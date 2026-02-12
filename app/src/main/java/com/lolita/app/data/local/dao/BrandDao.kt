@@ -31,4 +31,7 @@ interface BrandDao {
 
     @Query("SELECT * FROM brands WHERE name = :name LIMIT 1")
     suspend fun getBrandByName(name: String): Brand?
+
+    @Query("SELECT * FROM brands ORDER BY name ASC")
+    suspend fun getAllBrandsList(): List<Brand>
 }

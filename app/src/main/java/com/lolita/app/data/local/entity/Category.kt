@@ -3,6 +3,7 @@ package com.lolita.app.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "categories",
@@ -12,6 +13,7 @@ data class Category(
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis(),
 
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0,
 

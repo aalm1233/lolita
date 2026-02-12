@@ -1,22 +1,23 @@
 package com.lolita.app.ui.screen.item
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.theme.Pink300
@@ -32,6 +33,7 @@ fun ItemDetailScreen(
     itemId: Long,
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
+    onNavigateToPriceManage: () -> Unit = {},
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -95,26 +97,26 @@ fun ItemDetailScreen(
                 title = { Text("服饰详情") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "返回")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
                     IconButton(onClick = { onEdit(itemId) }) {
-                        Icon(Icons.Default.Edit, "编辑")
+                        Icon(Icons.Default.Edit, contentDescription = "编辑")
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             Icons.Default.Delete,
-                            "删除",
+                            contentDescription = "删除",
                             tint = MaterialTheme.colorScheme.error
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Pink400,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White,
-                    actionIconContentColor = Color.White
+                    titleContentColor = androidx.compose.ui.graphics.Color.White,
+                    navigationIconContentColor = androidx.compose.ui.graphics.Color.White,
+                    actionIconContentColor = androidx.compose.ui.graphics.Color.White
                 )
             )
         }
@@ -148,31 +150,25 @@ fun ItemDetailScreen(
                 ) {
                     // Image section
                     if (item.imageUrl != null) {
-                        Box(
+                        AsyncImage(
+                            model = item.imageUrl,
+                            contentDescription = item.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(300.dp)
-                        ) {
-                            AsyncImage(
-                                model = item.imageUrl,
-                                contentDescription = "服饰图片",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+                                .clip(androidx.compose.foundation.shape.RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
+                            contentScale = ContentScale.Crop
+                        )
                     } else {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(200.dp)
-                                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-                                .clip(RoundedCornerShape(16.dp)),
-                            contentAlignment = Alignment.Center,
-                            contentColor = Pink400
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             Card(
                                 modifier = Modifier
-                                    .padding(16.dp)
                                     .fillMaxWidth()
                                     .height(150.dp),
                                 colors = CardDefaults.cardColors(
@@ -263,6 +259,50 @@ fun ItemDetailScreen(
 
                         Divider()
 
+                        // Price Management Section
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "价格信息",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                IconButton(onClick = onNavigateToPriceManage) {
+                                    Icon(
+                                        Icons.Default.Info,
+                                        contentDescription = "管理价格",
+                                        tint = Pink400
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Pink300.copy(alpha = 0.2f)
+                                )
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        "点击图标管理此服饰的价格和付款信息",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+
+                        Divider()
+
                         // Metadata
                         DetailRow(
                             label = "创建时间",
@@ -290,7 +330,7 @@ private fun StatusBadge(status: ItemStatus) {
             ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)
             ItemStatus.WISHED -> Pink400.copy(alpha = 0.3f)
         },
-        shape = RoundedCornerShape(8.dp)
+        shape = MaterialTheme.shapes.small
     ) {
         Text(
             text = when (status) {
@@ -311,11 +351,11 @@ private fun StatusBadge(status: ItemStatus) {
 private fun PriorityBadge(priority: ItemPriority) {
     Surface(
         color = when (priority) {
-            ItemPriority.HIGH -> Color(0xFFFF6B6B).copy(alpha = 0.3f)
-            ItemPriority.MEDIUM -> Color(0xFFFFD93D).copy(alpha = 0.3f)
-            ItemPriority.LOW -> Color(0xFF6BCF7F).copy(alpha = 0.3f)
+            ItemPriority.HIGH -> androidx.compose.ui.graphics.Color(0xFFFF6B6B).copy(alpha = 0.3f)
+            ItemPriority.MEDIUM -> androidx.compose.ui.graphics.Color(0xFFFFD93D).copy(alpha = 0.3f)
+            ItemPriority.LOW -> androidx.compose.ui.graphics.Color(0xFF6BCF7F).copy(alpha = 0.3f)
         },
-        shape = RoundedCornerShape(8.dp)
+        shape = MaterialTheme.shapes.small
     ) {
         Text(
             text = when (priority) {

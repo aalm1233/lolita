@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Dress body (JSK silhouette) -->
+    <path
+        android:pathData="M54,30 L54,30
+            C50,30 47,31 45,33
+            L42,38
+            L38,40
+            L34,58
+            L30,76
+            L32,78
+            L40,76
+            L44,74
+            L48,73
+            L54,72
+            L60,73
+            L64,74
+            L68,76
+            L76,78
+            L78,76
+            L74,58
+            L70,40
+            L66,38
+            L63,33
+            C61,31 58,30 54,30 Z"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="1.2"/>
+
+    <!-- Bodice detail - neckline -->
+    <path
+        android:pathData="M47,33 Q54,37 61,33"
+        android:strokeColor="#FF91A4"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"/>
+
+    <!-- Waist ribbon -->
+    <path
+        android:pathData="M40,48 L68,48"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"/>
+
+    <!-- Ribbon bow - left loop -->
+    <path
+        android:pathData="M54,48 C50,43 44,44 46,48 C44,44 48,41 54,48 Z"
+        android:fillColor="#FF69B4"/>
+
+    <!-- Ribbon bow - right loop -->
+    <path
+        android:pathData="M54,48 C58,43 64,44 62,48 C64,44 60,41 54,48 Z"
+        android:fillColor="#FF69B4"/>
+
+    <!-- Ribbon bow center -->
+    <path
+        android:pathData="M52,46 L56,46 L56,50 L52,50 Z"
+        android:fillColor="#E91E8C"/>
+
+    <!-- Ribbon tails -->
+    <path
+        android:pathData="M52,50 L48,56"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="1.2"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M56,50 L60,56"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="1.2"
+        android:fillColor="#00000000"/>
+
+    <!-- Skirt lace trim bottom -->
+    <path
+        android:pathData="M32,76 Q34,74 36,76 Q38,74 40,76 Q42,74 44,76 Q46,74 48,76 Q50,74 52,76 Q54,74 56,76 Q58,74 60,76 Q62,74 64,76 Q66,74 68,76 Q70,74 72,76 Q74,74 76,76"
+        android:strokeColor="#FFB6C1"
+        android:strokeWidth="1.2"
+        android:fillColor="#00000000"/>
+
+    <!-- Left shoulder strap -->
+    <path
+        android:pathData="M45,33 L42,24 L46,24 L48,32"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="0.8"/>
+
+    <!-- Right shoulder strap -->
+    <path
+        android:pathData="M60,32 L62,24 L66,24 L63,33"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FF69B4"
+        android:strokeWidth="0.8"/>
+
+    <!-- Small heart on bodice -->
+    <path
+        android:pathData="M52,40 C52,38.5 54,37 54,39 C54,37 56,38.5 56,40 C56,41.5 54,43 54,43 C54,43 52,41.5 52,40 Z"
+        android:fillColor="#FF69B4"/>
+
+    <!-- Decorative dots on skirt -->
+    <path
+        android:pathData="M46,58 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0"
+        android:fillColor="#FFB6C1"/>
+    <path
+        android:pathData="M54,62 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0"
+        android:fillColor="#FFB6C1"/>
+    <path
+        android:pathData="M62,58 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0"
+        android:fillColor="#FFB6C1"/>
+    <path
+        android:pathData="M50,66 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0"
+        android:fillColor="#FFB6C1"/>
+    <path
+        android:pathData="M58,66 m-1.2,0 a1.2,1.2 0 1,1 2.4,0 a1.2,1.2 0 1,1 -2.4,0"
+        android:fillColor="#FFB6C1"/>
+
+</vector>

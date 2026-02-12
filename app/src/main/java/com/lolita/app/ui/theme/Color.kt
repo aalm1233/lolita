@@ -10,6 +10,7 @@ val Pink200 = Color(0xFFFFB6C1)
 val Pink300 = Color(0xFFFF91A4)
 val Pink400 = Color(0xFFFF69B4)
 val Pink500 = Color(0xFFFF1493)
+val Pink600 = Color(0xFFE91E8C)
 
 // Supporting Colors
 val Cream = Color(0xFFFFFDD0)
@@ -24,3 +25,4 @@ val Gray200 = Color(0xFFEEEEEE)
 val Gray400 = Color(0xFFBDBDBD)
 val Gray600 = Color(0xFF757575)
 val Gray800 = Color(0xFF424242)
+val Gray900 = Color(0xFF212121)

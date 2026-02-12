@@ -21,9 +21,7 @@ class CategoryRepository(
     }
 
     suspend fun getCategoryByName(name: String): Category? {
-        return categoryDao.getAllCategories()
-            .toList()
-            .flatten()
+        return categoryDao.getAllCategoriesList()
             .firstOrNull { it.name == name }
     }
 

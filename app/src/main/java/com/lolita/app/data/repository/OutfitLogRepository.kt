@@ -1,6 +1,8 @@
 package com.lolita.app.data.repository
 
 import com.lolita.app.data.local.dao.OutfitLogDao
+import com.lolita.app.data.local.dao.OutfitLogItemCount
+import com.lolita.app.data.local.dao.OutfitLogWithItems
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.OutfitItemCrossRef
 import com.lolita.app.data.local.entity.OutfitLog
@@ -39,9 +41,7 @@ class OutfitLogRepository(
             OutfitItemCrossRef(outfitLogId = outfitLogId, itemId = itemId)
         )
     }
-}
 
-data class OutfitLogWithItems(
-    val outfitLog: OutfitLog,
-    val items: List<Item>
-)
+    fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>> =
+        outfitLogDao.getItemCountsByOutfitLog()
+}

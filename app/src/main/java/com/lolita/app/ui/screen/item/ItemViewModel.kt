@@ -254,7 +254,14 @@ class ItemEditViewModel(
                     )
                 }
 
-                val itemId = itemRepository.insertItem(item)
+                val itemId = if (state.item != null) {
+                    // Update existing item
+                    itemRepository.updateItem(item)
+                    state.item.id
+                } else {
+                    // Create new item
+                    itemRepository.insertItem(item)
+                }
                 _uiState.value = _uiState.value.copy(isSaving = false)
                 onSuccess(itemId)
             } catch (e: Exception) {

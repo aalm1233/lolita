@@ -1,70 +1,208 @@
 package com.lolita.app.ui.screen.outfit
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.lolita.app.data.local.entity.OutfitLog
-import com.lolita.app.di.AppModule
-import java.text.SimpleDateFormat
-import java.util.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.ui.screen.common.EmptyState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OutfitLogListScreen(onNavigateToDetail: (Long) -> Unit) {
-    val repository = AppModule.outfitLogRepository()
-    val logs by repository.getAllOutfitLogs().collectAsState(initial = emptyList())
+fun OutfitLogListScreen(
+    onNavigateToDetail: (Long) -> Unit,
+    onNavigateToEdit: (Long?) -> Unit,
+    viewModel: OutfitLogListViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    var logToDelete by remember { mutableStateOf<OutfitLogListItem?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "穿搭日记",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (logs.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("暂无穿搭记录")
+    if (logToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { logToDelete = null },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除这条穿搭日记吗？此操作不可撤销。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteOutfitLog(logToDelete!!.id)
+                        logToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) { Text("删除") }
+            },
+            dismissButton = {
+                TextButton(onClick = { logToDelete = null }) { Text("取消") }
             }
-        } else {
-            logs.forEach { log ->
-                OutfitLogCard(
-                    log = log,
-                    onClick = { onNavigateToDetail(log.id) }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+        )
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("穿搭日记") })
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNavigateToEdit(null) }) {
+                Icon(Icons.Default.Add, contentDescription = "添加日记")
+            }
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            if (uiState.isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else if (uiState.logs.isEmpty()) {
+                item {
+                    EmptyState(
+                        icon = Icons.Default.Create,
+                        title = "还没有穿搭日记",
+                        subtitle = "记录每天的穿搭"
+                    )
+                }
+            } else {
+                items(uiState.logs, key = { it.id }) { log ->
+                    OutfitLogListItemCard(
+                        log = log,
+                        onClick = { onNavigateToDetail(log.id) },
+                        onEdit = { onNavigateToEdit(log.id) },
+                        onDelete = { logToDelete = log },
+                        modifier = Modifier.animateItem()
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun OutfitLogCard(log: OutfitLog, onClick: () -> Unit) {
-    val dateFormat = SimpleDateFormat("MM月dd日", Locale.getDefault())
+private fun OutfitLogListItemCard(
+    log: OutfitLogListItem,
+    onClick: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.size(56.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        val dayIndex = log.dateString.indexOf("日")
+                        val monthPart = if (dayIndex > 0) log.dateString.substring(0, log.dateString.indexOf("月") + 1) else ""
+                        val dayPart = if (dayIndex > 0) log.dateString.substring(log.dateString.indexOf("月") + 1, dayIndex) else ""
+                        Text(
+                            text = monthPart,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = dayPart,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
 
-    Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = dateFormat.format(Date(log.date)),
-                style = MaterialTheme.typography.titleMedium
-            )
-            if (log.note.isNotEmpty()) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = log.note,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2
+                    text = log.previewNote,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = if (log.previewNote.isNotEmpty()) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    if (log.imageCount > 0) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.DateRange,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "${log.imageCount}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    if (log.itemCount > 0) {
+                        Text(
+                            text = "${log.itemCount} 件服饰",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            // Edit button
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "编辑")
+            }
+
+            // Delete button
+            IconButton(
+                onClick = onDelete,
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "删除")
             }
         }
     }

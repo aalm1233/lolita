@@ -2,10 +2,12 @@ package com.lolita.app.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
+import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import com.lolita.app.data.local.entity.Brand
@@ -62,11 +64,17 @@ interface ItemDao {
     @Transaction
     @Query("SELECT * FROM items WHERE id = :id")
     fun getItemWithFullDetails(id: Long): Flow<ItemWithFullDetails?>
+
+    @Query("SELECT * FROM items ORDER BY updated_at DESC")
+    suspend fun getAllItemsList(): List<Item>
 }
 
 data class ItemWithFullDetails(
-    val item: Item,
+    @Embedded val item: Item,
+    @Relation(parentColumn = "brand_id", entityColumn = "id")
     val brand: Brand,
+    @Relation(parentColumn = "category_id", entityColumn = "id")
     val category: Category,
+    @Relation(parentColumn = "id", entityColumn = "item_id")
     val prices: List<Price>
 )

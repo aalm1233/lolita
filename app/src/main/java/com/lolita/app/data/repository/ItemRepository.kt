@@ -1,6 +1,7 @@
 package com.lolita.app.data.repository
 
 import com.lolita.app.data.local.dao.ItemDao
+import com.lolita.app.data.local.dao.ItemWithFullDetails
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import kotlinx.coroutines.flow.Flow
@@ -31,10 +32,3 @@ class ItemRepository(
 
     suspend fun deleteItem(item: Item) = itemDao.deleteItem(item)
 }
-
-data class ItemWithFullDetails(
-    val item: Item,
-    val brand: com.lolita.app.data.local.entity.Brand,
-    val category: com.lolita.app.data.local.entity.Category,
-    val prices: List<com.lolita.app.data.local.entity.Price>
-)

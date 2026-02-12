@@ -14,6 +14,9 @@ interface PaymentDao {
     @Query("SELECT * FROM payments ORDER BY due_date ASC")
     fun getAllPayments(): Flow<List<Payment>>
 
+    @Query("SELECT * FROM payments WHERE id = :id")
+    suspend fun getPaymentById(id: Long): Payment?
+
     @Query("SELECT * FROM payments WHERE price_id = :priceId")
     fun getPaymentsByPrice(priceId: Long): Flow<List<Payment>>
 
@@ -31,4 +34,7 @@ interface PaymentDao {
 
     @Delete
     suspend fun deletePayment(payment: Payment)
+
+    @Query("SELECT * FROM payments ORDER BY due_date ASC")
+    suspend fun getAllPaymentsList(): List<Payment>
 }

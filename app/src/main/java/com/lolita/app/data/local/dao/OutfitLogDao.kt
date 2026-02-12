@@ -4,7 +4,10 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Embedded
+import androidx.room.Junction
 import androidx.room.Query
+import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import com.lolita.app.data.local.entity.Item
@@ -41,9 +44,32 @@ interface OutfitLogDao {
     @Transaction
     @Query("SELECT * FROM outfit_logs WHERE id = :id")
     fun getOutfitLogWithItems(id: Long): Flow<OutfitLogWithItems?>
+
+    @Query("SELECT * FROM outfit_logs ORDER BY date DESC")
+    suspend fun getAllOutfitLogsList(): List<OutfitLog>
+
+    @Query("SELECT * FROM outfit_item_cross_ref")
+    suspend fun getAllOutfitItemCrossRefsList(): List<OutfitItemCrossRef>
+
+    @Query("SELECT outfit_log_id, COUNT(item_id) as itemCount FROM outfit_item_cross_ref GROUP BY outfit_log_id")
+    fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>>
 }
 
 data class OutfitLogWithItems(
-    val outfitLog: OutfitLog,
+    @Embedded val outfitLog: OutfitLog,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = OutfitItemCrossRef::class,
+            parentColumn = "outfit_log_id",
+            entityColumn = "item_id"
+        )
+    )
     val items: List<Item>
+)
+
+data class OutfitLogItemCount(
+    @androidx.room.ColumnInfo(name = "outfit_log_id") val outfitLogId: Long,
+    val itemCount: Int
 )

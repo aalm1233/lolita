@@ -1,57 +1,191 @@
 package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemStatus
-import com.lolita.app.di.AppModule
+import com.lolita.app.data.repository.CoordinateRepository
+import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.repository.OutfitLogRepository
+import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.ui.theme.Pink400
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
+data class StatsUiState(
+    val ownedCount: Int = 0,
+    val wishedCount: Int = 0,
+    val coordinateCount: Int = 0,
+    val outfitLogCount: Int = 0,
+    val totalSpending: Double = 0.0,
+    val isLoading: Boolean = true
+)
+
+class StatsViewModel(
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
+    private val outfitLogRepository: OutfitLogRepository = com.lolita.app.di.AppModule.outfitLogRepository(),
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(StatsUiState())
+    val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
+
+    init {
+        loadStats()
+    }
+
+    private fun loadStats() {
+        viewModelScope.launch {
+            combine(
+                itemRepository.getItemsByStatus(ItemStatus.OWNED),
+                itemRepository.getItemsByStatus(ItemStatus.WISHED),
+                coordinateRepository.getCoordinateCount(),
+                outfitLogRepository.getAllOutfitLogs(),
+                priceRepository.getTotalSpending()
+            ) { owned, wished, coordCount, logs, spending ->
+                StatsUiState(
+                    ownedCount = owned.size,
+                    wishedCount = wished.size,
+                    coordinateCount = coordCount,
+                    outfitLogCount = logs.size,
+                    totalSpending = spending,
+                    isLoading = false
+                )
+            }.collect { _uiState.value = it }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatsScreen() {
-    val itemRepository = AppModule.itemRepository()
-    val outfitRepository = AppModule.outfitLogRepository()
+fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
 
-    val ownedItems by itemRepository.getItemsByStatus(ItemStatus.OWNED)
-        .collectAsState(initial = emptyList())
-    val wishedItems by itemRepository.getItemsByStatus(ItemStatus.WISHED)
-        .collectAsState(initial = emptyList())
-    val outfitLogs by outfitRepository.getAllOutfitLogs()
-        .collectAsState(initial = emptyList())
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = "数据统计",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        StatCard(title = "已拥有服饰", value = ownedItems.size.toString())
-        StatCard(title = "愿望单", value = wishedItems.size.toString())
-        StatCard(title = "穿搭记录", value = outfitLogs.size.toString())
-
-        Spacer(modifier = Modifier.weight(1f))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("数据统计") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Pink400,
+                    titleContentColor = Color.White
+                )
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 2-column grid
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                StatCard(
+                    title = "已拥有",
+                    value = uiState.ownedCount.toString(),
+                    icon = Icons.Default.Home,
+                    color = Color(0xFFFF69B4),
+                    modifier = Modifier.weight(1f)
+                )
+                StatCard(
+                    title = "愿望单",
+                    value = uiState.wishedCount.toString(),
+                    icon = Icons.Default.Favorite,
+                    color = Color(0xFFFF6B6B),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                StatCard(
+                    title = "套装",
+                    value = uiState.coordinateCount.toString(),
+                    icon = Icons.Default.Star,
+                    color = Color(0xFFFFD93D),
+                    modifier = Modifier.weight(1f)
+                )
+                StatCard(
+                    title = "穿搭记录",
+                    value = uiState.outfitLogCount.toString(),
+                    icon = Icons.Default.DateRange,
+                    color = Color(0xFF6BCF7F),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            // Full-width spending card
+            StatCard(
+                title = "总消费",
+                value = "¥${String.format("%.2f", uiState.totalSpending)}",
+                icon = Icons.Default.ShoppingCart,
+                color = Color(0xFFE91E8C),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
 @Composable
-private fun StatCard(title: String, value: String) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+private fun StatCard(
+    title: String,
+    value: String,
+    icon: ImageVector,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = color.copy(alpha = 0.1f)
+        )
+    ) {
         Column(modifier = Modifier.padding(20.dp)) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = color
             )
         }
     }

@@ -1,19 +1,31 @@
 package com.lolita.app.ui.screen.item
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.theme.Pink400
@@ -33,6 +45,7 @@ fun ItemEditScreen(
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     var showError by remember { mutableStateOf<String?>(null) }
+    var hasAttemptedSave by remember { mutableStateOf(false) }
 
     // Load item data if editing
     LaunchedEffect(itemId) {
@@ -66,6 +79,7 @@ fun ItemEditScreen(
                     // Save button
                     IconButton(
                         onClick = {
+                            hasAttemptedSave = true
                             coroutineScope.launch {
                                 viewModel.saveItem(
                                     onSuccess = { onSaveSuccess() },
@@ -119,7 +133,11 @@ fun ItemEditScreen(
                     label = { Text("服饰名称 *") },
                     placeholder = { Text("例如：梦幻童话JSK") },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    isError = hasAttemptedSave && uiState.name.isBlank(),
+                    supportingText = if (hasAttemptedSave && uiState.name.isBlank()) {
+                        { Text("请输入服饰名称") }
+                    } else null
                 )
 
                 // Description field
@@ -137,14 +155,16 @@ fun ItemEditScreen(
                 BrandSelector(
                     selectedBrandId = uiState.brandId,
                     brands = uiState.brands,
-                    onBrandSelected = { viewModel.updateBrand(it) }
+                    onBrandSelected = { viewModel.updateBrand(it) },
+                    isError = hasAttemptedSave && uiState.brandId == 0L
                 )
 
                 // Category selector
                 CategorySelector(
                     selectedCategoryId = uiState.categoryId,
                     categories = uiState.categories,
-                    onCategorySelected = { viewModel.updateCategory(it) }
+                    onCategorySelected = { viewModel.updateCategory(it) },
+                    isError = hasAttemptedSave && uiState.categoryId == 0L
                 )
 
                 // Coordinate selector (optional)
@@ -204,11 +224,13 @@ fun ItemEditScreen(
 /**
  * Brand Selector Component
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BrandSelector(
     selectedBrandId: Long,
     brands: List<com.lolita.app.data.local.entity.Brand>,
-    onBrandSelected: (Long) -> Unit
+    onBrandSelected: (Long) -> Unit,
+    isError: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -224,7 +246,11 @@ private fun BrandSelector(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(),
+            isError = isError,
+            supportingText = if (isError) {
+                { Text("请选择品牌") }
+            } else null
         )
 
         ExposedDropdownMenu(
@@ -247,11 +273,13 @@ private fun BrandSelector(
 /**
  * Category Selector Component
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategorySelector(
     selectedCategoryId: Long,
     categories: List<com.lolita.app.data.local.entity.Category>,
-    onCategorySelected: (Long) -> Unit
+    onCategorySelected: (Long) -> Unit,
+    isError: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -267,7 +295,11 @@ private fun CategorySelector(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(),
+            isError = isError,
+            supportingText = if (isError) {
+                { Text("请选择类型") }
+            } else null
         )
 
         ExposedDropdownMenu(
@@ -290,6 +322,7 @@ private fun CategorySelector(
 /**
  * Coordinate Selector Component
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CoordinateSelector(
     selectedCoordinateId: Long?,
@@ -425,6 +458,20 @@ private fun ImageUploaderSection(
     imageUrl: String?,
     onImageChanged: (String?) -> Unit
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            coroutineScope.launch {
+                val internalPath = ImageFileHelper.copyToInternalStorage(context, it)
+                onImageChanged(internalPath)
+            }
+        }
+    }
+
     Column {
         Text(
             text = "图片",
@@ -434,25 +481,53 @@ private fun ImageUploaderSection(
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { /* TODO: Implement image picker */ }
+            onClick = {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 if (imageUrl != null) {
-                    // TODO: Load and display image
-                    Text("图片显示区域")
+                    Box {
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = "服饰图片",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                        IconButton(
+                            onClick = {
+                                ImageFileHelper.deleteImage(imageUrl)
+                                onImageChanged(null)
+                            },
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
+                            )
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "删除图片",
+                                tint = MaterialTheme.colorScheme.onError
+                            )
+                        }
+                    }
                 } else {
-                    Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "点击添加图片",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Text(
-                            text = "(拍照或从相册选择)",
+                            text = "(从相册选择)",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

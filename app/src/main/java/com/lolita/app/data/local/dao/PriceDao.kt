@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Embedded
 import androidx.room.Query
+import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import com.lolita.app.data.local.entity.Payment
@@ -31,9 +33,23 @@ interface PriceDao {
     @Transaction
     @Query("SELECT * FROM prices WHERE id = :id")
     fun getPriceWithPayments(id: Long): Flow<PriceWithPayments?>
+
+    @Query("SELECT * FROM prices")
+    suspend fun getAllPricesList(): List<Price>
+
+    @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices")
+    fun getTotalSpending(): Flow<Double>
+
+    @Transaction
+    @Query("SELECT * FROM prices WHERE item_id = :itemId")
+    fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<PriceWithPayments>>
 }
 
 data class PriceWithPayments(
-    val price: Price,
+    @Embedded val price: Price,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "price_id"
+    )
     val payments: List<Payment>
 )

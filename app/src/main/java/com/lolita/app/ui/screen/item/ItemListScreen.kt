@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,13 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.theme.Pink300
 import com.lolita.app.ui.theme.Pink400
 
-/**
- * Item List Screen - 服饰列表界面
- */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ItemListScreen(
@@ -40,6 +40,29 @@ fun ItemListScreen(
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var itemToDelete by remember { mutableStateOf<Item?>(null) }
+
+    if (itemToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { itemToDelete = null },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除「${itemToDelete!!.name}」吗？此操作不可撤销。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteItem(itemToDelete!!)
+                        itemToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) { Text("删除") }
+            },
+            dismissButton = {
+                TextButton(onClick = { itemToDelete = null }) { Text("取消") }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -57,11 +80,7 @@ fun ItemListScreen(
                 containerColor = Pink400,
                 shape = CircleShape
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "添加服饰",
-                    tint = Color.White
-                )
+                Icon(Icons.Default.Add, contentDescription = "添加服饰", tint = Color.White)
             }
         }
     ) { padding ->
@@ -71,7 +90,6 @@ fun ItemListScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            // Filter Chips
             FilterChipsRow(
                 selectedFilter = uiState.filterStatus,
                 onFilterSelected = { viewModel.filterByStatus(it) },
@@ -80,7 +98,6 @@ fun ItemListScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Items List
             if (uiState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -89,28 +106,14 @@ fun ItemListScreen(
                     CircularProgressIndicator(color = Pink400)
                 }
             } else if (uiState.filteredItems.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "暂无服饰",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "点击右下角 + 添加新服饰",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+                EmptyState(
+                    icon = Icons.Default.Home,
+                    title = "暂无服饰",
+                    subtitle = "点击右下角 + 添加新服饰",
+                    modifier = Modifier.fillMaxSize()
+                )
             } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(
                         items = uiState.filteredItems,
                         key = { it.id }
@@ -119,7 +122,8 @@ fun ItemListScreen(
                             item = item,
                             onClick = { onNavigateToDetail(item.id) },
                             onEdit = { onNavigateToEdit(item.id) },
-                            onDelete = { viewModel.deleteItem(item) }
+                            onDelete = { itemToDelete = item },
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
@@ -128,9 +132,6 @@ fun ItemListScreen(
     }
 }
 
-/**
- * Filter Chips Row - 筛选选项
- */
 @Composable
 private fun FilterChipsRow(
     selectedFilter: ItemStatus?,
@@ -147,7 +148,6 @@ private fun FilterChipsRow(
             label = { Text("全部") },
             modifier = Modifier.weight(1f)
         )
-
         FilterChip(
             selected = selectedFilter == ItemStatus.OWNED,
             onClick = { onFilterSelected(ItemStatus.OWNED) },
@@ -157,7 +157,6 @@ private fun FilterChipsRow(
             } else null,
             modifier = Modifier.weight(1f)
         )
-
         FilterChip(
             selected = selectedFilter == ItemStatus.WISHED,
             onClick = { onFilterSelected(ItemStatus.WISHED) },
@@ -167,39 +166,31 @@ private fun FilterChipsRow(
             } else null,
             modifier = Modifier.weight(1f)
         )
-
-        // Wishlist button
         IconButton(
             onClick = onNavigateToWishlist,
             modifier = Modifier
                 .size(48.dp)
                 .background(Pink300.copy(alpha = 0.2f), CircleShape)
         ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "优先级愿望单",
-                tint = Pink400
-            )
+            Icon(Icons.Default.Star, contentDescription = "优先级愿望单", tint = Pink400)
         }
     }
 }
 
-/**
- * Item Card Component - 服饰卡片
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ItemCard(
-    item: com.lolita.app.data.local.entity.Item,
+    item: Item,
     onClick: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     Card(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -208,7 +199,6 @@ private fun ItemCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Header row with name and menu
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -219,46 +209,26 @@ private fun ItemCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-
                 Box {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "编辑",
-                            tint = Pink400
-                        )
+                        Icon(Icons.Default.Edit, contentDescription = "编辑", tint = Pink400)
                     }
-
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
                             text = { Text("编辑") },
-                            onClick = {
-                                showMenu = false
-                                onEdit()
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.Edit, null)
-                            }
+                            onClick = { showMenu = false; onEdit() },
+                            leadingIcon = { Icon(Icons.Default.Edit, null) }
                         )
                         DropdownMenuItem(
                             text = { Text("删除") },
-                            onClick = {
-                                showMenu = false
-                                onDelete()
-                            },
+                            onClick = { showMenu = false; onDelete() },
                             leadingIcon = {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    null,
-                                    tint = MaterialTheme.colorScheme.error
-                                )
+                                Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
                             },
-                            colors = MenuDefaults.itemColors(
-                                textColor = MaterialTheme.colorScheme.error
-                            )
+                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
                         )
                     }
                 }
@@ -266,7 +236,6 @@ private fun ItemCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Description
             if (item.description.isNotEmpty()) {
                 Text(
                     text = item.description,
@@ -277,7 +246,6 @@ private fun ItemCard(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Status badge
             Surface(
                 color = when (item.status) {
                     ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)

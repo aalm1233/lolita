@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Embedded
 import androidx.room.Query
+import androidx.room.Relation
 import androidx.room.Transaction
 import androidx.room.Update
 import com.lolita.app.data.local.entity.Coordinate
@@ -30,10 +32,20 @@ interface CoordinateDao {
 
     @Transaction
     @Query("SELECT * FROM coordinates WHERE id = :id")
-    fun getCoordinateWithItems(id: Long): Flow<CoordinateWithItems>
+    fun getCoordinateWithItems(id: Long): Flow<CoordinateWithItems?>
+
+    @Query("SELECT * FROM coordinates ORDER BY updated_at DESC")
+    suspend fun getAllCoordinatesList(): List<Coordinate>
+
+    @Query("SELECT COUNT(*) FROM coordinates")
+    fun getCoordinateCount(): Flow<Int>
 }
 
 data class CoordinateWithItems(
-    val coordinate: Coordinate,
+    @Embedded val coordinate: Coordinate,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "coordinate_id"
+    )
     val items: List<Item>
 )

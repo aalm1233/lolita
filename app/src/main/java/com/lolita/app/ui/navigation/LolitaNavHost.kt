@@ -1,5 +1,9 @@
 package com.lolita.app.ui.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -10,6 +14,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,16 +26,27 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.lolita.app.ui.screen.coordinate.CoordinateListScreen
+import com.lolita.app.ui.screen.coordinate.CoordinateDetailScreen
+import com.lolita.app.ui.screen.coordinate.CoordinateEditScreen
+import com.lolita.app.ui.screen.price.PriceEditScreen
+import com.lolita.app.ui.screen.price.PriceManageScreen
+import com.lolita.app.ui.screen.price.PaymentManageScreen
+import com.lolita.app.ui.screen.price.PaymentEditScreen
 import com.lolita.app.ui.screen.item.ItemDetailScreen
 import com.lolita.app.ui.screen.item.ItemEditScreen
 import com.lolita.app.ui.screen.item.ItemListScreen
 import com.lolita.app.ui.screen.item.WishlistScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogListScreen
+import com.lolita.app.ui.screen.outfit.OutfitLogDetailScreen
+import com.lolita.app.ui.screen.outfit.OutfitLogEditScreen
 import com.lolita.app.ui.screen.search.SearchScreen
+import com.lolita.app.ui.screen.settings.BackupRestoreScreen
+import com.lolita.app.ui.screen.settings.BrandManageScreen
+import com.lolita.app.ui.screen.settings.CategoryManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.stats.StatsScreen
 
-sealed interface BottomNavItem {
+interface BottomNavItem {
     val screen: Screen
     val icon: ImageVector
     val label: String
@@ -71,8 +87,10 @@ data object BottomNavItems {
 fun LolitaNavHost() {
     val navController = rememberNavController()
     val items = BottomNavItems.items
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -102,9 +120,13 @@ fun LolitaNavHost() {
         NavHost(
             navController = navController,
             startDestination = Screen.ItemList.route,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            enterTransition = { fadeIn() + slideInHorizontally { it / 4 } },
+            exitTransition = { fadeOut() + slideOutHorizontally { -it / 4 } },
+            popEnterTransition = { fadeIn() + slideInHorizontally { -it / 4 } },
+            popExitTransition = { fadeOut() + slideOutHorizontally { it / 4 } }
         ) {
-            // Item List Screen
+            // Item List
             composable(Screen.ItemList.route) {
                 ItemListScreen(
                     onNavigateToDetail = { itemId ->
@@ -119,32 +141,26 @@ fun LolitaNavHost() {
                 )
             }
 
-            // Item Detail Screen
+            // Item Detail
             composable(
                 route = Screen.ItemDetail.route,
-                arguments = listOf(
-                    navArgument("itemId") { type = NavType.LongType }
-                )
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType })
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
                 ItemDetailScreen(
                     itemId = itemId,
                     onBack = { navController.popBackStack() },
-                    onEdit = { editItemId ->
-                        navController.navigate(Screen.ItemEdit.createRoute(editItemId))
+                    onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
+                    onNavigateToPriceManage = {
+                        navController.navigate(Screen.PriceManage.createRoute(itemId))
                     }
                 )
             }
 
-            // Item Edit Screen
+            // Item Edit
             composable(
                 route = Screen.ItemEdit.route,
-                arguments = listOf(
-                    navArgument("itemId") {
-                        type = NavType.LongType
-                        defaultValue = 0L
-                    }
-                )
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType; defaultValue = 0L })
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
                 ItemEditScreen(
@@ -153,8 +169,75 @@ fun LolitaNavHost() {
                     onSaveSuccess = { navController.popBackStack() }
                 )
             }
+            // Price Manage
+            composable(
+                route = Screen.PriceManage.route,
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                PriceManageScreen(
+                    itemId = itemId,
+                    onBack = { navController.popBackStack() },
+                    onNavigateToPriceEdit = { priceId ->
+                        navController.navigate(Screen.PriceEdit.createRoute(itemId, priceId))
+                    },
+                    onNavigateToPaymentManage = { priceId ->
+                        navController.navigate(Screen.PaymentManage.createRoute(priceId))
+                    }
+                )
+            }
 
-            // Wishlist Screen
+            // Price Edit
+            composable(
+                route = Screen.PriceEdit.route,
+                arguments = listOf(
+                    navArgument("itemId") { type = NavType.LongType },
+                    navArgument("priceId") { type = NavType.LongType; defaultValue = 0L }
+                )
+            ) { backStackEntry ->
+                val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                val priceId = backStackEntry.arguments?.getLong("priceId") ?: 0L
+                PriceEditScreen(
+                    itemId = itemId,
+                    priceId = if (priceId == 0L) null else priceId,
+                    onBack = { navController.popBackStack() },
+                    onSaveSuccess = { navController.popBackStack() }
+                )
+            }
+
+            // Payment Manage
+            composable(
+                route = Screen.PaymentManage.route,
+                arguments = listOf(navArgument("priceId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val priceId = backStackEntry.arguments?.getLong("priceId") ?: return@composable
+                PaymentManageScreen(
+                    priceId = priceId,
+                    onBack = { navController.popBackStack() },
+                    onNavigateToPaymentEdit = { paymentId ->
+                        navController.navigate(Screen.PaymentEdit.createRoute(priceId, paymentId))
+                    }
+                )
+            }
+            // Payment Edit
+            composable(
+                route = Screen.PaymentEdit.route,
+                arguments = listOf(
+                    navArgument("priceId") { type = NavType.LongType },
+                    navArgument("paymentId") { type = NavType.LongType; defaultValue = 0L }
+                )
+            ) { backStackEntry ->
+                val priceId = backStackEntry.arguments?.getLong("priceId") ?: return@composable
+                val paymentId = backStackEntry.arguments?.getLong("paymentId") ?: 0L
+                PaymentEditScreen(
+                    priceId = priceId,
+                    paymentId = if (paymentId == 0L) null else paymentId,
+                    onBack = { navController.popBackStack() },
+                    onSaveSuccess = { navController.popBackStack() }
+                )
+            }
+
+            // Wishlist
             composable(Screen.Wishlist.route) {
                 WishlistScreen(
                     onNavigateToDetail = { itemId ->
@@ -163,48 +246,121 @@ fun LolitaNavHost() {
                 )
             }
 
-            // Coordinate List Screen
+            // Coordinate List
             composable(Screen.CoordinateList.route) {
-                CoordinateListScreen(onNavigateToDetail = { /* TODO */ })
+                CoordinateListScreen(
+                    onNavigateToDetail = { coordinateId ->
+                        navController.navigate(Screen.CoordinateDetail.createRoute(coordinateId))
+                    },
+                    onNavigateToAdd = {
+                        navController.navigate(Screen.CoordinateEdit.createRoute(null))
+                    }
+                )
             }
 
-            // Outfit Log List Screen
+            // Coordinate Detail
+            composable(
+                route = Screen.CoordinateDetail.route,
+                arguments = listOf(navArgument("coordinateId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val coordinateId = backStackEntry.arguments?.getLong("coordinateId") ?: return@composable
+                CoordinateDetailScreen(
+                    coordinateId = coordinateId,
+                    onBack = { navController.popBackStack() },
+                    onEdit = { navController.navigate(Screen.CoordinateEdit.createRoute(it)) }
+                )
+            }
+            // Coordinate Edit
+            composable(
+                route = Screen.CoordinateEdit.route,
+                arguments = listOf(navArgument("coordinateId") { type = NavType.LongType; defaultValue = 0L })
+            ) { backStackEntry ->
+                val coordinateId = backStackEntry.arguments?.getLong("coordinateId") ?: 0L
+                CoordinateEditScreen(
+                    coordinateId = if (coordinateId == 0L) null else coordinateId,
+                    onBack = { navController.popBackStack() },
+                    onSaveSuccess = { navController.popBackStack() }
+                )
+            }
+
+            // Outfit Log List
             composable(Screen.OutfitLogList.route) {
-                OutfitLogListScreen(onNavigateToDetail = { /* TODO */ })
+                OutfitLogListScreen(
+                    onNavigateToDetail = { logId ->
+                        navController.navigate(Screen.OutfitLogDetail.createRoute(logId))
+                    },
+                    onNavigateToEdit = { logId ->
+                        navController.navigate(Screen.OutfitLogEdit.createRoute(logId))
+                    }
+                )
             }
 
-            // Search Screen
+            // Outfit Log Detail
+            composable(
+                route = Screen.OutfitLogDetail.route,
+                arguments = listOf(navArgument("logId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val logId = backStackEntry.arguments?.getLong("logId") ?: return@composable
+                OutfitLogDetailScreen(
+                    logId = logId,
+                    onBack = { navController.popBackStack() },
+                    onNavigateToEdit = {
+                        navController.navigate(Screen.OutfitLogEdit.createRoute(logId))
+                    },
+                    onNavigateToItem = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    }
+                )
+            }
+
+            // Outfit Log Edit
+            composable(
+                route = Screen.OutfitLogEdit.route,
+                arguments = listOf(navArgument("logId") { type = NavType.LongType; defaultValue = 0L })
+            ) { backStackEntry ->
+                val logId = backStackEntry.arguments?.getLong("logId") ?: 0L
+                OutfitLogEditScreen(
+                    logId = if (logId == 0L) null else logId,
+                    onBack = { navController.popBackStack() },
+                    onSaveSuccess = { navController.popBackStack() }
+                )
+            }
+            // Search
             composable(Screen.Search.route) {
                 SearchScreen(onNavigateToItem = { itemId ->
                     navController.navigate(Screen.ItemDetail.createRoute(itemId))
                 })
             }
 
-            // Stats Screen
+            // Stats
             composable(Screen.Stats.route) {
                 StatsScreen()
             }
 
-            // Settings Screen
+            // Settings
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    onNavigateToBrand = {
-                        navController.navigate(Screen.BrandManage.route)
-                    },
-                    onNavigateToCategory = {
-                        navController.navigate(Screen.CategoryManage.route)
-                    }
+                    onNavigateToCoordinate = { navController.navigate(Screen.CoordinateList.route) },
+                    onNavigateToBrand = { navController.navigate(Screen.BrandManage.route) },
+                    onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
+                    onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
+                    onNavigateToStats = { navController.navigate(Screen.Stats.route) }
                 )
             }
 
-            // Brand Manage Screen
+            // Brand Manage
             composable(Screen.BrandManage.route) {
-                Text("品牌管理 - 开发中")
+                BrandManageScreen(onBack = { navController.popBackStack() })
             }
 
-            // Category Manage Screen
+            // Category Manage
             composable(Screen.CategoryManage.route) {
-                Text("类型管理 - 开发中")
+                CategoryManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Backup & Restore
+            composable(Screen.BackupRestore.route) {
+                BackupRestoreScreen(onBack = { navController.popBackStack() })
             }
         }
     }

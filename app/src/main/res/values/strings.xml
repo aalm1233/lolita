@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">我的Lolita</string>
+
+    <!-- Navigation -->
+    <string name="nav_items">服饰</string>
+    <string name="nav_coordinates">套装</string>
+    <string name="nav_outfits">穿搭</string>
+    <string name="nav_search">搜索</string>
+    <string name="nav_stats">统计</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- Common -->
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="loading">加载中...</string>
+    <string name="no_data">暂无数据</string>
+
+    <!-- Item -->
+    <string name="owned">已拥有</string>
+    <string name="wished">愿望单</string>
+    <string name="priority_high">高</string>
+    <string name="priority_medium">中</string>
+    <string name="priority_low">低</string>
+
+    <!-- Price -->
+    <string name="price_type_full">全款</string>
+    <string name="price_type_deposit">定金+尾款</string>
+    <string name="deposit">定金</string>
+    <string name="balance">尾款</string>
+    <string name="total_price">总价</string>
+    <string name="paid">已付</string>
+    <string name="unpaid">未付</string>
+
+    <!-- Reminder -->
+    <string name="reminder_set">设置提醒</string>
+    <string name="reminder_same_day">当天</string>
+    <string name="reminder_days_ago">%d天前</string>
+
+    <!-- Outfit Log -->
+    <string name="outfit_log_add">添加穿搭日记</string>
+    <string name="outfit_log_detail">穿搭详情</string>
+
+    <!-- Settings -->
+    <string name="settings_manage_brand">品牌管理</string>
+    <string name="settings_manage_category">类型管理</string>
+    <string name="settings_backup">数据备份</string>
+    <string name="settings_restore">数据恢复</string>
+</resources>

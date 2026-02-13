@@ -13,6 +13,8 @@ import com.lolita.app.data.repository.CategoryRepository
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.data.repository.StyleRepository
+import com.lolita.app.data.repository.SeasonRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +34,8 @@ data class ItemListUiState(
     val filterStatus: ItemStatus? = null,
     val searchQuery: String = "",
     val brandNames: Map<Long, String> = emptyMap(),
-    val categoryNames: Map<Long, String> = emptyMap()
+    val categoryNames: Map<Long, String> = emptyMap(),
+    val columnsPerRow: Int = 1
 )
 
 /**
@@ -51,11 +54,15 @@ data class ItemEditUiState(
     val color: String? = null,
     val season: String? = null,
     val style: String? = null,
+    val size: String? = null,
+    val sizeChartImageUrl: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
+    val styleOptions: List<String> = emptyList(),
+    val seasonOptions: List<String> = emptyList(),
     val pricesWithPayments: List<DaoPriceWithPayments> = emptyList()
 )
 
@@ -129,6 +136,10 @@ class ItemListViewModel(
         return result
     }
 
+    fun setColumns(count: Int) {
+        _uiState.update { it.copy(columnsPerRow = count) }
+    }
+
     fun deleteItem(item: Item) {
         viewModelScope.launch {
             itemRepository.deleteItem(item)
@@ -144,7 +155,9 @@ class ItemEditViewModel(
     private val brandRepository: com.lolita.app.data.repository.BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
     private val categoryRepository: com.lolita.app.data.repository.CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
     private val coordinateRepository: com.lolita.app.data.repository.CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
-    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val styleRepository: StyleRepository = com.lolita.app.di.AppModule.styleRepository(),
+    private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemEditUiState())
@@ -158,8 +171,18 @@ class ItemEditViewModel(
             val brands = brandRepository.getAllBrands().first()
             val categories = categoryRepository.getAllCategories().first()
             val coordinates = coordinateRepository.getAllCoordinates().first()
+            val styles = styleRepository.getAllStyles().first()
+            val seasons = seasonRepository.getAllSeasons().first()
 
-            _uiState.update { it.copy(brands = brands, categories = categories, coordinates = coordinates) }
+            _uiState.update {
+                it.copy(
+                    brands = brands,
+                    categories = categories,
+                    coordinates = coordinates,
+                    styleOptions = styles.map { s -> s.name },
+                    seasonOptions = seasons.map { s -> s.name }
+                )
+            }
 
             if (itemId > 0) {
                 val item = itemRepository.getItemById(itemId)
@@ -179,6 +202,8 @@ class ItemEditViewModel(
                             color = item.color,
                             season = item.season,
                             style = item.style,
+                            size = item.size,
+                            sizeChartImageUrl = item.sizeChartImageUrl,
                             pricesWithPayments = prices,
                             isLoading = false
                         )
@@ -236,6 +261,14 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(style = style)
     }
 
+    fun updateSize(size: String?) {
+        _uiState.value = _uiState.value.copy(size = size)
+    }
+
+    fun updateSizeChartImageUrl(url: String?) {
+        _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
+    }
+
     fun saveItem(onSuccess: (Long) -> Unit, onError: (String) -> Unit) {
         val state = _uiState.value
 
@@ -273,6 +306,8 @@ class ItemEditViewModel(
                         color = state.color,
                         season = state.season,
                         style = state.style,
+                        size = state.size,
+                        sizeChartImageUrl = state.sizeChartImageUrl,
                         updatedAt = now
                     )
                 } else {
@@ -290,6 +325,8 @@ class ItemEditViewModel(
                         color = state.color,
                         season = state.season,
                         style = state.style,
+                        size = state.size,
+                        sizeChartImageUrl = state.sizeChartImageUrl,
                         createdAt = now,
                         updatedAt = now
                     )

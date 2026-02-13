@@ -1,13 +1,16 @@
 package com.lolita.app.ui.screen.outfit
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Checkroom
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.theme.Pink400
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -42,7 +47,8 @@ fun OutfitLogDetailScreen(
     Scaffold(
         topBar = {
             GradientTopAppBar(
-                title = { Text("穿搭日记详情") },
+                title = { Text("穿搭详情") },
+                compact = true,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
@@ -66,51 +72,120 @@ fun OutfitLogDetailScreen(
                 CircularProgressIndicator()
             }
         } else {
-            val log = uiState.log
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+            val log = uiState.log ?: return@Scaffold
+            val dateFormat = SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA)
+
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Date card
-                if (log != null) {
+                // Date header
+                item {
+                    Text(
+                        text = dateFormat.format(Date(log.date)),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Pink400,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+
+                // Note section
+                if (log.note.isNotEmpty()) {
                     item {
-                        DateCard(
-                            date = log.date,
-                            modifier = Modifier.fillMaxWidth()
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            )
+                        ) {
+                            Text(
+                                text = log.note,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+                }
+
+                // Photos section
+                if (log.imageUrls.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = "照片 (${log.imageUrls.size})",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
-
-                    // Note card
-                    if (log.note.isNotEmpty()) {
+                    if (log.imageUrls.size == 1) {
                         item {
-                            NoteCard(
-                                note = log.note,
-                                modifier = Modifier.fillMaxWidth()
+                            AsyncImage(
+                                model = log.imageUrls.first(),
+                                contentDescription = "穿搭照片",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.FillWidth
+                            )
+                        }
+                    } else {
+                        item {
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                items(log.imageUrls) { imageUrl ->
+                                    AsyncImage(
+                                        model = imageUrl,
+                                        contentDescription = "穿搭照片",
+                                        modifier = Modifier
+                                            .width(220.dp)
+                                            .aspectRatio(0.75f)
+                                            .clip(RoundedCornerShape(12.dp)),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Associated items section
+                if (uiState.items.isNotEmpty()) {
+                    item {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Checkroom,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                                tint = Pink400
+                            )
+                            Text(
+                                text = "关联服饰 (${uiState.items.size})",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
-
-                    // Photos
-                    log.imageUrls.forEach { imageUrl ->
-                        item {
-                            PhotoCard(imageUrl = imageUrl)
-                        }
-                    }
-
-                    // Associated items
-                    uiState.items.forEach { item ->
-                        item {
-                            ItemCard(
-                                item = item,
-                                onClick = { onNavigateToItem(item.id) },
-                                onRemove = { viewModel.removeItem(item.id) }
-                            )
-                        }
+                    items(uiState.items) { item ->
+                        DetailItemCard(
+                            item = item,
+                            onClick = { onNavigateToItem(item.id) },
+                            onRemove = { viewModel.removeItem(item.id) },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
                     }
                 }
             }
@@ -119,82 +194,65 @@ fun OutfitLogDetailScreen(
 }
 
 @Composable
-private fun DateCard(date: Long, modifier: Modifier = Modifier) {
-    val dateFormat = SimpleDateFormat("yyyy年MM月dd日 EEEE", Locale.CHINA)
-    Card(modifier = modifier) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = dateFormat.format(Date(date)),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-@Composable
-private fun NoteCard(note: String, modifier: Modifier = Modifier) {
-    Card(modifier = modifier) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "备注",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = note,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
-
-@Composable
-private fun PhotoCard(imageUrl: String) {
+private fun DetailItemCard(
+    item: Item,
+    onClick: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp)
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "穿搭照片",
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(12.dp)),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
-@Composable
-private fun ItemCard(item: Item, onClick: () -> Unit, onRemove: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp)) {
+                .clickable(onClick = onClick)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Checkroom,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
             Text(
                 text = item.name,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.size(32.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                )
             ) {
-                TextButton(onClick = onClick) {
-                    Text("查看详情")
-                }
-                IconButton(
-                    onClick = onRemove,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "移除")
-                }
+                Icon(Icons.Default.Delete, contentDescription = "移除", modifier = Modifier.size(18.dp))
             }
         }
     }

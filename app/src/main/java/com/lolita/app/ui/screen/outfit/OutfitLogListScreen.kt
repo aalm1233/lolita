@@ -1,22 +1,25 @@
 package com.lolita.app.ui.screen.outfit
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Checkroom
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,7 +31,7 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink400
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun OutfitLogListScreen(
     onNavigateToDetail: (Long) -> Unit,
@@ -74,7 +77,7 @@ fun OutfitLogListScreen(
                 containerColor = Pink400,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加日记", tint = androidx.compose.ui.graphics.Color.White)
+                Icon(Icons.Default.Add, contentDescription = "添加日记", tint = Color.White)
             }
         }
     ) { padding ->
@@ -82,8 +85,9 @@ fun OutfitLogListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (uiState.isLoading) {
                 item {
@@ -117,6 +121,7 @@ fun OutfitLogListScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OutfitLogListItemCard(
     log: OutfitLogListItem,
@@ -125,69 +130,81 @@ private fun OutfitLogListItemCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LolitaCard(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
+    var showMenu by remember { mutableStateOf(false) }
+
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Thumbnail or date circle
-            if (log.firstImageUrl != null) {
-                AsyncImage(
-                    model = log.firstImageUrl,
-                    contentDescription = "穿搭照片",
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = { showMenu = true }
                 )
-            } else {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            val dayIndex = log.dateString.indexOf("日")
-                            val monthPart = if (dayIndex > 0) log.dateString.substring(0, log.dateString.indexOf("月") + 1) else ""
-                            val dayPart = if (dayIndex > 0) log.dateString.substring(log.dateString.indexOf("月") + 1, dayIndex) else ""
-                            Text(
-                                text = monthPart,
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = dayPart,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+        ) {
+            // Image header or date header
+            if (log.firstImageUrl != null) {
+                Box {
+                    AsyncImage(
+                        model = log.firstImageUrl,
+                        contentDescription = "穿搭照片",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    // Date badge overlay
+                    Surface(
+                        shape = RoundedCornerShape(bottomEnd = 12.dp),
+                        color = Pink400.copy(alpha = 0.85f),
+                        modifier = Modifier.align(Alignment.TopStart)
+                    ) {
+                        Text(
+                            text = log.dateString,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
                     }
+                }
+            } else {
+                // No image — colored date header
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Pink400.copy(alpha = 0.08f),
+                            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        )
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                ) {
+                    Text(
+                        text = log.dateString,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Pink400
+                    )
                 }
             }
 
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = log.previewNote,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = if (log.previewNote.isNotEmpty()) {
-                        MaterialTheme.colorScheme.onSurface
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
-                )
+            // Content area
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+                if (log.previewNote.isNotEmpty()) {
+                    Text(
+                        text = log.previewNote,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                // Stats row
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(top = 8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (log.imageCount > 0) {
                         Row(
@@ -195,42 +212,61 @@ private fun OutfitLogListItemCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Icons.Default.DateRange,
+                                Icons.Default.PhotoCamera,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp),
+                                modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
                                 text = "${log.imageCount}",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
                     if (log.itemCount > 0) {
-                        Text(
-                            text = "${log.itemCount} 件服饰",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Checkroom,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "${log.itemCount} 件",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
+        }
 
-            // Edit button
-            IconButton(onClick = onEdit) {
-                Icon(Icons.Default.Edit, contentDescription = "编辑")
-            }
-
-            // Delete button
-            IconButton(
-                onClick = onDelete,
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Icon(Icons.Default.Delete, contentDescription = "删除")
-            }
+        // Long-press dropdown menu
+        DropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("编辑") },
+                onClick = { showMenu = false; onEdit() },
+                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+            )
+            DropdownMenuItem(
+                text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                onClick = { showMenu = false; onDelete() },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            )
         }
     }
 }

@@ -85,7 +85,8 @@ fun OutfitLogEditScreen(
     Scaffold(
         topBar = {
             GradientTopAppBar(
-                title = { Text(if (logId == null) "添加穿搭日记" else "编辑穿搭日记") },
+                title = { Text(if (logId == null) "添加穿搭" else "编辑穿搭") },
+                compact = true,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")

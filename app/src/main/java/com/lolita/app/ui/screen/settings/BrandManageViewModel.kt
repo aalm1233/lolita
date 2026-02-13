@@ -81,7 +81,7 @@ class BrandManageViewModel(
             } catch (e: Exception) {
                 hideDeleteConfirm()
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = if (brand.isPreset) "预置品牌不可删除" else "删除失败：该品牌下仍有服饰"
+                    errorMessage = e.message ?: "删除失败"
                 )
             }
         }

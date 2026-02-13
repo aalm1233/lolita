@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -15,11 +16,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +52,11 @@ fun OutfitLogListScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("删除") }
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
             },
             dismissButton = {
                 TextButton(onClick = { logToDelete = null }) { Text("取消") }
@@ -55,11 +66,15 @@ fun OutfitLogListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("穿搭日记") })
+            GradientTopAppBar(title = { Text("穿搭日记") }, compact = true)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToEdit(null) }) {
-                Icon(Icons.Default.Add, contentDescription = "添加日记")
+            FloatingActionButton(
+                onClick = { onNavigateToEdit(null) },
+                containerColor = Pink400,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "添加日记", tint = androidx.compose.ui.graphics.Color.White)
             }
         }
     ) { padding ->
@@ -110,38 +125,50 @@ private fun OutfitLogListItemCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    LolitaCard(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                modifier = Modifier.size(56.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val dayIndex = log.dateString.indexOf("日")
-                        val monthPart = if (dayIndex > 0) log.dateString.substring(0, log.dateString.indexOf("月") + 1) else ""
-                        val dayPart = if (dayIndex > 0) log.dateString.substring(log.dateString.indexOf("月") + 1, dayIndex) else ""
-                        Text(
-                            text = monthPart,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = dayPart,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
+            // Thumbnail or date circle
+            if (log.firstImageUrl != null) {
+                AsyncImage(
+                    model = log.firstImageUrl,
+                    contentDescription = "穿搭照片",
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            val dayIndex = log.dateString.indexOf("日")
+                            val monthPart = if (dayIndex > 0) log.dateString.substring(0, log.dateString.indexOf("月") + 1) else ""
+                            val dayPart = if (dayIndex > 0) log.dateString.substring(log.dateString.indexOf("月") + 1, dayIndex) else ""
+                            Text(
+                                text = monthPart,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = dayPart,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }

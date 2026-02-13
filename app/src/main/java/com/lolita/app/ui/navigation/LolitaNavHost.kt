@@ -6,17 +6,20 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.lolita.app.ui.theme.Pink400
+import com.lolita.app.ui.theme.Pink100
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -65,14 +68,14 @@ data object BottomNavItems {
             override val label = "愿望单"
         },
         object : BottomNavItem {
+            override val screen = Screen.CoordinateList
+            override val icon = Icons.AutoMirrored.Filled.List
+            override val label = "套装"
+        },
+        object : BottomNavItem {
             override val screen = Screen.OutfitLogList
             override val icon = Icons.Filled.DateRange
             override val label = "穿搭"
-        },
-        object : BottomNavItem {
-            override val screen = Screen.Search
-            override val icon = Icons.Filled.Search
-            override val label = "搜索"
         },
         object : BottomNavItem {
             override val screen = Screen.Settings
@@ -92,7 +95,10 @@ fun LolitaNavHost() {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = Pink400
+            ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
@@ -111,7 +117,14 @@ fun LolitaNavHost() {
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Pink400,
+                            selectedTextColor = Pink400,
+                            indicatorColor = Pink100,
+                            unselectedIconColor = Color.Gray,
+                            unselectedTextColor = Color.Gray
+                        )
                     )
                 }
             }
@@ -327,20 +340,23 @@ fun LolitaNavHost() {
             }
             // Search
             composable(Screen.Search.route) {
-                SearchScreen(onNavigateToItem = { itemId ->
-                    navController.navigate(Screen.ItemDetail.createRoute(itemId))
-                })
+                SearchScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToItem = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    }
+                )
             }
 
             // Stats
             composable(Screen.Stats.route) {
-                StatsScreen()
+                StatsScreen(onBack = { navController.popBackStack() })
             }
 
             // Settings
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    onNavigateToCoordinate = { navController.navigate(Screen.CoordinateList.route) },
+                    onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToBrand = { navController.navigate(Screen.BrandManage.route) },
                     onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },

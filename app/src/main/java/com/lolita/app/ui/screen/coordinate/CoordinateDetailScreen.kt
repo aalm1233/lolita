@@ -1,12 +1,15 @@
 package com.lolita.app.ui.screen.coordinate
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,11 +19,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink300
+import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +64,11 @@ fun CoordinateDetailScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("移除") }
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("移除")
+                }
             },
             dismissButton = {
                 TextButton(onClick = { itemToRemove = null }) { Text("取消") }
@@ -65,11 +82,11 @@ fun CoordinateDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text(uiState.coordinate?.name ?: "套装详情") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -155,17 +172,29 @@ private fun CoordinateInfoCard(
     coordinate: com.lolita.app.data.local.entity.Coordinate,
     itemCount: Int
 ) {
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                coordinate.name,
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Pink400,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    coordinate.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             if (coordinate.description.isNotEmpty()) {
                 Text(
@@ -176,11 +205,18 @@ private fun CoordinateInfoCard(
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(
-                    "服饰: $itemCount",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Surface(
+                    color = Pink400.copy(alpha = 0.1f),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        "服饰: $itemCount 件",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Pink400,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -191,31 +227,87 @@ private fun CoordinateItemCard(
     item: Item,
     onRemove: () -> Unit
 ) {
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            // Thumbnail
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    modifier = Modifier.size(48.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    color = androidx.compose.ui.graphics.Color.Transparent
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f))
+                                ),
+                                RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = item.name.firstOrNull()?.toString() ?: "?",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Pink400
+                        )
+                    }
+                }
+            }
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     item.name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium
                 )
                 if (item.description.isNotEmpty()) {
                     Text(
                         item.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1
                     )
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     StatusBadge(item.status)
+                    // Show color/style if available
+                    val details = listOfNotNull(item.color, item.style).joinToString(" · ")
+                    if (details.isNotEmpty()) {
+                        Text(
+                            details,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
             IconButton(onClick = onRemove) {
-                Icon(Icons.Default.Delete, contentDescription = "移除")
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "移除",
+                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                )
             }
         }
     }

@@ -23,6 +23,7 @@ data class PriceEditUiState(
     val totalPrice: String = "",
     val deposit: String = "",
     val balance: String = "",
+    val purchaseDate: Long? = null,
     val isSaving: Boolean = false,
     val error: String? = null
 )
@@ -92,7 +93,8 @@ class PriceEditViewModel(
                     priceType = it.type,
                     totalPrice = it.totalPrice.toString(),
                     deposit = it.deposit?.toString() ?: "",
-                    balance = it.balance?.toString() ?: ""
+                    balance = it.balance?.toString() ?: "",
+                    purchaseDate = it.purchaseDate
                 )
             }
         }
@@ -114,6 +116,10 @@ class PriceEditViewModel(
         _uiState.value = _uiState.value.copy(balance = value)
     }
 
+    fun updatePurchaseDate(date: Long?) {
+        _uiState.value = _uiState.value.copy(purchaseDate = date)
+    }
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
@@ -132,7 +138,8 @@ class PriceEditViewModel(
                 } else null,
                 balance = if (_uiState.value.priceType == PriceType.DEPOSIT_BALANCE) {
                     _uiState.value.balance.toDoubleOrNull()
-                } else null
+                } else null,
+                purchaseDate = _uiState.value.purchaseDate
             )
 
             val id = priceRepository.insertPrice(price)
@@ -159,7 +166,8 @@ class PriceEditViewModel(
                 } else null,
                 balance = if (_uiState.value.priceType == PriceType.DEPOSIT_BALANCE) {
                     _uiState.value.balance.toDoubleOrNull()
-                } else null
+                } else null,
+                purchaseDate = _uiState.value.purchaseDate
             )
 
             priceRepository.updatePrice(price)

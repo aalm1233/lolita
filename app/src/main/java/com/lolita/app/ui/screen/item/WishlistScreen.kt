@@ -11,11 +11,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
@@ -23,6 +27,8 @@ import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -46,12 +52,9 @@ fun WishlistScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("愿望单") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Pink400,
-                    titleContentColor = Color.White
-                )
+                compact = true
             )
         }
     ) { padding ->
@@ -96,10 +99,9 @@ private fun WishlistItemCard(
         ItemPriority.LOW -> Color(0xFF6BCF7F)
     }
 
-    Card(
+    LolitaCard(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             // Priority color border
@@ -109,11 +111,38 @@ private fun WishlistItemCard(
                     .fillMaxHeight()
                     .background(borderColor)
             )
-            // Use IntrinsicSize to make the border match content height
+
+            // Thumbnail
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(RoundedCornerShape(0.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    modifier = Modifier.size(72.dp),
+                    color = borderColor.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(0.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Favorite,
+                            contentDescription = null,
+                            tint = borderColor,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Row(

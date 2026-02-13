@@ -1,5 +1,6 @@
 package com.lolita.app.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // Lolita Pink Palette
@@ -26,3 +27,7 @@ val Gray400 = Color(0xFFBDBDBD)
 val Gray600 = Color(0xFF757575)
 val Gray800 = Color(0xFF424242)
 val Gray900 = Color(0xFF212121)
+
+// Gradients
+val PinkGradient = Brush.horizontalGradient(listOf(Pink400, Pink300))
+val PinkGradientVertical = Brush.verticalGradient(listOf(Pink400, Pink300))

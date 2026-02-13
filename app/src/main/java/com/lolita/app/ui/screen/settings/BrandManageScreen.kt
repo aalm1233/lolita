@@ -5,8 +5,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,9 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Brand
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink100
+import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,18 +49,22 @@ fun BrandManageScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("品牌管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.showAddDialog() }) {
-                Icon(Icons.Default.Add, contentDescription = "添加品牌")
+            FloatingActionButton(
+                onClick = { viewModel.showAddDialog() },
+                containerColor = Pink400,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "添加品牌", tint = Color.White)
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -73,13 +84,13 @@ fun BrandManageScreen(
             }
 
             item {
-                Divider()
+                HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
 
             items(uiState.brands) { brand ->
                 BrandCard(
                     brand = brand,
-                    onDelete = { viewModel.deleteBrand(brand) }
+                    onDelete = { viewModel.showDeleteConfirm(brand) }
                 )
             }
         }
@@ -110,7 +121,7 @@ private fun BrandCard(
     brand: Brand,
     onDelete: () -> Unit
 ) {
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -175,6 +186,8 @@ private fun AddBrandDialog(
                     }
                 }
             ) {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
                 Text("添加")
             }
         },
@@ -203,6 +216,8 @@ private fun DeleteConfirmDialog(
                     contentColor = MaterialTheme.colorScheme.error
                 )
             ) {
+                Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
                 Text("删除")
             }
         },

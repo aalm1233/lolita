@@ -21,7 +21,7 @@ interface CoordinateDao {
     @Query("SELECT * FROM coordinates WHERE id = :id")
     suspend fun getCoordinateById(id: Long): Coordinate?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertCoordinate(coordinate: Coordinate): Long
 
     @Update
@@ -39,7 +39,15 @@ interface CoordinateDao {
 
     @Query("SELECT COUNT(*) FROM coordinates")
     fun getCoordinateCount(): Flow<Int>
+
+    @Query("SELECT coordinate_id, COUNT(*) as itemCount FROM items WHERE coordinate_id IS NOT NULL GROUP BY coordinate_id")
+    fun getItemCountsByCoordinate(): Flow<List<CoordinateItemCount>>
 }
+
+data class CoordinateItemCount(
+    val coordinate_id: Long,
+    val itemCount: Int
+)
 
 data class CoordinateWithItems(
     @Embedded val coordinate: Coordinate,

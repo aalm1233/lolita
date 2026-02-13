@@ -6,10 +6,13 @@ import com.lolita.app.data.local.dao.OutfitLogWithItems
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.OutfitItemCrossRef
 import com.lolita.app.data.local.entity.OutfitLog
+import androidx.room.RoomDatabase
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 
 class OutfitLogRepository(
-    private val outfitLogDao: OutfitLogDao
+    private val outfitLogDao: OutfitLogDao,
+    private val database: RoomDatabase
 ) {
     fun getAllOutfitLogs(): Flow<List<OutfitLog>> = outfitLogDao.getAllOutfitLogs()
 
@@ -44,4 +47,31 @@ class OutfitLogRepository(
 
     fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>> =
         outfitLogDao.getItemCountsByOutfitLog()
+
+    suspend fun saveOutfitLogWithItems(
+        outfitLog: OutfitLog,
+        isNew: Boolean,
+        addedItemIds: Set<Long>,
+        removedItemIds: Set<Long>
+    ): Long {
+        return database.withTransaction {
+            val logId = if (isNew) {
+                outfitLogDao.insertOutfitLog(outfitLog)
+            } else {
+                outfitLogDao.updateOutfitLog(outfitLog.copy(updatedAt = System.currentTimeMillis()))
+                outfitLog.id
+            }
+            removedItemIds.forEach { itemId ->
+                outfitLogDao.deleteOutfitItemCrossRef(
+                    OutfitItemCrossRef(outfitLogId = logId, itemId = itemId)
+                )
+            }
+            addedItemIds.forEach { itemId ->
+                outfitLogDao.insertOutfitItemCrossRef(
+                    OutfitItemCrossRef(outfitLogId = logId, itemId = itemId)
+                )
+            }
+            logId
+        }
+    }
 }

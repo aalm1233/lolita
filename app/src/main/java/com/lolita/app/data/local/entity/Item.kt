@@ -70,6 +70,15 @@ data class Item(
     @ColumnInfo(name = "coordinate_id")
     val coordinateId: Long? = null,
 
+    @ColumnInfo(name = "color")
+    val color: String? = null,
+
+    @ColumnInfo(name = "season")
+    val season: String? = null,
+
+    @ColumnInfo(name = "style")
+    val style: String? = null,
+
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()
 )

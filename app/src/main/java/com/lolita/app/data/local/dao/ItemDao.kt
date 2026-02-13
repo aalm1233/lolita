@@ -49,10 +49,10 @@ interface ItemDao {
             "END ASC, updated_at DESC")
     fun getWishlistByPriority(): Flow<List<Item>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertItem(item: Item): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertItems(items: List<Item>)
 
     @Update
@@ -67,6 +67,12 @@ interface ItemDao {
 
     @Query("SELECT * FROM items ORDER BY updated_at DESC")
     suspend fun getAllItemsList(): List<Item>
+
+    @Query("SELECT COUNT(*) FROM items WHERE brand_id = :brandId")
+    suspend fun countItemsByBrand(brandId: Long): Int
+
+    @Query("SELECT COUNT(*) FROM items WHERE category_id = :categoryId")
+    suspend fun countItemsByCategory(categoryId: Long): Int
 }
 
 data class ItemWithFullDetails(

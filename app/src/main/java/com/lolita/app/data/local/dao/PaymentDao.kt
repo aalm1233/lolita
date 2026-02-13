@@ -26,7 +26,7 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE is_paid = 0 AND reminder_set = 1 ORDER BY due_date ASC")
     fun getPendingReminderPayments(): Flow<List<Payment>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertPayment(payment: Payment): Long
 
     @Update

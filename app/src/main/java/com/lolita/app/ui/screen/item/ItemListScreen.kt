@@ -10,9 +10,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
@@ -21,13 +21,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink300
 import com.lolita.app.ui.theme.Pink400
 
@@ -56,29 +61,32 @@ fun ItemListScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("删除") }
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
             },
             dismissButton = {
-                TextButton(onClick = { itemToDelete = null }) { Text("取消") }
+                TextButton(onClick = { itemToDelete = null }) {
+                    Text("取消")
+                }
             }
         )
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("我的服饰") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Pink300,
-                    titleContentColor = Color.White
-                )
+                compact = true
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToEdit(null) },
                 containerColor = Pink400,
-                shape = CircleShape
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加服饰", tint = Color.White)
             }
@@ -120,6 +128,8 @@ fun ItemListScreen(
                     ) { item ->
                         ItemCard(
                             item = item,
+                            brandName = uiState.brandNames[item.brandId],
+                            categoryName = uiState.categoryNames[item.categoryId],
                             onClick = { onNavigateToDetail(item.id) },
                             onEdit = { onNavigateToEdit(item.id) },
                             onDelete = { itemToDelete = item },
@@ -146,24 +156,27 @@ private fun FilterChipsRow(
             selected = selectedFilter == null,
             onClick = { onFilterSelected(null) },
             label = { Text("全部") },
+            leadingIcon = {
+                Icon(Icons.Default.Home, null, modifier = Modifier.size(16.dp))
+            },
             modifier = Modifier.weight(1f)
         )
         FilterChip(
             selected = selectedFilter == ItemStatus.OWNED,
             onClick = { onFilterSelected(ItemStatus.OWNED) },
             label = { Text("已拥有") },
-            leadingIcon = if (selectedFilter == ItemStatus.OWNED) {
-                { Icon(Icons.Default.Face, null, modifier = Modifier.size(16.dp)) }
-            } else null,
+            leadingIcon = {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+            },
             modifier = Modifier.weight(1f)
         )
         FilterChip(
             selected = selectedFilter == ItemStatus.WISHED,
             onClick = { onFilterSelected(ItemStatus.WISHED) },
             label = { Text("愿望单") },
-            leadingIcon = if (selectedFilter == ItemStatus.WISHED) {
-                { Icon(Icons.Default.Favorite, null, modifier = Modifier.size(16.dp)) }
-            } else null,
+            leadingIcon = {
+                Icon(Icons.Default.Favorite, null, modifier = Modifier.size(16.dp))
+            },
             modifier = Modifier.weight(1f)
         )
         IconButton(
@@ -181,6 +194,8 @@ private fun FilterChipsRow(
 @Composable
 private fun ItemCard(
     item: Item,
+    brandName: String?,
+    categoryName: String?,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -188,80 +203,183 @@ private fun ItemCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    Card(
+    LolitaCard(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+            // Thumbnail - 80dp with gradient placeholder
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
                 )
-                Box {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.Edit, contentDescription = "编辑", tint = Pink400)
-                    }
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
+            } else {
+                val categoryInitial = categoryName?.firstOrNull()?.toString() ?: "?"
+                Surface(
+                    modifier = Modifier.size(80.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.Transparent
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.linearGradient(listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f)))
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("编辑") },
-                            onClick = { showMenu = false; onEdit() },
-                            leadingIcon = { Icon(Icons.Default.Edit, null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("删除") },
-                            onClick = { showMenu = false; onDelete() },
-                            leadingIcon = {
-                                Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
-                            },
-                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                        Text(
+                            text = categoryInitial,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Pink400
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (item.description.isNotEmpty()) {
-                Text(
-                    text = item.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            Surface(
-                color = when (item.status) {
-                    ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)
-                    ItemStatus.WISHED -> Pink400.copy(alpha = 0.3f)
-                },
-                shape = RoundedCornerShape(8.dp)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                    text = when (item.status) {
-                        ItemStatus.OWNED -> "已拥有"
-                        ItemStatus.WISHED -> "愿望单"
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Box {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(Icons.Default.Edit, contentDescription = "编辑", tint = Pink400)
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("编辑") },
+                                onClick = { showMenu = false; onEdit() },
+                                leadingIcon = { Icon(Icons.Default.Edit, null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("删除") },
+                                onClick = { showMenu = false; onDelete() },
+                                leadingIcon = {
+                                    Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
+                                },
+                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                            )
+                        }
+                    }
+                }
+
+                if (item.description.isNotEmpty()) {
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2
+                    )
+                }
+
+                // Brand and category labels with color dot
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    brandName?.let {
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                    categoryName?.let {
+                        Surface(
+                            color = MaterialTheme.colorScheme.tertiaryContainer,
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                    // Color dot
+                    item.color?.let { color ->
+                        if (color.isNotEmpty()) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                shape = RoundedCornerShape(4.dp)
+                            ) {
+                                Text(
+                                    text = color,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Status badge with icon
+                Surface(
+                    color = when (item.status) {
+                        ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)
+                        ItemStatus.WISHED -> Pink400.copy(alpha = 0.3f)
                     },
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Medium
-                )
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = when (item.status) {
+                                ItemStatus.OWNED -> Icons.Default.Check
+                                ItemStatus.WISHED -> Icons.Default.Favorite
+                            },
+                            contentDescription = null,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Text(
+                            text = when (item.status) {
+                                ItemStatus.OWNED -> "已拥有"
+                                ItemStatus.WISHED -> "愿望单"
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         }
     }

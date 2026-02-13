@@ -1,8 +1,17 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.kapt")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -17,12 +26,27 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../lolita-release.jks")
+            storePassword = localProperties.getProperty("STORE_PASSWORD", "")
+            keyAlias = localProperties.getProperty("KEY_ALIAS", "")
+            keyPassword = localProperties.getProperty("KEY_PASSWORD", "")
+        }
+    }
+
     buildFeatures {
         compose = true
     }
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     compileOptions {
@@ -33,6 +57,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

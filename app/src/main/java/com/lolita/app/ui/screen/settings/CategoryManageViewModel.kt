@@ -81,7 +81,7 @@ class CategoryManageViewModel(
             } catch (e: Exception) {
                 hideDeleteConfirm()
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = if (category.isPreset) "预置类型不可删除" else "删除失败：该类型下仍有服饰"
+                    errorMessage = e.message ?: "删除失败"
                 )
             }
         }

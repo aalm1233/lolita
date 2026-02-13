@@ -10,10 +10,14 @@ import com.lolita.app.data.repository.ItemRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class CoordinateListUiState(
     val coordinates: List<Coordinate> = emptyList(),
+    val itemCounts: Map<Long, Int> = emptyMap(),
+    val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
     val isLoading: Boolean = true
 )
 
@@ -26,11 +30,15 @@ data class CoordinateDetailUiState(
 data class CoordinateEditUiState(
     val name: String = "",
     val description: String = "",
+    val allItems: List<Item> = emptyList(),
+    val selectedItemIds: Set<Long> = emptySet(),
+    val coordinateNames: Map<Long, String> = emptyMap(),
     val isSaving: Boolean = false
 )
 
 class CoordinateListViewModel(
-    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository()
+    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateListUiState())
@@ -42,9 +50,22 @@ class CoordinateListViewModel(
 
     private fun loadCoordinates() {
         viewModelScope.launch {
-            coordinateRepository.getAllCoordinates().collect { coordinates ->
+            combine(
+                coordinateRepository.getAllCoordinates(),
+                coordinateRepository.getItemCountsByCoordinate(),
+                itemRepository.getAllItems()
+            ) { coordinates, itemCounts, allItems ->
+                val countMap = itemCounts.associate { it.coordinate_id to it.itemCount }
+                val imageMap = allItems
+                    .filter { it.coordinateId != null }
+                    .groupBy { it.coordinateId!! }
+                    .mapValues { (_, items) -> items.take(4).map { it.imageUrl } }
+                Triple(coordinates, countMap, imageMap)
+            }.collect { (coordinates, countMap, imageMap) ->
                 _uiState.value = _uiState.value.copy(
                     coordinates = coordinates,
+                    itemCounts = countMap,
+                    itemImagesByCoordinate = imageMap,
                     isLoading = false
                 )
             }
@@ -86,13 +107,36 @@ class CoordinateDetailViewModel(
 }
 
 class CoordinateEditViewModel(
-    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository()
+    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateEditUiState())
     val uiState: StateFlow<CoordinateEditUiState> = _uiState.asStateFlow()
 
     private var originalCreatedAt: Long = 0L
+    private var originalSelectedItemIds: Set<Long> = emptySet()
+
+    init {
+        loadAllItems()
+    }
+
+    private fun loadAllItems() {
+        viewModelScope.launch {
+            combine(
+                itemRepository.getAllItems(),
+                coordinateRepository.getAllCoordinates()
+            ) { items, coordinates ->
+                val nameMap = coordinates.associate { it.id to it.name }
+                Pair(items, nameMap)
+            }.collect { (items, nameMap) ->
+                _uiState.value = _uiState.value.copy(
+                    allItems = items,
+                    coordinateNames = nameMap
+                )
+            }
+        }
+    }
 
     fun loadCoordinate(coordinateId: Long?) {
         if (coordinateId == null) return
@@ -101,11 +145,17 @@ class CoordinateEditViewModel(
             val coordinate = coordinateRepository.getCoordinateById(coordinateId)
             coordinate?.let {
                 originalCreatedAt = it.createdAt
-                _uiState.value = CoordinateEditUiState(
+                _uiState.value = _uiState.value.copy(
                     name = it.name,
                     description = it.description
                 )
             }
+
+            // Load items already in this coordinate
+            val result = coordinateRepository.getCoordinateWithItems(coordinateId).first()
+            val itemIds = result?.items?.map { it.id }?.toSet() ?: emptySet()
+            originalSelectedItemIds = itemIds
+            _uiState.value = _uiState.value.copy(selectedItemIds = itemIds)
         }
     }
 
@@ -117,14 +167,22 @@ class CoordinateEditViewModel(
         _uiState.value = _uiState.value.copy(description = description)
     }
 
+    fun toggleItemSelection(itemId: Long) {
+        val current = _uiState.value.selectedItemIds
+        _uiState.value = _uiState.value.copy(
+            selectedItemIds = if (itemId in current) current - itemId else current + itemId
+        )
+    }
+
     suspend fun save(): Result<Long> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
-            val id = coordinateRepository.insertCoordinate(
-                Coordinate(
-                    name = _uiState.value.name,
-                    description = _uiState.value.description
-                )
+            val coordinate = Coordinate(
+                name = _uiState.value.name,
+                description = _uiState.value.description
+            )
+            val id = coordinateRepository.insertCoordinateWithItems(
+                coordinate, _uiState.value.selectedItemIds
             )
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(id)
@@ -137,15 +195,16 @@ class CoordinateEditViewModel(
     suspend fun update(coordinateId: Long): Result<Unit> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
-            coordinateRepository.updateCoordinate(
-                Coordinate(
-                    id = coordinateId,
-                    name = _uiState.value.name,
-                    description = _uiState.value.description,
-                    createdAt = originalCreatedAt,
-                    updatedAt = System.currentTimeMillis()
-                )
+            val coordinate = Coordinate(
+                id = coordinateId,
+                name = _uiState.value.name,
+                description = _uiState.value.description,
+                createdAt = originalCreatedAt,
+                updatedAt = System.currentTimeMillis()
             )
+            val removedIds = originalSelectedItemIds - _uiState.value.selectedItemIds
+            val addedIds = _uiState.value.selectedItemIds - originalSelectedItemIds
+            coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)
         } catch (e: Exception) {

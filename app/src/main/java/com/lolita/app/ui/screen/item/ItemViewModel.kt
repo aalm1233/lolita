@@ -5,14 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.Price
+import com.lolita.app.data.local.entity.Payment
+import com.lolita.app.data.local.dao.PriceWithPayments as DaoPriceWithPayments
 import com.lolita.app.data.repository.BrandRepository
 import com.lolita.app.data.repository.CategoryRepository
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.repository.PriceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -23,7 +30,9 @@ data class ItemListUiState(
     val filteredItems: List<Item> = emptyList(),
     val isLoading: Boolean = true,
     val filterStatus: ItemStatus? = null,
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val brandNames: Map<Long, String> = emptyMap(),
+    val categoryNames: Map<Long, String> = emptyMap()
 )
 
 /**
@@ -39,18 +48,24 @@ data class ItemEditUiState(
     val status: ItemStatus = ItemStatus.OWNED,
     val priority: ItemPriority = ItemPriority.MEDIUM,
     val imageUrl: String? = null,
+    val color: String? = null,
+    val season: String? = null,
+    val style: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
-    val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList()
+    val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
+    val pricesWithPayments: List<DaoPriceWithPayments> = emptyList()
 )
 
 /**
  * ViewModel for Item List Screen
  */
 class ItemListViewModel(
-    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
+    private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
@@ -62,10 +77,20 @@ class ItemListViewModel(
 
     private fun loadItems() {
         viewModelScope.launch {
-            itemRepository.getAllItems().collect { items ->
+            combine(
+                itemRepository.getAllItems(),
+                brandRepository.getAllBrands(),
+                categoryRepository.getAllCategories()
+            ) { items, brands, categories ->
+                val brandMap = brands.associate { it.id to it.name }
+                val categoryMap = categories.associate { it.id to it.name }
+                Triple(items, brandMap, categoryMap)
+            }.collect { (items, brandMap, categoryMap) ->
                 _uiState.value = _uiState.value.copy(
                     items = items,
                     filteredItems = applyFilters(items, _uiState.value.filterStatus, _uiState.value.searchQuery),
+                    brandNames = brandMap,
+                    categoryNames = categoryMap,
                     isLoading = false
                 )
             }
@@ -118,7 +143,8 @@ class ItemEditViewModel(
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
     private val brandRepository: com.lolita.app.data.repository.BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
     private val categoryRepository: com.lolita.app.data.repository.CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
-    private val coordinateRepository: com.lolita.app.data.repository.CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository()
+    private val coordinateRepository: com.lolita.app.data.repository.CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemEditUiState())
@@ -126,45 +152,42 @@ class ItemEditViewModel(
 
     fun loadItem(itemId: Long) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.update { it.copy(isLoading = true) }
 
-            // Load all brands, categories, and coordinates
-            launch {
-                brandRepository.getAllBrands().collect { brands ->
-                    _uiState.value = _uiState.value.copy(brands = brands)
-                }
-            }
+            // Load all reference data with .first() to avoid race conditions
+            val brands = brandRepository.getAllBrands().first()
+            val categories = categoryRepository.getAllCategories().first()
+            val coordinates = coordinateRepository.getAllCoordinates().first()
 
-            launch {
-                categoryRepository.getAllCategories().collect { categories ->
-                    _uiState.value = _uiState.value.copy(categories = categories)
-                }
-            }
-
-            launch {
-                coordinateRepository.getAllCoordinates().collect { coordinates ->
-                    _uiState.value = _uiState.value.copy(coordinates = coordinates)
-                }
-            }
+            _uiState.update { it.copy(brands = brands, categories = categories, coordinates = coordinates) }
 
             if (itemId > 0) {
                 val item = itemRepository.getItemById(itemId)
-                item?.let {
-                    _uiState.value = _uiState.value.copy(
-                        item = it,
-                        name = it.name,
-                        description = it.description,
-                        brandId = it.brandId,
-                        categoryId = it.categoryId,
-                        coordinateId = it.coordinateId,
-                        status = it.status,
-                        priority = it.priority,
-                        imageUrl = it.imageUrl,
-                        isLoading = false
-                    )
+                if (item != null) {
+                    val prices = priceRepository.getPricesWithPaymentsByItem(itemId).first()
+                    _uiState.update {
+                        it.copy(
+                            item = item,
+                            name = item.name,
+                            description = item.description,
+                            brandId = item.brandId,
+                            categoryId = item.categoryId,
+                            coordinateId = item.coordinateId,
+                            status = item.status,
+                            priority = item.priority,
+                            imageUrl = item.imageUrl,
+                            color = item.color,
+                            season = item.season,
+                            style = item.style,
+                            pricesWithPayments = prices,
+                            isLoading = false
+                        )
+                    }
+                } else {
+                    _uiState.update { it.copy(isLoading = false) }
                 }
             } else {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
@@ -201,6 +224,18 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(imageUrl = imageUrl)
     }
 
+    fun updateColor(color: String?) {
+        _uiState.value = _uiState.value.copy(color = color)
+    }
+
+    fun updateSeason(season: String?) {
+        _uiState.value = _uiState.value.copy(season = season)
+    }
+
+    fun updateStyle(style: String?) {
+        _uiState.value = _uiState.value.copy(style = style)
+    }
+
     fun saveItem(onSuccess: (Long) -> Unit, onError: (String) -> Unit) {
         val state = _uiState.value
 
@@ -235,6 +270,9 @@ class ItemEditViewModel(
                         status = state.status,
                         priority = state.priority,
                         imageUrl = state.imageUrl,
+                        color = state.color,
+                        season = state.season,
+                        style = state.style,
                         updatedAt = now
                     )
                 } else {
@@ -249,6 +287,9 @@ class ItemEditViewModel(
                         imageUrl = state.imageUrl,
                         status = state.status,
                         priority = state.priority,
+                        color = state.color,
+                        season = state.season,
+                        style = state.style,
                         createdAt = now,
                         updatedAt = now
                     )

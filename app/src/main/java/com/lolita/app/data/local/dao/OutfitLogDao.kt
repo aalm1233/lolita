@@ -26,7 +26,7 @@ interface OutfitLogDao {
     @Query("SELECT * FROM outfit_logs WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getOutfitLogsByDateRange(startDate: Long, endDate: Long): Flow<List<OutfitLog>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertOutfitLog(outfitLog: OutfitLog): Long
 
     @Update
@@ -35,7 +35,7 @@ interface OutfitLogDao {
     @Delete
     suspend fun deleteOutfitLog(outfitLog: OutfitLog)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertOutfitItemCrossRef(crossRef: OutfitItemCrossRef)
 
     @Delete

@@ -29,7 +29,8 @@ data class OutfitLogListItem(
     val dateString: String,
     val previewNote: String,
     val imageCount: Int,
-    val itemCount: Int
+    val itemCount: Int,
+    val firstImageUrl: String? = null
 )
 
 data class OutfitLogDetailUiState(
@@ -76,7 +77,8 @@ class OutfitLogListViewModel(
                             dateString = dateFormat.format(Date(log.date)),
                             previewNote = log.note.take(50) + if (log.note.length > 50) "..." else "",
                             imageCount = log.imageUrls.size,
-                            itemCount = countMap[log.id] ?: 0
+                            itemCount = countMap[log.id] ?: 0,
+                            firstImageUrl = log.imageUrls.firstOrNull()
                         )
                     }
                 }
@@ -117,7 +119,7 @@ class OutfitLogDetailViewModel(
     private fun loadOutfitLogDetail() {
         viewModelScope.launch {
             outfitLogRepository.getOutfitLogWithItems(logId).collect { result ->
-                _uiState.value = OutfitLogDetailUiState(
+                _uiState.value = _uiState.value.copy(
                     log = result?.outfitLog,
                     items = result?.items ?: emptyList(),
                     isLoading = false
@@ -232,44 +234,20 @@ class OutfitLogEditViewModel(
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
             val date = _uiState.value.date ?: System.currentTimeMillis()
-
             val outfitLog = OutfitLog(
                 id = editingLogId ?: 0,
                 date = date,
                 note = _uiState.value.note,
                 imageUrls = _uiState.value.imageUrls
             )
-
-            val logId = if (editingLogId == null) {
-                // Insert new outfit log
-                outfitLogRepository.insertOutfitLog(outfitLog)
-            } else {
-                // Update existing outfit log
-                outfitLogRepository.updateOutfitLog(outfitLog)
-                editingLogId!!
-            }
-
-            // Link selected items to the outfit log
+            val isNew = editingLogId == null
             val currentItems = _uiState.value.selectedItemIds
+            val removedItems = if (isNew) emptySet() else originalItemIds - currentItems
+            val addedItems = if (isNew) currentItems else currentItems - originalItemIds
 
-            // Unlink items that were removed during edit
-            if (editingLogId != null) {
-                val removedItems = originalItemIds - currentItems
-                removedItems.forEach { itemId ->
-                    outfitLogRepository.unlinkItemFromOutfitLog(logId, itemId)
-                }
-            }
-
-            // Link newly added items
-            val newItems = if (editingLogId != null) {
-                currentItems - originalItemIds
-            } else {
-                currentItems
-            }
-            newItems.forEach { itemId ->
-                outfitLogRepository.linkItemToOutfitLog(logId, itemId)
-            }
-
+            val logId = outfitLogRepository.saveOutfitLogWithItems(
+                outfitLog, isNew, addedItems, removedItems
+            )
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(logId)
         } catch (e: Exception) {

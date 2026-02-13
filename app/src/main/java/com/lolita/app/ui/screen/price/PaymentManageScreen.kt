@@ -5,19 +5,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Payment
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink100
+import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,21 +42,26 @@ fun PaymentManageScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
+    var paymentToDelete by remember { mutableStateOf<Payment?>(null) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("付款管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToPaymentEdit(null) }) {
-                Icon(Icons.Default.Add, contentDescription = "添加付款记录")
+            FloatingActionButton(
+                onClick = { onNavigateToPaymentEdit(null) },
+                containerColor = Pink400,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "添加付款记录", tint = androidx.compose.ui.graphics.Color.White)
             }
         }
     ) { padding ->
@@ -103,16 +115,43 @@ fun PaymentManageScreen(
                                 viewModel.markAsPaid(payment)
                             }
                         },
-                        onDelete = {
-                            coroutineScope.launch {
-                                viewModel.deletePayment(payment)
-                            }
-                        },
+                        onDelete = { paymentToDelete = payment },
                         onClick = { onNavigateToPaymentEdit(payment.id) }
                     )
                 }
             }
         }
+    }
+
+    // Delete confirmation dialog
+    if (paymentToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { paymentToDelete = null },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除这条付款记录吗？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        paymentToDelete?.let {
+                            coroutineScope.launch { viewModel.deletePayment(it) }
+                        }
+                        paymentToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { paymentToDelete = null }) {
+                    Text("取消")
+                }
+            }
+        )
     }
 }
 
@@ -134,7 +173,7 @@ private fun PaymentStatsCard(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            Divider()
+            HorizontalDivider(color = Pink100)
 
             StatRow("总价", "¥${String.format("%.2f", totalPrice)}")
             StatRow("已付款", "¥${String.format("%.2f", paidAmount)}", MaterialTheme.colorScheme.primary)

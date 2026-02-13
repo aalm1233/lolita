@@ -1,6 +1,7 @@
 package com.lolita.app.data.repository
 
 import com.lolita.app.data.local.dao.CoordinateDao
+import com.lolita.app.data.local.dao.CoordinateItemCount
 import com.lolita.app.data.local.dao.CoordinateWithItems
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.entity.Coordinate
@@ -19,6 +20,9 @@ class CoordinateRepository(
 
     fun getCoordinateCount(): Flow<Int> = coordinateDao.getCoordinateCount()
 
+    fun getItemCountsByCoordinate(): Flow<List<CoordinateItemCount>> =
+        coordinateDao.getItemCountsByCoordinate()
+
     suspend fun getCoordinateById(id: Long): Coordinate? =
         coordinateDao.getCoordinateById(id)
 
@@ -27,6 +31,35 @@ class CoordinateRepository(
 
     suspend fun insertCoordinate(coordinate: Coordinate): Long {
         return coordinateDao.insertCoordinate(coordinate)
+    }
+
+    suspend fun insertCoordinateWithItems(coordinate: Coordinate, itemIds: Set<Long>): Long {
+        return database.withTransaction {
+            val id = coordinateDao.insertCoordinate(coordinate)
+            itemIds.forEach { itemId ->
+                val item = itemDao.getItemById(itemId)
+                item?.let { itemDao.updateItem(it.copy(coordinateId = id)) }
+            }
+            id
+        }
+    }
+
+    suspend fun updateCoordinateWithItems(
+        coordinate: Coordinate,
+        addedItemIds: Set<Long>,
+        removedItemIds: Set<Long>
+    ) {
+        database.withTransaction {
+            coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
+            removedItemIds.forEach { itemId ->
+                val item = itemDao.getItemById(itemId)
+                item?.let { itemDao.updateItem(it.copy(coordinateId = null)) }
+            }
+            addedItemIds.forEach { itemId ->
+                val item = itemDao.getItemById(itemId)
+                item?.let { itemDao.updateItem(it.copy(coordinateId = coordinate.id)) }
+            }
+        }
     }
 
     suspend fun updateCoordinate(coordinate: Coordinate) =

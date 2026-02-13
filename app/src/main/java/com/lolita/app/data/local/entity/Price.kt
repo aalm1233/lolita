@@ -42,5 +42,8 @@ data class Price(
     val deposit: Double? = null,
 
     @ColumnInfo(name = "balance")
-    val balance: Double? = null
+    val balance: Double? = null,
+
+    @ColumnInfo(name = "purchase_date")
+    val purchaseDate: Long? = null
 )

@@ -1,9 +1,13 @@
 package com.lolita.app.ui.screen.stats
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -27,6 +31,7 @@ import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.OutfitLogRepository
 import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -81,17 +86,18 @@ class StatsViewModel(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
+fun StatsScreen(onBack: () -> Unit, viewModel: StatsViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("数据统计") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Pink400,
-                    titleContentColor = Color.White
-                )
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                    }
+                }
             )
         }
     ) { padding ->
@@ -110,14 +116,14 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
             ) {
                 StatCard(
                     title = "已拥有",
-                    value = uiState.ownedCount.toString(),
+                    targetValue = uiState.ownedCount,
                     icon = Icons.Default.Home,
                     color = Color(0xFFFF69B4),
                     modifier = Modifier.weight(1f)
                 )
                 StatCard(
                     title = "愿望单",
-                    value = uiState.wishedCount.toString(),
+                    targetValue = uiState.wishedCount,
                     icon = Icons.Default.Favorite,
                     color = Color(0xFFFF6B6B),
                     modifier = Modifier.weight(1f)
@@ -129,23 +135,23 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
             ) {
                 StatCard(
                     title = "套装",
-                    value = uiState.coordinateCount.toString(),
+                    targetValue = uiState.coordinateCount,
                     icon = Icons.Default.Star,
                     color = Color(0xFFFFD93D),
                     modifier = Modifier.weight(1f)
                 )
                 StatCard(
                     title = "穿搭记录",
-                    value = uiState.outfitLogCount.toString(),
+                    targetValue = uiState.outfitLogCount,
                     icon = Icons.Default.DateRange,
                     color = Color(0xFF6BCF7F),
                     modifier = Modifier.weight(1f)
                 )
             }
             // Full-width spending card
-            StatCard(
+            SpendingCard(
                 title = "总消费",
-                value = "¥${String.format("%.2f", uiState.totalSpending)}",
+                targetValue = uiState.totalSpending,
                 icon = Icons.Default.ShoppingCart,
                 color = Color(0xFFE91E8C),
                 modifier = Modifier.fillMaxWidth()
@@ -157,11 +163,17 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
 @Composable
 private fun StatCard(
     title: String,
-    value: String,
+    targetValue: Int,
     icon: ImageVector,
     color: Color,
     modifier: Modifier = Modifier
 ) {
+    val animatedValue by animateIntAsState(
+        targetValue = targetValue,
+        animationSpec = tween(durationMillis = 800),
+        label = "statCount"
+    )
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -182,7 +194,50 @@ private fun StatCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = value,
+                text = animatedValue.toString(),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
+        }
+    }
+}
+
+@Composable
+private fun SpendingCard(
+    title: String,
+    targetValue: Double,
+    icon: ImageVector,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    val animatedValue by animateFloatAsState(
+        targetValue = targetValue.toFloat(),
+        animationSpec = tween(durationMillis = 800),
+        label = "spendingAmount"
+    )
+
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = color.copy(alpha = 0.1f)
+        )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "¥${String.format("%.2f", animatedValue)}",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = color

@@ -5,13 +5,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,6 +24,9 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink300
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -45,6 +53,7 @@ class SearchViewModel(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
+    onBack: () -> Unit,
     onNavigateToItem: (Long) -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
@@ -53,12 +62,13 @@ fun SearchScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("搜索") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Pink400,
-                    titleContentColor = androidx.compose.ui.graphics.Color.White
-                )
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                    }
+                }
             )
         }
     ) { padding ->
@@ -120,49 +130,83 @@ private fun SearchResultItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    LolitaCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.weight(1f)
+            // Thumbnail
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
                 )
+            } else {
                 Surface(
-                    color = when (item.status) {
-                        ItemStatus.OWNED -> MaterialTheme.colorScheme.primaryContainer
-                        ItemStatus.WISHED -> MaterialTheme.colorScheme.secondaryContainer
-                    },
-                    shape = RoundedCornerShape(4.dp)
+                    modifier = Modifier.size(56.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Pink300.copy(alpha = 0.3f)
                 ) {
-                    Text(
-                        text = when (item.status) {
-                            ItemStatus.OWNED -> "已拥有"
-                            ItemStatus.WISHED -> "愿望单"
-                        },
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                        style = MaterialTheme.typography.labelSmall
-                    )
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null,
+                            tint = Pink400,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
-            if (item.description.isNotEmpty()) {
-                Text(
-                    text = item.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Surface(
+                        color = when (item.status) {
+                            ItemStatus.OWNED -> MaterialTheme.colorScheme.primaryContainer
+                            ItemStatus.WISHED -> MaterialTheme.colorScheme.secondaryContainer
+                        },
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            text = when (item.status) {
+                                ItemStatus.OWNED -> "已拥有"
+                                ItemStatus.WISHED -> "愿望单"
+                            },
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+                if (item.description.isNotEmpty()) {
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

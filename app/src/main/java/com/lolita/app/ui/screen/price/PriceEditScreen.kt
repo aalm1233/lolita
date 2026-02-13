@@ -5,20 +5,29 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.PriceType
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,11 +60,11 @@ fun PriceEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text(if (priceId == null) "添加价格" else "编辑价格") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
@@ -205,6 +214,54 @@ fun PriceEditScreen(
                             )
                         }
                     }
+                }
+            }
+
+            // 购买日期选择
+            var showDatePicker by remember { mutableStateOf(false) }
+            val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
+
+            OutlinedTextField(
+                value = uiState.purchaseDate?.let { dateFormat.format(Date(it)) } ?: "",
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("购买日期 (可选)") },
+                placeholder = { Text("点击选择日期") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(Icons.Default.DateRange, contentDescription = "选择日期")
+                    }
+                },
+                enabled = !uiState.isSaving
+            )
+
+            if (showDatePicker) {
+                val datePickerState = rememberDatePickerState(
+                    initialSelectedDateMillis = uiState.purchaseDate ?: System.currentTimeMillis()
+                )
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let {
+                                viewModel.updatePurchaseDate(it)
+                            }
+                            showDatePicker = false
+                        }) {
+                            Text("确定")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            viewModel.updatePurchaseDate(null)
+                            showDatePicker = false
+                        }) {
+                            Text("清除")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
                 }
             }
         }

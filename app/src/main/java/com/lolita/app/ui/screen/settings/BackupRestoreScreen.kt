@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.theme.Pink100
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -123,11 +125,11 @@ fun BackupRestoreScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("数据备份与恢复") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
@@ -187,7 +189,7 @@ fun BackupRestoreScreen(
                 }
             }
 
-            Divider()
+            HorizontalDivider(color = Pink100, thickness = 1.dp)
 
             // Import section
             Text("数据恢复", style = MaterialTheme.typography.titleMedium)
@@ -226,7 +228,7 @@ fun BackupRestoreScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("备份时间: $dateStr")
                     Text("版本: ${p.backupVersion}")
-                    Divider(modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
                     Text("品牌: ${p.brandCount} 条")
                     Text("类型: ${p.categoryCount} 条")
                     Text("套装: ${p.coordinateCount} 条")
@@ -234,7 +236,7 @@ fun BackupRestoreScreen(
                     Text("价格: ${p.priceCount} 条")
                     Text("付款: ${p.paymentCount} 条")
                     Text("穿搭日记: ${p.outfitLogCount} 条")
-                    Divider(modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
                     Text("共 ${p.totalCount} 条数据")
                 }
             },

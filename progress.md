@@ -656,3 +656,142 @@ app/src/main/
 - app/src/main/java/com/lolita/app/di/AppModule.kt (传递 database 给 CoordinateRepository)
 
 **编译状态**: ✅ BUILD SUCCESSFUL
+
+---
+
+### 2026-02-12 - Phase 5 界面展示深度优化 (规划)
+**目标**: 全面提升UI视觉品质、图片展示、交互体验、信息密度
+
+**优化方向 (5个Batch)**:
+1. 视觉风格精致化 — 渐变TopAppBar、统一卡片样式、底部导航美化
+2. 图片展示增强 — 列表缩略图、封面图、Coil过渡动画、美化占位符
+3. 交互体验提升 — 滑动删除、下拉刷新、数字动画、页面切换动画
+4. 信息密度优化 — 卡片显示品牌/类型标签、缩略图、统计图表
+5. 细节打磨 — 骨架屏加载、错误状态组件、EmptyState插图、设置页美化
+
+**当前状态**: 规划完成，待实施
+
+---
+
+### 2026-02-13 - Phase 6 功能修复与增强 (规划)
+**任务**: Phase 6 功能修复与增强规划
+
+**需求分析完成**:
+1. 价格显示在详情页: ItemDetailScreen 当前只有提示文字，没有实际价格数据展示
+2. 价格录入日期: Price 实体缺少 purchase_date 字段，PriceEditScreen 无日期选择器
+3. 套装移至新Tab: 当前在设置页，需移到底部导航独立页签，支持勾选多件衣服创建
+4. 新增字段: Item 需要 color/season/style 三个可选字段
+
+**代码分析**:
+- Item 实体: 当前有 coordinateId, brandId, categoryId, name, description, imageUrl, status, priority
+- Price 实体: 有 createdAt 但无 purchaseDate
+- 数据库版本: version=1, 使用 fallbackToDestructiveMigration
+- 底部导航: 5个Tab (服饰/愿望单/穿搭/搜索/设置)
+- 套装管理: 在设置页通过 SettingsScreen.onNavigateToCoordinate 入口进入
+
+**决策**:
+- 套装替换搜索Tab，搜索移到设置页
+- 数据库需要 Migration (version 1→2)
+- 颜色/季节/风格用可选 String? 字段
+
+**当前状态**: 规划完成，等待审批
+
+---
+
+### 2026-02-13 - Phase 6 功能修复与增强 (实施完成)
+**目标**: 修复价格显示、添加购买日期、套装移至底部导航、新增颜色/季节/风格字段
+
+**完成事项**:
+
+**Task 1: 衣服详情页显示价格信息** ✅
+- ItemEditViewModel 新增 priceRepository 依赖，加载价格数据 Flow
+- ItemEditUiState 新增 pricesWithPayments 字段
+- ItemDetailScreen 替换占位文字为实际价格摘要（总价、类型、定金/尾款、已付/未付、购买日期）
+
+**Task 2: 价格录入日期功能** ✅
+- Price 实体新增 `purchase_date: Long?` 字段
+- LolitaDatabase 版本升级 1→2，添加 MIGRATION_1_2（4条 ALTER TABLE）
+- PriceEditUiState/ViewModel 新增 purchaseDate 字段和方法
+- PriceEditScreen 添加 Material3 DatePickerDialog
+- PriceManageScreen PriceCard 显示购买日期
+
+**Task 3: 套装移至底部导航新页签** ✅
+- 底部导航: 搜索Tab → 套装Tab (Icons.Filled.Star, label="套装")
+- 设置页: 套装管理入口 → 搜索入口
+- CoordinateEditViewModel: 新增 allItems/selectedItemIds 状态，toggleItemSelection，save/update 批量更新 coordinateId
+- CoordinateEditScreen: 替换旧"提示"卡片为服饰勾选列表（Checkbox + LazyColumn）
+
+**Task 4: 衣服新增颜色、季节、风格字段** ✅
+- Item 实体新增 color/season/style (String?) 三个字段
+- Migration 包含 3 条 ALTER TABLE
+- ItemEditScreen: 颜色输入框 + SeasonSelector (FilterChip: 春/夏/秋/冬/四季) + StyleSelector (FilterChip: 甜系/古典/哥特/田园/中华/其他)
+- ItemDetailScreen: 显示颜色/季节/风格信息
+
+**更新文件汇总**:
+- data/local/entity/Item.kt (新增3字段)
+- data/local/entity/Price.kt (新增purchaseDate)
+- data/local/LolitaDatabase.kt (Migration 1→2)
+- ui/screen/item/ItemViewModel.kt (价格加载 + 新字段)
+- ui/screen/item/ItemEditScreen.kt (新字段选择器)
+- ui/screen/item/ItemDetailScreen.kt (价格显示 + 新字段显示)
+- ui/screen/price/PriceViewModel.kt (purchaseDate)
+- ui/screen/price/PriceEditScreen.kt (日期选择器)
+- ui/screen/price/PriceManageScreen.kt (购买日期显示)
+- ui/navigation/LolitaNavHost.kt (底部导航重构)
+- ui/screen/settings/SettingsScreen.kt (搜索入口替换套装入口)
+- ui/screen/coordinate/CoordinateViewModel.kt (服饰勾选逻辑)
+- ui/screen/coordinate/CoordinateEditScreen.kt (服饰勾选UI)
+
+---
+
+### 2026-02-13 - Phase 7 代码审查
+**目标**: 四人审核团队并行审查 + 交叉验证
+
+**审查分工**:
+- 审核员A: 数据层 (Entity/DAO/Database/Repository/DI)
+- 审核员B: Item模块UI (List/Detail/Edit/Wishlist/ViewModel)
+- 审核员C: 套装/穿搭/价格模块 (Coordinate/OutfitLog/Price/Payment)
+- 审核员D: 导航/设置/通用组件/主题
+
+**审查结果**: 17 严重 / 28 中等 / 20+ 建议
+**详细任务列表**: 见 task_plan.md Phase 7
+
+**下一步**: 按P0→P1→P2优先级修复
+
+---
+
+### 2026-02-13 - Phase 7 代码审查修复完成
+**目标**: 修复四人审核团队发现的所有问题 (13个Task)
+
+**完成事项**:
+- ✅ Task 7.1-7.8: 在上一会话中完成 (P0数据安全 + P1功能缺陷)
+- ✅ Task 7.9: CoordinateEditScreen保存失败添加Snackbar反馈；ItemDetailScreen删除对话框先关闭再执行
+- ✅ Task 7.10: SearchScreen和StatsScreen添加onBack参数和返回按钮
+- ✅ Task 7.11: 暗色模式适配 — 底部导航用MaterialTheme.colorScheme.surface；GradientTopAppBar根据暗色模式切换渐变色；DarkColors补充surfaceVariant
+- ✅ Task 7.12: Android 15兼容性 — 添加enableEdgeToEdge()，移除deprecated statusBarColor
+- ✅ Task 7.13: 替换弃用API — 15个文件Icons.Default.ArrowBack→Icons.AutoMirrored.Filled.ArrowBack；ItemEditScreen values()→entries
+
+**Phase 7 状态**: ✅ 全部完成 (13/13)
+
+---
+
+### 2026-02-13 - Phase 8 前端界面设计优化 (规划)
+**目标**: 优化安卓前端界面设计，按钮样式/图标、套装展示、服饰页展示、title占比调整
+
+**代码分析完成**:
+- GradientTopAppBar: 标准Material3 TopAppBar，64dp高度，列表页占比偏高
+- ItemListScreen: 72dp缩略图，FilterChip无图标，品牌/类型标签无图标
+- ItemDetailScreen: 无图片占位200dp过高，DetailRow无图标，价格管理按钮不直观
+- CoordinateListScreen: 卡片只有名称+描述+件数，无服饰预览
+- CoordinateDetailScreen: 服饰卡片无缩略图，信息密度低
+- 按钮样式: AlertDialog按钮无图标，FAB纯圆形，编辑页保存按钮不统一
+
+**规划任务 (6个)**:
+1. Task 8.1: 缩小TopAppBar高度 [P0]
+2. Task 8.2: 服饰列表页展示优化 [P0]
+3. Task 8.3: 服饰详情页展示优化 [P1]
+4. Task 8.4: 套装列表页展示优化 [P0]
+5. Task 8.5: 套装详情页展示优化 [P1]
+6. Task 8.6: 全局按钮样式统一与图标添加 [P1]
+
+**当前状态**: 规划完成，等待审批

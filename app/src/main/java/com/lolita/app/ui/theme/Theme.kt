@@ -1,12 +1,10 @@
 package com.lolita.app.ui.theme
 
-import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -56,6 +54,7 @@ private val DarkColors = darkColorScheme(
 
     surface = Gray800,
     onSurface = Gray100,
+    surfaceVariant = Color(0xFF3A3A3A),
 
     error = Color(0xFFCF6679),
     onError = Black
@@ -71,8 +70,7 @@ fun LolitaTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colors.primary.toArgb()
+            val window = (view.context as android.app.Activity).window
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

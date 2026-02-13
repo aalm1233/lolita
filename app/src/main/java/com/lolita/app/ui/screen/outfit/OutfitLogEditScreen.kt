@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -37,6 +37,7 @@ import coil.compose.AsyncImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.screen.common.GradientTopAppBar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -83,11 +84,11 @@ fun OutfitLogEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text(if (logId == null) "添加穿搭日记" else "编辑穿搭日记") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {

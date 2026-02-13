@@ -21,7 +21,7 @@ interface PriceDao {
     @Query("SELECT * FROM prices WHERE id = :id")
     suspend fun getPriceById(id: Long): Price?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertPrice(price: Price): Long
 
     @Update

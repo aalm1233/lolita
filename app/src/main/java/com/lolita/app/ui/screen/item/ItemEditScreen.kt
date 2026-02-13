@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -28,6 +28,7 @@ import coil.compose.AsyncImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,7 @@ fun ItemEditScreen(
     val coroutineScope = rememberCoroutineScope()
     var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
+    var showDeleteConfirm by remember { mutableStateOf(false) }
 
     // Load item data if editing
     LaunchedEffect(itemId) {
@@ -66,13 +68,47 @@ fun ItemEditScreen(
         )
     }
 
+    // Delete confirmation dialog
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除这件服饰吗？相关的价格和付款记录也会被删除。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirm = false
+                        coroutineScope.launch {
+                            viewModel.deleteItem(
+                                onSuccess = { onSaveSuccess() },
+                                onError = { showError = it }
+                            )
+                        }
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirm = false }) {
+                    Text("取消")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回")
                     }
                 },
                 actions = {
@@ -98,13 +134,7 @@ fun ItemEditScreen(
                             Icon(Icons.Default.Check, "保存")
                         }
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Pink400,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                }
             )
         }
     ) { padding ->
@@ -188,6 +218,28 @@ fun ItemEditScreen(
                     )
                 }
 
+                // Color field
+                OutlinedTextField(
+                    value = uiState.color ?: "",
+                    onValueChange = { viewModel.updateColor(it.ifBlank { null }) },
+                    label = { Text("颜色 (可选)") },
+                    placeholder = { Text("例如：粉色、白色、黑色") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                // Season selector
+                SeasonSelector(
+                    selectedSeason = uiState.season,
+                    onSeasonSelected = { viewModel.updateSeason(it) }
+                )
+
+                // Style selector
+                StyleSelector(
+                    selectedStyle = uiState.style,
+                    onStyleSelected = { viewModel.updateStyle(it) }
+                )
+
                 // Image upload placeholder
                 ImageUploaderSection(
                     imageUrl = uiState.imageUrl,
@@ -198,14 +250,7 @@ fun ItemEditScreen(
                 if (itemId != null && uiState.item != null) {
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                viewModel.deleteItem(
-                                    onSuccess = { onSaveSuccess() },
-                                    onError = { showError = it }
-                                )
-                            }
-                        },
+                        onClick = { showDeleteConfirm = true },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.error
@@ -246,7 +291,7 @@ private fun BrandSelector(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(),
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
             isError = isError,
             supportingText = if (isError) {
                 { Text("请选择品牌") }
@@ -295,7 +340,7 @@ private fun CategorySelector(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(),
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
             isError = isError,
             supportingText = if (isError) {
                 { Text("请选择类型") }
@@ -348,7 +393,7 @@ private fun CoordinateSelector(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
 
         ExposedDropdownMenu(
@@ -393,7 +438,7 @@ private fun StatusSelector(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ItemStatus.values().forEach { status ->
+            ItemStatus.entries.forEach { status ->
                 FilterChip(
                     selected = selectedStatus == status,
                     onClick = { onStatusSelected(status) },
@@ -430,7 +475,7 @@ private fun PrioritySelector(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ItemPriority.values().forEach { priority ->
+            ItemPriority.entries.forEach { priority ->
                 FilterChip(
                     selected = selectedPriority == priority,
                     onClick = { onPrioritySelected(priority) },
@@ -533,6 +578,86 @@ private fun ImageUploaderSection(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * Season Selector Component
+ */
+@Composable
+private fun SeasonSelector(
+    selectedSeason: String?,
+    onSeasonSelected: (String?) -> Unit
+) {
+    val seasons = listOf("春", "夏", "秋", "冬", "四季")
+    Column {
+        Text(
+            text = "季节 (可选)",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            seasons.forEach { season ->
+                FilterChip(
+                    selected = selectedSeason == season,
+                    onClick = {
+                        onSeasonSelected(if (selectedSeason == season) null else season)
+                    },
+                    label = { Text(season) }
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Style Selector Component
+ */
+@Composable
+private fun StyleSelector(
+    selectedStyle: String?,
+    onStyleSelected: (String?) -> Unit
+) {
+    val styles = listOf("甜系", "古典", "哥特", "田园", "中华", "其他")
+    Column {
+        Text(
+            text = "风格 (可选)",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            styles.take(3).forEach { style ->
+                FilterChip(
+                    selected = selectedStyle == style,
+                    onClick = {
+                        onStyleSelected(if (selectedStyle == style) null else style)
+                    },
+                    label = { Text(style) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            styles.drop(3).forEach { style ->
+                FilterChip(
+                    selected = selectedStyle == style,
+                    onClick = {
+                        onStyleSelected(if (selectedStyle == style) null else style)
+                    },
+                    label = { Text(style) },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }

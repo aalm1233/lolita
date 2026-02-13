@@ -5,8 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -19,8 +19,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.dao.PriceWithPayments
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,21 +41,26 @@ fun PriceManageScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var priceToDelete by remember { mutableStateOf<Price?>(null) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            GradientTopAppBar(
                 title = { Text("价格管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToPriceEdit(null) }) {
-                Icon(Icons.Default.Add, contentDescription = "添加价格")
+            FloatingActionButton(
+                onClick = { onNavigateToPriceEdit(null) },
+                containerColor = Pink400,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "添加价格", tint = androidx.compose.ui.graphics.Color.White)
             }
         }
     ) { padding ->
@@ -73,11 +85,40 @@ fun PriceManageScreen(
                         priceWithPayments = priceWithPayments,
                         onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
                         onEdit = { onNavigateToPriceEdit(priceWithPayments.price.id) },
-                        onDelete = { viewModel.deletePrice(priceWithPayments.price) }
+                        onDelete = { priceToDelete = priceWithPayments.price }
                     )
                 }
             }
         }
+    }
+
+    // Delete confirmation dialog
+    if (priceToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { priceToDelete = null },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除这条价格记录吗？相关的付款记录也会被删除。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        priceToDelete?.let { viewModel.deletePrice(it) }
+                        priceToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { priceToDelete = null }) {
+                    Text("取消")
+                }
+            }
+        )
     }
 }
 
@@ -92,6 +133,7 @@ private fun PriceCard(
     val payments = priceWithPayments.payments
     val paidAmount = payments.filter { it.isPaid }.sumOf { it.amount }
     val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
+    val dateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
 
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -114,7 +156,7 @@ private fun PriceCard(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconButton(onClick = onEdit) {
-                        Icon(Icons.Default.ArrowForward, contentDescription = "编辑")
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "编辑")
                     }
                     IconButton(
                         onClick = onDelete,
@@ -138,6 +180,10 @@ private fun PriceCard(
                     PriceRow("定金", "¥${String.format("%.2f", price.deposit ?: 0.0)}")
                     PriceRow("尾款", "¥${String.format("%.2f", price.balance ?: 0.0)}")
                 }
+            }
+
+            price.purchaseDate?.let { date ->
+                PriceRow("购买日期", dateFormat.format(java.util.Date(date)))
             }
 
             if (payments.isNotEmpty()) {

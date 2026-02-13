@@ -26,10 +26,10 @@ object AppModule {
     private val _itemRepository by lazy { ItemRepository(database.itemDao()) }
     fun itemRepository() = _itemRepository
 
-    private val _brandRepository by lazy { BrandRepository(database.brandDao()) }
+    private val _brandRepository by lazy { BrandRepository(database.brandDao(), database.itemDao()) }
     fun brandRepository() = _brandRepository
 
-    private val _categoryRepository by lazy { CategoryRepository(database.categoryDao()) }
+    private val _categoryRepository by lazy { CategoryRepository(database.categoryDao(), database.itemDao()) }
     fun categoryRepository() = _categoryRepository
 
     private val _priceRepository by lazy {
@@ -40,7 +40,7 @@ object AppModule {
     private val _paymentRepository by lazy { PaymentRepository(database.paymentDao(), appContext) }
     fun paymentRepository() = _paymentRepository
 
-    private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao()) }
+    private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }
     fun outfitLogRepository() = _outfitLogRepository
 
     fun backupManager() = BackupManager(appContext, database)

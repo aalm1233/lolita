@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.EmptyState
@@ -58,7 +61,17 @@ fun ItemListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState(pageCount = { 4 })
+    val coroutineScope = rememberCoroutineScope()
+
+    // Sync pager -> filter
+    LaunchedEffect(pagerState.currentPage) {
+        when (pagerState.currentPage) {
+            0 -> viewModel.filterByStatus(null)
+            1 -> viewModel.filterByStatus(ItemStatus.OWNED)
+            2 -> viewModel.filterByStatus(ItemStatus.WISHED)
+        }
+    }
     if (itemToDelete != null) {
         AlertDialog(
             onDismissRequest = { itemToDelete = null },
@@ -91,7 +104,7 @@ fun ItemListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    if (selectedTabIndex == 3) onNavigateToCoordinateAdd()
+                    if (pagerState.currentPage == 3) onNavigateToCoordinateAdd()
                     else onNavigateToEdit(null)
                 },
                 containerColor = Pink400,
@@ -99,7 +112,7 @@ fun ItemListScreen(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = if (selectedTabIndex == 3) "添加套装" else "添加服饰",
+                    contentDescription = if (pagerState.currentPage == 3) "添加套装" else "添加服饰",
                     tint = Color.White
                 )
             }
@@ -153,83 +166,84 @@ fun ItemListScreen(
 
             // Tab row: 全部 / 已拥有 / 愿望单 / 套装
             ItemFilterTabRow(
-                selectedIndex = selectedTabIndex,
+                selectedIndex = pagerState.currentPage,
                 onTabSelected = { index ->
-                    selectedTabIndex = index
-                    // Update filter for item tabs
-                    when (index) {
-                        0 -> viewModel.filterByStatus(null)
-                        1 -> viewModel.filterByStatus(ItemStatus.OWNED)
-                        2 -> viewModel.filterByStatus(ItemStatus.WISHED)
-                    }
+                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
                 }
             )
 
-            if (selectedTabIndex < 3) {
-                // Item list content
-                Spacer(modifier = Modifier.height(8.dp))
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                if (page < 3) {
+                    // Item list content
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                if (uiState.isLoading) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Pink400)
-                    }
-                } else if (uiState.filteredItems.isEmpty()) {
-                    EmptyState(
-                        icon = Icons.Default.Home,
-                        title = "暂无服饰",
-                        subtitle = "点击右下角 + 添加新服饰",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else if (uiState.columnsPerRow == 1) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(
-                            items = uiState.filteredItems,
-                            key = { it.id }
-                        ) { item ->
-                            ItemCard(
-                                item = item,
-                                brandName = uiState.brandNames[item.brandId],
-                                categoryName = uiState.categoryNames[item.categoryId],
-                                onClick = { onNavigateToDetail(item.id) },
-                                onEdit = { onNavigateToEdit(item.id) },
-                                onDelete = { itemToDelete = item },
-                                modifier = Modifier.animateItem()
+                        if (uiState.isLoading) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = Pink400)
+                            }
+                        } else if (uiState.filteredItems.isEmpty()) {
+                            EmptyState(
+                                icon = Icons.Default.Home,
+                                title = "暂无服饰",
+                                subtitle = "点击右下角 + 添加新服饰",
+                                modifier = Modifier.fillMaxSize()
                             )
+                        } else if (uiState.columnsPerRow == 1) {
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
+                            ) {
+                                items(
+                                    items = uiState.filteredItems,
+                                    key = { it.id }
+                                ) { item ->
+                                    ItemCard(
+                                        item = item,
+                                        brandName = uiState.brandNames[item.brandId],
+                                        categoryName = uiState.categoryNames[item.categoryId],
+                                        onClick = { onNavigateToDetail(item.id) },
+                                        onEdit = { onNavigateToEdit(item.id) },
+                                        onDelete = { itemToDelete = item },
+                                        modifier = Modifier.animateItem()
+                                    )
+                                }
+                            }
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(uiState.columnsPerRow),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
+                            ) {
+                                items(
+                                    items = uiState.filteredItems,
+                                    key = { it.id }
+                                ) { item ->
+                                    ItemGridCard(
+                                        item = item,
+                                        brandName = uiState.brandNames[item.brandId],
+                                        categoryName = uiState.categoryNames[item.categoryId],
+                                        onClick = { onNavigateToDetail(item.id) },
+                                        onEdit = { onNavigateToEdit(item.id) },
+                                        onDelete = { itemToDelete = item }
+                                    )
+                                }
+                            }
                         }
                     }
                 } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(uiState.columnsPerRow),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(
-                            items = uiState.filteredItems,
-                            key = { it.id }
-                        ) { item ->
-                            ItemGridCard(
-                                item = item,
-                                brandName = uiState.brandNames[item.brandId],
-                                categoryName = uiState.categoryNames[item.categoryId],
-                                onClick = { onNavigateToDetail(item.id) },
-                                onEdit = { onNavigateToEdit(item.id) },
-                                onDelete = { itemToDelete = item }
-                            )
-                        }
-                    }
+                    // Coordinate list content (tab 3)
+                    CoordinateListContent(
+                        onNavigateToDetail = onNavigateToCoordinateDetail
+                    )
                 }
-            } else {
-                // Coordinate list content (tab 3)
-                CoordinateListContent(
-                    onNavigateToDetail = onNavigateToCoordinateDetail
-                )
             }
         }
     }

@@ -4,12 +4,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.lolita.app.ui.screen.coordinate.CoordinateListScreen
 import com.lolita.app.ui.screen.coordinate.CoordinateDetailScreen
 import com.lolita.app.ui.screen.coordinate.CoordinateEditScreen
 import com.lolita.app.ui.screen.price.PriceEditScreen
@@ -42,12 +42,13 @@ import com.lolita.app.ui.screen.item.WishlistScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogListScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogDetailScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogEditScreen
-import com.lolita.app.ui.screen.search.SearchScreen
 import com.lolita.app.ui.screen.settings.BackupRestoreScreen
 import com.lolita.app.ui.screen.settings.BrandManageScreen
 import com.lolita.app.ui.screen.settings.CategoryManageScreen
+import com.lolita.app.ui.screen.settings.StyleManageScreen
+import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
-import com.lolita.app.ui.screen.stats.StatsScreen
+import com.lolita.app.ui.screen.stats.StatsPageScreen
 
 interface BottomNavItem {
     val screen: Screen
@@ -68,14 +69,14 @@ data object BottomNavItems {
             override val label = "愿望单"
         },
         object : BottomNavItem {
-            override val screen = Screen.CoordinateList
-            override val icon = Icons.AutoMirrored.Filled.List
-            override val label = "套装"
-        },
-        object : BottomNavItem {
             override val screen = Screen.OutfitLogList
             override val icon = Icons.Filled.DateRange
             override val label = "穿搭"
+        },
+        object : BottomNavItem {
+            override val screen = Screen.Stats
+            override val icon = Icons.Filled.Info
+            override val label = "统计"
         },
         object : BottomNavItem {
             override val screen = Screen.Settings
@@ -94,6 +95,7 @@ fun LolitaNavHost() {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -148,8 +150,11 @@ fun LolitaNavHost() {
                     onNavigateToEdit = { itemId ->
                         navController.navigate(Screen.ItemEdit.createRoute(itemId))
                     },
-                    onNavigateToWishlist = {
-                        navController.navigate(Screen.Wishlist.route)
+                    onNavigateToCoordinateDetail = { coordinateId ->
+                        navController.navigate(Screen.CoordinateDetail.createRoute(coordinateId))
+                    },
+                    onNavigateToCoordinateAdd = {
+                        navController.navigate(Screen.CoordinateEdit.createRoute(null))
                     }
                 )
             }
@@ -259,18 +264,6 @@ fun LolitaNavHost() {
                 )
             }
 
-            // Coordinate List
-            composable(Screen.CoordinateList.route) {
-                CoordinateListScreen(
-                    onNavigateToDetail = { coordinateId ->
-                        navController.navigate(Screen.CoordinateDetail.createRoute(coordinateId))
-                    },
-                    onNavigateToAdd = {
-                        navController.navigate(Screen.CoordinateEdit.createRoute(null))
-                    }
-                )
-            }
-
             // Coordinate Detail
             composable(
                 route = Screen.CoordinateDetail.route,
@@ -338,29 +331,20 @@ fun LolitaNavHost() {
                     onSaveSuccess = { navController.popBackStack() }
                 )
             }
-            // Search
-            composable(Screen.Search.route) {
-                SearchScreen(
-                    onBack = { navController.popBackStack() },
-                    onNavigateToItem = { itemId ->
-                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
-                    }
-                )
-            }
 
             // Stats
             composable(Screen.Stats.route) {
-                StatsScreen(onBack = { navController.popBackStack() })
+                StatsPageScreen()
             }
 
             // Settings
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    onNavigateToSearch = { navController.navigate(Screen.Search.route) },
                     onNavigateToBrand = { navController.navigate(Screen.BrandManage.route) },
                     onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
-                    onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
-                    onNavigateToStats = { navController.navigate(Screen.Stats.route) }
+                    onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
+                    onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
+                    onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) }
                 )
             }
 
@@ -372,6 +356,16 @@ fun LolitaNavHost() {
             // Category Manage
             composable(Screen.CategoryManage.route) {
                 CategoryManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Style Manage
+            composable(Screen.StyleManage.route) {
+                StyleManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Season Manage
+            composable(Screen.SeasonManage.route) {
+                SeasonManageScreen(onBack = { navController.popBackStack() })
             }
 
             // Backup & Restore

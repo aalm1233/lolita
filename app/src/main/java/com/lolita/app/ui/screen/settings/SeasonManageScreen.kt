@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.local.entity.Brand
+import com.lolita.app.data.local.entity.Season
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink100
@@ -29,12 +29,13 @@ import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BrandManageScreen(
+fun SeasonManageScreen(
     onBack: () -> Unit,
-    viewModel: BrandManageViewModel = viewModel()
+    viewModel: SeasonManageViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+// PLACEHOLDER_SEASON_BODY
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
@@ -43,14 +44,10 @@ fun BrandManageScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadBrands()
-    }
-
     Scaffold(
         topBar = {
             GradientTopAppBar(
-                title = { Text("品牌管理") },
+                title = { Text("季节管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
@@ -64,7 +61,7 @@ fun BrandManageScreen(
                 containerColor = Pink400,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加品牌", tint = Color.White)
+                Icon(Icons.Default.Add, contentDescription = "添加季节", tint = Color.White)
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -77,72 +74,61 @@ fun BrandManageScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Text(
-                    "品牌列表",
-                    style = MaterialTheme.typography.titleLarge
-                )
+                Text("季节列表", style = MaterialTheme.typography.titleLarge)
             }
-
             item {
                 HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
-
-            items(uiState.brands) { brand ->
-                BrandCard(
-                    brand = brand,
-                    onDelete = { viewModel.showDeleteConfirm(brand) }
-                )
+            items(uiState.seasons) { season ->
+                SeasonCard(season = season, onDelete = { viewModel.showDeleteConfirm(season) })
             }
         }
     }
+// PLACEHOLDER_SEASON_DIALOGS
 
     if (uiState.showAddDialog) {
-        AddBrandDialog(
+        AddSeasonDialog(
             onDismiss = { viewModel.hideAddDialog() },
-            onConfirm = { name ->
-                viewModel.addBrand(name)
-            }
+            onConfirm = { name -> viewModel.addSeason(name) }
         )
     }
 
     if (uiState.showDeleteConfirm != null) {
-        DeleteConfirmDialog(
-            brandName = uiState.showDeleteConfirm?.name ?: "",
-            onDismiss = { viewModel.hideDeleteConfirm() },
-            onConfirm = {
-                uiState.showDeleteConfirm?.let { viewModel.deleteBrand(it) }
+        AlertDialog(
+            onDismissRequest = { viewModel.hideDeleteConfirm() },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除季节 \"${uiState.showDeleteConfirm?.name}\" 吗？") },
+            confirmButton = {
+                TextButton(
+                    onClick = { uiState.showDeleteConfirm?.let { viewModel.deleteSeason(it) } },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.hideDeleteConfirm() }) { Text("取消") }
             }
         )
     }
 }
 
 @Composable
-private fun BrandCard(
-    brand: Brand,
-    onDelete: () -> Unit
-) {
-    LolitaCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+private fun SeasonCard(season: Season, onDelete: () -> Unit) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    brand.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(season.name, style = MaterialTheme.typography.titleMedium)
             }
-
             IconButton(
                 onClick = onDelete,
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
+                colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
             ) {
                 Icon(Icons.Default.Delete, contentDescription = "删除")
             }
@@ -151,71 +137,29 @@ private fun BrandCard(
 }
 
 @Composable
-private fun AddBrandDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
-) {
-    var brandName by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-
+private fun AddSeasonDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
+    var name by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("添加品牌") },
+        title = { Text("添加季节") },
         text = {
             OutlinedTextField(
-                value = brandName,
-                onValueChange = { brandName = it },
-                label = { Text("品牌名称") },
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("季节名称") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
         },
         confirmButton = {
-            TextButton(
-                onClick = {
-                    if (brandName.isNotBlank()) {
-                        onConfirm(brandName)
-                    }
-                }
-            ) {
+            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
                 Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("添加")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("取消")
-            }
-        }
-    )
-}
-
-@Composable
-private fun DeleteConfirmDialog(
-    brandName: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("确认删除") },
-        text = { Text("确定要删除品牌 \"$brandName\" 吗？") },
-        confirmButton = {
-            TextButton(
-                onClick = onConfirm,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("删除")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("取消")
-            }
+            TextButton(onClick = onDismiss) { Text("取消") }
         }
     )
 }

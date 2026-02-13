@@ -18,7 +18,6 @@ class BrandRepository(
     suspend fun updateBrand(brand: Brand) = brandDao.updateBrand(brand)
 
     suspend fun deleteBrand(brand: Brand) {
-        require(!brand.isPreset) { "预置品牌不可删除" }
         val count = itemDao.countItemsByBrand(brand.id)
         require(count == 0) { "该品牌下有 $count 件服饰，无法删除" }
         brandDao.deleteBrand(brand)

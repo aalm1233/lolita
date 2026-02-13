@@ -136,24 +136,15 @@ private fun CategoryCard(
                     category.name,
                     style = MaterialTheme.typography.titleMedium
                 )
-                if (category.isPreset) {
-                    Text(
-                        "预置类型",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
             }
 
-            if (!category.isPreset) {
-                IconButton(
-                    onClick = onDelete,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "删除")
-                }
+            IconButton(
+                onClick = onDelete,
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "删除")
             }
         }
     }

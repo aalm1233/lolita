@@ -4,7 +4,10 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -231,19 +235,37 @@ fun ItemEditScreen(
                 // Season selector
                 SeasonSelector(
                     selectedSeason = uiState.season,
+                    seasonOptions = uiState.seasonOptions,
                     onSeasonSelected = { viewModel.updateSeason(it) }
                 )
 
                 // Style selector
                 StyleSelector(
                     selectedStyle = uiState.style,
+                    styleOptions = uiState.styleOptions,
                     onStyleSelected = { viewModel.updateStyle(it) }
+                )
+
+                // Size field
+                OutlinedTextField(
+                    value = uiState.size ?: "",
+                    onValueChange = { viewModel.updateSize(it.ifBlank { null }) },
+                    label = { Text("尺码 (可选)") },
+                    placeholder = { Text("例如：S、M、L、XL、均码") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
 
                 // Image upload placeholder
                 ImageUploaderSection(
                     imageUrl = uiState.imageUrl,
                     onImageChanged = { viewModel.updateImageUrl(it) }
+                )
+
+                // Size chart image
+                SizeChartImageSection(
+                    sizeChartImageUrl = uiState.sizeChartImageUrl,
+                    onImageChanged = { viewModel.updateSizeChartImageUrl(it) }
                 )
 
                 // Delete button (only when editing)
@@ -267,9 +289,8 @@ fun ItemEditScreen(
 }
 
 /**
- * Brand Selector Component
+ * Brand Selector Component - with search dialog
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BrandSelector(
     selectedBrandId: Long,
@@ -277,41 +298,75 @@ private fun BrandSelector(
     onBrandSelected: (Long) -> Unit,
     isError: Boolean = false
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
-    ) {
-        OutlinedTextField(
-            value = brands.find { it.id == selectedBrandId }?.name ?: "",
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("品牌 *") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
-            isError = isError,
-            supportingText = if (isError) {
-                { Text("请选择品牌") }
-            } else null
+    OutlinedTextField(
+        value = brands.find { it.id == selectedBrandId }?.name ?: "",
+        onValueChange = {},
+        readOnly = true,
+        label = { Text("品牌 *") },
+        trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDialog = true },
+        isError = isError,
+        supportingText = if (isError) {
+            { Text("请选择品牌") }
+        } else null,
+        enabled = false,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+            disabledBorderColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
+            disabledLabelColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    )
 
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            brands.forEach { brand ->
-                DropdownMenuItem(
-                    text = { Text(brand.name) },
-                    onClick = {
-                        onBrandSelected(brand.id)
-                        expanded = false
-                    }
-                )
-            }
+    if (showDialog) {
+        var searchQuery by remember { mutableStateOf("") }
+        val filtered = remember(searchQuery, brands) {
+            if (searchQuery.isBlank()) brands
+            else brands.filter { it.name.contains(searchQuery, ignoreCase = true) }
         }
+
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("选择品牌") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        placeholder = { Text("搜索品牌...") },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LazyColumn(modifier = Modifier.heightIn(max = 350.dp)) {
+                        items(filtered) { brand ->
+                            Text(
+                                text = brand.name,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onBrandSelected(brand.id)
+                                        showDialog = false
+                                    }
+                                    .padding(vertical = 12.dp, horizontal = 4.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = if (brand.id == selectedBrandId) Pink400
+                                else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) { Text("取消") }
+            }
+        )
     }
 }
 
@@ -584,14 +639,14 @@ private fun ImageUploaderSection(
 }
 
 /**
- * Season Selector Component
+ * Season Selector Component - loads from database
  */
 @Composable
 private fun SeasonSelector(
     selectedSeason: String?,
+    seasonOptions: List<String>,
     onSeasonSelected: (String?) -> Unit
 ) {
-    val seasons = listOf("春", "夏", "秋", "冬", "四季")
     Column {
         Text(
             text = "季节 (可选)",
@@ -602,7 +657,7 @@ private fun SeasonSelector(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            seasons.forEach { season ->
+            seasonOptions.forEach { season ->
                 FilterChip(
                     selected = selectedSeason == season,
                     onClick = {
@@ -616,48 +671,128 @@ private fun SeasonSelector(
 }
 
 /**
- * Style Selector Component
+ * Style Selector Component - loads from database
  */
 @Composable
 private fun StyleSelector(
     selectedStyle: String?,
+    styleOptions: List<String>,
     onStyleSelected: (String?) -> Unit
 ) {
-    val styles = listOf("甜系", "古典", "哥特", "田园", "中华", "其他")
     Column {
         Text(
             text = "风格 (可选)",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            styles.take(3).forEach { style ->
-                FilterChip(
-                    selected = selectedStyle == style,
-                    onClick = {
-                        onStyleSelected(if (selectedStyle == style) null else style)
-                    },
-                    label = { Text(style) },
-                    modifier = Modifier.weight(1f)
-                )
+        // Split into rows of 3
+        styleOptions.chunked(3).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                rowItems.forEach { style ->
+                    FilterChip(
+                        selected = selectedStyle == style,
+                        onClick = {
+                            onStyleSelected(if (selectedStyle == style) null else style)
+                        },
+                        label = { Text(style) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                // Fill remaining space if row has fewer than 3 items
+                repeat(3 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
-        Row(
+    }
+}
+
+/**
+ * Size Chart Image Section Component
+ */
+@Composable
+private fun SizeChartImageSection(
+    sizeChartImageUrl: String?,
+    onImageChanged: (String?) -> Unit
+) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            coroutineScope.launch {
+                val internalPath = ImageFileHelper.copyToInternalStorage(context, it)
+                onImageChanged(internalPath)
+            }
+        }
+    }
+
+    Column {
+        Text(
+            text = "尺码表图片 (可选)",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Card(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            styles.drop(3).forEach { style ->
-                FilterChip(
-                    selected = selectedStyle == style,
-                    onClick = {
-                        onStyleSelected(if (selectedStyle == style) null else style)
-                    },
-                    label = { Text(style) },
-                    modifier = Modifier.weight(1f)
+            onClick = {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (sizeChartImageUrl != null) {
+                    Box {
+                        AsyncImage(
+                            model = sizeChartImageUrl,
+                            contentDescription = "尺码表",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                        IconButton(
+                            onClick = {
+                                ImageFileHelper.deleteImage(sizeChartImageUrl)
+                                onImageChanged(null)
+                            },
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
+                            )
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "删除尺码表",
+                                tint = MaterialTheme.colorScheme.onError
+                            )
+                        }
+                    }
+                } else {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "点击添加尺码表图片",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "(从相册选择)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }

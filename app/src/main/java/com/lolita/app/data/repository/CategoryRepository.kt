@@ -18,7 +18,6 @@ class CategoryRepository(
     suspend fun updateCategory(category: Category) = categoryDao.updateCategory(category)
 
     suspend fun deleteCategory(category: Category) {
-        require(!category.isPreset) { "预置类型不可删除" }
         val count = itemDao.countItemsByCategory(category.id)
         require(count == 0) { "该类型下有 $count 件服饰，无法删除" }
         categoryDao.deleteCategory(category)

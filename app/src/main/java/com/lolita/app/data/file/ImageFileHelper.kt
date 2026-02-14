@@ -37,7 +37,7 @@ object ImageFileHelper {
             destFile.absolutePath
         }
 
-    fun deleteImage(path: String) {
+    suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
         val file = File(path)
         if (file.exists()) file.delete()
     }

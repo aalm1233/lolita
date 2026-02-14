@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Category
+import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.repository.CategoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,7 @@ data class CategoryManageUiState(
     val categories: List<Category> = emptyList(),
     val showAddDialog: Boolean = false,
     val showDeleteConfirm: Category? = null,
+    val editingCategory: Category? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -28,7 +30,7 @@ class CategoryManageViewModel(
         loadCategories()
     }
 
-    fun loadCategories() {
+    private fun loadCategories() {
         viewModelScope.launch {
             categoryRepository.getAllCategories().collect { categories ->
                 _uiState.value = _uiState.value.copy(
@@ -47,11 +49,12 @@ class CategoryManageViewModel(
         _uiState.value = _uiState.value.copy(showAddDialog = false)
     }
 
-    fun addCategory(name: String) {
+    fun addCategory(name: String, group: CategoryGroup = CategoryGroup.CLOTHING) {
         viewModelScope.launch {
             try {
                 val category = Category(
-                    name = name,
+                    name = name.trim(),
+                    group = group,
                     isPreset = false
                 )
                 categoryRepository.insertCategory(category)
@@ -60,7 +63,6 @@ class CategoryManageViewModel(
                 _uiState.value = _uiState.value.copy(
                     errorMessage = "添加失败：类型名称已存在"
                 )
-                hideAddDialog()
             }
         }
     }
@@ -89,5 +91,26 @@ class CategoryManageViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun showEditDialog(category: Category) {
+        _uiState.value = _uiState.value.copy(editingCategory = category)
+    }
+
+    fun hideEditDialog() {
+        _uiState.value = _uiState.value.copy(editingCategory = null)
+    }
+
+    fun updateCategory(category: Category, newName: String, newGroup: CategoryGroup) {
+        viewModelScope.launch {
+            try {
+                categoryRepository.updateCategory(category.copy(name = newName.trim(), group = newGroup))
+                hideEditDialog()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "重命名失败：类型名称已存在"
+                )
+            }
+        }
     }
 }

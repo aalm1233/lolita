@@ -21,6 +21,9 @@ class PaymentRepository(
     fun getPaymentsByPrice(priceId: Long): Flow<List<Payment>> =
         paymentDao.getPaymentsByPrice(priceId)
 
+    suspend fun getPaymentsByPriceList(priceId: Long): List<Payment> =
+        paymentDao.getPaymentsByPriceList(priceId)
+
     fun getUnpaidPayments(): Flow<List<Payment>> = paymentDao.getUnpaidPayments()
 
     fun getPendingReminderPayments(): Flow<List<Payment>> =
@@ -37,36 +40,43 @@ class PaymentRepository(
                 // Exact alarm permission not granted, reminder skipped
             }
         }
-        // Add calendar event if permission granted
-        val calendarEventId = try {
-            CalendarEventHelper.insertEvent(
-                context = context,
-                title = "付款提醒: $itemName",
-                description = "金额: ¥${payment.amount}",
-                startTimeMillis = payment.dueDate
-            )
-        } catch (_: Exception) {
-            null
-        }
-        if (calendarEventId != null) {
-            paymentDao.updatePayment(payment.copy(id = id, calendarEventId = calendarEventId))
+        // Add calendar event only if reminder is set and not paid
+        if (payment.reminderSet && !payment.isPaid) {
+            val calendarEventId = try {
+                CalendarEventHelper.insertEvent(
+                    context = context,
+                    title = "付款提醒: $itemName",
+                    description = "金额: ¥${payment.amount}",
+                    startTimeMillis = payment.dueDate
+                )
+            } catch (_: Exception) {
+                null
+            }
+            if (calendarEventId != null) {
+                paymentDao.updatePayment(payment.copy(id = id, calendarEventId = calendarEventId))
+            }
         }
         return id
     }
 
     suspend fun updatePayment(payment: Payment, itemName: String = "") {
-        // Handle calendar event: delete old, insert new if due date present
+        // Handle calendar event: always delete old
         val oldPayment = paymentDao.getPaymentById(payment.id)
         var updatedPayment = payment
         try {
             oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
-            val newEventId = CalendarEventHelper.insertEvent(
-                context = context,
-                title = "付款提醒: $itemName",
-                description = "金额: ¥${payment.amount}",
-                startTimeMillis = payment.dueDate
-            )
-            updatedPayment = payment.copy(calendarEventId = newEventId)
+            // Only create new calendar event if not paid and reminder is set
+            if (!payment.isPaid && payment.reminderSet) {
+                val newEventId = CalendarEventHelper.insertEvent(
+                    context = context,
+                    title = "付款提醒: $itemName",
+                    description = "金额: ¥${payment.amount}",
+                    startTimeMillis = payment.dueDate
+                )
+                updatedPayment = payment.copy(calendarEventId = newEventId)
+            } else {
+                updatedPayment = payment.copy(calendarEventId = null)
+            }
         } catch (_: Exception) {
             // Calendar operation failed, proceed without calendar event
         }

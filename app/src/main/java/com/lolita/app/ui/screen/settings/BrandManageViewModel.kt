@@ -13,6 +13,7 @@ data class BrandManageUiState(
     val brands: List<Brand> = emptyList(),
     val showAddDialog: Boolean = false,
     val showDeleteConfirm: Brand? = null,
+    val editingBrand: Brand? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -28,7 +29,7 @@ class BrandManageViewModel(
         loadBrands()
     }
 
-    fun loadBrands() {
+    private fun loadBrands() {
         viewModelScope.launch {
             brandRepository.getAllBrands().collect { brands ->
                 _uiState.value = _uiState.value.copy(
@@ -51,7 +52,7 @@ class BrandManageViewModel(
         viewModelScope.launch {
             try {
                 val brand = Brand(
-                    name = name,
+                    name = name.trim(),
                     isPreset = false
                 )
                 brandRepository.insertBrand(brand)
@@ -60,7 +61,6 @@ class BrandManageViewModel(
                 _uiState.value = _uiState.value.copy(
                     errorMessage = "添加失败：品牌名称已存在"
                 )
-                hideAddDialog()
             }
         }
     }
@@ -89,5 +89,26 @@ class BrandManageViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun showEditDialog(brand: Brand) {
+        _uiState.value = _uiState.value.copy(editingBrand = brand)
+    }
+
+    fun hideEditDialog() {
+        _uiState.value = _uiState.value.copy(editingBrand = null)
+    }
+
+    fun updateBrand(brand: Brand, newName: String) {
+        viewModelScope.launch {
+            try {
+                brandRepository.updateBrand(brand.copy(name = newName.trim()))
+                hideEditDialog()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "重命名失败：品牌名称已存在"
+                )
+            }
+        }
     }
 }

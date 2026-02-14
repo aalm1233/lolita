@@ -13,8 +13,12 @@ sealed interface Screen {
     }
 
     data object ItemEdit : Screen {
-        override val route = "item_edit/{itemId}"
-        fun createRoute(itemId: Long? = null) = if (itemId != null) "item_edit/$itemId" else "item_edit/0"
+        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}"
+        fun createRoute(itemId: Long? = null, defaultStatus: String? = null): String {
+            val id = itemId ?: 0L
+            return if (defaultStatus != null) "item_edit/$id?defaultStatus=$defaultStatus"
+            else "item_edit/$id"
+        }
     }
 
     data object PriceManage : Screen {
@@ -39,10 +43,6 @@ sealed interface Screen {
 
     data object Wishlist : Screen {
         override val route = "wishlist"
-    }
-
-    data object CoordinateList : Screen {
-        override val route = "coordinate_list"
     }
 
     data object CoordinateDetail : Screen {

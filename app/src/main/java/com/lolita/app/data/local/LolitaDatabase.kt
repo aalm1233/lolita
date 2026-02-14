@@ -9,9 +9,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.lolita.app.data.local.converters.Converters
 import com.lolita.app.data.local.dao.*
 import com.lolita.app.data.local.entity.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [
@@ -131,11 +128,10 @@ abstract class LolitaDatabase : RoomDatabase() {
         private class DatabaseCallback : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                INSTANCE?.let { database ->
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // Insert preset brands
-                        val brandDao = database.brandDao()
-                        listOf(
+                val now = System.currentTimeMillis()
+
+                // Insert preset brands synchronously via raw SQL
+                listOf(
                             "古典玩偶（Classical Puppets）",
                             "仲夏物语（Elpress L）",
                             "玻璃纸之夜（NDC）",
@@ -338,43 +334,29 @@ abstract class LolitaDatabase : RoomDatabase() {
                             "Zesty Lolita",
                             "OZZ on japan"
                         ).forEach { name ->
-                            try {
-                                brandDao.insertBrand(Brand(name = name, isPreset = true))
-                            } catch (_: Exception) { }
+                            val escaped = name.replace("'", "''")
+                            db.execSQL("INSERT OR IGNORE INTO brands (name, is_preset, created_at) VALUES ('$escaped', 1, $now)")
                         }
 
                         // Insert preset categories
-                        val categoryDao = database.categoryDao()
                         val clothingCategories = listOf("JSK", "OP", "SK")
                         val accessoryCategories = listOf("KC", "斗篷", "披肩", "发带", "Bonnet", "其他头饰", "袜子", "手套", "其他配饰")
                         clothingCategories.forEach { name ->
-                            try {
-                                categoryDao.insertCategory(Category(name = name, isPreset = true, group = CategoryGroup.CLOTHING))
-                            } catch (_: Exception) { }
+                            db.execSQL("INSERT OR IGNORE INTO categories (name, is_preset, created_at, category_group) VALUES ('$name', 1, $now, 'CLOTHING')")
                         }
                         accessoryCategories.forEach { name ->
-                            try {
-                                categoryDao.insertCategory(Category(name = name, isPreset = true, group = CategoryGroup.ACCESSORY))
-                            } catch (_: Exception) { }
+                            db.execSQL("INSERT OR IGNORE INTO categories (name, is_preset, created_at, category_group) VALUES ('$name', 1, $now, 'ACCESSORY')")
                         }
 
                         // Insert preset styles
-                        val styleDao = database.styleDao()
                         listOf("甜系", "古典", "哥特", "田园", "中华", "其他").forEach { name ->
-                            try {
-                                styleDao.insertStyle(Style(name = name, isPreset = true))
-                            } catch (_: Exception) { }
+                            db.execSQL("INSERT OR IGNORE INTO styles (name, is_preset, created_at) VALUES ('$name', 1, $now)")
                         }
 
                         // Insert preset seasons
-                        val seasonDao = database.seasonDao()
                         listOf("春", "夏", "秋", "冬", "四季").forEach { name ->
-                            try {
-                                seasonDao.insertSeason(Season(name = name, isPreset = true))
-                            } catch (_: Exception) { }
+                            db.execSQL("INSERT OR IGNORE INTO seasons (name, is_preset, created_at) VALUES ('$name', 1, $now)")
                         }
-                    }
-                }
             }
         }
     }

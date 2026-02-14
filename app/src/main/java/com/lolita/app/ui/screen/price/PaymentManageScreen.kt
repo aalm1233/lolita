@@ -107,7 +107,7 @@ fun PaymentManageScreen(
                     }
                 }
             } else {
-                items(uiState.payments) { payment ->
+                items(uiState.payments, key = { it.id }) { payment ->
                     PaymentCard(
                         payment = payment,
                         onMarkPaid = {

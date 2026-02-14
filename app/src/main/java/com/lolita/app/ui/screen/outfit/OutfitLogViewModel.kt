@@ -93,9 +93,10 @@ class OutfitLogListViewModel(
 
     fun deleteOutfitLog(logId: Long) {
         viewModelScope.launch {
-            val log = outfitLogRepository.getOutfitLogById(logId)
-            log?.let {
-                outfitLogRepository.deleteOutfitLog(it)
+            try {
+                outfitLogRepository.deleteOutfitLogById(logId)
+            } catch (_: Exception) {
+                // Log already deleted or doesn't exist
             }
         }
     }
@@ -185,12 +186,11 @@ class OutfitLogEditViewModel(
             result?.let { data ->
                 val itemIds = data.items.map { it.id }.toSet()
                 originalItemIds = itemIds
-                _uiState.value = OutfitLogEditUiState(
+                _uiState.value = _uiState.value.copy(
                     date = data.outfitLog.date,
                     note = data.outfitLog.note,
                     imageUrls = data.outfitLog.imageUrls,
-                    selectedItemIds = itemIds,
-                    availableItems = _uiState.value.availableItems
+                    selectedItemIds = itemIds
                 )
             }
         }

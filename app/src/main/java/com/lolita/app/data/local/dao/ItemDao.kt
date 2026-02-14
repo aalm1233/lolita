@@ -73,6 +73,18 @@ interface ItemDao {
 
     @Query("SELECT COUNT(*) FROM items WHERE category_id = :categoryId")
     suspend fun countItemsByCategory(categoryId: Long): Int
+
+    @Query("UPDATE items SET style = :newName WHERE style = :oldName")
+    suspend fun updateItemsStyle(oldName: String, newName: String)
+
+    @Query("UPDATE items SET season = :newName WHERE season = :oldName")
+    suspend fun updateItemsSeason(oldName: String, newName: String)
+
+    @Query("UPDATE items SET style = NULL WHERE style = :name")
+    suspend fun clearItemsStyle(name: String)
+
+    @Query("UPDATE items SET season = NULL WHERE season = :name")
+    suspend fun clearItemsSeason(name: String)
 }
 
 data class ItemWithFullDetails(

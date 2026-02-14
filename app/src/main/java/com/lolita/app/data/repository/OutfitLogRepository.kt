@@ -6,6 +6,7 @@ import com.lolita.app.data.local.dao.OutfitLogWithItems
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.OutfitItemCrossRef
 import com.lolita.app.data.local.entity.OutfitLog
+import com.lolita.app.data.file.ImageFileHelper
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
@@ -30,8 +31,18 @@ class OutfitLogRepository(
     suspend fun updateOutfitLog(outfitLog: OutfitLog) =
         outfitLogDao.updateOutfitLog(outfitLog.copy(updatedAt = System.currentTimeMillis()))
 
-    suspend fun deleteOutfitLog(outfitLog: OutfitLog) =
+    suspend fun deleteOutfitLog(outfitLog: OutfitLog) {
+        outfitLog.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
         outfitLogDao.deleteOutfitLog(outfitLog)
+    }
+
+    suspend fun deleteOutfitLogById(id: Long) {
+        val log = outfitLogDao.getOutfitLogById(id)
+        if (log != null) {
+            log.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
+            outfitLogDao.deleteOutfitLogById(id)
+        }
+    }
 
     suspend fun linkItemToOutfitLog(outfitLogId: Long, itemId: Long) {
         outfitLogDao.insertOutfitItemCrossRef(

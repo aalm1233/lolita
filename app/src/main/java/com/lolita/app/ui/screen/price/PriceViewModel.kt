@@ -70,7 +70,11 @@ class PriceManageViewModel(
 
     fun deletePrice(price: Price) {
         viewModelScope.launch {
-            priceRepository.deletePrice(price)
+            try {
+                priceRepository.deletePrice(price)
+            } catch (_: Exception) {
+                // Price already deleted
+            }
         }
     }
 }
@@ -128,7 +132,8 @@ class PriceEditViewModel(
     suspend fun save(itemId: Long): Result<Long> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
-            val totalPrice = _uiState.value.totalPrice.toDoubleOrNull() ?: 0.0
+            val totalPrice = _uiState.value.totalPrice.toDoubleOrNull()
+                ?: throw IllegalArgumentException("总价无效")
 
             val price = Price(
                 itemId = itemId,
@@ -213,7 +218,8 @@ class PriceEditViewModel(
         return try {
             val existing = priceRepository.getPriceById(priceId)
                 ?: throw IllegalStateException("价格记录不存在")
-            val totalPrice = _uiState.value.totalPrice.toDoubleOrNull() ?: 0.0
+            val totalPrice = _uiState.value.totalPrice.toDoubleOrNull()
+                ?: throw IllegalArgumentException("总价无效")
 
             val price = existing.copy(
                 type = _uiState.value.priceType,
@@ -228,6 +234,47 @@ class PriceEditViewModel(
             )
 
             priceRepository.updatePrice(price)
+
+            // Sync payments if type or amounts changed
+            val typeChanged = existing.type != price.type
+            val amountChanged = existing.totalPrice != price.totalPrice ||
+                existing.deposit != price.deposit || existing.balance != price.balance
+            if (typeChanged || amountChanged) {
+                val item = itemRepository.getItemById(existing.itemId)
+                val itemName = item?.name ?: "服饰"
+                val oldPayments = paymentRepository.getPaymentsByPriceList(priceId)
+                // Delete old unpaid payments and recreate
+                oldPayments.filter { !it.isPaid }.forEach { paymentRepository.deletePayment(it) }
+                val now = System.currentTimeMillis()
+                when (_uiState.value.priceType) {
+                    PriceType.FULL -> {
+                        paymentRepository.insertPayment(
+                            Payment(priceId = priceId, amount = totalPrice, dueDate = now,
+                                isPaid = false, reminderSet = true, customReminderDays = 1),
+                            itemName
+                        )
+                    }
+                    PriceType.DEPOSIT_BALANCE -> {
+                        val depositAmount = _uiState.value.deposit.toDoubleOrNull() ?: 0.0
+                        val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
+                        if (depositAmount > 0) {
+                            paymentRepository.insertPayment(
+                                Payment(priceId = priceId, amount = depositAmount, dueDate = now,
+                                    isPaid = false, reminderSet = true, customReminderDays = 1),
+                                itemName
+                            )
+                        }
+                        if (balanceAmount > 0) {
+                            paymentRepository.insertPayment(
+                                Payment(priceId = priceId, amount = balanceAmount, dueDate = now,
+                                    isPaid = false, reminderSet = true, customReminderDays = 1),
+                                itemName
+                            )
+                        }
+                    }
+                }
+            }
+
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)
         } catch (e: Exception) {
@@ -238,12 +285,16 @@ class PriceEditViewModel(
 
     fun isValid(): Boolean {
         return when (_uiState.value.priceType) {
-            PriceType.FULL -> _uiState.value.totalPrice.toDoubleOrNull() != null
+            PriceType.FULL -> {
+                val total = _uiState.value.totalPrice.toDoubleOrNull()
+                total != null && total > 0
+            }
             PriceType.DEPOSIT_BALANCE -> {
                 val total = _uiState.value.totalPrice.toDoubleOrNull()
                 val deposit = _uiState.value.deposit.toDoubleOrNull()
                 val balance = _uiState.value.balance.toDoubleOrNull()
-                total != null && deposit != null && balance != null
+                total != null && total > 0 && deposit != null && balance != null &&
+                    kotlin.math.abs((deposit + balance) - total) < 0.01
             }
         }
     }
@@ -302,7 +353,11 @@ class PaymentManageViewModel(
 
     fun deletePayment(payment: Payment) {
         viewModelScope.launch {
-            paymentRepository.deletePayment(payment)
+            try {
+                paymentRepository.deletePayment(payment)
+            } catch (_: Exception) {
+                // Payment already deleted
+            }
         }
     }
 }

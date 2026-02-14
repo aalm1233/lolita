@@ -8,12 +8,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,7 +37,6 @@ fun SeasonManageScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-// PLACEHOLDER_SEASON_BODY
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
@@ -79,12 +80,11 @@ fun SeasonManageScreen(
             item {
                 HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
-            items(uiState.seasons) { season ->
-                SeasonCard(season = season, onDelete = { viewModel.showDeleteConfirm(season) })
+            items(uiState.seasons, key = { it.id }) { season ->
+                SeasonCard(season = season, onEdit = { viewModel.showEditDialog(season) }, onDelete = { viewModel.showDeleteConfirm(season) })
             }
         }
     }
-// PLACEHOLDER_SEASON_DIALOGS
 
     if (uiState.showAddDialog) {
         AddSeasonDialog(
@@ -113,10 +113,18 @@ fun SeasonManageScreen(
             }
         )
     }
+
+    if (uiState.editingSeason != null) {
+        EditSeasonDialog(
+            currentName = uiState.editingSeason!!.name,
+            onDismiss = { viewModel.hideEditDialog() },
+            onConfirm = { newName -> viewModel.updateSeason(uiState.editingSeason!!, newName) }
+        )
+    }
 }
 
 @Composable
-private fun SeasonCard(season: Season, onDelete: () -> Unit) {
+private fun SeasonCard(season: Season, onEdit: () -> Unit, onDelete: () -> Unit) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -125,6 +133,9 @@ private fun SeasonCard(season: Season, onDelete: () -> Unit) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(season.name, style = MaterialTheme.typography.titleMedium)
+            }
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "编辑")
             }
             IconButton(
                 onClick = onDelete,
@@ -138,7 +149,7 @@ private fun SeasonCard(season: Season, onDelete: () -> Unit) {
 
 @Composable
 private fun AddSeasonDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
-    var name by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("添加季节") },
@@ -156,6 +167,34 @@ private fun AddSeasonDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) 
                 Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("添加")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("取消") }
+        }
+    )
+}
+
+@Composable
+private fun EditSeasonDialog(currentName: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
+    var name by remember { mutableStateOf(currentName) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("编辑季节") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("季节名称") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("保存")
             }
         },
         dismissButton = {

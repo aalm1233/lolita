@@ -36,6 +36,7 @@ import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -61,11 +62,14 @@ class PaymentCalendarViewModel(
     private val _uiState = MutableStateFlow(PaymentCalendarUiState())
     val uiState: StateFlow<PaymentCalendarUiState> = _uiState.asStateFlow()
 
+    private var loadDataJob: Job? = null
+
     init {
         loadData()
     }
 
     private fun loadData() {
+        loadDataJob?.cancel()
         val state = _uiState.value
         val cal = Calendar.getInstance().apply {
             set(Calendar.YEAR, state.currentYear)
@@ -81,7 +85,7 @@ class PaymentCalendarViewModel(
         val monthEnd = cal.timeInMillis - 1
         val now = System.currentTimeMillis()
 
-        viewModelScope.launch {
+        loadDataJob = viewModelScope.launch {
             combine(
                 paymentRepository.getPaymentsWithItemInfoByDateRange(monthStart, monthEnd),
                 paymentRepository.getMonthUnpaidTotal(monthStart, monthEnd),
@@ -135,11 +139,12 @@ class PaymentCalendarViewModel(
         _uiState.value = _uiState.value.copy(selectedDay = day)
     }
 
-    fun markAsPaid(paymentId: Long) {
+    fun markAsPaid(paymentId: Long, itemName: String = "") {
         viewModelScope.launch {
             val payment = paymentRepository.getPaymentById(paymentId) ?: return@launch
             paymentRepository.updatePayment(
-                payment.copy(isPaid = true, paidDate = System.currentTimeMillis())
+                payment.copy(isPaid = true, paidDate = System.currentTimeMillis()),
+                itemName = itemName
             )
         }
     }
@@ -236,7 +241,7 @@ fun PaymentCalendarContent(
                     PaymentInfoCard(
                         payment = payment,
                         onMarkPaid = {
-                            coroutineScope.launch { viewModel.markAsPaid(payment.paymentId) }
+                            coroutineScope.launch { viewModel.markAsPaid(payment.paymentId, payment.itemName) }
                         }
                     )
                 }

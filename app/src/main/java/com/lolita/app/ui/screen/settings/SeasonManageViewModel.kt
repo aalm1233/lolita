@@ -13,6 +13,7 @@ data class SeasonManageUiState(
     val seasons: List<Season> = emptyList(),
     val showAddDialog: Boolean = false,
     val showDeleteConfirm: Season? = null,
+    val editingSeason: Season? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -47,11 +48,10 @@ class SeasonManageViewModel(
     fun addSeason(name: String) {
         viewModelScope.launch {
             try {
-                seasonRepository.insertSeason(Season(name = name, isPreset = false))
+                seasonRepository.insertSeason(Season(name = name.trim(), isPreset = false))
                 hideAddDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = "添加失败：季节名称已存在")
-                hideAddDialog()
             }
         }
     }
@@ -78,5 +78,26 @@ class SeasonManageViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun showEditDialog(season: Season) {
+        _uiState.value = _uiState.value.copy(editingSeason = season)
+    }
+
+    fun hideEditDialog() {
+        _uiState.value = _uiState.value.copy(editingSeason = null)
+    }
+
+    fun updateSeason(season: Season, newName: String) {
+        viewModelScope.launch {
+            try {
+                seasonRepository.updateSeason(season.copy(name = newName.trim()), oldName = season.name)
+                hideEditDialog()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "重命名失败：季节名称已存在"
+                )
+            }
+        }
     }
 }

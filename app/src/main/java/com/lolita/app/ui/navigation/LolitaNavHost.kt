@@ -178,11 +178,16 @@ fun LolitaNavHost() {
             // Item Edit
             composable(
                 route = Screen.ItemEdit.route,
-                arguments = listOf(navArgument("itemId") { type = NavType.LongType; defaultValue = 0L })
+                arguments = listOf(
+                    navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" }
+                )
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
+                val defaultStatus = backStackEntry.arguments?.getString("defaultStatus") ?: ""
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
+                    defaultStatus = defaultStatus,
                     onBack = { navController.popBackStack() },
                     onSaveSuccess = { navController.popBackStack() }
                 )
@@ -262,7 +267,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },
                     onNavigateToEdit = { itemId ->
-                        navController.navigate(Screen.ItemEdit.createRoute(itemId))
+                        navController.navigate(Screen.ItemEdit.createRoute(itemId, defaultStatus = "WISHED"))
                     }
                 )
             }

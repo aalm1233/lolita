@@ -4,6 +4,7 @@ import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.ItemWithFullDetails
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.file.ImageFileHelper
 import kotlinx.coroutines.flow.Flow
 
 class ItemRepository(
@@ -30,5 +31,9 @@ class ItemRepository(
     suspend fun updateItem(item: Item) =
         itemDao.updateItem(item.copy(updatedAt = System.currentTimeMillis()))
 
-    suspend fun deleteItem(item: Item) = itemDao.deleteItem(item)
+    suspend fun deleteItem(item: Item) {
+        item.imageUrl?.let { ImageFileHelper.deleteImage(it) }
+        item.sizeChartImageUrl?.let { ImageFileHelper.deleteImage(it) }
+        itemDao.deleteItem(item)
+    }
 }

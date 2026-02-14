@@ -29,15 +29,20 @@ class CategoryRepository(
     }
 
     suspend fun ensurePresetCategories() {
-        val presetNames = listOf(
-            "JSK", "OP", "SK", "KC",
-            "斗篷", "披肩", "发带", "Bonnet",
+        val clothingNames = listOf("JSK", "OP", "SK")
+        val accessoryNames = listOf(
+            "KC", "斗篷", "披肩", "发带", "Bonnet",
             "其他头饰", "袜子", "手套", "其他配饰"
         )
 
-        presetNames.forEach { name ->
+        clothingNames.forEach { name ->
             if (getCategoryByName(name) == null) {
-                categoryDao.insertCategory(Category(name = name, isPreset = true))
+                categoryDao.insertCategory(Category(name = name, isPreset = true, group = com.lolita.app.data.local.entity.CategoryGroup.CLOTHING))
+            }
+        }
+        accessoryNames.forEach { name ->
+            if (getCategoryByName(name) == null) {
+                categoryDao.insertCategory(Category(name = name, isPreset = true, group = com.lolita.app.data.local.entity.CategoryGroup.ACCESSORY))
             }
         }
     }

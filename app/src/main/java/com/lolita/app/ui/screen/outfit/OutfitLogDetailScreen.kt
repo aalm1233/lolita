@@ -15,6 +15,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +46,29 @@ fun OutfitLogDetailScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var removeConfirmItem by remember { mutableStateOf<Item?>(null) }
+
+    if (removeConfirmItem != null) {
+        AlertDialog(
+            onDismissRequest = { removeConfirmItem = null },
+            title = { Text("确认移除") },
+            text = { Text("确定要移除关联服饰 \"${removeConfirmItem?.name}\" 吗？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        removeConfirmItem?.let { viewModel.removeItem(it.id) }
+                        removeConfirmItem = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) { Text("移除") }
+            },
+            dismissButton = {
+                TextButton(onClick = { removeConfirmItem = null }) { Text("取消") }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -179,11 +205,11 @@ fun OutfitLogDetailScreen(
                             )
                         }
                     }
-                    items(uiState.items) { item ->
+                    items(uiState.items, key = { it.id }) { item ->
                         DetailItemCard(
                             item = item,
                             onClick = { onNavigateToItem(item.id) },
-                            onRemove = { viewModel.removeItem(item.id) },
+                            onRemove = { removeConfirmItem = item },
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }

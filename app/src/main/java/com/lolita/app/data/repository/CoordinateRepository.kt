@@ -8,7 +8,6 @@ import com.lolita.app.data.local.entity.Coordinate
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 
 class CoordinateRepository(
     private val coordinateDao: CoordinateDao,
@@ -68,7 +67,7 @@ class CoordinateRepository(
     suspend fun deleteCoordinate(coordinate: Coordinate) {
         database.withTransaction {
             // Unlink all items from this coordinate before deleting (FK RESTRICT)
-            val withItems = coordinateDao.getCoordinateWithItems(coordinate.id).first()
+            val withItems = coordinateDao.getCoordinateWithItemsList(coordinate.id)
             withItems?.items?.forEach { item ->
                 itemDao.updateItem(item.copy(coordinateId = null))
             }

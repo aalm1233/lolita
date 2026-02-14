@@ -1,8 +1,14 @@
 package com.lolita.app.ui.screen.price
 
 import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,10 +53,18 @@ fun PaymentEditScreen(
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
+    var showExactAlarmDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     // Save action extracted so it can be called after permission result
     val performSave: () -> Unit = {
+        // Check exact alarm permission when reminder is enabled
+        if (uiState.reminderSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                showExactAlarmDialog = true
+            }
+        }
         coroutineScope.launch {
             val result = if (paymentId == null) {
                 viewModel.save(priceId)
@@ -100,6 +114,25 @@ fun PaymentEditScreen(
         )
     }
 
+    if (showExactAlarmDialog) {
+        AlertDialog(
+            onDismissRequest = { showExactAlarmDialog = false },
+            title = { Text("精确提醒权限") },
+            text = { Text("当前未授予精确闹钟权限，提醒时间可能不准确。是否前往设置开启？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showExactAlarmDialog = false
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        context.startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                    }
+                }) { Text("去设置") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExactAlarmDialog = false }) { Text("暂不") }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -112,15 +145,21 @@ fun PaymentEditScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            if (CalendarEventHelper.hasCalendarPermission(context)) {
+                            val permissionsNeeded = mutableListOf<String>()
+                            if (!CalendarEventHelper.hasCalendarPermission(context)) {
+                                permissionsNeeded.add(Manifest.permission.READ_CALENDAR)
+                                permissionsNeeded.add(Manifest.permission.WRITE_CALENDAR)
+                            }
+                            if (uiState.reminderSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                val notifPerm = Manifest.permission.POST_NOTIFICATIONS
+                                if (context.checkSelfPermission(notifPerm) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                    permissionsNeeded.add(notifPerm)
+                                }
+                            }
+                            if (permissionsNeeded.isEmpty()) {
                                 performSave()
                             } else {
-                                calendarPermissionLauncher.launch(
-                                    arrayOf(
-                                        Manifest.permission.READ_CALENDAR,
-                                        Manifest.permission.WRITE_CALENDAR
-                                    )
-                                )
+                                calendarPermissionLauncher.launch(permissionsNeeded.toTypedArray())
                             }
                         },
                         enabled = viewModel.isValid() && !uiState.isSaving
@@ -158,19 +197,27 @@ fun PaymentEditScreen(
                 enabled = !uiState.isSaving
             )
 
-            OutlinedTextField(
-                value = uiState.dueDate?.let { formatDate(it) } ?: "",
-                onValueChange = {},
-                label = { Text("应付款时间") },
-                modifier = Modifier.fillMaxWidth(),
-                readOnly = true,
-                trailingIcon = {
-                    IconButton(onClick = { showDatePicker = true }) {
-                        Icon(Icons.Default.DateRange, contentDescription = "选择日期")
-                    }
-                },
-                enabled = !uiState.isSaving
-            )
+            Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
+                OutlinedTextField(
+                    value = uiState.dueDate?.let { formatDate(it) } ?: "",
+                    onValueChange = {},
+                    label = { Text("应付款时间") },
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(onClick = { showDatePicker = true }) {
+                            Icon(Icons.Default.DateRange, contentDescription = "选择日期")
+                        }
+                    },
+                    enabled = false,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledBorderColor = MaterialTheme.colorScheme.outline,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
 
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(
@@ -200,6 +247,7 @@ fun PaymentEditScreen(
                                 onValueChange = { viewModel.updateCustomReminderDays(it) },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 suffix = { Text("天") },
                                 placeholder = { Text("1") },
                                 enabled = !uiState.isSaving
@@ -242,7 +290,6 @@ private fun AndroidDatePickerDialog(
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).apply {
-            setOnCancelListener { onDismiss() }
             setOnDismissListener { onDismiss() }
         }
         dialog.show()

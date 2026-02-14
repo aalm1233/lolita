@@ -23,6 +23,9 @@ interface OutfitLogDao {
     @Query("SELECT * FROM outfit_logs WHERE id = :id")
     suspend fun getOutfitLogById(id: Long): OutfitLog?
 
+    @Query("DELETE FROM outfit_logs WHERE id = :id")
+    suspend fun deleteOutfitLogById(id: Long)
+
     @Query("SELECT * FROM outfit_logs WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getOutfitLogsByDateRange(startDate: Long, endDate: Long): Flow<List<OutfitLog>>
 

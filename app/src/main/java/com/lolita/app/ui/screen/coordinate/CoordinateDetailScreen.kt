@@ -159,7 +159,7 @@ fun CoordinateDetailScreen(
                         }
                     }
                 } else {
-                    items(uiState.items) { item ->
+                    items(uiState.items, key = { it.id }) { item ->
                         CoordinateItemCard(
                             item = item,
                             onRemove = { itemToRemove = item }

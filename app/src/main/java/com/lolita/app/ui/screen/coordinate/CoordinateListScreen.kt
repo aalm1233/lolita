@@ -240,8 +240,7 @@ private fun CoordinateCard(
     }
 }
 
-private val coordinateDateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
-
 private fun formatCoordinateDate(timestamp: Long): String {
-    return coordinateDateFormat.format(java.util.Date(timestamp))
+    val dateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
+    return dateFormat.format(java.util.Date(timestamp))
 }

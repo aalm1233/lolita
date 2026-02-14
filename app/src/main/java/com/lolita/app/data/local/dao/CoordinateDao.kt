@@ -37,6 +37,10 @@ interface CoordinateDao {
     @Query("SELECT * FROM coordinates ORDER BY updated_at DESC")
     suspend fun getAllCoordinatesList(): List<Coordinate>
 
+    @Transaction
+    @Query("SELECT * FROM coordinates WHERE id = :id")
+    suspend fun getCoordinateWithItemsList(id: Long): CoordinateWithItems?
+
     @Query("SELECT COUNT(*) FROM coordinates")
     fun getCoordinateCount(): Flow<Int>
 

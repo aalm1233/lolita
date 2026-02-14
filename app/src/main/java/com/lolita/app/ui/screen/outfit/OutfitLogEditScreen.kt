@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -201,8 +202,8 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
         val context = androidx.compose.ui.platform.LocalContext.current
         val calendar = Calendar.getInstance()
         date?.let { calendar.timeInMillis = it }
-        LaunchedEffect(Unit) {
-            android.app.DatePickerDialog(
+        DisposableEffect(Unit) {
+            val dialog = android.app.DatePickerDialog(
                 context,
                 { _, year, month, dayOfMonth ->
                     val cal = Calendar.getInstance()
@@ -215,8 +216,9 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).apply {
                 setOnCancelListener { showDatePicker = false }
-                show()
             }
+            dialog.show()
+            onDispose { dialog.dismiss() }
         }
     }
 }
@@ -341,7 +343,7 @@ private fun ItemSelectionCard(
                 LazyColumn(
                     modifier = Modifier.heightIn(max = 300.dp)
                 ) {
-                    items(availableItems) { item ->
+                    items(availableItems, key = { it.id }) { item ->
                         val isSelected = selectedIds.contains(item.id)
                         val isEnabled = item.status == ItemStatus.OWNED
 

@@ -21,11 +21,28 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE price_id = :priceId")
     fun getPaymentsByPrice(priceId: Long): Flow<List<Payment>>
 
+    @Query("SELECT * FROM payments WHERE price_id = :priceId")
+    suspend fun getPaymentsByPriceList(priceId: Long): List<Payment>
+
     @Query("SELECT * FROM payments WHERE is_paid = 0 ORDER BY due_date ASC")
     fun getUnpaidPayments(): Flow<List<Payment>>
 
     @Query("SELECT * FROM payments WHERE is_paid = 0 AND reminder_set = 1 ORDER BY due_date ASC")
     fun getPendingReminderPayments(): Flow<List<Payment>>
+
+    @Query("SELECT * FROM payments WHERE is_paid = 0 AND reminder_set = 1 ORDER BY due_date ASC")
+    suspend fun getPendingReminderPaymentsList(): List<Payment>
+
+    @Query("""
+        SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
+               p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
+        FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.is_paid = 0 AND p.reminder_set = 1
+        ORDER BY p.due_date ASC
+    """)
+    suspend fun getPendingReminderPaymentsWithItemInfoList(): List<PaymentWithItemInfo>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertPayment(payment: Payment): Long

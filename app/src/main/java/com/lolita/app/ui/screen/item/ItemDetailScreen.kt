@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,9 +47,12 @@ fun ItemDetailScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
 
-    // Load item data
-    LaunchedEffect(itemId) {
-        viewModel.loadItem(itemId)
+    // Load item data — reload when screen is resumed (e.g. after editing)
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    LaunchedEffect(itemId, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.RESUMED) {
+            viewModel.loadItem(itemId)
+        }
     }
 
     // Show error dialog
@@ -331,7 +335,7 @@ fun ItemDetailScreen(
                                     }
                                 }
                             } else {
-                                val dateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
+                        val dateFormat = remember { java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault()) }
                                 uiState.pricesWithPayments.forEach { priceWithPayments ->
                                     val price = priceWithPayments.price
                                     val payments = priceWithPayments.payments

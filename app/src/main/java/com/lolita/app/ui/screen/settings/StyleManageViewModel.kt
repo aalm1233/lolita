@@ -13,6 +13,7 @@ data class StyleManageUiState(
     val styles: List<Style> = emptyList(),
     val showAddDialog: Boolean = false,
     val showDeleteConfirm: Style? = null,
+    val editingStyle: Style? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -47,11 +48,10 @@ class StyleManageViewModel(
     fun addStyle(name: String) {
         viewModelScope.launch {
             try {
-                styleRepository.insertStyle(Style(name = name, isPreset = false))
+                styleRepository.insertStyle(Style(name = name.trim(), isPreset = false))
                 hideAddDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = "添加失败：风格名称已存在")
-                hideAddDialog()
             }
         }
     }
@@ -78,5 +78,26 @@ class StyleManageViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun showEditDialog(style: Style) {
+        _uiState.value = _uiState.value.copy(editingStyle = style)
+    }
+
+    fun hideEditDialog() {
+        _uiState.value = _uiState.value.copy(editingStyle = null)
+    }
+
+    fun updateStyle(style: Style, newName: String) {
+        viewModelScope.launch {
+            try {
+                styleRepository.updateStyle(style.copy(name = newName.trim()), oldName = style.name)
+                hideEditDialog()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "重命名失败：风格名称已存在"
+                )
+            }
+        }
     }
 }

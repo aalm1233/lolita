@@ -41,7 +41,7 @@ class PaymentReminderScheduler(private val context: Context) {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            payment.id.toInt(),
+            (payment.id % Int.MAX_VALUE).toInt(),
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -90,7 +90,7 @@ class PaymentReminderScheduler(private val context: Context) {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            paymentId.toInt(),
+            (paymentId % Int.MAX_VALUE).toInt(),
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )

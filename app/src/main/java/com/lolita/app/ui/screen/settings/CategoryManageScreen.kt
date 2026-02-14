@@ -8,12 +8,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Category
+import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink100
@@ -41,10 +44,6 @@ fun CategoryManageScreen(
             snackbarHostState.showSnackbar(it)
             viewModel.clearError()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCategories()
     }
 
     Scaffold(
@@ -87,9 +86,10 @@ fun CategoryManageScreen(
                 HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
 
-            items(uiState.categories) { category ->
+            items(uiState.categories, key = { it.id }) { category ->
                 CategoryCard(
                     category = category,
+                    onEdit = { viewModel.showEditDialog(category) },
                     onDelete = { viewModel.showDeleteConfirm(category) }
                 )
             }
@@ -99,8 +99,8 @@ fun CategoryManageScreen(
     if (uiState.showAddDialog) {
         AddCategoryDialog(
             onDismiss = { viewModel.hideAddDialog() },
-            onConfirm = { name ->
-                viewModel.addCategory(name)
+            onConfirm = { name, group ->
+                viewModel.addCategory(name, group)
             }
         )
     }
@@ -114,11 +114,23 @@ fun CategoryManageScreen(
             }
         )
     }
+
+    if (uiState.editingCategory != null) {
+        EditCategoryDialog(
+            currentName = uiState.editingCategory!!.name,
+            currentGroup = uiState.editingCategory!!.group,
+            onDismiss = { viewModel.hideEditDialog() },
+            onConfirm = { newName, newGroup ->
+                viewModel.updateCategory(uiState.editingCategory!!, newName, newGroup)
+            }
+        )
+    }
 }
 
 @Composable
 private fun CategoryCard(
     category: Category,
+    onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
     LolitaCard(
@@ -136,6 +148,15 @@ private fun CategoryCard(
                     category.name,
                     style = MaterialTheme.typography.titleMedium
                 )
+                Text(
+                    if (category.group == CategoryGroup.CLOTHING) "服装" else "配饰",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "编辑")
             }
 
             IconButton(
@@ -153,27 +174,46 @@ private fun CategoryCard(
 @Composable
 private fun AddCategoryDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (String, CategoryGroup) -> Unit
 ) {
     var categoryName by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    var selectedGroup by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(CategoryGroup.CLOTHING) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("添加类型") },
         text = {
-            OutlinedTextField(
-                value = categoryName,
-                onValueChange = { categoryName = it },
-                label = { Text("类型名称") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
+            Column {
+                OutlinedTextField(
+                    value = categoryName,
+                    onValueChange = { categoryName = it },
+                    label = { Text("类型名称") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Spacer(Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    FilterChip(
+                        selected = selectedGroup == CategoryGroup.CLOTHING,
+                        onClick = { selectedGroup = CategoryGroup.CLOTHING },
+                        label = { Text("服装") }
+                    )
+                    FilterChip(
+                        selected = selectedGroup == CategoryGroup.ACCESSORY,
+                        onClick = { selectedGroup = CategoryGroup.ACCESSORY },
+                        label = { Text("配饰") }
+                    )
+                }
+            }
         },
         confirmButton = {
             TextButton(
                 onClick = {
                     if (categoryName.isNotBlank()) {
-                        onConfirm(categoryName)
+                        onConfirm(categoryName, selectedGroup)
                     }
                 }
             ) {
@@ -216,6 +256,58 @@ private fun DeleteConfirmDialog(
             TextButton(onClick = onDismiss) {
                 Text("取消")
             }
+        }
+    )
+}
+
+@Composable
+private fun EditCategoryDialog(
+    currentName: String,
+    currentGroup: CategoryGroup,
+    onDismiss: () -> Unit,
+    onConfirm: (String, CategoryGroup) -> Unit
+) {
+    var name by remember { mutableStateOf(currentName) }
+    var selectedGroup by remember { mutableStateOf(currentGroup) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("编辑类型") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("类型名称") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Spacer(Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    FilterChip(
+                        selected = selectedGroup == CategoryGroup.CLOTHING,
+                        onClick = { selectedGroup = CategoryGroup.CLOTHING },
+                        label = { Text("服装") }
+                    )
+                    FilterChip(
+                        selected = selectedGroup == CategoryGroup.ACCESSORY,
+                        onClick = { selectedGroup = CategoryGroup.ACCESSORY },
+                        label = { Text("配饰") }
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name, selectedGroup) }) {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("保存")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("取消") }
         }
     )
 }

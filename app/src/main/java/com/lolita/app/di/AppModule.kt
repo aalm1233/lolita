@@ -44,13 +44,14 @@ object AppModule {
     private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }
     fun outfitLogRepository() = _outfitLogRepository
 
-    private val _styleRepository by lazy { StyleRepository(database.styleDao()) }
+    private val _styleRepository by lazy { StyleRepository(database.styleDao(), database.itemDao()) }
     fun styleRepository() = _styleRepository
 
-    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao()) }
+    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao(), database.itemDao()) }
     fun seasonRepository() = _seasonRepository
 
-    fun backupManager() = BackupManager(appContext, database)
+    private val _backupManager by lazy { BackupManager(appContext, database) }
+    fun backupManager() = _backupManager
 
     private val _appPreferences by lazy { AppPreferences(appContext) }
     fun appPreferences() = _appPreferences

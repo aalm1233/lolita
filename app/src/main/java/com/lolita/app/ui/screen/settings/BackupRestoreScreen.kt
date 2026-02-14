@@ -20,89 +20,104 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.file.BackupManager
 import com.lolita.app.data.file.BackupPreview
 import com.lolita.app.di.AppModule
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+data class BackupRestoreUiState(
+    val isExporting: Boolean = false,
+    val isImporting: Boolean = false,
+    val isPreviewing: Boolean = false,
+    val message: String? = null,
+    val preview: BackupPreview? = null,
+    val pendingImportUri: Uri? = null,
+    val showConfirmDialog: Boolean = false
+)
+
 class BackupRestoreViewModel : ViewModel() {
     private val backupManager: BackupManager = AppModule.backupManager()
 
-    var isExporting by mutableStateOf(false)
-        private set
-    var isImporting by mutableStateOf(false)
-        private set
-    var message by mutableStateOf<String?>(null)
-        private set
-    var preview by mutableStateOf<BackupPreview?>(null)
-        private set
-    var pendingImportUri by mutableStateOf<Uri?>(null)
-        private set
-    var showConfirmDialog by mutableStateOf(false)
-        private set
+    private val _uiState = MutableStateFlow(BackupRestoreUiState())
+    val uiState: StateFlow<BackupRestoreUiState> = _uiState.asStateFlow()
 
     fun exportJson() {
         viewModelScope.launch {
-            isExporting = true
-            message = null
+            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
             backupManager.exportToJson().fold(
-                onSuccess = { message = "JSON备份成功！文件已保存到下载目录" },
-                onFailure = { message = "备份失败: ${it.message}" }
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "JSON备份成功！文件已保存到下载目录") },
+                onFailure = { _uiState.value = _uiState.value.copy(message = "备份失败: ${it.message}") }
             )
-            isExporting = false
+            _uiState.value = _uiState.value.copy(isExporting = false)
         }
     }
     fun exportCsv() {
         viewModelScope.launch {
-            isExporting = true
-            message = null
+            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
             backupManager.exportToCsv().fold(
-                onSuccess = { message = "CSV导出成功！文件已保存到下载目录" },
-                onFailure = { message = "导出失败: ${it.message}" }
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "CSV导出成功！文件已保存到下载目录") },
+                onFailure = { _uiState.value = _uiState.value.copy(message = "导出失败: ${it.message}") }
             )
-            isExporting = false
+            _uiState.value = _uiState.value.copy(isExporting = false)
         }
     }
 
     fun onFileSelected(uri: Uri?) {
         if (uri == null) return
-        pendingImportUri = uri
+        _uiState.value = _uiState.value.copy(pendingImportUri = uri, isPreviewing = true)
         viewModelScope.launch {
             backupManager.previewBackup(uri).fold(
                 onSuccess = {
-                    preview = it
-                    showConfirmDialog = true
+                    _uiState.value = _uiState.value.copy(
+                        preview = it,
+                        showConfirmDialog = true,
+                        isPreviewing = false
+                    )
                 },
-                onFailure = { message = "无法读取备份文件: ${it.message}" }
+                onFailure = {
+                    _uiState.value = _uiState.value.copy(
+                        message = "无法读取备份文件: ${it.message}",
+                        isPreviewing = false
+                    )
+                }
             )
         }
     }
 
     fun confirmImport() {
-        val uri = pendingImportUri ?: return
-        showConfirmDialog = false
+        val uri = _uiState.value.pendingImportUri ?: return
+        _uiState.value = _uiState.value.copy(showConfirmDialog = false, isImporting = true, message = null)
         viewModelScope.launch {
-            isImporting = true
-            message = null
             backupManager.importFromJson(uri).fold(
                 onSuccess = { summary ->
-                    message = "恢复完成！导入 ${summary.totalImported} 条，跳过 ${summary.totalSkipped} 条"
+                    _uiState.value = _uiState.value.copy(
+                        message = "恢复完成！导入 ${summary.totalImported} 条，跳过 ${summary.totalSkipped} 条"
+                    )
                 },
-                onFailure = { message = "恢复失败: ${it.message}" }
+                onFailure = { _uiState.value = _uiState.value.copy(message = "恢复失败: ${it.message}") }
             )
-            isImporting = false
-            pendingImportUri = null
-            preview = null
+            _uiState.value = _uiState.value.copy(
+                isImporting = false,
+                pendingImportUri = null,
+                preview = null
+            )
         }
     }
 
     fun dismissDialog() {
-        showConfirmDialog = false
-        pendingImportUri = null
-        preview = null
+        _uiState.value = _uiState.value.copy(
+            showConfirmDialog = false,
+            pendingImportUri = null,
+            preview = null
+        )
     }
 
-    fun clearMessage() { message = null }
+    fun clearMessage() {
+        _uiState.value = _uiState.value.copy(message = null)
+    }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,14 +125,16 @@ fun BackupRestoreScreen(
     onBack: () -> Unit,
     viewModel: BackupRestoreViewModel = viewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri -> viewModel.onFileSelected(uri) }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(viewModel.message) {
-        viewModel.message?.let {
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
             snackbarHostState.showSnackbar(it)
             viewModel.clearMessage()
         }
@@ -156,10 +173,10 @@ fun BackupRestoreScreen(
                     Text("包含所有数据，可用于完整备份和恢复", style = MaterialTheme.typography.bodySmall)
                     Button(
                         onClick = { viewModel.exportJson() },
-                        enabled = !viewModel.isExporting,
+                        enabled = !uiState.isExporting,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        if (viewModel.isExporting) {
+                        if (uiState.isExporting) {
                             CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(8.dp))
                         }
@@ -177,10 +194,10 @@ fun BackupRestoreScreen(
                     Text("方便在Excel中查看数据", style = MaterialTheme.typography.bodySmall)
                     Button(
                         onClick = { viewModel.exportCsv() },
-                        enabled = !viewModel.isExporting,
+                        enabled = !uiState.isExporting,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        if (viewModel.isExporting) {
+                        if (uiState.isExporting) {
                             CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(8.dp))
                         }
@@ -203,10 +220,10 @@ fun BackupRestoreScreen(
                     Text("选择之前导出的JSON备份文件，已有数据不会被覆盖", style = MaterialTheme.typography.bodySmall)
                     Button(
                         onClick = { filePickerLauncher.launch(arrayOf("application/json")) },
-                        enabled = !viewModel.isImporting,
+                        enabled = !uiState.isImporting && !uiState.isPreviewing,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        if (viewModel.isImporting) {
+                        if (uiState.isImporting || uiState.isPreviewing) {
                             CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(8.dp))
                         }
@@ -218,8 +235,8 @@ fun BackupRestoreScreen(
     }
 
     // Confirm import dialog
-    if (viewModel.showConfirmDialog && viewModel.preview != null) {
-        val p = viewModel.preview!!
+    if (uiState.showConfirmDialog && uiState.preview != null) {
+        val p = uiState.preview!!
         val dateStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(p.backupDate))
         AlertDialog(
             onDismissRequest = { viewModel.dismissDialog() },
@@ -231,6 +248,8 @@ fun BackupRestoreScreen(
                     HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
                     Text("品牌: ${p.brandCount} 条")
                     Text("类型: ${p.categoryCount} 条")
+                    Text("风格: ${p.styleCount} 条")
+                    Text("季节: ${p.seasonCount} 条")
                     Text("套装: ${p.coordinateCount} 条")
                     Text("服饰: ${p.itemCount} 条")
                     Text("价格: ${p.priceCount} 条")

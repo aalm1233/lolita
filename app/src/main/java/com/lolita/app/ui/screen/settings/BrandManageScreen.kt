@@ -8,12 +8,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,10 +43,6 @@ fun BrandManageScreen(
             snackbarHostState.showSnackbar(it)
             viewModel.clearError()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadBrands()
     }
 
     Scaffold(
@@ -87,9 +85,10 @@ fun BrandManageScreen(
                 HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
 
-            items(uiState.brands) { brand ->
+            items(uiState.brands, key = { it.id }) { brand ->
                 BrandCard(
                     brand = brand,
+                    onEdit = { viewModel.showEditDialog(brand) },
                     onDelete = { viewModel.showDeleteConfirm(brand) }
                 )
             }
@@ -114,11 +113,22 @@ fun BrandManageScreen(
             }
         )
     }
+
+    if (uiState.editingBrand != null) {
+        EditBrandDialog(
+            currentName = uiState.editingBrand!!.name,
+            onDismiss = { viewModel.hideEditDialog() },
+            onConfirm = { newName ->
+                viewModel.updateBrand(uiState.editingBrand!!, newName)
+            }
+        )
+    }
 }
 
 @Composable
 private fun BrandCard(
     brand: Brand,
+    onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
     LolitaCard(
@@ -136,6 +146,10 @@ private fun BrandCard(
                     brand.name,
                     style = MaterialTheme.typography.titleMedium
                 )
+            }
+
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "编辑")
             }
 
             IconButton(
@@ -216,6 +230,38 @@ private fun DeleteConfirmDialog(
             TextButton(onClick = onDismiss) {
                 Text("取消")
             }
+        }
+    )
+}
+
+@Composable
+private fun EditBrandDialog(
+    currentName: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var name by remember { mutableStateOf(currentName) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("编辑品牌") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("品牌名称") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("保存")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("取消") }
         }
     )
 }

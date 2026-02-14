@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ItemEditScreen(
     itemId: Long?,
+    defaultStatus: String = "",
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
     viewModel: ItemEditViewModel = viewModel()
@@ -56,6 +57,9 @@ fun ItemEditScreen(
     // Load item data if editing
     LaunchedEffect(itemId) {
         viewModel.loadItem(itemId ?: 0L)
+        if (itemId == null && defaultStatus == "WISHED") {
+            viewModel.updateStatus(ItemStatus.WISHED)
+        }
     }
 
     // Show error dialog
@@ -127,7 +131,7 @@ fun ItemEditScreen(
                                 )
                             }
                         },
-                        enabled = !uiState.isSaving
+                        enabled = !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(
@@ -300,27 +304,31 @@ private fun BrandSelector(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = brands.find { it.id == selectedBrandId }?.name ?: "",
-        onValueChange = {},
-        readOnly = true,
-        label = { Text("品牌 *") },
-        trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showDialog = true },
-        isError = isError,
-        supportingText = if (isError) {
-            { Text("请选择品牌") }
-        } else null,
-        enabled = false,
-        colors = OutlinedTextFieldDefaults.colors(
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledBorderColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
-            disabledLabelColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+            .clickable { showDialog = true }
+    ) {
+        OutlinedTextField(
+            value = brands.find { it.id == selectedBrandId }?.name ?: "",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("品牌 *") },
+            trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            modifier = Modifier.fillMaxWidth(),
+            isError = isError,
+            supportingText = if (isError) {
+                { Text("请选择品牌") }
+            } else null,
+            enabled = false,
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledBorderColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
+                disabledLabelColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
-    )
+    }
 
     if (showDialog) {
         var searchQuery by remember { mutableStateOf("") }
@@ -345,7 +353,7 @@ private fun BrandSelector(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     LazyColumn(modifier = Modifier.heightIn(max = 350.dp)) {
-                        items(filtered) { brand ->
+                        items(filtered, key = { it.id }) { brand ->
                             Text(
                                 text = brand.name,
                                 modifier = Modifier
@@ -605,7 +613,6 @@ private fun ImageUploaderSection(
                         )
                         IconButton(
                             onClick = {
-                                ImageFileHelper.deleteImage(imageUrl)
                                 onImageChanged(null)
                             },
                             modifier = Modifier.align(Alignment.TopEnd),
@@ -765,7 +772,6 @@ private fun SizeChartImageSection(
                         )
                         IconButton(
                             onClick = {
-                                ImageFileHelper.deleteImage(sizeChartImageUrl)
                                 onImageChanged(null)
                             },
                             modifier = Modifier.align(Alignment.TopEnd),

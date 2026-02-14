@@ -9,6 +9,7 @@ import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.local.dao.PriceWithPayments
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,8 @@ data class CoordinateListUiState(
     val coordinates: List<Coordinate> = emptyList(),
     val itemCounts: Map<Long, Int> = emptyMap(),
     val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val errorMessage: String? = null
 )
 
 data class CoordinateDetailUiState(
@@ -79,8 +81,18 @@ class CoordinateListViewModel(
 
     fun deleteCoordinate(coordinate: Coordinate) {
         viewModelScope.launch {
-            coordinateRepository.deleteCoordinate(coordinate)
+            try {
+                coordinateRepository.deleteCoordinate(coordinate)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = e.message ?: "删除失败"
+                )
+            }
         }
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(errorMessage = null)
     }
 }
 
@@ -92,8 +104,11 @@ class CoordinateDetailViewModel(
     private val _uiState = MutableStateFlow(CoordinateDetailUiState())
     val uiState: StateFlow<CoordinateDetailUiState> = _uiState.asStateFlow()
 
+    private var loadJob: Job? = null
+
     fun loadCoordinate(coordinateId: Long) {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             combine(
                 coordinateRepository.getCoordinateWithItems(coordinateId),
                 priceRepository.getPricesWithPaymentsByCoordinate(coordinateId)
@@ -217,6 +232,9 @@ class CoordinateEditViewModel(
     suspend fun update(coordinateId: Long): Result<Unit> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
+            if (originalCreatedAt == 0L) {
+                throw IllegalStateException("数据未加载完成，请稍后再试")
+            }
             val coordinate = Coordinate(
                 id = coordinateId,
                 name = _uiState.value.name,

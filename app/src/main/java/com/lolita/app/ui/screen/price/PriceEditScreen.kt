@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -221,20 +222,28 @@ fun PriceEditScreen(
             var showDatePicker by remember { mutableStateOf(false) }
             val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
-            OutlinedTextField(
-                value = uiState.purchaseDate?.let { dateFormat.format(Date(it)) } ?: "",
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("购买日期 (可选)") },
-                placeholder = { Text("点击选择日期") },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { showDatePicker = true }) {
-                        Icon(Icons.Default.DateRange, contentDescription = "选择日期")
-                    }
-                },
-                enabled = !uiState.isSaving
-            )
+            Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
+                OutlinedTextField(
+                    value = uiState.purchaseDate?.let { dateFormat.format(Date(it)) } ?: "",
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("购买日期 (可选)") },
+                    placeholder = { Text("点击选择日期") },
+                    modifier = Modifier.fillMaxWidth(),
+                    trailingIcon = {
+                        IconButton(onClick = { showDatePicker = true }) {
+                            Icon(Icons.Default.DateRange, contentDescription = "选择日期")
+                        }
+                    },
+                    enabled = false,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledBorderColor = MaterialTheme.colorScheme.outline,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
 
             if (showDatePicker) {
                 val datePickerState = rememberDatePickerState(

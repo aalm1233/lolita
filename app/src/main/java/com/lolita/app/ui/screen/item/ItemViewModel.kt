@@ -17,6 +17,8 @@ import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.data.repository.SeasonRepository
 import com.lolita.app.data.preferences.AppPreferences
+import com.lolita.app.data.file.ImageFileHelper
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +51,8 @@ data class ItemListUiState(
     val totalPrice: Double = 0.0,
     val showTotalPrice: Boolean = false,
     val columnsPerRow: Int = 1,
-    val itemPrices: Map<Long, Double> = emptyMap()
+    val itemPrices: Map<Long, Double> = emptyMap(),
+    val errorMessage: String? = null
 )
 
 /**
@@ -93,6 +96,8 @@ class ItemListViewModel(
 
     private val _uiState = MutableStateFlow(ItemListUiState())
     val uiState: StateFlow<ItemListUiState> = _uiState.asStateFlow()
+
+    private var totalPriceJob: Job? = null
 
     init {
         loadItems()
@@ -158,7 +163,8 @@ class ItemListViewModel(
     )
 
     private fun updateTotalPrice(filteredItems: List<Item>) {
-        viewModelScope.launch {
+        totalPriceJob?.cancel()
+        totalPriceJob = viewModelScope.launch {
             val itemIds = filteredItems.map { it.id }
             if (itemIds.isEmpty()) {
                 _uiState.update { it.copy(totalPrice = 0.0) }
@@ -290,8 +296,16 @@ class ItemListViewModel(
 
     fun deleteItem(item: Item) {
         viewModelScope.launch {
-            itemRepository.deleteItem(item)
+            try {
+                itemRepository.deleteItem(item)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message ?: "删除失败") }
+            }
         }
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }
 
@@ -310,6 +324,8 @@ class ItemEditViewModel(
 
     private val _uiState = MutableStateFlow(ItemEditUiState())
     val uiState: StateFlow<ItemEditUiState> = _uiState.asStateFlow()
+
+    private val pendingImageDeletions = mutableListOf<String>()
 
     fun loadItem(itemId: Long) {
         viewModelScope.launch {
@@ -394,6 +410,10 @@ class ItemEditViewModel(
     }
 
     fun updateImageUrl(imageUrl: String?) {
+        val oldUrl = _uiState.value.imageUrl
+        if (oldUrl != null && imageUrl != oldUrl) {
+            pendingImageDeletions.add(oldUrl)
+        }
         _uiState.value = _uiState.value.copy(imageUrl = imageUrl)
     }
 
@@ -414,6 +434,10 @@ class ItemEditViewModel(
     }
 
     fun updateSizeChartImageUrl(url: String?) {
+        val oldUrl = _uiState.value.sizeChartImageUrl
+        if (oldUrl != null && url != oldUrl) {
+            pendingImageDeletions.add(oldUrl)
+        }
         _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
     }
 
@@ -488,6 +512,9 @@ class ItemEditViewModel(
                     // Create new item
                     itemRepository.insertItem(item)
                 }
+                // Delete pending images after successful save
+                pendingImageDeletions.forEach { ImageFileHelper.deleteImage(it) }
+                pendingImageDeletions.clear()
                 _uiState.value = _uiState.value.copy(isSaving = false)
                 onSuccess(itemId)
             } catch (e: Exception) {

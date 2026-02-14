@@ -118,8 +118,10 @@ private fun WishlistItemCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            // Priority color border
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+        ) {
             Box(
                 modifier = Modifier
                     .width(4.dp)

@@ -37,7 +37,7 @@ interface PriceDao {
     @Query("SELECT * FROM prices")
     suspend fun getAllPricesList(): List<Price>
 
-    @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices")
+    @Query("SELECT COALESCE(SUM(p.total_price), 0.0) FROM prices p INNER JOIN items i ON p.item_id = i.id WHERE i.status = 'OWNED'")
     fun getTotalSpending(): Flow<Double>
 
     @Transaction

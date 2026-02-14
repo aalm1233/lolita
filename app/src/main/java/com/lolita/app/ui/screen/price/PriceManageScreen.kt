@@ -28,6 +28,9 @@ import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink400
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,7 +83,7 @@ fun PriceManageScreen(
                     )
                 }
             } else {
-                items(uiState.prices) { priceWithPayments ->
+                items(uiState.prices, key = { it.price.id }) { priceWithPayments ->
                     PriceCard(
                         priceWithPayments = priceWithPayments,
                         onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
@@ -133,7 +136,7 @@ private fun PriceCard(
     val payments = priceWithPayments.payments
     val paidAmount = payments.filter { it.isPaid }.sumOf { it.amount }
     val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
-    val dateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
+    val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -183,7 +186,7 @@ private fun PriceCard(
             }
 
             price.purchaseDate?.let { date ->
-                PriceRow("购买日期", dateFormat.format(java.util.Date(date)))
+                PriceRow("购买日期", dateFormat.format(Date(date)))
             }
 
             if (payments.isNotEmpty()) {

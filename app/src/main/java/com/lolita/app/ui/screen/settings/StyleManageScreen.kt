@@ -8,12 +8,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,7 +37,6 @@ fun StyleManageScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-// PLACEHOLDER_STYLE_SCREEN_BODY
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
@@ -79,12 +80,11 @@ fun StyleManageScreen(
             item {
                 HorizontalDivider(color = Pink100, thickness = 1.dp)
             }
-            items(uiState.styles) { style ->
-                StyleCard(style = style, onDelete = { viewModel.showDeleteConfirm(style) })
+            items(uiState.styles, key = { it.id }) { style ->
+                StyleCard(style = style, onEdit = { viewModel.showEditDialog(style) }, onDelete = { viewModel.showDeleteConfirm(style) })
             }
         }
     }
-// PLACEHOLDER_STYLE_DIALOGS
 
     if (uiState.showAddDialog) {
         AddStyleDialog(
@@ -113,10 +113,18 @@ fun StyleManageScreen(
             }
         )
     }
+
+    if (uiState.editingStyle != null) {
+        EditStyleDialog(
+            currentName = uiState.editingStyle!!.name,
+            onDismiss = { viewModel.hideEditDialog() },
+            onConfirm = { newName -> viewModel.updateStyle(uiState.editingStyle!!, newName) }
+        )
+    }
 }
 
 @Composable
-private fun StyleCard(style: Style, onDelete: () -> Unit) {
+private fun StyleCard(style: Style, onEdit: () -> Unit, onDelete: () -> Unit) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -125,6 +133,9 @@ private fun StyleCard(style: Style, onDelete: () -> Unit) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(style.name, style = MaterialTheme.typography.titleMedium)
+            }
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "编辑")
             }
             IconButton(
                 onClick = onDelete,
@@ -135,11 +146,10 @@ private fun StyleCard(style: Style, onDelete: () -> Unit) {
         }
     }
 }
-// PLACEHOLDER_ADD_STYLE_DIALOG
 
 @Composable
 private fun AddStyleDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
-    var name by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("添加风格") },
@@ -157,6 +167,34 @@ private fun AddStyleDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
                 Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("添加")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("取消") }
+        }
+    )
+}
+
+@Composable
+private fun EditStyleDialog(currentName: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
+    var name by remember { mutableStateOf(currentName) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("编辑风格") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("风格名称") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
+                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("保存")
             }
         },
         dismissButton = {

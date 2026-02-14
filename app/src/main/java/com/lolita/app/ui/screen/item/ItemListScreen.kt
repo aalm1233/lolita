@@ -294,6 +294,7 @@ fun ItemListScreen(
                                         brandName = uiState.brandNames[item.brandId],
                                         categoryName = uiState.categoryNames[item.categoryId],
                                         itemPrice = uiState.itemPrices[item.id],
+                                        showPrice = uiState.showTotalPrice,
                                         onClick = { onNavigateToDetail(item.id) },
                                         onEdit = { onNavigateToEdit(item.id) },
                                         onDelete = { itemToDelete = item },
@@ -317,6 +318,7 @@ fun ItemListScreen(
                                         brandName = uiState.brandNames[item.brandId],
                                         categoryName = uiState.categoryNames[item.categoryId],
                                         itemPrice = uiState.itemPrices[item.id],
+                                        showPrice = uiState.showTotalPrice,
                                         onClick = { onNavigateToDetail(item.id) },
                                         onEdit = { onNavigateToEdit(item.id) },
                                         onDelete = { itemToDelete = item }
@@ -374,6 +376,7 @@ private fun ItemCard(
     brandName: String?,
     categoryName: String?,
     itemPrice: Double?,
+    showPrice: Boolean = true,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -439,7 +442,7 @@ private fun ItemCard(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
-                    if (itemPrice != null && itemPrice > 0) {
+                    if (showPrice && itemPrice != null && itemPrice > 0) {
                         Text(
                             text = "¥%.0f".format(itemPrice),
                             style = MaterialTheme.typography.labelMedium,
@@ -574,6 +577,7 @@ private fun ItemGridCard(
     brandName: String?,
     categoryName: String?,
     itemPrice: Double?,
+    showPrice: Boolean = true,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -630,7 +634,7 @@ private fun ItemGridCard(
                             )
                         }
                     }
-                    if (itemPrice != null && itemPrice > 0) {
+                    if (showPrice && itemPrice != null && itemPrice > 0) {
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)

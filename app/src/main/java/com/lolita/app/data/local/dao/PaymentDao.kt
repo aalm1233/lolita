@@ -56,24 +56,39 @@ interface PaymentDao {
     @Query("SELECT * FROM payments ORDER BY due_date ASC")
     suspend fun getAllPaymentsList(): List<Payment>
 
-    // Calendar queries
+    // Calendar queries — only include payments for OWNED items
     @Query("""
         SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
                p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
         FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.due_date BETWEEN :startDate AND :endDate
+        WHERE p.due_date BETWEEN :startDate AND :endDate AND i.status = 'OWNED'
         ORDER BY p.due_date ASC
     """)
     fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>>
 
-    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0 AND due_date BETWEEN :monthStart AND :monthEnd")
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.is_paid = 0 AND p.due_date BETWEEN :monthStart AND :monthEnd AND i.status = 'OWNED'
+    """)
     fun getMonthUnpaidTotal(monthStart: Long, monthEnd: Long): Flow<Double>
 
-    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0")
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.is_paid = 0 AND i.status = 'OWNED'
+    """)
     fun getTotalUnpaidAmount(): Flow<Double>
 
-    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0 AND due_date < :now")
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.is_paid = 0 AND p.due_date < :now AND i.status = 'OWNED'
+    """)
     fun getOverdueAmount(now: Long): Flow<Double>
 }

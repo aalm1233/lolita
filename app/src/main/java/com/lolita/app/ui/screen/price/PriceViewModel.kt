@@ -153,6 +153,7 @@ class PriceEditViewModel(
             // Auto-create payment records
             val item = itemRepository.getItemById(itemId)
             val itemName = item?.name ?: "服饰"
+            val shouldRemind = item?.status == ItemStatus.OWNED
             val now = System.currentTimeMillis()
 
             when (_uiState.value.priceType) {
@@ -164,8 +165,8 @@ class PriceEditViewModel(
                             amount = totalPrice,
                             dueDate = now,
                             isPaid = false,
-                            reminderSet = true,
-                            customReminderDays = 1
+                            reminderSet = shouldRemind,
+                            customReminderDays = if (shouldRemind) 1 else null
                         ),
                         itemName
                     )
@@ -182,8 +183,8 @@ class PriceEditViewModel(
                                 amount = depositAmount,
                                 dueDate = now,
                                 isPaid = false,
-                                reminderSet = true,
-                                customReminderDays = 1
+                                reminderSet = shouldRemind,
+                                customReminderDays = if (shouldRemind) 1 else null
                             ),
                             itemName
                         )
@@ -196,8 +197,8 @@ class PriceEditViewModel(
                                 amount = balanceAmount,
                                 dueDate = now,
                                 isPaid = false,
-                                reminderSet = true,
-                                customReminderDays = 1
+                                reminderSet = shouldRemind,
+                                customReminderDays = if (shouldRemind) 1 else null
                             ),
                             itemName
                         )
@@ -242,6 +243,7 @@ class PriceEditViewModel(
             if (typeChanged || amountChanged) {
                 val item = itemRepository.getItemById(existing.itemId)
                 val itemName = item?.name ?: "服饰"
+                val shouldRemind = item?.status == ItemStatus.OWNED
                 val oldPayments = paymentRepository.getPaymentsByPriceList(priceId)
                 // Delete old unpaid payments and recreate
                 oldPayments.filter { !it.isPaid }.forEach { paymentRepository.deletePayment(it) }
@@ -250,7 +252,8 @@ class PriceEditViewModel(
                     PriceType.FULL -> {
                         paymentRepository.insertPayment(
                             Payment(priceId = priceId, amount = totalPrice, dueDate = now,
-                                isPaid = false, reminderSet = true, customReminderDays = 1),
+                                isPaid = false, reminderSet = shouldRemind,
+                                customReminderDays = if (shouldRemind) 1 else null),
                             itemName
                         )
                     }
@@ -260,14 +263,16 @@ class PriceEditViewModel(
                         if (depositAmount > 0) {
                             paymentRepository.insertPayment(
                                 Payment(priceId = priceId, amount = depositAmount, dueDate = now,
-                                    isPaid = false, reminderSet = true, customReminderDays = 1),
+                                    isPaid = false, reminderSet = shouldRemind,
+                                    customReminderDays = if (shouldRemind) 1 else null),
                                 itemName
                             )
                         }
                         if (balanceAmount > 0) {
                             paymentRepository.insertPayment(
                                 Payment(priceId = priceId, amount = balanceAmount, dueDate = now,
-                                    isPaid = false, reminderSet = true, customReminderDays = 1),
+                                    isPaid = false, reminderSet = shouldRemind,
+                                    customReminderDays = if (shouldRemind) 1 else null),
                                 itemName
                             )
                         }

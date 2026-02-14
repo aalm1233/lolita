@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -14,6 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -103,29 +107,34 @@ fun ItemDetailScreen(
         )
     }
 
+    val hasImage = uiState.item?.imageUrl != null
+
     Scaffold(
         topBar = {
-            GradientTopAppBar(
-                title = { Text("服饰详情") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+            if (!hasImage) {
+                GradientTopAppBar(
+                    title = { Text("服饰详情") },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { onEdit(itemId) }) {
+                            Icon(Icons.Default.Edit, contentDescription = "编辑")
+                        }
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = "删除",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = { onEdit(itemId) }) {
-                        Icon(Icons.Default.Edit, contentDescription = "编辑")
-                    }
-                    IconButton(onClick = { showDeleteDialog = true }) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "删除",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            )
-        }
+                )
+            }
+        },
+        contentWindowInsets = if (hasImage) WindowInsets(0, 0, 0, 0) else ScaffoldDefaults.contentWindowInsets
     ) { padding ->
         if (uiState.isLoading) {
             Box(
@@ -148,12 +157,16 @@ fun ItemDetailScreen(
                     Text("服饰不存在")
                 }
             } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(rememberScrollState())
-                ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                top = if (hasImage) 0.dp else padding.calculateTopPadding(),
+                                bottom = padding.calculateBottomPadding()
+                            )
+                            .verticalScroll(rememberScrollState())
+                    ) {
                     // Image section
                     if (item.imageUrl != null) {
                         AsyncImage(
@@ -164,7 +177,7 @@ fun ItemDetailScreen(
                             contentDescription = item.name,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(300.dp)
+                                .height(380.dp)
                                 .clip(androidx.compose.foundation.shape.RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
                             contentScale = ContentScale.Crop
                         )
@@ -283,6 +296,37 @@ fun ItemDetailScreen(
                                     text = item.description,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
+                            }
+                        }
+
+                        // Size info
+                        if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
+                            HorizontalDivider(color = Pink100, thickness = 1.dp)
+
+                            Column {
+                                Text(
+                                    text = "尺码信息",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                if (!item.size.isNullOrEmpty()) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    DetailRow(label = "尺码", value = item.size!!)
+                                }
+                                if (item.sizeChartImageUrl != null) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(item.sizeChartImageUrl)
+                                            .crossfade(300)
+                                            .build(),
+                                        contentDescription = "尺码表",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(MaterialTheme.shapes.medium),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                }
                             }
                         }
 
@@ -436,6 +480,55 @@ fun ItemDetailScreen(
                             label = "更新时间",
                             value = formatDate(item.updatedAt)
                         )
+                    }
+                }
+
+                    // Floating top bar overlay for immersive image
+                    if (hasImage) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Black.copy(alpha = 0.5f),
+                                            Color.Transparent
+                                        ),
+                                        startY = 0f,
+                                        endY = 160f
+                                    )
+                                )
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(onClick = onBack) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "返回",
+                                        tint = Color.White
+                                    )
+                                }
+                                Spacer(modifier = Modifier.weight(1f))
+                                IconButton(onClick = { onEdit(itemId) }) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "编辑",
+                                        tint = Color.White
+                                    )
+                                }
+                                IconButton(onClick = { showDeleteDialog = true }) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "删除",
+                                        tint = Color.White.copy(alpha = 0.8f)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

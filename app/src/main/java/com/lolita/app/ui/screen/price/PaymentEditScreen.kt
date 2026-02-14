@@ -1,5 +1,8 @@
 package com.lolita.app.ui.screen.price
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,9 +23,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -42,6 +47,28 @@ fun PaymentEditScreen(
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // Save action extracted so it can be called after permission result
+    val performSave: () -> Unit = {
+        coroutineScope.launch {
+            val result = if (paymentId == null) {
+                viewModel.save(priceId)
+            } else {
+                viewModel.update(paymentId)
+            }
+            result.onSuccess {
+                onSaveSuccess()
+            }
+        }
+    }
+
+    val calendarPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ ->
+        // Proceed with save regardless of permission result
+        performSave()
+    }
 
     LaunchedEffect(paymentId) {
         viewModel.loadPayment(paymentId)
@@ -85,15 +112,15 @@ fun PaymentEditScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            coroutineScope.launch {
-                                val result = if (paymentId == null) {
-                                    viewModel.save(priceId)
-                                } else {
-                                    viewModel.update(paymentId)
-                                }
-                                result.onSuccess {
-                                    onSaveSuccess()
-                                }
+                            if (CalendarEventHelper.hasCalendarPermission(context)) {
+                                performSave()
+                            } else {
+                                calendarPermissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.READ_CALENDAR,
+                                        Manifest.permission.WRITE_CALENDAR
+                                    )
+                                )
                             }
                         },
                         enabled = viewModel.isValid() && !uiState.isSaving

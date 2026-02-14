@@ -22,9 +22,11 @@ import kotlinx.coroutines.launch
         Price::class,
         Payment::class,
         OutfitLog::class,
-        OutfitItemCrossRef::class
+        OutfitItemCrossRef::class,
+        Style::class,
+        Season::class
     ],
-    version = 2,
+    version = 5,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -36,6 +38,8 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun priceDao(): PriceDao
     abstract fun paymentDao(): PaymentDao
     abstract fun outfitLogDao(): OutfitLogDao
+    abstract fun styleDao(): StyleDao
+    abstract fun seasonDao(): SeasonDao
 
     companion object {
         @Volatile
@@ -50,6 +54,65 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Create styles table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS styles (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        is_preset INTEGER NOT NULL DEFAULT 0,
+                        created_at INTEGER NOT NULL
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_styles_name ON styles (name)")
+
+                // Create seasons table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS seasons (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        is_preset INTEGER NOT NULL DEFAULT 0,
+                        created_at INTEGER NOT NULL
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_seasons_name ON seasons (name)")
+
+                // Add size and sizeChartImageUrl to items
+                db.execSQL("ALTER TABLE items ADD COLUMN size TEXT DEFAULT NULL")
+                db.execSQL("ALTER TABLE items ADD COLUMN size_chart_image_url TEXT DEFAULT NULL")
+
+                // Insert preset styles
+                val now = System.currentTimeMillis()
+                listOf("甜系", "古典", "哥特", "田园", "中华", "其他").forEach { name ->
+                    db.execSQL("INSERT OR IGNORE INTO styles (name, is_preset, created_at) VALUES ('$name', 1, $now)")
+                }
+                // Insert preset seasons
+                listOf("春", "夏", "秋", "冬", "四季").forEach { name ->
+                    db.execSQL("INSERT OR IGNORE INTO seasons (name, is_preset, created_at) VALUES ('$name', 1, $now)")
+                }
+            }
+        }
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Add category_group column to categories
+                db.execSQL("ALTER TABLE categories ADD COLUMN category_group TEXT NOT NULL DEFAULT 'CLOTHING'")
+
+                // Update accessory categories
+                val accessories = listOf("KC", "斗篷", "披肩", "发带", "Bonnet", "其他头饰", "袜子", "手套", "其他配饰")
+                accessories.forEach { name ->
+                    db.execSQL("UPDATE categories SET category_group = 'ACCESSORY' WHERE name = '$name'")
+                }
+            }
+        }
+
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE payments ADD COLUMN calendar_event_id INTEGER DEFAULT NULL")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -58,7 +121,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
                 INSTANCE = instance
                 instance
@@ -282,12 +345,32 @@ abstract class LolitaDatabase : RoomDatabase() {
 
                         // Insert preset categories
                         val categoryDao = database.categoryDao()
-                        listOf(
-                            "JSK", "OP", "SK", "KC", "斗篷", "披肩",
-                            "发带", "Bonnet", "其他头饰", "袜子", "手套", "其他配饰"
-                        ).forEach { name ->
+                        val clothingCategories = listOf("JSK", "OP", "SK")
+                        val accessoryCategories = listOf("KC", "斗篷", "披肩", "发带", "Bonnet", "其他头饰", "袜子", "手套", "其他配饰")
+                        clothingCategories.forEach { name ->
                             try {
-                                categoryDao.insertCategory(Category(name = name, isPreset = true))
+                                categoryDao.insertCategory(Category(name = name, isPreset = true, group = CategoryGroup.CLOTHING))
+                            } catch (_: Exception) { }
+                        }
+                        accessoryCategories.forEach { name ->
+                            try {
+                                categoryDao.insertCategory(Category(name = name, isPreset = true, group = CategoryGroup.ACCESSORY))
+                            } catch (_: Exception) { }
+                        }
+
+                        // Insert preset styles
+                        val styleDao = database.styleDao()
+                        listOf("甜系", "古典", "哥特", "田园", "中华", "其他").forEach { name ->
+                            try {
+                                styleDao.insertStyle(Style(name = name, isPreset = true))
+                            } catch (_: Exception) { }
+                        }
+
+                        // Insert preset seasons
+                        val seasonDao = database.seasonDao()
+                        listOf("春", "夏", "秋", "冬", "四季").forEach { name ->
+                            try {
+                                seasonDao.insertSeason(Season(name = name, isPreset = true))
                             } catch (_: Exception) { }
                         }
                     }

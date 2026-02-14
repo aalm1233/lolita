@@ -26,6 +26,9 @@ data class Payment(
     @ColumnInfo(name = "amount")
     val amount: Double,
 
+    @ColumnInfo(name = "calendar_event_id", defaultValue = "NULL")
+    val calendarEventId: Long? = null,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis(),
 

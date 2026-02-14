@@ -3,6 +3,8 @@ package com.lolita.app.data.repository
 import android.content.Context
 import com.lolita.app.data.local.dao.PaymentDao
 import com.lolita.app.data.local.entity.Payment
+import com.lolita.app.data.local.entity.PaymentWithItemInfo
+import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.data.notification.PaymentReminderScheduler
 import kotlinx.coroutines.flow.Flow
 
@@ -28,31 +30,72 @@ class PaymentRepository(
         val id = paymentDao.insertPayment(payment)
         // Schedule reminder if enabled
         if (payment.reminderSet && !payment.isPaid) {
-            val insertedPayment = payment.copy(id = id)
-            reminderScheduler.scheduleReminder(insertedPayment, itemName)
+            try {
+                val insertedPayment = payment.copy(id = id)
+                reminderScheduler.scheduleReminder(insertedPayment, itemName)
+            } catch (_: SecurityException) {
+                // Exact alarm permission not granted, reminder skipped
+            }
+        }
+        // Add calendar event if permission granted
+        val calendarEventId = try {
+            CalendarEventHelper.insertEvent(
+                context = context,
+                title = "付款提醒: $itemName",
+                description = "金额: ¥${payment.amount}",
+                startTimeMillis = payment.dueDate
+            )
+        } catch (_: Exception) {
+            null
+        }
+        if (calendarEventId != null) {
+            paymentDao.updatePayment(payment.copy(id = id, calendarEventId = calendarEventId))
         }
         return id
     }
 
     suspend fun updatePayment(payment: Payment, itemName: String = "") {
-        paymentDao.updatePayment(payment)
+        // Handle calendar event: delete old, insert new if due date present
+        val oldPayment = paymentDao.getPaymentById(payment.id)
+        var updatedPayment = payment
+        try {
+            oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
+            val newEventId = CalendarEventHelper.insertEvent(
+                context = context,
+                title = "付款提醒: $itemName",
+                description = "金额: ¥${payment.amount}",
+                startTimeMillis = payment.dueDate
+            )
+            updatedPayment = payment.copy(calendarEventId = newEventId)
+        } catch (_: Exception) {
+            // Calendar operation failed, proceed without calendar event
+        }
 
-        // Update reminder based on payment status
-        if (payment.isPaid) {
-            // Cancel reminder when payment is marked as paid
-            reminderScheduler.cancelReminder(payment.id)
-        } else if (payment.reminderSet) {
-            // Schedule or update reminder
-            reminderScheduler.scheduleReminder(payment, itemName)
-        } else {
-            // Cancel reminder if reminder is disabled
-            reminderScheduler.cancelReminder(payment.id)
+        paymentDao.updatePayment(updatedPayment)
+
+        try {
+            // Update reminder based on payment status
+            if (payment.isPaid) {
+                reminderScheduler.cancelReminder(payment.id)
+            } else if (payment.reminderSet) {
+                reminderScheduler.scheduleReminder(payment, itemName)
+            } else {
+                reminderScheduler.cancelReminder(payment.id)
+            }
+        } catch (_: SecurityException) {
+            // Exact alarm permission not granted, reminder skipped
         }
     }
 
     suspend fun deletePayment(payment: Payment) {
         // Cancel reminder before deleting
         reminderScheduler.cancelReminder(payment.id)
+        // Delete calendar event if exists
+        payment.calendarEventId?.let {
+            try {
+                CalendarEventHelper.deleteEvent(context, it)
+            } catch (_: Exception) { }
+        }
         paymentDao.deletePayment(payment)
     }
 
@@ -77,4 +120,17 @@ class PaymentRepository(
      * Get the scheduler instance (for testing purposes)
      */
     fun getScheduler(): PaymentReminderScheduler = reminderScheduler
+
+    // Calendar queries
+    fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>> =
+        paymentDao.getPaymentsWithItemInfoByDateRange(startDate, endDate)
+
+    fun getMonthUnpaidTotal(monthStart: Long, monthEnd: Long): Flow<Double> =
+        paymentDao.getMonthUnpaidTotal(monthStart, monthEnd)
+
+    fun getTotalUnpaidAmount(): Flow<Double> =
+        paymentDao.getTotalUnpaidAmount()
+
+    fun getOverdueAmount(now: Long): Flow<Double> =
+        paymentDao.getOverdueAmount(now)
 }

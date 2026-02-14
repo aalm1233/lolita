@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ class WishlistViewModel(
 @Composable
 fun WishlistScreen(
     onNavigateToDetail: (Long) -> Unit,
+    onNavigateToEdit: (Long?) -> Unit,
     viewModel: WishlistViewModel = viewModel()
 ) {
     val items by viewModel.items.collectAsState()
@@ -56,6 +58,19 @@ fun WishlistScreen(
                 title = { Text("愿望单") },
                 compact = true
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onNavigateToEdit(null) },
+                containerColor = Pink400,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "添加愿望",
+                    tint = Color.White
+                )
+            }
         }
     ) { padding ->
         if (items.isEmpty()) {

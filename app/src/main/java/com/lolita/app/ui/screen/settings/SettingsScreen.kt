@@ -1,17 +1,21 @@
 package com.lolita.app.ui.screen.settings
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,16 +26,21 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink100
 import com.lolita.app.ui.theme.Pink400
+import com.lolita.app.data.preferences.AppPreferences
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onNavigateToSearch: () -> Unit = {},
     onNavigateToBrand: () -> Unit,
     onNavigateToCategory: () -> Unit,
+    onNavigateToStyle: () -> Unit = {},
+    onNavigateToSeason: () -> Unit = {},
     onNavigateToBackupRestore: () -> Unit,
-    onNavigateToStats: () -> Unit = {}
+    appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) {
+    val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -44,25 +53,10 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            SettingsMenuItem(
-                title = "数据统计",
-                description = "查看服饰和消费统计",
-                icon = Icons.Default.DateRange,
-                iconTint = Color(0xFFE91E8C),
-                onClick = onNavigateToStats
-            )
-
-            SettingsMenuItem(
-                title = "搜索",
-                description = "按名称搜索服饰",
-                icon = Icons.Default.Search,
-                iconTint = Color(0xFFFFD93D),
-                onClick = onNavigateToSearch
-            )
-
             SettingsMenuItem(
                 title = "品牌管理",
                 description = "管理预置和自定义品牌",
@@ -80,6 +74,22 @@ fun SettingsScreen(
             )
 
             SettingsMenuItem(
+                title = "风格管理",
+                description = "管理服饰风格（甜系、古典、哥特等）",
+                icon = Icons.Default.Star,
+                iconTint = Color(0xFFBA68C8),
+                onClick = onNavigateToStyle
+            )
+
+            SettingsMenuItem(
+                title = "季节管理",
+                description = "管理适用季节（春、夏、秋、冬等）",
+                icon = Icons.Default.DateRange,
+                iconTint = Color(0xFF4FC3F7),
+                onClick = onNavigateToSeason
+            )
+
+            SettingsMenuItem(
                 title = "数据备份与恢复",
                 description = "导出/导入数据，支持JSON和CSV格式",
                 icon = Icons.Default.Build,
@@ -87,7 +97,28 @@ fun SettingsScreen(
                 onClick = onNavigateToBackupRestore
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+            // Display settings section
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                "显示设置",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+
+            SettingsToggleItem(
+                title = "显示总价",
+                description = "在服饰列表右上角显示筛选结果的总价",
+                icon = Icons.Default.AttachMoney,
+                iconTint = Color(0xFFFFB74D),
+                checked = showTotalPrice,
+                onCheckedChange = {
+                    coroutineScope.launch { appPreferences.setShowTotalPrice(it) }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             // About section
             HorizontalDivider(color = Pink100, thickness = 1.dp)
@@ -182,6 +213,63 @@ private fun SettingsMenuItem(
                 contentDescription = null,
                 modifier = Modifier.size(18.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsToggleItem(
+    title: String,
+    description: String,
+    icon: ImageVector,
+    iconTint: Color,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    LolitaCard(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Surface(
+                color = iconTint.copy(alpha = 0.1f),
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Pink400
+                )
             )
         }
     }

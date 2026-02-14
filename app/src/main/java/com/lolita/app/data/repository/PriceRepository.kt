@@ -29,4 +29,16 @@ class PriceRepository(
         priceDao.getPricesWithPaymentsByItem(itemId)
 
     fun getTotalSpending(): Flow<Double> = priceDao.getTotalSpending()
+
+    fun getTotalPriceByCoordinate(coordinateId: Long): Flow<Double> =
+        priceDao.getTotalPriceByCoordinate(coordinateId)
+
+    fun getPricesWithPaymentsByCoordinate(coordinateId: Long): Flow<List<DaoPriceWithPayments>> =
+        priceDao.getPricesWithPaymentsByCoordinate(coordinateId)
+
+    fun getTotalPriceByItemIds(itemIds: List<Long>): Flow<Double> =
+        priceDao.getTotalPriceByItemIds(itemIds)
+
+    fun getItemPriceSums(): Flow<List<com.lolita.app.data.local.dao.ItemPriceSum>> =
+        priceDao.getItemPriceSums()
 }

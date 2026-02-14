@@ -7,6 +7,8 @@ import com.lolita.app.data.local.dao.CoordinateWithItems
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.data.local.dao.PriceWithPayments
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +26,9 @@ data class CoordinateListUiState(
 data class CoordinateDetailUiState(
     val coordinate: Coordinate? = null,
     val items: List<Item> = emptyList(),
+    val totalPrice: Double = 0.0,
+    val paidAmount: Double = 0.0,
+    val unpaidAmount: Double = 0.0,
     val isLoading: Boolean = true
 )
 
@@ -80,7 +85,8 @@ class CoordinateListViewModel(
 }
 
 class CoordinateDetailViewModel(
-    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository()
+    private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateDetailUiState())
@@ -88,12 +94,28 @@ class CoordinateDetailViewModel(
 
     fun loadCoordinate(coordinateId: Long) {
         viewModelScope.launch {
-            coordinateRepository.getCoordinateWithItems(coordinateId).collect { result ->
-                _uiState.value = _uiState.value.copy(
+            combine(
+                coordinateRepository.getCoordinateWithItems(coordinateId),
+                priceRepository.getPricesWithPaymentsByCoordinate(coordinateId)
+            ) { result, pricesWithPayments ->
+                val totalPrice = pricesWithPayments.sumOf { it.price.totalPrice }
+                val paidAmount = pricesWithPayments.flatMap { it.payments }
+                    .filter { it.isPaid }
+                    .sumOf { it.amount }
+                val unpaidAmount = pricesWithPayments.flatMap { it.payments }
+                    .filter { !it.isPaid }
+                    .sumOf { it.amount }
+
+                CoordinateDetailUiState(
                     coordinate = result?.coordinate,
                     items = result?.items ?: emptyList(),
+                    totalPrice = totalPrice,
+                    paidAmount = paidAmount,
+                    unpaidAmount = unpaidAmount,
                     isLoading = false
                 )
+            }.collect { state ->
+                _uiState.value = state
             }
         }
     }

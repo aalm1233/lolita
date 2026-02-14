@@ -37,8 +37,6 @@ fun CoordinateListScreen(
     onNavigateToAdd: () -> Unit = {},
     viewModel: CoordinateListViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             GradientTopAppBar(title = { Text("套装管理") }, compact = true)
@@ -53,42 +51,56 @@ fun CoordinateListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (uiState.isLoading) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+        CoordinateListContent(
+            onNavigateToDetail = onNavigateToDetail,
+            viewModel = viewModel,
+            modifier = Modifier.padding(padding)
+        )
+    }
+}
+
+@Composable
+fun CoordinateListContent(
+    onNavigateToDetail: (Long) -> Unit,
+    viewModel: CoordinateListViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (uiState.isLoading) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
-            } else if (uiState.coordinates.isEmpty()) {
-                item {
-                    EmptyState(
-                        icon = Icons.Default.Star,
-                        title = "暂无套装",
-                        subtitle = "点击 + 创建第一个套装"
-                    )
-                }
-            } else {
-                items(uiState.coordinates, key = { it.id }) { coordinate ->
-                    CoordinateCard(
-                        coordinate = coordinate,
-                        itemCount = uiState.itemCounts[coordinate.id] ?: 0,
-                        itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
-                        onClick = { onNavigateToDetail(coordinate.id) },
-                        modifier = Modifier.animateItem()
-                    )
-                }
+            }
+        } else if (uiState.coordinates.isEmpty()) {
+            item {
+                EmptyState(
+                    icon = Icons.Default.Star,
+                    title = "暂无套装",
+                    subtitle = "点击 + 创建第一个套装"
+                )
+            }
+        } else {
+            items(uiState.coordinates, key = { it.id }) { coordinate ->
+                CoordinateCard(
+                    coordinate = coordinate,
+                    itemCount = uiState.itemCounts[coordinate.id] ?: 0,
+                    itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
+                    onClick = { onNavigateToDetail(coordinate.id) },
+                    modifier = Modifier.animateItem()
+                )
             }
         }
     }

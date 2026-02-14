@@ -79,6 +79,12 @@ data class Item(
     @ColumnInfo(name = "style")
     val style: String? = null,
 
+    @ColumnInfo(name = "size")
+    val size: String? = null,
+
+    @ColumnInfo(name = "size_chart_image_url")
+    val sizeChartImageUrl: String? = null,
+
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()
 )

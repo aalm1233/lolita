@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.dao.PriceWithPayments as DaoPriceWithPayments
@@ -15,6 +16,7 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.data.repository.SeasonRepository
+import com.lolita.app.data.preferences.AppPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,10 +34,22 @@ data class ItemListUiState(
     val filteredItems: List<Item> = emptyList(),
     val isLoading: Boolean = true,
     val filterStatus: ItemStatus? = null,
+    val filterGroup: CategoryGroup? = null,
+    val filterSeason: String? = null,
+    val filterStyle: String? = null,
+    val filterColor: String? = null,
+    val filterBrandId: Long? = null,
     val searchQuery: String = "",
     val brandNames: Map<Long, String> = emptyMap(),
     val categoryNames: Map<Long, String> = emptyMap(),
-    val columnsPerRow: Int = 1
+    val categoryGroups: Map<Long, CategoryGroup> = emptyMap(),
+    val seasonOptions: List<String> = emptyList(),
+    val styleOptions: List<String> = emptyList(),
+    val colorOptions: List<String> = emptyList(),
+    val totalPrice: Double = 0.0,
+    val showTotalPrice: Boolean = false,
+    val columnsPerRow: Int = 1,
+    val itemPrices: Map<Long, Double> = emptyMap()
 )
 
 /**
@@ -72,7 +86,9 @@ data class ItemEditUiState(
 class ItemListViewModel(
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
     private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
-    private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository()
+    private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
@@ -80,6 +96,15 @@ class ItemListViewModel(
 
     init {
         loadItems()
+        loadPreferences()
+    }
+
+    private fun loadPreferences() {
+        viewModelScope.launch {
+            appPreferences.showTotalPrice.collect { show ->
+                _uiState.update { it.copy(showTotalPrice = show) }
+            }
+        }
     }
 
     private fun loadItems() {
@@ -87,46 +112,169 @@ class ItemListViewModel(
             combine(
                 itemRepository.getAllItems(),
                 brandRepository.getAllBrands(),
-                categoryRepository.getAllCategories()
-            ) { items, brands, categories ->
+                categoryRepository.getAllCategories(),
+                priceRepository.getItemPriceSums()
+            ) { items, brands, categories, priceSums ->
                 val brandMap = brands.associate { it.id to it.name }
                 val categoryMap = categories.associate { it.id to it.name }
-                Triple(items, brandMap, categoryMap)
-            }.collect { (items, brandMap, categoryMap) ->
-                _uiState.value = _uiState.value.copy(
-                    items = items,
-                    filteredItems = applyFilters(items, _uiState.value.filterStatus, _uiState.value.searchQuery),
-                    brandNames = brandMap,
-                    categoryNames = categoryMap,
+                val groupMap = categories.associate { it.id to it.group }
+                val priceMap = priceSums.associate { it.itemId to it.totalPrice }
+                val seasonOpts = items.mapNotNull { it.season?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
+                val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
+                val colorOpts = items.mapNotNull { it.color?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
+                ItemListData(items, brandMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
+            }.collect { data ->
+                val state = _uiState.value
+                val filtered = applyFilters(
+                    data.items, state.filterStatus, state.searchQuery, state.filterGroup,
+                    data.groupMap, state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
+                )
+                _uiState.value = state.copy(
+                    items = data.items,
+                    filteredItems = filtered,
+                    brandNames = data.brandMap,
+                    categoryNames = data.categoryMap,
+                    categoryGroups = data.groupMap,
+                    itemPrices = data.priceMap,
+                    seasonOptions = data.seasonOpts,
+                    styleOptions = data.styleOpts,
+                    colorOptions = data.colorOpts,
                     isLoading = false
                 )
+                updateTotalPrice(filtered)
+            }
+        }
+    }
+
+    private data class ItemListData(
+        val items: List<Item>,
+        val brandMap: Map<Long, String>,
+        val categoryMap: Map<Long, String>,
+        val groupMap: Map<Long, CategoryGroup>,
+        val priceMap: Map<Long, Double>,
+        val seasonOpts: List<String>,
+        val styleOpts: List<String>,
+        val colorOpts: List<String>
+    )
+
+    private fun updateTotalPrice(filteredItems: List<Item>) {
+        viewModelScope.launch {
+            val itemIds = filteredItems.map { it.id }
+            if (itemIds.isEmpty()) {
+                _uiState.update { it.copy(totalPrice = 0.0) }
+                return@launch
+            }
+            priceRepository.getTotalPriceByItemIds(itemIds).collect { total ->
+                _uiState.update { it.copy(totalPrice = total) }
             }
         }
     }
 
     fun filterByStatus(status: ItemStatus?) {
-        _uiState.value = _uiState.value.copy(
-            filterStatus = status,
-            filteredItems = applyFilters(_uiState.value.items, status, _uiState.value.searchQuery)
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, status, state.searchQuery, state.filterGroup, state.categoryGroups,
+            state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
         )
+        _uiState.value = state.copy(filterStatus = status, filteredItems = filtered)
+        updateTotalPrice(filtered)
+    }
+
+    fun filterByGroup(group: CategoryGroup?) {
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, state.searchQuery, group, state.categoryGroups,
+            state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
+        )
+        _uiState.value = state.copy(filterGroup = group, filteredItems = filtered)
+        updateTotalPrice(filtered)
+    }
+
+    fun filterBySeason(season: String?) {
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
+            season, state.filterStyle, state.filterColor, state.filterBrandId
+        )
+        _uiState.value = state.copy(filterSeason = season, filteredItems = filtered)
+        updateTotalPrice(filtered)
+    }
+
+    fun filterByStyle(style: String?) {
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
+            state.filterSeason, style, state.filterColor, state.filterBrandId
+        )
+        _uiState.value = state.copy(filterStyle = style, filteredItems = filtered)
+        updateTotalPrice(filtered)
+    }
+
+    fun filterByColor(color: String?) {
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
+            state.filterSeason, state.filterStyle, color, state.filterBrandId
+        )
+        _uiState.value = state.copy(filterColor = color, filteredItems = filtered)
+        updateTotalPrice(filtered)
+    }
+
+    fun filterByBrand(brandId: Long?) {
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
+            state.filterSeason, state.filterStyle, state.filterColor, brandId
+        )
+        _uiState.value = state.copy(filterBrandId = brandId, filteredItems = filtered)
+        updateTotalPrice(filtered)
     }
 
     fun search(query: String) {
-        _uiState.value = _uiState.value.copy(
-            searchQuery = query,
-            filteredItems = applyFilters(_uiState.value.items, _uiState.value.filterStatus, query)
+        val state = _uiState.value
+        val filtered = applyFilters(
+            state.items, state.filterStatus, query, state.filterGroup, state.categoryGroups,
+            state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
         )
+        _uiState.value = state.copy(searchQuery = query, filteredItems = filtered)
+        updateTotalPrice(filtered)
     }
 
     private fun applyFilters(
         items: List<Item>,
         status: ItemStatus?,
-        query: String
+        query: String,
+        group: CategoryGroup? = null,
+        categoryGroups: Map<Long, CategoryGroup> = emptyMap(),
+        season: String? = null,
+        style: String? = null,
+        color: String? = null,
+        brandId: Long? = null
     ): List<Item> {
         var result = items
 
         if (status != null) {
             result = result.filter { it.status == status }
+        }
+
+        if (group != null) {
+            result = result.filter { categoryGroups[it.categoryId] == group }
+        }
+
+        if (season != null) {
+            result = result.filter { it.season == season }
+        }
+
+        if (style != null) {
+            result = result.filter { it.style == style }
+        }
+
+        if (color != null) {
+            result = result.filter { it.color == color }
+        }
+
+        if (brandId != null) {
+            result = result.filter { it.brandId == brandId }
         }
 
         if (query.isNotBlank()) {

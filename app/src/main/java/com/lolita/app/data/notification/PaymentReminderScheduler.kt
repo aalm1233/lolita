@@ -47,12 +47,22 @@ class PaymentReminderScheduler(private val context: Context) {
         )
 
         // Use setExactAndAllowWhileIdle for Android 12+ compatibility
+        // Check canScheduleExactAlarms on Android 12+ to avoid SecurityException
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                reminderTimeMillis,
-                pendingIntent
-            )
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    reminderTimeMillis,
+                    pendingIntent
+                )
+            } else {
+                // Fallback to inexact alarm when exact alarm permission not granted
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    reminderTimeMillis,
+                    pendingIntent
+                )
+            }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,

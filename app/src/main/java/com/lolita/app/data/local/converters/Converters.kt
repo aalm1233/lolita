@@ -41,6 +41,17 @@ class Converters {
         PriceType.FULL
     }
 
+    // CategoryGroup
+    @TypeConverter
+    fun fromCategoryGroup(value: CategoryGroup): String = value.name
+
+    @TypeConverter
+    fun toCategoryGroup(value: String): CategoryGroup = try {
+        CategoryGroup.valueOf(value)
+    } catch (e: IllegalArgumentException) {
+        CategoryGroup.CLOTHING
+    }
+
     // String List
     @TypeConverter
     fun fromStringList(value: List<String>): String = gson.toJson(value)

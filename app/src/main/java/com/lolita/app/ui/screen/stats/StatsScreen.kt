@@ -87,8 +87,6 @@ class StatsViewModel(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsScreen(onBack: () -> Unit, viewModel: StatsViewModel = viewModel()) {
-    val uiState by viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -101,62 +99,66 @@ fun StatsScreen(onBack: () -> Unit, viewModel: StatsViewModel = viewModel()) {
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        StatsContent(viewModel = viewModel, modifier = Modifier.padding(padding))
+    }
+}
+
+@Composable
+fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = Modifier) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 2-column grid
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "已拥有",
-                    targetValue = uiState.ownedCount,
-                    icon = Icons.Default.Home,
-                    color = Color(0xFFFF69B4),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    title = "愿望单",
-                    targetValue = uiState.wishedCount,
-                    icon = Icons.Default.Favorite,
-                    color = Color(0xFFFF6B6B),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "套装",
-                    targetValue = uiState.coordinateCount,
-                    icon = Icons.Default.Star,
-                    color = Color(0xFFFFD93D),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    title = "穿搭记录",
-                    targetValue = uiState.outfitLogCount,
-                    icon = Icons.Default.DateRange,
-                    color = Color(0xFF6BCF7F),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            // Full-width spending card
-            SpendingCard(
-                title = "总消费",
-                targetValue = uiState.totalSpending,
-                icon = Icons.Default.ShoppingCart,
-                color = Color(0xFFE91E8C),
-                modifier = Modifier.fillMaxWidth()
+            StatCard(
+                title = "已拥有",
+                targetValue = uiState.ownedCount,
+                icon = Icons.Default.Home,
+                color = Color(0xFFFF69B4),
+                modifier = Modifier.weight(1f)
+            )
+            StatCard(
+                title = "愿望单",
+                targetValue = uiState.wishedCount,
+                icon = Icons.Default.Favorite,
+                color = Color(0xFFFF6B6B),
+                modifier = Modifier.weight(1f)
             )
         }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            StatCard(
+                title = "套装",
+                targetValue = uiState.coordinateCount,
+                icon = Icons.Default.Star,
+                color = Color(0xFFFFD93D),
+                modifier = Modifier.weight(1f)
+            )
+            StatCard(
+                title = "穿搭记录",
+                targetValue = uiState.outfitLogCount,
+                icon = Icons.Default.DateRange,
+                color = Color(0xFF6BCF7F),
+                modifier = Modifier.weight(1f)
+            )
+        }
+        SpendingCard(
+            title = "总消费",
+            targetValue = uiState.totalSpending,
+            icon = Icons.Default.ShoppingCart,
+            color = Color(0xFFE91E8C),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

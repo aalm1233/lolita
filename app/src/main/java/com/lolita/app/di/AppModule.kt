@@ -3,6 +3,7 @@ package com.lolita.app.di
 import android.content.Context
 import com.lolita.app.data.file.BackupManager
 import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.*
 
 object AppModule {
@@ -43,7 +44,16 @@ object AppModule {
     private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }
     fun outfitLogRepository() = _outfitLogRepository
 
+    private val _styleRepository by lazy { StyleRepository(database.styleDao()) }
+    fun styleRepository() = _styleRepository
+
+    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao()) }
+    fun seasonRepository() = _seasonRepository
+
     fun backupManager() = BackupManager(appContext, database)
+
+    private val _appPreferences by lazy { AppPreferences(appContext) }
+    fun appPreferences() = _appPreferences
 
     fun context() = appContext
 }

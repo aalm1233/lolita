@@ -43,7 +43,32 @@ interface PriceDao {
     @Transaction
     @Query("SELECT * FROM prices WHERE item_id = :itemId")
     fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<PriceWithPayments>>
+
+    @Query("""
+        SELECT COALESCE(SUM(p.total_price), 0.0)
+        FROM prices p INNER JOIN items i ON p.item_id = i.id
+        WHERE i.coordinate_id = :coordinateId
+    """)
+    fun getTotalPriceByCoordinate(coordinateId: Long): Flow<Double>
+
+    @Transaction
+    @Query("""
+        SELECT p.* FROM prices p INNER JOIN items i ON p.item_id = i.id
+        WHERE i.coordinate_id = :coordinateId
+    """)
+    fun getPricesWithPaymentsByCoordinate(coordinateId: Long): Flow<List<PriceWithPayments>>
+
+    @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices WHERE item_id IN (:itemIds)")
+    fun getTotalPriceByItemIds(itemIds: List<Long>): Flow<Double>
+
+    @Query("SELECT item_id, COALESCE(SUM(total_price), 0.0) as totalPrice FROM prices GROUP BY item_id")
+    fun getItemPriceSums(): Flow<List<ItemPriceSum>>
 }
+
+data class ItemPriceSum(
+    @androidx.room.ColumnInfo(name = "item_id") val itemId: Long,
+    val totalPrice: Double
+)
 
 data class PriceWithPayments(
     @Embedded val price: Price,

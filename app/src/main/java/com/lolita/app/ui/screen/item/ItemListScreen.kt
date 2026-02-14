@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.item
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,9 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
@@ -43,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
@@ -61,15 +65,19 @@ fun ItemListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
-    val pagerState = rememberPagerState(pageCount = { 4 })
+    var showFilterPanel by remember { mutableStateOf(false) }
+    val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
+    val activeFilterCount = listOfNotNull(
+        uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
+        uiState.filterBrandId?.let { "" }
+    ).size
 
     // Sync pager -> filter
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {
             0 -> viewModel.filterByStatus(null)
             1 -> viewModel.filterByStatus(ItemStatus.OWNED)
-            2 -> viewModel.filterByStatus(ItemStatus.WISHED)
         }
     }
     if (itemToDelete != null) {
@@ -104,7 +112,7 @@ fun ItemListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    if (pagerState.currentPage == 3) onNavigateToCoordinateAdd()
+                    if (pagerState.currentPage == 2) onNavigateToCoordinateAdd()
                     else onNavigateToEdit(null)
                 },
                 containerColor = Pink400,
@@ -112,7 +120,7 @@ fun ItemListScreen(
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = if (pagerState.currentPage == 3) "添加套装" else "添加服饰",
+                    contentDescription = if (pagerState.currentPage == 2) "添加套装" else "添加服饰",
                     tint = Color.White
                 )
             }
@@ -123,7 +131,7 @@ fun ItemListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Search bar with column toggle
+            // Search bar with filter + column toggle
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -144,6 +152,34 @@ fun ItemListScreen(
                         cursorColor = Pink400
                     )
                 )
+                Box {
+                    IconButton(onClick = { showFilterPanel = !showFilterPanel }) {
+                        Icon(
+                            Icons.Default.FilterList,
+                            contentDescription = "过滤",
+                            tint = if (activeFilterCount > 0) Pink400 else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    if (activeFilterCount > 0) {
+                        Surface(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(4.dp)
+                                .size(16.dp),
+                            shape = CircleShape,
+                            color = Pink400
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    "$activeFilterCount",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontSize = 10.sp,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
                 IconButton(
                     onClick = {
                         val next = when (uiState.columnsPerRow) {
@@ -164,7 +200,18 @@ fun ItemListScreen(
                 }
             }
 
-            // Tab row: 全部 / 已拥有 / 愿望单 / 套装
+            // Filter panel
+            AnimatedVisibility(visible = showFilterPanel) {
+                FilterPanel(
+                    uiState = uiState,
+                    onSeasonSelected = { viewModel.filterBySeason(it) },
+                    onStyleSelected = { viewModel.filterByStyle(it) },
+                    onColorSelected = { viewModel.filterByColor(it) },
+                    onBrandSelected = { viewModel.filterByBrand(it) }
+                )
+            }
+
+            // Tab row: 全部 / 已拥有 / 套装
             ItemFilterTabRow(
                 selectedIndex = pagerState.currentPage,
                 onTabSelected = { index ->
@@ -172,11 +219,49 @@ fun ItemListScreen(
                 }
             )
 
+            // Category group filter + total price (only on item tabs)
+            if (pagerState.currentPage < 2) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    val groupOptions = listOf<Pair<String, CategoryGroup?>>(
+                        "全部" to null,
+                        "服装" to CategoryGroup.CLOTHING,
+                        "小物" to CategoryGroup.ACCESSORY
+                    )
+                    groupOptions.forEach { (label, group) ->
+                        FilterChip(
+                            selected = uiState.filterGroup == group,
+                            onClick = { viewModel.filterByGroup(group) },
+                            label = { Text(label, fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Pink400.copy(alpha = 0.15f),
+                                selectedLabelColor = Pink400
+                            ),
+                            modifier = Modifier.height(28.dp)
+                        )
+                    }
+                    Spacer(Modifier.weight(1f))
+                    if (uiState.showTotalPrice && uiState.totalPrice > 0) {
+                        Text(
+                            "¥%.0f".format(uiState.totalPrice),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Pink400
+                        )
+                    }
+                }
+            }
+
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                if (page < 3) {
+                if (page < 2) {
                     // Item list content
                     Column(modifier = Modifier.fillMaxSize()) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -208,6 +293,7 @@ fun ItemListScreen(
                                         item = item,
                                         brandName = uiState.brandNames[item.brandId],
                                         categoryName = uiState.categoryNames[item.categoryId],
+                                        itemPrice = uiState.itemPrices[item.id],
                                         onClick = { onNavigateToDetail(item.id) },
                                         onEdit = { onNavigateToEdit(item.id) },
                                         onDelete = { itemToDelete = item },
@@ -230,6 +316,7 @@ fun ItemListScreen(
                                         item = item,
                                         brandName = uiState.brandNames[item.brandId],
                                         categoryName = uiState.categoryNames[item.categoryId],
+                                        itemPrice = uiState.itemPrices[item.id],
                                         onClick = { onNavigateToDetail(item.id) },
                                         onEdit = { onNavigateToEdit(item.id) },
                                         onDelete = { itemToDelete = item }
@@ -254,7 +341,7 @@ private fun ItemFilterTabRow(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    val tabs = listOf("全部", "已拥有", "愿望单", "套装")
+    val tabs = listOf("全部", "已拥有", "套装")
 
     TabRow(
         selectedTabIndex = selectedIndex,
@@ -286,6 +373,7 @@ private fun ItemCard(
     item: Item,
     brandName: String?,
     categoryName: String?,
+    itemPrice: Double?,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -351,6 +439,15 @@ private fun ItemCard(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
+                    if (itemPrice != null && itemPrice > 0) {
+                        Text(
+                            text = "¥%.0f".format(itemPrice),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Pink400,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
                     Box {
                         IconButton(onClick = { showMenu = true }) {
                             Icon(Icons.Default.Edit, contentDescription = "编辑", tint = Pink400)
@@ -476,6 +573,7 @@ private fun ItemGridCard(
     item: Item,
     brandName: String?,
     categoryName: String?,
+    itemPrice: Double?,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -495,40 +593,59 @@ private fun ItemGridCard(
                 )
         ) {
             Column {
-                // Image area
-                if (item.imageUrl != null) {
-                    AsyncImage(
-                        model = item.imageUrl,
-                        contentDescription = item.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(0.8f)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    val initial = categoryName?.firstOrNull()?.toString() ?: "?"
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(0.8f)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        Pink300.copy(alpha = 0.5f),
-                                        Pink400.copy(alpha = 0.3f)
-                                    )
-                                )
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = initial,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Pink400
+                // Image area with price overlay
+                Box {
+                    if (item.imageUrl != null) {
+                        AsyncImage(
+                            model = item.imageUrl,
+                            contentDescription = item.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(0.8f)
+                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                            contentScale = ContentScale.Crop
                         )
+                    } else {
+                        val initial = categoryName?.firstOrNull()?.toString() ?: "?"
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(0.8f)
+                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(
+                                            Pink300.copy(alpha = 0.5f),
+                                            Pink400.copy(alpha = 0.3f)
+                                        )
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = initial,
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = Pink400
+                            )
+                        }
+                    }
+                    if (itemPrice != null && itemPrice > 0) {
+                        Surface(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(6.dp),
+                            color = Color.Black.copy(alpha = 0.55f),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(
+                                text = "¥%.0f".format(itemPrice),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
 
@@ -597,6 +714,173 @@ private fun ItemGridCard(
                     },
                     colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilterPanel(
+    uiState: ItemListUiState,
+    onSeasonSelected: (String?) -> Unit,
+    onStyleSelected: (String?) -> Unit,
+    onColorSelected: (String?) -> Unit,
+    onBrandSelected: (Long?) -> Unit
+) {
+    // Collect brand options that items actually use
+    val usedBrandIds = uiState.items.map { it.brandId }.toSet()
+    val brandOptions = uiState.brandNames.filter { it.key in usedBrandIds }
+        .entries.sortedBy { it.value }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        tonalElevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Season
+            if (uiState.seasonOptions.isNotEmpty()) {
+                FilterOptionRow(
+                    label = "季节",
+                    options = uiState.seasonOptions,
+                    selectedValue = uiState.filterSeason,
+                    onSelected = { onSeasonSelected(it) },
+                    onClear = { onSeasonSelected(null) }
+                )
+            }
+            // Style
+            if (uiState.styleOptions.isNotEmpty()) {
+                FilterOptionRow(
+                    label = "风格",
+                    options = uiState.styleOptions,
+                    selectedValue = uiState.filterStyle,
+                    onSelected = { onStyleSelected(it) },
+                    onClear = { onStyleSelected(null) }
+                )
+            }
+            // Color
+            if (uiState.colorOptions.isNotEmpty()) {
+                FilterOptionRow(
+                    label = "颜色",
+                    options = uiState.colorOptions,
+                    selectedValue = uiState.filterColor,
+                    onSelected = { onColorSelected(it) },
+                    onClear = { onColorSelected(null) }
+                )
+            }
+            // Brand
+            if (brandOptions.isNotEmpty()) {
+                FilterOptionRow(
+                    label = "品牌",
+                    options = brandOptions.map { it.value },
+                    selectedValue = uiState.filterBrandId?.let { uiState.brandNames[it] },
+                    onSelected = { name ->
+                        val id = brandOptions.firstOrNull { it.value == name }?.key
+                        onBrandSelected(id)
+                    },
+                    onClear = { onBrandSelected(null) },
+                    searchable = true
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilterOptionRow(
+    label: String,
+    options: List<String>,
+    selectedValue: String?,
+    onSelected: (String) -> Unit,
+    onClear: () -> Unit,
+    searchable: Boolean = false
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(36.dp)
+        )
+        Box(modifier = Modifier.weight(1f)) {
+            FilterChip(
+                selected = selectedValue != null,
+                onClick = {
+                    searchQuery = ""
+                    expanded = true
+                },
+                label = {
+                    Text(
+                        text = selectedValue ?: "全部",
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                trailingIcon = if (selectedValue != null) {
+                    {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "清除",
+                            modifier = Modifier
+                                .size(14.dp)
+                                .clickable { onClear() }
+                        )
+                    }
+                } else null,
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = Pink400.copy(alpha = 0.15f),
+                    selectedLabelColor = Pink400
+                ),
+                modifier = Modifier.height(30.dp)
+            )
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.heightIn(max = 280.dp)
+            ) {
+                if (searchable) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        placeholder = { Text("搜索", fontSize = 13.sp) },
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .width(200.dp),
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodySmall,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
+                val filtered = if (searchQuery.isBlank()) options
+                    else options.filter { it.contains(searchQuery, ignoreCase = true) }
+                filtered.forEach { option ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                option,
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        onClick = {
+                            onSelected(option)
+                            expanded = false
+                        }
+                    )
+                }
             }
         }
     }

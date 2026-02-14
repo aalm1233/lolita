@@ -77,6 +77,7 @@ class PriceManageViewModel(
 
 class PriceEditViewModel(
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val paymentRepository: PaymentRepository = com.lolita.app.di.AppModule.paymentRepository(),
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
 
@@ -142,9 +143,65 @@ class PriceEditViewModel(
                 purchaseDate = _uiState.value.purchaseDate
             )
 
-            val id = priceRepository.insertPrice(price)
+            val priceId = priceRepository.insertPrice(price)
+
+            // Auto-create payment records
+            val item = itemRepository.getItemById(itemId)
+            val itemName = item?.name ?: "服饰"
+            val now = System.currentTimeMillis()
+
+            when (_uiState.value.priceType) {
+                PriceType.FULL -> {
+                    // Create one payment for the full amount
+                    paymentRepository.insertPayment(
+                        Payment(
+                            priceId = priceId,
+                            amount = totalPrice,
+                            dueDate = now,
+                            isPaid = false,
+                            reminderSet = true,
+                            customReminderDays = 1
+                        ),
+                        itemName
+                    )
+                }
+                PriceType.DEPOSIT_BALANCE -> {
+                    // Create payment for deposit
+                    val depositAmount = _uiState.value.deposit.toDoubleOrNull() ?: 0.0
+                    val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
+
+                    if (depositAmount > 0) {
+                        paymentRepository.insertPayment(
+                            Payment(
+                                priceId = priceId,
+                                amount = depositAmount,
+                                dueDate = now,
+                                isPaid = false,
+                                reminderSet = true,
+                                customReminderDays = 1
+                            ),
+                            itemName
+                        )
+                    }
+                    // Create payment for balance
+                    if (balanceAmount > 0) {
+                        paymentRepository.insertPayment(
+                            Payment(
+                                priceId = priceId,
+                                amount = balanceAmount,
+                                dueDate = now,
+                                isPaid = false,
+                                reminderSet = true,
+                                customReminderDays = 1
+                            ),
+                            itemName
+                        )
+                    }
+                }
+            }
+
             _uiState.value = _uiState.value.copy(isSaving = false)
-            Result.success(id)
+            Result.success(priceId)
         } catch (e: Exception) {
             _uiState.value = _uiState.value.copy(isSaving = false, error = e.message ?: "保存失败")
             Result.failure(e)

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.lolita.app.data.local.entity.Payment
+import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -37,4 +38,25 @@ interface PaymentDao {
 
     @Query("SELECT * FROM payments ORDER BY due_date ASC")
     suspend fun getAllPaymentsList(): List<Payment>
+
+    // Calendar queries
+    @Query("""
+        SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
+               p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
+        FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.due_date BETWEEN :startDate AND :endDate
+        ORDER BY p.due_date ASC
+    """)
+    fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>>
+
+    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0 AND due_date BETWEEN :monthStart AND :monthEnd")
+    fun getMonthUnpaidTotal(monthStart: Long, monthEnd: Long): Flow<Double>
+
+    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0")
+    fun getTotalUnpaidAmount(): Flow<Double>
+
+    @Query("SELECT COALESCE(SUM(amount), 0.0) FROM payments WHERE is_paid = 0 AND due_date < :now")
+    fun getOverdueAmount(now: Long): Flow<Double>
 }

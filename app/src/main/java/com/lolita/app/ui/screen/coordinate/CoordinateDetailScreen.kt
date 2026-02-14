@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
@@ -126,7 +127,10 @@ fun CoordinateDetailScreen(
                 item {
                     CoordinateInfoCard(
                         coordinate = uiState.coordinate!!,
-                        itemCount = uiState.items.size
+                        itemCount = uiState.items.size,
+                        totalPrice = uiState.totalPrice,
+                        paidAmount = uiState.paidAmount,
+                        unpaidAmount = uiState.unpaidAmount
                     )
                 }
 
@@ -170,7 +174,10 @@ fun CoordinateDetailScreen(
 @Composable
 private fun CoordinateInfoCard(
     coordinate: com.lolita.app.data.local.entity.Coordinate,
-    itemCount: Int
+    itemCount: Int,
+    totalPrice: Double,
+    paidAmount: Double,
+    unpaidAmount: Double
 ) {
     LolitaCard(
         modifier = Modifier.fillMaxWidth()
@@ -204,7 +211,10 @@ private fun CoordinateInfoCard(
                 )
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Surface(
                     color = Pink400.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
@@ -216,6 +226,68 @@ private fun CoordinateInfoCard(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
+                }
+            }
+
+            // Price summary
+            if (totalPrice > 0) {
+                HorizontalDivider(
+                    color = Pink400.copy(alpha = 0.15f),
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                Text(
+                    "价格汇总",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "总价",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        "¥%.2f".format(totalPrice),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Pink400
+                    )
+                }
+                if (paidAmount > 0 || unpaidAmount > 0) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "已付",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            "¥%.2f".format(paidAmount),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "待付",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                        )
+                        Text(
+                            "¥%.2f".format(unpaidAmount),
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                        )
+                    }
                 }
             }
         }

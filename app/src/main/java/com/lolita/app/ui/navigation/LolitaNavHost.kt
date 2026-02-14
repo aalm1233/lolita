@@ -260,6 +260,9 @@ fun LolitaNavHost() {
                 WishlistScreen(
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    },
+                    onNavigateToEdit = { itemId ->
+                        navController.navigate(Screen.ItemEdit.createRoute(itemId))
                     }
                 )
             }

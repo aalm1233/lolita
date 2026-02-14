@@ -6,23 +6,20 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "categories",
+    tableName = "seasons",
     indices = [Index(value = ["name"], unique = true)]
 )
-data class Category(
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long = System.currentTimeMillis(),
-
+data class Season(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0,
 
-    @ColumnInfo(name = "is_preset", defaultValue = "0")
-    val isPreset: Boolean = false,
-
     @ColumnInfo(name = "name")
     val name: String,
 
-    @ColumnInfo(name = "category_group", defaultValue = "CLOTHING")
-    val group: CategoryGroup = CategoryGroup.CLOTHING
+    @ColumnInfo(name = "is_preset", defaultValue = "0")
+    val isPreset: Boolean = false,
+
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long = System.currentTimeMillis()
 )

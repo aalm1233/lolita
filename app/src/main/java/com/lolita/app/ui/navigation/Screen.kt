@@ -69,10 +69,6 @@ sealed interface Screen {
         fun createRoute(logId: Long?) = if (logId != null) "outfit_log_edit/$logId" else "outfit_log_edit/0"
     }
 
-    data object Search : Screen {
-        override val route = "search"
-    }
-
     data object Stats : Screen {
         override val route = "stats"
     }
@@ -91,5 +87,13 @@ sealed interface Screen {
 
     data object BackupRestore : Screen {
         override val route = "backup_restore"
+    }
+
+    data object StyleManage : Screen {
+        override val route = "style_manage"
+    }
+
+    data object SeasonManage : Screen {
+        override val route = "season_manage"
     }
 }

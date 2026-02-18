@@ -13,9 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lolita.app.ui.theme.Pink300
-import com.lolita.app.ui.theme.Pink400
-import com.lolita.app.ui.theme.Pink600
+import com.lolita.app.ui.theme.LolitaSkin
 
 @Composable
 fun GradientTopAppBar(
@@ -25,10 +23,11 @@ fun GradientTopAppBar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
+    val skin = LolitaSkin.current
     val gradient = if (isSystemInDarkTheme()) {
-        Brush.horizontalGradient(listOf(Pink600, Pink400))
+        Brush.horizontalGradient(skin.gradientColorsDark)
     } else {
-        Brush.horizontalGradient(listOf(Pink400, Pink300))
+        Brush.horizontalGradient(skin.gradientColors)
     }
 
     if (compact) {
@@ -59,11 +58,11 @@ fun GradientTopAppBar(
                             contentAlignment = Alignment.Center
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("✿", fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f))
+                                Text(skin.topBarDecoration, fontSize = 12.sp, color = Color.White.copy(alpha = skin.topBarDecorationAlpha))
                                 Spacer(modifier = Modifier.width(6.dp))
                                 title()
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text("✿", fontSize = 12.sp, color = Color.White.copy(alpha = 0.7f))
+                                Text(skin.topBarDecoration, fontSize = 12.sp, color = Color.White.copy(alpha = skin.topBarDecorationAlpha))
                             }
                         }
                     }

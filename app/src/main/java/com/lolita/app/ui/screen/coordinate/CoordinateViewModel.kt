@@ -141,6 +141,19 @@ class CoordinateDetailViewModel(
             itemRepository.updateItem(item.copy(coordinateId = null))
         }
     }
+
+    fun deleteCoordinate(onSuccess: () -> Unit) {
+        val coordinate = _uiState.value.coordinate ?: return
+        viewModelScope.launch {
+            try {
+                val coordinateRepository = com.lolita.app.di.AppModule.coordinateRepository()
+                coordinateRepository.deleteCoordinate(coordinate)
+                onSuccess()
+            } catch (_: Exception) {
+                // 删除失败静默处理
+            }
+        }
+    }
 }
 
 class CoordinateEditViewModel(

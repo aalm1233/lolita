@@ -323,6 +323,81 @@ private fun ImportItemCard(
                     }
                 }
 
+                // 未匹配定金：手动填写尾款信息
+                if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    Text(
+                        "尾款信息（手动填写）",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    var balanceText by remember(item.manualBalance) {
+                        mutableStateOf(
+                            item.manualBalance?.let { String.format("%.2f", it) } ?: ""
+                        )
+                    }
+                    var showBalanceDatePicker by remember { mutableStateOf(false) }
+                    val balanceDatePickerState = rememberDatePickerState(
+                        initialSelectedDateMillis = item.balanceDueDate
+                    )
+
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = balanceText,
+                            onValueChange = { v ->
+                                balanceText = v
+                                onUpdate { it.copy(manualBalance = v.toDoubleOrNull()) }
+                            },
+                            label = { Text("尾款金额") },
+                            modifier = Modifier.weight(1f),
+                            singleLine = true,
+                            prefix = { Text("¥") }
+                        )
+                        Box(modifier = Modifier.weight(1f).clickable { showBalanceDatePicker = true }) {
+                            OutlinedTextField(
+                                value = item.balanceDueDate?.let {
+                                    java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                                        .format(java.util.Date(it))
+                                } ?: "",
+                                onValueChange = {},
+                                label = { Text("计划付款日期") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                readOnly = true,
+                                enabled = false,
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                        }
+                    }
+
+                    if (showBalanceDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = { showBalanceDatePicker = false },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    balanceDatePickerState.selectedDateMillis?.let { millis ->
+                                        onUpdate { it.copy(balanceDueDate = millis) }
+                                    }
+                                    showBalanceDatePicker = false
+                                }) { Text("确定") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showBalanceDatePicker = false }) { Text("取消") }
+                            }
+                        ) {
+                            DatePicker(state = balanceDatePickerState)
+                        }
+                    }
+                }
+
                 // 图片
                 Text("商品图片", style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -101,14 +101,15 @@ object TaobaoOrderParser {
             // 点缀噪声
             .replace(Regex("·(?:尾款|定金|现货)"), "")
             .replace(Regex("β款"), "")
+            // 备注类（必须在支付噪声之前，避免"色码以定金为准"被部分吃掉）
+            .replace(Regex("色码以定金为准"), "")
             // 支付/批次噪声
             .replace(Regex("[一二三四五六七八九十\\d]+批"), "")
             .replace(Regex("[一二三四五六七八九十\\d]+团"), "")
             .replace(Regex("(?:仅|只)?(?:定-?金|尾款|现货|预约|全款|意向金)"), "")
             // 备注类
-            .replace(Regex("色码以定金为准"), "")
             .replace(Regex("(?:自行)?备注尺码|尺码(?:请)?备注|单品尺码请备注"), "")
-            .replace(Regex("(?:发货|收货)(?:以|为)?(?:尾款)?地址[^;/]*"), "")
+            .replace(Regex("(?:发货|收货)[^;/]*地址[^;/]*"), "")
             .replace(Regex("注意[^;/]*"), "")
             .replace(Regex("需有[^;/]*"), "")
             .replace(Regex("需要有[^;/]*"), "")

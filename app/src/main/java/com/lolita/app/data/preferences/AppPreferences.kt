@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.lolita.app.ui.theme.SkinType
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -35,9 +37,20 @@ class AppPreferences(private val context: Context) {
         context.dataStore.edit { it[OUTFIT_REMINDER_HOUR] = hour }
     }
 
+    val skinType: Flow<SkinType> = context.dataStore.data
+        .map {
+            try { SkinType.valueOf(it[SKIN_TYPE] ?: "DEFAULT") }
+            catch (_: Exception) { SkinType.DEFAULT }
+        }
+
+    suspend fun setSkinType(skinType: SkinType) {
+        context.dataStore.edit { it[SKIN_TYPE] = skinType.name }
+    }
+
     companion object {
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
         private val OUTFIT_REMINDER_HOUR = intPreferencesKey("outfit_reminder_hour")
+        private val SKIN_TYPE = stringPreferencesKey("skin_type")
     }
 }

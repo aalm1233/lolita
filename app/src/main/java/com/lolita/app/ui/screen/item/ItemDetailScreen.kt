@@ -31,9 +31,6 @@ import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink300
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
 /**
@@ -146,7 +143,7 @@ fun ItemDetailScreen(
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Pink400)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             val item = uiState.item
@@ -197,7 +194,7 @@ fun ItemDetailScreen(
                                     .fillMaxWidth()
                                     .height(88.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Pink300.copy(alpha = 0.3f)
+                                    containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
                                 )
                             ) {
                                 Box(
@@ -209,13 +206,13 @@ fun ItemDetailScreen(
                                             text = item.name.firstOrNull()?.toString() ?: "?",
                                             style = MaterialTheme.typography.headlineMedium,
                                             fontWeight = FontWeight.Bold,
-                                            color = Pink400.copy(alpha = 0.6f)
+                                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
                                             text = "暂无图片",
                                             style = MaterialTheme.typography.bodySmall,
-                                            color = Pink400
+                                            color = MaterialTheme.colorScheme.primary
                                         )
                                     }
                                 }
@@ -252,7 +249,7 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        HorizontalDivider(color = Pink100, thickness = 1.dp)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                         // Brand and Category
                         DetailRow(
@@ -284,7 +281,7 @@ fun ItemDetailScreen(
                             if (style.isNotEmpty()) DetailRow(label = "风格", value = style)
                         }
 
-                        HorizontalDivider(color = Pink100, thickness = 1.dp)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                         // Description
                         if (item.description.isNotEmpty()) {
@@ -304,7 +301,7 @@ fun ItemDetailScreen(
 
                         // Size info
                         if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
-                            HorizontalDivider(color = Pink100, thickness = 1.dp)
+                            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                             Column {
                                 Text(
@@ -333,7 +330,7 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        HorizontalDivider(color = Pink100, thickness = 1.dp)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                         // Price Management Section
                         Column {
@@ -367,7 +364,7 @@ fun ItemDetailScreen(
                                 Card(
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = CardDefaults.cardColors(
-                                        containerColor = Pink300.copy(alpha = 0.2f)
+                                        containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
                                     )
                                 ) {
                                     Column(
@@ -391,7 +388,7 @@ fun ItemDetailScreen(
                                     Card(
                                         modifier = Modifier.fillMaxWidth(),
                                         colors = CardDefaults.cardColors(
-                                            containerColor = Pink300.copy(alpha = 0.2f)
+                                            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
                                         )
                                     ) {
                                         Column(
@@ -408,13 +405,13 @@ fun ItemDetailScreen(
                                                         PriceType.DEPOSIT_BALANCE -> "定金+尾款"
                                                     },
                                                     style = MaterialTheme.typography.labelMedium,
-                                                    color = Pink400
+                                                    color = MaterialTheme.colorScheme.primary
                                                 )
                                                 Text(
                                                     "¥${String.format("%.2f", price.totalPrice)}",
                                                     style = MaterialTheme.typography.titleMedium,
                                                     fontWeight = FontWeight.Bold,
-                                                    color = Pink400
+                                                    color = MaterialTheme.colorScheme.primary
                                                 )
                                             }
 
@@ -479,18 +476,18 @@ fun ItemDetailScreen(
                             ) {
                                 OutlinedButton(
                                     onClick = { onNavigateToRecommendation(item.id) },
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Pink400),
-                                    border = BorderStroke(1.dp, Pink400)
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                                 ) {
                                     Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                                     Spacer(Modifier.width(6.dp))
                                     Text("推荐搭配")
                                 }
                             }
-                            HorizontalDivider(color = Pink100, thickness = 1.dp)
+                            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
                         }
 
-                        HorizontalDivider(color = Pink100, thickness = 1.dp)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                         // Metadata
                         DetailRow(
@@ -565,8 +562,8 @@ fun ItemDetailScreen(
 private fun StatusBadge(status: ItemStatus) {
     Surface(
         color = when (status) {
-            ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)
-            ItemStatus.WISHED -> Pink400.copy(alpha = 0.3f)
+            ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+            ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
         },
         shape = MaterialTheme.shapes.small
     ) {
@@ -627,7 +624,7 @@ private fun DetailRow(label: String, value: String) {
             Surface(
                 modifier = Modifier.size(6.dp),
                 shape = MaterialTheme.shapes.extraLarge,
-                color = Pink400.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
             ) {}
             Text(
                 text = label,

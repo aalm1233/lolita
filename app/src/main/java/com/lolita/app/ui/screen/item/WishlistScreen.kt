@@ -30,7 +30,6 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -62,7 +61,7 @@ fun WishlistScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToEdit(null) },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(

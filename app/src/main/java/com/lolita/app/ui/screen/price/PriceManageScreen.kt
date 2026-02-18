@@ -27,7 +27,6 @@ import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink400
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -60,7 +59,7 @@ fun PriceManageScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToPriceEdit(null) },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加价格", tint = androidx.compose.ui.graphics.Color.White)

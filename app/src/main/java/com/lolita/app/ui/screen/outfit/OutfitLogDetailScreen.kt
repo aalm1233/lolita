@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink400
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -114,7 +113,7 @@ fun OutfitLogDetailScreen(
                         text = dateFormat.format(Date(log.date)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Pink400,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
@@ -196,7 +195,7 @@ fun OutfitLogDetailScreen(
                                 Icons.Default.Checkroom,
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp),
-                                tint = Pink400
+                                tint = MaterialTheme.colorScheme.primary
                             )
                             Text(
                                 text = "关联服饰 (${uiState.items.size})",

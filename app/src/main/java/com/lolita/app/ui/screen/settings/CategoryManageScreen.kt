@@ -27,8 +27,6 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +58,7 @@ fun CategoryManageScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.showAddDialog() },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加类型", tint = Color.White)
@@ -83,7 +81,7 @@ fun CategoryManageScreen(
             }
 
             item {
-                HorizontalDivider(color = Pink100, thickness = 1.dp)
+                HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
 
             items(uiState.categories, key = { it.id }) { category ->

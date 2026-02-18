@@ -33,7 +33,6 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
 /**
@@ -364,7 +363,7 @@ private fun BrandSelector(
                                     }
                                     .padding(vertical = 12.dp, horizontal = 4.dp),
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = if (brand.id == selectedBrandId) Pink400
+                                color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface
                             )
                         }

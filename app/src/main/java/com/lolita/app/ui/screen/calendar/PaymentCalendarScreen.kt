@@ -35,7 +35,6 @@ import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.di.AppModule
 
-import com.lolita.app.ui.theme.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -234,7 +233,7 @@ private fun StatsRow(monthUnpaid: Double, totalUnpaid: Double, overdue: Double) 
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        MiniStatCard("当月待付", monthUnpaid, Pink400, Modifier.weight(1f))
+        MiniStatCard("当月待付", monthUnpaid, MaterialTheme.colorScheme.primary, Modifier.weight(1f))
         MiniStatCard("累计待付", totalUnpaid, Color(0xFF7C4DFF), Modifier.weight(1f))
         MiniStatCard("已逾期", overdue, Color(0xFFD32F2F), Modifier.weight(1f))
     }
@@ -363,12 +362,12 @@ private fun DayCell(
     val dotColor = when (status) {
         DayStatus.OVERDUE -> Color(0xFFD32F2F)
         DayStatus.UPCOMING -> Color(0xFFFF9800)
-        DayStatus.UNPAID -> Pink400
+        DayStatus.UNPAID -> MaterialTheme.colorScheme.primary
         DayStatus.ALL_PAID -> Color(0xFF4CAF50)
         null -> Color.Transparent
     }
     val bgColor by animateColorAsState(
-        if (isSelected) Pink400.copy(alpha = 0.15f) else Color.Transparent,
+        if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else Color.Transparent,
         animationSpec = tween(200), label = "dayBg"
     )
 
@@ -384,7 +383,7 @@ private fun DayCell(
             day.toString(),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) Pink400 else MaterialTheme.colorScheme.onSurface,
+            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(2.dp))
@@ -429,7 +428,7 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
                 Surface(
                     color = if (payment.isPaid) Color(0xFF4CAF50).copy(alpha = 0.1f)
                     else if (isOverdue) Color(0xFFD32F2F).copy(alpha = 0.1f)
-                    else Pink400.copy(alpha = 0.1f),
+                    else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
@@ -438,7 +437,7 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
                         style = MaterialTheme.typography.labelSmall,
                         color = if (payment.isPaid) Color(0xFF4CAF50)
                         else if (isOverdue) Color(0xFFD32F2F)
-                        else Pink400
+                        else MaterialTheme.colorScheme.primary
                     )
                 }
             }

@@ -25,8 +25,6 @@ import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.LineChart
 import com.lolita.app.ui.component.chart.LineChartData
-import com.lolita.app.ui.theme.Pink30
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -175,7 +173,7 @@ fun SpendingTrendContent(
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "上一年",
-                    tint = Pink400
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
             Text(
@@ -187,7 +185,7 @@ fun SpendingTrendContent(
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "下一年",
-                    tint = Pink400
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -195,7 +193,7 @@ fun SpendingTrendContent(
                 text = "¥${String.format("%.2f", uiState.yearTotal)}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = Pink400
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -219,7 +217,7 @@ fun SpendingTrendContent(
                     .then(
                         if (detail.isCurrentMonth) {
                             Modifier.background(
-                                Pink30,
+                                MaterialTheme.colorScheme.background,
                                 RoundedCornerShape(8.dp)
                             )
                         } else {
@@ -238,7 +236,7 @@ fun SpendingTrendContent(
                 Text(
                     text = "¥${String.format("%.2f", detail.amount)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (detail.amount > 0) Pink400 else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (detail.amount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

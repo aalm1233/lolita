@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.lolita.app.ui.theme.Pink400
 
 @Composable
 fun EmptyState(
@@ -29,7 +28,7 @@ fun EmptyState(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Surface(
-                color = Pink400.copy(alpha = 0.08f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                 shape = MaterialTheme.shapes.extraLarge,
                 modifier = Modifier.size(96.dp)
             ) {
@@ -38,7 +37,7 @@ fun EmptyState(
                         icon,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
-                        tint = Pink400.copy(alpha = 0.6f)
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                     )
                 }
             }

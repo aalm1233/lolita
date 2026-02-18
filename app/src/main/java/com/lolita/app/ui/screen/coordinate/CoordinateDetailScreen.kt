@@ -33,8 +33,6 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink300
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +231,7 @@ private fun CoordinateInfoCard(
                 Icon(
                     Icons.Default.Star,
                     contentDescription = null,
-                    tint = Pink400,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
@@ -256,13 +254,13 @@ private fun CoordinateInfoCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Surface(
-                    color = Pink400.copy(alpha = 0.1f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
                         "服饰: $itemCount 件",
                         style = MaterialTheme.typography.labelMedium,
-                        color = Pink400,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
@@ -272,7 +270,7 @@ private fun CoordinateInfoCard(
             // Price summary
             if (totalPrice > 0) {
                 HorizontalDivider(
-                    color = Pink400.copy(alpha = 0.15f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Text(
@@ -293,7 +291,7 @@ private fun CoordinateInfoCard(
                         "¥%.2f".format(totalPrice),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = Pink400
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 if (paidAmount > 0 || unpaidAmount > 0) {
@@ -368,7 +366,7 @@ private fun CoordinateItemCard(
                             .fillMaxSize()
                             .background(
                                 Brush.linearGradient(
-                                    listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f))
+                                    listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
                                 ),
                                 RoundedCornerShape(8.dp)
                             ),
@@ -378,7 +376,7 @@ private fun CoordinateItemCard(
                             text = item.name.firstOrNull()?.toString() ?: "?",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Pink400
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

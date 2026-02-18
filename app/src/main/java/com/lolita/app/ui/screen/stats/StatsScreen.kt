@@ -43,7 +43,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.style.TextAlign
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -126,7 +125,7 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                 title = "已拥有",
                 targetValue = uiState.ownedCount,
                 icon = Icons.Default.Home,
-                color = Color(0xFFFF69B4),
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
             StatCard(
@@ -227,7 +226,7 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFF69B4).copy(alpha = 0.1f)
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                 )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -258,8 +257,8 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                                     .weight(1f)
                                     .height(8.dp)
                                     .clip(RoundedCornerShape(4.dp)),
-                                color = Color(0xFFFF69B4),
-                                trackColor = Color(0xFFFF69B4).copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                             )
                             Text(
                                 text = "${brand.itemCount}",

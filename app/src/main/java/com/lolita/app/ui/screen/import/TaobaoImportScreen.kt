@@ -21,7 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.model.TaobaoOrder
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +112,7 @@ private fun OrderSelectContent(
                         )
                         Button(
                             onClick = { viewModel.proceedToPrepare() },
-                            colors = ButtonDefaults.buttonColors(containerColor = Pink400)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) { Text("下一步") }
                     }
                 }
@@ -122,7 +121,7 @@ private fun OrderSelectContent(
     ) { padding ->
         if (uiState.isLoading) {
             Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Pink400)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else if (!uiState.fileLoaded) {
             Column(
@@ -130,7 +129,7 @@ private fun OrderSelectContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Icon(Icons.Default.FileOpen, null, Modifier.size(64.dp), tint = Pink400.copy(alpha = 0.6f))
+                Icon(Icons.Default.FileOpen, null, Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                 Spacer(Modifier.height(16.dp))
                 Text("选择淘宝订单导出的 Excel 文件",
                     style = MaterialTheme.typography.bodyLarge,
@@ -142,7 +141,7 @@ private fun OrderSelectContent(
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         ))
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Pink400)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) { Text("选择文件（可多选）") }
             }
         } else {
@@ -193,7 +192,7 @@ private fun OrderListBody(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     TextButton(onClick = { if (allSelected) onDeselectAll() else onSelectAll() }) {
-                        Text(if (allSelected) "取消全选" else "全选", color = Pink400)
+                        Text(if (allSelected) "取消全选" else "全选", color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -234,7 +233,7 @@ private fun OrderCard(
                         Text("¥${String.format("%.2f", order.totalPaid)}",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
-                            color = if (isClosed) Color.Gray else Pink400)
+                            color = if (isClosed) Color.Gray else MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -245,7 +244,7 @@ private fun OrderCard(
                 Row(Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(isSelected, { onToggleItem(order.orderId, index) },
-                        colors = CheckboxDefaults.colors(checkedColor = Pink400))
+                        colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary))
                     Column(Modifier.weight(1f)) {
                         Text(item.name, style = MaterialTheme.typography.bodyMedium,
                             maxLines = 2, overflow = TextOverflow.Ellipsis,
@@ -314,7 +313,7 @@ private fun ImportPrepareContent(
                     Button(
                         onClick = { viewModel.confirmPrepare() },
                         enabled = !uiState.isLoading,
-                        colors = ButtonDefaults.buttonColors(containerColor = Pink400)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
                         if (uiState.isLoading) {
                             CircularProgressIndicator(
@@ -344,10 +343,10 @@ private fun ImportPrepareContent(
                 Spacer(Modifier.height(4.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = { viewModel.toggleAllMissingItems(true) }) {
-                        Text("全选", color = Pink400)
+                        Text("全选", color = MaterialTheme.colorScheme.primary)
                     }
                     TextButton(onClick = { viewModel.toggleAllMissingItems(false) }) {
-                        Text("全不选", color = Pink400)
+                        Text("全不选", color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -404,7 +403,7 @@ private fun MissingDataRow(
             Checkbox(
                 checked = item.checked,
                 onCheckedChange = { onToggle() },
-                colors = CheckboxDefaults.colors(checkedColor = Pink400)
+                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
             )
             Column(modifier = Modifier.weight(1f)) {
                 Text(item.name, style = MaterialTheme.typography.bodyMedium)
@@ -418,7 +417,7 @@ private fun MissingDataRow(
             }
             Surface(
                 color = if (item.type == MissingDataType.BRAND)
-                    Pink400.copy(alpha = 0.1f) else MaterialTheme.colorScheme.primaryContainer,
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else MaterialTheme.colorScheme.primaryContainer,
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
@@ -426,7 +425,7 @@ private fun MissingDataRow(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (item.type == MissingDataType.BRAND)
-                        Pink400 else MaterialTheme.colorScheme.primary
+                        MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -439,7 +438,7 @@ private fun MissingDataRow(
 private fun ImportingContent() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            CircularProgressIndicator(color = Pink400)
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(16.dp))
             Text("正在导入...", style = MaterialTheme.typography.bodyLarge)
         }
@@ -468,7 +467,7 @@ private fun ImportResultContent(
             Icon(
                 Icons.Default.CheckCircle, null,
                 modifier = Modifier.size(72.dp),
-                tint = Pink400
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(Modifier.height(24.dp))
             Text(
@@ -494,7 +493,7 @@ private fun ImportResultContent(
             Spacer(Modifier.height(32.dp))
             Button(
                 onClick = onDone,
-                colors = ButtonDefaults.buttonColors(containerColor = Pink400)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) { Text("完成") }
         }
     }

@@ -20,8 +20,6 @@ import coil.compose.AsyncImage
 import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +52,7 @@ fun RecommendationScreen(
         when {
             uiState.isLoading -> {
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    CircularProgressIndicator(color = Pink400)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
             uiState.error != null -> {
@@ -87,7 +85,7 @@ fun RecommendationScreen(
                                 onClick = { onNavigateToItem(matchScore.item.id) }
                             )
                         }
-                        item { HorizontalDivider(color = Pink100, thickness = 1.dp) }
+                        item { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp) }
                     }
                 }
             }
@@ -118,10 +116,10 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                 Surface(
                     modifier = Modifier.size(56.dp),
                     shape = RoundedCornerShape(8.dp),
-                    color = Pink100
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text("?", color = Pink400)
+                        Text("?", color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -148,13 +146,13 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
             // Score badge
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Pink400.copy(alpha = 0.15f)
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
             ) {
                 Text(
                     text = "${(matchScore.score * 100).toInt()}%",
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelSmall,
-                    color = Pink400,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
             }

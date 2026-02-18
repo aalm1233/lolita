@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.Gray200
 import com.lolita.app.ui.theme.Gray600
 import com.lolita.app.ui.theme.Gray800
-import com.lolita.app.ui.theme.Pink400
 
 @Composable
 fun StatsProgressBar(
@@ -29,7 +28,7 @@ fun StatsProgressBar(
     total: Double,
     label: String,
     modifier: Modifier = Modifier,
-    barColor: Color = Pink400,
+    barColor: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = Gray200
 ) {
     val fraction = if (total > 0) (current / total).coerceIn(0.0, 1.0) else 0.0

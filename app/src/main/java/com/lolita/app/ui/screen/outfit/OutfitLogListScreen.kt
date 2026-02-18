@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -74,7 +73,7 @@ fun OutfitLogListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToEdit(null) },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加日记", tint = Color.White)
@@ -156,7 +155,7 @@ private fun OutfitLogListItemCard(
                     // Date badge overlay
                     Surface(
                         shape = RoundedCornerShape(bottomEnd = 12.dp),
-                        color = Pink400.copy(alpha = 0.85f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
                         modifier = Modifier.align(Alignment.TopStart)
                     ) {
                         Text(
@@ -174,7 +173,7 @@ private fun OutfitLogListItemCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            Pink400.copy(alpha = 0.08f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                             RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                         )
                         .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -183,7 +182,7 @@ private fun OutfitLogListItemCard(
                         text = log.dateString,
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
-                        color = Pink400
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

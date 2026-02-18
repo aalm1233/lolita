@@ -25,8 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +56,7 @@ fun QuickOutfitLogScreen(
                         onClick = { viewModel.save() },
                         enabled = uiState.selectedItemIds.isNotEmpty() && !uiState.isSaving
                     ) {
-                        Text("保存", color = if (uiState.selectedItemIds.isNotEmpty()) Pink400
+                        Text("保存", color = if (uiState.selectedItemIds.isNotEmpty()) MaterialTheme.colorScheme.primary
                             else MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
@@ -72,14 +70,14 @@ fun QuickOutfitLogScreen(
         ) {
             // Today's date (read-only)
             Surface(
-                color = Pink400.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
                     text = dateFormat.format(Date()),
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                     style = MaterialTheme.typography.titleSmall,
-                    color = Pink400,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -112,7 +110,7 @@ fun QuickOutfitLogScreen(
             Text(
                 text = "已选 ${uiState.selectedItemIds.size} 件",
                 style = MaterialTheme.typography.labelMedium,
-                color = Pink400
+                color = MaterialTheme.colorScheme.primary
             )
 
             // Error
@@ -142,7 +140,7 @@ fun QuickOutfitLogScreen(
 
 @Composable
 private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) {
-    val borderColor = if (isSelected) Pink400 else MaterialTheme.colorScheme.outlineVariant
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     val borderWidth = if (isSelected) 2.dp else 1.dp
 
     Column(
@@ -165,14 +163,14 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
                 Surface(
                     modifier = Modifier.size(80.dp),
                     shape = RoundedCornerShape(6.dp),
-                    color = Pink100
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {}
             }
             if (isSelected) {
                 Surface(
                     modifier = Modifier.align(Alignment.TopEnd).padding(2.dp).size(20.dp),
                     shape = RoundedCornerShape(10.dp),
-                    color = Pink400
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,

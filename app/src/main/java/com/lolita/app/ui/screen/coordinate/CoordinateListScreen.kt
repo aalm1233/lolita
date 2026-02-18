@@ -41,8 +41,6 @@ import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
-import com.lolita.app.ui.theme.Pink300
-import com.lolita.app.ui.theme.Pink400
 
 @Composable
 fun CoordinateListScreen(
@@ -70,7 +68,7 @@ fun CoordinateListScreen(
                                 else -> Icons.Default.Apps
                             },
                             contentDescription = "切换列数",
-                            tint = Pink400
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -79,7 +77,7 @@ fun CoordinateListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onNavigateToAdd,
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加套装", tint = Color.White)
@@ -227,12 +225,12 @@ private fun CoordinateCard(
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize().background(
-                                Brush.linearGradient(listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f))),
+                                Brush.linearGradient(listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))),
                                 RoundedCornerShape(12.dp)
                             ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Star, null, Modifier.size(28.dp), tint = Pink400)
+                            Icon(Icons.Default.Star, null, Modifier.size(28.dp), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -256,7 +254,7 @@ private fun CoordinateCard(
                                 "¥%.0f".format(totalPrice),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Pink400
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -272,12 +270,12 @@ private fun CoordinateCard(
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                         if (itemCount > 0) {
-                            Surface(color = Pink400.copy(alpha = 0.15f), shape = MaterialTheme.shapes.small) {
+                            Surface(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f), shape = MaterialTheme.shapes.small) {
                                 Text(
                                     "${itemCount} 件",
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Pink400,
+                                    color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.Medium
                                 )
                             }
@@ -350,11 +348,11 @@ private fun CoordinateGridCard(
                                 .aspectRatio(0.8f)
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                                 .background(
-                                    Brush.linearGradient(listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f)))
+                                    Brush.linearGradient(listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)))
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Star, null, Modifier.size(36.dp), tint = Pink400)
+                            Icon(Icons.Default.Star, null, Modifier.size(36.dp), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
 // __GRID_OVERLAY__
@@ -378,7 +376,7 @@ private fun CoordinateGridCard(
                     if (itemCount > 0) {
                         Surface(
                             modifier = Modifier.align(Alignment.TopStart).padding(6.dp),
-                            color = Pink400.copy(alpha = 0.85f),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
                             shape = RoundedCornerShape(6.dp)
                         ) {
                             Text(

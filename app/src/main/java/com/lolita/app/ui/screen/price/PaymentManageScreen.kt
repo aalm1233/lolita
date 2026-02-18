@@ -23,8 +23,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -58,7 +56,7 @@ fun PaymentManageScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onNavigateToPaymentEdit(null) },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "添加付款记录", tint = androidx.compose.ui.graphics.Color.White)
@@ -187,7 +185,7 @@ private fun PaymentStatsCard(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            HorizontalDivider(color = Pink100)
+            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer)
 
             StatRow("总价", "¥${String.format("%.2f", totalPrice)}")
             StatRow("已付款", "¥${String.format("%.2f", paidAmount)}", MaterialTheme.colorScheme.primary)

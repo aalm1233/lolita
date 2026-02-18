@@ -29,7 +29,6 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +73,7 @@ fun ImportDetailContent(
                     Button(
                         onClick = onExecuteImport,
                         enabled = validCount > 0,
-                        colors = ButtonDefaults.buttonColors(containerColor = Pink400)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) { Text("导入") }
                 }
             }
@@ -131,13 +130,13 @@ private fun ImportItemCard(
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text("#${index + 1}", style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold, color = Pink400)
+                        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     // 定金/尾款标签
                     if (item.paymentRole != null) {
                         val isPaired = item.pairedWith != null
                         val roleText = if (item.paymentRole == PaymentRole.DEPOSIT) "定金" else "尾款"
-                        val labelColor = if (isPaired) Pink400 else MaterialTheme.colorScheme.error
-                        val labelBg = if (isPaired) Pink400.copy(alpha = 0.1f)
+                        val labelColor = if (isPaired) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                        val labelBg = if (isPaired) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                             else MaterialTheme.colorScheme.error.copy(alpha = 0.1f)
                         Surface(color = labelBg, shape = MaterialTheme.shapes.small) {
                             Row(Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
@@ -165,14 +164,14 @@ private fun ImportItemCard(
                         } else {
                             IconButton(onClick = { showPairDialog = true }, modifier = Modifier.size(32.dp)) {
                                 Icon(Icons.Default.Link, "手动匹配",
-                                    tint = Pink400, modifier = Modifier.size(18.dp))
+                                    tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
                             }
                         }
                     }
                     if (isValid) {
-                        Surface(color = Pink400.copy(alpha = 0.1f), shape = MaterialTheme.shapes.small) {
+                        Surface(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), shape = MaterialTheme.shapes.small) {
                             Text("已完善", Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall, color = Pink400)
+                                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -539,7 +538,7 @@ private fun ImportBrandSelector(
                                     .clickable { onBrandSelected(brand.id); showDialog = false }
                                     .padding(vertical = 12.dp, horizontal = 4.dp),
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = if (brand.id == selectedBrandId) Pink400
+                                color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary
                                     else MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -582,7 +581,7 @@ private fun ImportCategorySelector(
             }
             HorizontalDivider()
             DropdownMenuItem(
-                text = { Text("+ 新增类型", color = Pink400, fontWeight = FontWeight.Medium) },
+                text = { Text("+ 新增类型", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium) },
                 onClick = { expanded = false; showAddDialog = true }
             )
         }

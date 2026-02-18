@@ -22,6 +22,7 @@ import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.ChartPalette
+import com.lolita.app.ui.component.chart.chartPalette
 import com.lolita.app.ui.component.chart.DonutChart
 import com.lolita.app.ui.component.chart.PieChartData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -202,6 +203,7 @@ fun SpendingDistributionContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             uiState.rankingList.forEachIndexed { index, item ->
+                val palette = chartPalette()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -215,7 +217,7 @@ fun SpendingDistributionContent(
                             .clip(CircleShape)
                             .background(
                                 if (index < uiState.chartData.size) uiState.chartData[index].color
-                                else ChartPalette[index % ChartPalette.size]
+                                else palette[index % palette.size]
                             )
                     )
                     Text(

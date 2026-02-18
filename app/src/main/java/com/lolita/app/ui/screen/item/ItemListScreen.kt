@@ -54,9 +54,6 @@ import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink300
-import com.lolita.app.ui.theme.Pink400
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -137,7 +134,7 @@ fun ItemListScreen(
                     if (pagerState.currentPage == 2) onNavigateToCoordinateAdd()
                     else onNavigateToEdit(null)
                 },
-                containerColor = Pink400,
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(
@@ -170,8 +167,8 @@ fun ItemListScreen(
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Pink400,
-                        cursorColor = Pink400
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
                     )
                 )
                 Box {
@@ -179,7 +176,7 @@ fun ItemListScreen(
                         Icon(
                             Icons.Default.FilterList,
                             contentDescription = "过滤",
-                            tint = if (activeFilterCount > 0) Pink400 else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = if (activeFilterCount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     if (activeFilterCount > 0) {
@@ -189,7 +186,7 @@ fun ItemListScreen(
                                 .padding(4.dp)
                                 .size(16.dp),
                             shape = CircleShape,
-                            color = Pink400
+                            color = MaterialTheme.colorScheme.primary
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Text(
@@ -221,7 +218,7 @@ fun ItemListScreen(
                             else -> Icons.Default.Apps
                         },
                         contentDescription = "切换列数",
-                        tint = Pink400
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -267,10 +264,10 @@ fun ItemListScreen(
                             }
                         }
                         Spacer(Modifier.weight(1f))
-                        Text("查看今日穿搭", style = MaterialTheme.typography.labelMedium, color = Pink400)
+                        Text("查看今日穿搭", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                     } else {
                         Icon(Icons.Default.AddCircleOutline, contentDescription = null,
-                            tint = Pink400, modifier = Modifier.size(24.dp))
+                            tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                         Text("记录今日穿搭", style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium)
                         Spacer(Modifier.weight(1f))
@@ -301,8 +298,8 @@ fun ItemListScreen(
                             onClick = { viewModel.filterByGroup(group) },
                             label = { Text(label, fontSize = 12.sp) },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Pink400.copy(alpha = 0.15f),
-                                selectedLabelColor = Pink400
+                                selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                selectedLabelColor = MaterialTheme.colorScheme.primary
                             ),
                             modifier = Modifier.height(28.dp)
                         )
@@ -313,7 +310,7 @@ fun ItemListScreen(
                             "¥%.0f".format(uiState.totalPrice),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = Pink400
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -333,7 +330,7 @@ fun ItemListScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                CircularProgressIndicator(color = Pink400)
+                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                             }
                         } else if (uiState.filteredItems.isEmpty()) {
                             EmptyState(
@@ -416,8 +413,8 @@ private fun ItemFilterTabRow(
     TabRow(
         selectedTabIndex = selectedIndex,
         containerColor = Color.Transparent,
-        contentColor = Pink400,
-        divider = { HorizontalDivider(color = Pink100) }
+        contentColor = MaterialTheme.colorScheme.primary,
+        divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) }
     ) {
         tabs.forEachIndexed { index, label ->
             Tab(
@@ -430,7 +427,7 @@ private fun ItemFilterTabRow(
                         fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Normal
                     )
                 },
-                selectedContentColor = Pink400,
+                selectedContentColor = MaterialTheme.colorScheme.primary,
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -482,7 +479,7 @@ private fun ItemCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(
-                                Brush.linearGradient(listOf(Pink300.copy(alpha = 0.5f), Pink400.copy(alpha = 0.3f)))
+                                Brush.linearGradient(listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)))
                             ),
                         contentAlignment = Alignment.Center
                     ) {
@@ -490,7 +487,7 @@ private fun ItemCard(
                             text = categoryInitial,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Pink400
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -515,13 +512,13 @@ private fun ItemCard(
                             text = "¥%.0f".format(itemPrice),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Pink400,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(end = 4.dp)
                         )
                     }
                     Box {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Default.Edit, contentDescription = "编辑", tint = Pink400)
+                            Icon(Icons.Default.Edit, contentDescription = "编辑", tint = MaterialTheme.colorScheme.primary)
                         }
                         DropdownMenu(
                             expanded = showMenu,
@@ -605,8 +602,8 @@ private fun ItemCard(
 
                 Surface(
                     color = when (item.status) {
-                        ItemStatus.OWNED -> Pink300.copy(alpha = 0.3f)
-                        ItemStatus.WISHED -> Pink400.copy(alpha = 0.3f)
+                        ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                        ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
                     },
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -687,8 +684,8 @@ private fun ItemGridCard(
                                 .background(
                                     Brush.linearGradient(
                                         listOf(
-                                            Pink300.copy(alpha = 0.5f),
-                                            Pink400.copy(alpha = 0.3f)
+                                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
                                         )
                                     )
                                 ),
@@ -698,7 +695,7 @@ private fun ItemGridCard(
                                 text = initial,
                                 style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Pink400
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -752,8 +749,8 @@ private fun ItemGridCard(
                                 .clip(CircleShape)
                                 .background(
                                     when (item.status) {
-                                        ItemStatus.OWNED -> Pink300
-                                        ItemStatus.WISHED -> Pink400
+                                        ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
+                                        ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
                                     }
                                 )
                         )
@@ -911,8 +908,8 @@ private fun FilterOptionRow(
                     }
                 } else null,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Pink400.copy(alpha = 0.15f),
-                    selectedLabelColor = Pink400
+                    selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    selectedLabelColor = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier.height(30.dp)
             )

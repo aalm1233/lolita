@@ -12,8 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.calendar.PaymentCalendarContent
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 
 @Composable
@@ -29,8 +27,8 @@ fun StatsPageScreen() {
             selectedTabIndex = pagerState.currentPage,
             edgePadding = 8.dp,
             containerColor = Color.Transparent,
-            contentColor = Pink400,
-            divider = { HorizontalDivider(color = Pink100) }
+            contentColor = MaterialTheme.colorScheme.primary,
+            divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) }
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -43,7 +41,7 @@ fun StatsPageScreen() {
                             fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal
                         )
                     },
-                    selectedContentColor = Pink400,
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

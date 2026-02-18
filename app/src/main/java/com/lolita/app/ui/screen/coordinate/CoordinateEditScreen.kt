@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -150,11 +149,11 @@ fun CoordinateEditScreen(
                         Icon(
                             Icons.Default.AddPhotoAlternate,
                             contentDescription = null,
-                            tint = Pink400,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(Modifier.height(4.dp))
-                        Text("添加封面图", style = MaterialTheme.typography.bodySmall, color = Pink400)
+                        Text("添加封面图", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -195,7 +194,7 @@ fun CoordinateEditScreen(
                 "选择服饰 (${uiState.selectedItemIds.size}件)",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = Pink400
+                color = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -217,7 +216,7 @@ fun CoordinateEditScreen(
                             onClick = { viewModel.toggleItemSelection(item.id) },
                             shape = MaterialTheme.shapes.small,
                             color = if (isSelected)
-                                Pink400.copy(alpha = 0.08f)
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
                             else
                                 MaterialTheme.colorScheme.surface
                         ) {
@@ -232,7 +231,7 @@ fun CoordinateEditScreen(
                                     checked = isSelected,
                                     onCheckedChange = { viewModel.toggleItemSelection(item.id) },
                                     colors = CheckboxDefaults.colors(
-                                        checkedColor = Pink400
+                                        checkedColor = MaterialTheme.colorScheme.primary
                                     )
                                 )
                                 Column(modifier = Modifier.weight(1f)) {

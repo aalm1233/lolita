@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.theme.Pink100
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -239,7 +238,7 @@ fun BackupRestoreScreen(
                 }
             }
 
-            HorizontalDivider(color = Pink100, thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
             // Import section
             Text("数据恢复", style = MaterialTheme.typography.titleMedium)
@@ -278,7 +277,7 @@ fun BackupRestoreScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("备份时间: $dateStr")
                     Text("版本: ${p.backupVersion}")
-                    HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.padding(vertical = 4.dp))
                     Text("品牌: ${p.brandCount} 条")
                     Text("类型: ${p.categoryCount} 条")
                     Text("风格: ${p.styleCount} 条")
@@ -291,7 +290,7 @@ fun BackupRestoreScreen(
                     if (p.imageCount > 0) {
                         Text("图片: ${p.imageCount} 张")
                     }
-                    HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.padding(vertical = 4.dp))
                     Text("共 ${p.totalCount} 条数据")
                     Spacer(Modifier.height(8.dp))
                     Text(

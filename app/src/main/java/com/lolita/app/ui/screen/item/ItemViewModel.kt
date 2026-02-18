@@ -53,7 +53,10 @@ data class ItemListUiState(
     val showTotalPrice: Boolean = false,
     val columnsPerRow: Int = 1,
     val itemPrices: Map<Long, Double> = emptyMap(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val todayOutfitItemImages: List<String?> = emptyList(),
+    val hasTodayOutfit: Boolean = false,
+    val todayOutfitLogId: Long? = null
 )
 
 /**
@@ -104,6 +107,20 @@ class ItemListViewModel(
     init {
         loadItems()
         loadPreferences()
+        loadTodayOutfit()
+    }
+
+    private fun loadTodayOutfit() {
+        viewModelScope.launch {
+            val todayLog = com.lolita.app.di.AppModule.outfitLogRepository().getTodayOutfitLog()
+            _uiState.update {
+                it.copy(
+                    hasTodayOutfit = todayLog != null,
+                    todayOutfitLogId = todayLog?.outfitLog?.id,
+                    todayOutfitItemImages = todayLog?.items?.take(3)?.map { item -> item.imageUrl } ?: emptyList()
+                )
+            }
+        }
     }
 
     private fun loadPreferences() {

@@ -105,4 +105,8 @@ sealed interface Screen {
         override val route = "recommendation/{itemId}"
         fun createRoute(itemId: Long) = "recommendation/$itemId"
     }
+
+    data object QuickOutfitLog : Screen {
+        override val route = "quick_outfit_log"
+    }
 }

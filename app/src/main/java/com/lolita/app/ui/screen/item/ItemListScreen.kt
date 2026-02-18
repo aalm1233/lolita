@@ -17,7 +17,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -64,6 +66,7 @@ fun ItemListScreen(
     onNavigateToCoordinateDetail: (Long) -> Unit = {},
     onNavigateToCoordinateAdd: () -> Unit = {},
     onNavigateToCoordinateEdit: (Long) -> Unit = {},
+    onNavigateToQuickOutfit: () -> Unit = {},
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -241,6 +244,42 @@ fun ItemListScreen(
                     coroutineScope.launch { pagerState.animateScrollToPage(index) }
                 }
             )
+
+            // 今日穿搭快捷卡片
+            LolitaCard(
+                onClick = onNavigateToQuickOutfit,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (uiState.hasTodayOutfit) {
+                        uiState.todayOutfitItemImages.forEach { imageUrl ->
+                            if (imageUrl != null) {
+                                AsyncImage(
+                                    model = java.io.File(imageUrl),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(36.dp).clip(RoundedCornerShape(6.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
+                        Spacer(Modifier.weight(1f))
+                        Text("查看今日穿搭", style = MaterialTheme.typography.labelMedium, color = Pink400)
+                    } else {
+                        Icon(Icons.Default.AddCircleOutline, contentDescription = null,
+                            tint = Pink400, modifier = Modifier.size(24.dp))
+                        Text("记录今日穿搭", style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium)
+                        Spacer(Modifier.weight(1f))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp))
+                    }
+                }
+            }
 
             // Category group filter + total price (only on item tabs)
             if (pagerState.currentPage < 2) {

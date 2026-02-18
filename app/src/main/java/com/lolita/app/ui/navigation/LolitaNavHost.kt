@@ -45,6 +45,7 @@ import com.lolita.app.ui.screen.item.WishlistScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogListScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogDetailScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogEditScreen
+import com.lolita.app.ui.screen.outfit.QuickOutfitLogScreen
 import com.lolita.app.ui.screen.settings.BackupRestoreScreen
 import com.lolita.app.ui.screen.settings.BrandManageScreen
 import com.lolita.app.ui.screen.settings.CategoryManageScreen
@@ -164,6 +165,9 @@ fun LolitaNavHost() {
                     },
                     onNavigateToCoordinateEdit = { coordinateId ->
                         navController.navigate(Screen.CoordinateEdit.createRoute(coordinateId))
+                    },
+                    onNavigateToQuickOutfit = {
+                        navController.navigate(Screen.QuickOutfitLog.route)
                     }
                 )
             }
@@ -418,6 +422,17 @@ fun LolitaNavHost() {
                     itemId = itemId,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }
+                )
+            }
+
+            // Quick Outfit Log
+            composable(
+                route = Screen.QuickOutfitLog.route,
+                enterTransition = { fadeIn() + slideInHorizontally { it } },
+                exitTransition = { fadeOut() + slideOutHorizontally { it } }
+            ) {
+                QuickOutfitLogScreen(
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

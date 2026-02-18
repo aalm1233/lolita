@@ -157,6 +157,7 @@ fun CoordinateListContent(
                         itemCount = uiState.itemCounts[coordinate.id] ?: 0,
                         itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
                         totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
+                        showPrice = uiState.showPrice,
                         onClick = { onNavigateToDetail(coordinate.id) },
                         onEdit = { onNavigateToEdit(coordinate.id) },
                         onDelete = { coordinateToDelete = coordinate },
@@ -179,6 +180,7 @@ fun CoordinateListContent(
                     itemCount = uiState.itemCounts[coordinate.id] ?: 0,
                     itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
                     totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
+                    showPrice = uiState.showPrice,
                     onClick = { onNavigateToDetail(coordinate.id) },
                     onEdit = { onNavigateToEdit(coordinate.id) },
                     onDelete = { coordinateToDelete = coordinate }
@@ -195,6 +197,7 @@ private fun CoordinateCard(
     itemCount: Int,
     itemImages: List<String?>,
     totalPrice: Double,
+    showPrice: Boolean,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -248,7 +251,7 @@ private fun CoordinateCard(
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.weight(1f)
                         )
-                        if (totalPrice > 0) {
+                        if (showPrice && totalPrice > 0) {
                             Text(
                                 "¥%.0f".format(totalPrice),
                                 style = MaterialTheme.typography.labelMedium,
@@ -314,6 +317,7 @@ private fun CoordinateGridCard(
     itemCount: Int,
     itemImages: List<String?>,
     totalPrice: Double,
+    showPrice: Boolean,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -355,7 +359,7 @@ private fun CoordinateGridCard(
                     }
 // __GRID_OVERLAY__
                     // 价格标签（右上角）
-                    if (totalPrice > 0) {
+                    if (showPrice && totalPrice > 0) {
                         Surface(
                             modifier = Modifier.align(Alignment.TopEnd).padding(6.dp),
                             color = Color.Black.copy(alpha = 0.55f),

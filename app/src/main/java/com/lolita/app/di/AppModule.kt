@@ -59,5 +59,10 @@ object AppModule {
     private val _appPreferences by lazy { AppPreferences(appContext) }
     fun appPreferences() = _appPreferences
 
+    private val _recommendationRepository by lazy {
+        RecommendationRepository(database.itemDao(), database.outfitLogDao(), database.coordinateDao())
+    }
+    fun recommendationRepository() = _recommendationRepository
+
     fun context() = appContext
 }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
@@ -27,6 +28,7 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.Pink100
 import com.lolita.app.ui.theme.Pink400
+import com.lolita.app.data.notification.DailyOutfitReminderScheduler
 import com.lolita.app.data.preferences.AppPreferences
 import kotlinx.coroutines.launch
 
@@ -105,6 +107,35 @@ fun SettingsScreen(
                 icon = Icons.Default.ShoppingCart,
                 iconTint = Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
+            )
+
+            // 穿搭提醒设置
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                "穿搭提醒",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
+
+            val outfitReminderEnabled by appPreferences.outfitReminderEnabled.collectAsState(initial = false)
+            val outfitReminderHour by appPreferences.outfitReminderHour.collectAsState(initial = 20)
+
+            SettingsToggleItem(
+                title = "每日穿搭提醒",
+                description = "每天 ${outfitReminderHour}:00 提醒记录穿搭",
+                icon = Icons.Default.Notifications,
+                iconTint = Color(0xFFE57373),
+                checked = outfitReminderEnabled,
+                onCheckedChange = { enabled ->
+                    coroutineScope.launch {
+                        appPreferences.setOutfitReminderEnabled(enabled)
+                        val scheduler = DailyOutfitReminderScheduler(com.lolita.app.di.AppModule.context())
+                        if (enabled) scheduler.schedule(outfitReminderHour)
+                        else scheduler.cancel()
+                    }
+                }
             )
 
             // Display settings section

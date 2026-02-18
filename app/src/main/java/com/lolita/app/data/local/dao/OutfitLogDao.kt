@@ -62,6 +62,9 @@ interface OutfitLogDao {
 
     @Query("DELETE FROM outfit_item_cross_ref")
     suspend fun deleteAllOutfitItemCrossRefs()
+
+    @Query("SELECT DISTINCT item_id FROM outfit_item_cross_ref WHERE outfit_log_id IN (SELECT outfit_log_id FROM outfit_item_cross_ref WHERE item_id = :itemId) AND item_id != :itemId")
+    suspend fun getCoOccurringItemIds(itemId: Long): List<Long>
 }
 
 data class OutfitLogWithItems(

@@ -112,6 +112,9 @@ interface ItemDao {
 
     @Query("SELECT COUNT(*) FROM items")
     suspend fun getItemCount(): Int
+
+    @Query("SELECT * FROM items WHERE status = :status AND id != :excludeId ORDER BY updated_at DESC")
+    suspend fun getOwnedItemsExcluding(status: ItemStatus, excludeId: Long): List<Item>
 }
 
 data class ItemWithFullDetails(

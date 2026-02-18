@@ -15,6 +15,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.BrandItemCount
 import com.lolita.app.data.local.entity.Price
 import kotlinx.coroutines.flow.Flow
 
@@ -88,6 +89,23 @@ interface ItemDao {
 
     @Query("UPDATE items SET style = NULL WHERE style = :name")
     suspend fun clearItemsStyle(name: String)
+
+    @Query("""
+        SELECT b.name AS brandName, COUNT(i.id) AS itemCount
+        FROM items i
+        INNER JOIN brands b ON i.brand_id = b.id
+        WHERE i.status = 'OWNED'
+        GROUP BY b.name
+        ORDER BY itemCount DESC
+        LIMIT 5
+    """)
+    fun getTopBrandsByCount(): Flow<List<BrandItemCount>>
+
+    @Query("SELECT COUNT(*) FROM items WHERE status = 'OWNED'")
+    fun getOwnedCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM items WHERE status = 'WISHED'")
+    fun getWishedCount(): Flow<Int>
 }
 
 data class ItemWithFullDetails(

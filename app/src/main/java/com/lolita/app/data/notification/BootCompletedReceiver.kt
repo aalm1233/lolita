@@ -7,6 +7,7 @@ import com.lolita.app.di.AppModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 /**
  * Reschedules all pending payment reminders after device reboot.
@@ -20,16 +21,21 @@ class BootCompletedReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                AppModule.init(context.applicationContext)
-                val db = AppModule.database()
-                val scheduler = PaymentReminderScheduler(context)
-                val payments = db.paymentDao().getPendingReminderPaymentsWithItemInfoList()
-                val paymentEntities = db.paymentDao().getPendingReminderPaymentsList()
+                withTimeout(9000) {
+                    AppModule.init(context.applicationContext)
+                    val db = AppModule.database()
+                    val scheduler = PaymentReminderScheduler(context)
+                    // Single query with JOIN to get both payment entity and item name
+                    val paymentsWithInfo = db.paymentDao().getPendingReminderPaymentsWithItemInfoList()
+                    val paymentEntities = db.paymentDao().getPendingReminderPaymentsList()
+                    val paymentMap = paymentEntities.associateBy { it.id }
 
-                val paymentMap = paymentEntities.associateBy { it.id }
-                payments.forEach { info ->
-                    val payment = paymentMap[info.paymentId] ?: return@forEach
-                    scheduler.scheduleReminder(payment, info.itemName)
+                    paymentsWithInfo.forEach { info ->
+                        val payment = paymentMap[info.paymentId] ?: return@forEach
+                        try {
+                            scheduler.scheduleReminder(payment, info.itemName)
+                        } catch (_: Exception) { }
+                    }
                 }
             } catch (_: Exception) {
                 // Silently fail — reminders won't be rescheduled but app won't crash

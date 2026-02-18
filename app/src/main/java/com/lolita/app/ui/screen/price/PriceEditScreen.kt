@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.PriceType
+import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
@@ -44,6 +45,10 @@ fun PriceEditScreen(
 
     LaunchedEffect(priceId) {
         viewModel.loadPrice(priceId)
+    }
+
+    LaunchedEffect(itemId) {
+        viewModel.loadItemStatus(itemId)
     }
 
     uiState.error?.let { errorMsg ->
@@ -218,59 +223,61 @@ fun PriceEditScreen(
                 }
             }
 
-            // 购买日期选择
-            var showDatePicker by remember { mutableStateOf(false) }
-            val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
+            // 购买日期选择 — 仅已拥有物品显示
+            if (uiState.itemStatus == ItemStatus.OWNED) {
+                var showDatePicker by remember { mutableStateOf(false) }
+                val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
-            Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
-                OutlinedTextField(
-                    value = uiState.purchaseDate?.let { dateFormat.format(Date(it)) } ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("购买日期 (可选)") },
-                    placeholder = { Text("点击选择日期") },
-                    modifier = Modifier.fillMaxWidth(),
-                    trailingIcon = {
-                        IconButton(onClick = { showDatePicker = true }) {
-                            Icon(Icons.Default.DateRange, contentDescription = "选择日期")
-                        }
-                    },
-                    enabled = false,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-            }
-
-            if (showDatePicker) {
-                val datePickerState = rememberDatePickerState(
-                    initialSelectedDateMillis = uiState.purchaseDate ?: System.currentTimeMillis()
-                )
-                DatePickerDialog(
-                    onDismissRequest = { showDatePicker = false },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            datePickerState.selectedDateMillis?.let {
-                                viewModel.updatePurchaseDate(it)
+                Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
+                    OutlinedTextField(
+                        value = uiState.purchaseDate?.let { dateFormat.format(Date(it)) } ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("购买日期 (可选)") },
+                        placeholder = { Text("点击选择日期") },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = { showDatePicker = true }) {
+                                Icon(Icons.Default.DateRange, contentDescription = "选择日期")
                             }
-                            showDatePicker = false
-                        }) {
-                            Text("确定")
+                        },
+                        enabled = false,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                            disabledBorderColor = MaterialTheme.colorScheme.outline,
+                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
+
+                if (showDatePicker) {
+                    val datePickerState = rememberDatePickerState(
+                        initialSelectedDateMillis = uiState.purchaseDate ?: System.currentTimeMillis()
+                    )
+                    DatePickerDialog(
+                        onDismissRequest = { showDatePicker = false },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                datePickerState.selectedDateMillis?.let {
+                                    viewModel.updatePurchaseDate(it)
+                                }
+                                showDatePicker = false
+                            }) {
+                                Text("确定")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                viewModel.updatePurchaseDate(null)
+                                showDatePicker = false
+                            }) {
+                                Text("清除")
+                            }
                         }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            viewModel.updatePurchaseDate(null)
-                            showDatePicker = false
-                        }) {
-                            Text("清除")
-                        }
+                    ) {
+                        DatePicker(state = datePickerState)
                     }
-                ) {
-                    DatePicker(state = datePickerState)
                 }
             }
         }

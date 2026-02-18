@@ -48,6 +48,7 @@ import com.lolita.app.ui.screen.settings.CategoryManageScreen
 import com.lolita.app.ui.screen.settings.StyleManageScreen
 import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
+import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
 
 interface BottomNavItem {
@@ -352,7 +353,8 @@ fun LolitaNavHost() {
                     onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
                     onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
                     onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
-                    onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) }
+                    onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
+                    onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) }
                 )
             }
 
@@ -379,6 +381,17 @@ fun LolitaNavHost() {
             // Backup & Restore
             composable(Screen.BackupRestore.route) {
                 BackupRestoreScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Taobao Import
+            composable(Screen.TaobaoImport.route) {
+                TaobaoImportScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToDetail = { _ ->
+                        // Navigate back to item list after import
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }

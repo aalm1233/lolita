@@ -9,6 +9,16 @@ import com.lolita.app.data.local.entity.Payment
 import java.util.Calendar
 
 /**
+ * Result of scheduling a reminder
+ */
+enum class ReminderScheduleResult {
+    EXACT,      // Exact alarm scheduled successfully
+    INEXACT,    // Fell back to inexact alarm (permission not granted)
+    SKIPPED,    // Not scheduled (paid, no reminder, or in the past)
+    CANCELLED   // Existing reminder was cancelled
+}
+
+/**
  * Scheduler for payment reminders using AlarmManager
  */
 class PaymentReminderScheduler(private val context: Context) {
@@ -17,13 +27,12 @@ class PaymentReminderScheduler(private val context: Context) {
 
     /**
      * Schedule a reminder for a payment
-     * @param payment The payment to schedule reminder for
-     * @param itemName Name of the associated item (for notification)
+     * @return ReminderScheduleResult indicating what happened
      */
-    fun scheduleReminder(payment: Payment, itemName: String) {
+    fun scheduleReminder(payment: Payment, itemName: String): ReminderScheduleResult {
         if (!payment.reminderSet || payment.isPaid) {
             cancelReminder(payment.id)
-            return
+            return ReminderScheduleResult.CANCELLED
         }
 
         // Calculate reminder time: due date minus custom reminder days (default 1 day)
@@ -32,7 +41,7 @@ class PaymentReminderScheduler(private val context: Context) {
 
         // Don't schedule if reminder time is in the past
         if (reminderTimeMillis < System.currentTimeMillis()) {
-            return
+            return ReminderScheduleResult.SKIPPED
         }
 
         val intent = createReminderIntent(payment, itemName).apply {
@@ -48,6 +57,7 @@ class PaymentReminderScheduler(private val context: Context) {
 
         // Use setExactAndAllowWhileIdle for Android 12+ compatibility
         // Check canScheduleExactAlarms on Android 12+ to avoid SecurityException
+        var isExact = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(
@@ -57,6 +67,7 @@ class PaymentReminderScheduler(private val context: Context) {
                 )
             } else {
                 // Fallback to inexact alarm when exact alarm permission not granted
+                isExact = false
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     reminderTimeMillis,
@@ -76,6 +87,7 @@ class PaymentReminderScheduler(private val context: Context) {
                 pendingIntent
             )
         }
+        return if (isExact) ReminderScheduleResult.EXACT else ReminderScheduleResult.INEXACT
     }
 
     /**
@@ -92,11 +104,13 @@ class PaymentReminderScheduler(private val context: Context) {
             context,
             (paymentId % Int.MAX_VALUE).toInt(),
             intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
         )
 
-        alarmManager.cancel(pendingIntent)
-        pendingIntent.cancel()
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+            it.cancel()
+        }
     }
 
     /**

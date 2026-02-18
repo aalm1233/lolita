@@ -4,11 +4,16 @@ import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.ItemWithFullDetails
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.file.ImageFileHelper
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 
 class ItemRepository(
-    private val itemDao: ItemDao
+    private val itemDao: ItemDao,
+    private val paymentRepository: PaymentRepository? = null,
+    private val priceRepository: PriceRepository? = null,
+    private val database: LolitaDatabase? = null
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
 
@@ -32,8 +37,25 @@ class ItemRepository(
         itemDao.updateItem(item.copy(updatedAt = System.currentTimeMillis()))
 
     suspend fun deleteItem(item: Item) {
-        item.imageUrl?.let { ImageFileHelper.deleteImage(it) }
-        item.sizeChartImageUrl?.let { ImageFileHelper.deleteImage(it) }
-        itemDao.deleteItem(item)
+        val doDelete: suspend () -> Unit = {
+            // Clean up AlarmManager reminders and calendar events before CASCADE deletes payments
+            if (paymentRepository != null && priceRepository != null) {
+                val prices = priceRepository.getPricesByItemList(item.id)
+                for (price in prices) {
+                    val payments = paymentRepository.getPaymentsByPriceList(price.id)
+                    for (payment in payments) {
+                        paymentRepository.deletePayment(payment)
+                    }
+                }
+            }
+            item.imageUrl?.let { ImageFileHelper.deleteImage(it) }
+            item.sizeChartImageUrl?.let { ImageFileHelper.deleteImage(it) }
+            itemDao.deleteItem(item)
+        }
+        if (database != null) {
+            database.withTransaction { doDelete() }
+        } else {
+            doDelete()
+        }
     }
 }

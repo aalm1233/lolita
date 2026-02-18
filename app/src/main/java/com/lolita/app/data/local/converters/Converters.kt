@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lolita.app.data.local.entity.*
+import android.util.Log
 
 class Converters {
     private val gson = Gson()
@@ -16,7 +17,8 @@ class Converters {
     fun toItemStatus(value: String): ItemStatus = try {
         ItemStatus.valueOf(value)
     } catch (e: IllegalArgumentException) {
-        ItemStatus.OWNED
+        Log.e("Converters", "Unknown ItemStatus: $value — data may be corrupted, preserving as WISHED to avoid silent status change")
+        ItemStatus.WISHED
     }
 
     // ItemPriority
@@ -27,6 +29,7 @@ class Converters {
     fun toItemPriority(value: String): ItemPriority = try {
         ItemPriority.valueOf(value)
     } catch (e: IllegalArgumentException) {
+        Log.w("Converters", "Unknown ItemPriority: $value, defaulting to MEDIUM")
         ItemPriority.MEDIUM
     }
 
@@ -38,6 +41,7 @@ class Converters {
     fun toPriceType(value: String): PriceType = try {
         PriceType.valueOf(value)
     } catch (e: IllegalArgumentException) {
+        Log.w("Converters", "Unknown PriceType: $value, defaulting to FULL")
         PriceType.FULL
     }
 
@@ -49,6 +53,7 @@ class Converters {
     fun toCategoryGroup(value: String): CategoryGroup = try {
         CategoryGroup.valueOf(value)
     } catch (e: IllegalArgumentException) {
+        Log.w("Converters", "Unknown CategoryGroup: $value, defaulting to CLOTHING")
         CategoryGroup.CLOTHING
     }
 

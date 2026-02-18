@@ -275,7 +275,7 @@ fun ItemDetailScreen(
                             if (color.isNotEmpty()) DetailRow(label = "颜色", value = color)
                         }
                         item.season?.let { season ->
-                            if (season.isNotEmpty()) DetailRow(label = "季节", value = season)
+                            if (season.isNotEmpty()) DetailRow(label = "季节", value = season.replace(",", "、"))
                         }
                         item.style?.let { style ->
                             if (style.isNotEmpty()) DetailRow(label = "风格", value = style)

@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -27,11 +27,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.OutfitLogRepository
 import com.lolita.app.data.repository.PriceRepository
-import com.lolita.app.ui.screen.common.GradientTopAppBar
+
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +46,7 @@ data class StatsUiState(
     val coordinateCount: Int = 0,
     val outfitLogCount: Int = 0,
     val totalSpending: Double = 0.0,
+    val showTotalPrice: Boolean = false,
     val isLoading: Boolean = true
 )
 
@@ -52,7 +54,8 @@ class StatsViewModel(
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
     private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
     private val outfitLogRepository: OutfitLogRepository = com.lolita.app.di.AppModule.outfitLogRepository(),
-    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(StatsUiState())
@@ -79,27 +82,10 @@ class StatsViewModel(
                     totalSpending = spending,
                     isLoading = false
                 )
+            }.combine(appPreferences.showTotalPrice) { state, showPrice ->
+                state.copy(showTotalPrice = showPrice)
             }.collect { _uiState.value = it }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun StatsScreen(onBack: () -> Unit, viewModel: StatsViewModel = viewModel()) {
-    Scaffold(
-        topBar = {
-            GradientTopAppBar(
-                title = { Text("数据统计") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        StatsContent(viewModel = viewModel, modifier = Modifier.padding(padding))
     }
 }
 
@@ -152,13 +138,15 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                 modifier = Modifier.weight(1f)
             )
         }
-        SpendingCard(
-            title = "总消费",
-            targetValue = uiState.totalSpending,
-            icon = Icons.Default.ShoppingCart,
-            color = Color(0xFFE91E8C),
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (uiState.showTotalPrice) {
+            SpendingCard(
+                title = "总消费",
+                targetValue = uiState.totalSpending,
+                icon = Icons.Default.ShoppingCart,
+                color = Color(0xFFE91E8C),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

@@ -32,15 +32,17 @@ class OutfitLogRepository(
         outfitLogDao.updateOutfitLog(outfitLog.copy(updatedAt = System.currentTimeMillis()))
 
     suspend fun deleteOutfitLog(outfitLog: OutfitLog) {
-        outfitLog.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
+        val imageUrls = outfitLog.imageUrls.toList()
         outfitLogDao.deleteOutfitLog(outfitLog)
+        imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
     }
 
     suspend fun deleteOutfitLogById(id: Long) {
         val log = outfitLogDao.getOutfitLogById(id)
         if (log != null) {
-            log.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
+            val imageUrls = log.imageUrls.toList()
             outfitLogDao.deleteOutfitLogById(id)
+            imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
         }
     }
 

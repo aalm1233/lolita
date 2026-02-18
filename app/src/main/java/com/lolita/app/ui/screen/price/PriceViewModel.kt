@@ -7,9 +7,12 @@ import com.lolita.app.data.local.entity.*
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.data.local.LolitaDatabase
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
@@ -25,7 +28,8 @@ data class PriceEditUiState(
     val balance: String = "",
     val purchaseDate: Long? = null,
     val isSaving: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val itemStatus: ItemStatus? = null
 )
 
 data class PaymentManageUiState(
@@ -33,7 +37,8 @@ data class PaymentManageUiState(
     val totalPrice: Double = 0.0,
     val paidAmount: Double = 0.0,
     val unpaidAmount: Double = 0.0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val errorMessage: String? = null
 )
 
 data class PaymentEditUiState(
@@ -72,8 +77,11 @@ class PriceManageViewModel(
         viewModelScope.launch {
             try {
                 priceRepository.deletePrice(price)
-            } catch (_: Exception) {
-                // Price already deleted
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    prices = _uiState.value.prices,
+                    isLoading = false
+                )
             }
         }
     }
@@ -82,25 +90,35 @@ class PriceManageViewModel(
 class PriceEditViewModel(
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
     private val paymentRepository: PaymentRepository = com.lolita.app.di.AppModule.paymentRepository(),
-    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val database: LolitaDatabase = com.lolita.app.di.AppModule.database()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PriceEditUiState())
     val uiState: StateFlow<PriceEditUiState> = _uiState.asStateFlow()
+
+    fun loadItemStatus(itemId: Long) {
+        viewModelScope.launch {
+            val item = itemRepository.getItemById(itemId)
+            _uiState.update { it.copy(itemStatus = item?.status) }
+        }
+    }
 
     fun loadPrice(priceId: Long?) {
         if (priceId == null) return
 
         viewModelScope.launch {
             val price = priceRepository.getPriceById(priceId)
-            price?.let {
-                _uiState.value = PriceEditUiState(
-                    priceType = it.type,
-                    totalPrice = it.totalPrice.toString(),
-                    deposit = it.deposit?.toString() ?: "",
-                    balance = it.balance?.toString() ?: "",
-                    purchaseDate = it.purchaseDate
-                )
+            price?.let { p ->
+                _uiState.update {
+                    it.copy(
+                        priceType = p.type,
+                        totalPrice = p.totalPrice.toString(),
+                        deposit = p.deposit?.toString() ?: "",
+                        balance = p.balance?.toString() ?: "",
+                        purchaseDate = p.purchaseDate
+                    )
+                }
             }
         }
     }
@@ -236,7 +254,7 @@ class PriceEditViewModel(
 
             priceRepository.updatePrice(price)
 
-            // Sync payments if type or amounts changed
+            // Sync payments if type or amounts changed — wrapped in transaction
             val typeChanged = existing.type != price.type
             val amountChanged = existing.totalPrice != price.totalPrice ||
                 existing.deposit != price.deposit || existing.balance != price.balance
@@ -244,37 +262,39 @@ class PriceEditViewModel(
                 val item = itemRepository.getItemById(existing.itemId)
                 val itemName = item?.name ?: "服饰"
                 val shouldRemind = item?.status == ItemStatus.OWNED
-                val oldPayments = paymentRepository.getPaymentsByPriceList(priceId)
-                // Delete old unpaid payments and recreate
-                oldPayments.filter { !it.isPaid }.forEach { paymentRepository.deletePayment(it) }
-                val now = System.currentTimeMillis()
-                when (_uiState.value.priceType) {
-                    PriceType.FULL -> {
-                        paymentRepository.insertPayment(
-                            Payment(priceId = priceId, amount = totalPrice, dueDate = now,
-                                isPaid = false, reminderSet = shouldRemind,
-                                customReminderDays = if (shouldRemind) 1 else null),
-                            itemName
-                        )
-                    }
-                    PriceType.DEPOSIT_BALANCE -> {
-                        val depositAmount = _uiState.value.deposit.toDoubleOrNull() ?: 0.0
-                        val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
-                        if (depositAmount > 0) {
+                database.withTransaction {
+                    val oldPayments = paymentRepository.getPaymentsByPriceList(priceId)
+                    // Delete old unpaid payments and recreate
+                    oldPayments.filter { !it.isPaid }.forEach { paymentRepository.deletePayment(it) }
+                    val now = System.currentTimeMillis()
+                    when (_uiState.value.priceType) {
+                        PriceType.FULL -> {
                             paymentRepository.insertPayment(
-                                Payment(priceId = priceId, amount = depositAmount, dueDate = now,
+                                Payment(priceId = priceId, amount = totalPrice, dueDate = now,
                                     isPaid = false, reminderSet = shouldRemind,
                                     customReminderDays = if (shouldRemind) 1 else null),
                                 itemName
                             )
                         }
-                        if (balanceAmount > 0) {
-                            paymentRepository.insertPayment(
-                                Payment(priceId = priceId, amount = balanceAmount, dueDate = now,
-                                    isPaid = false, reminderSet = shouldRemind,
-                                    customReminderDays = if (shouldRemind) 1 else null),
-                                itemName
-                            )
+                        PriceType.DEPOSIT_BALANCE -> {
+                            val depositAmount = _uiState.value.deposit.toDoubleOrNull() ?: 0.0
+                            val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
+                            if (depositAmount > 0) {
+                                paymentRepository.insertPayment(
+                                    Payment(priceId = priceId, amount = depositAmount, dueDate = now,
+                                        isPaid = false, reminderSet = shouldRemind,
+                                        customReminderDays = if (shouldRemind) 1 else null),
+                                    itemName
+                                )
+                            }
+                            if (balanceAmount > 0) {
+                                paymentRepository.insertPayment(
+                                    Payment(priceId = priceId, amount = balanceAmount, dueDate = now,
+                                        isPaid = false, reminderSet = shouldRemind,
+                                        customReminderDays = if (shouldRemind) 1 else null),
+                                    itemName
+                                )
+                            }
                         }
                     }
                 }
@@ -360,10 +380,14 @@ class PaymentManageViewModel(
         viewModelScope.launch {
             try {
                 paymentRepository.deletePayment(payment)
-            } catch (_: Exception) {
-                // Payment already deleted
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "删除失败")
             }
         }
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(errorMessage = null)
     }
 }
 

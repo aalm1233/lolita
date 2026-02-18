@@ -35,6 +35,21 @@ android {
         }
     }
 
+    packaging {
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/*.SF",
+                "META-INF/*.DSA",
+                "META-INF/*.RSA"
+            )
+        }
+    }
+
     buildFeatures {
         compose = true
     }
@@ -105,4 +120,11 @@ dependencies {
 
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Apache POI (Excel parsing)
+    implementation("org.apache.poi:poi-ooxml:5.2.5") {
+        exclude(group = "org.apache.xmlgraphics")
+        exclude(group = "org.apache.httpcomponents")
+        exclude(group = "de.rototor.pdfbox")
+    }
 }

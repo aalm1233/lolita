@@ -3,6 +3,7 @@ package com.lolita.app.data.file
 import android.content.Context
 import android.net.Uri
 import androidx.room.withTransaction
+import android.database.sqlite.SQLiteConstraintException
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
 import com.lolita.app.data.notification.PaymentReminderScheduler
@@ -38,18 +39,20 @@ class BackupManager(
 
     suspend fun exportToJson(): Result<Uri> = withContext(Dispatchers.IO) {
         try {
-            val backupData = BackupData(
-                brands = database.brandDao().getAllBrandsList(),
-                categories = database.categoryDao().getAllCategoriesList(),
-                coordinates = database.coordinateDao().getAllCoordinatesList(),
-                items = database.itemDao().getAllItemsList(),
-                prices = database.priceDao().getAllPricesList(),
-                payments = database.paymentDao().getAllPaymentsList(),
-                outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
-                outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
-                styles = database.styleDao().getAllStylesList(),
-                seasons = database.seasonDao().getAllSeasonsList()
-            )
+            val backupData = database.withTransaction {
+                BackupData(
+                    brands = database.brandDao().getAllBrandsList(),
+                    categories = database.categoryDao().getAllCategoriesList(),
+                    coordinates = database.coordinateDao().getAllCoordinatesList(),
+                    items = database.itemDao().getAllItemsList(),
+                    prices = database.priceDao().getAllPricesList(),
+                    payments = database.paymentDao().getAllPaymentsList(),
+                    outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
+                    outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
+                    styles = database.styleDao().getAllStylesList(),
+                    seasons = database.seasonDao().getAllSeasonsList()
+                )
+            }
             val jsonString = gson.toJson(backupData)
             val fileName = "lolita_backup_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}.json"
             val uri = createFileInDownloads(fileName, "application/json", jsonString.toByteArray())
@@ -145,7 +148,7 @@ class BackupManager(
             val backupData = if (cachedBackupUri == uri && cachedBackupData != null) {
                 cachedBackupData!!
             } else {
-                val jsonString = context.contentResolver.openInputStream(uri)?.bufferedReader()?.readText()
+                val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
                     ?: return@withContext Result.failure(Exception("无法读取文件"))
                 gson.fromJson(jsonString, BackupData::class.java)
             }
@@ -154,24 +157,31 @@ class BackupManager(
 
             var imported = 0
             var skipped = 0
+            var errors = 0
 
             database.withTransaction {
                 // Import in order respecting foreign keys
-                backupData.brands.forEach { try { database.brandDao().insertBrand(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.categories.forEach { try { database.categoryDao().insertCategory(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.styles.forEach { try { database.styleDao().insertStyle(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.seasons.forEach { try { database.seasonDao().insertSeason(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.coordinates.forEach { try { database.coordinateDao().insertCoordinate(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.items.forEach { try { database.itemDao().insertItem(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.prices.forEach { try { database.priceDao().insertPrice(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.payments.forEach { try { database.paymentDao().insertPayment(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.outfitLogs.forEach { try { database.outfitLogDao().insertOutfitLog(it); imported++ } catch (_: Exception) { skipped++ } }
-                backupData.outfitItemCrossRefs.forEach { try { database.outfitLogDao().insertOutfitItemCrossRef(it); imported++ } catch (_: Exception) { skipped++ } }
+                backupData.brands.forEach { try { database.brandDao().insertBrand(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.categories.forEach { try { database.categoryDao().insertCategory(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.styles.forEach { try { database.styleDao().insertStyle(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.seasons.forEach { try { database.seasonDao().insertSeason(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.coordinates.forEach { try { database.coordinateDao().insertCoordinate(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.items.forEach { try { database.itemDao().insertItem(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.prices.forEach { try { database.priceDao().insertPrice(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.payments.forEach { try { database.paymentDao().insertPayment(it.copy(calendarEventId = null)); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.outfitLogs.forEach { try { database.outfitLogDao().insertOutfitLog(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
+                backupData.outfitItemCrossRefs.forEach { try { database.outfitLogDao().insertOutfitItemCrossRef(it); imported++ } catch (_: SQLiteConstraintException) { skipped++ } catch (_: Exception) { errors++ } }
             }
 
-            // Reschedule reminders for imported payments (M-10)
+            // Reschedule reminders for imported payments
+            // First cancel all existing reminders to avoid duplicates
             try {
                 val scheduler = PaymentReminderScheduler(context)
+                val allPayments = database.paymentDao().getAllPaymentsList()
+                allPayments.forEach { payment ->
+                    try { scheduler.cancelReminder(payment.id) } catch (_: Exception) {}
+                }
+                // Now reschedule only pending ones
                 val pendingPayments = database.paymentDao().getPendingReminderPaymentsWithItemInfoList()
                 val paymentEntities = database.paymentDao().getPendingReminderPaymentsList()
                 val paymentMap = paymentEntities.associateBy { it.id }
@@ -184,6 +194,7 @@ class BackupManager(
             Result.success(ImportSummary(
                 totalImported = imported,
                 totalSkipped = skipped,
+                totalErrors = errors,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -194,7 +205,7 @@ class BackupManager(
 
     suspend fun previewBackup(uri: Uri): Result<BackupPreview> = withContext(Dispatchers.IO) {
         try {
-            val jsonString = context.contentResolver.openInputStream(uri)?.bufferedReader()?.readText()
+            val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
                 ?: return@withContext Result.failure(Exception("无法读取文件"))
 
             val backupData = gson.fromJson(jsonString, BackupData::class.java)
@@ -240,6 +251,7 @@ class BackupManager(
 data class ImportSummary(
     val totalImported: Int,
     val totalSkipped: Int,
+    val totalErrors: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 )

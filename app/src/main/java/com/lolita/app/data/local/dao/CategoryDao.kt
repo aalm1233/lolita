@@ -31,4 +31,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories ORDER BY name ASC")
     suspend fun getAllCategoriesList(): List<Category>
+
+    @Query("SELECT * FROM categories WHERE name = :name LIMIT 1")
+    suspend fun getCategoryByName(name: String): Category?
 }

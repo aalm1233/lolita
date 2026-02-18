@@ -8,9 +8,12 @@ import com.lolita.app.data.repository.*
 
 object AppModule {
     private lateinit var database: LolitaDatabase
+    @Volatile
     private lateinit var appContext: Context
 
+    @Synchronized
     fun init(context: Context) {
+        if (::appContext.isInitialized) return
         appContext = context
         database = LolitaDatabase.getDatabase(context)
     }
@@ -24,7 +27,7 @@ object AppModule {
     }
     fun coordinateRepository() = _coordinateRepository
 
-    private val _itemRepository by lazy { ItemRepository(database.itemDao()) }
+    private val _itemRepository by lazy { ItemRepository(database.itemDao(), _paymentRepository, _priceRepository, database) }
     fun itemRepository() = _itemRepository
 
     private val _brandRepository by lazy { BrandRepository(database.brandDao(), database.itemDao()) }
@@ -44,10 +47,10 @@ object AppModule {
     private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }
     fun outfitLogRepository() = _outfitLogRepository
 
-    private val _styleRepository by lazy { StyleRepository(database.styleDao(), database.itemDao()) }
+    private val _styleRepository by lazy { StyleRepository(database.styleDao(), database.itemDao(), database) }
     fun styleRepository() = _styleRepository
 
-    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao(), database.itemDao()) }
+    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao(), database.itemDao(), database) }
     fun seasonRepository() = _seasonRepository
 
     private val _backupManager by lazy { BackupManager(appContext, database) }

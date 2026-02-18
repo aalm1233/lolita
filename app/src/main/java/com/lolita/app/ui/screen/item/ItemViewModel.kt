@@ -19,6 +19,7 @@ import com.lolita.app.data.repository.SeasonRepository
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +70,7 @@ data class ItemEditUiState(
     val priority: ItemPriority = ItemPriority.MEDIUM,
     val imageUrl: String? = null,
     val color: String? = null,
-    val season: String? = null,
+    val seasons: List<String> = emptyList(),
     val style: String? = null,
     val size: String? = null,
     val sizeChartImageUrl: String? = null,
@@ -98,6 +99,7 @@ class ItemListViewModel(
     val uiState: StateFlow<ItemListUiState> = _uiState.asStateFlow()
 
     private var totalPriceJob: Job? = null
+    private var searchJob: Job? = null
 
     init {
         loadItems()
@@ -124,28 +126,29 @@ class ItemListViewModel(
                 val categoryMap = categories.associate { it.id to it.name }
                 val groupMap = categories.associate { it.id to it.group }
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
-                val seasonOpts = items.mapNotNull { it.season?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
+                val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
                 val colorOpts = items.mapNotNull { it.color?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
                 ItemListData(items, brandMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
-                val state = _uiState.value
                 val filtered = applyFilters(
-                    data.items, state.filterStatus, state.searchQuery, state.filterGroup,
-                    data.groupMap, state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
+                    data.items, _uiState.value.filterStatus, _uiState.value.searchQuery, _uiState.value.filterGroup,
+                    data.groupMap, _uiState.value.filterSeason, _uiState.value.filterStyle, _uiState.value.filterColor, _uiState.value.filterBrandId
                 )
-                _uiState.value = state.copy(
-                    items = data.items,
-                    filteredItems = filtered,
-                    brandNames = data.brandMap,
-                    categoryNames = data.categoryMap,
-                    categoryGroups = data.groupMap,
-                    itemPrices = data.priceMap,
-                    seasonOptions = data.seasonOpts,
-                    styleOptions = data.styleOpts,
-                    colorOptions = data.colorOpts,
-                    isLoading = false
-                )
+                _uiState.update {
+                    it.copy(
+                        items = data.items,
+                        filteredItems = filtered,
+                        brandNames = data.brandMap,
+                        categoryNames = data.categoryMap,
+                        categoryGroups = data.groupMap,
+                        itemPrices = data.priceMap,
+                        seasonOptions = data.seasonOpts,
+                        styleOptions = data.styleOpts,
+                        colorOptions = data.colorOpts,
+                        isLoading = false
+                    )
+                }
                 updateTotalPrice(filtered)
             }
         }
@@ -170,9 +173,8 @@ class ItemListViewModel(
                 _uiState.update { it.copy(totalPrice = 0.0) }
                 return@launch
             }
-            priceRepository.getTotalPriceByItemIds(itemIds).collect { total ->
-                _uiState.update { it.copy(totalPrice = total) }
-            }
+            val total = priceRepository.getTotalPriceByItemIds(itemIds).first()
+            _uiState.update { it.copy(totalPrice = total) }
         }
     }
 
@@ -182,7 +184,7 @@ class ItemListViewModel(
             state.items, status, state.searchQuery, state.filterGroup, state.categoryGroups,
             state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
         )
-        _uiState.value = state.copy(filterStatus = status, filteredItems = filtered)
+        _uiState.update { it.copy(filterStatus = status, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
@@ -192,7 +194,7 @@ class ItemListViewModel(
             state.items, state.filterStatus, state.searchQuery, group, state.categoryGroups,
             state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
         )
-        _uiState.value = state.copy(filterGroup = group, filteredItems = filtered)
+        _uiState.update { it.copy(filterGroup = group, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
@@ -202,7 +204,7 @@ class ItemListViewModel(
             state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
             season, state.filterStyle, state.filterColor, state.filterBrandId
         )
-        _uiState.value = state.copy(filterSeason = season, filteredItems = filtered)
+        _uiState.update { it.copy(filterSeason = season, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
@@ -212,7 +214,7 @@ class ItemListViewModel(
             state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
             state.filterSeason, style, state.filterColor, state.filterBrandId
         )
-        _uiState.value = state.copy(filterStyle = style, filteredItems = filtered)
+        _uiState.update { it.copy(filterStyle = style, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
@@ -222,7 +224,7 @@ class ItemListViewModel(
             state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
             state.filterSeason, state.filterStyle, color, state.filterBrandId
         )
-        _uiState.value = state.copy(filterColor = color, filteredItems = filtered)
+        _uiState.update { it.copy(filterColor = color, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
@@ -232,18 +234,23 @@ class ItemListViewModel(
             state.items, state.filterStatus, state.searchQuery, state.filterGroup, state.categoryGroups,
             state.filterSeason, state.filterStyle, state.filterColor, brandId
         )
-        _uiState.value = state.copy(filterBrandId = brandId, filteredItems = filtered)
+        _uiState.update { it.copy(filterBrandId = brandId, filteredItems = filtered) }
         updateTotalPrice(filtered)
     }
 
     fun search(query: String) {
-        val state = _uiState.value
-        val filtered = applyFilters(
-            state.items, state.filterStatus, query, state.filterGroup, state.categoryGroups,
-            state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
-        )
-        _uiState.value = state.copy(searchQuery = query, filteredItems = filtered)
-        updateTotalPrice(filtered)
+        _uiState.update { it.copy(searchQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300) // debounce
+            val state = _uiState.value
+            val filtered = applyFilters(
+                state.items, state.filterStatus, query, state.filterGroup, state.categoryGroups,
+                state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId
+            )
+            _uiState.update { it.copy(filteredItems = filtered) }
+            updateTotalPrice(filtered)
+        }
     }
 
     private fun applyFilters(
@@ -268,7 +275,9 @@ class ItemListViewModel(
         }
 
         if (season != null) {
-            result = result.filter { it.season == season }
+            result = result.filter { item ->
+                item.season?.split(",")?.any { it.trim() == season } == true
+            }
         }
 
         if (style != null) {
@@ -364,7 +373,7 @@ class ItemEditViewModel(
                             priority = item.priority,
                             imageUrl = item.imageUrl,
                             color = item.color,
-                            season = item.season,
+                            seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,
                             sizeChartImageUrl = item.sizeChartImageUrl,
@@ -421,8 +430,10 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(color = color)
     }
 
-    fun updateSeason(season: String?) {
-        _uiState.value = _uiState.value.copy(season = season)
+    fun toggleSeason(season: String) {
+        val current = _uiState.value.seasons
+        val updated = if (season in current) current - season else current + season
+        _uiState.value = _uiState.value.copy(seasons = updated)
     }
 
     fun updateStyle(style: String?) {
@@ -464,6 +475,7 @@ class ItemEditViewModel(
 
             try {
                 val now = System.currentTimeMillis()
+                val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
                 val item = if (state.item != null) {
                     // Update existing item
                     state.item.copy(
@@ -476,7 +488,7 @@ class ItemEditViewModel(
                         priority = state.priority,
                         imageUrl = state.imageUrl,
                         color = state.color,
-                        season = state.season,
+                        season = seasonStr,
                         style = state.style,
                         size = state.size,
                         sizeChartImageUrl = state.sizeChartImageUrl,
@@ -495,7 +507,7 @@ class ItemEditViewModel(
                         status = state.status,
                         priority = state.priority,
                         color = state.color,
-                        season = state.season,
+                        season = seasonStr,
                         style = state.style,
                         size = state.size,
                         sizeChartImageUrl = state.sizeChartImageUrl,
@@ -513,8 +525,11 @@ class ItemEditViewModel(
                     itemRepository.insertItem(item)
                 }
                 // Delete pending images after successful save
-                pendingImageDeletions.forEach { ImageFileHelper.deleteImage(it) }
+                val deletions = pendingImageDeletions.toList()
                 pendingImageDeletions.clear()
+                deletions.forEach { path ->
+                    try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
+                }
                 _uiState.value = _uiState.value.copy(isSaving = false)
                 onSuccess(itemId)
             } catch (e: Exception) {

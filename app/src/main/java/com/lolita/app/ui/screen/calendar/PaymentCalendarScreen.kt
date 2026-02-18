@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -34,7 +34,7 @@ import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.di.AppModule
-import com.lolita.app.ui.screen.common.GradientTopAppBar
+
 import com.lolita.app.ui.theme.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -151,28 +151,6 @@ class PaymentCalendarViewModel(
 }
 
 // --- UI ---
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PaymentCalendarScreen(
-    onBack: () -> Unit,
-    viewModel: PaymentCalendarViewModel = viewModel()
-) {
-    Scaffold(
-        topBar = {
-            GradientTopAppBar(
-                title = { Text("付款日历") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        PaymentCalendarContent(viewModel = viewModel, modifier = Modifier.padding(padding))
-    }
-}
 
 @Composable
 fun PaymentCalendarContent(

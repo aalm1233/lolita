@@ -18,6 +18,9 @@ interface PriceDao {
     @Query("SELECT * FROM prices WHERE item_id = :itemId")
     fun getPricesByItem(itemId: Long): Flow<List<Price>>
 
+    @Query("SELECT * FROM prices WHERE item_id = :itemId")
+    suspend fun getPricesByItemList(itemId: Long): List<Price>
+
     @Query("SELECT * FROM prices WHERE id = :id")
     suspend fun getPriceById(id: Long): Price?
 

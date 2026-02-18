@@ -123,6 +123,20 @@ fun PaymentManageScreen(
         }
     }
 
+    // Error message dialog
+    uiState.errorMessage?.let { msg ->
+        AlertDialog(
+            onDismissRequest = { viewModel.clearError() },
+            title = { Text("提示") },
+            text = { Text(msg) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("确定")
+                }
+            }
+        )
+    }
+
     // Delete confirmation dialog
     if (paymentToDelete != null) {
         AlertDialog(

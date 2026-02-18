@@ -1,87 +1,65 @@
-# Progress: 代码审计问题修复
+# Progress Log
 
-## Session: 2026-02-14
+## Session: 2026-02-17 (专业代码审计)
 
-### 修复计划制定
-- **Status:** complete
-- **Started:** 2026-02-14
-- Actions taken:
-  - 阅读 code_audit_report.md（58 个问题）
-  - 按优先级分为 6 个修复阶段
-  - 识别文件修改热点和重复模式
-  - 创建 task_plan.md / findings.md / progress.md
+### Phase 1: 独立审计
+- [x] 初始化规划文件
+- [x] 恢复上次中断的会话 (2026-02-17)
+- [x] 审计员A：数据层审计 ✅ 17个问题
+- [x] 审计员B：UI/交互层审计 ✅ 19个问题
+- [x] 审计员C：系统集成层审计 ✅ 16个问题
 
-### Phase 4: ViewModel/Repository 修复
-- **Status:** complete
-- **Started:** 2026-02-14
-- Files modified:
-  - `CoordinateDao.kt` — 添加 `getCoordinateWithItemsList` suspend 函数
-  - `CoordinateRepository.kt` — 事务内改用 suspend 函数替代 Flow.first()
-  - `BrandManageScreen.kt` — 移除重复 LaunchedEffect(Unit)
-  - `CategoryManageScreen.kt` — 移除重复 LaunchedEffect(Unit)，添加分组选择器
-  - `BrandManageViewModel.kt` — loadBrands() 改 private
-  - `CategoryManageViewModel.kt` — loadCategories() 改 private，addCategory 增加 group 参数
-  - `PriceViewModel.kt` — isValid() 增加 total>0 和 deposit+balance==total 校验；update() 同步 Payment
-  - `PaymentDao.kt` — 添加 getPaymentsByPriceList suspend 函数
-  - `PaymentRepository.kt` — 添加 getPaymentsByPriceList
-  - `ItemViewModel.kt` — deleteItem 添加 try-catch + errorMessage
-  - `CoordinateViewModel.kt` — deleteCoordinate 添加 try-catch + errorMessage；update() 检查 createdAt==0
+### Phase 2: 交叉审视
+- [x] 汇总发现
+- [x] 去重分类 → 1 Critical, 9 High, 18 Medium, 14 Low + 8 补充
+- [x] 写入 findings.md
 
-### Phase 5: UI 修复
-- **Status:** complete
-- **Started:** 2026-02-14
-- Files modified:
-  - `PaymentEditScreen.kt` — 精确闹钟权限 UI 引导 + 提前天数数字键盘
-  - `BrandManageViewModel.kt` — 编辑功能 + trim + 失败不关闭对话框
-  - `CategoryManageViewModel.kt` — 编辑功能 + trim + 失败不关闭对话框
-  - `StyleManageViewModel.kt` — 编辑功能 + trim + 失败不关闭对话框
-  - `SeasonManageViewModel.kt` — 编辑功能 + trim + 失败不关闭对话框
-  - `BrandManageScreen.kt` — 编辑按钮 + 编辑对话框 + key
-  - `CategoryManageScreen.kt` — 编辑按钮 + 编辑对话框 + 分组显示 + key
-  - `StyleManageScreen.kt` — 编辑按钮 + 编辑对话框 + key + 删除 PLACEHOLDER
-  - `SeasonManageScreen.kt` — 编辑按钮 + 编辑对话框 + key + 删除 PLACEHOLDER
-  - `OutfitLogEditScreen.kt` — DatePicker 改 DisposableEffect + key
-  - `OutfitLogDetailScreen.kt` — 移除确认对话框 + key
-  - `CoordinateDetailScreen.kt` — key
-  - `ItemEditScreen.kt` — key
-  - `PriceManageScreen.kt` — key
-  - `PaymentManageScreen.kt` — key
+### Phase 4: 修复实施
+- [x] 批次1 Critical + High ✅ 构建通过
+  - C1: PaymentEditScreen 权限不阻断保存 → doSave 重命名，权限流程与保存分离
+  - H1: season LIKE 模糊匹配 → 精确逗号分隔匹配
+  - H2: 删除未使用的 updateItemsSeason/clearItemsSeason DAO 方法
+  - H3: SeasonRepository 加 withTransaction + 注入 database
+  - H4: StyleRepository 加 withTransaction + itemDao 改非空
+  - H5: ItemListScreen 添加 errorMessage AlertDialog
+  - H6: OutfitLogEditScreen setOnCancelListener → setOnDismissListener
+  - H7: PriceEditViewModel _uiState.value= → _uiState.update{}
+  - H8: ItemListViewModel 所有 filterByXxx + loadItems 改用 _uiState.update{}
+  - H9: scheduleReminder 返回 ReminderScheduleResult 枚举
+  - L14: cancelReminder FLAG_UPDATE_CURRENT → FLAG_NO_CREATE
+  - 修改文件：ItemDao, SeasonRepository, StyleRepository, AppModule, PaymentEditScreen, PriceViewModel, ItemViewModel, ItemListScreen, OutfitLogEditScreen, PaymentReminderScheduler
 
-### Phase 6: 低优先级修复
-- **Status:** complete
-- **Started:** 2026-02-14
-- Files modified:
-  - `PriceDao.kt` — getTotalSpending JOIN items 过滤 OWNED
-  - `ItemDao.kt` — 添加 updateItemsStyle/Season/clearItemsStyle/Season 查询
-  - `StyleRepository.kt` — 重命名/删除时同步更新 Item
-  - `SeasonRepository.kt` — 重命名/删除时同步更新 Item
-  - `StyleManageViewModel.kt` — updateStyle 传 oldName
-  - `SeasonManageViewModel.kt` — updateSeason 传 oldName
-  - `Screen.kt` — 移除 CoordinateList 死代码
-  - `AppModule.kt` — backupManager 改 lazy 单例，Style/Season Repository 传 itemDao
-  - `ImageFileHelper.kt` — deleteImage 改 suspend + IO
-  - `PaymentReminderScheduler.kt` — id % Int.MAX_VALUE 溢出保护
-  - `PaymentReminderReceiver.kt` — id % Int.MAX_VALUE 溢出保护
-  - `BackupRestoreScreen.kt` — ViewModel 改 StateFlow + isPreviewing 状态
-  - `PriceViewModel.kt` — totalPrice 解析抛异常 + deletePrice/deletePayment try-catch
-  - `CoordinateViewModel.kt` — loadCoordinate Job 引用防重复
-  - `OutfitLogDao.kt` — 添加 deleteOutfitLogById
-  - `OutfitLogRepository.kt` — 添加 deleteOutfitLogById
-  - `OutfitLogViewModel.kt` — deleteOutfitLog 改直接删除 + loadOutfitLog 用 copy
-  - `PriceEditScreen.kt` — 日期 TextField 外层 Box clickable
-  - `PaymentEditScreen.kt` — 日期 TextField 外层 Box clickable + 移除冗余 OnCancelListener
-  - `PriceManageScreen.kt` — SimpleDateFormat remember 缓存
-  - `ItemDetailScreen.kt` — SimpleDateFormat remember 缓存
-  - `CoordinateListScreen.kt` — SimpleDateFormat 改函数内局部变量
-  - `ItemEditScreen.kt` — 保存按钮增加表单有效性检查
-- Skipped:
-  - L-10 errorMessage Channel/SharedFlow — 收益极低，重复错误在同帧内几乎不可能发生
+- [x] 批次2 Medium ✅ 构建通过
+  - M1: ItemRepository.deleteItem 加 withTransaction + 注入 database
+  - M2: PaymentRepository.insertPayment 用 PaymentDao.updateCalendarEventId 替代全量 updatePayment
+  - M5: Converters toItemStatus 默认值 OWNED → WISHED（避免静默改变业务含义）
+  - M8: CoordinateEditViewModel.save() 显式设置 createdAt/updatedAt
+  - M9: PaymentManageScreen 添加 errorMessage AlertDialog
+  - M11: 删除死代码 SearchScreen.kt + StatsScreen/PaymentCalendarScreen 未使用 wrapper
+  - M15: TaobaoOrderParser 用 inputStream.use + workbook.use 保护资源
+  - M16: BackupManager.importFromJson 区分 SQLiteConstraintException(skipped) 和其他异常(errors)
+  - M17: BackupManager.exportToJson 用 database.withTransaction 包裹所有查询
+  - M18: BootCompletedReceiver 添加 withTimeout(9000) 保护
+  - 修改文件：ItemRepository, PaymentRepository, PaymentDao, Converters, CoordinateViewModel, PaymentManageScreen, TaobaoOrderParser, BackupManager, BootCompletedReceiver, StatsScreen, PaymentCalendarScreen, AppModule
+  - 删除文件：SearchScreen.kt
 
-## 5-Question Reboot Check
-| Question | Answer |
-|----------|--------|
-| Where am I? | Phase 6 complete，全部完成 |
-| Where am I going? | 所有 58 个审计问题已处理 |
-| What's the goal? | 修复 58 个审计问题 |
-| What have I learned? | 低优先级修复大多是小改动，L-10 Channel 重构收益太低跳过 |
-| What have I done? | Phase 1-6 全部完成（57/58 问题已修复，L-10 跳过） |
+- [x] 批次3 Low ✅ 构建通过
+  - L1: CategoryRepository.getCategoryByName 改用 DAO 查询替代全表加载内存过滤
+  - L2: BrandRepository.deleteBrand require() → throw IllegalStateException（与 CategoryRepository 统一）
+  - L9: PriceManageViewModel.deletePrice 不再静默吞掉异常
+  - L12: BackupManager openInputStream 全部改用 .use{} 保护（importFromJson + previewBackup）
+  - L13: ImageFileHelper.deleteImage 添加路径验证，防止路径穿越
+  - 修改文件：CategoryDao, CategoryRepository, BrandRepository, PriceViewModel, BackupManager, ImageFileHelper
+
+---
+
+## 历史 Sessions
+
+## Session: 2026-02-17 (5个功能逻辑问题调查与修复方案)
+- 全部完成，详见历史记录
+
+## Session: 2026-02-15 (优化订单导入 — 定金尾款匹配)
+- Phase 1-4 全部完成
+
+## Session: 2026-02-14 (淘宝订单导入功能 — 全部 5 个阶段已完成)
+- Phase 1-5 全部完成

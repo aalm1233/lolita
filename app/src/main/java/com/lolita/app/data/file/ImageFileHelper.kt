@@ -5,6 +5,8 @@ import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.UUID
 
 /**
@@ -39,6 +41,48 @@ object ImageFileHelper {
 
     suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
         val file = File(path)
-        if (file.exists()) file.delete()
+        // Only delete files within our images directory to prevent path traversal
+        if (file.exists() && file.canonicalPath.contains("${File.separator}$IMAGE_DIR${File.separator}")) {
+            file.delete()
+        }
     }
+
+    suspend fun downloadFromUrl(context: Context, imageUrl: String): String =
+        withContext(Dispatchers.IO) {
+            val dir = File(context.filesDir, IMAGE_DIR)
+            if (!dir.exists()) dir.mkdirs()
+
+            val extension = imageUrl.substringAfterLast(".", "jpg")
+                .substringBefore("?")
+                .filter { it.isLetterOrDigit() }
+                .take(4).ifBlank { "jpg" }
+            val fileName = "${UUID.randomUUID()}.$extension"
+            val destFile = File(dir, fileName)
+
+            val connection = URL(imageUrl).openConnection() as HttpURLConnection
+            try {
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+                connection.connect()
+
+                val responseCode = connection.responseCode
+                if (responseCode !in 200..299) {
+                    throw Exception("HTTP $responseCode")
+                }
+
+                connection.inputStream.use { input ->
+                    destFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } catch (e: Exception) {
+                // Clean up incomplete file on failure
+                if (destFile.exists()) destFile.delete()
+                throw e
+            } finally {
+                connection.disconnect()
+            }
+            destFile.absolutePath
+        }
 }

@@ -56,9 +56,9 @@ fun PaymentEditScreen(
     var showExactAlarmDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Save action extracted so it can be called after permission result
-    val performSave: () -> Unit = {
-        // Check exact alarm permission when reminder is enabled
+    // Actual save logic — only called once
+    val doSave: () -> Unit = {
+        // Check exact alarm permission when reminder is enabled (non-blocking info)
         if (uiState.reminderSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (!alarmManager.canScheduleExactAlarms()) {
@@ -80,8 +80,8 @@ fun PaymentEditScreen(
     val calendarPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { _ ->
-        // Proceed with save regardless of permission result
-        performSave()
+        // Proceed with save after permission result (only save entry point from permission flow)
+        doSave()
     }
 
     LaunchedEffect(paymentId) {
@@ -157,8 +157,9 @@ fun PaymentEditScreen(
                                 }
                             }
                             if (permissionsNeeded.isEmpty()) {
-                                performSave()
+                                doSave()
                             } else {
+                                // Save will be triggered in calendarPermissionLauncher callback
                                 calendarPermissionLauncher.launch(permissionsNeeded.toTypedArray())
                             }
                         },

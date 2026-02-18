@@ -80,11 +80,14 @@ interface ItemDao {
     @Query("UPDATE items SET season = :newName WHERE season = :oldName")
     suspend fun updateItemsSeason(oldName: String, newName: String)
 
+    @Query("SELECT * FROM items WHERE season = :name OR season LIKE :name || ',%' OR season LIKE '%,' || :name || ',%' OR season LIKE '%,' || :name")
+    suspend fun getItemsWithSeason(name: String): List<Item>
+
+    @Update
+    suspend fun updateItems(items: List<Item>)
+
     @Query("UPDATE items SET style = NULL WHERE style = :name")
     suspend fun clearItemsStyle(name: String)
-
-    @Query("UPDATE items SET season = NULL WHERE season = :name")
-    suspend fun clearItemsSeason(name: String)
 }
 
 data class ItemWithFullDetails(

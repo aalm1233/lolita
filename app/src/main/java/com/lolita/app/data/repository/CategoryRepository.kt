@@ -19,13 +19,12 @@ class CategoryRepository(
 
     suspend fun deleteCategory(category: Category) {
         val count = itemDao.countItemsByCategory(category.id)
-        require(count == 0) { "该类型下有 $count 件服饰，无法删除" }
+        if (count > 0) throw IllegalStateException("该类型下有 $count 件服饰，无法删除")
         categoryDao.deleteCategory(category)
     }
 
     suspend fun getCategoryByName(name: String): Category? {
-        return categoryDao.getAllCategoriesList()
-            .firstOrNull { it.name == name }
+        return categoryDao.getCategoryByName(name)
     }
 
     suspend fun ensurePresetCategories() {

@@ -53,7 +53,7 @@ class PaymentRepository(
                 null
             }
             if (calendarEventId != null) {
-                paymentDao.updatePayment(payment.copy(id = id, calendarEventId = calendarEventId))
+                paymentDao.updateCalendarEventId(id, calendarEventId)
             }
         }
         return id

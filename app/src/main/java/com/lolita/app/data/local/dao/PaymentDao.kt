@@ -50,6 +50,9 @@ interface PaymentDao {
     @Update
     suspend fun updatePayment(payment: Payment)
 
+    @Query("UPDATE payments SET calendar_event_id = :calendarEventId WHERE id = :paymentId")
+    suspend fun updateCalendarEventId(paymentId: Long, calendarEventId: Long?)
+
     @Delete
     suspend fun deletePayment(payment: Payment)
 

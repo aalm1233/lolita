@@ -238,9 +238,9 @@ fun ItemEditScreen(
 
                 // Season selector
                 SeasonSelector(
-                    selectedSeason = uiState.season,
+                    selectedSeasons = uiState.seasons,
                     seasonOptions = uiState.seasonOptions,
-                    onSeasonSelected = { viewModel.updateSeason(it) }
+                    onSeasonToggled = { viewModel.toggleSeason(it) }
                 )
 
                 // Style selector
@@ -650,13 +650,13 @@ private fun ImageUploaderSection(
  */
 @Composable
 private fun SeasonSelector(
-    selectedSeason: String?,
+    selectedSeasons: List<String>,
     seasonOptions: List<String>,
-    onSeasonSelected: (String?) -> Unit
+    onSeasonToggled: (String) -> Unit
 ) {
     Column {
         Text(
-            text = "季节 (可选)",
+            text = "季节 (可多选)",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -666,10 +666,8 @@ private fun SeasonSelector(
         ) {
             seasonOptions.forEach { season ->
                 FilterChip(
-                    selected = selectedSeason == season,
-                    onClick = {
-                        onSeasonSelected(if (selectedSeason == season) null else season)
-                    },
+                    selected = season in selectedSeasons,
+                    onClick = { onSeasonToggled(season) },
                     label = { Text(season) }
                 )
             }

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ fun SettingsScreen(
     onNavigateToStyle: () -> Unit = {},
     onNavigateToSeason: () -> Unit = {},
     onNavigateToBackupRestore: () -> Unit,
+    onNavigateToTaobaoImport: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) {
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
@@ -95,6 +97,14 @@ fun SettingsScreen(
                 icon = Icons.Default.Build,
                 iconTint = Color(0xFF64B5F6),
                 onClick = onNavigateToBackupRestore
+            )
+
+            SettingsMenuItem(
+                title = "淘宝订单导入",
+                description = "从淘宝订单Excel文件批量导入服饰",
+                icon = Icons.Default.ShoppingCart,
+                iconTint = Color(0xFFFF8A65),
+                onClick = onNavigateToTaobaoImport
             )
 
             // Display settings section

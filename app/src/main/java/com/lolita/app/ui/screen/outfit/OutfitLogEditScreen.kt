@@ -215,7 +215,7 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ).apply {
-                setOnCancelListener { showDatePicker = false }
+                setOnDismissListener { showDatePicker = false }
             }
             dialog.show()
             onDispose { dialog.dismiss() }

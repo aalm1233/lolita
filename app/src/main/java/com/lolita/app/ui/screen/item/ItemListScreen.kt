@@ -108,6 +108,20 @@ fun ItemListScreen(
         )
     }
 
+    // H5: Show error message when delete fails (e.g. RESTRICT foreign key)
+    uiState.errorMessage?.let { msg ->
+        AlertDialog(
+            onDismissRequest = { viewModel.clearError() },
+            title = { Text("提示") },
+            text = { Text(msg) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("确定")
+                }
+            }
+        )
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(

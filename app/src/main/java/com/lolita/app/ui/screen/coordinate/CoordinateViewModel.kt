@@ -214,9 +214,12 @@ class CoordinateEditViewModel(
     suspend fun save(): Result<Long> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
+            val now = System.currentTimeMillis()
             val coordinate = Coordinate(
                 name = _uiState.value.name,
-                description = _uiState.value.description
+                description = _uiState.value.description,
+                createdAt = now,
+                updatedAt = now
             )
             val id = coordinateRepository.insertCoordinateWithItems(
                 coordinate, _uiState.value.selectedItemIds

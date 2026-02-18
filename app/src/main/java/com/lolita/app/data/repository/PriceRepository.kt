@@ -62,4 +62,13 @@ class PriceRepository(
 
     fun getItemPriceSums(): Flow<List<com.lolita.app.data.local.dao.ItemPriceSum>> =
         priceDao.getItemPriceSums()
+
+    fun getSpendingByBrand() = priceDao.getSpendingByBrand()
+    fun getSpendingByCategory() = priceDao.getSpendingByCategory()
+    fun getSpendingByStyle() = priceDao.getSpendingByStyle()
+    fun getSpendingBySeasonRaw() = priceDao.getSpendingBySeasonRaw()
+    fun getMonthlySpending() = priceDao.getMonthlySpending()
+    fun getMostExpensiveItem() = priceDao.getMostExpensiveItem()
+    fun getWishlistTotalBudget() = priceDao.getWishlistTotalBudget()
+    fun getWishlistByPriorityStats() = priceDao.getWishlistByPriorityStats()
 }

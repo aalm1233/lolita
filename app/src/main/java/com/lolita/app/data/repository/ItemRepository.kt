@@ -36,6 +36,10 @@ class ItemRepository(
     suspend fun updateItem(item: Item) =
         itemDao.updateItem(item.copy(updatedAt = System.currentTimeMillis()))
 
+    fun getTopBrandsByCount() = itemDao.getTopBrandsByCount()
+    fun getOwnedCount() = itemDao.getOwnedCount()
+    fun getWishedCount() = itemDao.getWishedCount()
+
     suspend fun deleteItem(item: Item) {
         val doDelete: suspend () -> Unit = {
             // Clean up AlarmManager reminders and calendar events before CASCADE deletes payments

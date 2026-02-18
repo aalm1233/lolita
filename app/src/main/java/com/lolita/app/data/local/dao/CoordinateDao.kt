@@ -46,6 +46,9 @@ interface CoordinateDao {
 
     @Query("SELECT coordinate_id, COUNT(*) as itemCount FROM items WHERE coordinate_id IS NOT NULL GROUP BY coordinate_id")
     fun getItemCountsByCoordinate(): Flow<List<CoordinateItemCount>>
+
+    @Query("DELETE FROM coordinates")
+    suspend fun deleteAllCoordinates()
 }
 
 data class CoordinateItemCount(

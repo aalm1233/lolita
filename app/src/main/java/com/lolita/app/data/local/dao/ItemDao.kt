@@ -106,6 +106,12 @@ interface ItemDao {
 
     @Query("SELECT COUNT(*) FROM items WHERE status = 'WISHED'")
     fun getWishedCount(): Flow<Int>
+
+    @Query("DELETE FROM items")
+    suspend fun deleteAllItems()
+
+    @Query("SELECT COUNT(*) FROM items")
+    suspend fun getItemCount(): Int
 }
 
 data class ItemWithFullDetails(

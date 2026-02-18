@@ -34,4 +34,7 @@ interface SeasonDao {
 
     @Query("SELECT * FROM seasons ORDER BY name ASC")
     suspend fun getAllSeasonsList(): List<Season>
+
+    @Query("DELETE FROM seasons")
+    suspend fun deleteAllSeasons()
 }

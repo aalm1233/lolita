@@ -154,6 +154,9 @@ interface PriceDao {
         GROUP BY i.priority
     """)
     fun getWishlistByPriorityStats(): Flow<List<PriorityStats>>
+
+    @Query("DELETE FROM prices")
+    suspend fun deleteAllPrices()
 }
 
 data class ItemPriceSum(

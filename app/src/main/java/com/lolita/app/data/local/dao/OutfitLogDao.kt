@@ -56,6 +56,12 @@ interface OutfitLogDao {
 
     @Query("SELECT outfit_log_id, COUNT(item_id) as itemCount FROM outfit_item_cross_ref GROUP BY outfit_log_id")
     fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>>
+
+    @Query("DELETE FROM outfit_logs")
+    suspend fun deleteAllOutfitLogs()
+
+    @Query("DELETE FROM outfit_item_cross_ref")
+    suspend fun deleteAllOutfitItemCrossRefs()
 }
 
 data class OutfitLogWithItems(

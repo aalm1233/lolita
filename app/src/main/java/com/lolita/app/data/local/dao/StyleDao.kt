@@ -34,4 +34,7 @@ interface StyleDao {
 
     @Query("SELECT * FROM styles ORDER BY name ASC")
     suspend fun getAllStylesList(): List<Style>
+
+    @Query("DELETE FROM styles")
+    suspend fun deleteAllStyles()
 }

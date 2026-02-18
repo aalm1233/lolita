@@ -34,4 +34,7 @@ interface BrandDao {
 
     @Query("SELECT * FROM brands ORDER BY name ASC")
     suspend fun getAllBrandsList(): List<Brand>
+
+    @Query("DELETE FROM brands")
+    suspend fun deleteAllBrands()
 }

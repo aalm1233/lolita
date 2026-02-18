@@ -94,4 +94,7 @@ interface PaymentDao {
         WHERE p.is_paid = 0 AND p.due_date < :now AND i.status = 'OWNED'
     """)
     fun getOverdueAmount(now: Long): Flow<Double>
+
+    @Query("DELETE FROM payments")
+    suspend fun deleteAllPayments()
 }

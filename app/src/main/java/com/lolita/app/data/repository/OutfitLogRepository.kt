@@ -61,6 +61,18 @@ class OutfitLogRepository(
     fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>> =
         outfitLogDao.getItemCountsByOutfitLog()
 
+    suspend fun getTodayOutfitLog(): OutfitLogWithItems? {
+        val calendar = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }
+        val dayStart = calendar.timeInMillis
+        val dayEnd = dayStart + 24 * 60 * 60 * 1000L - 1
+        return outfitLogDao.getOutfitLogByDay(dayStart, dayEnd)
+    }
+
     suspend fun saveOutfitLogWithItems(
         outfitLog: OutfitLog,
         isNew: Boolean,

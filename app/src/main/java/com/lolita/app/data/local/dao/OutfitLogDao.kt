@@ -65,6 +65,10 @@ interface OutfitLogDao {
 
     @Query("SELECT DISTINCT item_id FROM outfit_item_cross_ref WHERE outfit_log_id IN (SELECT outfit_log_id FROM outfit_item_cross_ref WHERE item_id = :itemId) AND item_id != :itemId")
     suspend fun getCoOccurringItemIds(itemId: Long): List<Long>
+
+    @Transaction
+    @Query("SELECT * FROM outfit_logs WHERE date BETWEEN :dayStart AND :dayEnd LIMIT 1")
+    suspend fun getOutfitLogByDay(dayStart: Long, dayEnd: Long): OutfitLogWithItems?
 }
 
 data class OutfitLogWithItems(

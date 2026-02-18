@@ -65,6 +65,17 @@ class BackupRestoreViewModel : ViewModel() {
         }
     }
 
+    fun exportZip() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
+            backupManager.exportToZip().fold(
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "ZIP备份成功！文件已保存到下载目录（含图片）") },
+                onFailure = { _uiState.value = _uiState.value.copy(message = "备份失败: ${it.message}") }
+            )
+            _uiState.value = _uiState.value.copy(isExporting = false)
+        }
+    }
+
     fun onFileSelected(uri: Uri?) {
         if (uri == null) return
         _uiState.value = _uiState.value.copy(pendingImportUri = uri, isPreviewing = true)
@@ -93,8 +104,9 @@ class BackupRestoreViewModel : ViewModel() {
         viewModelScope.launch {
             backupManager.importFromJson(uri).fold(
                 onSuccess = { summary ->
+                    val imageMsg = if (summary.imageCount > 0) "，恢复 ${summary.imageCount} 张图片" else ""
                     _uiState.value = _uiState.value.copy(
-                        message = "恢复完成！导入 ${summary.totalImported} 条，跳过 ${summary.totalSkipped} 条"
+                        message = "恢复完成！导入 ${summary.totalImported} 条数据$imageMsg"
                     )
                 },
                 onFailure = { _uiState.value = _uiState.value.copy(message = "恢复失败: ${it.message}") }
@@ -190,6 +202,27 @@ fun BackupRestoreScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Text("导出为ZIP（含图片）", style = MaterialTheme.typography.bodyLarge)
+                    Text("包含所有数据和图片，推荐用于完整备份", style = MaterialTheme.typography.bodySmall)
+                    Button(
+                        onClick = { viewModel.exportZip() },
+                        enabled = !uiState.isExporting,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        if (uiState.isExporting) {
+                            CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        Text("导出ZIP备份")
+                    }
+                }
+            }
+
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Text("导出为CSV", style = MaterialTheme.typography.bodyLarge)
                     Text("方便在Excel中查看数据", style = MaterialTheme.typography.bodySmall)
                     Button(
@@ -216,10 +249,10 @@ fun BackupRestoreScreen(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("从JSON备份恢复", style = MaterialTheme.typography.bodyLarge)
-                    Text("选择之前导出的JSON备份文件，已有数据不会被覆盖", style = MaterialTheme.typography.bodySmall)
+                    Text("从备份恢复", style = MaterialTheme.typography.bodyLarge)
+                    Text("选择之前导出的备份文件（支持ZIP和JSON格式），将清空当前数据并替换为备份数据", style = MaterialTheme.typography.bodySmall)
                     Button(
-                        onClick = { filePickerLauncher.launch(arrayOf("application/json")) },
+                        onClick = { filePickerLauncher.launch(arrayOf("application/json", "application/zip")) },
                         enabled = !uiState.isImporting && !uiState.isPreviewing,
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -255,8 +288,17 @@ fun BackupRestoreScreen(
                     Text("价格: ${p.priceCount} 条")
                     Text("付款: ${p.paymentCount} 条")
                     Text("穿搭日记: ${p.outfitLogCount} 条")
+                    if (p.imageCount > 0) {
+                        Text("图片: ${p.imageCount} 张")
+                    }
                     HorizontalDivider(color = Pink100, modifier = Modifier.padding(vertical = 4.dp))
                     Text("共 ${p.totalCount} 条数据")
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "⚠ 恢复将清空当前所有数据",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             },
             confirmButton = {

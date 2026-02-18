@@ -89,48 +89,144 @@ object TaobaoOrderParser {
      */
     private fun parseStyleSpec(spec: String): ParsedStyle {
         if (spec.isBlank()) return ParsedStyle()
-        // 预处理：去除干扰信息
+        // 阶段1: 增强噪声清理
         val cleaned = spec
-            .replace(Regex("【[^】]*】"), "")       // 【现货】【全款预约】
-            .replace(Regex("\\[[^\\]]*]"), "")      // [一批尾款] [定金]
+            // 括号类噪声
+            .replace(Regex("【[^】]*】"), "")
+            .replace(Regex("\\[[^\\]]*]"), "")
+            .replace(Regex("\\{[^}]*}"), "")
+            .replace(Regex("<[^>]*>"), "")
+            .replace(Regex("（[^）]*(?:尾款|定金|不单售|备注|售后)[^）]*）"), "")
+            .replace(Regex("\\([^)]*(?:尾款|定金|不单售|备注|售后)[^)]*\\)"), "")
+            // 点缀噪声
+            .replace(Regex("·(?:尾款|定金|现货)"), "")
             .replace(Regex("β款"), "")
+            // 备注类（必须在支付噪声之前，避免"色码以定金为准"被部分吃掉）
             .replace(Regex("色码以定金为准"), "")
-            .replace(Regex("发货地址[^;/]*"), "")
+            // 支付/批次噪声
+            .replace(Regex("[一二三四五六七八九十\\d]+批"), "")
+            .replace(Regex("[一二三四五六七八九十\\d]+团"), "")
+            .replace(Regex("(?:仅|只)?(?:定-?金|尾款|现货|预约|全款|意向金)"), "")
+            // 备注类
+            .replace(Regex("(?:自行)?备注尺码|尺码(?:请)?备注|单品尺码请备注"), "")
+            .replace(Regex("(?:发货|收货)[^;/]*地址[^;/]*"), "")
             .replace(Regex("注意[^;/]*"), "")
             .replace(Regex("需有[^;/]*"), "")
             .replace(Regex("需要有[^;/]*"), "")
+            .replace(Regex("需补[^;/]*"), "")
+            .replace(Regex("还需补[^;/]*"), "")
+            // 日期时间模式
+            .replace(Regex("\\d+\\.\\d+(?:晚上|上午|下午)?[^;/]{0,10}"), "")
+            .replace(Regex("\\d+月\\d+日[^;/]*"), "")
+            // 杂项
+            .replace(Regex("本体"), "")
+            .replace(Regex("正常长度"), "")
+            .replace(Regex("不退不换不售后"), "")
+            .replace(Regex("福袋[^;/]*"), "")
+            .replace(Regex("按拍付顺序发"), "")
+            .replace(Regex("仅[^;/]*期间[^;/]*"), "")
+            .replace(Regex("物流情况"), "")
+            .replace(Regex("年前年后"), "")
+            .replace(Regex("单品[^;/]*请?备注"), "")
             .trim()
 
-        val parts = cleaned.split(Regex("[;/]")).map { it.trim() }.filter { it.isNotBlank() }
+        // 阶段2: 多级分割
+        val primaryParts = cleaned.split(Regex("[;/]")).map { it.trim() }.filter { it.isNotBlank() }
+        val allParts = primaryParts.flatMap { part ->
+            part.split(Regex("\\s+|--")).map { it.trim() }.filter { it.isNotBlank() }
+        }
+
+        // 阶段3: 智能分类
         var type: String? = null
         var size: String? = null
         var color: String? = null
-        for (part in parts) {
-            when {
-                isTypeKeyword(part) -> if (type == null) type = part
-                isSizeKeyword(part) -> if (size == null) size = part
-                isColorKeyword(part) -> if (color == null) color = part
-                else -> if (color == null) color = part  // 兜底
-            }
+
+        for (part in allParts) {
+            val (t, s, c) = classifyPart(part)
+            if (t != null && type == null) type = t
+            if (s != null && size == null) size = s
+            if (c != null && color == null) color = c
         }
         return ParsedStyle(type, size, color)
+    }
+
+    private fun classifyPart(part: String): Triple<String?, String?, String?> {
+        if (part.isBlank()) return Triple(null, null, null)
+
+        // 1. 纯尺寸
+        if (isSizeKeyword(part)) return Triple(null, part, null)
+
+        // 2. 精确类型匹配
+        if (typeKeywords.any { part.equals(it, ignoreCase = true) }) {
+            return Triple(part, null, null)
+        }
+
+        // 3. 后缀类型匹配 (如 "粉色柳波芙jsk", "深海色FS")
+        for (suffix in typeSuffixes) {
+            if (part.endsWith(suffix, ignoreCase = true) && part.length > suffix.length) {
+                val prefix = part.substring(0, part.length - suffix.length)
+                val extractedColor = if (isColorKeyword(prefix)) prefix else null
+                return Triple(part, null, extractedColor)
+            }
+        }
+
+        // 4. 包含类型匹配（长关键词优先）
+        val sortedTypeKeywords = typeKeywords.sortedByDescending { it.length }
+        for (keyword in sortedTypeKeywords) {
+            if (part.contains(keyword, ignoreCase = true)) {
+                val remaining = part.replace(
+                    Regex(Regex.escape(keyword), RegexOption.IGNORE_CASE), ""
+                ).trim()
+                val extractedColor = if (remaining.isNotBlank() && isColorKeyword(remaining)) {
+                    remaining
+                } else null
+                return Triple(keyword, null, extractedColor)
+            }
+        }
+
+        // 5. 前缀尺寸提取 (如 "M半裙", "L白色JSK", "XL上衣")
+        val sizePrefix = extractLeadingSize(part)
+        if (sizePrefix != null) {
+            val remaining = part.substring(sizePrefix.length).trim()
+            if (remaining.isNotBlank()) {
+                val (t, _, c) = classifyPart(remaining)
+                return Triple(t, sizePrefix, c)
+            }
+            return Triple(null, sizePrefix, null)
+        }
+
+        // 6. 颜色匹配
+        if (isColorKeyword(part)) return Triple(null, null, part)
+
+        // 7. 兜底：归为颜色
+        return Triple(null, null, part)
+    }
+
+    private fun extractLeadingSize(part: String): String? {
+        Regex("^(Lady\\d+)", RegexOption.IGNORE_CASE).find(part)?.let {
+            if (it.value.length < part.length) return it.value
+        }
+        Regex("^(XS|XXL|XXXL|2XL|3XL|XL|S|M|L)", RegexOption.IGNORE_CASE).find(part)?.let {
+            if (it.value.length < part.length) return it.value
+        }
+        return null
     }
 
     private val typeKeywords = listOf(
         // 基础类型
         "OP", "SK", "JSK", "SET", "FS",
         // 裙类变体
-        "开襟OP", "堆褶OP", "堆褶开襟OP", "拼色SK", "罩裙", "半裙", "格裙",
+        "开襟OP", "堆褶OP", "堆褶开襟OP", "拼色SK", "罩裙", "半裙", "格裙", "长裙", "连衣裙",
         // 套装
-        "Fullset", "FullSet", "fullset", "华丽套装",
+        "Fullset", "FullSet", "fullset", "FULLSET", "华丽套装",
         // 上装
-        "衬衫", "上衣", "外套", "长外套", "大衣", "罩衫", "斗篷", "罩衫斗篷",
+        "衬衫", "上衣", "外套", "长外套", "大衣", "罩衫", "斗篷", "罩衫斗篷", "胸衣", "蝙蝠胸衣",
         // 下装
         "短裤", "南瓜裤",
         // 配饰 — 头部
         "头饰", "蝴蝶结头饰", "帽子", "贝雷帽", "KC", "发箍", "发带", "发夹", "边夹", "头纱",
         // 配饰 — 身体
-        "腰封", "拖尾腰封", "印花钢骨腰封", "手袖", "接袖",
+        "腰封", "拖尾腰封", "印花钢骨腰封", "手袖", "接袖", "袖子",
         // 配饰 — 其他
         "包", "包包", "吊坠", "项链", "耳环", "戒指", "胸针"
     )
@@ -153,10 +249,15 @@ object TaobaoOrderParser {
         // 深浅变体
         "深蓝", "浅蓝", "天蓝", "藏蓝", "深绿", "浅绿", "墨绿", "军绿",
         "深紫", "浅紫", "暗红", "酒红", "玫红", "粉红",
-        // 特殊色名（来自实际数据）
+        // 特殊色名
         "绀色", "苔绿", "生成色", "香槟色", "白金色", "月银色", "深海色",
         "龙骨酒红色", "金色", "银色", "玫瑰金", "肤色",
         "米白", "米黄", "米色", "卡其", "驼色", "咖啡",
+        // 双色组合
+        "黑白", "蓝黑", "灰黑", "绿金", "粉绿", "黑粉",
+        "黑x红", "黑x青", "白×蓝", "黑x红色", "黑x青色", "白×蓝色",
+        // 系列色名
+        "织金", "白玫瑰", "黑玫瑰", "黑夕", "白昼", "蓝暮", "紫夜", "白金", "深海",
         // 配色/拼色表达
         "配色", "拼色", "撞色", "混色", "渐变",
         // 图色等特殊值

@@ -7,6 +7,7 @@ import com.lolita.app.data.local.dao.CoordinateWithItems
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.local.dao.ItemPriceSum
 import com.lolita.app.data.local.dao.PriceWithPayments
@@ -23,6 +24,7 @@ data class CoordinateListUiState(
     val itemCounts: Map<Long, Int> = emptyMap(),
     val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
     val priceByCoordinate: Map<Long, Double> = emptyMap(),
+    val showPrice: Boolean = false,
     val columnsPerRow: Int = 1,
     val isLoading: Boolean = true,
     val errorMessage: String? = null
@@ -50,7 +52,8 @@ data class CoordinateEditUiState(
 class CoordinateListViewModel(
     private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
-    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateListUiState())
@@ -70,8 +73,9 @@ class CoordinateListViewModel(
                 combine(
                     itemRepository.getAllItems(),
                     priceRepository.getItemPriceSums()
-                ) { a, b -> Pair(a, b) }
-            ) { (coordinates, itemCounts), (allItems, priceSums) ->
+                ) { a, b -> Pair(a, b) },
+                appPreferences.showTotalPrice
+            ) { (coordinates, itemCounts), (allItems, priceSums), showPrice ->
                 val countMap = itemCounts.associate { it.coordinate_id to it.itemCount }
                 val imageMap = allItems
                     .filter { it.coordinateId != null }
@@ -91,6 +95,7 @@ class CoordinateListViewModel(
                     itemCounts = countMap,
                     itemImagesByCoordinate = imageMap,
                     priceByCoordinate = coordPriceMap,
+                    showPrice = showPrice,
                     columnsPerRow = _uiState.value.columnsPerRow,
                     isLoading = false
                 )

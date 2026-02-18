@@ -12,6 +12,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.model.TaobaoOrder
@@ -51,7 +52,9 @@ data class ImportItemState(
     val imageUrl: String? = null,
     val styleSpec: String = "",
     val paymentRole: PaymentRole? = null,
-    val pairedWith: Int? = null
+    val pairedWith: Int? = null,
+    val manualBalance: Double? = null,
+    val balanceDueDate: Long? = null
 )
 
 data class ImportResult(
@@ -96,6 +99,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
     private val categoryRepository: CategoryRepository = AppModule.categoryRepository()
     private val itemRepository: ItemRepository = AppModule.itemRepository()
     private val priceRepository: PriceRepository = AppModule.priceRepository()
+    private val paymentRepository = AppModule.paymentRepository()
     private val database: LolitaDatabase = AppModule.database()
 
     private val _uiState = MutableStateFlow(TaobaoImportUiState())
@@ -376,6 +380,10 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
             if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
                 // 已配对的尾款项只需价格有效
                 item.price > 0
+            } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+                // 未配对的定金项需要品牌、分类、手动尾款金额和尾款截止日期
+                item.brandId > 0 && item.categoryId > 0
+                    && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
             } else {
                 // 普通项和未配对尾款项需要品牌和分类
                 item.brandId > 0 && item.categoryId > 0
@@ -436,6 +444,57 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                             processedIndices.add(pairedIdx!!)
                             importedCount++
                             mergedCount++
+                        } else if (importItem.paymentRole == PaymentRole.DEPOSIT
+                            && importItem.pairedWith == null
+                            && importItem.manualBalance != null && importItem.manualBalance > 0) {
+                            // 未配对定金 + 手动尾款导入
+                            val deposit = importItem.price
+                            val balance = importItem.manualBalance
+                            val totalPrice = deposit + balance
+
+                            val itemId = itemRepository.insertItem(
+                                Item(
+                                    name = importItem.name,
+                                    brandId = importItem.brandId,
+                                    categoryId = importItem.categoryId,
+                                    color = importItem.color.ifBlank { null },
+                                    size = importItem.size.ifBlank { null },
+                                    imageUrl = importItem.imageUrl,
+                                    status = ItemStatus.OWNED,
+                                    description = ""
+                                )
+                            )
+                            val priceId = priceRepository.insertPrice(
+                                Price(
+                                    itemId = itemId,
+                                    type = PriceType.DEPOSIT_BALANCE,
+                                    totalPrice = totalPrice,
+                                    deposit = deposit,
+                                    balance = balance,
+                                    purchaseDate = parseDateToMillis(importItem.purchaseDate)
+                                )
+                            )
+                            // 定金付款记录（已付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = deposit,
+                                    isPaid = true,
+                                    paidDate = parseDateToMillis(importItem.purchaseDate),
+                                    dueDate = parseDateToMillis(importItem.purchaseDate) ?: System.currentTimeMillis()
+                                )
+                            )
+                            // 尾款付款记录（未付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = balance,
+                                    isPaid = false,
+                                    dueDate = importItem.balanceDueDate!!
+                                )
+                            )
+                            processedIndices.add(index)
+                            importedCount++
                         } else {
                             // 普通商品导入
                             val itemId = itemRepository.insertItem(
@@ -756,14 +815,33 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
         // 精确匹配
         categories.firstOrNull { it.name.equals(parsedType, ignoreCase = true) }
             ?.let { return it }
-        // 关键词包含匹配
+        // 关键词映射（精确匹配优先）
         val typeMap = mapOf(
             "OP" to listOf("OP", "开襟OP", "堆褶OP", "堆褶开襟OP"),
-            "SK" to listOf("SK", "拼色SK"),
+            "SK" to listOf("SK", "拼色SK", "半裙", "格裙", "长裙", "罩裙"),
             "JSK" to listOf("JSK"),
-            "斗篷" to listOf("斗篷", "罩衫斗篷"),
-            "其他头饰" to listOf("头饰", "蝴蝶结头饰")
+            "衬衫" to listOf("衬衫"),
+            "斗篷" to listOf("斗篷", "罩衫斗篷", "罩衫"),
+            "外套" to listOf("外套", "长外套", "大衣"),
+            "帽子" to listOf("帽子", "贝雷帽"),
+            "其他头饰" to listOf("头饰", "蝴蝶结头饰", "KC", "发箍", "发带", "发夹", "边夹", "头纱"),
+            "腰封" to listOf("腰封", "拖尾腰封", "印花钢骨腰封"),
+            "手袖" to listOf("手袖", "接袖", "袖子"),
+            "包" to listOf("包", "包包"),
+            "短裤" to listOf("短裤", "南瓜裤"),
+            "胸针" to listOf("胸针"),
+            "项链" to listOf("项链", "吊坠"),
+            "耳环" to listOf("耳环"),
+            "戒指" to listOf("戒指"),
+            "上衣" to listOf("上衣", "胸衣", "蝙蝠胸衣")
         )
+        // 先精确匹配关键词
+        for ((categoryName, keywords) in typeMap) {
+            if (keywords.any { parsedType.equals(it, ignoreCase = true) }) {
+                categories.firstOrNull { it.name == categoryName }?.let { return it }
+            }
+        }
+        // 再包含匹配兜底
         for ((categoryName, keywords) in typeMap) {
             if (keywords.any { parsedType.contains(it, ignoreCase = true) }) {
                 categories.firstOrNull { it.name == categoryName }?.let { return it }

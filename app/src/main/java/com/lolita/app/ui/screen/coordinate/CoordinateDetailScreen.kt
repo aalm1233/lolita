@@ -43,11 +43,13 @@ fun CoordinateDetailScreen(
     coordinateId: Long,
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
+    onDelete: () -> Unit = {},
     viewModel: CoordinateDetailViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     var itemToRemove by remember { mutableStateOf<Item?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (itemToRemove != null) {
         AlertDialog(
@@ -77,6 +79,30 @@ fun CoordinateDetailScreen(
         )
     }
 
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("确认删除") },
+            text = { Text("确定要删除套装「${uiState.coordinate?.name ?: ""}」吗？套装内的服饰不会被删除。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        viewModel.deleteCoordinate { onDelete() }
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("取消") }
+            }
+        )
+    }
+
     LaunchedEffect(coordinateId) {
         viewModel.loadCoordinate(coordinateId)
     }
@@ -93,6 +119,9 @@ fun CoordinateDetailScreen(
                 actions = {
                     IconButton(onClick = { onEdit(coordinateId) }) {
                         Icon(Icons.Default.Edit, contentDescription = "编辑")
+                    }
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(Icons.Default.Delete, contentDescription = "删除", tint = MaterialTheme.colorScheme.error)
                     }
                 }
             )

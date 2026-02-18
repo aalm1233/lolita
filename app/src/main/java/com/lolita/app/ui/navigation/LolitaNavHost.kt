@@ -6,6 +6,8 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
@@ -99,8 +101,10 @@ fun LolitaNavHost() {
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
+                modifier = Modifier.height(64.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = Pink400
+                contentColor = Pink400,
+                windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination

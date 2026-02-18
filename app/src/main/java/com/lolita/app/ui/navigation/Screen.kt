@@ -100,4 +100,9 @@ sealed interface Screen {
     data object TaobaoImport : Screen {
         override val route = "taobao_import"
     }
+
+    data object Recommendation : Screen {
+        override val route = "recommendation/{itemId}"
+        fun createRoute(itemId: Long) = "recommendation/$itemId"
+    }
 }

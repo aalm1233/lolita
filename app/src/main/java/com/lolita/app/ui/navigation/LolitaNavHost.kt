@@ -38,6 +38,7 @@ import com.lolita.app.ui.screen.price.PriceManageScreen
 import com.lolita.app.ui.screen.price.PaymentManageScreen
 import com.lolita.app.ui.screen.price.PaymentEditScreen
 import com.lolita.app.ui.screen.item.ItemDetailScreen
+import com.lolita.app.ui.screen.item.RecommendationScreen
 import com.lolita.app.ui.screen.item.ItemEditScreen
 import com.lolita.app.ui.screen.item.ItemListScreen
 import com.lolita.app.ui.screen.item.WishlistScreen
@@ -179,6 +180,9 @@ fun LolitaNavHost() {
                     onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
                     onNavigateToPriceManage = {
                         navController.navigate(Screen.PriceManage.createRoute(itemId))
+                    },
+                    onNavigateToRecommendation = { id ->
+                        navController.navigate(Screen.Recommendation.createRoute(id))
                     }
                 )
             }
@@ -399,6 +403,21 @@ fun LolitaNavHost() {
                         // Navigate back to item list after import
                         navController.popBackStack()
                     }
+                )
+            }
+
+            // Recommendation
+            composable(
+                route = Screen.Recommendation.route,
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType }),
+                enterTransition = { fadeIn() + slideInHorizontally { it } },
+                exitTransition = { fadeOut() + slideOutHorizontally { it } }
+            ) { backStackEntry ->
+                val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                RecommendationScreen(
+                    itemId = itemId,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }
                 )
             }
         }

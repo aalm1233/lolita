@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.item
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.repeatOnLifecycle
@@ -44,6 +46,7 @@ fun ItemDetailScreen(
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
     onNavigateToPriceManage: () -> Unit = {},
+    onNavigateToRecommendation: (Long) -> Unit = {},
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -466,6 +469,25 @@ fun ItemDetailScreen(
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
+                        }
+
+                        // 推荐搭配按钮
+                        if (item.status == ItemStatus.OWNED) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                OutlinedButton(
+                                    onClick = { onNavigateToRecommendation(item.id) },
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Pink400),
+                                    border = BorderStroke(1.dp, Pink400)
+                                ) {
+                                    Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
+                                    Spacer(Modifier.width(6.dp))
+                                    Text("推荐搭配")
+                                }
+                            }
+                            HorizontalDivider(color = Pink100, thickness = 1.dp)
                         }
 
                         HorizontalDivider(color = Pink100, thickness = 1.dp)

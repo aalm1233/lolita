@@ -21,8 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.lolita.app.ui.theme.Pink400
-import com.lolita.app.ui.theme.Pink100
+import com.lolita.app.ui.theme.LolitaSkin
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -98,6 +98,9 @@ fun LolitaNavHost() {
     val items = BottomNavItems.items
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val skin = LolitaSkin.current
+    val accent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -105,7 +108,7 @@ fun LolitaNavHost() {
             NavigationBar(
                 modifier = Modifier.height(64.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = Pink400,
+                contentColor = accent,
                 windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -128,9 +131,9 @@ fun LolitaNavHost() {
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Pink400,
-                            selectedTextColor = Pink400,
-                            indicatorColor = Pink100,
+                            selectedIconColor = accent,
+                            selectedTextColor = accent,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
                             unselectedIconColor = Color.Gray,
                             unselectedTextColor = Color.Gray
                         )

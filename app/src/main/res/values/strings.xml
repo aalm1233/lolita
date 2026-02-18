@@ -49,4 +49,7 @@
     <string name="settings_manage_category">类型管理</string>
     <string name="settings_backup">数据备份</string>
     <string name="settings_restore">数据恢复</string>
+
+    <!-- Widget -->
+    <string name="widget_description">记录今日穿搭</string>
 </resources>

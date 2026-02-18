@@ -121,6 +121,10 @@ dependencies {
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
+    // Glance (App Widget)
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
+
     // Apache POI (Excel parsing)
     implementation("org.apache.poi:poi-ooxml:5.2.5") {
         exclude(group = "org.apache.xmlgraphics")

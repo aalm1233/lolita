@@ -12,6 +12,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.model.TaobaoOrder
@@ -98,6 +99,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
     private val categoryRepository: CategoryRepository = AppModule.categoryRepository()
     private val itemRepository: ItemRepository = AppModule.itemRepository()
     private val priceRepository: PriceRepository = AppModule.priceRepository()
+    private val paymentRepository = AppModule.paymentRepository()
     private val database: LolitaDatabase = AppModule.database()
 
     private val _uiState = MutableStateFlow(TaobaoImportUiState())
@@ -378,6 +380,10 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
             if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
                 // 已配对的尾款项只需价格有效
                 item.price > 0
+            } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+                // 未配对的定金项需要品牌、分类、手动尾款金额和尾款截止日期
+                item.brandId > 0 && item.categoryId > 0
+                    && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
             } else {
                 // 普通项和未配对尾款项需要品牌和分类
                 item.brandId > 0 && item.categoryId > 0
@@ -438,6 +444,57 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                             processedIndices.add(pairedIdx!!)
                             importedCount++
                             mergedCount++
+                        } else if (importItem.paymentRole == PaymentRole.DEPOSIT
+                            && importItem.pairedWith == null
+                            && importItem.manualBalance != null && importItem.manualBalance > 0) {
+                            // 未配对定金 + 手动尾款导入
+                            val deposit = importItem.price
+                            val balance = importItem.manualBalance
+                            val totalPrice = deposit + balance
+
+                            val itemId = itemRepository.insertItem(
+                                Item(
+                                    name = importItem.name,
+                                    brandId = importItem.brandId,
+                                    categoryId = importItem.categoryId,
+                                    color = importItem.color.ifBlank { null },
+                                    size = importItem.size.ifBlank { null },
+                                    imageUrl = importItem.imageUrl,
+                                    status = ItemStatus.OWNED,
+                                    description = ""
+                                )
+                            )
+                            val priceId = priceRepository.insertPrice(
+                                Price(
+                                    itemId = itemId,
+                                    type = PriceType.DEPOSIT_BALANCE,
+                                    totalPrice = totalPrice,
+                                    deposit = deposit,
+                                    balance = balance,
+                                    purchaseDate = parseDateToMillis(importItem.purchaseDate)
+                                )
+                            )
+                            // 定金付款记录（已付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = deposit,
+                                    isPaid = true,
+                                    paidDate = parseDateToMillis(importItem.purchaseDate),
+                                    dueDate = parseDateToMillis(importItem.purchaseDate) ?: System.currentTimeMillis()
+                                )
+                            )
+                            // 尾款付款记录（未付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = balance,
+                                    isPaid = false,
+                                    dueDate = importItem.balanceDueDate!!
+                                )
+                            )
+                            processedIndices.add(index)
+                            importedCount++
                         } else {
                             // 普通商品导入
                             val itemId = itemRepository.insertItem(

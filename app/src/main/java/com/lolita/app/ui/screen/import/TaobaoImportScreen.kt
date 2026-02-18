@@ -77,8 +77,8 @@ private fun OrderSelectContent(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val filePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri -> viewModel.onFileSelected(uri) }
+        contract = ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris -> viewModel.onFileSelected(uris) }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
@@ -143,7 +143,7 @@ private fun OrderSelectContent(
                         ))
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Pink400)
-                ) { Text("选择文件") }
+                ) { Text("选择文件（可多选）") }
             }
         } else {
             OrderListBody(
@@ -152,6 +152,8 @@ private fun OrderSelectContent(
                 onToggleItem = viewModel::toggleItem,
                 onSelectAll = viewModel::selectAll,
                 onDeselectAll = viewModel::deselectAll,
+                fileCount = uiState.fileCount,
+                dedupCount = uiState.dedupCount,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -165,6 +167,8 @@ private fun OrderListBody(
     onToggleItem: (String, Int) -> Unit,
     onSelectAll: () -> Unit,
     onDeselectAll: () -> Unit,
+    fileCount: Int = 0,
+    dedupCount: Int = 0,
     modifier: Modifier = Modifier
 ) {
     val totalItems = orders.sumOf { it.items.size }
@@ -176,12 +180,21 @@ private fun OrderListBody(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                Text("共 ${orders.size} 个订单，${totalItems} 件商品",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                TextButton(onClick = { if (allSelected) onDeselectAll() else onSelectAll() }) {
-                    Text(if (allSelected) "取消全选" else "全选", color = Pink400)
+            Column {
+                if (fileCount > 1) {
+                    Text("已解析 $fileCount 个文件，共 ${orders.size} 个订单" +
+                        if (dedupCount > 0) "（去重 $dedupCount 个）" else "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.height(4.dp))
+                }
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                    Text("共 ${orders.size} 个订单，${totalItems} 件商品",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    TextButton(onClick = { if (allSelected) onDeselectAll() else onSelectAll() }) {
+                        Text(if (allSelected) "取消全选" else "全选", color = Pink400)
+                    }
                 }
             }
         }

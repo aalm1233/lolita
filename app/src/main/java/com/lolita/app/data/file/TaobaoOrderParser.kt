@@ -16,6 +16,17 @@ import java.io.InputStream
  */
 object TaobaoOrderParser {
 
+    fun parseMultipleFiles(inputStreams: List<InputStream>): Triple<List<TaobaoOrder>, Int, Int> {
+        val allOrders = mutableListOf<TaobaoOrder>()
+        inputStreams.forEach { stream ->
+            allOrders.addAll(parse(stream))
+        }
+        val totalBeforeDedup = allOrders.size
+        val deduped = allOrders.distinctBy { it.orderId }
+        val dupCount = totalBeforeDedup - deduped.size
+        return Triple(deduped, inputStreams.size, dupCount)
+    }
+
     fun parse(inputStream: InputStream): List<TaobaoOrder> = inputStream.use { stream ->
         XSSFWorkbook(stream).use { workbook ->
         val sheet = workbook.getSheetAt(0)

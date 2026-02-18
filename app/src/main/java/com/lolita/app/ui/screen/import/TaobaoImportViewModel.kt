@@ -81,6 +81,8 @@ data class TaobaoImportUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val fileLoaded: Boolean = false,
+    val fileCount: Int = 0,
+    val dedupCount: Int = 0,
     // Step flow
     val currentStep: ImportStep = ImportStep.SELECT,
     val importItems: List<ImportItemState> = emptyList(),
@@ -119,15 +121,17 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun onFileSelected(uri: Uri?) {
-        if (uri == null) return
+    fun onFileSelected(uris: List<Uri>) {
+        if (uris.isEmpty()) return
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val inputStream = getApplication<Application>()
-                    .contentResolver.openInputStream(uri)
-                    ?: throw Exception("无法读取文件")
-                val orders = inputStream.use { TaobaoOrderParser.parse(it) }
+                val contentResolver = getApplication<Application>().contentResolver
+                val inputStreams = uris.map { uri ->
+                    contentResolver.openInputStream(uri)
+                        ?: throw Exception("无法读取文件")
+                }
+                val (orders, fileCount, dupCount) = TaobaoOrderParser.parseMultipleFiles(inputStreams)
 
                 // 默认选中所有"交易成功"订单中的非意向金商品
                 val selected = mutableSetOf<String>()
@@ -143,7 +147,9 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                     orders = orders,
                     selectedItems = selected,
                     isLoading = false,
-                    fileLoaded = true
+                    fileLoaded = true,
+                    fileCount = fileCount,
+                    dedupCount = dupCount
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

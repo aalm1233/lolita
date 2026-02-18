@@ -48,6 +48,7 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
@@ -311,17 +312,21 @@ fun ItemListScreen(
                                     items = uiState.filteredItems,
                                     key = { it.id }
                                 ) { item ->
-                                    ItemCard(
-                                        item = item,
-                                        brandName = uiState.brandNames[item.brandId],
-                                        categoryName = uiState.categoryNames[item.categoryId],
-                                        itemPrice = uiState.itemPrices[item.id],
-                                        showPrice = uiState.showTotalPrice,
-                                        onClick = { onNavigateToDetail(item.id) },
-                                        onEdit = { onNavigateToEdit(item.id) },
-                                        onDelete = { itemToDelete = item },
-                                        modifier = Modifier.animateItem()
-                                    )
+                                    SwipeToDeleteContainer(
+                                        onDelete = { itemToDelete = item }
+                                    ) {
+                                        ItemCard(
+                                            item = item,
+                                            brandName = uiState.brandNames[item.brandId],
+                                            categoryName = uiState.categoryNames[item.categoryId],
+                                            itemPrice = uiState.itemPrices[item.id],
+                                            showPrice = uiState.showTotalPrice,
+                                            onClick = { onNavigateToDetail(item.id) },
+                                            onEdit = { onNavigateToEdit(item.id) },
+                                            onDelete = { itemToDelete = item },
+                                            modifier = Modifier.animateItem()
+                                        )
+                                    }
                                 }
                             }
                         } else {

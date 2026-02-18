@@ -109,4 +109,8 @@ sealed interface Screen {
     data object QuickOutfitLog : Screen {
         override val route = "quick_outfit_log"
     }
+
+    data object ThemeSelect : Screen {
+        override val route = "theme_select"
+    }
 }

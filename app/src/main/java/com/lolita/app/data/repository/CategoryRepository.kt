@@ -23,6 +23,10 @@ class CategoryRepository(
         categoryDao.deleteCategory(category)
     }
 
+    suspend fun getCategoryById(id: Long): Category? {
+        return categoryDao.getCategoryById(id)
+    }
+
     suspend fun getCategoryByName(name: String): Category? {
         return categoryDao.getCategoryByName(name)
     }

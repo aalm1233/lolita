@@ -371,7 +371,16 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
      */
     fun executeImport() {
         val allItems = _uiState.value.importItems
-        val validIndices = allItems.indices.filter { allItems[it].brandId > 0 && allItems[it].categoryId > 0 }.toSet()
+        val validIndices = allItems.indices.filter { idx ->
+            val item = allItems[idx]
+            if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
+                // 已配对的尾款项只需价格有效
+                item.price > 0
+            } else {
+                // 普通项和未配对尾款项需要品牌和分类
+                item.brandId > 0 && item.categoryId > 0
+            }
+        }.toSet()
         if (validIndices.isEmpty()) return
 
         _uiState.value = _uiState.value.copy(currentStep = ImportStep.IMPORTING)
@@ -406,9 +415,9 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     name = mainItem.name,
                                     brandId = mainItem.brandId,
                                     categoryId = mainItem.categoryId,
-                                    color = mainItem.color.ifBlank { balanceItem.color.ifBlank { null } },
-                                    size = mainItem.size.ifBlank { balanceItem.size.ifBlank { null } },
-                                    imageUrl = mainItem.imageUrl ?: balanceItem.imageUrl,
+                                    color = mainItem.color.ifBlank { null },
+                                    size = mainItem.size.ifBlank { null },
+                                    imageUrl = mainItem.imageUrl,
                                     status = ItemStatus.OWNED,
                                     description = ""
                                 )

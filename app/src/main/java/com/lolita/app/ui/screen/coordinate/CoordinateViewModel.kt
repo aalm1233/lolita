@@ -8,6 +8,7 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
+import com.lolita.app.data.local.dao.ItemPriceSum
 import com.lolita.app.data.local.dao.PriceWithPayments
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,8 @@ data class CoordinateListUiState(
     val coordinates: List<Coordinate> = emptyList(),
     val itemCounts: Map<Long, Int> = emptyMap(),
     val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
+    val priceByCoordinate: Map<Long, Double> = emptyMap(),
+    val columnsPerRow: Int = 1,
     val isLoading: Boolean = true,
     val errorMessage: String? = null
 )
@@ -46,7 +49,8 @@ data class CoordinateEditUiState(
 
 class CoordinateListViewModel(
     private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
-    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateListUiState())
@@ -59,23 +63,39 @@ class CoordinateListViewModel(
     private fun loadCoordinates() {
         viewModelScope.launch {
             combine(
-                coordinateRepository.getAllCoordinates(),
-                coordinateRepository.getItemCountsByCoordinate(),
-                itemRepository.getAllItems()
-            ) { coordinates, itemCounts, allItems ->
+                combine(
+                    coordinateRepository.getAllCoordinates(),
+                    coordinateRepository.getItemCountsByCoordinate()
+                ) { a, b -> Pair(a, b) },
+                combine(
+                    itemRepository.getAllItems(),
+                    priceRepository.getItemPriceSums()
+                ) { a, b -> Pair(a, b) }
+            ) { (coordinates, itemCounts), (allItems, priceSums) ->
                 val countMap = itemCounts.associate { it.coordinate_id to it.itemCount }
                 val imageMap = allItems
                     .filter { it.coordinateId != null }
                     .groupBy { it.coordinateId!! }
                     .mapValues { (_, items) -> items.take(4).map { it.imageUrl } }
-                Triple(coordinates, countMap, imageMap)
-            }.collect { (coordinates, countMap, imageMap) ->
-                _uiState.value = _uiState.value.copy(
+
+                val priceMap = priceSums.associate { it.itemId to it.totalPrice }
+                val coordPriceMap = allItems
+                    .filter { it.coordinateId != null }
+                    .groupBy { it.coordinateId!! }
+                    .mapValues { (_, items) ->
+                        items.sumOf { priceMap[it.id] ?: 0.0 }
+                    }
+
+                CoordinateListUiState(
                     coordinates = coordinates,
                     itemCounts = countMap,
                     itemImagesByCoordinate = imageMap,
+                    priceByCoordinate = coordPriceMap,
+                    columnsPerRow = _uiState.value.columnsPerRow,
                     isLoading = false
                 )
+            }.collect { state ->
+                _uiState.value = state
             }
         }
     }
@@ -94,6 +114,10 @@ class CoordinateListViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun setColumns(count: Int) {
+        _uiState.value = _uiState.value.copy(columnsPerRow = count)
     }
 }
 

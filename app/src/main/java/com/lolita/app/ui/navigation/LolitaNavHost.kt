@@ -156,6 +156,9 @@ fun LolitaNavHost() {
                     },
                     onNavigateToCoordinateAdd = {
                         navController.navigate(Screen.CoordinateEdit.createRoute(null))
+                    },
+                    onNavigateToCoordinateEdit = { coordinateId ->
+                        navController.navigate(Screen.CoordinateEdit.createRoute(coordinateId))
                     }
                 )
             }
@@ -282,7 +285,8 @@ fun LolitaNavHost() {
                 CoordinateDetailScreen(
                     coordinateId = coordinateId,
                     onBack = { navController.popBackStack() },
-                    onEdit = { navController.navigate(Screen.CoordinateEdit.createRoute(it)) }
+                    onEdit = { navController.navigate(Screen.CoordinateEdit.createRoute(it)) },
+                    onDelete = { navController.popBackStack() }
                 )
             }
             // Coordinate Edit

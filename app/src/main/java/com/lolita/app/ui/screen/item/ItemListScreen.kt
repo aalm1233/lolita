@@ -61,6 +61,7 @@ fun ItemListScreen(
     onNavigateToEdit: (Long?) -> Unit,
     onNavigateToCoordinateDetail: (Long) -> Unit = {},
     onNavigateToCoordinateAdd: () -> Unit = {},
+    onNavigateToCoordinateEdit: (Long) -> Unit = {},
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -344,7 +345,8 @@ fun ItemListScreen(
                 } else {
                     // Coordinate list content (tab 3)
                     CoordinateListContent(
-                        onNavigateToDetail = onNavigateToCoordinateDetail
+                        onNavigateToDetail = onNavigateToCoordinateDetail,
+                        onNavigateToEdit = onNavigateToCoordinateEdit
                     )
                 }
             }

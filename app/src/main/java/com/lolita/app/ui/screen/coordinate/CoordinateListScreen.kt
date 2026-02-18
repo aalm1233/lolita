@@ -62,6 +62,7 @@ fun CoordinateListScreen(
 @Composable
 fun CoordinateListContent(
     onNavigateToDetail: (Long) -> Unit,
+    onNavigateToEdit: (Long) -> Unit = {},
     viewModel: CoordinateListViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {

@@ -1,0 +1,25 @@
+# Build outputs
+.gradle/
+build/
+app/build/
+
+# IDE
+.idea/
+*.iml
+
+# Local config
+local.properties
+
+# Signing keys
+*.jks
+*.keystore
+
+# Gradle wrapper zip
+gradle-*-bin.zip
+
+# Data files
+订单数据*.xlsx
+
+# Audit reports
+code_audit_report.md
+cross_audit_report.md

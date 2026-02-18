@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -26,8 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.theme.Pink100
-import com.lolita.app.ui.theme.Pink400
 import com.lolita.app.data.notification.DailyOutfitReminderScheduler
 import com.lolita.app.data.preferences.AppPreferences
 import kotlinx.coroutines.launch
@@ -41,6 +40,7 @@ fun SettingsScreen(
     onNavigateToSeason: () -> Unit = {},
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
+    onNavigateToThemeSelect: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
 ) {
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
@@ -159,17 +159,25 @@ fun SettingsScreen(
                 }
             )
 
+            SettingsMenuItem(
+                title = "皮肤选择",
+                description = "切换应用主题风格",
+                icon = Icons.Default.Palette,
+                iconTint = Color(0xFF9C27B0),
+                onClick = onNavigateToThemeSelect
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
             // About section
-            HorizontalDivider(color = Pink100, thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Surface(
-                    color = Pink400.copy(alpha = 0.1f),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.size(56.dp)
                 ) {
@@ -185,7 +193,7 @@ fun SettingsScreen(
                     "我的Lolita",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Pink400
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     "v1.0.0",
@@ -309,7 +317,7 @@ private fun SettingsToggleItem(
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
-                    checkedTrackColor = Pink400
+                    checkedTrackColor = MaterialTheme.colorScheme.primary
                 )
             )
         }

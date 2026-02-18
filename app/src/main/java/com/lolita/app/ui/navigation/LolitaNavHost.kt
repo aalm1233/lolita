@@ -52,6 +52,7 @@ import com.lolita.app.ui.screen.settings.CategoryManageScreen
 import com.lolita.app.ui.screen.settings.StyleManageScreen
 import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
+import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
 
@@ -373,7 +374,8 @@ fun LolitaNavHost() {
                     onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
                     onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
-                    onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) }
+                    onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
+                    onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
                 )
             }
 
@@ -395,6 +397,11 @@ fun LolitaNavHost() {
             // Season Manage
             composable(Screen.SeasonManage.route) {
                 SeasonManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Theme Select
+            composable(Screen.ThemeSelect.route) {
+                ThemeSelectScreen(onBack = { navController.popBackStack() })
             }
 
             // Backup & Restore

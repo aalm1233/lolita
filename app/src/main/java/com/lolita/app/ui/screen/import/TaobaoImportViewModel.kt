@@ -51,7 +51,9 @@ data class ImportItemState(
     val imageUrl: String? = null,
     val styleSpec: String = "",
     val paymentRole: PaymentRole? = null,
-    val pairedWith: Int? = null
+    val pairedWith: Int? = null,
+    val manualBalance: Double? = null,
+    val balanceDueDate: Long? = null
 )
 
 data class ImportResult(

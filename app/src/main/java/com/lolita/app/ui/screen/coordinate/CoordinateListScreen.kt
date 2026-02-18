@@ -40,6 +40,7 @@ import com.lolita.app.data.local.entity.Coordinate
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.theme.Pink300
 import com.lolita.app.ui.theme.Pink400
 
@@ -148,16 +149,20 @@ fun CoordinateListContent(
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {
             items(uiState.coordinates, key = { it.id }) { coordinate ->
-                CoordinateCard(
-                    coordinate = coordinate,
-                    itemCount = uiState.itemCounts[coordinate.id] ?: 0,
-                    itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
-                    totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
-                    onClick = { onNavigateToDetail(coordinate.id) },
-                    onEdit = { onNavigateToEdit(coordinate.id) },
-                    onDelete = { coordinateToDelete = coordinate },
-                    modifier = Modifier.animateItem()
-                )
+                SwipeToDeleteContainer(
+                    onDelete = { coordinateToDelete = coordinate }
+                ) {
+                    CoordinateCard(
+                        coordinate = coordinate,
+                        itemCount = uiState.itemCounts[coordinate.id] ?: 0,
+                        itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
+                        totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
+                        onClick = { onNavigateToDetail(coordinate.id) },
+                        onEdit = { onNavigateToEdit(coordinate.id) },
+                        onDelete = { coordinateToDelete = coordinate },
+                        modifier = Modifier.animateItem()
+                    )
+                }
             }
         }
     } else {

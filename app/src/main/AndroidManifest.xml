@@ -38,6 +38,10 @@
             android:enabled="true" />
 
         <receiver
+            android:name=".data.notification.DailyOutfitReminderReceiver"
+            android:enabled="true" />
+
+        <receiver
             android:name=".data.notification.BootCompletedReceiver"
             android:enabled="true"
             android:exported="true">

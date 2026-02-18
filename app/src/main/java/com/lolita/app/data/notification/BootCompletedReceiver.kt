@@ -6,7 +6,9 @@ import android.content.Intent
 import com.lolita.app.di.AppModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 
 /**
@@ -35,6 +37,14 @@ class BootCompletedReceiver : BroadcastReceiver() {
                         try {
                             scheduler.scheduleReminder(payment, info.itemName)
                         } catch (_: Exception) { }
+                    }
+
+                    // Reschedule daily outfit reminder if enabled
+                    val appPreferences = AppModule.appPreferences()
+                    val enabled = appPreferences.outfitReminderEnabled.first()
+                    if (enabled) {
+                        val hour = appPreferences.outfitReminderHour.first()
+                        DailyOutfitReminderScheduler(context).schedule(hour)
                     }
                 }
             } catch (_: Exception) {

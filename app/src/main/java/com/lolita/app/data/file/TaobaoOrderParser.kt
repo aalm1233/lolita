@@ -93,8 +93,8 @@ object TaobaoOrderParser {
         val cleaned = spec
             // 括号类噪声
             .replace(Regex("【[^】]*】"), "")
-            .replace(Regex("\\[[^\\]]*]"), "")
-            .replace(Regex("\\{[^}]*}"), "")
+            .replace(Regex("\\[[^\\]]*\\]"), "")
+            .replace(Regex("\\{[^\\}]*\\}"), "")
             .replace(Regex("<[^>]*>"), "")
             .replace(Regex("（[^）]*(?:尾款|定金|不单售|备注|售后)[^）]*）"), "")
             .replace(Regex("\\([^)]*(?:尾款|定金|不单售|备注|售后)[^)]*\\)"), "")

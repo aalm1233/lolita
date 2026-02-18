@@ -33,6 +33,16 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.OutfitLogRepository
 import com.lolita.app.data.repository.PriceRepository
 
+import com.lolita.app.data.local.entity.BrandItemCount
+import com.lolita.app.data.local.entity.ItemWithSpending
+import coil.compose.AsyncImage
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.text.style.TextAlign
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +57,10 @@ data class StatsUiState(
     val outfitLogCount: Int = 0,
     val totalSpending: Double = 0.0,
     val showTotalPrice: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val averagePrice: Double = 0.0,
+    val mostExpensiveItem: ItemWithSpending? = null,
+    val topBrands: List<BrandItemCount> = emptyList()
 )
 
 class StatsViewModel(
@@ -80,10 +93,15 @@ class StatsViewModel(
                     coordinateCount = coordCount,
                     outfitLogCount = logs.size,
                     totalSpending = spending,
+                    averagePrice = if (owned.isNotEmpty()) spending / owned.size else 0.0,
                     isLoading = false
                 )
             }.combine(appPreferences.showTotalPrice) { state, showPrice ->
                 state.copy(showTotalPrice = showPrice)
+            }.combine(priceRepository.getMostExpensiveItem()) { state, item ->
+                state.copy(mostExpensiveItem = item)
+            }.combine(itemRepository.getTopBrandsByCount()) { state, brands ->
+                state.copy(topBrands = brands)
             }.collect { _uiState.value = it }
         }
     }
@@ -146,6 +164,114 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                 color = Color(0xFFE91E8C),
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+
+        // Average price card
+        if (uiState.showTotalPrice && uiState.ownedCount > 0) {
+            SpendingCard(
+                title = "单品均价",
+                targetValue = uiState.averagePrice,
+                icon = Icons.Default.ShoppingCart,
+                color = Color(0xFFFF91A4),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // Most expensive item
+        if (uiState.showTotalPrice && uiState.mostExpensiveItem != null) {
+            val item = uiState.mostExpensiveItem!!
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFF1493).copy(alpha = 0.1f)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (item.imageUrl != null) {
+                        AsyncImage(
+                            model = item.imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "最贵单品",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = item.itemName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Text(
+                        text = "¥${String.format("%.2f", item.totalSpending)}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFFF1493)
+                    )
+                }
+            }
+        }
+        // Brand Top 5
+        if (uiState.topBrands.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFF69B4).copy(alpha = 0.1f)
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "品牌 Top 5",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    val maxCount = uiState.topBrands.maxOfOrNull { it.itemCount } ?: 1
+                    uiState.topBrands.forEach { brand ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = brand.brandName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.width(80.dp),
+                                maxLines = 1
+                            )
+                            LinearProgressIndicator(
+                                progress = { brand.itemCount.toFloat() / maxCount },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(8.dp)
+                                    .clip(RoundedCornerShape(4.dp)),
+                                color = Color(0xFFFF69B4),
+                                trackColor = Color(0xFFFF69B4).copy(alpha = 0.2f),
+                            )
+                            Text(
+                                text = "${brand.itemCount}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.width(32.dp),
+                                textAlign = TextAlign.End
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -50,6 +50,7 @@ import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
+import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.Pink100
 import com.lolita.app.ui.theme.Pink300
 import com.lolita.app.ui.theme.Pink400
@@ -65,6 +66,8 @@ fun ItemListScreen(
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coordinateViewModel: CoordinateListViewModel = viewModel()
+    val coordinateUiState by coordinateViewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
     var showFilterPanel by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -197,14 +200,18 @@ fun ItemListScreen(
                 }
                 IconButton(
                     onClick = {
-                        val next = when (uiState.columnsPerRow) {
-                            1 -> 2; 2 -> 3; else -> 1
+                        if (pagerState.currentPage == 2) {
+                            val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
+                            coordinateViewModel.setColumns(next)
+                        } else {
+                            val next = when (uiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
+                            viewModel.setColumns(next)
                         }
-                        viewModel.setColumns(next)
                     }
                 ) {
+                    val currentColumns = if (pagerState.currentPage == 2) coordinateUiState.columnsPerRow else uiState.columnsPerRow
                     Icon(
-                        imageVector = when (uiState.columnsPerRow) {
+                        imageVector = when (currentColumns) {
                             1 -> Icons.Default.ViewAgenda
                             2 -> Icons.Default.GridView
                             else -> Icons.Default.Apps
@@ -346,7 +353,8 @@ fun ItemListScreen(
                     // Coordinate list content (tab 3)
                     CoordinateListContent(
                         onNavigateToDetail = onNavigateToCoordinateDetail,
-                        onNavigateToEdit = onNavigateToCoordinateEdit
+                        onNavigateToEdit = onNavigateToCoordinateEdit,
+                        viewModel = coordinateViewModel
                     )
                 }
             }

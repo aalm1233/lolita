@@ -19,6 +19,9 @@ data class Coordinate(
     @ColumnInfo(name = "description")
     val description: String,
 
+    @ColumnInfo(name = "image_url")
+    val imageUrl: String? = null,
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0,

@@ -274,6 +274,23 @@ private fun CoordinateCard(
                                 )
                             }
                         }
+                        if (itemImages.isNotEmpty()) {
+                            Spacer(Modifier.width(4.dp))
+                            Box {
+                                itemImages.take(4).filterNotNull().forEachIndexed { index, imageUrl ->
+                                    AsyncImage(
+                                        model = imageUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .padding(start = (index * 18).dp)
+                                            .size(24.dp)
+                                            .border(1.dp, Color.White, CircleShape)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -385,6 +402,22 @@ private fun CoordinateGridCard(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
+                    }
+                    if (itemImages.isNotEmpty()) {
+                        Box(modifier = Modifier.padding(top = 2.dp)) {
+                            itemImages.take(4).filterNotNull().forEachIndexed { index, imageUrl ->
+                                AsyncImage(
+                                    model = imageUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(start = (index * 14).dp)
+                                        .size(20.dp)
+                                        .border(1.dp, Color.White, CircleShape)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
                     }
                 }
             }

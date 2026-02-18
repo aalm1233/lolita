@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.calendar.PaymentCalendarContent
 import com.lolita.app.ui.screen.common.GradientTopAppBar
@@ -17,15 +18,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun StatsPageScreen() {
-    val tabs = listOf("数据统计", "付款日历")
+    val tabs = listOf("总览", "消费分布", "消费趋势", "愿望单", "付款日历")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
         GradientTopAppBar(title = { Text("统计") })
 
-        TabRow(
+        ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
+            edgePadding = 8.dp,
             containerColor = Color.Transparent,
             contentColor = Pink400,
             divider = { HorizontalDivider(color = Pink100) }
@@ -53,7 +55,10 @@ fun StatsPageScreen() {
         ) { page ->
             when (page) {
                 0 -> StatsContent()
-                1 -> PaymentCalendarContent()
+                1 -> SpendingDistributionContent()
+                2 -> SpendingTrendContent()
+                3 -> WishlistAnalysisContent()
+                4 -> PaymentCalendarContent()
             }
         }
     }

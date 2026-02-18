@@ -25,6 +25,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.Pink400
 import kotlinx.coroutines.launch
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+import com.lolita.app.data.file.ImageFileHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +53,19 @@ fun CoordinateEditScreen(
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            coroutineScope.launch {
+                val path = withContext(Dispatchers.IO) {
+                    ImageFileHelper.copyToInternalStorage(context, it)
+                }
+                path?.let { viewModel.updateImageUrl(it) }
+            }
+        }
+    }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(errorMessage) {
@@ -97,6 +126,38 @@ fun CoordinateEditScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 封面图选择
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable { imagePickerLauncher.launch("image/*") },
+                contentAlignment = Alignment.Center
+            ) {
+                if (uiState.imageUrl != null) {
+                    AsyncImage(
+                        model = uiState.imageUrl,
+                        contentDescription = "封面图",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Default.AddPhotoAlternate,
+                            contentDescription = null,
+                            tint = Pink400,
+                            modifier = Modifier.size(32.dp)
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text("添加封面图", style = MaterialTheme.typography.bodySmall, color = Pink400)
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(

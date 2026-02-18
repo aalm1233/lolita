@@ -37,6 +37,7 @@ data class CoordinateDetailUiState(
 data class CoordinateEditUiState(
     val name: String = "",
     val description: String = "",
+    val imageUrl: String? = null,
     val allItems: List<Item> = emptyList(),
     val selectedItemIds: Set<Long> = emptySet(),
     val coordinateNames: Map<Long, String> = emptyMap(),
@@ -197,7 +198,8 @@ class CoordinateEditViewModel(
                 originalCreatedAt = it.createdAt
                 _uiState.value = _uiState.value.copy(
                     name = it.name,
-                    description = it.description
+                    description = it.description,
+                    imageUrl = it.imageUrl
                 )
             }
 
@@ -217,6 +219,10 @@ class CoordinateEditViewModel(
         _uiState.value = _uiState.value.copy(description = description)
     }
 
+    fun updateImageUrl(url: String?) {
+        _uiState.value = _uiState.value.copy(imageUrl = url)
+    }
+
     fun toggleItemSelection(itemId: Long) {
         val current = _uiState.value.selectedItemIds
         _uiState.value = _uiState.value.copy(
@@ -231,6 +237,7 @@ class CoordinateEditViewModel(
             val coordinate = Coordinate(
                 name = _uiState.value.name,
                 description = _uiState.value.description,
+                imageUrl = _uiState.value.imageUrl,
                 createdAt = now,
                 updatedAt = now
             )
@@ -255,6 +262,7 @@ class CoordinateEditViewModel(
                 id = coordinateId,
                 name = _uiState.value.name,
                 description = _uiState.value.description,
+                imageUrl = _uiState.value.imageUrl,
                 createdAt = originalCreatedAt,
                 updatedAt = System.currentTimeMillis()
             )

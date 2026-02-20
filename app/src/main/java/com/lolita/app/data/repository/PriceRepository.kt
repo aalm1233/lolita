@@ -71,4 +71,6 @@ class PriceRepository(
     fun getMostExpensiveItem() = priceDao.getMostExpensiveItem()
     fun getWishlistTotalBudget() = priceDao.getWishlistTotalBudget()
     fun getWishlistByPriorityStats() = priceDao.getWishlistByPriorityStats()
+
+    fun getItemsByPurchaseMonth(yearMonth: String) = priceDao.getItemsByPurchaseMonth(yearMonth)
 }

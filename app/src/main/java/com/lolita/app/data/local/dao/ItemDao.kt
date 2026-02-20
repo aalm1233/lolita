@@ -115,6 +115,31 @@ interface ItemDao {
 
     @Query("SELECT * FROM items WHERE status = :status AND id != :excludeId ORDER BY updated_at DESC")
     suspend fun getOwnedItemsExcluding(status: ItemStatus, excludeId: Long): List<Item>
+
+    @Query("SELECT * FROM items WHERE style = :style OR style LIKE '%' || :style || '%' ORDER BY updated_at DESC")
+    fun getItemsByStyle(style: String): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE season = :season OR season LIKE '%' || :season || '%' ORDER BY updated_at DESC")
+    fun getItemsBySeason(season: String): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE status = 'WISHED' AND priority = :priority ORDER BY updated_at DESC")
+    fun getWishlistByPriorityFilter(priority: ItemPriority): Flow<List<Item>>
+
+    @Query("""
+        SELECT i.* FROM items i
+        INNER JOIN brands b ON i.brand_id = b.id
+        WHERE b.name = :brandName
+        ORDER BY i.updated_at DESC
+    """)
+    fun getItemsByBrandName(brandName: String): Flow<List<Item>>
+
+    @Query("""
+        SELECT i.* FROM items i
+        INNER JOIN categories c ON i.category_id = c.id
+        WHERE c.name = :categoryName
+        ORDER BY i.updated_at DESC
+    """)
+    fun getItemsByCategoryName(categoryName: String): Flow<List<Item>>
 }
 
 data class ItemWithFullDetails(

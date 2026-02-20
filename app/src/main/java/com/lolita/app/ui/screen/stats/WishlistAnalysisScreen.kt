@@ -1,9 +1,11 @@
 package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -129,7 +131,8 @@ class WishlistAnalysisViewModel(
 @Composable
 fun WishlistAnalysisContent(
     viewModel: WishlistAnalysisViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -228,11 +231,18 @@ fun WishlistAnalysisContent(
             // Priority details list
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 uiState.priorityDetails.forEachIndexed { index, detail ->
+                    val priorityValue = when (detail.priorityLabel) {
+                        "高优先级" -> "HIGH"
+                        "中优先级" -> "MEDIUM"
+                        "低优先级" -> "LOW"
+                        else -> ""
+                    }
                     PriorityDetailRow(
                         detail = detail,
                         color = uiState.priorityChartData.getOrNull(index)?.color
                             ?: Color(0xFFFFB6C1),
-                        showBudget = uiState.showTotalPrice
+                        showBudget = uiState.showTotalPrice,
+                        onClick = { onNavigateToFilteredList("priority", priorityValue, detail.priorityLabel) }
                     )
                 }
             }
@@ -244,11 +254,14 @@ fun WishlistAnalysisContent(
 private fun PriorityDetailRow(
     detail: PriorityDetail,
     color: Color,
-    showBudget: Boolean
+    showBudget: Boolean,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(onClick = onClick)
             .padding(horizontal = 4.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

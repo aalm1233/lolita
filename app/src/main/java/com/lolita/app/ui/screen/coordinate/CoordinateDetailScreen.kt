@@ -42,6 +42,7 @@ fun CoordinateDetailScreen(
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
     onDelete: () -> Unit = {},
+    onNavigateToItem: (Long) -> Unit = {},
     viewModel: CoordinateDetailViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -189,6 +190,7 @@ fun CoordinateDetailScreen(
                     items(uiState.items, key = { it.id }) { item ->
                         CoordinateItemCard(
                             item = item,
+                            onClick = { onNavigateToItem(item.id) },
                             onRemove = { itemToRemove = item }
                         )
                     }
@@ -335,9 +337,11 @@ private fun CoordinateInfoCard(
 @Composable
 private fun CoordinateItemCard(
     item: Item,
+    onClick: () -> Unit,
     onRemove: () -> Unit
 ) {
     LolitaCard(
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(

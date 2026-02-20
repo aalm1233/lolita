@@ -3,6 +3,7 @@ package com.lolita.app.data.repository
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.ItemWithFullDetails
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.file.ImageFileHelper
@@ -39,6 +40,12 @@ class ItemRepository(
     fun getTopBrandsByCount() = itemDao.getTopBrandsByCount()
     fun getOwnedCount() = itemDao.getOwnedCount()
     fun getWishedCount() = itemDao.getWishedCount()
+
+    fun getItemsByBrandName(brandName: String) = itemDao.getItemsByBrandName(brandName)
+    fun getItemsByCategoryName(categoryName: String) = itemDao.getItemsByCategoryName(categoryName)
+    fun getItemsByStyle(style: String) = itemDao.getItemsByStyle(style)
+    fun getItemsBySeason(season: String) = itemDao.getItemsBySeason(season)
+    fun getWishlistByPriorityFilter(priority: ItemPriority) = itemDao.getWishlistByPriorityFilter(priority)
 
     suspend fun deleteItem(item: Item) {
         val doDelete: suspend () -> Unit = {

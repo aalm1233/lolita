@@ -40,6 +40,7 @@ import com.lolita.app.ui.screen.price.PaymentEditScreen
 import com.lolita.app.ui.screen.item.ItemDetailScreen
 import com.lolita.app.ui.screen.item.RecommendationScreen
 import com.lolita.app.ui.screen.item.ItemEditScreen
+import com.lolita.app.ui.screen.item.FilteredItemListScreen
 import com.lolita.app.ui.screen.item.ItemListScreen
 import com.lolita.app.ui.screen.item.WishlistScreen
 import com.lolita.app.ui.screen.outfit.OutfitLogListScreen
@@ -302,7 +303,10 @@ fun LolitaNavHost() {
                     coordinateId = coordinateId,
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(Screen.CoordinateEdit.createRoute(it)) },
-                    onDelete = { navController.popBackStack() }
+                    onDelete = { navController.popBackStack() },
+                    onNavigateToItem = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    }
                 )
             }
             // Coordinate Edit
@@ -363,7 +367,14 @@ fun LolitaNavHost() {
 
             // Stats
             composable(Screen.Stats.route) {
-                StatsPageScreen()
+                StatsPageScreen(
+                    onNavigateToFilteredList = { filterType, filterValue, title ->
+                        navController.navigate(Screen.FilteredItemList.createRoute(filterType, filterValue, title))
+                    },
+                    onNavigateToItemDetail = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    }
+                )
             }
 
             // Settings
@@ -443,6 +454,29 @@ fun LolitaNavHost() {
             ) {
                 QuickOutfitLogScreen(
                     onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            // Filtered Item List
+            composable(
+                route = Screen.FilteredItemList.route,
+                arguments = listOf(
+                    navArgument("filterType") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("filterValue") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("title") { type = NavType.StringType; defaultValue = "" }
+                )
+            ) { backStackEntry ->
+                val filterType = backStackEntry.arguments?.getString("filterType") ?: ""
+                val filterValue = backStackEntry.arguments?.getString("filterValue") ?: ""
+                val title = backStackEntry.arguments?.getString("title") ?: ""
+                FilteredItemListScreen(
+                    title = title,
+                    filterType = filterType,
+                    filterValue = filterValue,
+                    onBack = { navController.popBackStack() },
+                    onNavigateToDetail = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    }
                 )
             }
         }

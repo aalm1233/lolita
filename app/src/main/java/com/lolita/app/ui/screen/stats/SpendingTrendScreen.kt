@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -139,7 +141,8 @@ class SpendingTrendViewModel(
 @Composable
 fun SpendingTrendContent(
     viewModel: SpendingTrendViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -211,9 +214,16 @@ fun SpendingTrendContent(
 
         // Monthly details list
         uiState.monthlyDetails.forEachIndexed { index, detail ->
+            val yearMonth = "${uiState.selectedYear}-${String.format("%02d", index + 1)}"
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        if (detail.amount > 0) {
+                            onNavigateToFilteredList("month", yearMonth, "${uiState.selectedYear}年${detail.month}")
+                        }
+                    }
                     .then(
                         if (detail.isCurrentMonth) {
                             Modifier.background(

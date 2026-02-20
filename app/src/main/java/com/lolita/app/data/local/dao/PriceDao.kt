@@ -17,6 +17,7 @@ import com.lolita.app.data.local.entity.StyleSpending
 import com.lolita.app.data.local.entity.MonthlySpending
 import com.lolita.app.data.local.entity.ItemWithSpending
 import com.lolita.app.data.local.entity.PriorityStats
+import com.lolita.app.data.local.entity.Item
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -154,6 +155,16 @@ interface PriceDao {
         GROUP BY i.priority
     """)
     fun getWishlistByPriorityStats(): Flow<List<PriorityStats>>
+
+    @Query("""
+        SELECT DISTINCT i.* FROM items i
+        INNER JOIN prices p ON p.item_id = i.id
+        WHERE i.status = 'OWNED'
+          AND p.purchase_date IS NOT NULL
+          AND strftime('%Y-%m', p.purchase_date / 1000, 'unixepoch') = :yearMonth
+        ORDER BY i.updated_at DESC
+    """)
+    fun getItemsByPurchaseMonth(yearMonth: String): Flow<List<Item>>
 
     @Query("DELETE FROM prices")
     suspend fun deleteAllPrices()

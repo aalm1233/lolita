@@ -113,4 +113,11 @@ sealed interface Screen {
     data object ThemeSelect : Screen {
         override val route = "theme_select"
     }
+
+    data object FilteredItemList : Screen {
+        override val route = "filtered_item_list?filterType={filterType}&filterValue={filterValue}&title={title}"
+        fun createRoute(filterType: String, filterValue: String, title: String): String {
+            return "filtered_item_list?filterType=$filterType&filterValue=${android.net.Uri.encode(filterValue)}&title=${android.net.Uri.encode(title)}"
+        }
+    }
 }

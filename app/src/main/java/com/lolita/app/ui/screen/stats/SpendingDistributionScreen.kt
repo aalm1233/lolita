@@ -1,9 +1,11 @@
 package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -147,7 +149,8 @@ class SpendingDistributionViewModel(
 @Composable
 fun SpendingDistributionContent(
     viewModel: SpendingDistributionViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -202,11 +205,25 @@ fun SpendingDistributionContent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            val filterType = when (uiState.dimension) {
+                SpendingDimension.BRAND -> "brand"
+                SpendingDimension.CATEGORY -> "category"
+                SpendingDimension.STYLE -> "style"
+                SpendingDimension.SEASON -> "season"
+            }
+            val dimensionLabel = uiState.dimension.label
+
             uiState.rankingList.forEachIndexed { index, item ->
                 val palette = chartPalette()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(4.dp))
+                        .clickable {
+                            if (item.name != "其他") {
+                                onNavigateToFilteredList(filterType, item.name, "$dimensionLabel: ${item.name}")
+                            }
+                        }
                         .padding(vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)

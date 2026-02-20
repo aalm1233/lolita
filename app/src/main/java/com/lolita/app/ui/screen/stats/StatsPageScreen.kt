@@ -15,7 +15,10 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import kotlinx.coroutines.launch
 
 @Composable
-fun StatsPageScreen() {
+fun StatsPageScreen(
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
+    onNavigateToItemDetail: (Long) -> Unit = {}
+) {
     val tabs = listOf("总览", "消费分布", "消费趋势", "愿望单", "付款日历")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
@@ -52,10 +55,19 @@ fun StatsPageScreen() {
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> StatsContent()
-                1 -> SpendingDistributionContent()
-                2 -> SpendingTrendContent()
-                3 -> WishlistAnalysisContent()
+                0 -> StatsContent(
+                    onNavigateToFilteredList = onNavigateToFilteredList,
+                    onNavigateToItemDetail = onNavigateToItemDetail
+                )
+                1 -> SpendingDistributionContent(
+                    onNavigateToFilteredList = onNavigateToFilteredList
+                )
+                2 -> SpendingTrendContent(
+                    onNavigateToFilteredList = onNavigateToFilteredList
+                )
+                3 -> WishlistAnalysisContent(
+                    onNavigateToFilteredList = onNavigateToFilteredList
+                )
                 4 -> PaymentCalendarContent()
             }
         }

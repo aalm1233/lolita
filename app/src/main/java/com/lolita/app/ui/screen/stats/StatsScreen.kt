@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.stats
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -107,7 +108,12 @@ class StatsViewModel(
 }
 
 @Composable
-fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun StatsContent(
+    viewModel: StatsViewModel = viewModel(),
+    modifier: Modifier = Modifier,
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
+    onNavigateToItemDetail: (Long) -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -126,14 +132,16 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                 targetValue = uiState.ownedCount,
                 icon = Icons.Default.Home,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigateToFilteredList("status_owned", "", "已拥有") }
             )
             StatCard(
                 title = "愿望单",
                 targetValue = uiState.wishedCount,
                 icon = Icons.Default.Favorite,
                 color = Color(0xFFFF6B6B),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onClick = { onNavigateToFilteredList("status_wished", "", "愿望单") }
             )
         }
         Row(
@@ -181,6 +189,7 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
             val item = uiState.mostExpensiveItem!!
             Card(
                 modifier = Modifier.fillMaxWidth(),
+                onClick = { onNavigateToItemDetail(item.itemId) },
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFFF1493).copy(alpha = 0.1f)
                 )
@@ -242,6 +251,8 @@ fun StatsContent(viewModel: StatsViewModel = viewModel(), modifier: Modifier = M
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(4.dp))
+                                .clickable { onNavigateToFilteredList("brand", brand.brandName, "品牌: ${brand.brandName}") }
                                 .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -281,7 +292,8 @@ private fun StatCard(
     targetValue: Int,
     icon: ImageVector,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     val animatedValue by animateIntAsState(
         targetValue = targetValue,
@@ -291,6 +303,7 @@ private fun StatCard(
 
     Card(
         modifier = modifier,
+        onClick = { onClick?.invoke() },
         colors = CardDefaults.cardColors(
             containerColor = color.copy(alpha = 0.1f)
         )

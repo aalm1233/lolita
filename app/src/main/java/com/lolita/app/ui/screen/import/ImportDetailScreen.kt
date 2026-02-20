@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.`import`
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,9 @@ fun ImportDetailContent(
     onExecuteImport: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var showBackConfirmDialog by remember { mutableStateOf(false) }
+
+    BackHandler { showBackConfirmDialog = true }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
@@ -54,7 +58,7 @@ fun ImportDetailContent(
             GradientTopAppBar(
                 title = { Text("完善导入数据 (${uiState.importItems.size}件)") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { showBackConfirmDialog = true }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
@@ -100,6 +104,23 @@ fun ImportDetailContent(
                 )
             }
         }
+    }
+
+    if (showBackConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showBackConfirmDialog = false },
+            title = { Text("确认返回") },
+            text = { Text("已编辑的导入数据尚未保存，返回后将丢失所有修改。") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showBackConfirmDialog = false
+                    onBack()
+                }) { Text("返回") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showBackConfirmDialog = false }) { Text("继续编辑") }
+            }
+        )
     }
 }
 

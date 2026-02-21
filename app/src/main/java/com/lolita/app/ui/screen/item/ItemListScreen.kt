@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -326,9 +327,11 @@ fun ItemListScreen(
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else if (uiState.columnsPerRow == 1) {
+                            val flingBehavior = rememberSkinFlingBehavior()
                             LazyColumn(
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp)
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                flingBehavior = flingBehavior
                             ) {
                                 items(
                                     items = uiState.filteredItems,

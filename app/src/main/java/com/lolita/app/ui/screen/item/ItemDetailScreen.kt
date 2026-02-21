@@ -84,10 +84,9 @@ fun ItemDetailScreen(
                     onClick = {
                         showDeleteDialog = false
                         coroutineScope.launch {
-                            viewModel.deleteItem(
-                                onSuccess = { onBack() },
-                                onError = { showError = it }
-                            )
+                            viewModel.deleteItem()
+                                .onSuccess { onBack() }
+                                .onFailure { showError = it.message }
                         }
                     },
                     colors = ButtonDefaults.textButtonColors(

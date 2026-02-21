@@ -304,6 +304,12 @@ class BackupManager(
     }
 
     private suspend fun clearAllTables() {
+        // Clean up orphaned image files before clearing database
+        val imagesDir = File(context.filesDir, "images")
+        if (imagesDir.exists()) {
+            imagesDir.listFiles()?.forEach { it.delete() }
+        }
+
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()

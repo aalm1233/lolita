@@ -11,6 +11,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.lolita.app.R
+import com.lolita.app.ui.theme.skin.animation.DefaultAnimationProvider
+import com.lolita.app.ui.theme.skin.icon.BaseSkinIconProvider
 
 val LocalLolitaSkin = compositionLocalOf { defaultSkinConfig() }
 
@@ -84,6 +86,8 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         cardShape = RoundedCornerShape(16.dp),
         buttonShape = RoundedCornerShape(16.dp),
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
+        icons = BaseSkinIconProvider(),
+        animations = DefaultAnimationProvider(),
     )
 }
 
@@ -129,6 +133,8 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         cardShape = RoundedCornerShape(8.dp),
         buttonShape = RoundedCornerShape(8.dp),
         topBarDecoration = "✝", topBarDecorationAlpha = 0.5f,
+        icons = BaseSkinIconProvider(),
+        animations = DefaultAnimationProvider(),
     )
 }
 
@@ -174,6 +180,8 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         cardShape = RoundedCornerShape(4.dp),
         buttonShape = RoundedCornerShape(4.dp),
         topBarDecoration = "☁", topBarDecorationAlpha = 0.6f,
+        icons = BaseSkinIconProvider(),
+        animations = DefaultAnimationProvider(),
     )
 }
 
@@ -219,5 +227,7 @@ fun classicSkinConfig(): LolitaSkinConfig {
         cardShape = RoundedCornerShape(12.dp),
         buttonShape = RoundedCornerShape(12.dp),
         topBarDecoration = "♠", topBarDecorationAlpha = 0.5f,
+        icons = BaseSkinIconProvider(),
+        animations = DefaultAnimationProvider(),
     )
 }

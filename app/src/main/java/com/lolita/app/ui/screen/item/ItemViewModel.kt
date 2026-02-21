@@ -516,107 +516,94 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
     }
 
-    fun saveItem(onSuccess: (Long) -> Unit, onError: (String) -> Unit) {
+    suspend fun saveItem(): Result<Unit> {
         val state = _uiState.value
 
         if (state.name.isBlank()) {
-            onError("请输入服饰名称")
-            return
+            return Result.failure(Exception("请输入服饰名称"))
         }
 
         if (state.brandId == 0L) {
-            onError("请选择品牌")
-            return
+            return Result.failure(Exception("请选择品牌"))
         }
 
         if (state.categoryId == 0L) {
-            onError("请选择类型")
-            return
+            return Result.failure(Exception("请选择类型"))
         }
 
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isSaving = true)
+        _uiState.value = _uiState.value.copy(isSaving = true)
 
-            try {
-                val now = System.currentTimeMillis()
-                val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
-                val item = if (state.item != null) {
-                    // Update existing item
-                    state.item.copy(
-                        name = state.name,
-                        description = state.description,
-                        brandId = state.brandId,
-                        categoryId = state.categoryId,
-                        coordinateId = state.coordinateId,
-                        status = state.status,
-                        priority = state.priority,
-                        imageUrl = state.imageUrl,
-                        color = state.color,
-                        season = seasonStr,
-                        style = state.style,
-                        size = state.size,
-                        sizeChartImageUrl = state.sizeChartImageUrl,
-                        updatedAt = now
-                    )
-                } else {
-                    // Create new item
-                    Item(
-                        id = 0,
-                        coordinateId = state.coordinateId,
-                        brandId = state.brandId,
-                        categoryId = state.categoryId,
-                        name = state.name,
-                        description = state.description,
-                        imageUrl = state.imageUrl,
-                        status = state.status,
-                        priority = state.priority,
-                        color = state.color,
-                        season = seasonStr,
-                        style = state.style,
-                        size = state.size,
-                        sizeChartImageUrl = state.sizeChartImageUrl,
-                        createdAt = now,
-                        updatedAt = now
-                    )
-                }
-
-                val itemId = if (state.item != null) {
-                    // Update existing item
-                    itemRepository.updateItem(item)
-                    state.item.id
-                } else {
-                    // Create new item
-                    itemRepository.insertItem(item)
-                }
-                // Delete pending images after successful save
-                val deletions = pendingImageDeletions.toList()
-                pendingImageDeletions.clear()
-                deletions.forEach { path ->
-                    try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
-                }
-                _uiState.value = _uiState.value.copy(isSaving = false)
-                onSuccess(itemId)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isSaving = false)
-                onError(e.message ?: "保存失败")
+        return try {
+            val now = System.currentTimeMillis()
+            val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
+            val item = if (state.item != null) {
+                // Update existing item
+                state.item.copy(
+                    name = state.name,
+                    description = state.description,
+                    brandId = state.brandId,
+                    categoryId = state.categoryId,
+                    coordinateId = state.coordinateId,
+                    status = state.status,
+                    priority = state.priority,
+                    imageUrl = state.imageUrl,
+                    color = state.color,
+                    season = seasonStr,
+                    style = state.style,
+                    size = state.size,
+                    sizeChartImageUrl = state.sizeChartImageUrl,
+                    updatedAt = now
+                )
+            } else {
+                // Create new item
+                Item(
+                    id = 0,
+                    coordinateId = state.coordinateId,
+                    brandId = state.brandId,
+                    categoryId = state.categoryId,
+                    name = state.name,
+                    description = state.description,
+                    imageUrl = state.imageUrl,
+                    status = state.status,
+                    priority = state.priority,
+                    color = state.color,
+                    season = seasonStr,
+                    style = state.style,
+                    size = state.size,
+                    sizeChartImageUrl = state.sizeChartImageUrl,
+                    createdAt = now,
+                    updatedAt = now
+                )
             }
+
+            if (state.item != null) {
+                itemRepository.updateItem(item)
+            } else {
+                itemRepository.insertItem(item)
+            }
+            // Delete pending images after successful save
+            val deletions = pendingImageDeletions.toList()
+            pendingImageDeletions.clear()
+            deletions.forEach { path ->
+                try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
+            }
+            _uiState.value = _uiState.value.copy(isSaving = false)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            _uiState.value = _uiState.value.copy(isSaving = false)
+            Result.failure(e)
         }
     }
 
-    fun deleteItem(onSuccess: () -> Unit, onError: (String) -> Unit) {
+    suspend fun deleteItem(): Result<Unit> {
         val item = _uiState.value.item
-        if (item == null) {
-            onError("服饰不存在")
-            return
-        }
+            ?: return Result.failure(Exception("服饰不存在"))
 
-        viewModelScope.launch {
-            try {
-                itemRepository.deleteItem(item)
-                onSuccess()
-            } catch (e: Exception) {
-                onError(e.message ?: "删除失败")
-            }
+        return try {
+            itemRepository.deleteItem(item)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

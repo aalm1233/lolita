@@ -92,10 +92,9 @@ fun ItemEditScreen(
                     onClick = {
                         showDeleteConfirm = false
                         coroutineScope.launch {
-                            viewModel.deleteItem(
-                                onSuccess = { onSaveSuccess() },
-                                onError = { showError = it }
-                            )
+                            viewModel.deleteItem()
+                                .onSuccess { onSaveSuccess() }
+                                .onFailure { showError = it.message }
                         }
                     },
                     colors = ButtonDefaults.textButtonColors(
@@ -130,10 +129,9 @@ fun ItemEditScreen(
                         onClick = {
                             hasAttemptedSave = true
                             coroutineScope.launch {
-                                viewModel.saveItem(
-                                    onSuccess = { onSaveSuccess() },
-                                    onError = { showError = it }
-                                )
+                                viewModel.saveItem()
+                                    .onSuccess { onSaveSuccess() }
+                                    .onFailure { showError = it.message }
                             }
                         },
                         enabled = !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L

@@ -23,3 +23,6 @@ gradle-*-bin.zip
 # Audit reports
 code_audit_report.md
 cross_audit_report.md
+
+# Worktrees
+.worktrees/

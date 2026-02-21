@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -121,14 +122,10 @@ fun OutfitLogDetailScreen(
                 // Note section
                 if (log.note.isNotEmpty()) {
                     item {
-                        Card(
+                        LolitaCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
+                                .padding(horizontal = 16.dp)
                         ) {
                             Text(
                                 text = log.note,
@@ -225,9 +222,8 @@ private fun DetailItemCard(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+    LolitaCard(
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier

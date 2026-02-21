@@ -89,7 +89,7 @@ fun PaymentManageScreen(
 
             if (uiState.payments.isEmpty()) {
                 item {
-                    Card(
+                    LolitaCard(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(
@@ -173,7 +173,7 @@ private fun PaymentStatsCard(
     paidAmount: Double,
     unpaidAmount: Double
 ) {
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
@@ -220,7 +220,7 @@ private fun PaymentCard(
     onDelete: () -> Unit,
     onClick: () -> Unit
 ) {
-    Card(
+    LolitaCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {

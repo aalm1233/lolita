@@ -137,7 +137,7 @@ private fun PriceCard(
     val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
     val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(

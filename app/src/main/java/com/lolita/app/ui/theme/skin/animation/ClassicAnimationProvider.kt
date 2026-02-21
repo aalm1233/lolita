@@ -2,6 +2,7 @@ package com.lolita.app.ui.theme.skin.animation
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -88,5 +89,15 @@ class ClassicAnimationProvider : SkinAnimationProvider {
                 )
             }
         }
+    )
+
+    override val clickFeedback = SkinClickFeedbackSpec(
+        pressScale = 0.94f,
+        scaleAnimationSpec = tween(300, easing = LinearOutSlowInEasing),
+        rippleColor = Color(0xFFD4AF37),
+        rippleDuration = 450,
+        rippleStyle = RippleStyle.GLOW,
+        hasParticles = true,
+        particleCount = 4
     )
 }

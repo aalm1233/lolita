@@ -79,6 +79,16 @@ class SweetAnimationProvider : SkinAnimationProvider {
             }
         }
     )
+
+    override val clickFeedback = SkinClickFeedbackSpec(
+        pressScale = 0.88f,
+        scaleAnimationSpec = spring(dampingRatio = 0.5f, stiffness = Spring.StiffnessMedium),
+        rippleColor = Pink400,
+        rippleDuration = 500,
+        rippleStyle = RippleStyle.SOFT,
+        hasParticles = true,
+        particleCount = 4
+    )
 }
 
 private fun DrawScope.drawSweetHeartParticle(center: Offset, radius: Float, color: Color) {

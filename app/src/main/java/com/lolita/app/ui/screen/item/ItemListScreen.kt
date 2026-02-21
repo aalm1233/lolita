@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -333,6 +334,7 @@ fun ItemListScreen(
                                     items = uiState.filteredItems,
                                     key = { it.id }
                                 ) { item ->
+                                    val index = uiState.filteredItems.indexOf(item)
                                     SwipeToDeleteContainer(
                                         onDelete = { itemToDelete = item }
                                     ) {
@@ -345,7 +347,9 @@ fun ItemListScreen(
                                             onClick = { onNavigateToDetail(item.id) },
                                             onEdit = { onNavigateToEdit(item.id) },
                                             onDelete = { itemToDelete = item },
-                                            modifier = Modifier.animateItem()
+                                            modifier = Modifier
+                                                .skinItemAppear(index)
+                                                .animateItem()
                                         )
                                     }
                                 }

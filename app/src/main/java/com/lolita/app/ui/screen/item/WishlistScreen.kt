@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -226,13 +227,16 @@ fun WishlistScreen(
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
                     items(uiState.filteredItems, key = { it.id }) { item ->
+                        val index = uiState.filteredItems.indexOf(item)
                         SwipeToDeleteContainer(
                             onDelete = { itemToDelete = item }
                         ) {
                             WishlistItemCard(
                                 item = item,
                                 onClick = { onNavigateToDetail(item.id) },
-                                modifier = Modifier.animateItem()
+                                modifier = Modifier
+                                    .skinItemAppear(index)
+                                    .animateItem()
                             )
                         }
                     }

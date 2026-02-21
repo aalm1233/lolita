@@ -6,6 +6,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
@@ -136,6 +137,7 @@ fun OutfitLogListScreen(
                     }
                 } else {
                     items(uiState.logs, key = { it.id }) { log ->
+                        val index = uiState.logs.indexOf(log)
                         SwipeToDeleteContainer(
                             onDelete = { logToDelete = log }
                         ) {
@@ -144,7 +146,9 @@ fun OutfitLogListScreen(
                                 onClick = { onNavigateToDetail(log.id) },
                                 onEdit = { onNavigateToEdit(log.id) },
                                 onDelete = { logToDelete = log },
-                                modifier = Modifier.animateItem()
+                                modifier = Modifier
+                                    .skinItemAppear(index)
+                                    .animateItem()
                             )
                         }
                     }

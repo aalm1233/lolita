@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -132,6 +133,11 @@ fun PaymentEditScreen(
             }
         )
     }
+
+    UnsavedChangesHandler(
+        hasUnsavedChanges = viewModel.hasUnsavedChanges,
+        onBack = onBack
+    )
 
     Scaffold(
         topBar = {

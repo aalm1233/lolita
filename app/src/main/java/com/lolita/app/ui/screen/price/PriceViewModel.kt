@@ -96,6 +96,8 @@ class PriceEditViewModel(
 
     private val _uiState = MutableStateFlow(PriceEditUiState())
     val uiState: StateFlow<PriceEditUiState> = _uiState.asStateFlow()
+    var hasUnsavedChanges: Boolean = false
+        private set
 
     fun loadItemStatus(itemId: Long) {
         viewModelScope.launch {
@@ -124,22 +126,27 @@ class PriceEditViewModel(
     }
 
     fun updatePriceType(type: PriceType) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(priceType = type)
     }
 
     fun updateTotalPrice(value: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(totalPrice = value)
     }
 
     fun updateDeposit(value: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(deposit = value)
     }
 
     fun updateBalance(value: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(balance = value)
     }
 
     fun updatePurchaseDate(date: Long?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(purchaseDate = date)
     }
 
@@ -401,6 +408,8 @@ class PaymentEditViewModel(
 
     private val _uiState = MutableStateFlow(PaymentEditUiState())
     val uiState: StateFlow<PaymentEditUiState> = _uiState.asStateFlow()
+    var hasUnsavedChanges: Boolean = false
+        private set
 
     fun loadPayment(paymentId: Long?) {
         if (paymentId == null) {
@@ -423,18 +432,22 @@ class PaymentEditViewModel(
     }
 
     fun updateAmount(value: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(amount = value)
     }
 
     fun updateDueDate(date: Long?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(dueDate = date)
     }
 
     fun updateReminderSet(enabled: Boolean) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(reminderSet = enabled)
     }
 
     fun updateCustomReminderDays(value: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(customReminderDays = value)
     }
 

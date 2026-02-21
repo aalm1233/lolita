@@ -33,6 +33,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 
 /**
@@ -52,6 +53,11 @@ fun ItemEditScreen(
     var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+
+    UnsavedChangesHandler(
+        hasUnsavedChanges = viewModel.hasUnsavedChanges,
+        onBack = onBack
+    )
 
     // Load item data if editing
     LaunchedEffect(itemId) {

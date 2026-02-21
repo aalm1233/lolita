@@ -249,6 +249,8 @@ class CoordinateEditViewModel(
 
     private var originalCreatedAt: Long = 0L
     private var originalSelectedItemIds: Set<Long> = emptySet()
+    var hasUnsavedChanges: Boolean = false
+        private set
 
     init {
         loadAllItems()
@@ -294,18 +296,22 @@ class CoordinateEditViewModel(
     }
 
     fun updateName(name: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(name = name)
     }
 
     fun updateDescription(description: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(description = description)
     }
 
     fun updateImageUrl(url: String?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(imageUrl = url)
     }
 
     fun toggleItemSelection(itemId: Long) {
+        hasUnsavedChanges = true
         val current = _uiState.value.selectedItemIds
         _uiState.value = _uiState.value.copy(
             selectedItemIds = if (itemId in current) current - itemId else current + itemId

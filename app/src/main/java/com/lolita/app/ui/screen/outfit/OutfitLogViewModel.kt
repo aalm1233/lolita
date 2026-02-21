@@ -185,6 +185,8 @@ class OutfitLogEditViewModel(
 
     private var editingLogId: Long? = null
     private var originalItemIds: Set<Long> = emptySet()
+    var hasUnsavedChanges: Boolean = false
+        private set
 
     init {
         loadAvailableItems()
@@ -226,26 +228,31 @@ class OutfitLogEditViewModel(
     }
 
     fun updateDate(date: Long) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(date = date)
     }
 
     fun updateNote(note: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(note = note)
     }
 
     fun addImage(imageUrl: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(
             imageUrls = _uiState.value.imageUrls + imageUrl
         )
     }
 
     fun removeImage(imageUrl: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(
             imageUrls = _uiState.value.imageUrls - imageUrl
         )
     }
 
     fun toggleItemSelection(itemId: Long) {
+        hasUnsavedChanges = true
         val currentSelection = _uiState.value.selectedItemIds
         val newSelection = if (currentSelection.contains(itemId)) {
             currentSelection - itemId

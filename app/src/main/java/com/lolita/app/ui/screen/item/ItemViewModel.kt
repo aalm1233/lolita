@@ -384,6 +384,8 @@ class ItemEditViewModel(
     val uiState: StateFlow<ItemEditUiState> = _uiState.asStateFlow()
 
     private val pendingImageDeletions = mutableListOf<String>()
+    var hasUnsavedChanges: Boolean = false
+        private set
 
     fun loadItem(itemId: Long) {
         viewModelScope.launch {
@@ -440,34 +442,42 @@ class ItemEditViewModel(
     }
 
     fun updateName(name: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(name = name)
     }
 
     fun updateDescription(description: String) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(description = description)
     }
 
     fun updateBrand(brandId: Long) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(brandId = brandId)
     }
 
     fun updateCategory(categoryId: Long) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(categoryId = categoryId)
     }
 
     fun updateCoordinate(coordinateId: Long?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(coordinateId = coordinateId)
     }
 
     fun updateStatus(status: ItemStatus) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(status = status)
     }
 
     fun updatePriority(priority: ItemPriority) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(priority = priority)
     }
 
     fun updateImageUrl(imageUrl: String?) {
+        hasUnsavedChanges = true
         val oldUrl = _uiState.value.imageUrl
         if (oldUrl != null && imageUrl != oldUrl) {
             pendingImageDeletions.add(oldUrl)
@@ -476,24 +486,29 @@ class ItemEditViewModel(
     }
 
     fun updateColor(color: String?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(color = color)
     }
 
     fun toggleSeason(season: String) {
+        hasUnsavedChanges = true
         val current = _uiState.value.seasons
         val updated = if (season in current) current - season else current + season
         _uiState.value = _uiState.value.copy(seasons = updated)
     }
 
     fun updateStyle(style: String?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(style = style)
     }
 
     fun updateSize(size: String?) {
+        hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(size = size)
     }
 
     fun updateSizeChartImageUrl(url: String?) {
+        hasUnsavedChanges = true
         val oldUrl = _uiState.value.sizeChartImageUrl
         if (oldUrl != null && url != oldUrl) {
             pendingImageDeletions.add(oldUrl)

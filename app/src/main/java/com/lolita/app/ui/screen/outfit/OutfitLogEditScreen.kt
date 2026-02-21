@@ -39,6 +39,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -82,6 +83,11 @@ fun OutfitLogEditScreen(
             }
         )
     }
+
+    UnsavedChangesHandler(
+        hasUnsavedChanges = viewModel.hasUnsavedChanges,
+        onBack = onBack
+    )
 
     Scaffold(
         topBar = {

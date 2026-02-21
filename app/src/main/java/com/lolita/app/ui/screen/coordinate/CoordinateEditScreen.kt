@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -77,6 +78,11 @@ fun CoordinateEditScreen(
     LaunchedEffect(coordinateId) {
         viewModel.loadCoordinate(coordinateId)
     }
+
+    UnsavedChangesHandler(
+        hasUnsavedChanges = viewModel.hasUnsavedChanges,
+        onBack = onBack
+    )
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },

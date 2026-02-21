@@ -48,7 +48,8 @@ import androidx.lifecycle.viewModelScope
 data class WishlistUiState(
     val allItems: List<Item> = emptyList(),
     val filteredItems: List<Item> = emptyList(),
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val isLoading: Boolean = true
 )
 
 class WishlistViewModel(
@@ -66,7 +67,8 @@ class WishlistViewModel(
                 _uiState.update {
                     it.copy(
                         allItems = items,
-                        filteredItems = applySearch(items, query)
+                        filteredItems = applySearch(items, query),
+                        isLoading = false
                     )
                 }
             }
@@ -179,7 +181,14 @@ fun WishlistScreen(
                     )
                 )
             }
-            if (uiState.allItems.isEmpty()) {
+            if (uiState.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (uiState.allItems.isEmpty()) {
                 EmptyState(
                     icon = Icons.Default.Favorite,
                     title = "愿望单为空",

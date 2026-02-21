@@ -66,29 +66,38 @@ fun PriceManageScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            if (uiState.prices.isEmpty()) {
-                item {
-                    EmptyState(
-                        icon = Icons.Default.ShoppingCart,
-                        title = "暂无价格信息",
-                        subtitle = "点击 + 添加价格"
-                    )
-                }
-            } else {
-                items(uiState.prices, key = { it.price.id }) { priceWithPayments ->
-                    PriceCard(
-                        priceWithPayments = priceWithPayments,
-                        onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
-                        onEdit = { onNavigateToPriceEdit(priceWithPayments.price.id) },
-                        onDelete = { priceToDelete = priceWithPayments.price }
-                    )
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (uiState.prices.isEmpty()) {
+                    item {
+                        EmptyState(
+                            icon = Icons.Default.ShoppingCart,
+                            title = "暂无价格信息",
+                            subtitle = "点击 + 添加价格"
+                        )
+                    }
+                } else {
+                    items(uiState.prices, key = { it.price.id }) { priceWithPayments ->
+                        PriceCard(
+                            priceWithPayments = priceWithPayments,
+                            onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
+                            onEdit = { onNavigateToPriceEdit(priceWithPayments.price.id) },
+                            onDelete = { priceToDelete = priceWithPayments.price }
+                        )
+                    }
                 }
             }
         }

@@ -65,50 +65,59 @@ fun PaymentManageScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // 统计卡片
-            item {
-                PaymentStatsCard(
-                    totalPrice = uiState.totalPrice,
-                    paidAmount = uiState.paidAmount,
-                    unpaidAmount = uiState.unpaidAmount
-                )
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                contentAlignment = androidx.compose.ui.Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-
-            // 付款记录列表
-            item {
-                Text(
-                    "付款记录",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-
-            if (uiState.payments.isEmpty()) {
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // 统计卡片
                 item {
-                    EmptyState(
-                        icon = Icons.Default.Payment,
-                        title = "暂无付款记录",
-                        subtitle = "点击 + 添加付款记录"
+                    PaymentStatsCard(
+                        totalPrice = uiState.totalPrice,
+                        paidAmount = uiState.paidAmount,
+                        unpaidAmount = uiState.unpaidAmount
                     )
                 }
-            } else {
-                items(uiState.payments, key = { it.id }) { payment ->
-                    PaymentCard(
-                        payment = payment,
-                        onMarkPaid = {
-                            coroutineScope.launch {
-                                viewModel.markAsPaid(payment)
-                            }
-                        },
-                        onDelete = { paymentToDelete = payment },
-                        onClick = { onNavigateToPaymentEdit(payment.id) }
+
+                // 付款记录列表
+                item {
+                    Text(
+                        "付款记录",
+                        style = MaterialTheme.typography.titleMedium
                     )
+                }
+
+                if (uiState.payments.isEmpty()) {
+                    item {
+                        EmptyState(
+                            icon = Icons.Default.Payment,
+                            title = "暂无付款记录",
+                            subtitle = "点击 + 添加付款记录"
+                        )
+                    }
+                } else {
+                    items(uiState.payments, key = { it.id }) { payment ->
+                        PaymentCard(
+                            payment = payment,
+                            onMarkPaid = {
+                                coroutineScope.launch {
+                                    viewModel.markAsPaid(payment)
+                                }
+                            },
+                            onDelete = { paymentToDelete = payment },
+                            onClick = { onNavigateToPaymentEdit(payment.id) }
+                        )
+                    }
                 }
             }
         }

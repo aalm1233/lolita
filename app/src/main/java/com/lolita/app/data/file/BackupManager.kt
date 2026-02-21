@@ -88,16 +88,16 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_url,created_at,updated_at")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_url,color,season,style,size,size_chart_image_url,created_at,updated_at")
             database.itemDao().getAllItemsList().forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrl)},${i.createdAt},${i.updatedAt}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrl)},${escapeCsv(i.color)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
             }
 
             // Coordinates
             sb.appendLine("\n=== COORDINATES ===")
-            sb.appendLine("id,name,description,created_at,updated_at")
+            sb.appendLine("id,name,description,image_url,created_at,updated_at")
             database.coordinateDao().getAllCoordinatesList().forEach { c ->
-                sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${c.createdAt},${c.updatedAt}")
+                sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${escapeCsv(c.imageUrl)},${c.createdAt},${c.updatedAt}")
             }
 
             // Styles

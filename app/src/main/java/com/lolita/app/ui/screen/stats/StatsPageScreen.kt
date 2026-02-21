@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.calendar.PaymentCalendarContent
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
 import kotlinx.coroutines.launch
 
 @Composable
@@ -31,7 +32,13 @@ fun StatsPageScreen(
             edgePadding = 8.dp,
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.primary,
-            divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) }
+            divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) },
+            indicator = { tabPositions ->
+                SkinTabIndicator(
+                    tabPositions = tabPositions,
+                    selectedTabIndex = pagerState.currentPage
+                )
+            }
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -406,7 +407,13 @@ private fun ItemFilterTabRow(
         selectedTabIndex = selectedIndex,
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.primary,
-        divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) }
+        divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) },
+        indicator = { tabPositions ->
+            SkinTabIndicator(
+                tabPositions = tabPositions,
+                selectedTabIndex = selectedIndex
+            )
+        }
     ) {
         tabs.forEachIndexed { index, label ->
             Tab(

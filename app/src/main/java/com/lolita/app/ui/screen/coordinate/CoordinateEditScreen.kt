@@ -52,7 +52,6 @@ fun CoordinateEditScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -66,17 +65,23 @@ fun CoordinateEditScreen(
             }
         }
     }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(errorMessage) {
-        errorMessage?.let {
-            snackbarHostState.showSnackbar(it)
-            errorMessage = null
-        }
-    }
+    var showError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(coordinateId) {
         viewModel.loadCoordinate(coordinateId)
+    }
+
+    if (showError != null) {
+        AlertDialog(
+            onDismissRequest = { showError = null },
+            title = { Text("保存失败") },
+            text = { Text(showError ?: "") },
+            confirmButton = {
+                TextButton(onClick = { showError = null }) {
+                    Text("确定")
+                }
+            }
+        )
     }
 
     UnsavedChangesHandler(
@@ -85,7 +90,6 @@ fun CoordinateEditScreen(
     )
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (coordinateId == null) "新建套装" else "编辑套装") },
@@ -106,7 +110,7 @@ fun CoordinateEditScreen(
                                 result.onSuccess {
                                     onSaveSuccess()
                                 }.onFailure { e ->
-                                    errorMessage = e.message ?: "保存失败"
+                                    showError = e.message ?: "保存失败"
                                 }
                             }
                         },

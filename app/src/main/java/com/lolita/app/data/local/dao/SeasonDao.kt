@@ -17,9 +17,6 @@ interface SeasonDao {
     @Query("SELECT * FROM seasons WHERE id = :id")
     suspend fun getSeasonById(id: Long): Season?
 
-    @Query("SELECT * FROM seasons WHERE is_preset = 1 ORDER BY name ASC")
-    fun getPresetSeasons(): Flow<List<Season>>
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertSeason(season: Season): Long
 

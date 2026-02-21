@@ -17,9 +17,6 @@ interface StyleDao {
     @Query("SELECT * FROM styles WHERE id = :id")
     suspend fun getStyleById(id: Long): Style?
 
-    @Query("SELECT * FROM styles WHERE is_preset = 1 ORDER BY name ASC")
-    fun getPresetStyles(): Flow<List<Style>>
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertStyle(style: Style): Long
 

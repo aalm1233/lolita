@@ -30,15 +30,6 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE status = :status ORDER BY updated_at DESC")
     fun getItemsByStatus(status: ItemStatus): Flow<List<Item>>
 
-    @Query("SELECT * FROM items WHERE coordinate_id = :coordinateId")
-    fun getItemsByCoordinate(coordinateId: Long): Flow<List<Item>>
-
-    @Query("SELECT * FROM items WHERE brand_id = :brandId")
-    fun getItemsByBrand(brandId: Long): Flow<List<Item>>
-
-    @Query("SELECT * FROM items WHERE category_id = :categoryId")
-    fun getItemsByCategory(categoryId: Long): Flow<List<Item>>
-
     @Query("SELECT * FROM items WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
     fun searchItemsByName(query: String): Flow<List<Item>>
 

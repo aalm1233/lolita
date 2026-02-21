@@ -4,7 +4,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
@@ -15,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimation
+import com.lolita.app.ui.theme.skin.animation.SkinNavigationOverlay
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -145,16 +149,27 @@ fun LolitaNavHost() {
         }
     ) { paddingValues ->
         val navSpec = skin.animations.navigation
+        val navBackStackEntryForOverlay by navController.currentBackStackEntryAsState()
+        val isNavigating = navBackStackEntryForOverlay != null
 
-        NavHost(
-            navController = navController,
-            startDestination = Screen.ItemList.route,
-            modifier = Modifier.padding(paddingValues),
-            enterTransition = { navSpec.enterTransition },
-            exitTransition = { navSpec.exitTransition },
-            popEnterTransition = { navSpec.popEnterTransition },
-            popExitTransition = { navSpec.popExitTransition }
-        ) {
+        Box {
+            // Bottom layer: ambient background animation
+            SkinBackgroundAnimation(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            )
+
+            // Middle layer: main content
+            NavHost(
+                navController = navController,
+                startDestination = Screen.ItemList.route,
+                modifier = Modifier.padding(paddingValues),
+                enterTransition = { navSpec.enterTransition },
+                exitTransition = { navSpec.exitTransition },
+                popEnterTransition = { navSpec.popEnterTransition },
+                popExitTransition = { navSpec.popExitTransition }
+            ) {
             // Item List
             composable(Screen.ItemList.route) {
                 ItemListScreen(
@@ -481,6 +496,13 @@ fun LolitaNavHost() {
                     }
                 )
             }
+        }
+
+            // Top layer: navigation transition overlay
+            SkinNavigationOverlay(
+                isTransitioning = isNavigating,
+                skinType = skin.skinType
+            )
         }
     }
 }

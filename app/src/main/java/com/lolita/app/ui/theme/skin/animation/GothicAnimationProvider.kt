@@ -94,4 +94,13 @@ class GothicAnimationProvider : SkinAnimationProvider {
         hasParticles = true,
         particleCount = 5
     )
+
+    override val navigation = SkinNavigationSpec(
+        enterTransition = gothicEnterTransition(),
+        exitTransition = gothicExitTransition(),
+        popEnterTransition = gothicPopEnterTransition(),
+        popExitTransition = gothicPopExitTransition(),
+        hasOverlayEffect = true,
+        overlayDuration = 400
+    )
 }

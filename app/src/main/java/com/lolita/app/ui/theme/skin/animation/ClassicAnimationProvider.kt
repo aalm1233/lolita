@@ -100,4 +100,13 @@ class ClassicAnimationProvider : SkinAnimationProvider {
         hasParticles = true,
         particleCount = 4
     )
+
+    override val navigation = SkinNavigationSpec(
+        enterTransition = classicEnterTransition(),
+        exitTransition = classicExitTransition(),
+        popEnterTransition = classicPopEnterTransition(),
+        popExitTransition = classicPopExitTransition(),
+        hasOverlayEffect = true,
+        overlayDuration = 380
+    )
 }

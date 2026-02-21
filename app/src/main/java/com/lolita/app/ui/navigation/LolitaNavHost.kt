@@ -144,14 +144,16 @@ fun LolitaNavHost() {
             }
         }
     ) { paddingValues ->
+        val navSpec = skin.animations.navigation
+
         NavHost(
             navController = navController,
             startDestination = Screen.ItemList.route,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn() + slideInHorizontally { it / 4 } },
-            exitTransition = { fadeOut() + slideOutHorizontally { -it / 4 } },
-            popEnterTransition = { fadeIn() + slideInHorizontally { -it / 4 } },
-            popExitTransition = { fadeOut() + slideOutHorizontally { it / 4 } }
+            enterTransition = { navSpec.enterTransition },
+            exitTransition = { navSpec.exitTransition },
+            popEnterTransition = { navSpec.popEnterTransition },
+            popExitTransition = { navSpec.popExitTransition }
         ) {
             // Item List
             composable(Screen.ItemList.route) {

@@ -113,4 +113,13 @@ class ChineseAnimationProvider : SkinAnimationProvider {
         hasParticles = true,
         particleCount = 3
     )
+
+    override val navigation = SkinNavigationSpec(
+        enterTransition = chineseEnterTransition(),
+        exitTransition = chineseExitTransition(),
+        popEnterTransition = chinesePopEnterTransition(),
+        popExitTransition = chinesePopExitTransition(),
+        hasOverlayEffect = true,
+        overlayDuration = 400
+    )
 }

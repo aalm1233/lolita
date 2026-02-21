@@ -89,6 +89,15 @@ class SweetAnimationProvider : SkinAnimationProvider {
         hasParticles = true,
         particleCount = 4
     )
+
+    override val navigation = SkinNavigationSpec(
+        enterTransition = sweetEnterTransition(),
+        exitTransition = sweetExitTransition(),
+        popEnterTransition = sweetPopEnterTransition(),
+        popExitTransition = sweetPopExitTransition(),
+        hasOverlayEffect = true,
+        overlayDuration = 350
+    )
 }
 
 private fun DrawScope.drawSweetHeartParticle(center: Offset, radius: Float, color: Color) {

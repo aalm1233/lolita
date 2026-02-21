@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.room.withTransaction
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
+import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.data.notification.PaymentReminderScheduler
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -236,6 +237,25 @@ class BackupManager(
             if (actualCount != backupData.items.size) {
                 return@withContext Result.failure(Exception("数据验证失败：期望 ${backupData.items.size} 条服饰，实际 $actualCount 条"))
             }
+
+            // Recreate calendar events for unpaid payments with due dates
+            try {
+                val unpaidPayments = database.paymentDao().getAllPaymentsList()
+                    .filter { !it.isPaid && it.dueDate > System.currentTimeMillis() }
+                unpaidPayments.forEach { payment ->
+                    try {
+                        val eventId = CalendarEventHelper.insertEvent(
+                            context = context,
+                            title = "付款提醒",
+                            description = "付款金额: ¥${String.format("%.2f", payment.amount)}",
+                            startTimeMillis = payment.dueDate
+                        )
+                        if (eventId != null) {
+                            database.paymentDao().updateCalendarEventId(payment.id, eventId)
+                        }
+                    } catch (_: Exception) {}
+                }
+            } catch (_: Exception) {}
 
             // Reschedule reminders
             try {

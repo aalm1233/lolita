@@ -26,6 +26,9 @@ interface ActionIcons {
     @Composable fun MoreVert(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun ContentCopy(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Refresh(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun ViewAgenda(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun GridView(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun Apps(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
 }
 
 interface ContentIcons {

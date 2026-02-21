@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
@@ -44,6 +46,7 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -88,9 +91,13 @@ open class BaseActionIcons : ActionIcons {
         Icon(Icons.Filled.ContentCopy, null, modifier, tint)
     @Composable override fun Refresh(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Refresh, null, modifier, tint)
-}
-
-open class BaseContentIcons : ContentIcons {
+    @Composable override fun ViewAgenda(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.ViewAgenda, null, modifier, tint)
+    @Composable override fun GridView(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.GridView, null, modifier, tint)
+    @Composable override fun Apps(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.Apps, null, modifier, tint)
+} : ContentIcons {
     @Composable override fun Star(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Star, null, modifier, tint)
     @Composable override fun StarBorder(modifier: Modifier, tint: Color) =

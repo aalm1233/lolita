@@ -5,6 +5,7 @@ enum class IconKey {
     Home, Wishlist, Outfit, Stats, Settings,
     // Action
     Add, Delete, Edit, Search, Sort, Save, Close, Share, FilterList, MoreVert, ContentCopy, Refresh,
+    ViewAgenda, GridView, Apps,
     // Content
     Star, StarBorder, Image, Camera, AddPhoto, Link, LinkOff, Palette, FileOpen, CalendarMonth, Notifications, AttachMoney, Category,
     // Arrow

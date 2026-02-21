@@ -33,6 +33,8 @@ import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.CategoryGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer

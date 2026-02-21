@@ -97,7 +97,9 @@ open class BaseActionIcons : ActionIcons {
         Icon(Icons.Filled.GridView, null, modifier, tint)
     @Composable override fun Apps(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Apps, null, modifier, tint)
-} : ContentIcons {
+}
+
+open class BaseContentIcons : ContentIcons {
     @Composable override fun Star(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Star, null, modifier, tint)
     @Composable override fun StarBorder(modifier: Modifier, tint: Color) =

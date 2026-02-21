@@ -8,20 +8,15 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -59,7 +54,7 @@ import com.lolita.app.ui.screen.stats.StatsPageScreen
 
 interface BottomNavItem {
     val screen: Screen
-    val icon: ImageVector
+    val iconKey: IconKey
     val label: String
 }
 
@@ -67,27 +62,27 @@ data object BottomNavItems {
     val items = listOf(
         object : BottomNavItem {
             override val screen = Screen.ItemList
-            override val icon = Icons.Filled.Home
+            override val iconKey = IconKey.Home
             override val label = "服饰"
         },
         object : BottomNavItem {
             override val screen = Screen.Wishlist
-            override val icon = Icons.Filled.Favorite
+            override val iconKey = IconKey.Wishlist
             override val label = "愿望单"
         },
         object : BottomNavItem {
             override val screen = Screen.OutfitLogList
-            override val icon = Icons.Filled.DateRange
+            override val iconKey = IconKey.Outfit
             override val label = "穿搭"
         },
         object : BottomNavItem {
             override val screen = Screen.Stats
-            override val icon = Icons.Filled.Info
+            override val iconKey = IconKey.Stats
             override val label = "统计"
         },
         object : BottomNavItem {
             override val screen = Screen.Settings
-            override val icon = Icons.Filled.Settings
+            override val iconKey = IconKey.Settings
             override val label = "设置"
         }
     )
@@ -118,7 +113,12 @@ fun LolitaNavHost() {
 
                 items.forEach { item ->
                     NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = null) },
+                        icon = {
+                            val tint = if (currentDestination?.hierarchy?.any {
+                                    it.route == item.screen.route
+                                } == true) accent else Color.Gray
+                            SkinIcon(item.iconKey, tint = tint)
+                        },
                         label = { Text(item.label) },
                         selected = currentDestination?.hierarchy?.any {
                             it.route == item.screen.route

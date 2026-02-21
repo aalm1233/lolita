@@ -103,4 +103,12 @@ class GothicAnimationProvider : SkinAnimationProvider {
         hasOverlayEffect = true,
         overlayDuration = 400
     )
+
+    override val listAnimation = SkinListAnimationSpec(
+        appearDirection = AppearDirection.FADE_SCALE,
+        appearOffsetPx = 40f,
+        staggerDelayMs = 30,
+        animationSpec = tween(250, easing = LinearOutSlowInEasing),
+        flingFrictionMultiplier = 1.5f
+    )
 }

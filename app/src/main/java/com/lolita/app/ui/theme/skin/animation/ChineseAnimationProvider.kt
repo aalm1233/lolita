@@ -122,4 +122,12 @@ class ChineseAnimationProvider : SkinAnimationProvider {
         hasOverlayEffect = true,
         overlayDuration = 400
     )
+
+    override val listAnimation = SkinListAnimationSpec(
+        appearDirection = AppearDirection.FROM_LEFT,
+        appearOffsetPx = 100f,
+        staggerDelayMs = 80,
+        animationSpec = tween(400, easing = CubicBezierEasing(0.4f, 0f, 0.2f, 1f)),
+        flingFrictionMultiplier = 1.0f
+    )
 }

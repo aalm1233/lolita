@@ -98,6 +98,17 @@ class SweetAnimationProvider : SkinAnimationProvider {
         hasOverlayEffect = true,
         overlayDuration = 350
     )
+
+    override val listAnimation = SkinListAnimationSpec(
+        appearDirection = AppearDirection.FROM_BOTTOM,
+        appearOffsetPx = 80f,
+        staggerDelayMs = 60,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
+        flingFrictionMultiplier = 0.7f
+    )
 }
 
 private fun DrawScope.drawSweetHeartParticle(center: Offset, radius: Float, color: Color) {

@@ -109,4 +109,12 @@ class ClassicAnimationProvider : SkinAnimationProvider {
         hasOverlayEffect = true,
         overlayDuration = 380
     )
+
+    override val listAnimation = SkinListAnimationSpec(
+        appearDirection = AppearDirection.FROM_BOTTOM,
+        appearOffsetPx = 60f,
+        staggerDelayMs = 50,
+        animationSpec = tween(350, easing = LinearOutSlowInEasing),
+        flingFrictionMultiplier = 1.3f
+    )
 }

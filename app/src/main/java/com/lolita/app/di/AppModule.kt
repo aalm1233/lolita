@@ -37,7 +37,7 @@ object AppModule {
     fun categoryRepository() = _categoryRepository
 
     private val _priceRepository by lazy {
-        PriceRepository(database.priceDao(), database.paymentDao())
+        PriceRepository(database.priceDao(), database.paymentDao(), appContext)
     }
     fun priceRepository() = _priceRepository
 

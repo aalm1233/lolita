@@ -1,7 +1,10 @@
 package com.lolita.app.data.repository
 
+import android.content.Context
 import com.lolita.app.data.local.dao.PaymentDao
 import com.lolita.app.data.local.dao.PriceDao
+import com.lolita.app.data.notification.CalendarEventHelper
+import com.lolita.app.data.notification.PaymentReminderScheduler
 import com.lolita.app.data.local.dao.PriceWithPayments as DaoPriceWithPayments
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.Price
@@ -11,7 +14,8 @@ import kotlin.math.abs
 
 class PriceRepository(
     private val priceDao: PriceDao,
-    private val paymentDao: PaymentDao
+    private val paymentDao: PaymentDao,
+    private val context: Context? = null
 ) {
     fun getPricesByItem(itemId: Long): Flow<List<Price>> =
         priceDao.getPricesByItem(itemId)
@@ -44,7 +48,18 @@ class PriceRepository(
         return price
     }
 
-    suspend fun deletePrice(price: Price) = priceDao.deletePrice(price)
+    suspend fun deletePrice(price: Price) {
+        // Clean up calendar events and reminders before CASCADE delete
+        val payments = paymentDao.getPaymentsByPriceList(price.id)
+        if (context != null) {
+            val scheduler = PaymentReminderScheduler(context)
+            payments.forEach { payment ->
+                payment.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
+                try { scheduler.cancelReminder(payment.id) } catch (_: Exception) {}
+            }
+        }
+        priceDao.deletePrice(price)
+    }
 
     fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<DaoPriceWithPayments>> =
         priceDao.getPricesWithPaymentsByItem(itemId)

@@ -7,14 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.Checkroom
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +23,8 @@ import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -57,7 +51,7 @@ fun OutfitLogListScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -78,7 +72,7 @@ fun OutfitLogListScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加日记", tint = Color.White)
+                SkinIcon(IconKey.Add, tint = Color.White)
             }
         }
     ) { padding ->
@@ -92,7 +86,7 @@ fun OutfitLogListScreen(
                     value = uiState.searchQuery,
                     onValueChange = { viewModel.search(it) },
                     placeholder = { Text("搜索穿搭日记") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    leadingIcon = { SkinIcon(IconKey.Search) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
@@ -264,12 +258,7 @@ private fun OutfitLogListItemCard(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Default.Checkroom,
-                                contentDescription = null,
-                                modifier = Modifier.size(14.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            SkinIcon(IconKey.Save, modifier = Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             Text(
                                 text = "${log.itemCount} 件",
                                 style = MaterialTheme.typography.labelSmall,
@@ -289,17 +278,13 @@ private fun OutfitLogListItemCard(
             DropdownMenuItem(
                 text = { Text("编辑") },
                 onClick = { showMenu = false; onEdit() },
-                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+                leadingIcon = { SkinIcon(IconKey.Edit) }
             )
             DropdownMenuItem(
                 text = { Text("删除", color = MaterialTheme.colorScheme.error) },
                 onClick = { showMenu = false; onDelete() },
                 leadingIcon = {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
+                    SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
                 }
             )
         }

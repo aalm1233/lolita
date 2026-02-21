@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,7 +37,8 @@ import coil.compose.AsyncImage
 import com.lolita.app.data.file.ImageFileHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import androidx.compose.material.icons.filled.AddPhotoAlternate
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,7 +93,7 @@ fun CoordinateEditScreen(
                 title = { Text(if (coordinateId == null) "新建套装" else "编辑套装") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
@@ -122,7 +120,7 @@ fun CoordinateEditScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Icon(Icons.Default.Check, contentDescription = "保存")
+                            SkinIcon(IconKey.Save)
                         }
                     }
                 }
@@ -156,12 +154,7 @@ fun CoordinateEditScreen(
                     )
                 } else {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            Icons.Default.AddPhotoAlternate,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
+                        SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.height(4.dp))
                         Text("添加封面图", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                     }

@@ -11,11 +11,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +38,8 @@ import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,7 +93,7 @@ fun OutfitLogEditScreen(
                 compact = true,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
@@ -114,7 +111,7 @@ fun OutfitLogEditScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Icon(Icons.Default.Check, contentDescription = "保存")
+                            SkinIcon(IconKey.Save)
                         }
                     }
                 }
@@ -274,7 +271,7 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
                     containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
                 )
             ) {
-                Icon(Icons.Default.Close, contentDescription = "删除", tint = MaterialTheme.colorScheme.onError)
+                SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.onError)
             }
         }
     }
@@ -297,12 +294,7 @@ private fun AddPhotoCard(onAddPhoto: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "添加照片",
-                    modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                SkinIcon(IconKey.Add, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "添加照片",

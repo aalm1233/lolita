@@ -8,11 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
 
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,6 +36,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 // --- ViewModel ---
 
@@ -268,7 +266,7 @@ private fun MonthHeader(year: Int, month: Int, onPrevious: () -> Unit, onNext: (
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onPrevious) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "上月")
+            SkinIcon(IconKey.KeyboardArrowLeft)
         }
         Text(
             "${year}年${month + 1}月",
@@ -276,7 +274,7 @@ private fun MonthHeader(year: Int, month: Int, onPrevious: () -> Unit, onNext: (
             fontWeight = FontWeight.Bold
         )
         IconButton(onClick = onNext) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "下月")
+            SkinIcon(IconKey.KeyboardArrowRight)
         }
     }
 }
@@ -451,7 +449,7 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
                 Spacer(Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onMarkPaid) {
-                        Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                        SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
                         Text("标记已付款")
                     }

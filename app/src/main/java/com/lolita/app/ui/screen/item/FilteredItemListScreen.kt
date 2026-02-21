@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,6 +25,8 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @Composable
 fun FilteredItemListScreen(
@@ -48,7 +47,7 @@ fun FilteredItemListScreen(
                 title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -65,7 +64,7 @@ fun FilteredItemListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 EmptyState(
-                    icon = Icons.Default.Search,
+                    icon = Icons.Default.Search, // TODO: EmptyState uses ImageVector
                     title = "暂无数据",
                     subtitle = "没有找到匹配的服饰"
                 )

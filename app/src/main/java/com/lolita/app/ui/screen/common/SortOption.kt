@@ -1,11 +1,10 @@
 package com.lolita.app.ui.screen.common
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 enum class SortOption(val label: String) {
     DEFAULT("默认排序"),
@@ -42,7 +41,7 @@ fun SortMenuButton(
                 text = { Text(option.label) },
                 onClick = { onSortSelected(option); expanded = false },
                 trailingIcon = if (currentSort == option) {
-                    { Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary) }
+                    { SkinIcon(IconKey.Save, tint = MaterialTheme.colorScheme.primary) }
                 } else null
             )
         }

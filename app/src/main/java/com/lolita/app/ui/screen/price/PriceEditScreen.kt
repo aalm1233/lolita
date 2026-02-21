@@ -4,10 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +26,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +73,7 @@ fun PriceEditScreen(
                 title = { Text(if (priceId == null) "添加价格" else "编辑价格") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
@@ -100,7 +98,7 @@ fun PriceEditScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Icon(Icons.Default.Check, contentDescription = "保存")
+                            SkinIcon(IconKey.Save)
                         }
                     }
                 }
@@ -243,7 +241,7 @@ fun PriceEditScreen(
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
-                                Icon(Icons.Default.DateRange, contentDescription = "选择日期")
+                                SkinIcon(IconKey.CalendarMonth)
                             }
                         },
                         enabled = false,

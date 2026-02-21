@@ -3,12 +3,6 @@ package com.lolita.app.ui.screen.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,6 +20,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Season
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +45,7 @@ fun SeasonManageScreen(
                 title = { Text("季节管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -60,7 +56,7 @@ fun SeasonManageScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加季节", tint = Color.White)
+                SkinIcon(IconKey.Add, tint = Color.White)
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -101,7 +97,7 @@ fun SeasonManageScreen(
                     onClick = { uiState.showDeleteConfirm?.let { viewModel.deleteSeason(it) } },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -133,13 +129,13 @@ private fun SeasonCard(season: Season, onEdit: () -> Unit, onDelete: () -> Unit)
                 Text(season.name, style = MaterialTheme.typography.titleMedium)
             }
             IconButton(onClick = onEdit) {
-                Icon(Icons.Default.Edit, contentDescription = "编辑")
+                SkinIcon(IconKey.Edit)
             }
             IconButton(
                 onClick = onDelete,
                 colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.error)
             ) {
-                Icon(Icons.Default.Delete, contentDescription = "删除")
+                SkinIcon(IconKey.Delete)
             }
         }
     }
@@ -162,7 +158,7 @@ private fun AddSeasonDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) 
         },
         confirmButton = {
             TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
-                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("添加")
             }
@@ -190,7 +186,7 @@ private fun EditSeasonDialog(currentName: String, onDismiss: () -> Unit, onConfi
         },
         confirmButton = {
             TextButton(onClick = { if (name.isNotBlank()) onConfirm(name) }) {
-                Icon(Icons.Default.Check, null, modifier = Modifier.size(16.dp))
+                SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
                 Spacer(Modifier.width(4.dp))
                 Text("保存")
             }

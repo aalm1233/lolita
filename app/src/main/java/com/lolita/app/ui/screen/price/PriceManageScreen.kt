@@ -3,12 +3,6 @@ package com.lolita.app.ui.screen.price
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +24,8 @@ import com.lolita.app.ui.screen.common.LolitaCard
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +47,7 @@ fun PriceManageScreen(
                 title = { Text("价格管理") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -62,7 +58,7 @@ fun PriceManageScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加价格", tint = androidx.compose.ui.graphics.Color.White)
+                SkinIcon(IconKey.Add, tint = androidx.compose.ui.graphics.Color.White)
             }
         }
     ) { padding ->
@@ -119,7 +115,7 @@ fun PriceManageScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -167,7 +163,7 @@ private fun PriceCard(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconButton(onClick = onEdit) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "编辑")
+                        SkinIcon(IconKey.ArrowForward)
                     }
                     IconButton(
                         onClick = onDelete,
@@ -175,7 +171,7 @@ private fun PriceCard(
                             contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Delete, contentDescription = "删除")
+                        SkinIcon(IconKey.Delete)
                     }
                 }
             }

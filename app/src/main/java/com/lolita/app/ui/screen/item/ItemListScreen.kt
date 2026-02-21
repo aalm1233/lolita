@@ -15,22 +15,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,6 +39,8 @@ import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -101,7 +87,7 @@ fun ItemListScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -138,11 +124,7 @@ fun ItemListScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = if (pagerState.currentPage == 2) "添加套装" else "添加服饰",
-                    tint = Color.White
-                )
+                SkinIcon(IconKey.Add, tint = Color.White)
             }
         }
     ) { padding ->
@@ -163,7 +145,7 @@ fun ItemListScreen(
                     value = uiState.searchQuery,
                     onValueChange = { viewModel.search(it) },
                     placeholder = { Text("搜索服饰") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    leadingIcon = { SkinIcon(IconKey.Search) },
                     modifier = Modifier.weight(1f),
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
@@ -174,11 +156,7 @@ fun ItemListScreen(
                 )
                 Box {
                     IconButton(onClick = { showFilterPanel = !showFilterPanel }) {
-                        Icon(
-                            Icons.Default.FilterList,
-                            contentDescription = "过滤",
-                            tint = if (activeFilterCount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        SkinIcon(IconKey.FilterList, tint = if (activeFilterCount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (activeFilterCount > 0) {
                         Surface(
@@ -220,13 +198,12 @@ fun ItemListScreen(
                     }
                 ) {
                     val currentColumns = if (pagerState.currentPage == 2) coordinateUiState.columnsPerRow else uiState.columnsPerRow
-                    Icon(
-                        imageVector = when (currentColumns) {
-                            1 -> Icons.Default.ViewAgenda
-                            2 -> Icons.Default.GridView
-                            else -> Icons.Default.Apps
+                    SkinIcon(
+                        when (currentColumns) {
+                            1 -> IconKey.Sort
+                            2 -> IconKey.Sort
+                            else -> IconKey.Sort
                         },
-                        contentDescription = "切换列数",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -275,14 +252,11 @@ fun ItemListScreen(
                         Spacer(Modifier.weight(1f))
                         Text("查看今日穿搭", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                     } else {
-                        Icon(Icons.Default.AddCircleOutline, contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
+                        SkinIcon(IconKey.Add, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
                         Text("记录今日穿搭", style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium)
                         Spacer(Modifier.weight(1f))
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(16.dp))
+                        SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -527,7 +501,7 @@ private fun ItemCard(
                     }
                     Box {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Default.Edit, contentDescription = "编辑", tint = MaterialTheme.colorScheme.primary)
+                            SkinIcon(IconKey.Edit, tint = MaterialTheme.colorScheme.primary)
                         }
                         DropdownMenu(
                             expanded = showMenu,
@@ -536,13 +510,13 @@ private fun ItemCard(
                             DropdownMenuItem(
                                 text = { Text("编辑") },
                                 onClick = { showMenu = false; onEdit() },
-                                leadingIcon = { Icon(Icons.Default.Edit, null) }
+                                leadingIcon = { SkinIcon(IconKey.Edit) }
                             )
                             DropdownMenuItem(
                                 text = { Text("删除") },
                                 onClick = { showMenu = false; onDelete() },
                                 leadingIcon = {
-                                    Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
+                                    SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
                                 },
                                 colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
                             )
@@ -621,14 +595,7 @@ private fun ItemCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = when (item.status) {
-                                ItemStatus.OWNED -> Icons.Default.Check
-                                ItemStatus.WISHED -> Icons.Default.Favorite
-                            },
-                            contentDescription = null,
-                            modifier = Modifier.size(12.dp)
-                        )
+                        SkinIcon(IconKey.Save, modifier = Modifier.size(12.dp))
                         Text(
                             text = when (item.status) {
                                 ItemStatus.OWNED -> "已拥有"
@@ -782,13 +749,13 @@ private fun ItemGridCard(
                 DropdownMenuItem(
                     text = { Text("编辑") },
                     onClick = { showMenu = false; onEdit() },
-                    leadingIcon = { Icon(Icons.Default.Edit, null) }
+                    leadingIcon = { SkinIcon(IconKey.Edit) }
                 )
                 DropdownMenuItem(
                     text = { Text("删除") },
                     onClick = { showMenu = false; onDelete() },
                     leadingIcon = {
-                        Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error)
+                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
                     },
                     colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
                 )
@@ -907,13 +874,9 @@ private fun FilterOptionRow(
                 },
                 trailingIcon = if (selectedValue != null) {
                     {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "清除",
-                            modifier = Modifier
+                        SkinIcon(IconKey.Close, modifier = Modifier
                                 .size(14.dp)
-                                .clickable { onClear() }
-                        )
+                                .clickable { onClear() })
                     }
                 } else null,
                 colors = FilterChipDefaults.filterChipColors(

@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +25,8 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.theme.SkinType
 import com.lolita.app.ui.theme.getSkinConfig
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @Composable
 fun ThemeSelectScreen(
@@ -42,7 +42,7 @@ fun ThemeSelectScreen(
                 title = { Text("选择皮肤") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )

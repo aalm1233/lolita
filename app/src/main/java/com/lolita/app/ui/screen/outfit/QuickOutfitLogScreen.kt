@@ -7,11 +7,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +23,8 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +45,7 @@ fun QuickOutfitLogScreen(
                 title = { Text(if (uiState.existingLogId != null) "编辑今日穿搭" else "记录今日穿搭") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
@@ -172,9 +169,7 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
                     shape = RoundedCornerShape(10.dp),
                     color = MaterialTheme.colorScheme.primary
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.padding(2.dp))
+                    SkinIcon(IconKey.Save, modifier = Modifier.padding(2.dp), tint = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }

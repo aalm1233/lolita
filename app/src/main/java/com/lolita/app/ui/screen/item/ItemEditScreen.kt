@@ -12,12 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,6 +29,8 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 /**
  * Item Edit Screen - 添加/编辑服饰界面
@@ -101,7 +97,7 @@ fun ItemEditScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -120,7 +116,7 @@ fun ItemEditScreen(
                 title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
@@ -142,7 +138,7 @@ fun ItemEditScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Icon(Icons.Default.Check, "保存")
+                            SkinIcon(IconKey.Save)
                         }
                     }
                 }
@@ -285,7 +281,7 @@ fun ItemEditScreen(
                             contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Delete, null)
+                        SkinIcon(IconKey.Delete)
                         Spacer(Modifier.width(8.dp))
                         Text("删除服饰")
                     }
@@ -317,7 +313,7 @@ private fun BrandSelector(
             onValueChange = {},
             readOnly = true,
             label = { Text("品牌 *") },
-            trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = { SkinIcon(IconKey.Search) },
             modifier = Modifier.fillMaxWidth(),
             isError = isError,
             supportingText = if (isError) {
@@ -349,7 +345,7 @@ private fun BrandSelector(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         placeholder = { Text("搜索品牌...") },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                        leadingIcon = { SkinIcon(IconKey.Search) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp)
@@ -623,11 +619,7 @@ private fun ImageUploaderSection(
                                 containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
                             )
                         ) {
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "删除图片",
-                                tint = MaterialTheme.colorScheme.onError
-                            )
+                            SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.onError)
                         }
                     }
                 } else {
@@ -780,11 +772,7 @@ private fun SizeChartImageSection(
                                 containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
                             )
                         ) {
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "删除尺码表",
-                                tint = MaterialTheme.colorScheme.onError
-                            )
+                            SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.onError)
                         }
                     }
                 } else {

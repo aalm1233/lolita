@@ -5,11 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +29,8 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +64,7 @@ fun CoordinateDetailScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("移除")
                 }
@@ -91,7 +88,7 @@ fun CoordinateDetailScreen(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -112,15 +109,15 @@ fun CoordinateDetailScreen(
                 title = { Text(uiState.coordinate?.name ?: "套装详情") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
                     IconButton(onClick = { onEdit(coordinateId) }) {
-                        Icon(Icons.Default.Edit, contentDescription = "编辑")
+                        SkinIcon(IconKey.Edit)
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
-                        Icon(Icons.Default.Delete, contentDescription = "删除", tint = MaterialTheme.colorScheme.error)
+                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
                     }
                 }
             )
@@ -230,12 +227,7 @@ private fun CoordinateInfoCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
+                SkinIcon(IconKey.Star, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
                 Text(
                     coordinate.name,
                     style = MaterialTheme.typography.headlineSmall,
@@ -417,11 +409,7 @@ private fun CoordinateItemCard(
                 }
             }
             IconButton(onClick = onRemove) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = "移除",
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
-                )
+                SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f))
             }
         }
     }

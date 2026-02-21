@@ -6,12 +6,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.repeatOnLifecycle
@@ -32,6 +26,8 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 /**
  * Item Detail Screen - 服饰详情界面
@@ -93,7 +89,7 @@ fun ItemDetailScreen(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(4.dp))
                     Text("删除")
                 }
@@ -115,19 +111,15 @@ fun ItemDetailScreen(
                     title = { Text("服饰详情") },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                            SkinIcon(IconKey.ArrowBack)
                         }
                     },
                     actions = {
                         IconButton(onClick = { onEdit(itemId) }) {
-                            Icon(Icons.Default.Edit, contentDescription = "编辑")
+                            SkinIcon(IconKey.Edit)
                         }
                         IconButton(onClick = { showDeleteDialog = true }) {
-                            Icon(
-                                Icons.Default.Delete,
-                                contentDescription = "删除",
-                                tint = MaterialTheme.colorScheme.error
-                            )
+                            SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
                         }
                     }
                 )
@@ -349,11 +341,7 @@ fun ItemDetailScreen(
                                 ) {
                                     Text("管理价格", style = MaterialTheme.typography.labelMedium)
                                     Spacer(Modifier.width(4.dp))
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
+                                    SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp))
                                 }
                             }
 
@@ -478,7 +466,7 @@ fun ItemDetailScreen(
                                     colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                                 ) {
-                                    Icon(Icons.Default.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
+                                    SkinIcon(IconKey.Star, modifier = Modifier.size(18.dp))
                                     Spacer(Modifier.width(6.dp))
                                     Text("推荐搭配")
                                 }
@@ -524,26 +512,14 @@ fun ItemDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 IconButton(onClick = onBack) {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "返回",
-                                        tint = Color.White
-                                    )
+                                    SkinIcon(IconKey.ArrowBack, tint = Color.White)
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
                                 IconButton(onClick = { onEdit(itemId) }) {
-                                    Icon(
-                                        Icons.Default.Edit,
-                                        contentDescription = "编辑",
-                                        tint = Color.White
-                                    )
+                                    SkinIcon(IconKey.Edit, tint = Color.White)
                                 }
                                 IconButton(onClick = { showDeleteDialog = true }) {
-                                    Icon(
-                                        Icons.Default.Delete,
-                                        contentDescription = "删除",
-                                        tint = Color.White.copy(alpha = 0.8f)
-                                    )
+                                    SkinIcon(IconKey.Delete, tint = Color.White.copy(alpha = 0.8f))
                                 }
                             }
                         }

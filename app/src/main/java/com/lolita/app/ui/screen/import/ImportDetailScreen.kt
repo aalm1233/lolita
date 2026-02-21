@@ -6,13 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.LinkOff
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +23,8 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +54,7 @@ fun ImportDetailContent(
                 title = { Text("完善导入数据 (${uiState.importItems.size}件)") },
                 navigationIcon = {
                     IconButton(onClick = { showBackConfirmDialog = true }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -179,13 +174,11 @@ private fun ImportItemCard(
                     if (item.paymentRole != null) {
                         if (item.pairedWith != null) {
                             IconButton(onClick = onUnpair, modifier = Modifier.size(32.dp)) {
-                                Icon(Icons.Default.LinkOff, "取消配对",
-                                    tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
+                                SkinIcon(IconKey.LinkOff, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.error)
                             }
                         } else {
                             IconButton(onClick = { showPairDialog = true }, modifier = Modifier.size(32.dp)) {
-                                Icon(Icons.Default.Link, "手动匹配",
-                                    tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                                SkinIcon(IconKey.Link, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -435,8 +428,7 @@ private fun ImportItemCard(
                             onClick = { onUpdate { it.copy(imageUrl = null) } },
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {
-                            Icon(Icons.Default.Close, "移除图片",
-                                tint = MaterialTheme.colorScheme.error)
+                            SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.error)
                         }
                     }
                 } else {
@@ -444,7 +436,7 @@ private fun ImportItemCard(
                         onClick = onPickLocalImage,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Default.AddPhotoAlternate, null, Modifier.size(18.dp))
+                        SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(4.dp))
                         Text("选择图片")
                     }
@@ -515,7 +507,7 @@ private fun ImportBrandSelector(
             onValueChange = {},
             readOnly = true,
             label = { Text("品牌 *") },
-            trailingIcon = { Icon(Icons.Default.Search, null) },
+            trailingIcon = { SkinIcon(IconKey.Search) },
             modifier = Modifier.fillMaxWidth(),
             enabled = false,
             isError = isError,
@@ -545,7 +537,7 @@ private fun ImportBrandSelector(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         placeholder = { Text("搜索品牌...") },
-                        leadingIcon = { Icon(Icons.Default.Search, null) },
+                        leadingIcon = { SkinIcon(IconKey.Search) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp)

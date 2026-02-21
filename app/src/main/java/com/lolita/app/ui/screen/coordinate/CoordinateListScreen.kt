@@ -12,13 +12,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,6 +36,8 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @Composable
 fun CoordinateListScreen(
@@ -87,7 +82,7 @@ fun CoordinateListScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "添加套装", tint = Color.White)
+                SkinIcon(IconKey.Add, tint = Color.White)
             }
         }
     ) { padding ->
@@ -97,7 +92,7 @@ fun CoordinateListScreen(
                     value = uiState.searchQuery,
                     onValueChange = { viewModel.search(it) },
                     placeholder = { Text("搜索套装") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    leadingIcon = { SkinIcon(IconKey.Search) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
@@ -266,7 +261,7 @@ private fun CoordinateCard(
                             ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Star, null, Modifier.size(28.dp), tint = MaterialTheme.colorScheme.primary)
+                            SkinIcon(IconKey.Star, modifier = Modifier.size(28.dp), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -388,7 +383,7 @@ private fun CoordinateGridCard(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Star, null, Modifier.size(36.dp), tint = MaterialTheme.colorScheme.primary)
+                            SkinIcon(IconKey.Star, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
 // __GRID_OVERLAY__

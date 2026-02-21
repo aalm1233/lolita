@@ -5,10 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.model.TaobaoOrder
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,7 +90,7 @@ private fun OrderSelectContent(
                 title = { Text("淘宝订单导入") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -129,7 +127,7 @@ private fun OrderSelectContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Icon(Icons.Default.FileOpen, null, Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                SkinIcon(IconKey.FileOpen, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                 Spacer(Modifier.height(16.dp))
                 Text("选择淘宝订单导出的 Excel 文件",
                     style = MaterialTheme.typography.bodyLarge,
@@ -293,7 +291,7 @@ private fun ImportPrepareContent(
                 title = { Text("数据准备") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 }
             )
@@ -464,11 +462,7 @@ private fun ImportResultContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                Icons.Default.CheckCircle, null,
-                modifier = Modifier.size(72.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
+            SkinIcon(IconKey.CheckCircle, modifier = Modifier.size(72.dp), tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(24.dp))
             Text(
                 "成功导入 ${result?.importedCount ?: 0} 件服饰",

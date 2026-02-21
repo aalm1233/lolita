@@ -6,11 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Checkroom
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,6 +28,8 @@ import com.lolita.app.ui.screen.common.LolitaCard
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,12 +74,12 @@ fun OutfitLogDetailScreen(
                 compact = true,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        SkinIcon(IconKey.ArrowBack)
                     }
                 },
                 actions = {
                     IconButton(onClick = { onNavigateToEdit(logId) }) {
-                        Icon(Icons.Default.Edit, contentDescription = "编辑")
+                        SkinIcon(IconKey.Edit)
                     }
                 }
             )
@@ -192,12 +189,7 @@ fun OutfitLogDetailScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Icon(
-                                Icons.Default.Checkroom,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
+                            SkinIcon(IconKey.Save, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
                             Text(
                                 text = "关联服饰 (${uiState.items.size})",
                                 style = MaterialTheme.typography.titleSmall,
@@ -253,12 +245,7 @@ private fun DetailItemCard(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.Checkroom,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                        SkinIcon(IconKey.Save, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }
@@ -277,7 +264,7 @@ private fun DetailItemCard(
                     contentColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                 )
             ) {
-                Icon(Icons.Default.Delete, contentDescription = "移除", modifier = Modifier.size(18.dp))
+                SkinIcon(IconKey.Delete, modifier = Modifier.size(18.dp))
             }
         }
     }

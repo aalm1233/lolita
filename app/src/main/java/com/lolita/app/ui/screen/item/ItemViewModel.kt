@@ -516,6 +516,11 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
     }
 
+    fun isValid(): Boolean {
+        val state = _uiState.value
+        return state.name.isNotBlank() && state.brandId != 0L && state.categoryId != 0L
+    }
+
     suspend fun saveItem(): Result<Unit> {
         val state = _uiState.value
 

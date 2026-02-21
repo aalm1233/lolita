@@ -318,6 +318,10 @@ class CoordinateEditViewModel(
         )
     }
 
+    fun isValid(): Boolean {
+        return _uiState.value.name.isNotBlank()
+    }
+
     suspend fun save(): Result<Long> {
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {

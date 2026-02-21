@@ -7,12 +7,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +35,7 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,6 +83,14 @@ class WishlistViewModel(
         }
     }
 
+    fun deleteItem(item: Item) {
+        viewModelScope.launch {
+            try {
+                itemRepository.deleteItem(item)
+            } catch (_: Exception) {}
+        }
+    }
+
     private fun applySearch(items: List<Item>, query: String): List<Item> {
         if (query.isBlank()) return items
         return items.filter {
@@ -95,6 +108,33 @@ fun WishlistScreen(
     viewModel: WishlistViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var itemToDelete by remember { mutableStateOf<Item?>(null) }
+
+    if (itemToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { itemToDelete = null },
+            title = { Text("确认删除") },
+            text = { Text("确定要从愿望单删除 \"${itemToDelete?.name}\" 吗？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        itemToDelete?.let { viewModel.deleteItem(it) }
+                        itemToDelete = null
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Default.Delete, null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { itemToDelete = null }) { Text("取消") }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -162,11 +202,15 @@ fun WishlistScreen(
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
                     items(uiState.filteredItems, key = { it.id }) { item ->
-                        WishlistItemCard(
-                            item = item,
-                            onClick = { onNavigateToDetail(item.id) },
-                            modifier = Modifier.animateItem()
-                        )
+                        SwipeToDeleteContainer(
+                            onDelete = { itemToDelete = item }
+                        ) {
+                            WishlistItemCard(
+                                item = item,
+                                onClick = { onNavigateToDetail(item.id) },
+                                modifier = Modifier.animateItem()
+                            )
+                        }
                     }
                 }
             }

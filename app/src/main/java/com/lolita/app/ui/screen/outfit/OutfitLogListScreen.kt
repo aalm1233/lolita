@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -137,13 +138,17 @@ fun OutfitLogListScreen(
                     }
                 } else {
                     items(uiState.logs, key = { it.id }) { log ->
-                        OutfitLogListItemCard(
-                            log = log,
-                            onClick = { onNavigateToDetail(log.id) },
-                            onEdit = { onNavigateToEdit(log.id) },
-                            onDelete = { logToDelete = log },
-                            modifier = Modifier.animateItem()
-                        )
+                        SwipeToDeleteContainer(
+                            onDelete = { logToDelete = log }
+                        ) {
+                            OutfitLogListItemCard(
+                                log = log,
+                                onClick = { onNavigateToDetail(log.id) },
+                                onEdit = { onNavigateToEdit(log.id) },
+                                onDelete = { logToDelete = log },
+                                modifier = Modifier.animateItem()
+                            )
+                        }
                     }
                 }
             }

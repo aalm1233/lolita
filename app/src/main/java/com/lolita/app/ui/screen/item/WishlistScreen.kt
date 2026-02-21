@@ -85,11 +85,18 @@ class WishlistViewModel(
         }
     }
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    fun clearError() { _errorMessage.value = null }
+
     fun deleteItem(item: Item) {
         viewModelScope.launch {
             try {
                 itemRepository.deleteItem(item)
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                _errorMessage.value = e.message ?: "删除失败"
+            }
         }
     }
 
@@ -110,7 +117,19 @@ fun WishlistScreen(
     viewModel: WishlistViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val deleteError by viewModel.errorMessage.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
+
+    deleteError?.let { msg ->
+        AlertDialog(
+            onDismissRequest = { viewModel.clearError() },
+            title = { Text("提示") },
+            text = { Text(msg) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearError() }) { Text("确定") }
+            }
+        )
+    }
 
     if (itemToDelete != null) {
         AlertDialog(

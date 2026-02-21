@@ -153,13 +153,27 @@ private class GothicActionIcons : BaseActionIcons() {
     @Composable override fun Add(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.5f, s * 0.15f), Offset(s * 0.5f, s * 0.85f),
-                strokeWidth = s * 0.06f)
-            drawLine(tint, Offset(s * 0.15f, s * 0.5f), Offset(s * 0.85f, s * 0.5f),
-                strokeWidth = s * 0.06f)
-            // Thorn tips
-            drawLine(tint, Offset(s * 0.5f, s * 0.15f), Offset(s * 0.45f, s * 0.1f), strokeWidth = s * 0.03f)
-            drawLine(tint, Offset(s * 0.5f, s * 0.15f), Offset(s * 0.55f, s * 0.1f), strokeWidth = s * 0.03f)
+            val cx = s * 0.5f; val cy = s * 0.5f
+            val ironCross = Path().apply {
+                moveTo(cx - s * 0.06f, cy - s * 0.08f)
+                lineTo(cx - s * 0.10f, cy - s * 0.38f)
+                lineTo(cx + s * 0.10f, cy - s * 0.38f)
+                lineTo(cx + s * 0.06f, cy - s * 0.08f)
+                moveTo(cx + s * 0.08f, cy - s * 0.06f)
+                lineTo(cx + s * 0.38f, cy - s * 0.10f)
+                lineTo(cx + s * 0.38f, cy + s * 0.10f)
+                lineTo(cx + s * 0.08f, cy + s * 0.06f)
+                moveTo(cx + s * 0.06f, cy + s * 0.08f)
+                lineTo(cx + s * 0.10f, cy + s * 0.38f)
+                lineTo(cx - s * 0.10f, cy + s * 0.38f)
+                lineTo(cx - s * 0.06f, cy + s * 0.08f)
+                moveTo(cx - s * 0.08f, cy + s * 0.06f)
+                lineTo(cx - s * 0.38f, cy + s * 0.10f)
+                lineTo(cx - s * 0.38f, cy - s * 0.10f)
+                lineTo(cx - s * 0.08f, cy - s * 0.06f)
+            }
+            drawPath(ironCross, tint, style = Fill)
+            drawRect(tint, Offset(cx - s * 0.08f, cy - s * 0.08f), Size(s * 0.16f, s * 0.16f))
         }
     }
     @Composable override fun Delete(modifier: Modifier, tint: Color) {
@@ -205,14 +219,29 @@ private class GothicActionIcons : BaseActionIcons() {
     @Composable override fun Sort(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.18f, s * 0.25f), Offset(s * 0.82f, s * 0.25f), strokeWidth = s * 0.05f)
-            drawLine(tint, Offset(s * 0.18f, s * 0.5f), Offset(s * 0.65f, s * 0.5f), strokeWidth = s * 0.05f)
-            drawLine(tint, Offset(s * 0.18f, s * 0.75f), Offset(s * 0.48f, s * 0.75f), strokeWidth = s * 0.05f)
-            // Thorn tips at line ends
-            listOf(0.25f, 0.5f, 0.75f).forEach { y ->
-                drawLine(tint, Offset(s * 0.14f, s * y), Offset(s * 0.1f, s * (y - 0.04f)), strokeWidth = s * 0.03f)
-                drawLine(tint, Offset(s * 0.14f, s * y), Offset(s * 0.1f, s * (y + 0.04f)), strokeWidth = s * 0.03f)
+            data class Bar(val y: Float, val endX: Float)
+            val bars = listOf(
+                Bar(s * 0.28f, s * 0.82f),
+                Bar(s * 0.52f, s * 0.64f),
+                Bar(s * 0.76f, s * 0.46f)
+            )
+            val startX = s * 0.16f
+            bars.forEach { bar ->
+                drawLine(tint, Offset(startX, bar.y), Offset(bar.endX, bar.y), strokeWidth = s * 0.05f)
+                val spire = Path().apply {
+                    moveTo(bar.endX - s * 0.04f, bar.y)
+                    lineTo(bar.endX, bar.y - s * 0.10f)
+                    lineTo(bar.endX + s * 0.04f, bar.y)
+                }
+                drawPath(spire, tint, style = Fill)
             }
+            val wing = Path().apply {
+                moveTo(startX, bars[0].y)
+                lineTo(startX - s * 0.06f, bars[0].y - s * 0.08f)
+                cubicTo(startX - s * 0.02f, bars[0].y - s * 0.04f,
+                    startX - s * 0.02f, bars[0].y - s * 0.02f, startX, bars[0].y)
+            }
+            drawPath(wing, tint, style = Fill)
         }
     }
     @Composable override fun Save(modifier: Modifier, tint: Color) {
@@ -254,10 +283,31 @@ private class GothicActionIcons : BaseActionIcons() {
     @Composable override fun FilterList(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.1f, s * 0.22f), Offset(s * 0.9f, s * 0.22f), strokeWidth = s * 0.05f)
-            drawLine(tint, Offset(s * 0.22f, s * 0.5f), Offset(s * 0.78f, s * 0.5f), strokeWidth = s * 0.05f)
-            drawLine(tint, Offset(s * 0.35f, s * 0.78f), Offset(s * 0.65f, s * 0.78f), strokeWidth = s * 0.05f)
-            drawGothicCross(Offset(s * 0.5f, s * 0.78f), s * 0.04f, tint.copy(alpha = 0.5f))
+            val cx = s * 0.5f
+            data class Bar(val y: Float, val halfW: Float)
+            val bars = listOf(
+                Bar(s * 0.22f, s * 0.38f),
+                Bar(s * 0.50f, s * 0.24f),
+                Bar(s * 0.78f, s * 0.10f)
+            )
+            bars.forEach { bar ->
+                drawLine(tint, Offset(cx - bar.halfW, bar.y), Offset(cx + bar.halfW, bar.y),
+                    strokeWidth = s * 0.05f)
+                drawLine(tint, Offset(cx - bar.halfW, bar.y),
+                    Offset(cx - bar.halfW - s * 0.04f, bar.y - s * 0.04f), strokeWidth = s * 0.03f)
+                drawLine(tint, Offset(cx - bar.halfW, bar.y),
+                    Offset(cx - bar.halfW - s * 0.04f, bar.y + s * 0.04f), strokeWidth = s * 0.03f)
+                drawLine(tint, Offset(cx + bar.halfW, bar.y),
+                    Offset(cx + bar.halfW + s * 0.04f, bar.y - s * 0.04f), strokeWidth = s * 0.03f)
+                drawLine(tint, Offset(cx + bar.halfW, bar.y),
+                    Offset(cx + bar.halfW + s * 0.04f, bar.y + s * 0.04f), strokeWidth = s * 0.03f)
+            }
+            for (i in 0 until bars.size - 1) {
+                val x1 = cx - bars[i].halfW; val x2 = cx - bars[i + 1].halfW
+                drawLine(tint, Offset(x1, bars[i].y), Offset(x2, bars[i + 1].y), strokeWidth = s * 0.03f)
+                val x3 = cx + bars[i].halfW; val x4 = cx + bars[i + 1].halfW
+                drawLine(tint, Offset(x3, bars[i].y), Offset(x4, bars[i + 1].y), strokeWidth = s * 0.03f)
+            }
         }
     }
     @Composable override fun MoreVert(modifier: Modifier, tint: Color) {
@@ -293,6 +343,56 @@ private class GothicActionIcons : BaseActionIcons() {
             }
             drawPath(arrow, tint, style = Fill)
             drawGothicThorn(Offset(s * 0.3f, s * 0.15f), Offset(s * 0.7f, s * 0.15f), s * 0.04f, tint.copy(alpha = 0.4f))
+        }
+    }
+    @Composable override fun ViewAgenda(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = Stroke(s * 0.05f, join = StrokeJoin.Miter)
+            drawRect(tint, Offset(s * 0.14f, s * 0.10f), Size(s * 0.72f, s * 0.32f), style = stroke)
+            drawLine(tint, Offset(s * 0.50f, s * 0.16f), Offset(s * 0.50f, s * 0.34f), strokeWidth = s * 0.025f)
+            drawLine(tint, Offset(s * 0.38f, s * 0.24f), Offset(s * 0.62f, s * 0.24f), strokeWidth = s * 0.025f)
+            drawRect(tint, Offset(s * 0.14f, s * 0.58f), Size(s * 0.72f, s * 0.32f), style = stroke)
+            drawLine(tint, Offset(s * 0.50f, s * 0.64f), Offset(s * 0.50f, s * 0.82f), strokeWidth = s * 0.025f)
+            drawLine(tint, Offset(s * 0.38f, s * 0.72f), Offset(s * 0.62f, s * 0.72f), strokeWidth = s * 0.025f)
+        }
+    }
+    @Composable override fun GridView(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val positions = listOf(
+                Offset(s * 0.30f, s * 0.30f), Offset(s * 0.70f, s * 0.30f),
+                Offset(s * 0.30f, s * 0.70f), Offset(s * 0.70f, s * 0.70f)
+            )
+            val r = s * 0.12f
+            positions.forEach { c ->
+                val diamond = Path().apply {
+                    moveTo(c.x, c.y - r); lineTo(c.x + r, c.y)
+                    lineTo(c.x, c.y + r); lineTo(c.x - r, c.y); close()
+                }
+                drawPath(diamond, tint, style = Stroke(s * 0.045f, join = StrokeJoin.Miter))
+            }
+            drawLine(tint, Offset(s * 0.30f, s * 0.42f), Offset(s * 0.30f, s * 0.58f), strokeWidth = s * 0.025f)
+            drawLine(tint, Offset(s * 0.70f, s * 0.42f), Offset(s * 0.70f, s * 0.58f), strokeWidth = s * 0.025f)
+            drawLine(tint, Offset(s * 0.42f, s * 0.30f), Offset(s * 0.58f, s * 0.30f), strokeWidth = s * 0.025f)
+            drawLine(tint, Offset(s * 0.42f, s * 0.70f), Offset(s * 0.58f, s * 0.70f), strokeWidth = s * 0.025f)
+        }
+    }
+    @Composable override fun Apps(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s / 4f
+            val r = s * 0.06f
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    val cx = gap + col * gap; val cy = gap + row * gap
+                    val diamond = Path().apply {
+                        moveTo(cx, cy - r); lineTo(cx + r, cy)
+                        lineTo(cx, cy + r); lineTo(cx - r, cy); close()
+                    }
+                    drawPath(diamond, tint, style = Fill)
+                }
+            }
         }
     }
 }
@@ -495,10 +595,19 @@ private class GothicArrowIcons : BaseArrowIcons() {
     @Composable override fun ArrowBack(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            val arr = Path().apply {
-                moveTo(s * 0.7f, s * 0.18f); lineTo(s * 0.25f, s * 0.5f); lineTo(s * 0.7f, s * 0.82f)
+            val blade = Path().apply {
+                moveTo(s * 0.18f, s * 0.50f)
+                lineTo(s * 0.42f, s * 0.35f)
+                lineTo(s * 0.78f, s * 0.40f)
+                lineTo(s * 0.78f, s * 0.60f)
+                lineTo(s * 0.42f, s * 0.65f)
+                close()
             }
-            drawPath(arr, tint, style = gothicStroke(s))
+            drawPath(blade, tint, style = Stroke(s * 0.05f, join = StrokeJoin.Miter))
+            drawLine(tint, Offset(s * 0.55f, s * 0.38f), Offset(s * 0.52f, s * 0.30f), strokeWidth = s * 0.03f)
+            drawLine(tint, Offset(s * 0.65f, s * 0.39f), Offset(s * 0.62f, s * 0.31f), strokeWidth = s * 0.03f)
+            drawLine(tint, Offset(s * 0.55f, s * 0.62f), Offset(s * 0.52f, s * 0.70f), strokeWidth = s * 0.03f)
+            drawLine(tint, Offset(s * 0.65f, s * 0.61f), Offset(s * 0.62f, s * 0.69f), strokeWidth = s * 0.03f)
         }
     }
     @Composable override fun ArrowForward(modifier: Modifier, tint: Color) {

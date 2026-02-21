@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -162,12 +163,25 @@ private class ChineseActionIcons : BaseActionIcons() {
     @Composable override fun Add(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            // Brush stroke "十"
-            drawLine(tint, Offset(s * 0.5f, s * 0.15f), Offset(s * 0.5f, s * 0.85f),
-                strokeWidth = s * 0.09f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.15f, s * 0.5f), Offset(s * 0.85f, s * 0.5f),
-                strokeWidth = s * 0.09f, cap = StrokeCap.Round)
-            drawInkSplash(Offset(s * 0.82f, s * 0.18f), s * 0.04f, tint)
+            val cx = s * 0.5f; val cy = s * 0.5f
+            val thick = s * 0.11f
+            val vStroke = Path().apply {
+                moveTo(cx - thick * 0.5f, s * 0.14f)
+                lineTo(cx + thick * 0.5f, s * 0.14f)
+                lineTo(cx + thick * 0.45f, s * 0.86f)
+                lineTo(cx - thick * 0.45f, s * 0.86f)
+                close()
+            }
+            drawPath(vStroke, tint, style = Fill)
+            val hStroke = Path().apply {
+                moveTo(s * 0.14f, cy - thick * 0.5f)
+                lineTo(s * 0.86f, cy - thick * 0.5f)
+                lineTo(s * 0.86f, cy + thick * 0.45f)
+                lineTo(s * 0.14f, cy + thick * 0.45f)
+                close()
+            }
+            drawPath(hStroke, tint, style = Fill)
+            drawInkSplash(Offset(s * 0.82f, s * 0.18f), s * 0.035f, tint)
         }
     }
     @Composable override fun Delete(modifier: Modifier, tint: Color) {
@@ -224,13 +238,26 @@ private class ChineseActionIcons : BaseActionIcons() {
     @Composable override fun Sort(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            // Brush strokes with varying thickness
-            drawLine(tint, Offset(s * 0.15f, s * 0.25f), Offset(s * 0.85f, s * 0.25f),
-                strokeWidth = s * 0.09f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.15f, s * 0.5f), Offset(s * 0.65f, s * 0.5f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.15f, s * 0.75f), Offset(s * 0.45f, s * 0.75f),
-                strokeWidth = s * 0.05f, cap = StrokeCap.Round)
+            data class Mountain(val y: Float, val startX: Float, val endX: Float, val alpha: Float, val thick: Float)
+            val mountains = listOf(
+                Mountain(s * 0.28f, s * 0.10f, s * 0.90f, 0.4f, s * 0.06f),
+                Mountain(s * 0.52f, s * 0.15f, s * 0.70f, 0.7f, s * 0.07f),
+                Mountain(s * 0.76f, s * 0.20f, s * 0.50f, 1.0f, s * 0.08f)
+            )
+            mountains.forEach { m ->
+                val w = m.endX - m.startX
+                val peak = Path().apply {
+                    moveTo(m.startX, m.y)
+                    cubicTo(m.startX + w * 0.25f, m.y - s * 0.06f,
+                        m.startX + w * 0.40f, m.y - s * 0.08f,
+                        m.startX + w * 0.50f, m.y - s * 0.03f)
+                    cubicTo(m.startX + w * 0.65f, m.y + s * 0.02f,
+                        m.startX + w * 0.80f, m.y - s * 0.05f,
+                        m.endX, m.y)
+                }
+                drawPath(peak, tint.copy(alpha = m.alpha),
+                    style = Stroke(m.thick, cap = StrokeCap.Round))
+            }
         }
     }
     @Composable override fun Save(modifier: Modifier, tint: Color) {
@@ -278,14 +305,23 @@ private class ChineseActionIcons : BaseActionIcons() {
     @Composable override fun FilterList(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            // Bamboo sieve shape
-            drawLine(tint, Offset(s * 0.1f, s * 0.22f), Offset(s * 0.9f, s * 0.22f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.22f, s * 0.48f), Offset(s * 0.78f, s * 0.48f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.35f, s * 0.74f), Offset(s * 0.65f, s * 0.74f),
-                strokeWidth = s * 0.05f, cap = StrokeCap.Round)
-            drawChineseCloud(Offset(s * 0.8f, s * 0.74f), s * 0.07f, tint.copy(alpha = 0.35f))
+            val pivotX = s * 0.50f; val pivotY = s * 0.88f
+            data class Rib(val radius: Float, val thick: Float, val sweep: Float)
+            val ribs = listOf(
+                Rib(s * 0.62f, s * 0.07f, 100f),
+                Rib(s * 0.44f, s * 0.06f, 80f),
+                Rib(s * 0.26f, s * 0.05f, 60f)
+            )
+            ribs.forEach { rib ->
+                val rect = Rect(
+                    pivotX - rib.radius, pivotY - rib.radius,
+                    pivotX + rib.radius, pivotY + rib.radius
+                )
+                drawArc(tint, startAngle = -90f - rib.sweep / 2, sweepAngle = rib.sweep,
+                    useCenter = false, topLeft = rect.topLeft, size = rect.size,
+                    style = Stroke(rib.thick, cap = StrokeCap.Round))
+            }
+            drawCircle(tint, radius = s * 0.04f, center = Offset(pivotX, pivotY))
         }
     }
     @Composable override fun MoreVert(modifier: Modifier, tint: Color) {
@@ -319,6 +355,50 @@ private class ChineseActionIcons : BaseActionIcons() {
             }
             drawPath(arrow, tint, style = Fill)
             drawChineseCloud(Offset(s * 0.5f, s * 0.5f), s * 0.08f, tint.copy(alpha = 0.3f))
+        }
+    }
+    @Composable override fun ViewAgenda(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = brushStroke(s)
+            drawRoundRect(tint, Offset(s * 0.20f, s * 0.12f), Size(s * 0.60f, s * 0.30f),
+                cornerRadius = CornerRadius(s * 0.03f), style = stroke)
+            drawCircle(tint, s * 0.045f, Offset(s * 0.18f, s * 0.27f))
+            drawCircle(tint, s * 0.045f, Offset(s * 0.82f, s * 0.27f))
+            drawRoundRect(tint, Offset(s * 0.20f, s * 0.58f), Size(s * 0.60f, s * 0.30f),
+                cornerRadius = CornerRadius(s * 0.03f), style = stroke)
+            drawCircle(tint, s * 0.045f, Offset(s * 0.18f, s * 0.73f))
+            drawCircle(tint, s * 0.045f, Offset(s * 0.82f, s * 0.73f))
+        }
+    }
+    @Composable override fun GridView(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val pad = s * 0.12f
+            val inner = s - pad * 2
+            val mid = pad + inner / 2
+            drawRect(tint, Offset(pad, pad), Size(inner, inner),
+                style = Stroke(s * 0.06f, cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawLine(tint, Offset(mid, pad), Offset(mid, pad + inner),
+                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
+            drawLine(tint, Offset(pad, mid), Offset(pad + inner, mid),
+                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
+        }
+    }
+    @Composable override fun Apps(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s / 4f
+            val r = s * 0.055f
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    val cx = gap + col * gap; val cy = gap + row * gap
+                    drawRoundRect(tint,
+                        Offset(cx - r, cy - r), Size(r * 2, r * 2),
+                        cornerRadius = CornerRadius(r * 0.3f),
+                        style = Fill)
+                }
+            }
         }
     }
 }
@@ -518,11 +598,23 @@ private class ChineseArrowIcons : BaseArrowIcons() {
     @Composable override fun ArrowBack(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            val arr = Path().apply {
-                moveTo(s * 0.68f, s * 0.18f); lineTo(s * 0.28f, s * 0.5f); lineTo(s * 0.68f, s * 0.82f)
+            val stroke = Path().apply {
+                moveTo(s * 0.78f, s * 0.20f)
+                cubicTo(s * 0.60f, s * 0.30f, s * 0.40f, s * 0.42f, s * 0.20f, s * 0.52f)
             }
-            drawPath(arr, tint, style = brushStroke(s))
-            drawInkSplash(Offset(s * 0.28f, s * 0.5f), s * 0.04f, tint)
+            drawPath(stroke, tint, style = Stroke(s * 0.10f, cap = StrokeCap.Round))
+            val taper = Path().apply {
+                moveTo(s * 0.50f, s * 0.38f)
+                cubicTo(s * 0.38f, s * 0.44f, s * 0.28f, s * 0.48f, s * 0.18f, s * 0.52f)
+            }
+            drawPath(taper, tint, style = Stroke(s * 0.04f, cap = StrokeCap.Round))
+            drawLine(tint.copy(alpha = 0.4f),
+                Offset(s * 0.22f, s * 0.56f), Offset(s * 0.16f, s * 0.60f),
+                strokeWidth = s * 0.025f, cap = StrokeCap.Round)
+            drawLine(tint.copy(alpha = 0.3f),
+                Offset(s * 0.26f, s * 0.58f), Offset(s * 0.20f, s * 0.63f),
+                strokeWidth = s * 0.02f, cap = StrokeCap.Round)
+            drawInkSplash(Offset(s * 0.78f, s * 0.20f), s * 0.04f, tint)
         }
     }
     @Composable override fun ArrowForward(modifier: Modifier, tint: Color) {

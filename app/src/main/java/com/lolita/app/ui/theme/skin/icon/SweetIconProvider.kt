@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -152,12 +153,25 @@ private class SweetNavigationIcons : BaseNavigationIcons() {
 private class SweetActionIcons : BaseActionIcons() {
     @Composable override fun Add(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
-            val s = size.minDimension; val c = Offset(s * 0.5f, s * 0.5f)
-            drawLine(tint, Offset(s * 0.5f, s * 0.2f), Offset(s * 0.5f, s * 0.8f),
-                strokeWidth = s * 0.09f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.2f, s * 0.5f), Offset(s * 0.8f, s * 0.5f),
-                strokeWidth = s * 0.09f, cap = StrokeCap.Round)
-            drawSweetFlower(Offset(s * 0.5f, s * 0.2f), s * 0.06f, tint.copy(alpha = 0.5f), 4)
+            val s = size.minDimension
+            val cx = s * 0.5f; val cy = s * 0.5f
+            val petalR = s * 0.12f
+            listOf(
+                Offset(cx, cy - s * 0.28f),
+                Offset(cx + s * 0.28f, cy),
+                Offset(cx, cy + s * 0.28f),
+                Offset(cx - s * 0.28f, cy)
+            ).forEach { center ->
+                val petal = Path().apply {
+                    moveTo(cx, cy)
+                    cubicTo(center.x - petalR * 0.8f, center.y - petalR * 0.8f,
+                        center.x - petalR, center.y + petalR * 0.3f, center.x, center.y)
+                    cubicTo(center.x + petalR, center.y + petalR * 0.3f,
+                        center.x + petalR * 0.8f, center.y - petalR * 0.8f, cx, cy)
+                }
+                drawPath(petal, tint, style = Fill)
+            }
+            drawCircle(tint, radius = s * 0.06f, center = Offset(cx, cy))
         }
     }
     @Composable override fun Delete(modifier: Modifier, tint: Color) {
@@ -206,13 +220,18 @@ private class SweetActionIcons : BaseActionIcons() {
     @Composable override fun Sort(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.2f, s * 0.28f), Offset(s * 0.8f, s * 0.28f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.2f, s * 0.5f), Offset(s * 0.65f, s * 0.5f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.2f, s * 0.72f), Offset(s * 0.5f, s * 0.72f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawSweetHeart(Offset(s * 0.85f, s * 0.28f), s * 0.05f, tint.copy(alpha = 0.5f))
+            data class Bar(val y: Float, val endX: Float)
+            val bars = listOf(
+                Bar(s * 0.25f, s * 0.80f),
+                Bar(s * 0.50f, s * 0.62f),
+                Bar(s * 0.75f, s * 0.44f)
+            )
+            val startX = s * 0.18f
+            bars.forEach { bar ->
+                drawLine(tint, Offset(startX, bar.y), Offset(bar.endX - s * 0.04f, bar.y),
+                    strokeWidth = s * 0.06f, cap = StrokeCap.Round)
+                drawCircle(tint, radius = s * 0.055f, center = Offset(bar.endX, bar.y))
+            }
         }
     }
     @Composable override fun Save(modifier: Modifier, tint: Color) {
@@ -254,13 +273,33 @@ private class SweetActionIcons : BaseActionIcons() {
     @Composable override fun FilterList(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.12f, s * 0.25f), Offset(s * 0.88f, s * 0.25f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.25f, s * 0.5f), Offset(s * 0.75f, s * 0.5f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.38f, s * 0.75f), Offset(s * 0.62f, s * 0.75f),
-                strokeWidth = s * 0.07f, cap = StrokeCap.Round)
-            drawSweetBow(Offset(s * 0.5f, s * 0.75f), s * 0.08f, tint.copy(alpha = 0.5f))
+            val cx = s * 0.5f
+            data class Tier(val y: Float, val halfW: Float, val thick: Float)
+            val tiers = listOf(
+                Tier(s * 0.30f, s * 0.38f, s * 0.08f),
+                Tier(s * 0.52f, s * 0.26f, s * 0.07f),
+                Tier(s * 0.74f, s * 0.14f, s * 0.06f)
+            )
+            tiers.forEach { tier ->
+                val wave = Path().apply {
+                    moveTo(cx - tier.halfW, tier.y)
+                    val segments = 4
+                    val segW = tier.halfW * 2 / segments
+                    for (i in 0 until segments) {
+                        val x0 = cx - tier.halfW + segW * i
+                        val x1 = x0 + segW
+                        val cpY = if (i % 2 == 0) tier.y - s * 0.03f else tier.y + s * 0.03f
+                        quadraticBezierTo(x0 + segW / 2, cpY, x1, tier.y)
+                    }
+                }
+                drawPath(wave, tint, style = Stroke(tier.thick, cap = StrokeCap.Round))
+            }
+            drawCircle(tint, radius = s * 0.04f, center = Offset(cx, s * 0.18f))
+            val stem = Path().apply {
+                moveTo(cx, s * 0.18f)
+                cubicTo(cx + s * 0.03f, s * 0.14f, cx + s * 0.05f, s * 0.12f, cx + s * 0.04f, s * 0.10f)
+            }
+            drawPath(stem, tint, style = Stroke(s * 0.025f, cap = StrokeCap.Round))
         }
     }
     @Composable override fun MoreVert(modifier: Modifier, tint: Color) {
@@ -295,6 +334,53 @@ private class SweetActionIcons : BaseActionIcons() {
             }
             drawPath(arrow, tint, style = Fill)
             drawSweetFlower(Offset(s * 0.5f, s * 0.5f), s * 0.06f, tint.copy(alpha = 0.4f), 4)
+        }
+    }
+    @Composable override fun ViewAgenda(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val r = s * 0.06f
+            drawRoundRect(tint, topLeft = Offset(s * 0.15f, s * 0.12f),
+                size = Size(s * 0.70f, s * 0.30f),
+                cornerRadius = CornerRadius(r, r), style = Stroke(s * 0.06f, cap = StrokeCap.Round))
+            drawRoundRect(tint, topLeft = Offset(s * 0.15f, s * 0.58f),
+                size = Size(s * 0.70f, s * 0.30f),
+                cornerRadius = CornerRadius(r, r), style = Stroke(s * 0.06f, cap = StrokeCap.Round))
+            drawSweetHeart(Offset(s * 0.78f, s * 0.18f), s * 0.04f, tint.copy(alpha = 0.5f))
+            drawSweetHeart(Offset(s * 0.78f, s * 0.64f), s * 0.04f, tint.copy(alpha = 0.5f))
+        }
+    }
+    @Composable override fun GridView(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s * 0.08f
+            val cellSize = (s - gap * 3) / 2
+            val r = cellSize * 0.35f
+            for (row in 0..1) {
+                for (col in 0..1) {
+                    val x = gap + col * (cellSize + gap)
+                    val y = gap + row * (cellSize + gap)
+                    drawRoundRect(tint, topLeft = Offset(x, y),
+                        size = Size(cellSize, cellSize),
+                        cornerRadius = CornerRadius(r, r),
+                        style = Stroke(s * 0.055f, cap = StrokeCap.Round))
+                }
+            }
+        }
+    }
+    @Composable override fun Apps(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s / 4f
+            val sizes = listOf(0.065f, 0.055f, 0.06f, 0.055f, 0.07f, 0.055f, 0.06f, 0.055f, 0.065f)
+            var idx = 0
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    drawCircle(tint, radius = s * sizes[idx],
+                        center = Offset(gap + col * gap, gap + row * gap))
+                    idx++
+                }
+            }
         }
     }
 }
@@ -506,13 +592,23 @@ private class SweetArrowIcons : BaseArrowIcons() {
     @Composable override fun ArrowBack(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            val arr = Path().apply {
-                moveTo(s * 0.65f, s * 0.2f)
-                lineTo(s * 0.3f, s * 0.5f)
-                lineTo(s * 0.65f, s * 0.8f)
+            val ribbon = Path().apply {
+                moveTo(s * 0.75f, s * 0.22f)
+                cubicTo(s * 0.55f, s * 0.28f, s * 0.40f, s * 0.40f, s * 0.22f, s * 0.50f)
+                cubicTo(s * 0.40f, s * 0.60f, s * 0.55f, s * 0.72f, s * 0.75f, s * 0.78f)
             }
-            drawPath(arr, tint, style = sweetStroke(s))
-            drawSweetPetal(Offset(s * 0.65f, s * 0.2f), s * 0.05f, -30f, tint.copy(alpha = 0.4f))
+            drawPath(ribbon, tint, style = sweetStroke(s))
+            drawCircle(tint, radius = s * 0.04f, center = Offset(s * 0.22f, s * 0.50f))
+            val bowTop = Path().apply {
+                moveTo(s * 0.75f, s * 0.22f)
+                cubicTo(s * 0.82f, s * 0.15f, s * 0.88f, s * 0.18f, s * 0.85f, s * 0.26f)
+            }
+            drawPath(bowTop, tint.copy(alpha = 0.6f), style = Stroke(s * 0.05f, cap = StrokeCap.Round))
+            val bowBot = Path().apply {
+                moveTo(s * 0.75f, s * 0.78f)
+                cubicTo(s * 0.82f, s * 0.85f, s * 0.88f, s * 0.82f, s * 0.85f, s * 0.74f)
+            }
+            drawPath(bowBot, tint.copy(alpha = 0.6f), style = Stroke(s * 0.05f, cap = StrokeCap.Round))
         }
     }
     @Composable override fun ArrowForward(modifier: Modifier, tint: Color) {

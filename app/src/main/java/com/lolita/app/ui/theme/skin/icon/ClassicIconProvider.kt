@@ -165,13 +165,40 @@ private class ClassicActionIcons : BaseActionIcons() {
     @Composable override fun Add(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.5f, s * 0.18f), Offset(s * 0.5f, s * 0.82f),
-                strokeWidth = s * 0.065f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.18f, s * 0.5f), Offset(s * 0.82f, s * 0.5f),
-                strokeWidth = s * 0.065f, cap = StrokeCap.Round)
-            // Scrollwork tips
-            drawScrollwork(Offset(s * 0.5f, s * 0.18f), s * 0.04f, tint.copy(alpha = 0.5f))
-            drawScrollwork(Offset(s * 0.82f, s * 0.5f), s * 0.04f, tint.copy(alpha = 0.5f))
+            val cx = s * 0.5f; val cy = s * 0.5f
+            val vArm = Path().apply {
+                moveTo(cx - s * 0.04f, cy - s * 0.06f)
+                lineTo(cx - s * 0.08f, cy - s * 0.34f)
+                cubicTo(cx - s * 0.14f, cy - s * 0.38f, cx - s * 0.12f, cy - s * 0.44f, cx, cy - s * 0.40f)
+                cubicTo(cx + s * 0.12f, cy - s * 0.44f, cx + s * 0.14f, cy - s * 0.38f, cx + s * 0.08f, cy - s * 0.34f)
+                lineTo(cx + s * 0.04f, cy - s * 0.06f)
+            }
+            drawPath(vArm, tint, style = Fill)
+            val bArm = Path().apply {
+                moveTo(cx - s * 0.04f, cy + s * 0.06f)
+                lineTo(cx - s * 0.08f, cy + s * 0.34f)
+                cubicTo(cx - s * 0.14f, cy + s * 0.38f, cx - s * 0.12f, cy + s * 0.44f, cx, cy + s * 0.40f)
+                cubicTo(cx + s * 0.12f, cy + s * 0.44f, cx + s * 0.14f, cy + s * 0.38f, cx + s * 0.08f, cy + s * 0.34f)
+                lineTo(cx + s * 0.04f, cy + s * 0.06f)
+            }
+            drawPath(bArm, tint, style = Fill)
+            val rArm = Path().apply {
+                moveTo(cx + s * 0.06f, cy - s * 0.04f)
+                lineTo(cx + s * 0.34f, cy - s * 0.08f)
+                cubicTo(cx + s * 0.38f, cy - s * 0.14f, cx + s * 0.44f, cy - s * 0.12f, cx + s * 0.40f, cy)
+                cubicTo(cx + s * 0.44f, cy + s * 0.12f, cx + s * 0.38f, cy + s * 0.14f, cx + s * 0.34f, cy + s * 0.08f)
+                lineTo(cx + s * 0.06f, cy + s * 0.04f)
+            }
+            drawPath(rArm, tint, style = Fill)
+            val lArm = Path().apply {
+                moveTo(cx - s * 0.06f, cy - s * 0.04f)
+                lineTo(cx - s * 0.34f, cy - s * 0.08f)
+                cubicTo(cx - s * 0.38f, cy - s * 0.14f, cx - s * 0.44f, cy - s * 0.12f, cx - s * 0.40f, cy)
+                cubicTo(cx - s * 0.44f, cy + s * 0.12f, cx - s * 0.38f, cy + s * 0.14f, cx - s * 0.34f, cy + s * 0.08f)
+                lineTo(cx - s * 0.06f, cy + s * 0.04f)
+            }
+            drawPath(lArm, tint, style = Fill)
+            drawCircle(tint, s * 0.06f, Offset(cx, cy))
         }
     }
     @Composable override fun Delete(modifier: Modifier, tint: Color) {
@@ -228,14 +255,24 @@ private class ClassicActionIcons : BaseActionIcons() {
     @Composable override fun Sort(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.18f, s * 0.25f), Offset(s * 0.82f, s * 0.25f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.18f, s * 0.5f), Offset(s * 0.65f, s * 0.5f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.18f, s * 0.75f), Offset(s * 0.48f, s * 0.75f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            // Scrollwork end caps
-            drawScrollwork(Offset(s * 0.82f, s * 0.25f), s * 0.03f, tint.copy(alpha = 0.4f))
+            data class Bar(val y: Float, val endX: Float)
+            val bars = listOf(
+                Bar(s * 0.25f, s * 0.82f),
+                Bar(s * 0.50f, s * 0.64f),
+                Bar(s * 0.75f, s * 0.46f)
+            )
+            val colX = s * 0.18f
+            drawLine(tint, Offset(colX, s * 0.15f), Offset(colX, s * 0.85f),
+                strokeWidth = s * 0.05f, cap = StrokeCap.Round)
+            drawLine(tint, Offset(colX - s * 0.06f, s * 0.85f), Offset(colX + s * 0.06f, s * 0.85f),
+                strokeWidth = s * 0.04f, cap = StrokeCap.Round)
+            drawLine(tint, Offset(colX - s * 0.06f, s * 0.15f), Offset(colX + s * 0.06f, s * 0.15f),
+                strokeWidth = s * 0.04f, cap = StrokeCap.Round)
+            bars.forEach { bar ->
+                drawLine(tint, Offset(colX, bar.y), Offset(bar.endX, bar.y),
+                    strokeWidth = s * 0.055f, cap = StrokeCap.Round)
+                drawCircle(tint, s * 0.04f, Offset(bar.endX, bar.y))
+            }
         }
     }
     @Composable override fun Save(modifier: Modifier, tint: Color) {
@@ -283,13 +320,23 @@ private class ClassicActionIcons : BaseActionIcons() {
     @Composable override fun FilterList(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            drawLine(tint, Offset(s * 0.1f, s * 0.22f), Offset(s * 0.9f, s * 0.22f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.22f, s * 0.5f), Offset(s * 0.78f, s * 0.5f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawLine(tint, Offset(s * 0.35f, s * 0.78f), Offset(s * 0.65f, s * 0.78f),
-                strokeWidth = s * 0.06f, cap = StrokeCap.Round)
-            drawScrollwork(Offset(s * 0.5f, s * 0.78f), s * 0.04f, tint.copy(alpha = 0.4f))
+            val cx = s * 0.5f
+            data class Bar(val y: Float, val halfW: Float)
+            val bars = listOf(
+                Bar(s * 0.24f, s * 0.36f),
+                Bar(s * 0.50f, s * 0.24f),
+                Bar(s * 0.76f, s * 0.12f)
+            )
+            drawLine(tint, Offset(cx, s * 0.18f), Offset(cx, s * 0.82f),
+                strokeWidth = s * 0.04f, cap = StrokeCap.Round)
+            bars.forEach { bar ->
+                drawLine(tint, Offset(cx - bar.halfW, bar.y), Offset(cx + bar.halfW, bar.y),
+                    strokeWidth = s * 0.055f, cap = StrokeCap.Round)
+                drawCircle(tint, s * 0.035f, Offset(cx - bar.halfW, bar.y))
+                drawCircle(tint, s * 0.035f, Offset(cx + bar.halfW, bar.y))
+                drawScrollwork(Offset(cx - bar.halfW - s * 0.01f, bar.y), s * 0.025f, tint.copy(alpha = 0.4f))
+                drawScrollwork(Offset(cx + bar.halfW + s * 0.01f, bar.y), s * 0.025f, tint.copy(alpha = 0.4f))
+            }
         }
     }
     @Composable override fun MoreVert(modifier: Modifier, tint: Color) {
@@ -323,6 +370,58 @@ private class ClassicActionIcons : BaseActionIcons() {
             }
             drawPath(arrow, tint, style = Fill)
             drawScrollwork(Offset(s * 0.5f, s * 0.5f), s * 0.05f, tint.copy(alpha = 0.3f))
+        }
+    }
+    @Composable override fun ViewAgenda(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = classicStroke(s)
+            drawRoundRect(tint, Offset(s * 0.14f, s * 0.10f), Size(s * 0.72f, s * 0.32f),
+                cornerRadius = CornerRadius(s * 0.02f), style = stroke)
+            drawLine(tint.copy(alpha = 0.3f), Offset(s * 0.22f, s * 0.20f), Offset(s * 0.78f, s * 0.20f),
+                strokeWidth = s * 0.02f)
+            drawLine(tint.copy(alpha = 0.3f), Offset(s * 0.22f, s * 0.30f), Offset(s * 0.78f, s * 0.30f),
+                strokeWidth = s * 0.02f)
+            drawRoundRect(tint, Offset(s * 0.14f, s * 0.58f), Size(s * 0.72f, s * 0.32f),
+                cornerRadius = CornerRadius(s * 0.02f), style = stroke)
+            drawLine(tint.copy(alpha = 0.3f), Offset(s * 0.22f, s * 0.68f), Offset(s * 0.78f, s * 0.68f),
+                strokeWidth = s * 0.02f)
+            drawLine(tint.copy(alpha = 0.3f), Offset(s * 0.22f, s * 0.78f), Offset(s * 0.78f, s * 0.78f),
+                strokeWidth = s * 0.02f)
+        }
+    }
+    @Composable override fun GridView(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s * 0.08f
+            val cellSize = (s - gap * 3) / 2
+            val stroke = Stroke(s * 0.05f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            for (row in 0..1) {
+                for (col in 0..1) {
+                    val x = gap + col * (cellSize + gap)
+                    val y = gap + row * (cellSize + gap)
+                    drawRoundRect(tint, Offset(x, y), Size(cellSize, cellSize),
+                        cornerRadius = CornerRadius(s * 0.02f), style = stroke)
+                    drawScrollwork(Offset(x + cellSize * 0.5f, y + cellSize * 0.5f),
+                        s * 0.03f, tint.copy(alpha = 0.35f))
+                }
+            }
+        }
+    }
+    @Composable override fun Apps(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val gap = s / 4f
+            val innerR = s * 0.045f
+            val outerR = s * 0.065f
+            for (row in 0..2) {
+                for (col in 0..2) {
+                    val cx = gap + col * gap; val cy = gap + row * gap
+                    drawCircle(tint.copy(alpha = 0.35f), outerR, Offset(cx, cy),
+                        style = Stroke(s * 0.02f))
+                    drawCircle(tint, innerR, Offset(cx, cy), style = Fill)
+                }
+            }
         }
     }
 }
@@ -532,11 +631,34 @@ private class ClassicArrowIcons : BaseArrowIcons() {
     @Composable override fun ArrowBack(modifier: Modifier, tint: Color) {
         Canvas(modifier.size(24.dp)) {
             val s = size.minDimension
-            val arr = Path().apply {
-                moveTo(s * 0.68f, s * 0.18f); lineTo(s * 0.28f, s * 0.5f); lineTo(s * 0.68f, s * 0.82f)
+            val shaft = Path().apply {
+                moveTo(s * 0.75f, s * 0.50f)
+                lineTo(s * 0.30f, s * 0.50f)
             }
-            drawPath(arr, tint, style = classicStroke(s))
-            drawScrollwork(Offset(s * 0.68f, s * 0.18f), s * 0.04f, tint.copy(alpha = 0.4f))
+            drawPath(shaft, tint, style = classicStroke(s))
+            val chevron = Path().apply {
+                moveTo(s * 0.48f, s * 0.28f)
+                lineTo(s * 0.26f, s * 0.50f)
+                lineTo(s * 0.48f, s * 0.72f)
+            }
+            drawPath(chevron, tint, style = classicStroke(s))
+            val voluteTop = Path().apply {
+                moveTo(s * 0.75f, s * 0.50f)
+                cubicTo(s * 0.80f, s * 0.42f, s * 0.86f, s * 0.36f, s * 0.82f, s * 0.30f)
+                cubicTo(s * 0.78f, s * 0.26f, s * 0.74f, s * 0.30f, s * 0.76f, s * 0.34f)
+            }
+            drawPath(voluteTop, tint.copy(alpha = 0.6f), style = thinClassic(s))
+            val voluteBot = Path().apply {
+                moveTo(s * 0.75f, s * 0.50f)
+                cubicTo(s * 0.80f, s * 0.58f, s * 0.86f, s * 0.64f, s * 0.82f, s * 0.70f)
+                cubicTo(s * 0.78f, s * 0.74f, s * 0.74f, s * 0.70f, s * 0.76f, s * 0.66f)
+            }
+            drawPath(voluteBot, tint.copy(alpha = 0.6f), style = thinClassic(s))
+            val spiral = Path().apply {
+                moveTo(s * 0.26f, s * 0.50f)
+                cubicTo(s * 0.22f, s * 0.47f, s * 0.19f, s * 0.50f, s * 0.22f, s * 0.53f)
+            }
+            drawPath(spiral, tint.copy(alpha = 0.5f), style = thinClassic(s))
         }
     }
     @Composable override fun ArrowForward(modifier: Modifier, tint: Color) {

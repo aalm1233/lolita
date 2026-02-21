@@ -130,4 +130,13 @@ class ChineseAnimationProvider : SkinAnimationProvider {
         animationSpec = tween(400, easing = CubicBezierEasing(0.4f, 0f, 0.2f, 1f)),
         flingFrictionMultiplier = 1.0f
     )
+
+    override val ambientAnimation = SkinAmbientAnimationSpec(
+        backgroundEnabled = true,
+        backgroundParticleCount = 3,
+        backgroundCycleDurationRange = 15000..25000,
+        backgroundAlphaRange = 0.05f..0.15f,
+        topBarDecorationAnimated = true,
+        cardGlowEffect = true
+    )
 }

@@ -117,4 +117,13 @@ class ClassicAnimationProvider : SkinAnimationProvider {
         animationSpec = tween(350, easing = LinearOutSlowInEasing),
         flingFrictionMultiplier = 1.3f
     )
+
+    override val ambientAnimation = SkinAmbientAnimationSpec(
+        backgroundEnabled = true,
+        backgroundParticleCount = 7,
+        backgroundCycleDurationRange = 10000..18000,
+        backgroundAlphaRange = 0.1f..0.25f,
+        topBarDecorationAnimated = true,
+        cardGlowEffect = true
+    )
 }

@@ -109,6 +109,15 @@ class SweetAnimationProvider : SkinAnimationProvider {
         ),
         flingFrictionMultiplier = 0.7f
     )
+
+    override val ambientAnimation = SkinAmbientAnimationSpec(
+        backgroundEnabled = true,
+        backgroundParticleCount = 15,
+        backgroundCycleDurationRange = 8000..15000,
+        backgroundAlphaRange = 0.1f..0.3f,
+        topBarDecorationAnimated = true,
+        cardGlowEffect = true
+    )
 }
 
 private fun DrawScope.drawSweetHeartParticle(center: Offset, radius: Float, color: Color) {

@@ -111,4 +111,13 @@ class GothicAnimationProvider : SkinAnimationProvider {
         animationSpec = tween(250, easing = LinearOutSlowInEasing),
         flingFrictionMultiplier = 1.5f
     )
+
+    override val ambientAnimation = SkinAmbientAnimationSpec(
+        backgroundEnabled = true,
+        backgroundParticleCount = 4,
+        backgroundCycleDurationRange = 12000..20000,
+        backgroundAlphaRange = 0.08f..0.2f,
+        topBarDecorationAnimated = true,
+        cardGlowEffect = true
+    )
 }

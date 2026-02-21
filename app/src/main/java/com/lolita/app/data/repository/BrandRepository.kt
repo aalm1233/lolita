@@ -11,8 +11,6 @@ class BrandRepository(
 ) {
     fun getAllBrands(): Flow<List<Brand>> = brandDao.getAllBrands()
 
-    fun getPresetBrands(): Flow<List<Brand>> = brandDao.getPresetBrands()
-
     suspend fun insertBrand(brand: Brand): Long = brandDao.insertBrand(brand)
 
     suspend fun updateBrand(brand: Brand) = brandDao.updateBrand(brand)

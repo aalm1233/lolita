@@ -17,9 +17,6 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getCategoryById(id: Long): Category?
 
-    @Query("SELECT * FROM categories WHERE is_preset = 1 ORDER BY name ASC")
-    fun getPresetCategories(): Flow<List<Category>>
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertCategory(category: Category): Long
 

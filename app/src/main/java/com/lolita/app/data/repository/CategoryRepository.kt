@@ -11,8 +11,6 @@ class CategoryRepository(
 ) {
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()
 
-    fun getPresetCategories(): Flow<List<Category>> = categoryDao.getPresetCategories()
-
     suspend fun insertCategory(category: Category): Long = categoryDao.insertCategory(category)
 
     suspend fun updateCategory(category: Category) = categoryDao.updateCategory(category)

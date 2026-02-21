@@ -17,9 +17,6 @@ interface BrandDao {
     @Query("SELECT * FROM brands WHERE id = :id")
     suspend fun getBrandById(id: Long): Brand?
 
-    @Query("SELECT * FROM brands WHERE is_preset = 1 ORDER BY name ASC")
-    fun getPresetBrands(): Flow<List<Brand>>
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertBrand(brand: Brand): Long
 

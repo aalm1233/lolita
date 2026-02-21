@@ -8,18 +8,23 @@ import com.lolita.app.data.local.entity.OutfitLog
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.OutfitLogRepository
 import com.lolita.app.data.local.dao.OutfitLogWithItems
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 data class OutfitLogListUiState(
+    val allLogs: List<OutfitLogListItem> = emptyList(),
     val logs: List<OutfitLogListItem> = emptyList(),
+    val searchQuery: String = "",
     val isLoading: Boolean = true
 )
 
@@ -60,6 +65,8 @@ class OutfitLogListViewModel(
     private val _uiState = MutableStateFlow(OutfitLogListUiState())
     val uiState: StateFlow<OutfitLogListUiState> = _uiState.asStateFlow()
 
+    private var searchJob: Job? = null
+
     init {
         loadOutfitLogs()
     }
@@ -83,11 +90,33 @@ class OutfitLogListViewModel(
                     }
                 }
                 .collect { listItems ->
-                    _uiState.value = _uiState.value.copy(
-                        logs = listItems,
-                        isLoading = false
-                    )
+                    val query = _uiState.value.searchQuery
+                    _uiState.update {
+                        it.copy(
+                            allLogs = listItems,
+                            logs = applySearch(listItems, query),
+                            isLoading = false
+                        )
+                    }
                 }
+        }
+    }
+
+    fun search(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300)
+            val allLogs = _uiState.value.allLogs
+            _uiState.update { it.copy(logs = applySearch(allLogs, query)) }
+        }
+    }
+
+    private fun applySearch(logs: List<OutfitLogListItem>, query: String): List<OutfitLogListItem> {
+        if (query.isBlank()) return logs
+        return logs.filter {
+            it.dateString.contains(query, ignoreCase = true) ||
+                it.previewNote.contains(query, ignoreCase = true)
         }
     }
 

@@ -13,15 +13,19 @@ import com.lolita.app.data.local.dao.ItemPriceSum
 import com.lolita.app.data.local.dao.PriceWithPayments
 import com.lolita.app.ui.screen.common.SortOption
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class CoordinateListUiState(
+    val allCoordinates: List<Coordinate> = emptyList(),
     val coordinates: List<Coordinate> = emptyList(),
+    val searchQuery: String = "",
     val itemCounts: Map<Long, Int> = emptyMap(),
     val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
     val priceByCoordinate: Map<Long, Double> = emptyMap(),
@@ -61,6 +65,8 @@ class CoordinateListViewModel(
     private val _uiState = MutableStateFlow(CoordinateListUiState())
     val uiState: StateFlow<CoordinateListUiState> = _uiState.asStateFlow()
 
+    private var searchJob: Job? = null
+
     init {
         loadCoordinates()
     }
@@ -93,6 +99,7 @@ class CoordinateListViewModel(
                     }
 
                 CoordinateListUiState(
+                    allCoordinates = coordinates,
                     coordinates = coordinates,
                     itemCounts = countMap,
                     itemImagesByCoordinate = imageMap,
@@ -102,12 +109,35 @@ class CoordinateListViewModel(
                     isLoading = false
                 )
             }.collect { state ->
-                val sorted = applySorting(state.coordinates, _uiState.value.sortOption, state.priceByCoordinate)
+                val query = _uiState.value.searchQuery
+                val filtered = applySearch(state.allCoordinates, query)
+                val sorted = applySorting(filtered, _uiState.value.sortOption, state.priceByCoordinate)
                 _uiState.value = state.copy(
                     coordinates = sorted,
+                    searchQuery = query,
                     sortOption = _uiState.value.sortOption
                 )
             }
+        }
+    }
+
+    fun search(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300)
+            val state = _uiState.value
+            val filtered = applySearch(state.allCoordinates, query)
+            val sorted = applySorting(filtered, state.sortOption, state.priceByCoordinate)
+            _uiState.update { it.copy(coordinates = sorted) }
+        }
+    }
+
+    private fun applySearch(coordinates: List<Coordinate>, query: String): List<Coordinate> {
+        if (query.isBlank()) return coordinates
+        return coordinates.filter {
+            it.name.contains(query, ignoreCase = true) ||
+                it.description.contains(query, ignoreCase = true)
         }
     }
 
@@ -133,7 +163,8 @@ class CoordinateListViewModel(
 
     fun setSortOption(option: SortOption) {
         val state = _uiState.value
-        val sorted = applySorting(state.coordinates, option, state.priceByCoordinate)
+        val filtered = applySearch(state.allCoordinates, state.searchQuery)
+        val sorted = applySorting(filtered, option, state.priceByCoordinate)
         _uiState.value = state.copy(sortOption = option, coordinates = sorted)
     }
 

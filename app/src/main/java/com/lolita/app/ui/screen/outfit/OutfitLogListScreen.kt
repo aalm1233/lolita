@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Checkroom
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -80,40 +81,70 @@ fun OutfitLogListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (uiState.isLoading) {
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+            if (uiState.allLogs.isNotEmpty()) {
+                OutlinedTextField(
+                    value = uiState.searchQuery,
+                    onValueChange = { viewModel.search(it) },
+                    placeholder = { Text("搜索穿搭日记") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (uiState.isLoading) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
-            } else if (uiState.logs.isEmpty()) {
-                item {
-                    EmptyState(
-                        icon = Icons.Default.Create,
-                        title = "还没有穿搭日记",
-                        subtitle = "记录每天的穿搭"
-                    )
-                }
-            } else {
-                items(uiState.logs, key = { it.id }) { log ->
-                    OutfitLogListItemCard(
-                        log = log,
-                        onClick = { onNavigateToDetail(log.id) },
-                        onEdit = { onNavigateToEdit(log.id) },
-                        onDelete = { logToDelete = log },
-                        modifier = Modifier.animateItem()
-                    )
+                } else if (uiState.allLogs.isEmpty()) {
+                    item {
+                        EmptyState(
+                            icon = Icons.Default.Create,
+                            title = "还没有穿搭日记",
+                            subtitle = "记录每天的穿搭"
+                        )
+                    }
+                } else if (uiState.logs.isEmpty()) {
+                    item {
+                        EmptyState(
+                            icon = Icons.Default.Search,
+                            title = "无搜索结果",
+                            subtitle = "试试其他关键词"
+                        )
+                    }
+                } else {
+                    items(uiState.logs, key = { it.id }) { log ->
+                        OutfitLogListItemCard(
+                            log = log,
+                            onClick = { onNavigateToDetail(log.id) },
+                            onEdit = { onNavigateToEdit(log.id) },
+                            onDelete = { logToDelete = log },
+                            modifier = Modifier.animateItem()
+                        )
+                    }
                 }
             }
         }

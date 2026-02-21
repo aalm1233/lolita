@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,16 +31,60 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
 
+data class WishlistUiState(
+    val allItems: List<Item> = emptyList(),
+    val filteredItems: List<Item> = emptyList(),
+    val searchQuery: String = ""
+)
+
 class WishlistViewModel(
-    itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
-    val items: StateFlow<List<Item>> = itemRepository.getWishlistByPriority()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    private val _uiState = MutableStateFlow(WishlistUiState())
+    val uiState: StateFlow<WishlistUiState> = _uiState.asStateFlow()
+
+    private var searchJob: Job? = null
+
+    init {
+        viewModelScope.launch {
+            itemRepository.getWishlistByPriority().collect { items ->
+                val query = _uiState.value.searchQuery
+                _uiState.update {
+                    it.copy(
+                        allItems = items,
+                        filteredItems = applySearch(items, query)
+                    )
+                }
+            }
+        }
+    }
+
+    fun search(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300)
+            val items = _uiState.value.allItems
+            _uiState.update { it.copy(filteredItems = applySearch(items, query)) }
+        }
+    }
+
+    private fun applySearch(items: List<Item>, query: String): List<Item> {
+        if (query.isBlank()) return items
+        return items.filter {
+            it.name.contains(query, ignoreCase = true) ||
+                it.description.contains(query, ignoreCase = true)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +94,7 @@ fun WishlistScreen(
     onNavigateToEdit: (Long?) -> Unit,
     viewModel: WishlistViewModel = viewModel()
 ) {
-    val items by viewModel.items.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -72,29 +117,57 @@ fun WishlistScreen(
             }
         }
     ) { padding ->
-        if (items.isEmpty()) {
-            EmptyState(
-                icon = Icons.Default.Favorite,
-                title = "愿望单为空",
-                subtitle = "添加心仪的服饰到愿望单",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(items, key = { it.id }) { item ->
-                    WishlistItemCard(
-                        item = item,
-                        onClick = { onNavigateToDetail(item.id) },
-                        modifier = Modifier.animateItem()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            if (uiState.allItems.isNotEmpty()) {
+                OutlinedTextField(
+                    value = uiState.searchQuery,
+                    onValueChange = { viewModel.search(it) },
+                    placeholder = { Text("搜索愿望单") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
                     )
+                )
+            }
+            if (uiState.allItems.isEmpty()) {
+                EmptyState(
+                    icon = Icons.Default.Favorite,
+                    title = "愿望单为空",
+                    subtitle = "添加心仪的服饰到愿望单",
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else if (uiState.filteredItems.isEmpty()) {
+                EmptyState(
+                    icon = Icons.Default.Search,
+                    title = "无搜索结果",
+                    subtitle = "试试其他关键词",
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(uiState.filteredItems, key = { it.id }) { item ->
+                        WishlistItemCard(
+                            item = item,
+                            onClick = { onNavigateToDetail(item.id) },
+                            modifier = Modifier.animateItem()
+                        )
+                    }
                 }
             }
         }

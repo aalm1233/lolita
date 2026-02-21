@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.*
@@ -90,12 +91,30 @@ fun CoordinateListScreen(
             }
         }
     ) { padding ->
-        CoordinateListContent(
-            onNavigateToDetail = onNavigateToDetail,
-            onNavigateToEdit = onNavigateToEdit,
-            viewModel = viewModel,
-            modifier = Modifier.padding(padding)
-        )
+        Column(modifier = Modifier.padding(padding)) {
+            if (uiState.allCoordinates.isNotEmpty()) {
+                OutlinedTextField(
+                    value = uiState.searchQuery,
+                    onValueChange = { viewModel.search(it) },
+                    placeholder = { Text("搜索套装") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+            CoordinateListContent(
+                onNavigateToDetail = onNavigateToDetail,
+                onNavigateToEdit = onNavigateToEdit,
+                viewModel = viewModel
+            )
+        }
     }
 }
 
@@ -135,7 +154,7 @@ fun CoordinateListContent(
         ) {
             CircularProgressIndicator()
         }
-    } else if (uiState.coordinates.isEmpty()) {
+    } else if (uiState.allCoordinates.isEmpty()) {
         Box(
             modifier = modifier.fillMaxSize().padding(16.dp),
             contentAlignment = Alignment.Center
@@ -144,6 +163,17 @@ fun CoordinateListContent(
                 icon = Icons.Default.Star,
                 title = "暂无套装",
                 subtitle = "点击 + 创建第一个套装"
+            )
+        }
+    } else if (uiState.coordinates.isEmpty()) {
+        Box(
+            modifier = modifier.fillMaxSize().padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            EmptyState(
+                icon = Icons.Default.Search,
+                title = "无搜索结果",
+                subtitle = "试试其他关键词"
             )
         }
     } else if (uiState.columnsPerRow == 1) {

@@ -50,6 +50,7 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
@@ -199,6 +200,14 @@ fun ItemListScreen(
                         }
                     }
                 }
+                SortMenuButton(
+                    currentSort = if (pagerState.currentPage == 2) coordinateUiState.sortOption else uiState.sortOption,
+                    showPriceOptions = if (pagerState.currentPage == 2) coordinateUiState.showPrice else uiState.showTotalPrice,
+                    onSortSelected = {
+                        if (pagerState.currentPage == 2) coordinateViewModel.setSortOption(it)
+                        else viewModel.setSortOption(it)
+                    }
+                )
                 IconButton(
                     onClick = {
                         if (pagerState.currentPage == 2) {

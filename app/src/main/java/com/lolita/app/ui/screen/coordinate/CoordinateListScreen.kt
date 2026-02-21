@@ -40,6 +40,7 @@ import com.lolita.app.data.local.entity.Coordinate
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 
 @Composable
@@ -57,6 +58,11 @@ fun CoordinateListScreen(
                 title = { Text("套装管理") },
                 compact = true,
                 actions = {
+                    SortMenuButton(
+                        currentSort = uiState.sortOption,
+                        showPriceOptions = uiState.showPrice,
+                        onSortSelected = { viewModel.setSortOption(it) }
+                    )
                     IconButton(onClick = {
                         val next = when (uiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
                         viewModel.setColumns(next)

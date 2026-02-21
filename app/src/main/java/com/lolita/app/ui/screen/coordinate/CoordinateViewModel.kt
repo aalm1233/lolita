@@ -11,6 +11,7 @@ import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.local.dao.ItemPriceSum
 import com.lolita.app.data.local.dao.PriceWithPayments
+import com.lolita.app.ui.screen.common.SortOption
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ data class CoordinateListUiState(
     val itemImagesByCoordinate: Map<Long, List<String?>> = emptyMap(),
     val priceByCoordinate: Map<Long, Double> = emptyMap(),
     val showPrice: Boolean = false,
+    val sortOption: SortOption = SortOption.DEFAULT,
     val columnsPerRow: Int = 1,
     val isLoading: Boolean = true,
     val errorMessage: String? = null
@@ -100,7 +102,11 @@ class CoordinateListViewModel(
                     isLoading = false
                 )
             }.collect { state ->
-                _uiState.value = state
+                val sorted = applySorting(state.coordinates, _uiState.value.sortOption, state.priceByCoordinate)
+                _uiState.value = state.copy(
+                    coordinates = sorted,
+                    sortOption = _uiState.value.sortOption
+                )
             }
         }
     }
@@ -123,6 +129,22 @@ class CoordinateListViewModel(
 
     fun setColumns(count: Int) {
         _uiState.value = _uiState.value.copy(columnsPerRow = count)
+    }
+
+    fun setSortOption(option: SortOption) {
+        val state = _uiState.value
+        val sorted = applySorting(state.coordinates, option, state.priceByCoordinate)
+        _uiState.value = state.copy(sortOption = option, coordinates = sorted)
+    }
+
+    private fun applySorting(coordinates: List<Coordinate>, sort: SortOption, prices: Map<Long, Double>): List<Coordinate> {
+        return when (sort) {
+            SortOption.DEFAULT -> coordinates
+            SortOption.DATE_DESC -> coordinates.sortedByDescending { it.updatedAt }
+            SortOption.DATE_ASC -> coordinates.sortedBy { it.updatedAt }
+            SortOption.PRICE_DESC -> coordinates.sortedByDescending { prices[it.id] ?: 0.0 }
+            SortOption.PRICE_ASC -> coordinates.sortedBy { prices[it.id] ?: 0.0 }
+        }
     }
 }
 

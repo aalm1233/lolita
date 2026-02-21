@@ -13,11 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -69,13 +66,12 @@ fun CoordinateListScreen(
                         val next = when (uiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
                         viewModel.setColumns(next)
                     }) {
-                        Icon(
-                            imageVector = when (uiState.columnsPerRow) {
-                                1 -> Icons.Default.ViewAgenda
-                                2 -> Icons.Default.GridView
-                                else -> Icons.Default.Apps
+                        SkinIcon(
+                            when (uiState.columnsPerRow) {
+                                1 -> IconKey.ViewAgenda
+                                2 -> IconKey.GridView
+                                else -> IconKey.Apps
                             },
-                            contentDescription = "切换列数",
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }

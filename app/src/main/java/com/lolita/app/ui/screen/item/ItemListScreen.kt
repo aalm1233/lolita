@@ -202,9 +202,9 @@ fun ItemListScreen(
                     val currentColumns = if (pagerState.currentPage == 2) coordinateUiState.columnsPerRow else uiState.columnsPerRow
                     SkinIcon(
                         when (currentColumns) {
-                            1 -> IconKey.Sort
-                            2 -> IconKey.Sort
-                            else -> IconKey.Sort
+                            1 -> IconKey.ViewAgenda
+                            2 -> IconKey.GridView
+                            else -> IconKey.Apps
                         },
                         tint = MaterialTheme.colorScheme.primary
                     )

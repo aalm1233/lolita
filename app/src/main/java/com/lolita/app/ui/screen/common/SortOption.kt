@@ -1,7 +1,5 @@
 package com.lolita.app.ui.screen.common
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,9 +24,8 @@ fun SortMenuButton(
     var expanded by remember { mutableStateOf(false) }
 
     IconButton(onClick = { expanded = true }, modifier = modifier) {
-        Icon(
-            Icons.AutoMirrored.Filled.Sort,
-            contentDescription = "排序",
+        SkinIcon(
+            IconKey.Sort,
             tint = if (currentSort != SortOption.DEFAULT)
                 MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant

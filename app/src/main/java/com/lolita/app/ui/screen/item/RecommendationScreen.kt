@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Checkroom
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.domain.usecase.MatchScore
+import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import java.io.File
@@ -62,7 +64,11 @@ fun RecommendationScreen(
             }
             uiState.recommendations.isEmpty() -> {
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    Text("暂无推荐搭配", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    EmptyState(
+                        icon = Icons.Default.Checkroom,
+                        title = "暂无推荐搭配",
+                        subtitle = "添加更多服饰以获取搭配推荐"
+                    )
                 }
             }
             else -> {

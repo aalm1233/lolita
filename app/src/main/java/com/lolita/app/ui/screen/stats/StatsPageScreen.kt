@@ -29,7 +29,7 @@ fun StatsPageScreen(
 
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
-            edgePadding = 8.dp,
+            edgePadding = 4.dp,
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.primary,
             divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) },

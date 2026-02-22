@@ -51,7 +51,7 @@ fun GradientTopAppBar(
                     modifier = Modifier
                         .background(gradient)
                         .statusBarsPadding()
-                        .padding(horizontal = 4.dp, vertical = 4.dp),
+                        .padding(horizontal = 4.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     navigationIcon()

@@ -150,7 +150,7 @@ fun ItemListScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .padding(horizontal = 12.dp, vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -244,10 +244,10 @@ fun ItemListScreen(
             // 今日穿搭快捷卡片
             LolitaCard(
                 onClick = onNavigateToQuickOutfit,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -279,7 +279,7 @@ fun ItemListScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                        .padding(horizontal = 12.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
@@ -297,7 +297,7 @@ fun ItemListScreen(
                                 selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                 selectedLabelColor = MaterialTheme.colorScheme.primary
                             ),
-                            modifier = Modifier.height(28.dp)
+                            modifier = Modifier.height(24.dp)
                         )
                     }
                     Spacer(Modifier.weight(1f))
@@ -358,8 +358,8 @@ fun ItemListScreen(
                             }
                             LazyColumn(
                                 state = listState,
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp),
                                 flingBehavior = flingBehavior
                             ) {
                                 itemsIndexed(
@@ -390,9 +390,9 @@ fun ItemListScreen(
                             LazyVerticalGrid(
                                 state = gridState,
                                 columns = GridCells.Fixed(uiState.columnsPerRow),
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp)
                             ) {
                                 items(
                                     items = uiState.itemCardDataList,

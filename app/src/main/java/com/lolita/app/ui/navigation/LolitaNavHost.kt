@@ -112,7 +112,7 @@ fun LolitaNavHost() {
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(64.dp),
+                modifier = Modifier.height(52.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = accent,
                 windowInsets = WindowInsets(0, 0, 0, 0)

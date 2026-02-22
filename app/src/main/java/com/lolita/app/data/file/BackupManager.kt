@@ -92,9 +92,9 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_url,color,season,style,size,size_chart_image_url,created_at,updated_at")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_url,colors,season,style,size,size_chart_image_url,created_at,updated_at")
             database.itemDao().getAllItemsList().forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrl)},${escapeCsv(i.color)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrl)},${escapeCsv(i.colors)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
             }
 
             // Coordinates

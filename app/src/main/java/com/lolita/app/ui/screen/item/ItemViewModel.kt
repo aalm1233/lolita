@@ -192,7 +192,7 @@ class ItemListViewModel(
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
-                val colorOpts = items.mapNotNull { it.color?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
+                val colorOpts = items.mapNotNull { it.colors?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
                 ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
                 val filtered = applyFilters(
@@ -418,7 +418,7 @@ class ItemListViewModel(
         }
 
         if (color != null) {
-            result = result.filter { it.color == color }
+            result = result.filter { it.colors == color }
         }
 
         if (brandId != null) {
@@ -541,7 +541,7 @@ class ItemEditViewModel(
                             status = item.status,
                             priority = item.priority,
                             imageUrl = item.imageUrl,
-                            color = item.color,
+                            color = item.colors,
                             seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,
@@ -682,7 +682,7 @@ class ItemEditViewModel(
                     status = state.status,
                     priority = state.priority,
                     imageUrl = state.imageUrl,
-                    color = state.color,
+                    colors = state.color,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,
@@ -703,7 +703,7 @@ class ItemEditViewModel(
                     imageUrl = state.imageUrl,
                     status = state.status,
                     priority = state.priority,
-                    color = state.color,
+                    colors = state.color,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,

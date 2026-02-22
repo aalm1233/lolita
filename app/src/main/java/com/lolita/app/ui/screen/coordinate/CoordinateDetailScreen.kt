@@ -398,7 +398,7 @@ private fun CoordinateItemCard(
                 ) {
                     StatusBadge(item.status)
                     // Show color/style if available
-                    val details = listOfNotNull(item.color, item.style).joinToString(" · ")
+                    val details = listOfNotNull(item.colors, item.style).joinToString(" · ")
                     if (details.isNotEmpty()) {
                         Text(
                             details,

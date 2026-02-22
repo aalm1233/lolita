@@ -294,7 +294,7 @@ fun ItemDetailScreen(
                         }
 
                         // Color, Season, Style
-                        item.color?.let { color ->
+                        item.colors?.let { color ->
                             if (color.isNotEmpty()) DetailRow(label = "颜色", value = color)
                         }
                         item.season?.let { season ->

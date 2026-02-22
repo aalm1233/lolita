@@ -655,7 +655,7 @@ private fun ItemCard(
                             )
                         }
                     }
-                    item.color?.let { color ->
+                    item.colors?.let { color ->
                         if (color.isNotEmpty()) {
                             Surface(
                                 color = MaterialTheme.colorScheme.outlineVariant,

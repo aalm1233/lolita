@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -266,6 +266,19 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_10_11 = object : Migration(10, 11) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Add new colors column
+                db.execSQL("ALTER TABLE items ADD COLUMN colors TEXT DEFAULT NULL")
+                // Migrate existing color data: single value -> JSON array
+                // e.g. "粉色" -> ["粉色"]
+                db.execSQL("""
+                    UPDATE items SET colors = '[\"' || color || '\"]'
+                    WHERE color IS NOT NULL AND color != ''
+                """.trimIndent())
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -274,7 +287,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                     .build()
                 INSTANCE = instance
                 instance

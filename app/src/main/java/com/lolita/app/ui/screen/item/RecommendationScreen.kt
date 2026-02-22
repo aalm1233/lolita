@@ -144,7 +144,7 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                         Text(it, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    matchScore.item.color?.let {
+                    matchScore.item.colors?.let {
                         Text(it, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }

@@ -261,7 +261,7 @@ fun CoordinateEditScreen(
                                         fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
                                     )
                                     val details = listOfNotNull(
-                                        item.color,
+                                        item.colors,
                                         item.season,
                                         item.style
                                     ).joinToString(" · ")

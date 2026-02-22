@@ -27,7 +27,7 @@ class MatchingEngine {
 
     fun encode(item: Item): ItemVector {
         val styleVec = STYLES.map { if (item.style == it) 1.0 else 0.0 }
-        val colorVec = COLORS.map { if (item.color?.contains(it) == true) 1.0 else 0.0 }
+        val colorVec = COLORS.map { if (item.colors?.contains(it) == true) 1.0 else 0.0 }
         val seasonVec = SEASONS.map { s ->
             if (item.season?.split(",")?.any { it.trim() == s } == true) 1.0 else 0.0
         }

@@ -27,9 +27,10 @@ import kotlin.math.min
 import kotlin.math.sin
 
 @Composable
-fun Modifier.skinCardGlow(isScrolling: Boolean = false): Modifier {
+fun Modifier.skinCardGlow(): Modifier {
     val skin = LolitaSkin.current
     if (!skin.animations.ambientAnimation.cardGlowEffect) return this
+    val isScrolling by LocalIsListScrolling.current
     if (isScrolling) return this
 
     val infiniteTransition = rememberInfiniteTransition(label = "cardGlow")

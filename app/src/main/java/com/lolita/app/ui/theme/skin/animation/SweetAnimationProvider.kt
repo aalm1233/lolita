@@ -112,9 +112,9 @@ class SweetAnimationProvider : SkinAnimationProvider {
 
     override val ambientAnimation = SkinAmbientAnimationSpec(
         backgroundEnabled = true,
-        backgroundParticleCount = 15,
+        backgroundParticleCount = 20,
         backgroundCycleDurationRange = 8000..15000,
-        backgroundAlphaRange = 0.1f..0.3f,
+        backgroundAlphaRange = 0.15f..0.4f,
         topBarDecorationAnimated = true,
         cardGlowEffect = true
     )

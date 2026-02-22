@@ -11,10 +11,14 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.SkinType
 import com.lolita.app.ui.theme.skin.animation.particles.ChineseCloudParticle
+import com.lolita.app.ui.theme.skin.animation.particles.ChinesePlumBlossomParticle
+import com.lolita.app.ui.theme.skin.animation.particles.ClassicDiamondParticle
 import com.lolita.app.ui.theme.skin.animation.particles.ClassicSparkleParticle
+import com.lolita.app.ui.theme.skin.animation.particles.GothicEmberParticle
 import com.lolita.app.ui.theme.skin.animation.particles.GothicSmokeParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetBubbleParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetPetalParticle
+import com.lolita.app.ui.theme.skin.animation.particles.SweetStarParticle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -65,12 +69,25 @@ fun SkinBackgroundAnimation(
 private fun createParticles(skinType: SkinType, count: Int): List<AmbientParticle> {
     return when (skinType) {
         SkinType.DEFAULT -> {
-            val bubbles = List((count * 0.67f).toInt().coerceAtLeast(1)) { SweetBubbleParticle() }
-            val petals = List((count * 0.33f).toInt().coerceAtLeast(1)) { SweetPetalParticle() }
-            bubbles + petals
+            val bubbles = List((count * 0.4f).toInt().coerceAtLeast(1)) { SweetBubbleParticle() }
+            val petals = List((count * 0.3f).toInt().coerceAtLeast(1)) { SweetPetalParticle() }
+            val stars = List((count * 0.3f).toInt().coerceAtLeast(1)) { SweetStarParticle() }
+            bubbles + petals + stars
         }
-        SkinType.GOTHIC -> List(count) { GothicSmokeParticle() }
-        SkinType.CHINESE -> List(count) { ChineseCloudParticle() }
-        SkinType.CLASSIC -> List(count) { ClassicSparkleParticle() }
+        SkinType.GOTHIC -> {
+            val smoke = List((count * 0.5f).toInt().coerceAtLeast(1)) { GothicSmokeParticle() }
+            val embers = List((count * 0.5f).toInt().coerceAtLeast(1)) { GothicEmberParticle() }
+            smoke + embers
+        }
+        SkinType.CHINESE -> {
+            val clouds = List((count * 0.4f).toInt().coerceAtLeast(1)) { ChineseCloudParticle() }
+            val blossoms = List((count * 0.6f).toInt().coerceAtLeast(1)) { ChinesePlumBlossomParticle() }
+            clouds + blossoms
+        }
+        SkinType.CLASSIC -> {
+            val sparkles = List((count * 0.5f).toInt().coerceAtLeast(1)) { ClassicSparkleParticle() }
+            val diamonds = List((count * 0.5f).toInt().coerceAtLeast(1)) { ClassicDiamondParticle() }
+            sparkles + diamonds
+        }
     }
 }

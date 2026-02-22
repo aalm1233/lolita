@@ -157,6 +157,17 @@ interface ItemDao {
     @Query("UPDATE items SET status = :status WHERE id = :itemId")
     suspend fun updateItemStatus(itemId: Long, status: String)
 
+    @Query("""
+        UPDATE items SET status = 'PENDING_BALANCE'
+        WHERE status = 'OWNED'
+        AND id IN (
+            SELECT DISTINCT pr.item_id FROM payments p
+            INNER JOIN prices pr ON p.price_id = pr.id
+            WHERE pr.type = 'DEPOSIT_BALANCE' AND p.is_paid = 0
+        )
+    """)
+    suspend fun refreshPendingBalanceStatus()
+
     @Query("SELECT * FROM items WHERE source = :source ORDER BY created_at DESC")
     fun getItemsBySource(source: String): Flow<List<Item>>
 }

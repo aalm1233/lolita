@@ -2,7 +2,8 @@ package com.lolita.app.data.local.entity
 
 enum class ItemStatus {
     OWNED,
-    WISHED
+    WISHED,
+    PENDING_BALANCE
 }
 
 enum class ItemPriority {

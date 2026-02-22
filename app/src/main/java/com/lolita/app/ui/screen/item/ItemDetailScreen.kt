@@ -271,6 +271,9 @@ fun ItemDetailScreen(
                         item.style?.let { style ->
                             if (style.isNotEmpty()) DetailRow(label = "风格", value = style)
                         }
+                        item.source?.let { source ->
+                            if (source.isNotEmpty()) DetailRow(label = "来源", value = source)
+                        }
 
                         HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 

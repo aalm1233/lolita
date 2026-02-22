@@ -256,6 +256,13 @@ fun ItemEditScreen(
                     onStyleSelected = { viewModel.updateStyle(it) }
                 )
 
+                // Source selector
+                SourceSelector(
+                    selectedSource = uiState.source,
+                    sourceOptions = uiState.sourceOptions,
+                    onSourceSelected = { viewModel.updateSource(it) }
+                )
+
                 // Size field
                 OutlinedTextField(
                     value = uiState.size ?: "",
@@ -710,6 +717,45 @@ private fun StyleSelector(
                     )
                 }
                 // Fill remaining space if row has fewer than 3 items
+                repeat(3 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Source Selector Component - loads from database
+ */
+@Composable
+private fun SourceSelector(
+    selectedSource: String?,
+    sourceOptions: List<String>,
+    onSourceSelected: (String?) -> Unit
+) {
+    Column {
+        Text(
+            text = "来源 (可选)",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        // Split into rows of 3
+        sourceOptions.chunked(3).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                rowItems.forEach { source ->
+                    FilterChip(
+                        selected = selectedSource == source,
+                        onClick = {
+                            onSourceSelected(if (selectedSource == source) null else source)
+                        },
+                        label = { Text(source) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 repeat(3 - rowItems.size) {
                     Spacer(modifier = Modifier.weight(1f))
                 }

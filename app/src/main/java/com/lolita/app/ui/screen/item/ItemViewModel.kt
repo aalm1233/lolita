@@ -17,6 +17,7 @@ import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.data.repository.SeasonRepository
+import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
@@ -89,6 +90,7 @@ data class ItemEditUiState(
     val style: String? = null,
     val size: String? = null,
     val sizeChartImageUrl: String? = null,
+    val source: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
@@ -96,6 +98,7 @@ data class ItemEditUiState(
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
     val styleOptions: List<String> = emptyList(),
     val seasonOptions: List<String> = emptyList(),
+    val sourceOptions: List<String> = emptyList(),
     val pricesWithPayments: List<DaoPriceWithPayments> = emptyList(),
     val locationId: Long? = null,
     val locations: List<com.lolita.app.data.local.entity.Location> = emptyList()
@@ -433,6 +436,7 @@ class ItemEditViewModel(
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
     private val styleRepository: StyleRepository = com.lolita.app.di.AppModule.styleRepository(),
     private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository(),
+    private val sourceRepository: SourceRepository = com.lolita.app.di.AppModule.sourceRepository(),
     private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
 ) : ViewModel() {
 
@@ -453,6 +457,7 @@ class ItemEditViewModel(
             val coordinates = coordinateRepository.getAllCoordinates().first()
             val styles = styleRepository.getAllStyles().first()
             val seasons = seasonRepository.getAllSeasons().first()
+            val sources = sourceRepository.getAllSources().first()
 
             _uiState.update {
                 it.copy(
@@ -460,7 +465,8 @@ class ItemEditViewModel(
                     categories = categories,
                     coordinates = coordinates,
                     styleOptions = styles.map { s -> s.name },
-                    seasonOptions = seasons.map { s -> s.name }
+                    seasonOptions = seasons.map { s -> s.name },
+                    sourceOptions = sources.map { s -> s.name }
                 )
             }
 
@@ -491,6 +497,7 @@ class ItemEditViewModel(
                             style = item.style,
                             size = item.size,
                             sizeChartImageUrl = item.sizeChartImageUrl,
+                            source = item.source,
                             locationId = item.locationId,
                             pricesWithPayments = prices,
                             isLoading = false
@@ -566,6 +573,11 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(style = style)
     }
 
+    fun updateSource(source: String?) {
+        hasUnsavedChanges = true
+        _uiState.value = _uiState.value.copy(source = source)
+    }
+
     fun updateSize(size: String?) {
         hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(size = size)
@@ -626,6 +638,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    source = state.source,
                     locationId = state.locationId,
                     updatedAt = now
                 )
@@ -646,6 +659,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    source = state.source,
                     locationId = state.locationId,
                     createdAt = now,
                     updatedAt = now

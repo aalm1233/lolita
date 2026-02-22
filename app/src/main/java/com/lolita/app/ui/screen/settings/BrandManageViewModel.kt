@@ -48,12 +48,13 @@ class BrandManageViewModel(
         _uiState.value = _uiState.value.copy(showAddDialog = false)
     }
 
-    fun addBrand(name: String) {
+    fun addBrand(name: String, logoUrl: String? = null) {
         viewModelScope.launch {
             try {
                 val brand = Brand(
                     name = name.trim(),
-                    isPreset = false
+                    isPreset = false,
+                    logoUrl = logoUrl
                 )
                 brandRepository.insertBrand(brand)
                 hideAddDialog()
@@ -99,10 +100,10 @@ class BrandManageViewModel(
         _uiState.value = _uiState.value.copy(editingBrand = null)
     }
 
-    fun updateBrand(brand: Brand, newName: String) {
+    fun updateBrand(brand: Brand, newName: String, logoUrl: String? = null) {
         viewModelScope.launch {
             try {
-                brandRepository.updateBrand(brand.copy(name = newName.trim()))
+                brandRepository.updateBrand(brand.copy(name = newName.trim(), logoUrl = logoUrl))
                 hideEditDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

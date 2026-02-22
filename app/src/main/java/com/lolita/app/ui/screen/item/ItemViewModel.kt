@@ -107,7 +107,8 @@ class ItemListViewModel(
     private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
     private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
-    private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
+    private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
+    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
@@ -116,10 +117,20 @@ class ItemListViewModel(
     private var totalPriceJob: Job? = null
     private var searchJob: Job? = null
 
+    private val _locations = MutableStateFlow<List<com.lolita.app.data.local.entity.Location>>(emptyList())
+    val locations: StateFlow<List<com.lolita.app.data.local.entity.Location>> = _locations.asStateFlow()
+
+    private val _locationItemCounts = MutableStateFlow<Map<Long, Int>>(emptyMap())
+    val locationItemCounts: StateFlow<Map<Long, Int>> = _locationItemCounts.asStateFlow()
+
+    private val _unassignedItemCount = MutableStateFlow(0)
+    val unassignedItemCount: StateFlow<Int> = _unassignedItemCount.asStateFlow()
+
     init {
         loadItems()
         loadPreferences()
         loadTodayOutfit()
+        loadLocations()
     }
 
     private fun loadTodayOutfit() {
@@ -132,6 +143,20 @@ class ItemListViewModel(
                     todayOutfitItemImages = todayLog?.items?.take(3)?.map { item -> item.imageUrl } ?: emptyList()
                 )
             }
+        }
+    }
+
+    private fun loadLocations() {
+        viewModelScope.launch {
+            locationRepository.getAllLocations().collect { _locations.value = it }
+        }
+        viewModelScope.launch {
+            locationRepository.getItemCountsByLocation().collect { counts ->
+                _locationItemCounts.value = counts.associate { it.locationId to it.count }
+            }
+        }
+        viewModelScope.launch {
+            locationRepository.countItemsWithNoLocation().collect { _unassignedItemCount.value = it }
         }
     }
 

@@ -27,6 +27,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -367,8 +368,7 @@ private fun BrandSelector(
                     Spacer(modifier = Modifier.height(8.dp))
                     LazyColumn(modifier = Modifier.heightIn(max = 350.dp)) {
                         items(filtered, key = { it.id }) { brand ->
-                            Text(
-                                text = brand.name,
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
@@ -376,10 +376,17 @@ private fun BrandSelector(
                                         showDialog = false
                                     }
                                     .padding(vertical = 12.dp, horizontal = 4.dp),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurface
-                            )
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                BrandLogo(brand = brand, size = 24.dp)
+                                Text(
+                                    text = brand.name,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         }
                     }
                 }

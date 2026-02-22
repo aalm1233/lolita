@@ -25,6 +25,7 @@ import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.BrandLogo
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -243,10 +244,41 @@ fun ItemDetailScreen(
                         HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
 
                         // Brand and Category
-                        DetailRow(
-                            label = "品牌",
-                            value = uiState.brands.find { it.id == item.brandId }?.name ?: "未知"
-                        )
+                        val brand = uiState.brands.find { it.id == item.brandId }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(6.dp),
+                                    shape = MaterialTheme.shapes.extraLarge,
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                ) {}
+                                Text(
+                                    text = "品牌",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BrandLogo(brand = brand, size = 20.dp)
+                                Text(
+                                    text = brand?.name ?: "未知",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
 
                         DetailRow(
                             label = "类型",

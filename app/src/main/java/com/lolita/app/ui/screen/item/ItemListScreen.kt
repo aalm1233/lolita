@@ -45,6 +45,7 @@ import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -487,6 +488,7 @@ private fun ItemCard(
 ) {
     val item = data.item
     val brandName = data.brandName
+    val brandLogoUrl = data.brandLogoUrl
     val categoryName = data.categoryName
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
@@ -624,13 +626,19 @@ private fun ItemCard(
                             color = MaterialTheme.colorScheme.secondaryContainer,
                             shape = RoundedCornerShape(4.dp)
                         ) {
-                            Text(
-                                text = it,
+                            Row(
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                maxLines = 1
-                            )
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                BrandLogo(logoUrl = brandLogoUrl, brandName = brandName, size = 14.dp)
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    maxLines = 1
+                                )
+                            }
                         }
                     }
                     categoryName?.let {
@@ -706,6 +714,7 @@ private fun ItemGridCard(
 ) {
     val item = data.item
     val brandName = data.brandName
+    val brandLogoUrl = data.brandLogoUrl
     val categoryName = data.categoryName
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
@@ -812,13 +821,19 @@ private fun ItemGridCard(
                         }
                     }
                     brandName?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            BrandLogo(logoUrl = brandLogoUrl, brandName = brandName, size = 14.dp)
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

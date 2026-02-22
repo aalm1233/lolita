@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 data class ItemCardData(
     val item: Item,
     val brandName: String?,
+    val brandLogoUrl: String?,
     val categoryName: String?,
     val itemPrice: Double?,
     val showPrice: Boolean
@@ -57,6 +58,7 @@ data class ItemListUiState(
     val filterBrandId: Long? = null,
     val searchQuery: String = "",
     val brandNames: Map<Long, String> = emptyMap(),
+    val brandLogoUrls: Map<Long, String?> = emptyMap(),
     val categoryNames: Map<Long, String> = emptyMap(),
     val categoryGroups: Map<Long, CategoryGroup> = emptyMap(),
     val seasonOptions: List<String> = emptyList(),
@@ -170,7 +172,7 @@ class ItemListViewModel(
     private fun loadPreferences() {
         viewModelScope.launch {
             appPreferences.showTotalPrice.collect { show ->
-                _uiState.update { it.copy(showTotalPrice = show, itemCardDataList = buildItemCardDataList(it.filteredItems, it.brandNames, it.categoryNames, it.itemPrices, show)) }
+                _uiState.update { it.copy(showTotalPrice = show, itemCardDataList = buildItemCardDataList(it.filteredItems, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, show)) }
             }
         }
     }
@@ -184,13 +186,14 @@ class ItemListViewModel(
                 priceRepository.getItemPriceSums()
             ) { items, brands, categories, priceSums ->
                 val brandMap = brands.associate { it.id to it.name }
+                val brandLogoMap = brands.associate { it.id to it.logoUrl }
                 val categoryMap = categories.associate { it.id to it.name }
                 val groupMap = categories.associate { it.id to it.group }
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
                 val colorOpts = items.mapNotNull { it.color?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
-                ItemListData(items, brandMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
+                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
                 val filtered = applyFilters(
                     data.items, _uiState.value.filterStatus, _uiState.value.searchQuery, _uiState.value.filterGroup,
@@ -203,6 +206,7 @@ class ItemListViewModel(
                         items = data.items,
                         filteredItems = sorted,
                         brandNames = data.brandMap,
+                        brandLogoUrls = data.brandLogoMap,
                         categoryNames = data.categoryMap,
                         categoryGroups = data.groupMap,
                         itemPrices = data.priceMap,
@@ -210,7 +214,7 @@ class ItemListViewModel(
                         styleOptions = data.styleOpts,
                         colorOptions = data.colorOpts,
                         isLoading = false,
-                        itemCardDataList = buildItemCardDataList(sorted, data.brandMap, data.categoryMap, data.priceMap, it.showTotalPrice)
+                        itemCardDataList = buildItemCardDataList(sorted, data.brandMap, data.brandLogoMap, data.categoryMap, data.priceMap, it.showTotalPrice)
                     )
                 }
                 updateTotalPrice(sorted)
@@ -221,6 +225,7 @@ class ItemListViewModel(
     private data class ItemListData(
         val items: List<Item>,
         val brandMap: Map<Long, String>,
+        val brandLogoMap: Map<Long, String?>,
         val categoryMap: Map<Long, String>,
         val groupMap: Map<Long, CategoryGroup>,
         val priceMap: Map<Long, Double>,
@@ -244,6 +249,7 @@ class ItemListViewModel(
     private fun buildItemCardDataList(
         items: List<Item>,
         brandNames: Map<Long, String>,
+        brandLogoUrls: Map<Long, String?>,
         categoryNames: Map<Long, String>,
         itemPrices: Map<Long, Double>,
         showPrice: Boolean
@@ -252,6 +258,7 @@ class ItemListViewModel(
             ItemCardData(
                 item = item,
                 brandName = brandNames[item.brandId],
+                brandLogoUrl = brandLogoUrls[item.brandId],
                 categoryName = categoryNames[item.categoryId],
                 itemPrice = itemPrices[item.id],
                 showPrice = showPrice
@@ -267,7 +274,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterStatus = status, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterStatus = status, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -279,7 +286,7 @@ class ItemListViewModel(
             statuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterStatuses = statuses, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterStatuses = statuses, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -292,7 +299,7 @@ class ItemListViewModel(
             state.filterStatuses, newValue
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterPendingBalanceOnly = newValue, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterPendingBalanceOnly = newValue, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -304,7 +311,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterGroup = group, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterGroup = group, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -316,7 +323,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterSeason = season, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterSeason = season, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -328,7 +335,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterStyle = style, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterStyle = style, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -340,7 +347,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterColor = color, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterColor = color, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -352,7 +359,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterBrandId = brandId, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filterBrandId = brandId, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 
@@ -368,7 +375,7 @@ class ItemListViewModel(
                 state.filterStatuses, state.filterPendingBalanceOnly
             )
             val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-            _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+            _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
             updateTotalPrice(sorted)
         }
     }
@@ -444,7 +451,7 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, option, state.itemPrices)
-        _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
         updateTotalPrice(sorted)
     }
 

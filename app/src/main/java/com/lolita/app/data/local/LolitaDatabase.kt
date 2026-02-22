@@ -21,9 +21,10 @@ import com.lolita.app.data.local.entity.*
         OutfitLog::class,
         OutfitItemCrossRef::class,
         Style::class,
-        Season::class
+        Season::class,
+        Location::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -115,6 +116,25 @@ abstract class LolitaDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE coordinates ADD COLUMN image_url TEXT DEFAULT NULL")
             }
         }
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `locations` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `name` TEXT NOT NULL,
+                        `description` TEXT NOT NULL DEFAULT '',
+                        `image_url` TEXT DEFAULT NULL,
+                        `sort_order` INTEGER NOT NULL DEFAULT 0,
+                        `created_at` INTEGER NOT NULL,
+                        `updated_at` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_locations_name` ON `locations` (`name`)")
+                db.execSQL("ALTER TABLE items ADD COLUMN `location_id` INTEGER DEFAULT NULL")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_location_id` ON `items` (`location_id`)")
+            }
+        }
+
 
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -124,7 +144,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build()
                 INSTANCE = instance
                 instance

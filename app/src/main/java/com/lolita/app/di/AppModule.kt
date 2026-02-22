@@ -56,6 +56,9 @@ object AppModule {
     private val _locationRepository by lazy { LocationRepository(database.locationDao(), database.itemDao()) }
     fun locationRepository() = _locationRepository
 
+    private val _sourceRepository by lazy { SourceRepository(database.sourceDao(), database.itemDao(), database) }
+    fun sourceRepository() = _sourceRepository
+
     private val _backupManager by lazy { BackupManager(appContext, database) }
     fun backupManager() = _backupManager
 

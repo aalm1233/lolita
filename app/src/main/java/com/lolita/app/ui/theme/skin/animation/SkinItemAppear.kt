@@ -9,8 +9,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import com.lolita.app.ui.theme.LolitaSkin
 import kotlinx.coroutines.delay
 
+private const val APPEAR_ANIMATION_THRESHOLD = 10
+
 @Composable
 fun Modifier.skinItemAppear(index: Int): Modifier {
+    if (index >= APPEAR_ANIMATION_THRESHOLD) {
+        return this
+    }
     val skin = LolitaSkin.current
     val spec = skin.animations.listAnimation
     val animProgress = remember { Animatable(0f) }

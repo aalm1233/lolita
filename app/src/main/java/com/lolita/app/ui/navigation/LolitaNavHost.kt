@@ -60,6 +60,7 @@ import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
 import com.lolita.app.ui.screen.item.LocationDetailScreen
 import com.lolita.app.ui.screen.settings.LocationManageScreen
+import com.lolita.app.ui.screen.settings.SourceManageScreen
 
 interface BottomNavItem {
     val screen: Screen
@@ -200,6 +201,9 @@ fun LolitaNavHost() {
                     },
                     onNavigateToLocationDetail = { locationId ->
                         navController.navigate(Screen.LocationDetail.createRoute(locationId))
+                    },
+                    onNavigateToFilteredList = { filterType, filterValue, title ->
+                        navController.navigate(Screen.FilteredItemList.createRoute(filterType, filterValue, title))
                     }
                 )
             }
@@ -441,6 +445,11 @@ fun LolitaNavHost() {
             // Location Manage
             composable(Screen.LocationManage.route) {
                 LocationManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Source Manage
+            composable(Screen.SourceManage.route) {
+                SourceManageScreen(onBack = { navController.popBackStack() })
             }
 
             // Theme Select

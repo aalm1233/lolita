@@ -119,6 +119,7 @@ abstract class LolitaDatabase : RoomDatabase() {
         }
         private val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                // 1. Create locations table
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `locations` (
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -131,7 +132,46 @@ abstract class LolitaDatabase : RoomDatabase() {
                     )
                 """.trimIndent())
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_locations_name` ON `locations` (`name`)")
-                db.execSQL("ALTER TABLE items ADD COLUMN `location_id` INTEGER DEFAULT NULL")
+
+                // 2. Recreate items table with location_id FK
+                //    (ALTER TABLE ADD COLUMN cannot add foreign keys in SQLite)
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `items_new` (
+                        `brand_id` INTEGER NOT NULL,
+                        `category_id` INTEGER NOT NULL,
+                        `created_at` INTEGER NOT NULL,
+                        `description` TEXT NOT NULL,
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `image_url` TEXT DEFAULT NULL,
+                        `name` TEXT NOT NULL,
+                        `priority` TEXT NOT NULL DEFAULT 'MEDIUM',
+                        `status` TEXT NOT NULL,
+                        `coordinate_id` INTEGER DEFAULT NULL,
+                        `color` TEXT DEFAULT NULL,
+                        `season` TEXT DEFAULT NULL,
+                        `style` TEXT DEFAULT NULL,
+                        `size` TEXT DEFAULT NULL,
+                        `size_chart_image_url` TEXT DEFAULT NULL,
+                        `location_id` INTEGER DEFAULT NULL,
+                        `updated_at` INTEGER NOT NULL,
+                        FOREIGN KEY(`coordinate_id`) REFERENCES `coordinates`(`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
+                        FOREIGN KEY(`brand_id`) REFERENCES `brands`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                        FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                        FOREIGN KEY(`location_id`) REFERENCES `locations`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO `items_new` (`brand_id`,`category_id`,`created_at`,`description`,`id`,`image_url`,`name`,`priority`,`status`,`coordinate_id`,`color`,`season`,`style`,`size`,`size_chart_image_url`,`location_id`,`updated_at`)
+                    SELECT `brand_id`,`category_id`,`created_at`,`description`,`id`,`image_url`,`name`,`priority`,`status`,`coordinate_id`,`color`,`season`,`style`,`size`,`size_chart_image_url`,NULL,`updated_at` FROM `items`
+                """.trimIndent())
+                db.execSQL("DROP TABLE `items`")
+                db.execSQL("ALTER TABLE `items_new` RENAME TO `items`")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_name` ON `items` (`name`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_coordinate_id` ON `items` (`coordinate_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_brand_id` ON `items` (`brand_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_category_id` ON `items` (`category_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_status` ON `items` (`status`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_priority` ON `items` (`priority`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_location_id` ON `items` (`location_id`)")
             }
         }

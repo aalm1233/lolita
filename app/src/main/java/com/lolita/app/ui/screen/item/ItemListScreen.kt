@@ -428,7 +428,7 @@ private fun ItemFilterTabRow(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    val tabs = listOf("位置", "已拥有", "套装")
+    val tabs = listOf("位置", "服饰", "套装")
 
     TabRow(
         selectedTabIndex = selectedIndex,

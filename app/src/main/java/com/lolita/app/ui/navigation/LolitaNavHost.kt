@@ -72,7 +72,7 @@ data object BottomNavItems {
         object : BottomNavItem {
             override val screen = Screen.ItemList
             override val iconKey = IconKey.Home
-            override val label = "服饰"
+            override val label = "首页"
         },
         object : BottomNavItem {
             override val screen = Screen.Wishlist
@@ -92,7 +92,7 @@ data object BottomNavItems {
         object : BottomNavItem {
             override val screen = Screen.Settings
             override val iconKey = IconKey.Settings
-            override val label = "设置"
+            override val label = "个人"
         }
     )
 }

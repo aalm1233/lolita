@@ -50,7 +50,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             GradientTopAppBar(
-                title = { Text("设置") },
+                title = { Text("个人") },
                 compact = true
             )
         }

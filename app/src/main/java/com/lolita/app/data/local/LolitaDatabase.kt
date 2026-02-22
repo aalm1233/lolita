@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -260,6 +260,11 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE brands ADD COLUMN logo_url TEXT DEFAULT NULL")
+            }
+        }
 
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -269,7 +274,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
                     .build()
                 INSTANCE = instance
                 instance

@@ -19,6 +19,9 @@ data class Brand(
     @ColumnInfo(name = "name")
     val name: String,
 
+    @ColumnInfo(name = "logo_url")
+    val logoUrl: String? = null,
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0

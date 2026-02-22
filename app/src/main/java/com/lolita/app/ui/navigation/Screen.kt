@@ -129,6 +129,10 @@ sealed interface Screen {
         override val route = "source_manage"
     }
 
+    data object AttributeManage : Screen {
+        override val route = "attribute_manage"
+    }
+
     data object LocationDetail : Screen {
         override val route = "location_detail/{locationId}"
         fun createRoute(locationId: Long): String = "location_detail/$locationId"

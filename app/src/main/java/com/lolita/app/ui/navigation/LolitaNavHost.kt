@@ -55,6 +55,7 @@ import com.lolita.app.ui.screen.settings.CategoryManageScreen
 import com.lolita.app.ui.screen.settings.StyleManageScreen
 import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
+import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
@@ -411,11 +412,7 @@ fun LolitaNavHost() {
             // Settings
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    onNavigateToBrand = { navController.navigate(Screen.BrandManage.route) },
-                    onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
-                    onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
-                    onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
-                    onNavigateToLocation = { navController.navigate(Screen.LocationManage.route) },
+                    onNavigateToAttributeManage = { navController.navigate(Screen.AttributeManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
@@ -450,6 +447,19 @@ fun LolitaNavHost() {
             // Source Manage
             composable(Screen.SourceManage.route) {
                 SourceManageScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Attribute Manage
+            composable(Screen.AttributeManage.route) {
+                AttributeManageScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToBrand = { navController.navigate(Screen.BrandManage.route) },
+                    onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
+                    onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
+                    onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
+                    onNavigateToLocation = { navController.navigate(Screen.LocationManage.route) },
+                    onNavigateToSource = { navController.navigate(Screen.SourceManage.route) }
+                )
             }
 
             // Theme Select

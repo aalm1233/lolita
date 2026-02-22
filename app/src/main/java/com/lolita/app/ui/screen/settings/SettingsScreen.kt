@@ -5,16 +5,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,11 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onNavigateToBrand: () -> Unit,
-    onNavigateToCategory: () -> Unit,
-    onNavigateToStyle: () -> Unit = {},
-    onNavigateToSeason: () -> Unit = {},
-    onNavigateToLocation: () -> Unit = {},
+    onNavigateToAttributeManage: () -> Unit,
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
     onNavigateToThemeSelect: () -> Unit = {},
@@ -64,43 +55,11 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SettingsMenuItem(
-                title = "品牌管理",
-                description = "管理预置和自定义品牌",
-                icon = Icons.Default.Favorite,
-                iconTint = Color(0xFFFF69B4),
-                onClick = onNavigateToBrand
-            )
-
-            SettingsMenuItem(
-                title = "类型管理",
-                description = "管理服饰类型",
-                icon = Icons.AutoMirrored.Filled.List,
-                iconTint = Color(0xFF6BCF7F),
-                onClick = onNavigateToCategory
-            )
-
-            SettingsMenuItem(
-                title = "风格管理",
-                description = "管理服饰风格（甜系、古典、哥特等）",
-                icon = Icons.Default.Star,
-                iconTint = Color(0xFFBA68C8),
-                onClick = onNavigateToStyle
-            )
-
-            SettingsMenuItem(
-                title = "季节管理",
-                description = "管理适用季节（春、夏、秋、冬等）",
-                icon = Icons.Default.DateRange,
-                iconTint = Color(0xFF4FC3F7),
-                onClick = onNavigateToSeason
-            )
-
-            SettingsMenuItem(
-                title = "位置管理",
-                description = "管理服饰存放位置（衣柜、抽屉等）",
-                icon = Icons.Default.LocationOn,
-                iconTint = Color(0xFF81C784),
-                onClick = onNavigateToLocation
+                title = "属性管理",
+                description = "管理品牌、类型、风格、季节、位置、来源",
+                icon = Icons.Default.Build,
+                iconTint = Color(0xFF7E57C2),
+                onClick = onNavigateToAttributeManage
             )
 
             SettingsMenuItem(

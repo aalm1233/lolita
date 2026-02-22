@@ -1,31 +1,40 @@
 package com.lolita.app.ui.screen.settings
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.screen.common.LolitaCard
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.notification.DailyOutfitReminderScheduler
 import com.lolita.app.data.preferences.AppPreferences
+import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,10 +43,27 @@ fun SettingsScreen(
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
     onNavigateToThemeSelect: () -> Unit = {},
-    appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences()
+    appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
+    settingsViewModel: SettingsViewModel = viewModel()
 ) {
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
+    val uiState by settingsViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    var showNicknameDialog by remember { mutableStateOf(false) }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            coroutineScope.launch {
+                val path = ImageFileHelper.copyToInternalStorage(context, it)
+                settingsViewModel.setAvatarPath(path)
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -54,6 +80,15 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Profile section
+            ProfileSection(
+                uiState = uiState,
+                onAvatarClick = { imagePickerLauncher.launch("image/*") },
+                onNicknameClick = { showNicknameDialog = true }
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             SettingsMenuItem(
                 title = "属性管理",
                 description = "管理品牌、类型、风格、季节、位置、来源",
@@ -145,19 +180,6 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            "🎀",
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     "我的Lolita",
                     style = MaterialTheme.typography.titleMedium,
@@ -179,6 +201,130 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+
+    // Nickname edit dialog
+    if (showNicknameDialog) {
+        NicknameEditDialog(
+            currentNickname = uiState.nickname,
+            onDismiss = { showNicknameDialog = false },
+            onConfirm = { name ->
+                settingsViewModel.setNickname(name)
+                showNicknameDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun ProfileSection(
+    uiState: SettingsUiState,
+    onAvatarClick: () -> Unit,
+    onNicknameClick: () -> Unit
+) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Avatar
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                    .clickable(onClick = onAvatarClick),
+                contentAlignment = Alignment.Center
+            ) {
+                if (uiState.avatarPath.isNotEmpty() && File(uiState.avatarPath).exists()) {
+                    AsyncImage(
+                        model = File(uiState.avatarPath),
+                        contentDescription = "头像",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text(
+                        "🎀",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
+            }
+
+            // Nickname + stats
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable(onClick = onNicknameClick)
+                ) {
+                    Text(
+                        text = uiState.nickname.ifEmpty { "点击设置昵称" },
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = if (uiState.nickname.isEmpty())
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        else MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "编辑昵称",
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                val formattedSpent = NumberFormat.getNumberInstance(Locale.CHINA)
+                    .apply { maximumFractionDigits = 0 }
+                    .format(uiState.totalSpent)
+                Text(
+                    text = "服饰 ${uiState.totalItems}件 | 套装 ${uiState.totalCoordinates}套 | 总花费 ¥$formattedSpent",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NicknameEditDialog(
+    currentNickname: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var text by remember { mutableStateOf(currentNickname) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("设置昵称") },
+        text = {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { if (it.length <= 20) text = it },
+                label = { Text("昵称") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(text.trim()) }) {
+                Text("确定")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("取消")
+            }
+        }
+    )
 }
 
 @Composable
@@ -200,6 +346,7 @@ private fun SettingsMenuItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
             Surface(
                 color = iconTint.copy(alpha = 0.1f),
                 shape = MaterialTheme.shapes.small,
@@ -292,3 +439,4 @@ private fun SettingsToggleItem(
         }
     }
 }
+

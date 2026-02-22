@@ -97,6 +97,9 @@ data class Item(
     @ColumnInfo(name = "location_id")
     val locationId: Long? = null,
 
+    @ColumnInfo(name = "source")
+    val source: String? = null,
+
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()
 )

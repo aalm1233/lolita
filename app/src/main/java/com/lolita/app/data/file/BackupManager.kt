@@ -30,6 +30,7 @@ data class BackupData(
     val styles: List<Style> = emptyList(),
     val seasons: List<Season> = emptyList(),
     val locations: List<Location> = emptyList(),
+    val sources: List<Source> = emptyList(),
     val backupDate: Long = System.currentTimeMillis(),
     val appVersion: String = "1.0"
 )
@@ -57,7 +58,8 @@ class BackupManager(
                     outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
                     styles = database.styleDao().getAllStylesList(),
                     seasons = database.seasonDao().getAllSeasonsList(),
-                    locations = database.locationDao().getAllLocationsList()
+                    locations = database.locationDao().getAllLocationsList(),
+                    sources = database.sourceDao().getAllSourcesList()
                 )
             }
             val jsonString = gson.toJson(backupData)
@@ -123,6 +125,13 @@ class BackupManager(
                 sb.appendLine("${l.id},${escapeCsv(l.name)},${escapeCsv(l.description)},${escapeCsv(l.imageUrl)},${l.sortOrder},${l.createdAt},${l.updatedAt}")
             }
 
+            // Sources
+            sb.appendLine("\n=== SOURCES ===")
+            sb.appendLine("id,name,is_preset,created_at")
+            database.sourceDao().getAllSourcesList().forEach { s ->
+                sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
+            }
+
             // Prices
             sb.appendLine("\n=== PRICES ===")
             sb.appendLine("id,item_id,type,total_price,deposit,balance,purchase_date")
@@ -171,7 +180,8 @@ class BackupManager(
                     outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
                     styles = database.styleDao().getAllStylesList(),
                     seasons = database.seasonDao().getAllSeasonsList(),
-                    locations = database.locationDao().getAllLocationsList()
+                    locations = database.locationDao().getAllLocationsList(),
+                    sources = database.sourceDao().getAllSourcesList()
                 )
             }
 
@@ -235,6 +245,7 @@ class BackupManager(
                 backupData.styles.forEach { database.styleDao().insertStyle(it); imported++ }
                 backupData.seasons.forEach { database.seasonDao().insertSeason(it); imported++ }
                 backupData.locations.forEach { database.locationDao().insertLocation(it); imported++ }
+                backupData.sources.forEach { database.sourceDao().insertSource(it); imported++ }
                 backupData.coordinates.forEach { database.coordinateDao().insertCoordinate(it); imported++ }
                 backupData.items.forEach { database.itemDao().insertItem(it); imported++ }
                 backupData.prices.forEach { database.priceDao().insertPrice(it); imported++ }
@@ -326,6 +337,7 @@ class BackupManager(
                 styleCount = backupData.styles.size,
                 seasonCount = backupData.seasons.size,
                 locationCount = backupData.locations.size,
+                sourceCount = backupData.sources.size,
                 imageCount = imageCount,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
@@ -353,6 +365,7 @@ class BackupManager(
         database.categoryDao().deleteAllCategories()
         database.styleDao().deleteAllStyles()
         database.seasonDao().deleteAllSeasons()
+        database.sourceDao().deleteAllSources()
     }
 
     private fun collectImagePaths(backupData: BackupData): Set<String> {
@@ -466,10 +479,11 @@ data class BackupPreview(
     val styleCount: Int = 0,
     val seasonCount: Int = 0,
     val locationCount: Int = 0,
+    val sourceCount: Int = 0,
     val imageCount: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount
 }

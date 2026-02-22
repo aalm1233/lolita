@@ -202,9 +202,26 @@ fun CoordinateEditScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            if (uiState.allItems.isEmpty()) {
+            var itemSearchQuery by remember { mutableStateOf("") }
+
+            OutlinedTextField(
+                value = itemSearchQuery,
+                onValueChange = { itemSearchQuery = it },
+                label = { Text("搜索服饰") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val filteredItems = uiState.allItems.filter {
+                itemSearchQuery.isBlank() || it.name.contains(itemSearchQuery, ignoreCase = true)
+            }
+
+            if (filteredItems.isEmpty()) {
                 Text(
-                    "暂无服饰，请先添加服饰",
+                    if (itemSearchQuery.isBlank()) "暂无服饰，请先添加服饰" else "未找到匹配的服饰",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -213,7 +230,7 @@ fun CoordinateEditScreen(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(uiState.allItems, key = { it.id }) { item ->
+                    items(filteredItems, key = { it.id }) { item ->
                         val isSelected = item.id in uiState.selectedItemIds
                         Surface(
                             onClick = { viewModel.toggleItemSelection(item.id) },

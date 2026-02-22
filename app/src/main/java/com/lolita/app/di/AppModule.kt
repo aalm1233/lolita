@@ -53,6 +53,9 @@ object AppModule {
     private val _seasonRepository by lazy { SeasonRepository(database.seasonDao(), database.itemDao(), database) }
     fun seasonRepository() = _seasonRepository
 
+    private val _locationRepository by lazy { LocationRepository(database.locationDao(), database.itemDao()) }
+    fun locationRepository() = _locationRepository
+
     private val _backupManager by lazy { BackupManager(appContext, database) }
     fun backupManager() = _backupManager
 

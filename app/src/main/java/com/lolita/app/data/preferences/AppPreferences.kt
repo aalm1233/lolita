@@ -47,10 +47,26 @@ class AppPreferences(private val context: Context) {
         context.dataStore.edit { it[SKIN_TYPE] = skinType.name }
     }
 
+    val nickname: Flow<String> = context.dataStore.data
+        .map { it[NICKNAME] ?: "" }
+
+    suspend fun setNickname(name: String) {
+        context.dataStore.edit { it[NICKNAME] = name }
+    }
+
+    val avatarPath: Flow<String> = context.dataStore.data
+        .map { it[AVATAR_PATH] ?: "" }
+
+    suspend fun setAvatarPath(path: String) {
+        context.dataStore.edit { it[AVATAR_PATH] = path }
+    }
+
     companion object {
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
         private val OUTFIT_REMINDER_HOUR = intPreferencesKey("outfit_reminder_hour")
         private val SKIN_TYPE = stringPreferencesKey("skin_type")
+        private val NICKNAME = stringPreferencesKey("nickname")
+        private val AVATAR_PATH = stringPreferencesKey("avatar_path")
     }
 }

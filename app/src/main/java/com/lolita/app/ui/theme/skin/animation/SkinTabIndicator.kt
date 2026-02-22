@@ -49,40 +49,41 @@ fun SkinTabIndicator(
     ) {
         val left = indicatorOffset.toPx()
         val w = indicatorWidth.toPx()
-        val h = size.height
+        val indicatorH = 3.dp.toPx()
+        val topY = size.height - indicatorH
 
         when (skin.skinType) {
             SkinType.DEFAULT -> {
                 drawRoundRect(
                     Pink400,
-                    topLeft = Offset(left + w * 0.1f, 0f),
-                    size = Size(w * 0.8f, h),
-                    cornerRadius = CornerRadius(h / 2f)
+                    topLeft = Offset(left + w * 0.1f, topY),
+                    size = Size(w * 0.8f, indicatorH),
+                    cornerRadius = CornerRadius(indicatorH / 2f)
                 )
             }
             SkinType.GOTHIC -> {
                 drawRect(
                     Color(0xFF4A0E4E),
-                    topLeft = Offset(left, 0f),
-                    size = Size(w, h)
+                    topLeft = Offset(left, topY),
+                    size = Size(w, indicatorH)
                 )
                 // Shadow trail
                 drawRect(
                     Color(0xFF4A0E4E).copy(alpha = 0.3f),
-                    topLeft = Offset(left - w * 0.1f, 0f),
-                    size = Size(w * 0.1f, h)
+                    topLeft = Offset(left - w * 0.1f, topY),
+                    size = Size(w * 0.1f, indicatorH)
                 )
             }
             SkinType.CHINESE -> {
                 val path = Path().apply {
-                    moveTo(left, h)
+                    moveTo(left, topY + indicatorH)
                     val steps = 20
                     for (i in 0..steps) {
                         val px = left + w * i / steps
-                        val py = h * 0.5f + sin(i.toFloat() * 0.8f) * h * 0.3f
+                        val py = topY + indicatorH * 0.5f + sin(i.toFloat() * 0.8f) * indicatorH * 0.3f
                         lineTo(px, py)
                     }
-                    lineTo(left + w, h)
+                    lineTo(left + w, topY + indicatorH)
                     close()
                 }
                 drawPath(path, Color(0xFF2C2C2C).copy(alpha = 0.8f))
@@ -92,16 +93,16 @@ fun SkinTabIndicator(
                 // Outer glow
                 drawRoundRect(
                     gold.copy(alpha = 0.2f),
-                    topLeft = Offset(left + w * 0.05f, -h * 0.3f),
-                    size = Size(w * 0.9f, h * 1.6f),
-                    cornerRadius = CornerRadius(h)
+                    topLeft = Offset(left + w * 0.05f, topY - indicatorH * 0.3f),
+                    size = Size(w * 0.9f, indicatorH * 1.6f),
+                    cornerRadius = CornerRadius(indicatorH)
                 )
                 // Inner line
                 drawRoundRect(
                     gold,
-                    topLeft = Offset(left + w * 0.15f, h * 0.2f),
-                    size = Size(w * 0.7f, h * 0.6f),
-                    cornerRadius = CornerRadius(h / 2f)
+                    topLeft = Offset(left + w * 0.15f, topY + indicatorH * 0.2f),
+                    size = Size(w * 0.7f, indicatorH * 0.6f),
+                    cornerRadius = CornerRadius(indicatorH / 2f)
                 )
             }
         }

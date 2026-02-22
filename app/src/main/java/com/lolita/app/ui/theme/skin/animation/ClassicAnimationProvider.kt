@@ -120,10 +120,10 @@ class ClassicAnimationProvider : SkinAnimationProvider {
 
     override val ambientAnimation = SkinAmbientAnimationSpec(
         backgroundEnabled = true,
-        backgroundParticleCount = 14,
+        backgroundParticleCount = 20,
         backgroundCycleDurationRange = 10000..18000,
         backgroundAlphaRange = 0.15f..0.35f,
         topBarDecorationAnimated = true,
-        cardGlowEffect = true
+        cardGlowEffect = false
     )
 }

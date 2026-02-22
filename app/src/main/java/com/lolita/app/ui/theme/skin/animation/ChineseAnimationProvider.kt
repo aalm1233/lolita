@@ -133,10 +133,10 @@ class ChineseAnimationProvider : SkinAnimationProvider {
 
     override val ambientAnimation = SkinAmbientAnimationSpec(
         backgroundEnabled = true,
-        backgroundParticleCount = 10,
+        backgroundParticleCount = 16,
         backgroundCycleDurationRange = 15000..25000,
         backgroundAlphaRange = 0.1f..0.25f,
         topBarDecorationAnimated = true,
-        cardGlowEffect = true
+        cardGlowEffect = false
     )
 }

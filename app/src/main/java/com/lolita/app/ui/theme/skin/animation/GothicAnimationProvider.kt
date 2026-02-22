@@ -114,10 +114,10 @@ class GothicAnimationProvider : SkinAnimationProvider {
 
     override val ambientAnimation = SkinAmbientAnimationSpec(
         backgroundEnabled = true,
-        backgroundParticleCount = 12,
+        backgroundParticleCount = 18,
         backgroundCycleDurationRange = 12000..20000,
         backgroundAlphaRange = 0.12f..0.3f,
         topBarDecorationAnimated = true,
-        cardGlowEffect = true
+        cardGlowEffect = false
     )
 }

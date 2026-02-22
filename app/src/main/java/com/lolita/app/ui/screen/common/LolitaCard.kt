@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
-import com.lolita.app.ui.theme.skin.animation.skinCardGlow
 
 @Composable
 fun LolitaCard(
@@ -14,21 +13,25 @@ fun LolitaCard(
     content: @Composable () -> Unit
 ) {
     val cardShape = LolitaSkin.current.cardShape
-    val glowModifier = modifier.skinCardGlow()
+    val cardColors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
+    )
     if (onClick != null) {
         Card(
             onClick = onClick,
-            modifier = glowModifier,
+            modifier = modifier,
             shape = cardShape,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            colors = cardColors,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             content()
         }
     } else {
         Card(
-            modifier = glowModifier,
+            modifier = modifier,
             shape = cardShape,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            colors = cardColors,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             content()
         }

@@ -45,6 +45,8 @@ class FilteredItemListViewModel(
                 "priority" -> itemRepository.getWishlistByPriorityFilter(
                     ItemPriority.valueOf(filterValue)
                 )
+                "location" -> itemRepository.getItemsByLocationId(filterValue.toLong())
+                "location_unassigned" -> itemRepository.getItemsWithNoLocation()
                 else -> itemRepository.getAllItems()
             }
             flow.collect { items ->

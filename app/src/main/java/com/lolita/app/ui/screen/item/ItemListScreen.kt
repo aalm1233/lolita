@@ -64,6 +64,7 @@ fun ItemListScreen(
     onNavigateToCoordinateEdit: (Long) -> Unit = {},
     onNavigateToQuickOutfit: () -> Unit = {},
     onNavigateToLocationDetail: (Long) -> Unit = {},
+    onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -326,7 +327,12 @@ fun ItemListScreen(
                         locationItemCounts = locationItemCounts,
                         unassignedItemCount = unassignedCount,
                         onLocationClick = { locationId ->
-                            onNavigateToLocationDetail(locationId)
+                            if (locationId == -1L) {
+                                onNavigateToFilteredList("location_unassigned", "", "未分配")
+                            } else {
+                                val locationName = locations.firstOrNull { it.id == locationId }?.name ?: ""
+                                onNavigateToFilteredList("location", locationId.toString(), locationName)
+                            }
                         }
                     )
                 }

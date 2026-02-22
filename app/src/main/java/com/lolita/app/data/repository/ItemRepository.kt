@@ -48,6 +48,8 @@ class ItemRepository(
     fun getItemsByStyle(style: String) = itemDao.getItemsByStyle(style)
     fun getItemsBySeason(season: String) = itemDao.getItemsBySeason(season)
     fun getWishlistByPriorityFilter(priority: ItemPriority) = itemDao.getWishlistByPriorityFilter(priority)
+    fun getItemsByLocationId(locationId: Long) = itemDao.getItemsByLocationId(locationId)
+    fun getItemsWithNoLocation() = itemDao.getItemsWithNoLocation()
 
     suspend fun deleteItem(item: Item) {
         val doDelete: suspend () -> Unit = {

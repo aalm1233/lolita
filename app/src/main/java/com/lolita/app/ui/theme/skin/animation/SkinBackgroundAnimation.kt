@@ -3,6 +3,7 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,8 @@ fun SkinBackgroundAnimation(
 
     if (!spec.backgroundEnabled) return
 
+    val isScrolling by LocalIsListScrolling.current
+
     val particles = remember(skin.skinType) {
         createParticles(skin.skinType, spec.backgroundParticleCount)
     }
@@ -51,7 +54,9 @@ fun SkinBackgroundAnimation(
         particles.forEach { it.reset(1080f, 1920f) }
         while (isActive) {
             delay(16L) // ~60fps
-            frameTime.longValue = System.nanoTime() / 1_000_000L
+            if (!isScrolling) {
+                frameTime.longValue = System.nanoTime() / 1_000_000L
+            }
         }
     }
 
@@ -59,9 +64,11 @@ fun SkinBackgroundAnimation(
         // Read frameTime to trigger recomposition
         @Suppress("UNUSED_VARIABLE")
         val currentFrame = frameTime.longValue
-        particles.forEach { particle ->
-            particle.update(16L, size.width, size.height)
-            with(particle) { draw() }
+        if (!isScrolling) {
+            particles.forEach { particle ->
+                particle.update(16L, size.width, size.height)
+                with(particle) { draw() }
+            }
         }
     }
 }

@@ -20,9 +20,9 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import com.lolita.app.ui.theme.skin.animation.SkinClickable
-import com.lolita.app.ui.theme.skin.animation.SkinItemAppear
-import com.lolita.app.ui.theme.skin.animation.SkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +65,7 @@ fun LocationDetailScreen(
                 modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(vertical = 12.dp),
-                flingBehavior = SkinFlingBehavior()
+                flingBehavior = rememberSkinFlingBehavior()
             ) {
                 // Location header (image + description)
                 if (!uiState.isUnassigned && uiState.location != null) {
@@ -111,14 +111,15 @@ fun LocationDetailScreen(
 
                 // Item list
                 itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
-                    SkinItemAppear(index = index) {
-                        SkinClickable(onClick = { onItemClick(item.id) }) {
-                            LocationItemCard(
-                                item = item,
-                                brandName = uiState.brandNames[item.brandId] ?: "",
-                                categoryName = uiState.categoryNames[item.categoryId] ?: ""
-                            )
-                        }
+                    SkinClickableBox(
+                        onClick = { onItemClick(item.id) },
+                        modifier = Modifier.skinItemAppear(index)
+                    ) {
+                        LocationItemCard(
+                            item = item,
+                            brandName = uiState.brandNames[item.brandId] ?: "",
+                            categoryName = uiState.categoryNames[item.categoryId] ?: ""
+                        )
                     }
                 }
 

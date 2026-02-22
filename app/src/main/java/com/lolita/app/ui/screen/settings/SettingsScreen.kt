@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +39,7 @@ fun SettingsScreen(
     onNavigateToCategory: () -> Unit,
     onNavigateToStyle: () -> Unit = {},
     onNavigateToSeason: () -> Unit = {},
+    onNavigateToLocation: () -> Unit = {},
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
     onNavigateToThemeSelect: () -> Unit = {},
@@ -91,6 +93,14 @@ fun SettingsScreen(
                 icon = Icons.Default.DateRange,
                 iconTint = Color(0xFF4FC3F7),
                 onClick = onNavigateToSeason
+            )
+
+            SettingsMenuItem(
+                title = "位置管理",
+                description = "管理服饰存放位置（衣柜、抽屉等）",
+                icon = Icons.Default.LocationOn,
+                iconTint = Color(0xFF81C784),
+                onClick = onNavigateToLocation
             )
 
             SettingsMenuItem(

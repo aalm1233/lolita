@@ -18,9 +18,9 @@ import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import com.lolita.app.ui.theme.skin.animation.SkinClickable
-import com.lolita.app.ui.theme.skin.animation.SkinItemAppear
-import com.lolita.app.ui.theme.skin.animation.SkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 
 @Composable
 fun LocationListContent(
@@ -33,32 +33,34 @@ fun LocationListContent(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(vertical = 12.dp),
-        flingBehavior = SkinFlingBehavior()
+        flingBehavior = rememberSkinFlingBehavior()
     ) {
         itemsIndexed(locations, key = { _, loc -> loc.id }) { index, location ->
-            SkinItemAppear(index = index) {
-                SkinClickable(onClick = { onLocationClick(location.id) }) {
-                    LocationCardItem(
-                        name = location.name,
-                        description = location.description,
-                        imageUrl = location.imageUrl,
-                        itemCount = locationItemCounts[location.id] ?: 0
-                    )
-                }
+            SkinClickableBox(
+                onClick = { onLocationClick(location.id) },
+                modifier = Modifier.skinItemAppear(index)
+            ) {
+                LocationCardItem(
+                    name = location.name,
+                    description = location.description,
+                    imageUrl = location.imageUrl,
+                    itemCount = locationItemCounts[location.id] ?: 0
+                )
             }
         }
         if (unassignedItemCount > 0) {
             item(key = "unassigned") {
-                SkinItemAppear(index = locations.size) {
-                    SkinClickable(onClick = { onLocationClick(-1L) }) {
-                        LocationCardItem(
-                            name = "未分配",
-                            description = "未设置位置的服饰",
-                            imageUrl = null,
-                            itemCount = unassignedItemCount,
-                            isUnassigned = true
-                        )
-                    }
+                SkinClickableBox(
+                    onClick = { onLocationClick(-1L) },
+                    modifier = Modifier.skinItemAppear(locations.size)
+                ) {
+                    LocationCardItem(
+                        name = "未分配",
+                        description = "未设置位置的服饰",
+                        imageUrl = null,
+                        itemCount = unassignedItemCount,
+                        isUnassigned = true
+                    )
                 }
             }
         }

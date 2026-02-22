@@ -58,6 +58,8 @@ import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
+import com.lolita.app.ui.screen.item.LocationDetailScreen
+import com.lolita.app.ui.screen.settings.LocationManageScreen
 
 interface BottomNavItem {
     val screen: Screen
@@ -195,6 +197,9 @@ fun LolitaNavHost() {
                     },
                     onNavigateToQuickOutfit = {
                         navController.navigate(Screen.QuickOutfitLog.route)
+                    },
+                    onNavigateToLocationDetail = { locationId ->
+                        navController.navigate(Screen.LocationDetail.createRoute(locationId))
                     }
                 )
             }
@@ -406,6 +411,7 @@ fun LolitaNavHost() {
                     onNavigateToCategory = { navController.navigate(Screen.CategoryManage.route) },
                     onNavigateToStyle = { navController.navigate(Screen.StyleManage.route) },
                     onNavigateToSeason = { navController.navigate(Screen.SeasonManage.route) },
+                    onNavigateToLocation = { navController.navigate(Screen.LocationManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
@@ -432,6 +438,11 @@ fun LolitaNavHost() {
                 SeasonManageScreen(onBack = { navController.popBackStack() })
             }
 
+            // Location Manage
+            composable(Screen.LocationManage.route) {
+                LocationManageScreen(onBack = { navController.popBackStack() })
+            }
+
             // Theme Select
             composable(Screen.ThemeSelect.route) {
                 ThemeSelectScreen(onBack = { navController.popBackStack() })
@@ -451,6 +462,19 @@ fun LolitaNavHost() {
                         navController.popBackStack()
                     }
                 )
+
+            // Location Detail
+            composable(
+                route = Screen.LocationDetail.route,
+                arguments = listOf(navArgument("locationId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val locationId = backStackEntry.arguments?.getLong("locationId") ?: return@composable
+                LocationDetailScreen(
+                    locationId = locationId,
+                    onBack = { navController.popBackStack() },
+                    onItemClick = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) }
+                )
+            }
             }
 
             // Recommendation

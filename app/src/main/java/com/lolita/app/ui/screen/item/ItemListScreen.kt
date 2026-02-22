@@ -63,6 +63,7 @@ fun ItemListScreen(
     onNavigateToCoordinateAdd: () -> Unit = {},
     onNavigateToCoordinateEdit: (Long) -> Unit = {},
     onNavigateToQuickOutfit: () -> Unit = {},
+    onNavigateToLocationDetail: (Long) -> Unit = {},
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -80,7 +81,7 @@ fun ItemListScreen(
     // Sync pager -> filter
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {
-            0 -> viewModel.filterByStatus(null)
+            0 -> { /* Location tab - no status filter needed */ }
             1 -> viewModel.filterByStatus(ItemStatus.OWNED)
         }
     }
@@ -274,7 +275,7 @@ fun ItemListScreen(
             }
 
             // Category group filter + total price (only on item tabs)
-            if (pagerState.currentPage < 2) {
+            if (pagerState.currentPage == 1) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -315,7 +316,21 @@ fun ItemListScreen(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                if (page < 2) {
+                when (page) {
+                0 -> {
+                    val locations by viewModel.locations.collectAsState()
+                    val locationItemCounts by viewModel.locationItemCounts.collectAsState()
+                    val unassignedCount by viewModel.unassignedItemCount.collectAsState()
+                    LocationListContent(
+                        locations = locations,
+                        locationItemCounts = locationItemCounts,
+                        unassignedItemCount = unassignedCount,
+                        onLocationClick = { locationId ->
+                            onNavigateToLocationDetail(locationId)
+                        }
+                    )
+                }
+                1 -> {
                     // Item list content
                     Column(modifier = Modifier.fillMaxSize()) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -393,13 +408,15 @@ fun ItemListScreen(
                             }
                         }
                     }
-                } else {
+                }
+                2 -> {
                     // Coordinate list content (tab 3)
                     CoordinateListContent(
                         onNavigateToDetail = onNavigateToCoordinateDetail,
                         onNavigateToEdit = onNavigateToCoordinateEdit,
                         viewModel = coordinateViewModel
                     )
+                }
                 }
             }
         }
@@ -411,7 +428,7 @@ private fun ItemFilterTabRow(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    val tabs = listOf("全部", "已拥有", "套装")
+    val tabs = listOf("位置", "已拥有", "套装")
 
     TabRow(
         selectedTabIndex = selectedIndex,

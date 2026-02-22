@@ -96,7 +96,9 @@ data class ItemEditUiState(
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
     val styleOptions: List<String> = emptyList(),
     val seasonOptions: List<String> = emptyList(),
-    val pricesWithPayments: List<DaoPriceWithPayments> = emptyList()
+    val pricesWithPayments: List<DaoPriceWithPayments> = emptyList(),
+    val locationId: Long? = null,
+    val locations: List<com.lolita.app.data.local.entity.Location> = emptyList()
 )
 
 /**
@@ -430,7 +432,8 @@ class ItemEditViewModel(
     private val coordinateRepository: com.lolita.app.data.repository.CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
     private val styleRepository: StyleRepository = com.lolita.app.di.AppModule.styleRepository(),
-    private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository()
+    private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository(),
+    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemEditUiState())
@@ -461,6 +464,13 @@ class ItemEditViewModel(
                 )
             }
 
+            // Load locations
+            viewModelScope.launch {
+                locationRepository.getAllLocations().collect { locations ->
+                    _uiState.update { it.copy(locations = locations) }
+                }
+            }
+
             if (itemId > 0) {
                 val item = itemRepository.getItemById(itemId)
                 if (item != null) {
@@ -481,6 +491,7 @@ class ItemEditViewModel(
                             style = item.style,
                             size = item.size,
                             sizeChartImageUrl = item.sizeChartImageUrl,
+                            locationId = item.locationId,
                             pricesWithPayments = prices,
                             isLoading = false
                         )
@@ -569,6 +580,11 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
     }
 
+    fun updateLocation(locationId: Long?) {
+        _uiState.update { it.copy(locationId = locationId) }
+        hasUnsavedChanges = true
+    }
+
     fun isValid(): Boolean {
         val state = _uiState.value
         return state.name.isNotBlank() && state.brandId != 0L && state.categoryId != 0L
@@ -610,6 +626,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    locationId = state.locationId,
                     updatedAt = now
                 )
             } else {
@@ -629,6 +646,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    locationId = state.locationId,
                     createdAt = now,
                     updatedAt = now
                 )

@@ -211,6 +211,13 @@ fun ItemEditScreen(
                     onCoordinateSelected = { viewModel.updateCoordinate(it) }
                 )
 
+                // Location selector (optional)
+                LocationSelector(
+                    selectedLocationId = uiState.locationId,
+                    locations = uiState.locations,
+                    onLocationSelected = { viewModel.updateLocation(it) }
+                )
+
                 // Status selector
                 StatusSelector(
                     selectedStatus = uiState.status,
@@ -788,6 +795,52 @@ private fun SizeChartImageSection(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LocationSelector(
+    selectedLocationId: Long?,
+    locations: List<com.lolita.app.data.local.entity.Location>,
+    onLocationSelected: (Long?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedName = if (selectedLocationId == null) {
+        "无"
+    } else {
+        locations.find { it.id == selectedLocationId }?.name ?: "无"
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        OutlinedTextField(
+            value = selectedName,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("存放位置 (可选)") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("无") },
+                onClick = { onLocationSelected(null); expanded = false }
+            )
+            locations.forEach { location ->
+                DropdownMenuItem(
+                    text = { Text(location.name) },
+                    onClick = { onLocationSelected(location.id); expanded = false }
+                )
             }
         }
     }

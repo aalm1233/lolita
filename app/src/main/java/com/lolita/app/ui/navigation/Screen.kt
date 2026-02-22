@@ -120,4 +120,13 @@ sealed interface Screen {
             return "filtered_item_list?filterType=$filterType&filterValue=${android.net.Uri.encode(filterValue)}&title=${android.net.Uri.encode(title)}"
         }
     }
+
+    data object LocationManage : Screen {
+        override val route = "location_manage"
+    }
+
+    data object LocationDetail : Screen {
+        override val route = "location_detail/{locationId}"
+        fun createRoute(locationId: Long): String = "location_detail/$locationId"
+    }
 }

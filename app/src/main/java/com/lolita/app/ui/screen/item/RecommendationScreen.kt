@@ -144,8 +144,11 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                         Text(it, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    matchScore.item.colors?.let {
-                        Text(it, style = MaterialTheme.typography.bodySmall,
+                    matchScore.item.colors?.let { colorsJson ->
+                        val colorDisplay = try {
+                            com.google.gson.Gson().fromJson(colorsJson, Array<String>::class.java).joinToString("、")
+                        } catch (_: Exception) { colorsJson }
+                        Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }

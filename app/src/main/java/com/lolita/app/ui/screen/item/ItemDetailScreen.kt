@@ -27,6 +27,10 @@ import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.FlowRow
+import com.google.gson.Gson
+import com.lolita.app.ui.screen.common.findColorHex
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -294,8 +298,13 @@ fun ItemDetailScreen(
                         }
 
                         // Color, Season, Style
-                        item.colors?.let { color ->
-                            if (color.isNotEmpty()) DetailRow(label = "颜色", value = color)
+                        item.colors?.let { colorsJson ->
+                            val colorList = try {
+                                Gson().fromJson(colorsJson, Array<String>::class.java).toList()
+                            } catch (_: Exception) { emptyList() }
+                            if (colorList.isNotEmpty()) {
+                                ColorChipsRow(label = "颜色", colors = colorList)
+                            }
                         }
                         item.season?.let { season ->
                             if (season.isNotEmpty()) DetailRow(label = "季节", value = season.replace(",", "、"))
@@ -649,6 +658,65 @@ private fun DetailRow(label: String, value: String) {
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium
         )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ColorChipsRow(label: String, colors: List<String>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.width(80.dp)
+        ) {
+            Surface(
+                modifier = Modifier.size(6.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+            ) {}
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            colors.forEach { colorName ->
+                val hex = findColorHex(colorName)
+                val chipColor = if (hex != null) Color(hex) else Color.Gray
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(12.dp)
+                                .clip(androidx.compose.foundation.shape.CircleShape)
+                                .background(chipColor)
+                        )
+                        Text(
+                            text = colorName,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

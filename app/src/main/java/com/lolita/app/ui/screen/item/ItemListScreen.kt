@@ -53,6 +53,8 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import coil.request.ImageRequest
+import com.google.gson.Gson
+import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -655,19 +657,37 @@ private fun ItemCard(
                             )
                         }
                     }
-                    item.colors?.let { color ->
-                        if (color.isNotEmpty()) {
+                    item.colors?.let { colorsJson ->
+                        val colorList = try {
+                            Gson().fromJson(colorsJson, Array<String>::class.java).toList()
+                        } catch (_: Exception) { emptyList() }
+                        if (colorList.isNotEmpty()) {
                             Surface(
                                 color = MaterialTheme.colorScheme.outlineVariant,
                                 shape = RoundedCornerShape(4.dp)
                             ) {
-                                Text(
-                                    text = color,
+                                Row(
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1
-                                )
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    colorList.take(3).forEach { colorName ->
+                                        val hex = findColorHex(colorName)
+                                        val chipColor = if (hex != null) Color(hex) else Color.Gray
+                                        Box(
+                                            modifier = Modifier
+                                                .size(8.dp)
+                                                .clip(CircleShape)
+                                                .background(chipColor)
+                                        )
+                                    }
+                                    Text(
+                                        text = colorList.joinToString("、"),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1
+                                    )
+                                }
                             }
                         }
                     }

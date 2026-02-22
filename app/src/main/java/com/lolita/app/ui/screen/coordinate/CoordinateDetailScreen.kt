@@ -398,7 +398,11 @@ private fun CoordinateItemCard(
                 ) {
                     StatusBadge(item.status)
                     // Show color/style if available
-                    val details = listOfNotNull(item.colors, item.style).joinToString(" · ")
+                    val colorDisplay = item.colors?.let { json ->
+                        try { com.google.gson.Gson().fromJson(json, Array<String>::class.java).joinToString("、") }
+                        catch (_: Exception) { json }
+                    }
+                    val details = listOfNotNull(colorDisplay, item.style).joinToString(" · ")
                     if (details.isNotEmpty()) {
                         Text(
                             details,

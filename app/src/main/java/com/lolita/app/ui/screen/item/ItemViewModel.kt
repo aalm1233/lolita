@@ -193,7 +193,12 @@ class ItemListViewModel(
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
-                val colorOpts = items.mapNotNull { it.colors?.takeIf { c -> c.isNotBlank() } }.distinct().sorted()
+                val colorOpts = items.flatMap { item ->
+                    item.colors?.let { json ->
+                        try { Gson().fromJson(json, Array<String>::class.java).toList() }
+                        catch (_: Exception) { emptyList() }
+                    } ?: emptyList()
+                }.filter { it.isNotBlank() }.distinct().sorted()
                 ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
                 val filtered = applyFilters(
@@ -419,7 +424,13 @@ class ItemListViewModel(
         }
 
         if (color != null) {
-            result = result.filter { it.colors == color }
+            result = result.filter { item ->
+                val itemColors = item.colors?.let { json ->
+                    try { Gson().fromJson(json, Array<String>::class.java).toList() }
+                    catch (_: Exception) { emptyList() }
+                } ?: emptyList()
+                itemColors.contains(color)
+            }
         }
 
         if (brandId != null) {

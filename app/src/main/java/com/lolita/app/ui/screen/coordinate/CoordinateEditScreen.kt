@@ -260,8 +260,12 @@ fun CoordinateEditScreen(
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
                                     )
+                                    val colorDisplay = item.colors?.let { json ->
+                                        try { com.google.gson.Gson().fromJson(json, Array<String>::class.java).joinToString("、") }
+                                        catch (_: Exception) { json }
+                                    }
                                     val details = listOfNotNull(
-                                        item.colors,
+                                        colorDisplay,
                                         item.season,
                                         item.style
                                     ).joinToString(" · ")

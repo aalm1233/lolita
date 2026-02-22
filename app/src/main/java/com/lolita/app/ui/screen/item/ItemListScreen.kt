@@ -49,6 +49,10 @@ import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import coil.request.ImageRequest
+import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -333,6 +337,10 @@ fun ItemListScreen(
                         } else if (uiState.columnsPerRow == 1) {
                             val flingBehavior = rememberSkinFlingBehavior()
                             val listState = rememberLazyListState()
+                            val scrollingState = LocalIsListScrolling.current
+                            LaunchedEffect(listState.isScrollInProgress) {
+                                scrollingState.value = listState.isScrollInProgress
+                            }
                             LazyColumn(
                                 state = listState,
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -340,22 +348,17 @@ fun ItemListScreen(
                                 flingBehavior = flingBehavior
                             ) {
                                 itemsIndexed(
-                                    items = uiState.filteredItems,
-                                    key = { _, item -> item.id }
-                                ) { index, item ->
+                                    items = uiState.itemCardDataList,
+                                    key = { _, data -> data.item.id }
+                                ) { index, data ->
                                     SwipeToDeleteContainer(
-                                        onDelete = { itemToDelete = item }
+                                        onDelete = { itemToDelete = data.item }
                                     ) {
                                         ItemCard(
-                                            item = item,
-                                            brandName = uiState.brandNames[item.brandId],
-                                            categoryName = uiState.categoryNames[item.categoryId],
-                                            itemPrice = uiState.itemPrices[item.id],
-                                            showPrice = uiState.showTotalPrice,
-                                            onClick = { onNavigateToDetail(item.id) },
-                                            onEdit = { onNavigateToEdit(item.id) },
-                                            onDelete = { itemToDelete = item },
-                                            isScrolling = listState.isScrollInProgress,
+                                            data = data,
+                                            onClick = { onNavigateToDetail(data.item.id) },
+                                            onEdit = { onNavigateToEdit(data.item.id) },
+                                            onDelete = { itemToDelete = data.item },
                                             modifier = Modifier
                                                 .skinItemAppear(index)
                                                 .animateItem()
@@ -365,6 +368,10 @@ fun ItemListScreen(
                             }
                         } else {
                             val gridState = rememberLazyGridState()
+                            val scrollingState = LocalIsListScrolling.current
+                            LaunchedEffect(gridState.isScrollInProgress) {
+                                scrollingState.value = gridState.isScrollInProgress
+                            }
                             LazyVerticalGrid(
                                 state = gridState,
                                 columns = GridCells.Fixed(uiState.columnsPerRow),
@@ -373,19 +380,14 @@ fun ItemListScreen(
                                 contentPadding = PaddingValues(horizontal = 16.dp)
                             ) {
                                 items(
-                                    items = uiState.filteredItems,
-                                    key = { it.id }
-                                ) { item ->
+                                    items = uiState.itemCardDataList,
+                                    key = { it.item.id }
+                                ) { data ->
                                     ItemGridCard(
-                                        item = item,
-                                        brandName = uiState.brandNames[item.brandId],
-                                        categoryName = uiState.categoryNames[item.categoryId],
-                                        itemPrice = uiState.itemPrices[item.id],
-                                        showPrice = uiState.showTotalPrice,
-                                        onClick = { onNavigateToDetail(item.id) },
-                                        onEdit = { onNavigateToEdit(item.id) },
-                                        onDelete = { itemToDelete = item },
-                                        isScrolling = gridState.isScrollInProgress
+                                        data = data,
+                                        onClick = { onNavigateToDetail(data.item.id) },
+                                        onEdit = { onNavigateToEdit(data.item.id) },
+                                        onDelete = { itemToDelete = data.item }
                                     )
                                 }
                             }
@@ -444,23 +446,22 @@ private fun ItemFilterTabRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ItemCard(
-    item: Item,
-    brandName: String?,
-    categoryName: String?,
-    itemPrice: Double?,
-    showPrice: Boolean = true,
+    data: ItemCardData,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val item = data.item
+    val brandName = data.brandName
+    val categoryName = data.categoryName
+    val itemPrice = data.itemPrice
+    val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
 
     LolitaCard(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        isScrolling = isScrolling
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
@@ -469,8 +470,15 @@ private fun ItemCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (item.imageUrl != null) {
+                val context = LocalContext.current
+                val density = LocalDensity.current
+                val imageSizePx = with(density) { 80.dp.roundToPx() }
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = ImageRequest.Builder(context)
+                        .data(java.io.File(item.imageUrl!!))
+                        .size(imageSizePx)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(80.dp)
@@ -529,23 +537,25 @@ private fun ItemCard(
                         IconButton(onClick = { showMenu = true }) {
                             SkinIcon(IconKey.Edit, tint = MaterialTheme.colorScheme.primary)
                         }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("编辑") },
-                                onClick = { showMenu = false; onEdit() },
-                                leadingIcon = { SkinIcon(IconKey.Edit) }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("删除") },
-                                onClick = { showMenu = false; onDelete() },
-                                leadingIcon = {
-                                    SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
-                                },
-                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
-                            )
+                        if (showMenu) {
+                            DropdownMenu(
+                                expanded = true,
+                                onDismissRequest = { showMenu = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("编辑") },
+                                    onClick = { showMenu = false; onEdit() },
+                                    leadingIcon = { SkinIcon(IconKey.Edit) }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("删除") },
+                                    onClick = { showMenu = false; onDelete() },
+                                    leadingIcon = {
+                                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                                )
+                            }
                         }
                     }
                 }
@@ -640,22 +650,21 @@ private fun ItemCard(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ItemGridCard(
-    item: Item,
-    brandName: String?,
-    categoryName: String?,
-    itemPrice: Double?,
-    showPrice: Boolean = true,
+    data: ItemCardData,
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val item = data.item
+    val brandName = data.brandName
+    val categoryName = data.categoryName
+    val itemPrice = data.itemPrice
+    val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
 
     LolitaCard(
-        modifier = modifier.fillMaxWidth(),
-        isScrolling = isScrolling
+        modifier = modifier.fillMaxWidth()
     ) {
         Box(
             modifier = Modifier
@@ -669,8 +678,15 @@ private fun ItemGridCard(
                 // Image area with price overlay
                 Box {
                     if (item.imageUrl != null) {
+                        val context = LocalContext.current
+                        val density = LocalDensity.current
+                        val imageSizePx = with(density) { 200.dp.roundToPx() }
                         AsyncImage(
-                            model = item.imageUrl,
+                            model = ImageRequest.Builder(context)
+                                .data(java.io.File(item.imageUrl!!))
+                                .size(imageSizePx)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = item.name,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -770,23 +786,25 @@ private fun ItemGridCard(
                 }
             }
 
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("编辑") },
-                    onClick = { showMenu = false; onEdit() },
-                    leadingIcon = { SkinIcon(IconKey.Edit) }
-                )
-                DropdownMenuItem(
-                    text = { Text("删除") },
-                    onClick = { showMenu = false; onDelete() },
-                    leadingIcon = {
-                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
-                    },
-                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
-                )
+            if (showMenu) {
+                DropdownMenu(
+                    expanded = true,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("编辑") },
+                        onClick = { showMenu = false; onEdit() },
+                        leadingIcon = { SkinIcon(IconKey.Edit) }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("删除") },
+                        onClick = { showMenu = false; onDelete() },
+                        leadingIcon = {
+                            SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
+                        },
+                        colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                    )
+                }
             }
         }
     }

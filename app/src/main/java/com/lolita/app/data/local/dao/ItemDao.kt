@@ -1,5 +1,6 @@
 package com.lolita.app.data.local.dao
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
@@ -131,6 +132,21 @@ interface ItemDao {
         ORDER BY i.updated_at DESC
     """)
     fun getItemsByCategoryName(categoryName: String): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE location_id = :locationId ORDER BY updated_at DESC")
+    fun getItemsByLocationId(locationId: Long): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE location_id IS NULL ORDER BY updated_at DESC")
+    fun getItemsWithNoLocation(): Flow<List<Item>>
+
+    @Query("SELECT COUNT(*) FROM items WHERE location_id = :locationId")
+    suspend fun countItemsByLocation(locationId: Long): Int
+
+    @Query("SELECT COUNT(*) FROM items WHERE location_id IS NULL")
+    fun countItemsWithNoLocation(): Flow<Int>
+
+    @Query("SELECT location_id, COUNT(*) as count FROM items WHERE location_id IS NOT NULL GROUP BY location_id")
+    fun getItemCountsByLocation(): Flow<List<LocationItemCount>>
 }
 
 data class ItemWithFullDetails(
@@ -141,4 +157,9 @@ data class ItemWithFullDetails(
     val category: Category,
     @Relation(parentColumn = "id", entityColumn = "item_id")
     val prices: List<Price>
+)
+
+data class LocationItemCount(
+    @ColumnInfo(name = "location_id") val locationId: Long,
+    @ColumnInfo(name = "count") val count: Int
 )

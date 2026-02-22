@@ -38,6 +38,7 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun outfitLogDao(): OutfitLogDao
     abstract fun styleDao(): StyleDao
     abstract fun seasonDao(): SeasonDao
+    abstract fun locationDao(): LocationDao
 
     companion object {
         @Volatile

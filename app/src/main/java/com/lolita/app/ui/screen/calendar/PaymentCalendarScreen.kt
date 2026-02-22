@@ -49,6 +49,9 @@ data class PaymentCalendarUiState(
     val monthUnpaidTotal: Double = 0.0,
     val totalUnpaidAmount: Double = 0.0,
     val overdueAmount: Double = 0.0,
+    val monthPaidTotal: Double = 0.0,
+    val monthPaidCount: Int = 0,
+    val monthUnpaidCount: Int = 0,
     val isLoading: Boolean = true
 )
 
@@ -89,11 +92,16 @@ class PaymentCalendarViewModel(
                 paymentRepository.getTotalUnpaidAmount(),
                 paymentRepository.getOverdueAmount(now)
             ) { payments, monthUnpaid, totalUnpaid, overdue ->
+                val paidPayments = payments.filter { it.isPaid }
+                val unpaidPayments = payments.filter { !it.isPaid }
                 _uiState.value.copy(
                     monthPayments = payments,
                     monthUnpaidTotal = monthUnpaid,
                     totalUnpaidAmount = totalUnpaid,
                     overdueAmount = overdue,
+                    monthPaidTotal = paidPayments.sumOf { it.amount },
+                    monthPaidCount = paidPayments.size,
+                    monthUnpaidCount = unpaidPayments.size,
                     isLoading = false
                 )
             }.collect { _uiState.value = it }
@@ -166,8 +174,10 @@ fun PaymentCalendarContent(
     ) {
         item {
             StatsRow(
+                monthPaid = uiState.monthPaidTotal,
+                monthPaidCount = uiState.monthPaidCount,
                 monthUnpaid = uiState.monthUnpaidTotal,
-                totalUnpaid = uiState.totalUnpaidAmount,
+                monthUnpaidCount = uiState.monthUnpaidCount,
                 overdue = uiState.overdueAmount
             )
         }
@@ -226,19 +236,25 @@ fun PaymentCalendarContent(
 }
 
 @Composable
-private fun StatsRow(monthUnpaid: Double, totalUnpaid: Double, overdue: Double) {
+private fun StatsRow(
+    monthPaid: Double,
+    monthPaidCount: Int,
+    monthUnpaid: Double,
+    monthUnpaidCount: Int,
+    overdue: Double
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        MiniStatCard("当月待付", monthUnpaid, MaterialTheme.colorScheme.primary, Modifier.weight(1f))
-        MiniStatCard("累计待付", totalUnpaid, Color(0xFF7C4DFF), Modifier.weight(1f))
+        MiniStatCard("当月已付", monthPaid, Color(0xFF4CAF50), Modifier.weight(1f), subtitle = "${monthPaidCount}笔")
+        MiniStatCard("当月待付", monthUnpaid, MaterialTheme.colorScheme.primary, Modifier.weight(1f), subtitle = "${monthUnpaidCount}笔")
         MiniStatCard("已逾期", overdue, Color(0xFFD32F2F), Modifier.weight(1f))
     }
 }
 
 @Composable
-private fun MiniStatCard(label: String, amount: Double, color: Color, modifier: Modifier) {
+private fun MiniStatCard(label: String, amount: Double, color: Color, modifier: Modifier, subtitle: String? = null) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f))
@@ -254,6 +270,14 @@ private fun MiniStatCard(label: String, amount: Double, color: Color, modifier: 
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            if (subtitle != null) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = color.copy(alpha = 0.7f)
+                )
+            }
         }
     }
 }

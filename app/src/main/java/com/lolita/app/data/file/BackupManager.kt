@@ -29,6 +29,7 @@ data class BackupData(
     val outfitItemCrossRefs: List<OutfitItemCrossRef>,
     val styles: List<Style> = emptyList(),
     val seasons: List<Season> = emptyList(),
+    val locations: List<Location> = emptyList(),
     val backupDate: Long = System.currentTimeMillis(),
     val appVersion: String = "1.0"
 )
@@ -55,7 +56,8 @@ class BackupManager(
                     outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
                     outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
                     styles = database.styleDao().getAllStylesList(),
-                    seasons = database.seasonDao().getAllSeasonsList()
+                    seasons = database.seasonDao().getAllSeasonsList(),
+                    locations = database.locationDao().getAllLocationsList()
                 )
             }
             val jsonString = gson.toJson(backupData)
@@ -114,6 +116,13 @@ class BackupManager(
                 sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
             }
 
+            // Locations
+            sb.appendLine("\n=== LOCATIONS ===")
+            sb.appendLine("id,name,description,image_url,sort_order,created_at,updated_at")
+            database.locationDao().getAllLocationsList().forEach { l ->
+                sb.appendLine("${l.id},${escapeCsv(l.name)},${escapeCsv(l.description)},${escapeCsv(l.imageUrl)},${l.sortOrder},${l.createdAt},${l.updatedAt}")
+            }
+
             // Prices
             sb.appendLine("\n=== PRICES ===")
             sb.appendLine("id,item_id,type,total_price,deposit,balance,purchase_date")
@@ -161,7 +170,8 @@ class BackupManager(
                     outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
                     outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
                     styles = database.styleDao().getAllStylesList(),
-                    seasons = database.seasonDao().getAllSeasonsList()
+                    seasons = database.seasonDao().getAllSeasonsList(),
+                    locations = database.locationDao().getAllLocationsList()
                 )
             }
 
@@ -224,6 +234,7 @@ class BackupManager(
                 backupData.categories.forEach { database.categoryDao().insertCategory(it); imported++ }
                 backupData.styles.forEach { database.styleDao().insertStyle(it); imported++ }
                 backupData.seasons.forEach { database.seasonDao().insertSeason(it); imported++ }
+                backupData.locations.forEach { database.locationDao().insertLocation(it); imported++ }
                 backupData.coordinates.forEach { database.coordinateDao().insertCoordinate(it); imported++ }
                 backupData.items.forEach { database.itemDao().insertItem(it); imported++ }
                 backupData.prices.forEach { database.priceDao().insertPrice(it); imported++ }
@@ -314,6 +325,7 @@ class BackupManager(
                 outfitLogCount = backupData.outfitLogs.size,
                 styleCount = backupData.styles.size,
                 seasonCount = backupData.seasons.size,
+                locationCount = backupData.locations.size,
                 imageCount = imageCount,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
@@ -335,6 +347,7 @@ class BackupManager(
         database.paymentDao().deleteAllPayments()
         database.priceDao().deleteAllPrices()
         database.itemDao().deleteAllItems()
+        database.locationDao().deleteAllLocations()
         database.coordinateDao().deleteAllCoordinates()
         database.brandDao().deleteAllBrands()
         database.categoryDao().deleteAllCategories()
@@ -353,6 +366,9 @@ class BackupManager(
         }
         backupData.outfitLogs.forEach { log ->
             log.imageUrls.forEach { paths.add(it) }
+        }
+        backupData.locations.forEach { location ->
+            location.imageUrl?.let { paths.add(it) }
         }
         return paths
     }
@@ -407,7 +423,8 @@ class BackupManager(
         return backupData.copy(
             items = backupData.items.map { it.copy(imageUrl = remap(it.imageUrl), sizeChartImageUrl = remap(it.sizeChartImageUrl)) },
             coordinates = backupData.coordinates.map { it.copy(imageUrl = remap(it.imageUrl)) },
-            outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) }
+            outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
+            locations = backupData.locations.map { it.copy(imageUrl = remap(it.imageUrl)) }
         )
     }
 
@@ -448,10 +465,11 @@ data class BackupPreview(
     val outfitLogCount: Int,
     val styleCount: Int = 0,
     val seasonCount: Int = 0,
+    val locationCount: Int = 0,
     val imageCount: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount
 }

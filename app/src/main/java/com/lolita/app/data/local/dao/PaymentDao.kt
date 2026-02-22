@@ -95,6 +95,21 @@ interface PaymentDao {
     """)
     fun getOverdueAmount(now: Long): Flow<Double>
 
+    @Query("""
+        SELECT COUNT(*) FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        WHERE pr.item_id = :itemId AND pr.type = 'DEPOSIT_BALANCE'
+        AND p.is_paid = 0
+    """)
+    suspend fun countUnpaidBalancePaymentsForItem(itemId: Long): Int
+
+    @Query("""
+        SELECT pr.item_id FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
+        WHERE p.id = :paymentId
+    """)
+    suspend fun getItemIdByPaymentId(paymentId: Long): Long?
+
     @Query("DELETE FROM payments")
     suspend fun deleteAllPayments()
 }

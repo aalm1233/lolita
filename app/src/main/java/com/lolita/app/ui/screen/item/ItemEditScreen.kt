@@ -516,6 +516,7 @@ private fun StatusSelector(
                             when (status) {
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
+                                ItemStatus.PENDING_BALANCE -> "待补尾款"
                             }
                         )
                     },

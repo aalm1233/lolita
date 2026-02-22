@@ -539,6 +539,7 @@ private fun StatusBadge(status: ItemStatus) {
         color = when (status) {
             ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
             ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+            ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
         },
         shape = MaterialTheme.shapes.small
     ) {
@@ -546,6 +547,7 @@ private fun StatusBadge(status: ItemStatus) {
             text = when (status) {
                 ItemStatus.OWNED -> "已拥有"
                 ItemStatus.WISHED -> "愿望单"
+                ItemStatus.PENDING_BALANCE -> "待补尾款"
             },
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             style = MaterialTheme.typography.labelMedium,

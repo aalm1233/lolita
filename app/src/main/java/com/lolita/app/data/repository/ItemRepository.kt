@@ -2,6 +2,7 @@ package com.lolita.app.data.repository
 
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.ItemWithFullDetails
+import com.lolita.app.data.local.dao.PaymentDao
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -14,7 +15,8 @@ class ItemRepository(
     private val itemDao: ItemDao,
     private val paymentRepository: PaymentRepository? = null,
     private val priceRepository: PriceRepository? = null,
-    private val database: LolitaDatabase? = null
+    private val database: LolitaDatabase? = null,
+    private val paymentDao: PaymentDao? = null
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
 
@@ -67,6 +69,18 @@ class ItemRepository(
             database.withTransaction { doDelete() }
         } else {
             doDelete()
+        }
+    }
+
+    suspend fun checkAndUpdatePendingBalanceStatus(itemId: Long) {
+        val dao = paymentDao ?: return
+        val item = itemDao.getItemById(itemId) ?: return
+        if (item.status == ItemStatus.OWNED || item.status == ItemStatus.PENDING_BALANCE) {
+            val unpaidCount = dao.countUnpaidBalancePaymentsForItem(itemId)
+            val newStatus = if (unpaidCount > 0) ItemStatus.PENDING_BALANCE else ItemStatus.OWNED
+            if (item.status != newStatus) {
+                itemDao.updateItemStatus(itemId, newStatus.name)
+            }
         }
     }
 }

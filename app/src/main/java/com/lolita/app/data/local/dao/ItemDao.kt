@@ -154,6 +154,9 @@ interface ItemDao {
     @Query("UPDATE items SET source = NULL WHERE source = :name")
     suspend fun clearItemsSource(name: String)
 
+    @Query("UPDATE items SET status = :status WHERE id = :itemId")
+    suspend fun updateItemStatus(itemId: Long, status: String)
+
     @Query("SELECT * FROM items WHERE source = :source ORDER BY created_at DESC")
     fun getItemsBySource(source: String): Flow<List<Item>>
 }

@@ -640,6 +640,7 @@ private fun ItemCard(
                     color = when (item.status) {
                         ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
                         ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                        ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                     },
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -653,6 +654,7 @@ private fun ItemCard(
                             text = when (item.status) {
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
+                                ItemStatus.PENDING_BALANCE -> "待补尾款"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium
@@ -788,6 +790,7 @@ private fun ItemGridCard(
                                     when (item.status) {
                                         ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
                                         ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
+                                        ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary
                                     }
                                 )
                         )
@@ -795,6 +798,7 @@ private fun ItemGridCard(
                             text = when (item.status) {
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
+                                ItemStatus.PENDING_BALANCE -> "待补尾款"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant

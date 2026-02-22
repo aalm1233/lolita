@@ -349,6 +349,7 @@ private fun WishlistItemCard(
                     text = when (item.status) {
                         ItemStatus.OWNED -> "已拥有"
                         ItemStatus.WISHED -> "愿望单"
+                        ItemStatus.PENDING_BALANCE -> "待补尾款"
                     },
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

@@ -27,7 +27,7 @@ object AppModule {
     }
     fun coordinateRepository() = _coordinateRepository
 
-    private val _itemRepository by lazy { ItemRepository(database.itemDao(), _paymentRepository, _priceRepository, database) }
+    private val _itemRepository by lazy { ItemRepository(database.itemDao(), _paymentRepository, _priceRepository, database, database.paymentDao()) }
     fun itemRepository() = _itemRepository
 
     private val _brandRepository by lazy { BrandRepository(database.brandDao(), database.itemDao()) }
@@ -41,7 +41,7 @@ object AppModule {
     }
     fun priceRepository() = _priceRepository
 
-    private val _paymentRepository by lazy { PaymentRepository(database.paymentDao(), appContext) }
+    private val _paymentRepository by lazy { PaymentRepository(database.paymentDao(), appContext, database.itemDao()) }
     fun paymentRepository() = _paymentRepository
 
     private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }

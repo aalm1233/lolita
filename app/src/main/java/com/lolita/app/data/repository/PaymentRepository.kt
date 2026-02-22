@@ -1,7 +1,9 @@
 package com.lolita.app.data.repository
 
 import android.content.Context
+import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.PaymentDao
+import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import com.lolita.app.data.notification.CalendarEventHelper
@@ -10,7 +12,8 @@ import kotlinx.coroutines.flow.Flow
 
 class PaymentRepository(
     private val paymentDao: PaymentDao,
-    private val context: Context
+    private val context: Context,
+    private val itemDao: ItemDao? = null
 ) {
     private val reminderScheduler = PaymentReminderScheduler(context)
 
@@ -83,6 +86,9 @@ class PaymentRepository(
 
         paymentDao.updatePayment(updatedPayment)
 
+        // Auto-toggle PENDING_BALANCE status based on unpaid balance payments
+        checkAndUpdatePendingBalanceStatus(payment.id)
+
         try {
             // Update reminder based on payment status
             if (payment.isPaid) {
@@ -143,4 +149,17 @@ class PaymentRepository(
 
     fun getOverdueAmount(now: Long): Flow<Double> =
         paymentDao.getOverdueAmount(now)
+
+    private suspend fun checkAndUpdatePendingBalanceStatus(paymentId: Long) {
+        val dao = itemDao ?: return
+        val itemId = paymentDao.getItemIdByPaymentId(paymentId) ?: return
+        val item = dao.getItemById(itemId) ?: return
+        if (item.status == ItemStatus.OWNED || item.status == ItemStatus.PENDING_BALANCE) {
+            val unpaidCount = paymentDao.countUnpaidBalancePaymentsForItem(itemId)
+            val newStatus = if (unpaidCount > 0) ItemStatus.PENDING_BALANCE else ItemStatus.OWNED
+            if (item.status != newStatus) {
+                dao.updateItemStatus(itemId, newStatus.name)
+            }
+        }
+    }
 }

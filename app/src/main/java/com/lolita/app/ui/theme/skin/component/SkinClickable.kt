@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.PointerEventPass
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.SkinClickParticles
 import com.lolita.app.ui.theme.skin.animation.SkinRippleEffect
@@ -38,21 +39,23 @@ fun Modifier.skinClickable(
 
     return this
         .scale(scale)
+        .pointerInput(enabled) {
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                    val down = event.changes.firstOrNull { it.pressed && !it.previousPressed }
+                    if (down != null && enabled) {
+                        clickPosition.value = down.position
+                    }
+                }
+            }
+        }
         .clickable(
             interactionSource = interactionSource,
             indication = null,
             enabled = enabled,
             onClick = onClick
         )
-        .pointerInput(enabled) {
-            if (enabled) {
-                detectTapGestures(
-                    onPress = { offset ->
-                        clickPosition.value = offset
-                    }
-                )
-            }
-        }
 }
 
 @Composable

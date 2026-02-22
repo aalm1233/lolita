@@ -13,10 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimation
 import com.lolita.app.ui.theme.skin.animation.SkinNavigationOverlay
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -152,6 +155,8 @@ fun LolitaNavHost() {
         val navBackStackEntryForOverlay by navController.currentBackStackEntryAsState()
         val isNavigating = navBackStackEntryForOverlay != null
 
+        val isListScrolling = remember { mutableStateOf(false) }
+        CompositionLocalProvider(LocalIsListScrolling provides isListScrolling) {
         Box {
             // Bottom layer: ambient background animation
             SkinBackgroundAnimation(
@@ -503,6 +508,7 @@ fun LolitaNavHost() {
                 isTransitioning = isNavigating,
                 skinType = skin.skinType
             )
+        }
         }
     }
 }

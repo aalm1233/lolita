@@ -189,7 +189,7 @@ private fun OutfitLogListItemCard(
                         contentDescription = "穿搭照片",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(160.dp)
+                            .height(220.dp)
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                         contentScale = ContentScale.Crop
                     )

@@ -170,7 +170,7 @@ fun OutfitLogDetailScreen(
                                         model = imageUrl,
                                         contentDescription = "穿搭照片",
                                         modifier = Modifier
-                                            .width(220.dp)
+                                            .width(300.dp)
                                             .aspectRatio(0.75f)
                                             .clip(RoundedCornerShape(12.dp)),
                                         contentScale = ContentScale.Crop

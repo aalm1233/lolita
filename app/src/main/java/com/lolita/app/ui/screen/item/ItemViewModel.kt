@@ -21,6 +21,7 @@ import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
+import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -89,7 +90,7 @@ data class ItemEditUiState(
     val status: ItemStatus = ItemStatus.OWNED,
     val priority: ItemPriority = ItemPriority.MEDIUM,
     val imageUrl: String? = null,
-    val color: String? = null,
+    val colors: List<String> = emptyList(),
     val seasons: List<String> = emptyList(),
     val style: String? = null,
     val size: String? = null,
@@ -541,7 +542,10 @@ class ItemEditViewModel(
                             status = item.status,
                             priority = item.priority,
                             imageUrl = item.imageUrl,
-                            color = item.colors,
+                            colors = item.colors?.let { json ->
+                                try { Gson().fromJson(json, Array<String>::class.java).toList() }
+                                catch (_: Exception) { listOfNotNull(json.takeIf { it.isNotBlank() }) }
+                            } ?: emptyList(),
                             seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,
@@ -605,9 +609,9 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(imageUrl = imageUrl)
     }
 
-    fun updateColor(color: String?) {
+    fun updateColors(colors: List<String>) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(color = color)
+        _uiState.value = _uiState.value.copy(colors = colors)
     }
 
     fun toggleSeason(season: String) {
@@ -671,6 +675,9 @@ class ItemEditViewModel(
         return try {
             val now = System.currentTimeMillis()
             val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
+            val colorsJson = if (state.colors.isNotEmpty()) {
+                Gson().toJson(state.colors)
+            } else null
             val item = if (state.item != null) {
                 // Update existing item
                 state.item.copy(
@@ -682,7 +689,7 @@ class ItemEditViewModel(
                     status = state.status,
                     priority = state.priority,
                     imageUrl = state.imageUrl,
-                    colors = state.color,
+                    colors = colorsJson,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,
@@ -703,7 +710,7 @@ class ItemEditViewModel(
                     imageUrl = state.imageUrl,
                     status = state.status,
                     priority = state.priority,
-                    colors = state.color,
+                    colors = colorsJson,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,

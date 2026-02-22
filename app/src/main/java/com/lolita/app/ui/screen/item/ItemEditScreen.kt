@@ -28,6 +28,7 @@ import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
+import com.lolita.app.ui.screen.common.ColorSelector
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -233,14 +234,10 @@ fun ItemEditScreen(
                     )
                 }
 
-                // Color field
-                OutlinedTextField(
-                    value = uiState.color ?: "",
-                    onValueChange = { viewModel.updateColor(it.ifBlank { null }) },
-                    label = { Text("颜色 (可选)") },
-                    placeholder = { Text("例如：粉色、白色、黑色") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                // Color selector
+                ColorSelector(
+                    selectedColors = uiState.colors,
+                    onColorsChanged = { viewModel.updateColors(it) }
                 )
 
                 // Season selector

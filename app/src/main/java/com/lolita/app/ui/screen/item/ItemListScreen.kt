@@ -83,7 +83,7 @@ fun ItemListScreen(
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {
             0 -> { /* Location tab - no status filter needed */ }
-            1 -> viewModel.filterByStatus(ItemStatus.OWNED)
+            1 -> viewModel.filterByStatuses(setOf(ItemStatus.OWNED, ItemStatus.PENDING_BALANCE))
         }
     }
     if (itemToDelete != null) {
@@ -301,6 +301,16 @@ fun ItemListScreen(
                             modifier = Modifier.height(24.dp)
                         )
                     }
+                    FilterChip(
+                        selected = uiState.filterPendingBalanceOnly,
+                        onClick = { viewModel.togglePendingBalanceOnly() },
+                        label = { Text("待补尾款", fontSize = 12.sp) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Color(0xFFFF9800).copy(alpha = 0.15f),
+                            selectedLabelColor = Color(0xFFFF9800)
+                        ),
+                        modifier = Modifier.height(24.dp)
+                    )
                     Spacer(Modifier.weight(1f))
                     if (uiState.showTotalPrice && uiState.totalPrice > 0) {
                         Text(
@@ -547,6 +557,19 @@ private fun ItemCard(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
+                    if (item.status == ItemStatus.PENDING_BALANCE) {
+                        Surface(
+                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = "待补尾款",
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFFFF9800)
+                            )
+                        }
+                    }
                     if (showPrice && itemPrice != null && itemPrice > 0) {
                         Text(
                             text = "¥%.0f".format(itemPrice),
@@ -775,6 +798,19 @@ private fun ItemGridCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    if (item.status == ItemStatus.PENDING_BALANCE) {
+                        Surface(
+                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = "待补尾款",
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFFFF9800)
+                            )
+                        }
+                    }
                     brandName?.let {
                         Text(
                             text = it,

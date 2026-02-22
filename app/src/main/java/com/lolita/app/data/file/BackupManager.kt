@@ -78,9 +78,9 @@ class BackupManager(
 
             // Brands
             sb.appendLine("=== BRANDS ===")
-            sb.appendLine("id,name,is_preset,created_at")
+            sb.appendLine("id,name,is_preset,logo_url,created_at")
             database.brandDao().getAllBrandsList().forEach { b ->
-                sb.appendLine("${b.id},${escapeCsv(b.name)},${b.isPreset},${b.createdAt}")
+                sb.appendLine("${b.id},${escapeCsv(b.name)},${b.isPreset},${escapeCsv(b.logoUrl)},${b.createdAt}")
             }
 
             // Categories
@@ -217,7 +217,7 @@ class BackupManager(
     suspend fun importFromJson(uri: Uri): Result<ImportSummary> = withContext(Dispatchers.IO) {
         try {
             var imageCount = 0
-            val backupData: BackupData
+            var backupData: BackupData
 
             if (cachedBackupUri == uri && cachedBackupData != null) {
                 backupData = cachedBackupData!!
@@ -231,6 +231,7 @@ class BackupManager(
                     ?: return@withContext Result.failure(Exception("无法读取文件"))
                 backupData = gson.fromJson(jsonString, BackupData::class.java)
             }
+            backupData = migrateBackupData(backupData)
             cachedBackupData = null
             cachedBackupUri = null
             cachedImageCount = 0
@@ -370,6 +371,9 @@ class BackupManager(
 
     private fun collectImagePaths(backupData: BackupData): Set<String> {
         val paths = mutableSetOf<String>()
+        backupData.brands.forEach { brand ->
+            brand.logoUrl?.let { paths.add(it) }
+        }
         backupData.items.forEach { item ->
             item.imageUrl?.let { paths.add(it) }
             item.sizeChartImageUrl?.let { paths.add(it) }
@@ -434,6 +438,7 @@ class BackupManager(
             return "$imagesDir/$fileName"
         }
         return backupData.copy(
+            brands = backupData.brands.map { it.copy(logoUrl = remap(it.logoUrl)) },
             items = backupData.items.map { it.copy(imageUrl = remap(it.imageUrl), sizeChartImageUrl = remap(it.sizeChartImageUrl)) },
             coordinates = backupData.coordinates.map { it.copy(imageUrl = remap(it.imageUrl)) },
             outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
@@ -456,6 +461,27 @@ class BackupManager(
     private fun escapeCsv(value: String?): String {
         if (value == null) return ""
         return "\"${value.replace("\"", "\"\"")}\""
+    }
+
+    /**
+     * Post-process imported backup data for backward compatibility.
+     * Converts old single-string color values to JSON array format.
+     * Old backups: "color": "粉色" → new format: "colors": "[\"粉色\"]"
+     */
+    private fun migrateBackupData(backupData: BackupData): BackupData {
+        val fixedItems = backupData.items.map { item ->
+            if (item.colors != null && !item.colors.startsWith("[")) {
+                // Old format: plain string like "粉色" → convert to JSON array
+                item.copy(colors = gson.toJson(listOf(item.colors)))
+            } else {
+                item
+            }
+        }
+        return if (fixedItems !== backupData.items) {
+            backupData.copy(items = fixedItems)
+        } else {
+            backupData
+        }
     }
 }
 

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -126,6 +127,8 @@ open class BaseContentIcons : ContentIcons {
         Icon(Icons.Filled.AttachMoney, null, modifier, tint)
     @Composable override fun Category(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Category, null, modifier, tint)
+    @Composable override fun Location(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.LocationOn, null, modifier, tint)
 }
 
 open class BaseArrowIcons : ArrowIcons {

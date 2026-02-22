@@ -584,6 +584,28 @@ private class SweetContentIcons : BaseContentIcons() {
             }
         }
     }
+    @Composable override fun Location(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = sweetStroke(s)
+            // House body
+            val house = Path().apply {
+                moveTo(s * 0.2f, s * 0.45f)
+                lineTo(s * 0.2f, s * 0.85f)
+                lineTo(s * 0.8f, s * 0.85f)
+                lineTo(s * 0.8f, s * 0.45f)
+            }
+            drawPath(house, tint, style = st)
+            // Roof
+            val roof = Path().apply {
+                moveTo(s * 0.12f, s * 0.48f)
+                lineTo(s * 0.5f, s * 0.15f)
+                lineTo(s * 0.88f, s * 0.48f)
+            }
+            drawPath(roof, tint, style = st)
+            // Heart window
+            drawSweetHeart(Offset(s * 0.5f, s * 0.6f), s * 0.12f, tint.copy(alpha = 0.6f))
+        }
+    }
 }
 
 // ── Arrow Icons ─────────────────────────────────────────────────

@@ -623,6 +623,28 @@ private class ClassicContentIcons : BaseContentIcons() {
             }
         }
     }
+    @Composable override fun Location(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = classicStroke(s)
+            // Wardrobe body
+            drawRoundRect(tint, Offset(s * 0.2f, s * 0.2f), Size(s * 0.6f, s * 0.65f),
+                CornerRadius(s * 0.03f), style = st)
+            // Top ornament arch
+            val arch = Path().apply {
+                moveTo(s * 0.3f, s * 0.2f)
+                quadraticBezierTo(s * 0.5f, s * 0.08f, s * 0.7f, s * 0.2f)
+            }
+            drawPath(arch, tint, style = st)
+            // Center divider
+            drawLine(tint, Offset(s * 0.5f, s * 0.25f), Offset(s * 0.5f, s * 0.8f), st.width)
+            // Door knobs
+            drawCircle(tint, s * 0.025f, Offset(s * 0.44f, s * 0.52f))
+            drawCircle(tint, s * 0.025f, Offset(s * 0.56f, s * 0.52f))
+            // Feet
+            drawLine(tint, Offset(s * 0.22f, s * 0.85f), Offset(s * 0.22f, s * 0.9f), st.width)
+            drawLine(tint, Offset(s * 0.78f, s * 0.85f), Offset(s * 0.78f, s * 0.9f), st.width)
+        }
+    }
 }
 
 // ── Arrow Icons ─────────────────────────────────────────────────

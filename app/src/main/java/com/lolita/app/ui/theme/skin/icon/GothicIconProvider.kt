@@ -587,6 +587,31 @@ private class GothicContentIcons : BaseContentIcons() {
             }
         }
     }
+    @Composable override fun Location(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = gothicStroke(s)
+            // Tower body
+            drawRect(tint, Offset(s * 0.3f, s * 0.4f), Size(s * 0.4f, s * 0.48f), style = st)
+            // Pointed arch top
+            val arch = Path().apply {
+                moveTo(s * 0.25f, s * 0.42f)
+                lineTo(s * 0.5f, s * 0.1f)
+                lineTo(s * 0.75f, s * 0.42f)
+            }
+            drawPath(arch, tint, style = st)
+            // Cross on top
+            drawLine(tint, Offset(s * 0.5f, s * 0.06f), Offset(s * 0.5f, s * 0.18f), st.width)
+            drawLine(tint, Offset(s * 0.44f, s * 0.11f), Offset(s * 0.56f, s * 0.11f), st.width)
+            // Gothic window
+            val win = Path().apply {
+                moveTo(s * 0.42f, s * 0.7f)
+                lineTo(s * 0.42f, s * 0.55f)
+                quadraticBezierTo(s * 0.5f, s * 0.48f, s * 0.58f, s * 0.55f)
+                lineTo(s * 0.58f, s * 0.7f)
+            }
+            drawPath(win, tint, style = st)
+        }
+    }
 }
 
 // ── Arrow Icons ─────────────────────────────────────────────────

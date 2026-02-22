@@ -50,6 +50,7 @@ fun SkinIcon(
         IconKey.Notifications -> icons.content.Notifications(modifier, tint)
         IconKey.AttachMoney -> icons.content.AttachMoney(modifier, tint)
         IconKey.Category -> icons.content.Category(modifier, tint)
+        IconKey.Location -> icons.content.Location(modifier, tint)
         // Arrow
         IconKey.ArrowBack -> icons.arrow.ArrowBack(modifier, tint)
         IconKey.ArrowForward -> icons.arrow.ArrowForward(modifier, tint)

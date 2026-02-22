@@ -590,6 +590,25 @@ private class ChineseContentIcons : BaseContentIcons() {
             }
         }
     }
+    @Composable override fun Location(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = brushStroke(s)
+            // Building body
+            drawRect(tint, Offset(s * 0.25f, s * 0.45f), Size(s * 0.5f, s * 0.42f), style = st)
+            // Curved eave roof
+            val roof = Path().apply {
+                moveTo(s * 0.1f, s * 0.48f)
+                quadraticBezierTo(s * 0.3f, s * 0.35f, s * 0.5f, s * 0.2f)
+                quadraticBezierTo(s * 0.7f, s * 0.35f, s * 0.9f, s * 0.48f)
+            }
+            drawPath(roof, tint, style = st)
+            // Eave tips curving up
+            drawLine(tint, Offset(s * 0.1f, s * 0.48f), Offset(s * 0.06f, s * 0.42f), st.width)
+            drawLine(tint, Offset(s * 0.9f, s * 0.48f), Offset(s * 0.94f, s * 0.42f), st.width)
+            // Door
+            drawRect(tint, Offset(s * 0.42f, s * 0.65f), Size(s * 0.16f, s * 0.22f), style = st)
+        }
+    }
 }
 
 // ── Arrow Icons ─────────────────────────────────────────────────

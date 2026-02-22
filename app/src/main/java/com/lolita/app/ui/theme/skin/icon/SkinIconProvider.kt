@@ -45,6 +45,7 @@ interface ContentIcons {
     @Composable fun Notifications(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun AttachMoney(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Category(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun Location(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
 }
 
 interface ArrowIcons {

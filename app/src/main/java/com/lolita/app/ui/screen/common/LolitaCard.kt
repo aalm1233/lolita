@@ -11,10 +11,11 @@ import com.lolita.app.ui.theme.skin.animation.skinCardGlow
 fun LolitaCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    isScrolling: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val cardShape = LolitaSkin.current.cardShape
-    val glowModifier = modifier.skinCardGlow()
+    val glowModifier = modifier.skinCardGlow(isScrolling = isScrolling)
     if (onClick != null) {
         Card(
             onClick = onClick,

@@ -12,7 +12,7 @@ class GothicEmberParticle : AmbientParticle() {
     override var y = 0f
     override var alpha = 0f
     private var baseAlpha = 0f
-    private var size = 0f
+    private var emberSize = 0f
     private var riseSpeed = 0f
     private var wobblePhase = 0f
     private var wobbleSpeed = 0f
@@ -21,7 +21,7 @@ class GothicEmberParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height + Random.nextFloat() * 100f
-        size = 3f + Random.nextFloat() * 5f
+        emberSize = 3f + Random.nextFloat() * 5f
         baseAlpha = 0.2f + Random.nextFloat() * 0.2f
         alpha = baseAlpha
         riseSpeed = 0.2f + Random.nextFloat() * 0.4f
@@ -42,14 +42,14 @@ class GothicEmberParticle : AmbientParticle() {
         val emberColor = Color(0xFF8B0000)
         drawCircle(
             emberColor.copy(alpha = alpha),
-            radius = size,
+            radius = emberSize,
             center = Offset(x, y)
         )
         drawLine(
             emberColor.copy(alpha = alpha * 0.5f),
             start = Offset(x, y),
             end = Offset(x, y + tailLength),
-            strokeWidth = size * 0.6f
+            strokeWidth = emberSize * 0.6f
         )
     }
 }

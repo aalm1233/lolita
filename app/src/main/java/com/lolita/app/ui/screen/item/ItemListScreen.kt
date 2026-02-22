@@ -7,9 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
@@ -329,16 +332,17 @@ fun ItemListScreen(
                             )
                         } else if (uiState.columnsPerRow == 1) {
                             val flingBehavior = rememberSkinFlingBehavior()
+                            val listState = rememberLazyListState()
                             LazyColumn(
+                                state = listState,
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                                 contentPadding = PaddingValues(horizontal = 16.dp),
                                 flingBehavior = flingBehavior
                             ) {
-                                items(
+                                itemsIndexed(
                                     items = uiState.filteredItems,
-                                    key = { it.id }
-                                ) { item ->
-                                    val index = uiState.filteredItems.indexOf(item)
+                                    key = { _, item -> item.id }
+                                ) { index, item ->
                                     SwipeToDeleteContainer(
                                         onDelete = { itemToDelete = item }
                                     ) {
@@ -351,6 +355,7 @@ fun ItemListScreen(
                                             onClick = { onNavigateToDetail(item.id) },
                                             onEdit = { onNavigateToEdit(item.id) },
                                             onDelete = { itemToDelete = item },
+                                            isScrolling = listState.isScrollInProgress,
                                             modifier = Modifier
                                                 .skinItemAppear(index)
                                                 .animateItem()
@@ -359,7 +364,9 @@ fun ItemListScreen(
                                 }
                             }
                         } else {
+                            val gridState = rememberLazyGridState()
                             LazyVerticalGrid(
+                                state = gridState,
                                 columns = GridCells.Fixed(uiState.columnsPerRow),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -377,7 +384,8 @@ fun ItemListScreen(
                                         showPrice = uiState.showTotalPrice,
                                         onClick = { onNavigateToDetail(item.id) },
                                         onEdit = { onNavigateToEdit(item.id) },
-                                        onDelete = { itemToDelete = item }
+                                        onDelete = { itemToDelete = item },
+                                        isScrolling = gridState.isScrollInProgress
                                     )
                                 }
                             }
@@ -444,13 +452,15 @@ private fun ItemCard(
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     LolitaCard(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        isScrolling = isScrolling
     ) {
         Row(
             modifier = Modifier
@@ -638,12 +648,14 @@ private fun ItemGridCard(
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     LolitaCard(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        isScrolling = isScrolling
     ) {
         Box(
             modifier = Modifier

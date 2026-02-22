@@ -49,12 +49,12 @@ fun SkinBackgroundAnimation(
 
     val frameTime = remember { mutableLongStateOf(0L) }
 
-    LaunchedEffect(skin.skinType) {
+    LaunchedEffect(skin.skinType, isScrolling) {
         // Initialize particles with a dummy size, they'll reset on first draw
         particles.forEach { it.reset(1080f, 1920f) }
-        while (isActive) {
-            delay(16L) // ~60fps
-            if (!isScrolling) {
+        if (!isScrolling) {
+            while (isActive) {
+                delay(16L) // ~60fps
                 frameTime.longValue = System.nanoTime() / 1_000_000L
             }
         }

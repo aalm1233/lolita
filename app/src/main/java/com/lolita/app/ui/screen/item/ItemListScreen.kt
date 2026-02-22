@@ -338,7 +338,7 @@ fun ItemListScreen(
                             val flingBehavior = rememberSkinFlingBehavior()
                             val listState = rememberLazyListState()
                             val scrollingState = LocalIsListScrolling.current
-                            LaunchedEffect(listState.isScrollInProgress) {
+                            LaunchedEffect(listState.isScrollInProgress, scrollingState) {
                                 scrollingState.value = listState.isScrollInProgress
                             }
                             LazyColumn(
@@ -369,7 +369,7 @@ fun ItemListScreen(
                         } else {
                             val gridState = rememberLazyGridState()
                             val scrollingState = LocalIsListScrolling.current
-                            LaunchedEffect(gridState.isScrollInProgress) {
+                            LaunchedEffect(gridState.isScrollInProgress, scrollingState) {
                                 scrollingState.value = gridState.isScrollInProgress
                             }
                             LazyVerticalGrid(

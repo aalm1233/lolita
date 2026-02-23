@@ -134,9 +134,9 @@ class BackupManager(
 
             // Prices
             sb.appendLine("\n=== PRICES ===")
-            sb.appendLine("id,item_id,type,total_price,deposit,balance,purchase_date")
+            sb.appendLine("id,item_id,type,total_price,deposit,balance")
             database.priceDao().getAllPricesList().forEach { p ->
-                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.purchaseDate}")
+                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance}")
             }
 
             // Payments

@@ -87,8 +87,7 @@ class OutfitLogRepository(
     suspend fun updateOutfitLogWithItems(log: OutfitLog, itemIds: List<Long>) {
         database.withTransaction {
             outfitLogDao.updateOutfitLog(log.copy(updatedAt = System.currentTimeMillis()))
-            val existing = outfitLogDao.getAllOutfitItemCrossRefsList()
-                .filter { it.outfitLogId == log.id }
+            val existing = outfitLogDao.getOutfitItemCrossRefsByLogId(log.id)
             existing.forEach { outfitLogDao.deleteOutfitItemCrossRef(it) }
             itemIds.forEach { itemId ->
                 outfitLogDao.insertOutfitItemCrossRef(

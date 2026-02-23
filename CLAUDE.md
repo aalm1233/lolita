@@ -45,7 +45,7 @@ Additional screens: CoordinateDetail → CoordinateEdit, OutfitLogList → Outfi
 
 ### Database
 
-Room database `LolitaDatabase`, currently version 6. Migrations are defined inline in the database class. 10 entities with foreign key relationships:
+Room database `LolitaDatabase`, currently version 14. Migrations are defined inline in the database class. 12 entities with foreign key relationships:
 
 - **Item** → Brand (RESTRICT), Category (RESTRICT), Coordinate (RESTRICT) — core entity with status, priority, color, season, style, size, sizeChartImageUrl
 - **Brand**, **Category**, **Style**, **Season** — preset data tables with `isPreset` flag
@@ -55,6 +55,8 @@ Room database `LolitaDatabase`, currently version 6. Migrations are defined inli
 - **Payment** → Price (CASCADE) — tracks payment status, due dates, reminder scheduling, and `calendarEventId` (added in v4→v5)
 - **OutfitLog** — daily outfit tracking with date, note, imageUrls (List<String> via Gson)
 - **OutfitItemCrossRef** — many-to-many between Item and OutfitLog (both FKs CASCADE)
+- **Location** — storage location tracking for items
+- **Source** — purchase source/shop tracking for items
 
 Type converters handle enums (`ItemStatus`, `ItemPriority`, `PriceType`, `CategoryGroup`) and `List<String>` (via Gson JSON).
 

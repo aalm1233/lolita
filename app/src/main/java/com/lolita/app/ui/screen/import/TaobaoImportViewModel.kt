@@ -273,7 +273,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                 for (item in checkedItems) {
                     when (item.type) {
                         MissingDataType.BRAND -> {
-                            brandRepository.insertBrand(Brand(name = item.name))
+                            brandRepository.insertBrand(Brand(name = item.name, logoUrl = ""))
                         }
                         MissingDataType.CATEGORY -> {
                             val group = if (item.extra == "ACCESSORY") CategoryGroup.ACCESSORY

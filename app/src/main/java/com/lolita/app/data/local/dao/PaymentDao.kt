@@ -35,7 +35,7 @@ interface PaymentDao {
 
     @Query("""
         SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
-               p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
+               p.paid_date AS paidDate, pr.id AS priceId, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
         FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
@@ -62,7 +62,7 @@ interface PaymentDao {
     // Calendar queries — include payments for OWNED and PENDING_BALANCE items
     @Query("""
         SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
-               p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
+               p.paid_date AS paidDate, pr.id AS priceId, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
         FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id

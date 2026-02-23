@@ -71,20 +71,27 @@ class LocationDetailViewModel(
         }
     }
 
-    fun loadAllItemsForPicker() {
+    fun loadAllItemsForPicker(onLoaded: () -> Unit = {}) {
         viewModelScope.launch {
             val items = itemRepository.getAllItems().first()
             val locations = locationRepository.getAllLocations().first()
+            val brands = brandRepository.getAllBrands().first()
+            val categories = categoryRepository.getAllCategories().first()
             val nameMap = locations.associate { it.id to it.name }
+            val brandMap = brands.associate { it.id to it.name }
+            val categoryMap = categories.associate { it.id to it.name }
             val currentItemIds = _uiState.value.items.map { it.id }.toSet()
             _uiState.update {
                 it.copy(
                     allItems = items,
                     locationNames = nameMap,
+                    brandNames = brandMap,
+                    categoryNames = categoryMap,
                     pickerSelectedItemIds = currentItemIds,
                     pickerSearchQuery = ""
                 )
             }
+            onLoaded()
         }
     }
 

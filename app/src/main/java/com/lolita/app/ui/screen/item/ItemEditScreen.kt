@@ -132,7 +132,7 @@ fun ItemEditScreen(
                                     .onFailure { showError = it.message }
                             }
                         },
-                        enabled = !uiState.isSaving && viewModel.isValid()
+                        enabled = !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(

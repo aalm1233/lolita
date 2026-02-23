@@ -113,7 +113,7 @@ fun CoordinateEditScreen(
                                 }
                             }
                         },
-                        enabled = viewModel.isValid() && !uiState.isSaving
+                        enabled = uiState.name.isNotBlank() && !uiState.isSaving
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(

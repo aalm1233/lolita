@@ -54,6 +54,9 @@ interface OutfitLogDao {
     @Query("SELECT * FROM outfit_item_cross_ref")
     suspend fun getAllOutfitItemCrossRefsList(): List<OutfitItemCrossRef>
 
+    @Query("SELECT * FROM outfit_item_cross_ref WHERE outfit_log_id = :logId")
+    suspend fun getOutfitItemCrossRefsByLogId(logId: Long): List<OutfitItemCrossRef>
+
     @Query("SELECT outfit_log_id, COUNT(item_id) as itemCount FROM outfit_item_cross_ref GROUP BY outfit_log_id")
     fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>>
 

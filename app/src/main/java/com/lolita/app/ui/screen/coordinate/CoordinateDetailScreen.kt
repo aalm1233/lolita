@@ -174,8 +174,9 @@ fun CoordinateDetailScreen(
                         )
                         SkinClickableBox(
                             onClick = {
-                                viewModel.loadAllItemsForPicker()
-                                showItemPicker = true
+                                viewModel.loadAllItemsForPicker {
+                                    showItemPicker = true
+                                }
                             }
                         ) {
                             Surface(

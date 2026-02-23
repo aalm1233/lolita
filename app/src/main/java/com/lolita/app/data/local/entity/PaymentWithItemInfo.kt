@@ -6,6 +6,7 @@ data class PaymentWithItemInfo(
     val dueDate: Long,
     val isPaid: Boolean,
     val paidDate: Long?,
+    val priceId: Long,
     val priceType: PriceType,
     val itemName: String,
     val itemId: Long

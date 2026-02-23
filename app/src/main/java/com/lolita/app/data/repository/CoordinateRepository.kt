@@ -7,6 +7,7 @@ import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.entity.Coordinate
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction
+import com.lolita.app.data.file.ImageFileHelper
 import kotlinx.coroutines.flow.Flow
 
 class CoordinateRepository(
@@ -72,6 +73,10 @@ class CoordinateRepository(
                 itemDao.updateItem(item.copy(coordinateId = null))
             }
             coordinateDao.deleteCoordinate(coordinate)
+        }
+        // Clean up imageUrl file after transaction succeeds
+        if (!coordinate.imageUrl.isNullOrEmpty()) {
+            try { ImageFileHelper.deleteImage(coordinate.imageUrl) } catch (_: Exception) {}
         }
     }
 }

@@ -11,6 +11,7 @@ import com.lolita.app.domain.usecase.MatchScore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -43,14 +44,17 @@ class RecommendationViewModel(
                 val candidates = recommendationRepository.getOwnedItemsExcluding(itemId)
                 val coOccurring = recommendationRepository.getCoOccurringItemIds(itemId)
 
-                val targetCategory = categoryRepository.getCategoryById(target.categoryId)
+                // Load all categories once to avoid N+1 queries
+                val allCategories = categoryRepository.getAllCategories().first()
+                val categoryMap = allCategories.associateBy { it.id }
+
+                val targetCategory = categoryMap[target.categoryId]
                 val targetGroup = targetCategory?.group
 
                 // Filter out same category group items
                 val filtered = if (targetGroup != null) {
                     val sameCategoryIds = candidates.filter { candidate ->
-                        val cat = categoryRepository.getCategoryById(candidate.categoryId)
-                        cat?.group == targetGroup
+                        categoryMap[candidate.categoryId]?.group == targetGroup
                     }.map { it.id }.toSet()
                     candidates.filter { it.id !in sameCategoryIds }
                 } else candidates
@@ -59,8 +63,7 @@ class RecommendationViewModel(
 
                 // Group by category name
                 val grouped = scores.groupBy { score ->
-                    val cat = categoryRepository.getCategoryById(score.item.categoryId)
-                    cat?.name ?: "其他"
+                    categoryMap[score.item.categoryId]?.name ?: "其他"
                 }
 
                 _uiState.update {

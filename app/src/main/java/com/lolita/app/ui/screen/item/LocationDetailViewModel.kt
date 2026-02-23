@@ -6,10 +6,13 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.data.repository.BrandRepository
 import com.lolita.app.data.repository.CategoryRepository
+import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.LocationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,13 +22,19 @@ data class LocationDetailUiState(
     val brandNames: Map<Long, String> = emptyMap(),
     val categoryNames: Map<Long, String> = emptyMap(),
     val isUnassigned: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    // Item picker state
+    val allItems: List<Item> = emptyList(),
+    val locationNames: Map<Long, String> = emptyMap(),
+    val pickerSelectedItemIds: Set<Long> = emptySet(),
+    val pickerSearchQuery: String = ""
 )
 
 class LocationDetailViewModel(
     private val locationRepository: LocationRepository = com.lolita.app.di.AppModule.locationRepository(),
     private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
-    private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository()
+    private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LocationDetailUiState())
@@ -60,6 +69,65 @@ class LocationDetailViewModel(
             categoryRepository.getAllCategories().collect { cats ->
                 _uiState.update { it.copy(categoryNames = cats.associate { c -> c.id to c.name }) }
             }
+        }
+    }
+
+    fun loadAllItemsForPicker() {
+        viewModelScope.launch {
+            combine(
+                itemRepository.getAllItems(),
+                locationRepository.getAllLocations()
+            ) { items, locations ->
+                val nameMap = locations.associate { it.id to it.name }
+                Pair(items, nameMap)
+            }.first().let { (items, nameMap) ->
+                val currentItemIds = _uiState.value.items.map { it.id }.toSet()
+                _uiState.update {
+                    it.copy(
+                        allItems = items,
+                        locationNames = nameMap,
+                        pickerSelectedItemIds = currentItemIds,
+                        pickerSearchQuery = ""
+                    )
+                }
+            }
+        }
+    }
+
+    fun togglePickerItemSelection(itemId: Long) {
+        val current = _uiState.value.pickerSelectedItemIds
+        _uiState.update {
+            it.copy(
+                pickerSelectedItemIds = if (itemId in current) current - itemId else current + itemId
+            )
+        }
+    }
+
+    fun updatePickerSearchQuery(query: String) {
+        _uiState.update { it.copy(pickerSearchQuery = query) }
+    }
+
+    fun confirmPickerSelection(locationId: Long, onComplete: () -> Unit) {
+        val originalItemIds = _uiState.value.items.map { it.id }.toSet()
+        val selectedIds = _uiState.value.pickerSelectedItemIds
+        val addedIds = selectedIds - originalItemIds
+        val removedIds = originalItemIds - selectedIds
+
+        if (addedIds.isEmpty() && removedIds.isEmpty()) {
+            onComplete()
+            return
+        }
+
+        viewModelScope.launch {
+            addedIds.forEach { itemId ->
+                val item = itemRepository.getItemById(itemId)
+                item?.let { itemRepository.updateItem(it.copy(locationId = locationId)) }
+            }
+            removedIds.forEach { itemId ->
+                val item = itemRepository.getItemById(itemId)
+                item?.let { itemRepository.updateItem(it.copy(locationId = null)) }
+            }
+            onComplete()
         }
     }
 }

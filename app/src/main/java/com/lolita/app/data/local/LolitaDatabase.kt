@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -279,8 +279,99 @@ abstract class LolitaDatabase : RoomDatabase() {
         private val MIGRATION_11_12 = object : Migration(11, 12) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Fix corrupted JSON from migration 10->11 that had literal backslashes
-                // e.g. [\"粉色\"] -> ["粉色"]
                 db.execSQL("""UPDATE items SET colors = REPLACE(colors, '\"', '"') WHERE colors IS NOT NULL AND colors LIKE '%\%'""")
+
+                // Rebuild items table to remove the old 'color' column
+                // Room schema validation requires exact column match — extra columns cause crash
+                db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
+                    brand_id INTEGER NOT NULL,
+                    category_id INTEGER NOT NULL,
+                    created_at INTEGER NOT NULL,
+                    description TEXT NOT NULL,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    image_url TEXT,
+                    name TEXT NOT NULL,
+                    priority TEXT NOT NULL DEFAULT 'MEDIUM',
+                    status TEXT NOT NULL,
+                    coordinate_id INTEGER,
+                    colors TEXT,
+                    season TEXT,
+                    style TEXT,
+                    size TEXT,
+                    size_chart_image_url TEXT,
+                    location_id INTEGER,
+                    source TEXT,
+                    updated_at INTEGER NOT NULL,
+                    FOREIGN KEY(coordinate_id) REFERENCES coordinates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY(brand_id) REFERENCES brands(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(category_id) REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                )""")
+                db.execSQL("""INSERT INTO items_new (brand_id, category_id, created_at, description, id, image_url, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at)
+                    SELECT brand_id, category_id, created_at, description, id, image_url, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at FROM items""")
+                db.execSQL("DROP TABLE items")
+                db.execSQL("ALTER TABLE items_new RENAME TO items")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_name ON items (name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_coordinate_id ON items (coordinate_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_brand_id ON items (brand_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_category_id ON items (category_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+            }
+        }
+
+        // For users who already ran the old MIGRATION_11_12 (data-only fix),
+        // their DB is at version 12 but still has the extra 'color' column.
+        // This migration rebuilds the table to remove it.
+        private val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Check if old 'color' column still exists
+                val cursor = db.query("PRAGMA table_info(items)")
+                var hasOldColorColumn = false
+                while (cursor.moveToNext()) {
+                    val colName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    if (colName == "color") { hasOldColorColumn = true; break }
+                }
+                cursor.close()
+                if (!hasOldColorColumn) return
+
+                // Rebuild items table to remove the old 'color' column
+                db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
+                    brand_id INTEGER NOT NULL,
+                    category_id INTEGER NOT NULL,
+                    created_at INTEGER NOT NULL,
+                    description TEXT NOT NULL,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    image_url TEXT,
+                    name TEXT NOT NULL,
+                    priority TEXT NOT NULL DEFAULT 'MEDIUM',
+                    status TEXT NOT NULL,
+                    coordinate_id INTEGER,
+                    colors TEXT,
+                    season TEXT,
+                    style TEXT,
+                    size TEXT,
+                    size_chart_image_url TEXT,
+                    location_id INTEGER,
+                    source TEXT,
+                    updated_at INTEGER NOT NULL,
+                    FOREIGN KEY(coordinate_id) REFERENCES coordinates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY(brand_id) REFERENCES brands(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(category_id) REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                )""")
+                db.execSQL("""INSERT INTO items_new (brand_id, category_id, created_at, description, id, image_url, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at)
+                    SELECT brand_id, category_id, created_at, description, id, image_url, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at FROM items""")
+                db.execSQL("DROP TABLE items")
+                db.execSQL("ALTER TABLE items_new RENAME TO items")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_name ON items (name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_coordinate_id ON items (coordinate_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_brand_id ON items (brand_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_category_id ON items (category_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
             }
         }
 
@@ -292,7 +383,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
                     .build()
                 INSTANCE = instance
                 instance

@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 11,
+    version = 12,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -272,10 +272,15 @@ abstract class LolitaDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE items ADD COLUMN colors TEXT DEFAULT NULL")
                 // Migrate existing color data: single value -> JSON array
                 // e.g. "粉色" -> ["粉色"]
-                db.execSQL("""
-                    UPDATE items SET colors = '[\"' || color || '\"]'
-                    WHERE color IS NOT NULL AND color != ''
-                """.trimIndent())
+                db.execSQL("""UPDATE items SET colors = '["' || color || '"]' WHERE color IS NOT NULL AND color != ''""")
+            }
+        }
+
+        private val MIGRATION_11_12 = object : Migration(11, 12) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Fix corrupted JSON from migration 10->11 that had literal backslashes
+                // e.g. [\"粉色\"] -> ["粉色"]
+                db.execSQL("""UPDATE items SET colors = REPLACE(colors, '\"', '"') WHERE colors IS NOT NULL AND colors LIKE '%\%'""")
             }
         }
 
@@ -287,7 +292,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                     .build()
                 INSTANCE = instance
                 instance

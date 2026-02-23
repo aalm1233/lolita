@@ -181,6 +181,8 @@ fun PaymentCalendarContent(
                 monthPaidCount = uiState.monthPaidCount,
                 monthUnpaid = uiState.monthUnpaidTotal,
                 monthUnpaidCount = uiState.monthUnpaidCount,
+                totalUnpaid = uiState.totalUnpaidAmount,
+                totalUnpaidCount = uiState.totalUnpaidCount,
                 overdue = uiState.overdueAmount
             )
         }
@@ -244,14 +246,17 @@ private fun StatsRow(
     monthPaidCount: Int,
     monthUnpaid: Double,
     monthUnpaidCount: Int,
+    totalUnpaid: Double,
+    totalUnpaidCount: Int,
     overdue: Double
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         MiniStatCard("当月已付", monthPaid, Color(0xFF4CAF50), Modifier.weight(1f), subtitle = "${monthPaidCount}笔")
         MiniStatCard("当月待付", monthUnpaid, MaterialTheme.colorScheme.primary, Modifier.weight(1f), subtitle = "${monthUnpaidCount}笔")
+        MiniStatCard("总待付", totalUnpaid, Color(0xFFFF9800), Modifier.weight(1f), subtitle = "${totalUnpaidCount}笔")
         MiniStatCard("已逾期", overdue, Color(0xFFD32F2F), Modifier.weight(1f))
     }
 }

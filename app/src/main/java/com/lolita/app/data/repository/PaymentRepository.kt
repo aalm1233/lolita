@@ -150,6 +150,9 @@ class PaymentRepository(
     fun getOverdueAmount(now: Long): Flow<Double> =
         paymentDao.getOverdueAmount(now)
 
+    fun getTotalUnpaidCount(): Flow<Int> =
+        paymentDao.getTotalUnpaidCount()
+
     private suspend fun checkAndUpdatePendingBalanceStatus(paymentId: Long) {
         val dao = itemDao ?: return
         val itemId = paymentDao.getItemIdByPaymentId(paymentId) ?: return

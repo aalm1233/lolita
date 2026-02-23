@@ -48,6 +48,7 @@ data class PaymentCalendarUiState(
     val monthPayments: List<PaymentWithItemInfo> = emptyList(),
     val monthUnpaidTotal: Double = 0.0,
     val totalUnpaidAmount: Double = 0.0,
+    val totalUnpaidCount: Int = 0,
     val overdueAmount: Double = 0.0,
     val monthPaidTotal: Double = 0.0,
     val monthPaidCount: Int = 0,
@@ -90,14 +91,16 @@ class PaymentCalendarViewModel(
                 paymentRepository.getPaymentsWithItemInfoByDateRange(monthStart, monthEnd),
                 paymentRepository.getMonthUnpaidTotal(monthStart, monthEnd),
                 paymentRepository.getTotalUnpaidAmount(),
-                paymentRepository.getOverdueAmount(now)
-            ) { payments, monthUnpaid, totalUnpaid, overdue ->
+                paymentRepository.getOverdueAmount(now),
+                paymentRepository.getTotalUnpaidCount()
+            ) { payments, monthUnpaid, totalUnpaid, overdue, totalUnpaidCount ->
                 val paidPayments = payments.filter { it.isPaid }
                 val unpaidPayments = payments.filter { !it.isPaid }
                 _uiState.value.copy(
                     monthPayments = payments,
                     monthUnpaidTotal = monthUnpaid,
                     totalUnpaidAmount = totalUnpaid,
+                    totalUnpaidCount = totalUnpaidCount,
                     overdueAmount = overdue,
                     monthPaidTotal = paidPayments.sumOf { it.amount },
                     monthPaidCount = paidPayments.size,

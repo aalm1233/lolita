@@ -98,6 +98,14 @@ interface PaymentDao {
     @Query("""
         SELECT COUNT(*) FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE p.is_paid = 0 AND i.status = 'OWNED'
+    """)
+    fun getTotalUnpaidCount(): Flow<Int>
+
+    @Query("""
+        SELECT COUNT(*) FROM payments p
+        INNER JOIN prices pr ON p.price_id = pr.id
         WHERE pr.item_id = :itemId AND pr.type = 'DEPOSIT_BALANCE'
         AND p.is_paid = 0
     """)

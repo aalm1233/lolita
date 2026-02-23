@@ -72,12 +72,12 @@ Type converters handle enums (`ItemStatus`, `ItemPriority`, `PriceType`, `Catego
 
 ### Skin System
 
-4 skins: DEFAULT (甜美粉), GOTHIC, CHINESE (中华), CLASSIC. Each skin defines its own colors, fonts, shapes, icons, and animations via `LolitaSkinConfig`. 29 files in `ui/theme/skin/`.
+5 skins: DEFAULT (甜美粉), GOTHIC, CHINESE (中华), CLASSIC, NAVY (清风水手). Each skin defines its own colors, fonts, shapes, icons, and animations via `LolitaSkinConfig`. 34 files in `ui/theme/skin/`.
 
 **Icon System:**
 - **SkinIconProvider** — 45 Canvas-drawn icons per skin, organized in 5 sub-interfaces: NavigationIcons (5), ActionIcons (12), ContentIcons (13), ArrowIcons (9), StatusIcons (6)
 - **BaseSkinIconProvider** — default fallback implementations
-- 4 skin-specific providers: `SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`
+- 5 skin-specific providers: `SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`
 - **SkinIcon** composable renders icons; **IconKey** enum maps icon identifiers
 
 **Animation System (`SkinAnimationProvider`):**
@@ -93,14 +93,14 @@ Type converters handle enums (`ItemStatus`, `ItemPriority`, `PriceType`, `Catego
 - **SkinTransitionOverlay** — full-screen transition effects with per-skin particles
 - **SkinTabIndicator** — per-skin tab indicator styles (used in ItemListScreen, StatsPageScreen)
 - **SkinCardGlow** — per-skin card glow/decoration effects
-- **SkinBackgroundAnimation** — ambient particle system (hearts/crosses/clouds/sparkles per skin)
+- **SkinBackgroundAnimation** — ambient particle system (hearts/crosses/clouds/sparkles/anchors per skin)
 - **SkinNavigationOverlay** + **SkinNavigationTransitions** — per-skin screen enter/exit animations
 - **SkinItemAppear** — staggered list item appear animations
 - **SkinFlingBehavior** — per-skin list scroll friction
 
-**Per-skin particle types** in `particles/`: SweetParticles, GothicParticles, ChineseParticles, ClassicParticles.
+**Per-skin particle types** in `particles/`: SweetParticles, GothicParticles, ChineseParticles, ClassicParticles, NavyParticles.
 
-When adding new icons, implement in `BaseSkinIconProvider` and all 4 skin-specific providers. When adding new screens, use skin-aware components (`SkinClickable`, `GradientTopAppBar`, `SkinItemAppear` for lists, `SkinTabIndicator` for tabs).
+When adding new icons, implement in `BaseSkinIconProvider` and all 5 skin-specific providers. When adding new screens, use skin-aware components (`SkinClickable`, `GradientTopAppBar`, `SkinItemAppear` for lists, `SkinTabIndicator` for tabs).
 
 ### Recommendation Engine
 
@@ -113,7 +113,7 @@ When adding new icons, implement in `BaseSkinIconProvider` and all 4 skin-specif
 ## Key Conventions
 
 - UI language is Chinese (zh-CN)
-- Theme: 4-skin system (DEFAULT/GOTHIC/CHINESE/CLASSIC) via `LolitaSkinConfig`, each with custom colors, fonts, shapes, Canvas-drawn icons, and animations. Default is pink-based (`Pink400` = #FF69B4), light/dark support. See below "Skin Design Language" section for full details
+- Theme: 5-skin system (DEFAULT/GOTHIC/CHINESE/CLASSIC/NAVY) via `LolitaSkinConfig`, each with custom colors, fonts, shapes, Canvas-drawn icons, and animations. Default is pink-based (`Pink400` = #FF69B4), light/dark support. See below "Skin Design Language" section for full details
 - `GradientTopAppBar` is the standard top bar, defaults to `compact = true` (tighter padding + flower decorations). All screens use it — do not add `compact = false` unless there's a specific reason
 - The outer `Scaffold` in `LolitaNavHost` sets `contentWindowInsets = WindowInsets(0,0,0,0)` to avoid double status bar padding — `GradientTopAppBar` handles `statusBarsPadding()` internally
 - `LolitaCard` wraps content in rounded cards
@@ -165,12 +165,12 @@ When adding new features, follow these rules to maintain data structure and feat
 ### New Icon Checklist
 
 - Implement in `BaseSkinIconProvider` (default implementation)
-- Override in all 4 skin-specific providers: `SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`
+- Override in all 5 skin-specific providers: `SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`
 - Icons are Canvas-drawn, not Material icons — follow existing patterns in each provider
 
 ### Version Bumping
 
-- Every feature update must bump the version in `app/build.gradle.kts`: increment `versionCode` by 1, and update `versionName` accordingly (current: versionCode=2, versionName="2.0")
+- Every feature update must bump the version in `app/build.gradle.kts`: increment `versionCode` by 1, and update `versionName` accordingly (current: versionCode=23, versionName="2.12")
 - Bug fixes: bump patch version (e.g. 2.0 → 2.0.1)
 - New features: bump minor version (e.g. 2.0 → 2.1)
 - Breaking/major changes: bump major version (e.g. 2.0 → 3.0)
@@ -194,7 +194,7 @@ When adding new features, follow these rules to maintain data structure and feat
 
 ## Skin Design Language
 
-Four skins, each with distinct visual identity. When adding new UI elements or modifying existing ones, follow the corresponding skin's design language.
+Five skins, each with distinct visual identity. When adding new UI elements or modifying existing ones, follow the corresponding skin's design language.
 
 ### DEFAULT (甜美粉) — Sweet Pink
 
@@ -240,14 +240,25 @@ Four skins, each with distinct visual identity. When adding new UI elements or m
 - Ripple: `#722F37` at 14% alpha
 - Philosophy: Victorian and Rococo elegance. Wine and gold evoke luxury. Balanced animations convey sophistication and timeless grace
 
+### NAVY (清风水手) — Sailor Lolita
+
+- Colors: Primary `#4A90D9` (sky blue), Secondary `#DAA520` (gold), Background `#F0F8FF` (Alice Blue). Dark mode background `#0D1B2A`, surface `#1B2D44`
+- Font: Pacifico Regular (`pacifico_regular.ttf`)
+- Shapes: `RoundedCornerShape(14.dp)` — soft, between sweet and classic
+- Top bar decoration: `"⚓"` (anchor) at 60% opacity
+- Icon style: Stroke `0.07f`, `Round` cap/join — smooth, flowing. Motifs: anchors, rope knots, sailor collars, helms, starfish, shells, telescopes, lighthouses, life preservers, sailboats, compasses, waves
+- Animations: Light and breezy. Tab switch 380ms with `CubicBezierEasing(0.3f, 0f, 0.2f, 1f)`. Press scale `0.94f`. Transition 380ms with water ripple rings from center. Card enter: fade + slide from 25% bottom, stagger 65ms
+- Ripple: `#4A90D9` at 16% alpha, SOFT style
+- Philosophy: Sailor Lolita freshness. Sky blue and gold evoke ocean breezes and nautical charm. Light animations feel like gentle waves
+
 ### Skin Quick Reference
 
-| Aspect | DEFAULT | GOTHIC | CHINESE | CLASSIC |
-|--------|---------|--------|---------|---------|
-| Corner Radius | 16dp | 8dp | 4dp | 12dp |
-| Stroke Width | 0.08f | 0.06f | 0.07f | 0.065f |
-| Stroke Cap | Round | Butt | Round | Round |
-| Press Scale | 0.92f | 0.97f | 0.95f | 0.96f |
-| Transition | 350ms | 600ms | 450ms | 400ms |
-| Font | System | Cinzel | Noto Serif SC | Playfair Display |
-| Primary Motif | Hearts & Flowers | Crosses & Thorns | Clouds & Plums | Spades & Scrolls |
+| Aspect | DEFAULT | GOTHIC | CHINESE | CLASSIC | NAVY |
+|--------|---------|--------|---------|---------|------|
+| Corner Radius | 16dp | 8dp | 4dp | 12dp | 14dp |
+| Stroke Width | 0.08f | 0.06f | 0.07f | 0.065f | 0.07f |
+| Stroke Cap | Round | Butt | Round | Round | Round |
+| Press Scale | 0.92f | 0.97f | 0.95f | 0.96f | 0.94f |
+| Transition | 350ms | 600ms | 450ms | 400ms | 380ms |
+| Font | System | Cinzel | Noto Serif SC | Playfair Display | Pacifico |
+| Primary Motif | Hearts & Flowers | Crosses & Thorns | Clouds & Plums | Spades & Scrolls | Anchors & Waves |

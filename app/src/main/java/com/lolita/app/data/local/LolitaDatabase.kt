@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 13,
+    version = 14,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -375,6 +375,50 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_13_14 = object : Migration(13, 14) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Case A: purchaseDate is not null — use it as paidDate
+                db.execSQL("""
+                    INSERT INTO payments (price_id, amount, due_date, is_paid, paid_date, reminder_set, created_at)
+                    SELECT p.id, p.total_price, p.purchase_date, 1, p.purchase_date, 0, p.created_at
+                    FROM prices p
+                    WHERE p.id NOT IN (SELECT price_id FROM payments)
+                      AND p.purchase_date IS NOT NULL
+                """.trimIndent())
+
+                // Case B: purchaseDate is null — use createdAt as fallback
+                db.execSQL("""
+                    INSERT INTO payments (price_id, amount, due_date, is_paid, paid_date, reminder_set, created_at)
+                    SELECT p.id, p.total_price, p.created_at, 1, p.created_at, 0, p.created_at
+                    FROM prices p
+                    WHERE p.id NOT IN (SELECT price_id FROM payments)
+                      AND p.purchase_date IS NULL
+                """.trimIndent())
+
+                // Rebuild Price table without purchaseDate column
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS prices_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        item_id INTEGER NOT NULL,
+                        type TEXT NOT NULL,
+                        total_price REAL NOT NULL,
+                        deposit REAL,
+                        balance REAL,
+                        created_at INTEGER NOT NULL,
+                        FOREIGN KEY(item_id) REFERENCES items(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO prices_new (id, item_id, type, total_price, deposit, balance, created_at)
+                    SELECT id, item_id, type, total_price, deposit, balance, created_at FROM prices
+                """.trimIndent())
+                db.execSQL("DROP TABLE prices")
+                db.execSQL("ALTER TABLE prices_new RENAME TO prices")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_prices_item_id ON prices(item_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_prices_type ON prices(type)")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -383,7 +427,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
                     .build()
                 INSTANCE = instance
                 instance

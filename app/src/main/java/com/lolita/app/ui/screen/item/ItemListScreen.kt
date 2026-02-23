@@ -620,9 +620,8 @@ private fun ItemCard(
                     )
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     brandName?.let {
                         Surface(

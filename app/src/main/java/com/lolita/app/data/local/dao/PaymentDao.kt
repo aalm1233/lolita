@@ -59,14 +59,14 @@ interface PaymentDao {
     @Query("SELECT * FROM payments ORDER BY due_date ASC")
     suspend fun getAllPaymentsList(): List<Payment>
 
-    // Calendar queries — only include payments for OWNED items
+    // Calendar queries — include payments for OWNED and PENDING_BALANCE items
     @Query("""
         SELECT p.id AS paymentId, p.amount, p.due_date AS dueDate, p.is_paid AS isPaid,
                p.paid_date AS paidDate, pr.type AS priceType, i.name AS itemName, pr.item_id AS itemId
         FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.due_date BETWEEN :startDate AND :endDate AND i.status = 'OWNED'
+        WHERE p.due_date BETWEEN :startDate AND :endDate AND i.status IN ('OWNED', 'PENDING_BALANCE')
         ORDER BY p.due_date ASC
     """)
     fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>>
@@ -75,7 +75,7 @@ interface PaymentDao {
         SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.is_paid = 0 AND p.due_date BETWEEN :monthStart AND :monthEnd AND i.status = 'OWNED'
+        WHERE p.is_paid = 0 AND p.due_date BETWEEN :monthStart AND :monthEnd AND i.status IN ('OWNED', 'PENDING_BALANCE')
     """)
     fun getMonthUnpaidTotal(monthStart: Long, monthEnd: Long): Flow<Double>
 
@@ -83,7 +83,7 @@ interface PaymentDao {
         SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.is_paid = 0 AND i.status = 'OWNED'
+        WHERE p.is_paid = 0 AND i.status IN ('OWNED', 'PENDING_BALANCE')
     """)
     fun getTotalUnpaidAmount(): Flow<Double>
 
@@ -91,7 +91,7 @@ interface PaymentDao {
         SELECT COALESCE(SUM(p.amount), 0.0) FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.is_paid = 0 AND p.due_date < :now AND i.status = 'OWNED'
+        WHERE p.is_paid = 0 AND p.due_date < :now AND i.status IN ('OWNED', 'PENDING_BALANCE')
     """)
     fun getOverdueAmount(now: Long): Flow<Double>
 
@@ -99,7 +99,7 @@ interface PaymentDao {
         SELECT COUNT(*) FROM payments p
         INNER JOIN prices pr ON p.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE p.is_paid = 0 AND i.status = 'OWNED'
+        WHERE p.is_paid = 0 AND i.status IN ('OWNED', 'PENDING_BALANCE')
     """)
     fun getTotalUnpaidCount(): Flow<Int>
 

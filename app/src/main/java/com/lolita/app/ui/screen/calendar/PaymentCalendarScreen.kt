@@ -393,56 +393,97 @@ private data class DayAmountInfo(
 @Composable
 private fun DayCell(
     day: Int,
+    isToday: Boolean,
     status: DayStatus?,
     amountInfo: DayAmountInfo?,
     isSelected: Boolean,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    val bgColor by animateColorAsState(
-        if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else Color.Transparent,
-        animationSpec = tween(200), label = "dayBg"
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val borderColor by animateColorAsState(
+        if (isSelected) primaryColor else Color.Transparent,
+        animationSpec = tween(200), label = "dayBorder"
     )
 
-    Column(
+    Box(
         modifier = modifier
-            .clip(CircleShape)
-            .background(bgColor)
+            .height(64.dp)
+            .padding(1.dp)
+            .border(
+                width = if (isSelected) 2.dp else 0.dp,
+                color = borderColor,
+                shape = MaterialTheme.shapes.extraSmall
+            )
+            .background(
+                MaterialTheme.colorScheme.surface,
+                MaterialTheme.shapes.extraSmall
+            )
             .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(3.dp)
     ) {
-        Text(
-            day.toString(),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center
-        )
-        if (amountInfo != null) {
-            if (amountInfo.paidTotal > 0) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (isToday) {
+                Box(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .background(primaryColor, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        day.toString(),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            } else {
                 Text(
-                    "¥${String.format("%.0f", amountInfo.paidTotal)}",
-                    fontSize = 9.sp,
-                    color = Color(0xFF4CAF50),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 10.sp
+                    day.toString(),
+                    fontSize = 12.sp,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            if (amountInfo.unpaidTotal > 0) {
-                Text(
-                    "¥${String.format("%.0f", amountInfo.unpaidTotal)}",
-                    fontSize = 9.sp,
-                    color = when (status) {
-                        DayStatus.OVERDUE -> Color(0xFFD32F2F)
-                        DayStatus.UPCOMING -> Color(0xFFFF9800)
-                        else -> MaterialTheme.colorScheme.primary
-                    },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 10.sp
-                )
+
+            if (amountInfo != null) {
+                var linesShown = 0
+                if (amountInfo.paidTotal > 0 && linesShown < 2) {
+                    Text(
+                        "¥${String.format("%.0f", amountInfo.paidTotal)}",
+                        fontSize = 9.sp,
+                        color = Color(0xFF4CAF50),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        lineHeight = 10.sp
+                    )
+                    linesShown++
+                }
+                if (amountInfo.unpaidTotal > 0 && linesShown < 2) {
+                    Text(
+                        "¥${String.format("%.0f", amountInfo.unpaidTotal)}",
+                        fontSize = 9.sp,
+                        color = when (status) {
+                            DayStatus.OVERDUE -> Color(0xFFD32F2F)
+                            else -> primaryColor
+                        },
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        lineHeight = 10.sp
+                    )
+                    linesShown++
+                }
+
+                val totalEntries = amountInfo.paidCount + amountInfo.unpaidCount
+                if (totalEntries > 2) {
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        "+${totalEntries - 2}",
+                        fontSize = 8.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                }
             }
         }
     }

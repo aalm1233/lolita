@@ -141,7 +141,7 @@ class PaymentCalendarViewModel(
         val cal = Calendar.getInstance()
         val monthPrices = mutableMapOf<Int, MutableList<PriceWithStatus>>()
         prices.forEach { p ->
-            cal.timeInMillis = p.purchaseDate
+            cal.timeInMillis = p.firstPaidDate
             if (cal.get(Calendar.YEAR) == year) {
                 val month = cal.get(Calendar.MONTH)
                 monthPrices.getOrPut(month) { mutableListOf() }.add(p)
@@ -456,7 +456,7 @@ private fun PriceInfoCard(price: PriceWithStatus) {
             }
             Spacer(Modifier.height(4.dp))
             Text(
-                "$typeLabel ¥${String.format("%.2f", price.totalPrice)}  购入: ${sdf.format(Date(price.purchaseDate))}",
+                "$typeLabel ¥${String.format("%.2f", price.totalPrice)}  付款: ${sdf.format(Date(price.firstPaidDate))}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -471,7 +471,7 @@ private fun getPricesForMonth(
 ): List<PriceWithStatus> {
     val cal = Calendar.getInstance()
     return prices.filter { p ->
-        cal.timeInMillis = p.purchaseDate
+        cal.timeInMillis = p.firstPaidDate
         cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month
     }
 }

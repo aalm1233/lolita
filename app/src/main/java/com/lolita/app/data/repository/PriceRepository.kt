@@ -88,4 +88,7 @@ class PriceRepository(
     fun getWishlistByPriorityStats() = priceDao.getWishlistByPriorityStats()
 
     fun getItemsByPurchaseMonth(yearMonth: String) = priceDao.getItemsByPurchaseMonth(yearMonth)
+
+    fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long) =
+        priceDao.getPricesWithStatusByDateRange(startDate, endDate, now)
 }

@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,9 +22,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.local.entity.PaymentWithItemInfo
+import com.lolita.app.data.local.dao.PriceWithStatus
 import com.lolita.app.data.local.entity.PriceType
-import com.lolita.app.data.repository.PaymentRepository
+import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 
 import kotlinx.coroutines.Job
@@ -50,7 +49,7 @@ data class MonthStats(
 data class PaymentCalendarUiState(
     val currentYear: Int = Calendar.getInstance().get(Calendar.YEAR),
     val selectedMonth: Int? = null, // 0-based, null = no month selected
-    val yearPayments: List<PaymentWithItemInfo> = emptyList(),
+    val yearPrices: List<PriceWithStatus> = emptyList(),
     val monthStatsMap: Map<Int, MonthStats> = emptyMap(),
     val yearPaidTotal: Double = 0.0,
     val yearPaidCount: Int = 0,
@@ -61,7 +60,7 @@ data class PaymentCalendarUiState(
 )
 
 class PaymentCalendarViewModel(
-    private val paymentRepository: PaymentRepository = AppModule.paymentRepository()
+    private val priceRepository: PriceRepository = AppModule.priceRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PaymentCalendarUiState())
@@ -91,19 +90,19 @@ class PaymentCalendarViewModel(
         val now = System.currentTimeMillis()
 
         loadDataJob = viewModelScope.launch {
-            paymentRepository.getPaymentsWithItemInfoByDateRange(yearStart, yearEnd)
-                .collect { payments ->
-                    val monthStatsMap = buildMonthStatsMap(payments, state.currentYear, now)
-                    val yearPaid = payments.filter { it.isPaid }
-                    val yearUnpaid = payments.filter { !it.isPaid }
+            priceRepository.getPricesWithStatusByDateRange(yearStart, yearEnd, now)
+                .collect { prices ->
+                    val monthStatsMap = buildMonthStatsMap(prices, state.currentYear)
+                    val paid = prices.filter { it.unpaidCount == 0 }
+                    val unpaid = prices.filter { it.unpaidCount > 0 }
                     _uiState.value = _uiState.value.copy(
-                        yearPayments = payments,
+                        yearPrices = prices,
                         monthStatsMap = monthStatsMap,
-                        yearPaidTotal = yearPaid.sumOf { it.amount },
-                        yearPaidCount = yearPaid.size,
-                        yearUnpaidTotal = yearUnpaid.sumOf { it.amount },
-                        yearUnpaidCount = yearUnpaid.size,
-                        yearOverdueAmount = yearUnpaid.filter { it.dueDate < now }.sumOf { it.amount },
+                        yearPaidTotal = paid.sumOf { it.totalPrice },
+                        yearPaidCount = paid.size,
+                        yearUnpaidTotal = unpaid.sumOf { it.totalPrice },
+                        yearUnpaidCount = unpaid.size,
+                        yearOverdueAmount = prices.filter { it.overdueCount > 0 }.sumOf { it.totalPrice },
                         isLoading = false
                     )
                 }
@@ -135,40 +134,29 @@ class PaymentCalendarViewModel(
         )
     }
 
-    fun markAsPaid(paymentId: Long, itemName: String = "") {
-        viewModelScope.launch {
-            val payment = paymentRepository.getPaymentById(paymentId) ?: return@launch
-            paymentRepository.updatePayment(
-                payment.copy(isPaid = true, paidDate = System.currentTimeMillis()),
-                itemName = itemName
-            )
-        }
-    }
-
     private fun buildMonthStatsMap(
-        payments: List<PaymentWithItemInfo>,
-        year: Int,
-        now: Long
+        prices: List<PriceWithStatus>,
+        year: Int
     ): Map<Int, MonthStats> {
         val cal = Calendar.getInstance()
-        val monthPayments = mutableMapOf<Int, MutableList<PaymentWithItemInfo>>()
-        payments.forEach { p ->
-            cal.timeInMillis = p.dueDate
+        val monthPrices = mutableMapOf<Int, MutableList<PriceWithStatus>>()
+        prices.forEach { p ->
+            cal.timeInMillis = p.purchaseDate
             if (cal.get(Calendar.YEAR) == year) {
                 val month = cal.get(Calendar.MONTH)
-                monthPayments.getOrPut(month) { mutableListOf() }.add(p)
+                monthPrices.getOrPut(month) { mutableListOf() }.add(p)
             }
         }
-        return monthPayments.mapValues { (month, list) ->
-            val paid = list.filter { it.isPaid }
-            val unpaid = list.filter { !it.isPaid }
+        return monthPrices.mapValues { (month, list) ->
+            val paid = list.filter { it.unpaidCount == 0 }
+            val unpaid = list.filter { it.unpaidCount > 0 }
             MonthStats(
                 month = month,
-                paidTotal = paid.sumOf { it.amount },
+                paidTotal = paid.sumOf { it.totalPrice },
                 paidCount = paid.size,
-                unpaidTotal = unpaid.sumOf { it.amount },
+                unpaidTotal = unpaid.sumOf { it.totalPrice },
                 unpaidCount = unpaid.size,
-                overdueAmount = unpaid.filter { it.dueDate < now }.sumOf { it.amount }
+                overdueAmount = list.filter { it.overdueCount > 0 }.sumOf { it.totalPrice }
             )
         }
     }
@@ -182,7 +170,6 @@ fun PaymentCalendarContent(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = modifier
@@ -212,23 +199,23 @@ fun PaymentCalendarContent(
             )
         }
 
-        val selectedPayments = uiState.selectedMonth?.let { month ->
-            getPaymentsForMonth(uiState.yearPayments, uiState.currentYear, month)
+        val selectedPrices = uiState.selectedMonth?.let { month ->
+            getPricesForMonth(uiState.yearPrices, uiState.currentYear, month)
         } ?: emptyList()
 
         if (uiState.selectedMonth != null) {
             item {
                 Text(
-                    "${uiState.selectedMonth!! + 1}月 付款记录",
+                    "${uiState.selectedMonth!! + 1}月 消费记录",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
             }
-            if (selectedPayments.isEmpty()) {
+            if (selectedPrices.isEmpty()) {
                 item {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            "当月无付款记录",
+                            "当月无消费记录",
                             modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -236,15 +223,8 @@ fun PaymentCalendarContent(
                     }
                 }
             } else {
-                items(selectedPayments, key = { it.paymentId }) { payment ->
-                    PaymentInfoCard(
-                        payment = payment,
-                        onMarkPaid = {
-                            coroutineScope.launch {
-                                viewModel.markAsPaid(payment.paymentId, payment.itemName)
-                            }
-                        }
-                    )
+                items(selectedPrices, key = { it.priceId }) { price ->
+                    PriceInfoCard(price = price)
                 }
             }
         }
@@ -429,12 +409,13 @@ private fun MonthCard(
 }
 
 @Composable
-private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit) {
-    val typeLabel = when (payment.priceType) {
-        PriceType.DEPOSIT_BALANCE -> "尾款"
+private fun PriceInfoCard(price: PriceWithStatus) {
+    val typeLabel = when (price.priceType) {
+        PriceType.DEPOSIT_BALANCE -> "定金尾款"
         PriceType.FULL -> "全款"
     }
-    val isOverdue = !payment.isPaid && payment.dueDate < System.currentTimeMillis()
+    val isPaid = price.unpaidCount == 0
+    val isOverdue = price.overdueCount > 0
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     Card(
@@ -450,7 +431,7 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    payment.itemName,
+                    price.itemName,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -458,16 +439,16 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
                     modifier = Modifier.weight(1f)
                 )
                 Surface(
-                    color = if (payment.isPaid) Color(0xFF4CAF50).copy(alpha = 0.1f)
+                    color = if (isPaid) Color(0xFF4CAF50).copy(alpha = 0.1f)
                     else if (isOverdue) Color(0xFFD32F2F).copy(alpha = 0.1f)
                     else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
-                        if (payment.isPaid) "已付款" else if (isOverdue) "已逾期" else "待付款",
+                        if (isPaid) "已付清" else if (isOverdue) "已逾期" else "待付款",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (payment.isPaid) Color(0xFF4CAF50)
+                        color = if (isPaid) Color(0xFF4CAF50)
                         else if (isOverdue) Color(0xFFD32F2F)
                         else MaterialTheme.colorScheme.primary
                     )
@@ -475,32 +456,22 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
             }
             Spacer(Modifier.height(4.dp))
             Text(
-                "$typeLabel ¥${String.format("%.2f", payment.amount)}  应付: ${sdf.format(Date(payment.dueDate))}",
+                "$typeLabel ¥${String.format("%.2f", price.totalPrice)}  购入: ${sdf.format(Date(price.purchaseDate))}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            if (!payment.isPaid) {
-                Spacer(Modifier.height(8.dp))
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onMarkPaid) {
-                        SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("标记已付款")
-                    }
-                }
-            }
         }
     }
 }
 
-private fun getPaymentsForMonth(
-    payments: List<PaymentWithItemInfo>,
+private fun getPricesForMonth(
+    prices: List<PriceWithStatus>,
     year: Int,
     month: Int
-): List<PaymentWithItemInfo> {
+): List<PriceWithStatus> {
     val cal = Calendar.getInstance()
-    return payments.filter { p ->
-        cal.timeInMillis = p.dueDate
+    return prices.filter { p ->
+        cal.timeInMillis = p.purchaseDate
         cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month
     }
 }

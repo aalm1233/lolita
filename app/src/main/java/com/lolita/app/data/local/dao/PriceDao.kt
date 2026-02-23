@@ -168,11 +168,36 @@ interface PriceDao {
 
     @Query("DELETE FROM prices")
     suspend fun deleteAllPrices()
+
+    @Query("""
+        SELECT pr.id AS priceId, pr.total_price AS totalPrice, pr.purchase_date AS purchaseDate,
+               pr.type AS priceType, i.name AS itemName, i.id AS itemId,
+               (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0) AS unpaidCount,
+               (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0 AND p.due_date < :now) AS overdueCount
+        FROM prices pr
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE pr.purchase_date BETWEEN :startDate AND :endDate
+          AND i.status IN ('OWNED', 'PENDING_BALANCE')
+          AND pr.purchase_date IS NOT NULL
+        ORDER BY pr.purchase_date ASC
+    """)
+    fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long): Flow<List<PriceWithStatus>>
 }
 
 data class ItemPriceSum(
     @androidx.room.ColumnInfo(name = "item_id") val itemId: Long,
     val totalPrice: Double
+)
+
+data class PriceWithStatus(
+    val priceId: Long,
+    val totalPrice: Double,
+    val purchaseDate: Long,
+    val priceType: com.lolita.app.data.local.entity.PriceType,
+    val itemName: String,
+    val itemId: Long,
+    val unpaidCount: Int,
+    val overdueCount: Int
 )
 
 data class PriceWithPayments(

@@ -254,14 +254,13 @@ fun PaymentCalendarContent(
 }
 
 @Composable
-private fun MonthHeader(
+private fun YearHeader(
     year: Int,
-    month: Int,
-    monthPaidTotal: Double,
-    monthPaidCount: Int,
-    monthUnpaidTotal: Double,
-    monthUnpaidCount: Int,
-    overdueAmount: Double,
+    yearPaidTotal: Double,
+    yearPaidCount: Int,
+    yearUnpaidTotal: Double,
+    yearUnpaidCount: Int,
+    yearOverdueAmount: Double,
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
@@ -276,7 +275,7 @@ private fun MonthHeader(
                     SkinIcon(IconKey.KeyboardArrowLeft)
                 }
                 Text(
-                    "${year}年${month + 1}月",
+                    "${year}年",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -288,10 +287,10 @@ private fun MonthHeader(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatChip("已付", monthPaidTotal, monthPaidCount, Color(0xFF4CAF50))
-                StatChip("待付", monthUnpaidTotal, monthUnpaidCount, MaterialTheme.colorScheme.primary)
-                if (overdueAmount > 0) {
-                    StatChip("逾期", overdueAmount, null, Color(0xFFD32F2F))
+                StatChip("已付", yearPaidTotal, yearPaidCount, Color(0xFF4CAF50))
+                StatChip("待付", yearUnpaidTotal, yearUnpaidCount, MaterialTheme.colorScheme.primary)
+                if (yearOverdueAmount > 0) {
+                    StatChip("逾期", yearOverdueAmount, null, Color(0xFFD32F2F))
                 }
             }
         }

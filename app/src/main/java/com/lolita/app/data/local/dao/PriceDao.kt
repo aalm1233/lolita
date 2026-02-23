@@ -190,6 +190,20 @@ interface PriceDao {
         ORDER BY firstPaidDate ASC
     """)
     fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long): Flow<List<PriceWithStatus>>
+
+    @Query("""
+        SELECT pay.id AS paymentId, pay.amount, pay.due_date AS dueDate,
+               pay.is_paid AS isPaid, pay.paid_date AS paidDate,
+               pr.id AS priceId, pr.type AS priceType,
+               i.name AS itemName, i.id AS itemId
+        FROM payments pay
+        INNER JOIN prices pr ON pay.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE pay.due_date BETWEEN :startDate AND :endDate
+          AND i.status IN ('OWNED', 'PENDING_BALANCE')
+        ORDER BY pay.due_date ASC
+    """)
+    fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>>
 }
 
 data class ItemPriceSum(
@@ -215,4 +229,16 @@ data class PriceWithPayments(
         entityColumn = "price_id"
     )
     val payments: List<Payment>
+)
+
+data class PaymentWithItemInfo(
+    val paymentId: Long,
+    val amount: Double,
+    val dueDate: Long,
+    val isPaid: Boolean,
+    val paidDate: Long?,
+    val priceId: Long,
+    val priceType: com.lolita.app.data.local.entity.PriceType,
+    val itemName: String,
+    val itemId: Long
 )

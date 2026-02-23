@@ -107,14 +107,13 @@ interface PriceDao {
     fun getSpendingByStyle(): Flow<List<StyleSpending>>
 
     @Query("""
-        SELECT strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch') AS yearMonth,
+        SELECT strftime('%Y-%m', pay.due_date / 1000, 'unixepoch') AS yearMonth,
                COALESCE(SUM(pay.amount), 0.0) AS totalSpending
         FROM payments pay
         INNER JOIN prices pr ON pay.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
         WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
           AND pay.is_paid = 1
-          AND pay.paid_date IS NOT NULL
         GROUP BY yearMonth
         ORDER BY yearMonth ASC
     """)
@@ -165,8 +164,7 @@ interface PriceDao {
         INNER JOIN payments pay ON pay.price_id = pr.id
         WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
           AND pay.is_paid = 1
-          AND pay.paid_date IS NOT NULL
-          AND strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch') = :yearMonth
+          AND strftime('%Y-%m', pay.due_date / 1000, 'unixepoch') = :yearMonth
         ORDER BY i.updated_at DESC
     """)
     fun getItemsByPurchaseMonth(yearMonth: String): Flow<List<Item>>

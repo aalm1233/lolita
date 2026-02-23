@@ -210,16 +210,18 @@ class CoordinateDetailViewModel(
                     .filter { !it.isPaid }
                     .sumOf { it.amount }
 
-                CoordinateDetailUiState(
-                    coordinate = result?.coordinate,
-                    items = result?.items ?: emptyList(),
-                    totalPrice = totalPrice,
-                    paidAmount = paidAmount,
-                    unpaidAmount = unpaidAmount,
-                    isLoading = false
-                )
-            }.collect { state ->
-                _uiState.value = state
+                Triple(result, totalPrice, paidAmount to unpaidAmount)
+            }.collect { (result, totalPrice, paidAmounts) ->
+                _uiState.update {
+                    it.copy(
+                        coordinate = result?.coordinate,
+                        items = result?.items ?: emptyList(),
+                        totalPrice = totalPrice,
+                        paidAmount = paidAmounts.first,
+                        unpaidAmount = paidAmounts.second,
+                        isLoading = false
+                    )
+                }
             }
         }
     }

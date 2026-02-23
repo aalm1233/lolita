@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.calendar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -319,12 +320,15 @@ private fun CalendarGrid(
     val now = System.currentTimeMillis()
     val sevenDaysLater = now + 7L * 24 * 60 * 60 * 1000
 
-    // Build day→status map
+    val todayCal = Calendar.getInstance()
+    val isCurrentMonth = todayCal.get(Calendar.YEAR) == year && todayCal.get(Calendar.MONTH) == month
+    val today = if (isCurrentMonth) todayCal.get(Calendar.DAY_OF_MONTH) else -1
+
     val dayStatusMap = buildDayStatusMap(payments, year, month, now, sevenDaysLater)
     val dayAmountMap = buildDayAmountMap(payments, year, month)
 
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
             // Weekday headers
             Row(modifier = Modifier.fillMaxWidth()) {
                 weekDays.forEach { day ->
@@ -337,34 +341,41 @@ private fun CalendarGrid(
                     )
                 }
             }
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
 
-            // Day cells
-            var dayCounter = 1
-            val rows = ((firstDayOfWeek + daysInMonth + 6) / 7)
-            repeat(rows) { row ->
+            // Fixed 6 rows
+            repeat(6) { row ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     repeat(7) { col ->
                         val cellIndex = row * 7 + col
-                        if (cellIndex < firstDayOfWeek || dayCounter > daysInMonth) {
-                            Spacer(Modifier.weight(1f))
-                        } else {
-                            val day = dayCounter
-                            val status = dayStatusMap[day]
-                            val isSelected = day == selectedDay
+                        val dayOfMonth = cellIndex - firstDayOfWeek + 1
+                        val isInMonth = dayOfMonth in 1..daysInMonth
+
+                        if (isInMonth) {
                             DayCell(
-                                day = day,
-                                status = status,
-                                amountInfo = dayAmountMap[day],
-                                isSelected = isSelected,
+                                day = dayOfMonth,
+                                isToday = dayOfMonth == today,
+                                status = dayStatusMap[dayOfMonth],
+                                amountInfo = dayAmountMap[dayOfMonth],
+                                isSelected = dayOfMonth == selectedDay,
                                 modifier = Modifier.weight(1f),
-                                onClick = { onDayClick(day) }
+                                onClick = { onDayClick(dayOfMonth) }
                             )
-                            dayCounter++
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(64.dp)
+                                    .padding(1.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                        MaterialTheme.shapes.extraSmall
+                                    )
+                            )
                         }
                     }
                 }
-                if (row < rows - 1) Spacer(Modifier.height(4.dp))
+                if (row < 5) Spacer(Modifier.height(2.dp))
             }
         }
     }

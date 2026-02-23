@@ -562,20 +562,31 @@ private fun ItemPickerContent(
                 .heightIn(max = 400.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            items(filteredItems, key = { it.id }) { item ->
-                val isSelected = item.id in selectedItemIds
-                val belongsToOther = item.coordinateId != null
-                    && item.coordinateId != currentCoordinateId
-                val otherCoordName = if (belongsToOther) {
-                    coordinateNames[item.coordinateId]
-                } else null
+            if (filteredItems.isEmpty()) {
+                item {
+                    Text(
+                        if (searchQuery.isBlank()) "暂无服饰" else "未找到匹配的服饰",
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                items(filteredItems, key = { it.id }) { item ->
+                    val isSelected = item.id in selectedItemIds
+                    val belongsToOther = item.coordinateId != null
+                        && item.coordinateId != currentCoordinateId
+                    val otherCoordName = if (belongsToOther) {
+                        coordinateNames[item.coordinateId]
+                    } else null
 
-                PickerItemRow(
-                    item = item,
-                    isSelected = isSelected,
-                    otherCoordinateName = otherCoordName,
-                    onToggle = { onToggleItem(item.id) }
-                )
+                    PickerItemRow(
+                        item = item,
+                        isSelected = isSelected,
+                        otherCoordinateName = otherCoordName,
+                        onToggle = { onToggleItem(item.id) }
+                    )
+                }
             }
         }
     }

@@ -98,6 +98,8 @@ class PriceEditViewModel(
     var hasUnsavedChanges: Boolean = false
         private set
 
+    private var originalPaymentDate: Long? = null
+
     fun loadPrice(priceId: Long?) {
         if (priceId == null) return
 
@@ -107,6 +109,7 @@ class PriceEditViewModel(
                 // Load paymentDate from first payment's paidDate
                 val payments = paymentRepository.getPaymentsByPriceList(p.id)
                 val firstPaidDate = payments.minByOrNull { it.createdAt }?.paidDate
+                originalPaymentDate = firstPaidDate
                 _uiState.update {
                     it.copy(
                         priceType = p.type,
@@ -301,6 +304,22 @@ class PriceEditViewModel(
                                 )
                             }
                         }
+                    }
+                }
+            } else {
+                // Sync payments if only paymentDate changed
+                val paymentDate = _uiState.value.paymentDate
+                val paymentDateChanged = paymentDate != originalPaymentDate
+                if (paymentDateChanged) {
+                    val item = itemRepository.getItemById(existing.itemId)
+                    val itemName = item?.name ?: "服饰"
+                    val payments = paymentRepository.getPaymentsByPriceList(priceId)
+                    for (p in payments) {
+                        val updated = p.copy(
+                            isPaid = paymentDate != null,
+                            paidDate = paymentDate
+                        )
+                        paymentRepository.updatePayment(updated, itemName)
                     }
                 }
             }

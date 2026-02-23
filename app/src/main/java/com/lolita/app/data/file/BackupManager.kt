@@ -229,7 +229,7 @@ class BackupManager(
             } else {
                 val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
                     ?: return@withContext Result.failure(Exception("无法读取文件"))
-                backupData = gson.fromJson(jsonString, BackupData::class.java)
+                backupData = gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
             }
             backupData = migrateBackupData(backupData)
             cachedBackupData = null
@@ -321,7 +321,7 @@ class BackupManager(
             } else {
                 val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
                     ?: return@withContext Result.failure(Exception("无法读取文件"))
-                backupData = gson.fromJson(jsonString, BackupData::class.java)
+                backupData = gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
             }
             cachedBackupData = backupData
             cachedBackupUri = uri
@@ -426,7 +426,7 @@ class BackupManager(
             }
         } ?: throw Exception("无法读取文件")
 
-        val data = gson.fromJson(jsonString ?: throw Exception("ZIP中未找到data.json"), BackupData::class.java)
+        val data = gson.fromJson(migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json")), BackupData::class.java)
         return Pair(data, imageCount)
     }
 
@@ -461,6 +461,14 @@ class BackupManager(
     private fun escapeCsv(value: String?): String {
         if (value == null) return ""
         return "\"${value.replace("\"", "\"\"")}\""
+    }
+
+    /**
+     * Pre-process backup JSON string for backward compatibility.
+     * Renames old "color" field to "colors" so Gson can deserialize it.
+     */
+    private fun migrateJsonString(json: String): String {
+        return json.replace(Regex("\"color\"\\s*:"), "\"colors\":")
     }
 
     /**

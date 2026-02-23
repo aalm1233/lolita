@@ -28,6 +28,7 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.parseColorsJson
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -398,10 +399,7 @@ private fun CoordinateItemCard(
                 ) {
                     StatusBadge(item.status)
                     // Show color/style if available
-                    val colorDisplay = item.colors?.let { json ->
-                        try { com.google.gson.Gson().fromJson(json, Array<String>::class.java).joinToString("、") }
-                        catch (_: Exception) { json }
-                    }
+                    val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
                     val details = listOfNotNull(colorDisplay, item.style).joinToString(" · ")
                     if (details.isNotEmpty()) {
                         Text(

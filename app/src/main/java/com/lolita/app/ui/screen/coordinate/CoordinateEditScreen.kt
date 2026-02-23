@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
+import com.lolita.app.ui.screen.common.parseColorsJson
 import kotlinx.coroutines.launch
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -260,10 +261,7 @@ fun CoordinateEditScreen(
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
                                     )
-                                    val colorDisplay = item.colors?.let { json ->
-                                        try { com.google.gson.Gson().fromJson(json, Array<String>::class.java).joinToString("、") }
-                                        catch (_: Exception) { json }
-                                    }
+                                    val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
                                     val details = listOfNotNull(
                                         colorDisplay,
                                         item.season,

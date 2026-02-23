@@ -22,7 +22,7 @@ fun LolitaCard(
             modifier = modifier,
             shape = cardShape,
             colors = cardColors,
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             content()
         }
@@ -31,7 +31,7 @@ fun LolitaCard(
             modifier = modifier,
             shape = cardShape,
             colors = cardColors,
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             content()
         }

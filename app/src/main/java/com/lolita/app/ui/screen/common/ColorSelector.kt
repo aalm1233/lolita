@@ -36,6 +36,31 @@ val PREDEFINED_COLORS = listOf(
 
 fun findColorHex(name: String): Long? = PREDEFINED_COLORS.find { it.name == name }?.hex
 
+/**
+ * Safely parse a colors JSON string into a list of color names.
+ * Handles: JSON arrays like ["粉色","白色"], plain strings like "粉色",
+ * corrupted JSON with backslashes like [\"粉色\"], and comma-separated like "粉色,白色".
+ */
+fun parseColorsJson(json: String?): List<String> {
+    if (json.isNullOrBlank()) return emptyList()
+    val trimmed = json.trim()
+    // Try JSON array first
+    if (trimmed.startsWith("[")) {
+        try {
+            val result = com.google.gson.Gson().fromJson(trimmed, Array<String>::class.java)
+            if (result != null) return result.toList().filter { it.isNotBlank() }
+        } catch (_: Exception) { }
+        // Try fixing corrupted JSON with backslashes
+        try {
+            val fixed = trimmed.replace("\\\"", "\"").replace("\\", "")
+            val result = com.google.gson.Gson().fromJson(fixed, Array<String>::class.java)
+            if (result != null) return result.toList().filter { it.isNotBlank() }
+        } catch (_: Exception) { }
+    }
+    // Fallback: treat as plain string, split by common separators
+    return trimmed.split(",", "、", "/").map { it.trim() }.filter { it.isNotBlank() }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColorSelector(

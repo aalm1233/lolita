@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.FlowRow
 import com.google.gson.Gson
 import com.lolita.app.ui.screen.common.findColorHex
+import com.lolita.app.ui.screen.common.parseColorsJson
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -299,9 +300,7 @@ fun ItemDetailScreen(
 
                         // Color, Season, Style
                         item.colors?.let { colorsJson ->
-                            val colorList = try {
-                                Gson().fromJson(colorsJson, Array<String>::class.java).toList()
-                            } catch (_: Exception) { emptyList() }
+                            val colorList = parseColorsJson(colorsJson)
                             if (colorList.isNotEmpty()) {
                                 ColorChipsRow(label = "颜色", colors = colorList)
                             }

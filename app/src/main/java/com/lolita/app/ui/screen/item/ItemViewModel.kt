@@ -19,6 +19,7 @@ import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.data.repository.SeasonRepository
 import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.SortOption
+import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
 import com.google.gson.Gson
@@ -194,10 +195,7 @@ class ItemListViewModel(
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
                 val colorOpts = items.flatMap { item ->
-                    item.colors?.let { json ->
-                        try { Gson().fromJson(json, Array<String>::class.java).toList() }
-                        catch (_: Exception) { emptyList() }
-                    } ?: emptyList()
+                    parseColorsJson(item.colors)
                 }.filter { it.isNotBlank() }.distinct().sorted()
                 ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
@@ -425,10 +423,7 @@ class ItemListViewModel(
 
         if (color != null) {
             result = result.filter { item ->
-                val itemColors = item.colors?.let { json ->
-                    try { Gson().fromJson(json, Array<String>::class.java).toList() }
-                    catch (_: Exception) { emptyList() }
-                } ?: emptyList()
+                val itemColors = parseColorsJson(item.colors)
                 itemColors.contains(color)
             }
         }
@@ -553,10 +548,7 @@ class ItemEditViewModel(
                             status = item.status,
                             priority = item.priority,
                             imageUrl = item.imageUrl,
-                            colors = item.colors?.let { json ->
-                                try { Gson().fromJson(json, Array<String>::class.java).toList() }
-                                catch (_: Exception) { listOfNotNull(json.takeIf { it.isNotBlank() }) }
-                            } ?: emptyList(),
+                            colors = parseColorsJson(item.colors),
                             seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,

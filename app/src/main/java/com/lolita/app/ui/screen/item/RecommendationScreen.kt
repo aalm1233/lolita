@@ -21,6 +21,7 @@ import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.parseColorsJson
 import java.io.File
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -145,11 +146,11 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     matchScore.item.colors?.let { colorsJson ->
-                        val colorDisplay = try {
-                            com.google.gson.Gson().fromJson(colorsJson, Array<String>::class.java).joinToString("、")
-                        } catch (_: Exception) { colorsJson }
+                        val colorDisplay = parseColorsJson(colorsJson).joinToString("、")
+                        if (colorDisplay.isNotEmpty()) {
                         Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
             }

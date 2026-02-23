@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity(
     tableName = "items",
@@ -81,7 +80,6 @@ data class Item(
     val coordinateId: Long? = null,
 
     @ColumnInfo(name = "colors")
-    @SerializedName(value = "colors", alternate = ["color"])
     val colors: String? = null,
 
     @ColumnInfo(name = "season")

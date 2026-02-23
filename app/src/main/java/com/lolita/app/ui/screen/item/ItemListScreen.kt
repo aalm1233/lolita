@@ -55,6 +55,7 @@ import androidx.compose.ui.platform.LocalDensity
 import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.lolita.app.ui.screen.common.findColorHex
+import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -658,9 +659,7 @@ private fun ItemCard(
                         }
                     }
                     item.colors?.let { colorsJson ->
-                        val colorList = try {
-                            Gson().fromJson(colorsJson, Array<String>::class.java).toList()
-                        } catch (_: Exception) { emptyList() }
+                        val colorList = parseColorsJson(colorsJson)
                         if (colorList.isNotEmpty()) {
                             Surface(
                                 color = MaterialTheme.colorScheme.outlineVariant,

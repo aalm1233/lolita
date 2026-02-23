@@ -516,6 +516,7 @@ private fun ItemPickerContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight(0.7f)
             .padding(bottom = 16.dp)
     ) {
         // Header
@@ -558,8 +559,7 @@ private fun ItemPickerContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f, fill = false)
-                .heightIn(max = 400.dp),
+                .weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             if (filteredItems.isEmpty()) {

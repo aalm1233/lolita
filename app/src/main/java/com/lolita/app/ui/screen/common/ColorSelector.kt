@@ -32,6 +32,15 @@ val PREDEFINED_COLORS = listOf(
     PredefinedColor("灰色", 0xFF808080),
     PredefinedColor("酒红", 0xFF722F37),
     PredefinedColor("藏蓝", 0xFF003153),
+    PredefinedColor("生成色", 0xFFFBEDCD),
+    PredefinedColor("绀色", 0xFF1B294B),
+    PredefinedColor("金色", 0xFFDAA520),
+    PredefinedColor("银色", 0xFFC0C0C0),
+    PredefinedColor("橘色", 0xFFFF8C00),
+    PredefinedColor("水色", 0xFF6CA6CD),
+    PredefinedColor("薰衣草", 0xFFB39DDB),
+    PredefinedColor("墨绿", 0xFF2E5A3C),
+    PredefinedColor("驼色", 0xFFC19A6B),
 )
 
 fun findColorHex(name: String): Long? = PREDEFINED_COLORS.find { it.name == name }?.hex
@@ -174,7 +183,8 @@ private fun ColorChip(
                     SkinIcon(
                         IconKey.CheckCircle,
                         modifier = Modifier.size(10.dp),
-                        tint = if (color == Color(0xFF000000) || color == Color(0xFF003153))
+                        tint = if (color == Color(0xFF000000) || color == Color(0xFF003153)
+                            || color == Color(0xFF1B294B) || color == Color(0xFF2E5A3C))
                             Color.White else Color.Black
                     )
                 }

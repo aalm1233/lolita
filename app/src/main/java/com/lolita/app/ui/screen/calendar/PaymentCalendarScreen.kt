@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.local.dao.PaymentWithItemInfo
+import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PaymentRepository

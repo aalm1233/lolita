@@ -2,6 +2,7 @@ package com.lolita.app.data.file
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.room.withTransaction
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
@@ -190,24 +191,25 @@ class BackupManager(
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "lolita_backup_${timestamp}.zip"
 
-            val baos = java.io.ByteArrayOutputStream()
-            ZipOutputStream(baos).use { zos ->
-                zos.putNextEntry(ZipEntry("data.json"))
-                zos.write(jsonBytes)
-                zos.closeEntry()
+            val (uri, outputStream) = createStreamInDownloads(fileName, "application/zip")
+            outputStream.use { os ->
+                ZipOutputStream(os).use { zos ->
+                    zos.putNextEntry(ZipEntry("data.json"))
+                    zos.write(jsonBytes)
+                    zos.closeEntry()
 
-                imagePaths.forEach { path ->
-                    val file = File(path)
-                    if (file.exists()) {
-                        val entryName = "images/${file.name}"
-                        zos.putNextEntry(ZipEntry(entryName))
-                        file.inputStream().use { it.copyTo(zos) }
-                        zos.closeEntry()
+                    imagePaths.forEach { path ->
+                        val file = File(path)
+                        if (file.exists()) {
+                            val entryName = "images/${file.name}"
+                            zos.putNextEntry(ZipEntry(entryName))
+                            file.inputStream().use { it.copyTo(zos) }
+                            zos.closeEntry()
+                        }
                     }
                 }
             }
 
-            val uri = createFileInDownloads(fileName, "application/zip", baos.toByteArray())
             Result.success(uri)
         } catch (e: Exception) {
             Result.failure(e)
@@ -276,9 +278,13 @@ class BackupManager(
                         if (eventId != null) {
                             database.paymentDao().updateCalendarEventId(payment.id, eventId)
                         }
-                    } catch (_: Exception) {}
+                    } catch (e: Exception) {
+                        Log.e("BackupManager", "Failed to create calendar event for payment ${payment.id}", e)
+                    }
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                Log.e("BackupManager", "Failed to recreate calendar events during import", e)
+            }
 
             // Reschedule reminders
             try {
@@ -444,6 +450,18 @@ class BackupManager(
             outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
             locations = backupData.locations.map { it.copy(imageUrl = remap(it.imageUrl)) }
         )
+    }
+
+    private fun createStreamInDownloads(fileName: String, mimeType: String): Pair<Uri, java.io.OutputStream> {
+        val contentValues = android.content.ContentValues().apply {
+            put(android.provider.MediaStore.Downloads.DISPLAY_NAME, fileName)
+            put(android.provider.MediaStore.Downloads.MIME_TYPE, mimeType)
+        }
+        val resolver = context.contentResolver
+        val uri = resolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            ?: throw Exception("无法创建文件")
+        val outputStream = resolver.openOutputStream(uri) ?: throw Exception("无法写入文件")
+        return Pair(uri, outputStream)
     }
 
     private fun createFileInDownloads(fileName: String, mimeType: String, content: ByteArray): Uri {

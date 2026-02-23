@@ -33,6 +33,7 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import kotlinx.coroutines.launch
 import java.io.File
+import com.lolita.app.BuildConfig
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -187,7 +188,7 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    "v1.0.0",
+                    "v${BuildConfig.VERSION_NAME}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

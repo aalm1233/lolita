@@ -86,7 +86,19 @@ fun PriceEditScreen(
                                 }
                             }
                         },
-                        enabled = viewModel.isValid() && !uiState.isSaving
+                        enabled = when (uiState.priceType) {
+                            PriceType.FULL -> {
+                                val total = uiState.totalPrice.toDoubleOrNull()
+                                total != null && total > 0
+                            }
+                            PriceType.DEPOSIT_BALANCE -> {
+                                val total = uiState.totalPrice.toDoubleOrNull()
+                                val deposit = uiState.deposit.toDoubleOrNull()
+                                val balance = uiState.balance.toDoubleOrNull()
+                                total != null && total > 0 && deposit != null && balance != null &&
+                                    kotlin.math.abs((deposit + balance) - total) < 0.01
+                            }
+                        } && !uiState.isSaving
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(

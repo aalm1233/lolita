@@ -167,7 +167,7 @@ fun PaymentEditScreen(
                                 calendarPermissionLauncher.launch(permissionsNeeded.toTypedArray())
                             }
                         },
-                        enabled = viewModel.isValid() && !uiState.isSaving
+                        enabled = uiState.amount.toDoubleOrNull() != null && uiState.dueDate != null && !uiState.isSaving
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(

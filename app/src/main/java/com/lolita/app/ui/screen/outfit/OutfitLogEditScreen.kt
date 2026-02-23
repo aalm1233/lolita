@@ -103,7 +103,7 @@ fun OutfitLogEditScreen(
                                 viewModel.save().onSuccess { onSaveSuccess() }
                             }
                         },
-                        enabled = viewModel.isValid() && !uiState.isSaving
+                        enabled = uiState.date != null && !uiState.isSaving
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Coordinate
 import com.lolita.app.data.local.dao.CoordinateWithItems
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.preferences.AppPreferences
@@ -246,7 +247,7 @@ class CoordinateDetailViewModel(
         }
     }
 
-    fun loadAllItemsForPicker() {
+    fun loadAllItemsForPicker(onLoaded: () -> Unit = {}) {
         viewModelScope.launch {
             val items = itemRepository.getAllItems().first()
             val coordinates = coordinateRepository.getAllCoordinates().first()
@@ -260,6 +261,7 @@ class CoordinateDetailViewModel(
                     pickerSearchQuery = ""
                 )
             }
+            onLoaded()
         }
     }
 
@@ -305,6 +307,7 @@ class CoordinateEditViewModel(
 
     private var originalCreatedAt: Long = 0L
     private var originalSelectedItemIds: Set<Long> = emptySet()
+    private var originalImageUrl: String? = null
     var hasUnsavedChanges: Boolean = false
         private set
 
@@ -331,6 +334,7 @@ class CoordinateEditViewModel(
             val coordinate = coordinateRepository.getCoordinateById(coordinateId)
             coordinate?.let {
                 originalCreatedAt = it.createdAt
+                originalImageUrl = it.imageUrl
                 _uiState.value = _uiState.value.copy(
                     name = it.name,
                     description = it.description,
@@ -412,6 +416,11 @@ class CoordinateEditViewModel(
             val removedIds = originalSelectedItemIds - _uiState.value.selectedItemIds
             val addedIds = _uiState.value.selectedItemIds - originalSelectedItemIds
             coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
+            // Clean up old image file if imageUrl changed
+            val newImageUrl = _uiState.value.imageUrl
+            if (!originalImageUrl.isNullOrEmpty() && originalImageUrl != newImageUrl) {
+                try { ImageFileHelper.deleteImage(originalImageUrl!!) } catch (_: Exception) {}
+            }
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)
         } catch (e: Exception) {

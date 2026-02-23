@@ -108,7 +108,7 @@ class PriceEditViewModel(
             price?.let { p ->
                 // Load paymentDate from first payment's paidDate
                 val payments = paymentRepository.getPaymentsByPriceList(p.id)
-                val firstPaidDate = payments.minByOrNull { it.createdAt }?.paidDate
+                val firstPaidDate = payments.minByOrNull { it.createdAt }?.let { if (it.isPaid) it.paidDate else it.dueDate }
                 originalPaymentDate = firstPaidDate
                 _uiState.update {
                     it.copy(

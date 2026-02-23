@@ -18,6 +18,7 @@ import com.lolita.app.data.local.entity.MonthlySpending
 import com.lolita.app.data.local.entity.ItemWithSpending
 import com.lolita.app.data.local.entity.PriorityStats
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -229,14 +230,3 @@ data class PriceWithPayments(
     val payments: List<Payment>
 )
 
-data class PaymentWithItemInfo(
-    val paymentId: Long,
-    val amount: Double,
-    val dueDate: Long,
-    val isPaid: Boolean,
-    val paidDate: Long?,
-    val priceId: Long,
-    val priceType: com.lolita.app.data.local.entity.PriceType,
-    val itemName: String,
-    val itemId: Long
-)

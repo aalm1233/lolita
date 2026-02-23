@@ -41,8 +41,11 @@ object ImageFileHelper {
 
     suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
         val file = File(path)
+        val canonicalPath = file.canonicalPath
+        val imagesDir = file.canonicalFile.parentFile
         // Only delete files within our images directory to prevent path traversal
-        if (file.exists() && file.canonicalPath.contains("${File.separator}$IMAGE_DIR${File.separator}")) {
+        if (file.exists() && imagesDir != null && imagesDir.name == IMAGE_DIR &&
+            canonicalPath.startsWith(imagesDir.canonicalPath + File.separator)) {
             file.delete()
         }
     }

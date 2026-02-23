@@ -29,6 +29,7 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.parseColorsJson
+import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -47,6 +48,7 @@ fun CoordinateDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     var itemToRemove by remember { mutableStateOf<Item?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showItemPicker by remember { mutableStateOf(false) }
 
     if (itemToRemove != null) {
         AlertDialog(
@@ -161,10 +163,40 @@ fun CoordinateDetailScreen(
                 }
 
                 item {
-                    Text(
-                        "包含服饰 (${uiState.items.size})",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "包含服饰 (${uiState.items.size})",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        SkinClickableBox(
+                            onClick = {
+                                viewModel.loadAllItemsForPicker()
+                                showItemPicker = true
+                            }
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                                    Text(
+                                        "添加服饰",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (uiState.items.isEmpty()) {
@@ -192,6 +224,27 @@ fun CoordinateDetailScreen(
                             onRemove = { itemToRemove = item }
                         )
                     }
+                }
+            }
+            if (showItemPicker) {
+                ModalBottomSheet(
+                    onDismissRequest = { showItemPicker = false },
+                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                ) {
+                    ItemPickerContent(
+                        allItems = uiState.allItems,
+                        selectedItemIds = uiState.pickerSelectedItemIds,
+                        coordinateNames = uiState.coordinateNames,
+                        currentCoordinateId = coordinateId,
+                        searchQuery = uiState.pickerSearchQuery,
+                        onSearchQueryChange = { viewModel.updatePickerSearchQuery(it) },
+                        onToggleItem = { viewModel.togglePickerItemSelection(it) },
+                        onConfirm = {
+                            viewModel.confirmPickerSelection {
+                                showItemPicker = false
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -441,5 +494,178 @@ private fun StatusBadge(status: ItemStatus) {
                 ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.onTertiaryContainer
             }
         )
+    }
+}
+
+@Composable
+private fun ItemPickerContent(
+    allItems: List<Item>,
+    selectedItemIds: Set<Long>,
+    coordinateNames: Map<Long, String>,
+    currentCoordinateId: Long,
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    onToggleItem: (Long) -> Unit,
+    onConfirm: () -> Unit
+) {
+    val filteredItems = remember(allItems, searchQuery) {
+        if (searchQuery.isBlank()) allItems
+        else allItems.filter { it.name.contains(searchQuery, ignoreCase = true) }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp)
+    ) {
+        // Header
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("选择服饰", style = MaterialTheme.typography.titleMedium)
+            SkinClickableBox(onClick = onConfirm) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        "确认 (${selectedItemIds.size})",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
+        }
+
+        // Search
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            placeholder = { Text("搜索服饰...") },
+            leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) },
+            singleLine = true
+        )
+
+        // Item list
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f, fill = false)
+                .heightIn(max = 400.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            items(filteredItems, key = { it.id }) { item ->
+                val isSelected = item.id in selectedItemIds
+                val belongsToOther = item.coordinateId != null
+                    && item.coordinateId != currentCoordinateId
+                val otherCoordName = if (belongsToOther) {
+                    coordinateNames[item.coordinateId]
+                } else null
+
+                PickerItemRow(
+                    item = item,
+                    isSelected = isSelected,
+                    otherCoordinateName = otherCoordName,
+                    onToggle = { onToggleItem(item.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PickerItemRow(
+    item: Item,
+    isSelected: Boolean,
+    otherCoordinateName: String?,
+    onToggle: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+                else MaterialTheme.colorScheme.surface,
+        onClick = onToggle
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = isSelected,
+                onCheckedChange = { onToggle() },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colorScheme.primary
+                )
+            )
+
+            // Thumbnail
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(6.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                )
+                            ),
+                            RoundedCornerShape(6.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = item.name.firstOrNull()?.toString() ?: "?",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    item.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium
+                )
+                val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
+                val details = listOfNotNull(colorDisplay, item.style, item.season).joinToString(" · ")
+                if (details.isNotEmpty()) {
+                    Text(
+                        details,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                if (otherCoordinateName != null) {
+                    Text(
+                        "已属于套装「$otherCoordinateName」",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                    )
+                }
+            }
+        }
     }
 }

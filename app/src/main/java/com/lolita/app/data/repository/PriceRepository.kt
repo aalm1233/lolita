@@ -91,4 +91,7 @@ class PriceRepository(
 
     fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long) =
         priceDao.getPricesWithStatusByDateRange(startDate, endDate, now)
+
+    fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long) =
+        priceDao.getPaymentsWithItemInfoByDateRange(startDate, endDate)
 }

@@ -385,7 +385,9 @@ private enum class DayStatus { OVERDUE, UPCOMING, UNPAID, ALL_PAID }
 
 private data class DayAmountInfo(
     val paidTotal: Double = 0.0,
-    val unpaidTotal: Double = 0.0
+    val unpaidTotal: Double = 0.0,
+    val paidCount: Int = 0,
+    val unpaidCount: Int = 0
 )
 
 @Composable
@@ -556,9 +558,15 @@ private fun buildDayAmountMap(
             val day = cal.get(Calendar.DAY_OF_MONTH)
             val current = dayAmounts.getOrPut(day) { DayAmountInfo() }
             if (p.isPaid) {
-                dayAmounts[day] = current.copy(paidTotal = current.paidTotal + p.amount)
+                dayAmounts[day] = current.copy(
+                    paidTotal = current.paidTotal + p.amount,
+                    paidCount = current.paidCount + 1
+                )
             } else {
-                dayAmounts[day] = current.copy(unpaidTotal = current.unpaidTotal + p.amount)
+                dayAmounts[day] = current.copy(
+                    unpaidTotal = current.unpaidTotal + p.amount,
+                    unpaidCount = current.unpaidCount + 1
+                )
             }
         }
     }

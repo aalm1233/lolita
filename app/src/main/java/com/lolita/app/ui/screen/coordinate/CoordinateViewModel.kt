@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 data class CoordinateListUiState(
     val allCoordinates: List<Coordinate> = emptyList(),
     val coordinates: List<Coordinate> = emptyList(),
@@ -247,7 +248,7 @@ class CoordinateDetailViewModel(
         }
     }
 
-    fun loadAllItemsForPicker(onLoaded: () -> Unit = {}) {
+    fun loadAllItemsForPicker() {
         viewModelScope.launch {
             val items = itemRepository.getAllItems().first()
             val coordinates = coordinateRepository.getAllCoordinates().first()
@@ -261,7 +262,6 @@ class CoordinateDetailViewModel(
                     pickerSearchQuery = ""
                 )
             }
-            onLoaded()
         }
     }
 

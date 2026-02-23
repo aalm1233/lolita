@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 data class LocationDetailUiState(
     val location: Location? = null,
     val items: List<Item> = emptyList(),
@@ -71,7 +72,7 @@ class LocationDetailViewModel(
         }
     }
 
-    fun loadAllItemsForPicker(onLoaded: () -> Unit = {}) {
+    fun loadAllItemsForPicker() {
         viewModelScope.launch {
             val items = itemRepository.getAllItems().first()
             val locations = locationRepository.getAllLocations().first()
@@ -91,7 +92,6 @@ class LocationDetailViewModel(
                     pickerSearchQuery = ""
                 )
             }
-            onLoaded()
         }
     }
 

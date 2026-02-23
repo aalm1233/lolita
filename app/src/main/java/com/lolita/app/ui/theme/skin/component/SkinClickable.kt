@@ -74,12 +74,14 @@ fun SkinClickableBox(
         content()
         SkinRippleEffect(
             interactionSource = interactionSource,
-            spec = clickFeedback
+            spec = clickFeedback,
+            modifier = Modifier.matchParentSize()
         )
         SkinClickParticles(
             trigger = clickPosition,
             spec = clickFeedback,
-            skinType = skin.skinType
+            skinType = skin.skinType,
+            modifier = Modifier.matchParentSize()
         )
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
@@ -174,9 +173,8 @@ fun CoordinateDetailScreen(
                         )
                         SkinClickableBox(
                             onClick = {
-                                viewModel.loadAllItemsForPicker {
-                                    showItemPicker = true
-                                }
+                                viewModel.loadAllItemsForPicker()
+                                showItemPicker = true
                             }
                         ) {
                             Surface(

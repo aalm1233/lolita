@@ -119,9 +119,8 @@ fun LocationDetailScreen(
                         if (!uiState.isUnassigned) {
                             SkinClickableBox(
                                 onClick = {
-                                    viewModel.loadAllItemsForPicker {
-                                        showItemPicker = true
-                                    }
+                                    viewModel.loadAllItemsForPicker()
+                                    showItemPicker = true
                                 }
                             ) {
                                 Surface(

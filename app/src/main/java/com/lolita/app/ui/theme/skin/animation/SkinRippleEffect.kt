@@ -5,7 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -47,7 +47,7 @@ fun SkinRippleEffect(
             }
         }
     }
-    Canvas(modifier.fillMaxSize()) {
+    Canvas(modifier) {
         ripples.forEach { ripple ->
             val progress = ripple.progress.value
             val alpha = (1f - progress).coerceIn(0f, 1f) * 0.5f

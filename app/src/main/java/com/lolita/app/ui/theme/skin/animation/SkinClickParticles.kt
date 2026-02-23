@@ -3,7 +3,7 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -73,7 +73,7 @@ fun SkinClickParticles(
 
     val currentProgress = progress.value
 
-    Canvas(modifier.fillMaxSize()) {
+    Canvas(modifier) {
         particles.forEach { p ->
             val alpha = (1f - currentProgress).coerceIn(0f, 1f)
             val drawX = p.x + p.vx * currentProgress * 20f

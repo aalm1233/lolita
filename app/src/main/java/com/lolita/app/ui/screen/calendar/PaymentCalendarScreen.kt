@@ -12,6 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +27,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.dao.PaymentWithItemInfo
 import com.lolita.app.data.local.entity.PriceType
+import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 
@@ -60,7 +65,9 @@ data class PaymentCalendarUiState(
 )
 
 class PaymentCalendarViewModel(
-    private val priceRepository: PriceRepository = AppModule.priceRepository()
+    private val priceRepository: PriceRepository = AppModule.priceRepository(),
+    private val paymentRepository: PaymentRepository = AppModule.paymentRepository(),
+    private val itemRepository: ItemRepository = AppModule.itemRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PaymentCalendarUiState())
@@ -132,6 +139,22 @@ class PaymentCalendarViewModel(
         _uiState.value = _uiState.value.copy(
             selectedMonth = if (current == month) null else month
         )
+    }
+
+    fun markAsPaid(payment: PaymentWithItemInfo) {
+        viewModelScope.launch {
+            val price = priceRepository.getPriceById(payment.priceId)
+            val item = price?.let { itemRepository.getItemById(it.itemId) }
+            val itemName = item?.name ?: "服饰"
+
+            val fullPayment = paymentRepository.getPaymentById(payment.paymentId)
+            if (fullPayment != null && !fullPayment.isPaid) {
+                paymentRepository.updatePayment(
+                    fullPayment.copy(isPaid = true, paidDate = System.currentTimeMillis()),
+                    itemName
+                )
+            }
+        }
     }
 
     private fun buildMonthStatsMap(
@@ -225,7 +248,10 @@ fun PaymentCalendarContent(
                 }
             } else {
                 items(selectedPayments, key = { it.paymentId }) { payment ->
-                    PaymentInfoCard(payment = payment)
+                    PaymentInfoCard(
+                        payment = payment,
+                        onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null
+                    )
                 }
             }
         }
@@ -410,7 +436,10 @@ private fun MonthCard(
 }
 
 @Composable
-private fun PaymentInfoCard(payment: PaymentWithItemInfo) {
+private fun PaymentInfoCard(
+    payment: PaymentWithItemInfo,
+    onMarkPaid: (() -> Unit)? = null
+) {
     val typeLabel = when (payment.priceType) {
         PriceType.DEPOSIT_BALANCE -> "定金尾款"
         PriceType.FULL -> "全款"
@@ -418,6 +447,26 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo) {
     val now = System.currentTimeMillis()
     val isOverdue = !payment.isPaid && payment.dueDate < now
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
+    if (showConfirmDialog && onMarkPaid != null) {
+        AlertDialog(
+            onDismissRequest = { showConfirmDialog = false },
+            title = { Text("确认付款") },
+            text = {
+                Text("确认将 ${payment.itemName} 的 ¥${String.format("%.2f", payment.amount)} 标记为已付款？")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showConfirmDialog = false
+                    onMarkPaid()
+                }) { Text("确认") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showConfirmDialog = false }) { Text("取消") }
+            }
+        )
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -456,11 +505,25 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo) {
                 }
             }
             Spacer(Modifier.height(4.dp))
-            Text(
-                "$typeLabel ¥${String.format("%.2f", payment.amount)}  应付: ${sdf.format(Date(payment.dueDate))}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "$typeLabel ¥${String.format("%.2f", payment.amount)}  应付: ${sdf.format(Date(payment.dueDate))}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (onMarkPaid != null) {
+                    TextButton(
+                        onClick = { showConfirmDialog = true },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                    ) {
+                        Text("标记已付", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
         }
     }
 }

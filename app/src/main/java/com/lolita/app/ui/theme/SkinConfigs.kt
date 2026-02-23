@@ -27,6 +27,7 @@ fun getSkinConfig(skinType: SkinType): LolitaSkinConfig = when (skinType) {
     SkinType.GOTHIC -> gothicSkinConfig()
     SkinType.CHINESE -> chineseSkinConfig()
     SkinType.CLASSIC -> classicSkinConfig()
+    SkinType.NAVY -> navySkinConfig()
 }
 
 private fun buildTypography(fontFamily: FontFamily): Typography {
@@ -229,5 +230,52 @@ fun classicSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "♠", topBarDecorationAlpha = 0.5f,
         icons = ClassicIconProvider(),
         animations = ClassicAnimationProvider(),
+    )
+}
+
+fun navySkinConfig(): LolitaSkinConfig {
+    val fontFamily = FontFamily(Font(R.font.pacifico_regular))
+    val skyBlue = Color(0xFF4A90D9)
+    val lightSkyBlue = Color(0xFF5BA0E9)
+    val gold = Color(0xFFDAA520)
+    val darkGold = Color(0xFFB8860B)
+    val darkBg = Color(0xFF0D1B2A)
+    val darkSurface = Color(0xFF1B2D44)
+    return LolitaSkinConfig(
+        skinType = SkinType.NAVY,
+        name = "清风水手",
+        lightColorScheme = lightColorScheme(
+            primary = skyBlue, onPrimary = White,
+            primaryContainer = Color(0xFFD6EAFF), onPrimaryContainer = Color(0xFF1B3A5C),
+            secondary = gold, onSecondary = Color(0xFF1A1A1A),
+            secondaryContainer = Color(0xFFFFF8E1), onSecondaryContainer = darkGold,
+            tertiary = gold, onTertiary = Color(0xFF1A1A1A),
+            background = Color(0xFFF0F8FF), onBackground = Color(0xFF1A1A1A),
+            surface = Color(0xFFFFFFFF), onSurface = Color(0xFF1A1A1A),
+            surfaceVariant = Color(0xFFE8F4FD),
+            error = Color(0xFFD32F2F), onError = White,
+            outline = Color(0xFF8EAEC0), outlineVariant = Color(0xFFBDD8EA)
+        ),
+        darkColorScheme = darkColorScheme(
+            primary = lightSkyBlue, onPrimary = White,
+            primaryContainer = Color(0xFF2E6EB5), onPrimaryContainer = Color(0xFFD6EAFF),
+            secondary = darkGold, onSecondary = White,
+            secondaryContainer = darkSurface,
+            tertiary = gold, onTertiary = Color(0xFF1A1A1A),
+            background = darkBg, onBackground = Color(0xFFD0E0F0),
+            surface = darkSurface, onSurface = Color(0xFFD0E0F0),
+            surfaceVariant = Color(0xFF253A50),
+            error = Color(0xFFCF6679), onError = Black
+        ),
+        gradientColors = listOf(skyBlue, Color(0xFF87CEEB)),
+        gradientColorsDark = listOf(Color(0xFF1B3A5C), Color(0xFF2E6EB5)),
+        accentColor = skyBlue, accentColorDark = lightSkyBlue,
+        cardColor = Color(0xFFF5FAFF), cardColorDark = darkSurface,
+        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        cardShape = RoundedCornerShape(14.dp),
+        buttonShape = RoundedCornerShape(14.dp),
+        topBarDecoration = "⚓", topBarDecorationAlpha = 0.6f,
+        icons = NavyIconProvider(),
+        animations = NavyAnimationProvider(),
     )
 }

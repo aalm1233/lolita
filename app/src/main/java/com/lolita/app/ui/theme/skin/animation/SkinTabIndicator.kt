@@ -105,6 +105,22 @@ fun SkinTabIndicator(
                     cornerRadius = CornerRadius(indicatorH / 2f)
                 )
             }
+            SkinType.NAVY -> {
+                val skyBlue = Color(0xFF4A90D9)
+                // Wave-shaped indicator
+                val wavePath = Path().apply {
+                    moveTo(left, topY + indicatorH)
+                    val steps = 20
+                    for (i in 0..steps) {
+                        val px = left + w * i / steps
+                        val py = topY + indicatorH * 0.5f + sin(i.toFloat() * 1.2f) * indicatorH * 0.4f
+                        lineTo(px, py)
+                    }
+                    lineTo(left + w, topY + indicatorH)
+                    close()
+                }
+                drawPath(wavePath, skyBlue)
+            }
         }
     }
 }

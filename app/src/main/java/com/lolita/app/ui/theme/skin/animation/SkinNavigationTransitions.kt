@@ -77,3 +77,17 @@ fun classicPopEnterTransition(): EnterTransition =
 
 fun classicPopExitTransition(): ExitTransition =
     fadeOut(tween(300)) + slideOutHorizontally(tween(350)) { it }
+
+// Navy: horizontal wave-like slide
+fun navyEnterTransition(): EnterTransition =
+    fadeIn(tween(380, easing = CubicBezierEasing(0.3f, 0f, 0.2f, 1f))) +
+        slideInHorizontally(tween(380, easing = CubicBezierEasing(0.3f, 0f, 0.2f, 1f))) { it / 3 }
+
+fun navyExitTransition(): ExitTransition =
+    fadeOut(tween(280)) + slideOutHorizontally(tween(320)) { -it / 3 }
+
+fun navyPopEnterTransition(): EnterTransition =
+    fadeIn(tween(380)) + slideInHorizontally(tween(380)) { -it / 3 }
+
+fun navyPopExitTransition(): ExitTransition =
+    fadeOut(tween(280)) + slideOutHorizontally(tween(320)) { it / 3 }

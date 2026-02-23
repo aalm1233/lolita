@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.Pink400
 import com.lolita.app.ui.theme.SkinType
@@ -66,6 +67,7 @@ fun SkinNavigationOverlay(
                 SkinType.GOTHIC -> drawShardOverlay(x * size.width, y * size.height, particle.size, alpha)
                 SkinType.CHINESE -> drawInkSplashOverlay(x * size.width, y * size.height, particle.size, alpha)
                 SkinType.CLASSIC -> drawGoldSweepOverlay(p, alpha)
+                SkinType.NAVY -> drawWaveRippleOverlay(x * size.width, y * size.height, particle.size, alpha)
             }
         }
     }
@@ -97,6 +99,12 @@ private fun createOverlayParticle(skinType: SkinType): OverlayParticle {
         SkinType.CLASSIC -> OverlayParticle(
             startX = 0f, startY = 0f, endX = 1f, endY = 0f,
             size = 0f, rotationStart = 0f, rotationEnd = 0f
+        )
+        SkinType.NAVY -> OverlayParticle(
+            startX = Random.nextFloat(), startY = 1.1f,
+            endX = Random.nextFloat(), endY = -0.1f,
+            size = 5f + Random.nextFloat() * 8f,
+            rotationStart = 0f, rotationEnd = 0f
         )
     }
 }
@@ -136,5 +144,20 @@ private fun DrawScope.drawGoldSweepOverlay(progress: Float, alpha: Float) {
             startX = sweepX - size.width * 0.15f,
             endX = sweepX + size.width * 0.15f
         )
+    )
+}
+
+private fun DrawScope.drawWaveRippleOverlay(x: Float, y: Float, s: Float, alpha: Float) {
+    val skyBlue = Color(0xFF4A90D9)
+    drawCircle(
+        skyBlue.copy(alpha = alpha * 0.2f),
+        radius = s * 1.5f,
+        center = Offset(x, y)
+    )
+    drawCircle(
+        skyBlue.copy(alpha = alpha * 0.3f),
+        radius = s,
+        center = Offset(x, y),
+        style = Stroke(width = 1.5f)
     )
 }

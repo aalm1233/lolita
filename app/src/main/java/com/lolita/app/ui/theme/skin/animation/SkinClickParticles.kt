@@ -86,6 +86,7 @@ fun SkinClickParticles(
                     SkinType.GOTHIC -> drawShardParticle(drawP)
                     SkinType.CHINESE -> drawInkDotParticle(drawP)
                     SkinType.CLASSIC -> drawSparkleParticle(drawP)
+                    SkinType.NAVY -> drawBubbleClickParticle(drawP)
                 }
             }
         }
@@ -135,5 +136,21 @@ private fun DrawScope.drawSparkleParticle(p: ClickParticle) {
         gold.copy(alpha = p.alpha * 0.3f),
         radius = r * 2f,
         center = Offset(p.x, p.y)
+    )
+}
+
+private fun DrawScope.drawBubbleClickParticle(p: ClickParticle) {
+    val r = (3f + 5f * p.scale)
+    val skyBlue = Color(0xFF87CEEB)
+    drawCircle(
+        skyBlue.copy(alpha = p.alpha * 0.3f),
+        radius = r * 1.5f,
+        center = Offset(p.x, p.y)
+    )
+    drawCircle(
+        skyBlue.copy(alpha = p.alpha),
+        radius = r,
+        center = Offset(p.x, p.y),
+        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
     )
 }

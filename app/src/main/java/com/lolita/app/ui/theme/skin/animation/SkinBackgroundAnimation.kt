@@ -20,6 +20,9 @@ import com.lolita.app.ui.theme.skin.animation.particles.GothicSmokeParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetBubbleParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetPetalParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetStarParticle
+import com.lolita.app.ui.theme.skin.animation.particles.NavyAnchorParticle
+import com.lolita.app.ui.theme.skin.animation.particles.NavyBubbleParticle
+import com.lolita.app.ui.theme.skin.animation.particles.NavyRopeKnotParticle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -95,6 +98,12 @@ private fun createParticles(skinType: SkinType, count: Int): List<AmbientParticl
             val sparkles = List((count * 0.5f).toInt().coerceAtLeast(1)) { ClassicSparkleParticle() }
             val diamonds = List((count * 0.5f).toInt().coerceAtLeast(1)) { ClassicDiamondParticle() }
             sparkles + diamonds
+        }
+        SkinType.NAVY -> {
+            val anchors = List((count * 0.4f).toInt().coerceAtLeast(1)) { NavyAnchorParticle() }
+            val knots = List((count * 0.3f).toInt().coerceAtLeast(1)) { NavyRopeKnotParticle() }
+            val bubbles = List((count * 0.3f).toInt().coerceAtLeast(1)) { NavyBubbleParticle() }
+            anchors + knots + bubbles
         }
     }
 }

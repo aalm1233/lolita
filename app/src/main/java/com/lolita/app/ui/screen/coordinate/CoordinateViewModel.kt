@@ -42,7 +42,12 @@ data class CoordinateDetailUiState(
     val totalPrice: Double = 0.0,
     val paidAmount: Double = 0.0,
     val unpaidAmount: Double = 0.0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    // Item picker state
+    val allItems: List<Item> = emptyList(),
+    val coordinateNames: Map<Long, String> = emptyMap(),
+    val pickerSelectedItemIds: Set<Long> = emptySet(),
+    val pickerSearchQuery: String = ""
 )
 
 data class CoordinateEditUiState(
@@ -181,7 +186,8 @@ class CoordinateListViewModel(
 
 class CoordinateDetailViewModel(
     private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
-    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
+    private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoordinateDetailUiState())
@@ -235,6 +241,59 @@ class CoordinateDetailViewModel(
             } catch (_: Exception) {
                 // 删除失败静默处理
             }
+        }
+    }
+
+    fun loadAllItemsForPicker() {
+        viewModelScope.launch {
+            combine(
+                itemRepository.getAllItems(),
+                coordinateRepository.getAllCoordinates()
+            ) { items, coordinates ->
+                val nameMap = coordinates.associate { it.id to it.name }
+                Pair(items, nameMap)
+            }.first().let { (items, nameMap) ->
+                val currentItemIds = _uiState.value.items.map { it.id }.toSet()
+                _uiState.update {
+                    it.copy(
+                        allItems = items,
+                        coordinateNames = nameMap,
+                        pickerSelectedItemIds = currentItemIds,
+                        pickerSearchQuery = ""
+                    )
+                }
+            }
+        }
+    }
+
+    fun togglePickerItemSelection(itemId: Long) {
+        val current = _uiState.value.pickerSelectedItemIds
+        _uiState.update {
+            it.copy(
+                pickerSelectedItemIds = if (itemId in current) current - itemId else current + itemId
+            )
+        }
+    }
+
+    fun updatePickerSearchQuery(query: String) {
+        _uiState.update { it.copy(pickerSearchQuery = query) }
+    }
+
+    fun confirmPickerSelection(onComplete: () -> Unit) {
+        val coordinate = _uiState.value.coordinate ?: return
+        val originalItemIds = _uiState.value.items.map { it.id }.toSet()
+        val selectedIds = _uiState.value.pickerSelectedItemIds
+        val addedIds = selectedIds - originalItemIds
+        val removedIds = originalItemIds - selectedIds
+
+        if (addedIds.isEmpty() && removedIds.isEmpty()) {
+            onComplete()
+            return
+        }
+
+        viewModelScope.launch {
+            coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
+            onComplete()
         }
     }
 }

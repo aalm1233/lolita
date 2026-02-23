@@ -20,7 +20,7 @@ fun StatsPageScreen(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
     onNavigateToItemDetail: (Long) -> Unit = {}
 ) {
-    val tabs = listOf("总览", "付款日历", "消费分布", "消费趋势", "愿望单")
+    val tabs = listOf("总览", "付款月历", "消费分布", "消费趋势", "愿望单")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
 

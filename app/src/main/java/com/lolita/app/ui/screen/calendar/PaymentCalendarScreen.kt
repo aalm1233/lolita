@@ -176,20 +176,14 @@ fun PaymentCalendarContent(
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         item {
-            StatsRow(
-                monthPaid = uiState.monthPaidTotal,
-                monthPaidCount = uiState.monthPaidCount,
-                monthUnpaid = uiState.monthUnpaidTotal,
-                monthUnpaidCount = uiState.monthUnpaidCount,
-                totalUnpaid = uiState.totalUnpaidAmount,
-                totalUnpaidCount = uiState.totalUnpaidCount,
-                overdue = uiState.overdueAmount
-            )
-        }
-        item {
             MonthHeader(
                 year = uiState.currentYear,
                 month = uiState.currentMonth,
+                monthPaidTotal = uiState.monthPaidTotal,
+                monthPaidCount = uiState.monthPaidCount,
+                monthUnpaidTotal = uiState.monthUnpaidTotal,
+                monthUnpaidCount = uiState.monthUnpaidCount,
+                overdueAmount = uiState.overdueAmount,
                 onPrevious = viewModel::previousMonth,
                 onNext = viewModel::nextMonth
             )
@@ -241,72 +235,67 @@ fun PaymentCalendarContent(
 }
 
 @Composable
-private fun StatsRow(
-    monthPaid: Double,
+private fun MonthHeader(
+    year: Int,
+    month: Int,
+    monthPaidTotal: Double,
     monthPaidCount: Int,
-    monthUnpaid: Double,
+    monthUnpaidTotal: Double,
     monthUnpaidCount: Int,
-    totalUnpaid: Double,
-    totalUnpaidCount: Int,
-    overdue: Double
+    overdueAmount: Double,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        MiniStatCard("当月已付", monthPaid, Color(0xFF4CAF50), Modifier.weight(1f), subtitle = "${monthPaidCount}笔")
-        MiniStatCard("当月待付", monthUnpaid, MaterialTheme.colorScheme.primary, Modifier.weight(1f), subtitle = "${monthUnpaidCount}笔")
-        MiniStatCard("总待付", totalUnpaid, Color(0xFFFF9800), Modifier.weight(1f), subtitle = "${totalUnpaidCount}笔")
-        MiniStatCard("已逾期", overdue, Color(0xFFD32F2F), Modifier.weight(1f))
-    }
-}
-
-@Composable
-private fun MiniStatCard(label: String, amount: Double, color: Color, modifier: Modifier, subtitle: String? = null) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f))
-    ) {
+    Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text(label, style = MaterialTheme.typography.labelSmall, color = color)
-            Spacer(Modifier.height(4.dp))
-            Text(
-                "¥${String.format("%.0f", amount)}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = color,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (subtitle != null) {
-                Spacer(Modifier.height(2.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onPrevious) {
+                    SkinIcon(IconKey.KeyboardArrowLeft)
+                }
                 Text(
-                    subtitle,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = color.copy(alpha = 0.7f)
+                    "${year}年${month + 1}月",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
                 )
+                IconButton(onClick = onNext) {
+                    SkinIcon(IconKey.KeyboardArrowRight)
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                StatChip("已付", monthPaidTotal, monthPaidCount, Color(0xFF4CAF50))
+                StatChip("待付", monthUnpaidTotal, monthUnpaidCount, MaterialTheme.colorScheme.primary)
+                if (overdueAmount > 0) {
+                    StatChip("逾期", overdueAmount, null, Color(0xFFD32F2F))
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MonthHeader(year: Int, month: Int, onPrevious: () -> Unit, onNext: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onPrevious) {
-            SkinIcon(IconKey.KeyboardArrowLeft)
-        }
+private fun StatChip(label: String, amount: Double, count: Int?, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = color)
+        Spacer(Modifier.width(4.dp))
         Text(
-            "${year}年${month + 1}月",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            "¥${String.format("%.0f", amount)}",
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = color
         )
-        IconButton(onClick = onNext) {
-            SkinIcon(IconKey.KeyboardArrowRight)
+        if (count != null) {
+            Text(
+                "(${count})",
+                style = MaterialTheme.typography.labelSmall,
+                color = color.copy(alpha = 0.7f)
+            )
         }
     }
 }

@@ -191,9 +191,11 @@ private fun PriceCard(
                 }
             }
 
-            price.purchaseDate?.let { date ->
-                PriceRow("购买日期", dateFormat.format(Date(date)))
-            }
+            payments.filter { it.isPaid }
+                .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
+                ?.paidDate?.let { date ->
+                    PriceRow("付款日期", dateFormat.format(Date(date)))
+                }
 
             if (payments.isNotEmpty()) {
                 HorizontalDivider()

@@ -484,13 +484,15 @@ fun ItemDetailScreen(
                                                 }
                                             }
 
-                                            price.purchaseDate?.let { date ->
-                                                Text(
-                                                    "购买日期: ${dateFormat.format(java.util.Date(date))}",
-                                                    style = MaterialTheme.typography.bodySmall,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
-                                            }
+                                            payments.filter { it.isPaid }
+                                                .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
+                                                ?.paidDate?.let { date ->
+                                                    Text(
+                                                        "付款日期: ${dateFormat.format(java.util.Date(date))}",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
                                         }
                                     }
                                     Spacer(modifier = Modifier.height(8.dp))

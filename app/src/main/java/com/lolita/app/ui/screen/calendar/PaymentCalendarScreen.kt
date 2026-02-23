@@ -319,186 +319,110 @@ private fun StatChip(label: String, amount: Double, count: Int?, color: Color) {
 }
 
 @Composable
-private fun CalendarGrid(
-    year: Int,
-    month: Int,
-    selectedDay: Int?,
-    payments: List<PaymentWithItemInfo>,
-    onDayClick: (Int) -> Unit
+private fun MonthCardGrid(
+    monthStatsMap: Map<Int, MonthStats>,
+    selectedMonth: Int?,
+    currentYear: Int,
+    onMonthClick: (Int) -> Unit
 ) {
-    val weekDays = listOf("日", "一", "二", "三", "四", "五", "六")
-    val cal = Calendar.getInstance().apply {
-        set(Calendar.YEAR, year)
-        set(Calendar.MONTH, month)
-        set(Calendar.DAY_OF_MONTH, 1)
-    }
-    val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1 // 0=Sunday
-    val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-    val now = System.currentTimeMillis()
-    val sevenDaysLater = now + 7L * 24 * 60 * 60 * 1000
-
     val todayCal = Calendar.getInstance()
-    val isCurrentMonth = todayCal.get(Calendar.YEAR) == year && todayCal.get(Calendar.MONTH) == month
-    val today = if (isCurrentMonth) todayCal.get(Calendar.DAY_OF_MONTH) else -1
+    val isCurrentYear = todayCal.get(Calendar.YEAR) == currentYear
+    val currentMonth = if (isCurrentYear) todayCal.get(Calendar.MONTH) else -1
 
-    val dayStatusMap = buildDayStatusMap(payments, year, month, now, sevenDaysLater)
-    val dayAmountMap = buildDayAmountMap(payments, year, month)
-
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            // Weekday headers
-            Row(modifier = Modifier.fillMaxWidth()) {
-                weekDays.forEach { day ->
-                    Text(
-                        day,
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        repeat(3) { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(4) { col ->
+                    val month = row * 4 + col
+                    MonthCard(
+                        month = month,
+                        stats = monthStatsMap[month],
+                        isCurrentMonth = month == currentMonth,
+                        isSelected = month == selectedMonth,
                         modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        onClick = { onMonthClick(month) }
                     )
                 }
-            }
-            Spacer(Modifier.height(4.dp))
-
-            // Fixed 6 rows
-            repeat(6) { row ->
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    repeat(7) { col ->
-                        val cellIndex = row * 7 + col
-                        val dayOfMonth = cellIndex - firstDayOfWeek + 1
-                        val isInMonth = dayOfMonth in 1..daysInMonth
-
-                        if (isInMonth) {
-                            DayCell(
-                                day = dayOfMonth,
-                                isToday = dayOfMonth == today,
-                                status = dayStatusMap[dayOfMonth],
-                                amountInfo = dayAmountMap[dayOfMonth],
-                                isSelected = dayOfMonth == selectedDay,
-                                modifier = Modifier.weight(1f),
-                                onClick = { onDayClick(dayOfMonth) }
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(64.dp)
-                                    .padding(1.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                                        MaterialTheme.shapes.extraSmall
-                                    )
-                            )
-                        }
-                    }
-                }
-                if (row < 5) Spacer(Modifier.height(2.dp))
             }
         }
     }
 }
 
-private enum class DayStatus { OVERDUE, UPCOMING, UNPAID, ALL_PAID }
-
-private data class DayAmountInfo(
-    val paidTotal: Double = 0.0,
-    val unpaidTotal: Double = 0.0,
-    val paidCount: Int = 0,
-    val unpaidCount: Int = 0
-)
-
 @Composable
-private fun DayCell(
-    day: Int,
-    isToday: Boolean,
-    status: DayStatus?,
-    amountInfo: DayAmountInfo?,
+private fun MonthCard(
+    month: Int,
+    stats: MonthStats?,
+    isCurrentMonth: Boolean,
     isSelected: Boolean,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    val borderColor by animateColorAsState(
-        if (isSelected) primaryColor else Color.Transparent,
-        animationSpec = tween(200), label = "dayBorder"
+    val hasPayments = stats != null
+    val hasOverdue = (stats?.overdueAmount ?: 0.0) > 0
+
+    val bgColor by animateColorAsState(
+        if (isSelected) primaryColor.copy(alpha = 0.15f)
+        else MaterialTheme.colorScheme.surface,
+        animationSpec = tween(200), label = "monthBg"
     )
 
-    Box(
+    Card(
         modifier = modifier
-            .height(64.dp)
-            .padding(1.dp)
-            .border(
-                width = if (isSelected) 2.dp else 0.dp,
-                color = borderColor,
-                shape = MaterialTheme.shapes.extraSmall
+            .then(
+                if (isCurrentMonth) Modifier.border(
+                    2.dp, primaryColor, MaterialTheme.shapes.medium
+                ) else Modifier
             )
-            .background(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.shapes.extraSmall
-            )
-            .clickable(onClick = onClick)
-            .padding(3.dp)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = bgColor)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            if (isToday) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(primaryColor, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(
+                "${month + 1}月",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (hasPayments) MaterialTheme.colorScheme.onSurface
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+            )
+            if (stats != null) {
+                if (stats.paidTotal > 0) {
                     Text(
-                        day.toString(),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            } else {
-                Text(
-                    day.toString(),
-                    fontSize = 12.sp,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            if (amountInfo != null) {
-                var linesShown = 0
-                if (amountInfo.paidTotal > 0 && linesShown < 2) {
-                    Text(
-                        "¥${String.format("%.0f", amountInfo.paidTotal)}",
-                        fontSize = 9.sp,
+                        "已付 ¥${String.format("%.0f", stats.paidTotal)}",
+                        fontSize = 10.sp,
                         color = Color(0xFF4CAF50),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        lineHeight = 10.sp
+                        overflow = TextOverflow.Ellipsis
                     )
-                    linesShown++
-                }
-                if (amountInfo.unpaidTotal > 0 && linesShown < 2) {
                     Text(
-                        "¥${String.format("%.0f", amountInfo.unpaidTotal)}",
+                        "(${stats.paidCount}笔)",
                         fontSize = 9.sp,
-                        color = when (status) {
-                            DayStatus.OVERDUE -> Color(0xFFD32F2F)
-                            else -> primaryColor
-                        },
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        lineHeight = 10.sp
+                        color = Color(0xFF4CAF50).copy(alpha = 0.7f)
                     )
-                    linesShown++
                 }
-
-                val totalEntries = amountInfo.paidCount + amountInfo.unpaidCount
-                if (totalEntries > 2) {
-                    Spacer(Modifier.weight(1f))
+                if (stats.unpaidTotal > 0) {
+                    val unpaidColor = if (hasOverdue) Color(0xFFD32F2F) else primaryColor
                     Text(
-                        "+${totalEntries - 2}",
-                        fontSize = 8.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.align(Alignment.End)
+                        "待付 ¥${String.format("%.0f", stats.unpaidTotal)}",
+                        fontSize = 10.sp,
+                        color = unpaidColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        "(${stats.unpaidCount}笔)",
+                        fontSize = 9.sp,
+                        color = unpaidColor.copy(alpha = 0.7f)
+                    )
+                }
+                if (hasOverdue) {
+                    Text(
+                        "逾期 ¥${String.format("%.0f", stats.overdueAmount)}",
+                        fontSize = 9.sp,
+                        color = Color(0xFFD32F2F)
                     )
                 }
             }

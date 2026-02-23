@@ -70,9 +70,6 @@ interface ItemDao {
     @Query("UPDATE items SET style = :newName WHERE style = :oldName")
     suspend fun updateItemsStyle(oldName: String, newName: String)
 
-    @Query("UPDATE items SET season = :newName WHERE season = :oldName")
-    suspend fun updateItemsSeason(oldName: String, newName: String)
-
     @Query("SELECT * FROM items WHERE season = :name OR season LIKE :name || ',%' OR season LIKE '%,' || :name || ',%' OR season LIKE '%,' || :name")
     suspend fun getItemsWithSeason(name: String): List<Item>
 
@@ -167,9 +164,6 @@ interface ItemDao {
         )
     """)
     suspend fun refreshPendingBalanceStatus()
-
-    @Query("SELECT * FROM items WHERE source = :source ORDER BY created_at DESC")
-    fun getItemsBySource(source: String): Flow<List<Item>>
 }
 
 data class ItemWithFullDetails(

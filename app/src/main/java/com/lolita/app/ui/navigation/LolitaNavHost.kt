@@ -481,6 +481,7 @@ fun LolitaNavHost() {
                         navController.popBackStack()
                     }
                 )
+            }
 
             // Location Detail
             composable(
@@ -493,7 +494,6 @@ fun LolitaNavHost() {
                     onBack = { navController.popBackStack() },
                     onItemClick = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) }
                 )
-            }
             }
 
             // Recommendation

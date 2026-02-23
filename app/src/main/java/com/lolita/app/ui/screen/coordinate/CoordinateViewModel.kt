@@ -314,18 +314,13 @@ class CoordinateEditViewModel(
 
     private fun loadAllItems() {
         viewModelScope.launch {
-            combine(
-                itemRepository.getAllItems(),
-                coordinateRepository.getAllCoordinates()
-            ) { items, coordinates ->
-                val nameMap = coordinates.associate { it.id to it.name }
-                Pair(items, nameMap)
-            }.collect { (items, nameMap) ->
-                _uiState.value = _uiState.value.copy(
-                    allItems = items,
-                    coordinateNames = nameMap
-                )
-            }
+            val items = itemRepository.getAllItems().first()
+            val coordinates = coordinateRepository.getAllCoordinates().first()
+            val nameMap = coordinates.associate { it.id to it.name }
+            _uiState.value = _uiState.value.copy(
+                allItems = items,
+                coordinateNames = nameMap
+            )
         }
     }
 

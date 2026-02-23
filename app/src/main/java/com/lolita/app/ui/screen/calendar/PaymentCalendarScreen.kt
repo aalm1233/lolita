@@ -195,35 +195,34 @@ fun PaymentCalendarContent(
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         item {
-            MonthHeader(
+            YearHeader(
                 year = uiState.currentYear,
-                month = uiState.currentMonth,
-                monthPaidTotal = uiState.monthPaidTotal,
-                monthPaidCount = uiState.monthPaidCount,
-                monthUnpaidTotal = uiState.monthUnpaidTotal,
-                monthUnpaidCount = uiState.monthUnpaidCount,
-                overdueAmount = uiState.overdueAmount,
-                onPrevious = viewModel::previousMonth,
-                onNext = viewModel::nextMonth
+                yearPaidTotal = uiState.yearPaidTotal,
+                yearPaidCount = uiState.yearPaidCount,
+                yearUnpaidTotal = uiState.yearUnpaidTotal,
+                yearUnpaidCount = uiState.yearUnpaidCount,
+                yearOverdueAmount = uiState.yearOverdueAmount,
+                onPrevious = viewModel::previousYear,
+                onNext = viewModel::nextYear
             )
         }
         item {
-            CalendarGrid(
-                year = uiState.currentYear,
-                month = uiState.currentMonth,
-                selectedDay = uiState.selectedDay,
-                payments = uiState.monthPayments,
-                onDayClick = viewModel::selectDay
+            MonthCardGrid(
+                monthStatsMap = uiState.monthStatsMap,
+                selectedMonth = uiState.selectedMonth,
+                currentYear = uiState.currentYear,
+                onMonthClick = viewModel::selectMonth
             )
         }
-        val selectedPayments = uiState.selectedDay?.let { day ->
-            getPaymentsForDay(uiState.monthPayments, uiState.currentYear, uiState.currentMonth, day)
+
+        val selectedPayments = uiState.selectedMonth?.let { month ->
+            getPaymentsForMonth(uiState.yearPayments, uiState.currentYear, month)
         } ?: emptyList()
 
-        if (uiState.selectedDay != null) {
+        if (uiState.selectedMonth != null) {
             item {
                 Text(
-                    "${uiState.currentMonth + 1}月${uiState.selectedDay}日 付款记录",
+                    "${uiState.selectedMonth!! + 1}月 付款记录",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -232,7 +231,7 @@ fun PaymentCalendarContent(
                 item {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            "当日无付款记录",
+                            "当月无付款记录",
                             modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -244,7 +243,9 @@ fun PaymentCalendarContent(
                     PaymentInfoCard(
                         payment = payment,
                         onMarkPaid = {
-                            coroutineScope.launch { viewModel.markAsPaid(payment.paymentId, payment.itemName) }
+                            coroutineScope.launch {
+                                viewModel.markAsPaid(payment.paymentId, payment.itemName)
+                            }
                         }
                     )
                 }

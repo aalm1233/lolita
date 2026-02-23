@@ -332,6 +332,7 @@ private fun CalendarGrid(
 
     // Build day→status map
     val dayStatusMap = buildDayStatusMap(payments, year, month, now, sevenDaysLater)
+    val dayAmountMap = buildDayAmountMap(payments, year, month)
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -365,6 +366,7 @@ private fun CalendarGrid(
                             DayCell(
                                 day = day,
                                 status = status,
+                                amountInfo = dayAmountMap[day],
                                 isSelected = isSelected,
                                 modifier = Modifier.weight(1f),
                                 onClick = { onDayClick(day) }
@@ -381,21 +383,20 @@ private fun CalendarGrid(
 
 private enum class DayStatus { OVERDUE, UPCOMING, UNPAID, ALL_PAID }
 
+private data class DayAmountInfo(
+    val paidTotal: Double = 0.0,
+    val unpaidTotal: Double = 0.0
+)
+
 @Composable
 private fun DayCell(
     day: Int,
     status: DayStatus?,
+    amountInfo: DayAmountInfo?,
     isSelected: Boolean,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    val dotColor = when (status) {
-        DayStatus.OVERDUE -> Color(0xFFD32F2F)
-        DayStatus.UPCOMING -> Color(0xFFFF9800)
-        DayStatus.UNPAID -> MaterialTheme.colorScheme.primary
-        DayStatus.ALL_PAID -> Color(0xFF4CAF50)
-        null -> Color.Transparent
-    }
     val bgColor by animateColorAsState(
         if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else Color.Transparent,
         animationSpec = tween(200), label = "dayBg"
@@ -406,7 +407,7 @@ private fun DayCell(
             .clip(CircleShape)
             .background(bgColor)
             .clickable(onClick = onClick)
-            .padding(vertical = 6.dp),
+            .padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -416,13 +417,32 @@ private fun DayCell(
             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(2.dp))
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .clip(CircleShape)
-                .background(dotColor)
-        )
+        if (amountInfo != null) {
+            if (amountInfo.paidTotal > 0) {
+                Text(
+                    "¥${String.format("%.0f", amountInfo.paidTotal)}",
+                    fontSize = 9.sp,
+                    color = Color(0xFF4CAF50),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 10.sp
+                )
+            }
+            if (amountInfo.unpaidTotal > 0) {
+                Text(
+                    "¥${String.format("%.0f", amountInfo.unpaidTotal)}",
+                    fontSize = 9.sp,
+                    color = when (status) {
+                        DayStatus.OVERDUE -> Color(0xFFD32F2F)
+                        DayStatus.UPCOMING -> Color(0xFFFF9800)
+                        else -> MaterialTheme.colorScheme.primary
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 10.sp
+                )
+            }
+        }
     }
 }
 
@@ -521,6 +541,28 @@ private fun buildDayStatusMap(
             }
         }
     }
+}
+
+private fun buildDayAmountMap(
+    payments: List<PaymentWithItemInfo>,
+    year: Int,
+    month: Int
+): Map<Int, DayAmountInfo> {
+    val cal = Calendar.getInstance()
+    val dayAmounts = mutableMapOf<Int, DayAmountInfo>()
+    payments.forEach { p ->
+        cal.timeInMillis = p.dueDate
+        if (cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month) {
+            val day = cal.get(Calendar.DAY_OF_MONTH)
+            val current = dayAmounts.getOrPut(day) { DayAmountInfo() }
+            if (p.isPaid) {
+                dayAmounts[day] = current.copy(paidTotal = current.paidTotal + p.amount)
+            } else {
+                dayAmounts[day] = current.copy(unpaidTotal = current.unpaidTotal + p.amount)
+            }
+        }
+    }
+    return dayAmounts
 }
 
 private fun getPaymentsForDay(

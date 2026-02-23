@@ -107,11 +107,14 @@ interface PriceDao {
     fun getSpendingByStyle(): Flow<List<StyleSpending>>
 
     @Query("""
-        SELECT strftime('%Y-%m', p.purchase_date / 1000, 'unixepoch') AS yearMonth,
-               COALESCE(SUM(p.total_price), 0.0) AS totalSpending
-        FROM prices p
-        INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'OWNED' AND p.purchase_date IS NOT NULL
+        SELECT strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch') AS yearMonth,
+               COALESCE(SUM(pay.amount), 0.0) AS totalSpending
+        FROM payments pay
+        INNER JOIN prices pr ON pay.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
+          AND pay.is_paid = 1
+          AND pay.paid_date IS NOT NULL
         GROUP BY yearMonth
         ORDER BY yearMonth ASC
     """)
@@ -158,10 +161,12 @@ interface PriceDao {
 
     @Query("""
         SELECT DISTINCT i.* FROM items i
-        INNER JOIN prices p ON p.item_id = i.id
-        WHERE i.status = 'OWNED'
-          AND p.purchase_date IS NOT NULL
-          AND strftime('%Y-%m', p.purchase_date / 1000, 'unixepoch') = :yearMonth
+        INNER JOIN prices pr ON pr.item_id = i.id
+        INNER JOIN payments pay ON pay.price_id = pr.id
+        WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
+          AND pay.is_paid = 1
+          AND pay.paid_date IS NOT NULL
+          AND strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch') = :yearMonth
         ORDER BY i.updated_at DESC
     """)
     fun getItemsByPurchaseMonth(yearMonth: String): Flow<List<Item>>
@@ -170,16 +175,19 @@ interface PriceDao {
     suspend fun deleteAllPrices()
 
     @Query("""
-        SELECT pr.id AS priceId, pr.total_price AS totalPrice, pr.purchase_date AS purchaseDate,
+        SELECT pr.id AS priceId, pr.total_price AS totalPrice,
+               MIN(pay.paid_date) AS firstPaidDate,
                pr.type AS priceType, i.name AS itemName, i.id AS itemId,
                (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0) AS unpaidCount,
                (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0 AND p.due_date < :now) AS overdueCount
         FROM prices pr
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE pr.purchase_date BETWEEN :startDate AND :endDate
+        INNER JOIN payments pay ON pay.price_id = pr.id
+        WHERE pay.is_paid = 1
+          AND pay.paid_date BETWEEN :startDate AND :endDate
           AND i.status IN ('OWNED', 'PENDING_BALANCE')
-          AND pr.purchase_date IS NOT NULL
-        ORDER BY pr.purchase_date ASC
+        GROUP BY pr.id
+        ORDER BY firstPaidDate ASC
     """)
     fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long): Flow<List<PriceWithStatus>>
 }
@@ -192,7 +200,7 @@ data class ItemPriceSum(
 data class PriceWithStatus(
     val priceId: Long,
     val totalPrice: Double,
-    val purchaseDate: Long,
+    val firstPaidDate: Long,
     val priceType: com.lolita.app.data.local.entity.PriceType,
     val itemName: String,
     val itemId: Long,

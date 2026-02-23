@@ -11,7 +11,6 @@ import com.lolita.app.data.repository.LocationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -74,22 +73,17 @@ class LocationDetailViewModel(
 
     fun loadAllItemsForPicker() {
         viewModelScope.launch {
-            combine(
-                itemRepository.getAllItems(),
-                locationRepository.getAllLocations()
-            ) { items, locations ->
-                val nameMap = locations.associate { it.id to it.name }
-                Pair(items, nameMap)
-            }.first().let { (items, nameMap) ->
-                val currentItemIds = _uiState.value.items.map { it.id }.toSet()
-                _uiState.update {
-                    it.copy(
-                        allItems = items,
-                        locationNames = nameMap,
-                        pickerSelectedItemIds = currentItemIds,
-                        pickerSearchQuery = ""
-                    )
-                }
+            val items = itemRepository.getAllItems().first()
+            val locations = locationRepository.getAllLocations().first()
+            val nameMap = locations.associate { it.id to it.name }
+            val currentItemIds = _uiState.value.items.map { it.id }.toSet()
+            _uiState.update {
+                it.copy(
+                    allItems = items,
+                    locationNames = nameMap,
+                    pickerSelectedItemIds = currentItemIds,
+                    pickerSearchQuery = ""
+                )
             }
         }
     }

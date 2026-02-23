@@ -248,22 +248,17 @@ class CoordinateDetailViewModel(
 
     fun loadAllItemsForPicker() {
         viewModelScope.launch {
-            combine(
-                itemRepository.getAllItems(),
-                coordinateRepository.getAllCoordinates()
-            ) { items, coordinates ->
-                val nameMap = coordinates.associate { it.id to it.name }
-                Pair(items, nameMap)
-            }.first().let { (items, nameMap) ->
-                val currentItemIds = _uiState.value.items.map { it.id }.toSet()
-                _uiState.update {
-                    it.copy(
-                        allItems = items,
-                        coordinateNames = nameMap,
-                        pickerSelectedItemIds = currentItemIds,
-                        pickerSearchQuery = ""
-                    )
-                }
+            val items = itemRepository.getAllItems().first()
+            val coordinates = coordinateRepository.getAllCoordinates().first()
+            val nameMap = coordinates.associate { it.id to it.name }
+            val currentItemIds = _uiState.value.items.map { it.id }.toSet()
+            _uiState.update {
+                it.copy(
+                    allItems = items,
+                    coordinateNames = nameMap,
+                    pickerSelectedItemIds = currentItemIds,
+                    pickerSearchQuery = ""
+                )
             }
         }
     }

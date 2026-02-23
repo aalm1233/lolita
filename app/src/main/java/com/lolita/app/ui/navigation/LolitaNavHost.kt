@@ -17,6 +17,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
@@ -128,9 +130,9 @@ fun LolitaNavHost() {
                             val tint = if (currentDestination?.hierarchy?.any {
                                     it.route == item.screen.route
                                 } == true) accent else Color.Gray
-                            SkinIcon(item.iconKey, tint = tint)
+                            SkinIcon(item.iconKey, modifier = Modifier.size(22.dp), tint = tint)
                         },
-                        label = { Text(item.label) },
+                        label = { Text(item.label, modifier = Modifier.offset(y = (-2).dp)) },
                         selected = currentDestination?.hierarchy?.any {
                             it.route == item.screen.route
                         } == true,

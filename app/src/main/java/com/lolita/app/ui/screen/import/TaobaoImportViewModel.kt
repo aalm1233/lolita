@@ -442,8 +442,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     type = PriceType.DEPOSIT_BALANCE,
                                     totalPrice = totalPrice,
                                     deposit = depositItem.price,
-                                    balance = balanceItem.price,
-                                    purchaseDate = parseDateToMillis(mainItem.purchaseDate)
+                                    balance = balanceItem.price
                                 )
                             )
                             processedIndices.add(index)
@@ -476,8 +475,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     type = PriceType.DEPOSIT_BALANCE,
                                     totalPrice = totalPrice,
                                     deposit = deposit,
-                                    balance = balance,
-                                    purchaseDate = parseDateToMillis(importItem.purchaseDate)
+                                    balance = balance
                                 )
                             )
                             // 定金付款记录（已付）
@@ -515,13 +513,26 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     description = ""
                                 )
                             )
-                            priceRepository.insertPrice(
+                            val priceId = priceRepository.insertPrice(
                                 Price(
                                     itemId = itemId,
                                     type = PriceType.FULL,
-                                    totalPrice = importItem.price,
-                                    purchaseDate = parseDateToMillis(importItem.purchaseDate)
+                                    totalPrice = importItem.price
                                 )
+                            )
+                            // Create paid Payment record for imported item
+                            val purchaseMillis = parseDateToMillis(importItem.purchaseDate)
+                            val paidDate = purchaseMillis ?: System.currentTimeMillis()
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = importItem.price,
+                                    dueDate = paidDate,
+                                    isPaid = true,
+                                    paidDate = paidDate,
+                                    reminderSet = false
+                                ),
+                                importItem.name
                             )
                             processedIndices.add(index)
                             importedCount++

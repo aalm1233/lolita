@@ -41,18 +41,25 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 // --- ViewModel ---
 
+data class MonthStats(
+    val month: Int, // 0-based
+    val paidTotal: Double = 0.0,
+    val paidCount: Int = 0,
+    val unpaidTotal: Double = 0.0,
+    val unpaidCount: Int = 0,
+    val overdueAmount: Double = 0.0
+)
+
 data class PaymentCalendarUiState(
     val currentYear: Int = Calendar.getInstance().get(Calendar.YEAR),
-    val currentMonth: Int = Calendar.getInstance().get(Calendar.MONTH), // 0-based
-    val selectedDay: Int? = null,
-    val monthPayments: List<PaymentWithItemInfo> = emptyList(),
-    val monthUnpaidTotal: Double = 0.0,
-    val totalUnpaidAmount: Double = 0.0,
-    val totalUnpaidCount: Int = 0,
-    val overdueAmount: Double = 0.0,
-    val monthPaidTotal: Double = 0.0,
-    val monthPaidCount: Int = 0,
-    val monthUnpaidCount: Int = 0,
+    val selectedMonth: Int? = null, // 0-based, null = no month selected
+    val yearPayments: List<PaymentWithItemInfo> = emptyList(),
+    val monthStatsMap: Map<Int, MonthStats> = emptyMap(),
+    val yearPaidTotal: Double = 0.0,
+    val yearPaidCount: Int = 0,
+    val yearUnpaidTotal: Double = 0.0,
+    val yearUnpaidCount: Int = 0,
+    val yearOverdueAmount: Double = 0.0,
     val isLoading: Boolean = true
 )
 
@@ -74,77 +81,61 @@ class PaymentCalendarViewModel(
         val state = _uiState.value
         val cal = Calendar.getInstance().apply {
             set(Calendar.YEAR, state.currentYear)
-            set(Calendar.MONTH, state.currentMonth)
+            set(Calendar.MONTH, Calendar.JANUARY)
             set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        val monthStart = cal.timeInMillis
-        cal.add(Calendar.MONTH, 1)
-        val monthEnd = cal.timeInMillis - 1
+        val yearStart = cal.timeInMillis
+        cal.add(Calendar.YEAR, 1)
+        val yearEnd = cal.timeInMillis - 1
         val now = System.currentTimeMillis()
 
         loadDataJob = viewModelScope.launch {
-            combine(
-                paymentRepository.getPaymentsWithItemInfoByDateRange(monthStart, monthEnd),
-                paymentRepository.getMonthUnpaidTotal(monthStart, monthEnd),
-                paymentRepository.getTotalUnpaidAmount(),
-                paymentRepository.getOverdueAmount(now),
-                paymentRepository.getTotalUnpaidCount()
-            ) { payments, monthUnpaid, totalUnpaid, overdue, totalUnpaidCount ->
-                val paidPayments = payments.filter { it.isPaid }
-                val unpaidPayments = payments.filter { !it.isPaid }
-                _uiState.value.copy(
-                    monthPayments = payments,
-                    monthUnpaidTotal = monthUnpaid,
-                    totalUnpaidAmount = totalUnpaid,
-                    totalUnpaidCount = totalUnpaidCount,
-                    overdueAmount = overdue,
-                    monthPaidTotal = paidPayments.sumOf { it.amount },
-                    monthPaidCount = paidPayments.size,
-                    monthUnpaidCount = unpaidPayments.size,
-                    isLoading = false
-                )
-            }.collect { _uiState.value = it }
+            paymentRepository.getPaymentsWithItemInfoByDateRange(yearStart, yearEnd)
+                .collect { payments ->
+                    val monthStatsMap = buildMonthStatsMap(payments, state.currentYear, now)
+                    val yearPaid = payments.filter { it.isPaid }
+                    val yearUnpaid = payments.filter { !it.isPaid }
+                    _uiState.value = _uiState.value.copy(
+                        yearPayments = payments,
+                        monthStatsMap = monthStatsMap,
+                        yearPaidTotal = yearPaid.sumOf { it.amount },
+                        yearPaidCount = yearPaid.size,
+                        yearUnpaidTotal = yearUnpaid.sumOf { it.amount },
+                        yearUnpaidCount = yearUnpaid.size,
+                        yearOverdueAmount = yearUnpaid.filter { it.dueDate < now }.sumOf { it.amount },
+                        isLoading = false
+                    )
+                }
         }
     }
 
-    fun previousMonth() {
-        val state = _uiState.value
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.YEAR, state.currentYear)
-            set(Calendar.MONTH, state.currentMonth)
-        }
-        cal.add(Calendar.MONTH, -1)
-        _uiState.value = state.copy(
-            currentYear = cal.get(Calendar.YEAR),
-            currentMonth = cal.get(Calendar.MONTH),
-            selectedDay = null,
+    fun previousYear() {
+        _uiState.value = _uiState.value.copy(
+            currentYear = _uiState.value.currentYear - 1,
+            selectedMonth = null,
             isLoading = true
         )
         loadData()
     }
 
-    fun nextMonth() {
-        val state = _uiState.value
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.YEAR, state.currentYear)
-            set(Calendar.MONTH, state.currentMonth)
-        }
-        cal.add(Calendar.MONTH, 1)
-        _uiState.value = state.copy(
-            currentYear = cal.get(Calendar.YEAR),
-            currentMonth = cal.get(Calendar.MONTH),
-            selectedDay = null,
+    fun nextYear() {
+        _uiState.value = _uiState.value.copy(
+            currentYear = _uiState.value.currentYear + 1,
+            selectedMonth = null,
             isLoading = true
         )
         loadData()
     }
 
-    fun selectDay(day: Int) {
-        _uiState.value = _uiState.value.copy(selectedDay = day)
+    fun selectMonth(month: Int) {
+        val current = _uiState.value.selectedMonth
+        _uiState.value = _uiState.value.copy(
+            selectedMonth = if (current == month) null else month
+        )
     }
 
     fun markAsPaid(paymentId: Long, itemName: String = "") {
@@ -153,6 +144,34 @@ class PaymentCalendarViewModel(
             paymentRepository.updatePayment(
                 payment.copy(isPaid = true, paidDate = System.currentTimeMillis()),
                 itemName = itemName
+            )
+        }
+    }
+
+    private fun buildMonthStatsMap(
+        payments: List<PaymentWithItemInfo>,
+        year: Int,
+        now: Long
+    ): Map<Int, MonthStats> {
+        val cal = Calendar.getInstance()
+        val monthPayments = mutableMapOf<Int, MutableList<PaymentWithItemInfo>>()
+        payments.forEach { p ->
+            cal.timeInMillis = p.dueDate
+            if (cal.get(Calendar.YEAR) == year) {
+                val month = cal.get(Calendar.MONTH)
+                monthPayments.getOrPut(month) { mutableListOf() }.add(p)
+            }
+        }
+        return monthPayments.mapValues { (month, list) ->
+            val paid = list.filter { it.isPaid }
+            val unpaid = list.filter { !it.isPaid }
+            MonthStats(
+                month = month,
+                paidTotal = paid.sumOf { it.amount },
+                paidCount = paid.size,
+                unpaidTotal = unpaid.sumOf { it.amount },
+                unpaidCount = unpaid.size,
+                overdueAmount = unpaid.filter { it.dueDate < now }.sumOf { it.amount }
             )
         }
     }
@@ -553,75 +572,14 @@ private fun PaymentInfoCard(payment: PaymentWithItemInfo, onMarkPaid: () -> Unit
     }
 }
 
-private fun buildDayStatusMap(
-    payments: List<PaymentWithItemInfo>,
-    year: Int,
-    month: Int,
-    now: Long,
-    sevenDaysLater: Long
-): Map<Int, DayStatus> {
-    val cal = Calendar.getInstance()
-    val dayPayments = mutableMapOf<Int, MutableList<PaymentWithItemInfo>>()
-    payments.forEach { p ->
-        cal.timeInMillis = p.dueDate
-        if (cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month) {
-            val day = cal.get(Calendar.DAY_OF_MONTH)
-            dayPayments.getOrPut(day) { mutableListOf() }.add(p)
-        }
-    }
-    return dayPayments.mapValues { (_, list) ->
-        val allPaid = list.all { it.isPaid }
-        if (allPaid) {
-            DayStatus.ALL_PAID
-        } else {
-            val hasOverdue = list.any { !it.isPaid && it.dueDate < now }
-            val hasUpcoming = list.any { !it.isPaid && it.dueDate in now..sevenDaysLater }
-            when {
-                hasOverdue -> DayStatus.OVERDUE
-                hasUpcoming -> DayStatus.UPCOMING
-                else -> DayStatus.UNPAID
-            }
-        }
-    }
-}
-
-private fun buildDayAmountMap(
+private fun getPaymentsForMonth(
     payments: List<PaymentWithItemInfo>,
     year: Int,
     month: Int
-): Map<Int, DayAmountInfo> {
-    val cal = Calendar.getInstance()
-    val dayAmounts = mutableMapOf<Int, DayAmountInfo>()
-    payments.forEach { p ->
-        cal.timeInMillis = p.dueDate
-        if (cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month) {
-            val day = cal.get(Calendar.DAY_OF_MONTH)
-            val current = dayAmounts.getOrPut(day) { DayAmountInfo() }
-            if (p.isPaid) {
-                dayAmounts[day] = current.copy(
-                    paidTotal = current.paidTotal + p.amount,
-                    paidCount = current.paidCount + 1
-                )
-            } else {
-                dayAmounts[day] = current.copy(
-                    unpaidTotal = current.unpaidTotal + p.amount,
-                    unpaidCount = current.unpaidCount + 1
-                )
-            }
-        }
-    }
-    return dayAmounts
-}
-
-private fun getPaymentsForDay(
-    payments: List<PaymentWithItemInfo>,
-    year: Int,
-    month: Int,
-    day: Int
 ): List<PaymentWithItemInfo> {
     val cal = Calendar.getInstance()
     return payments.filter { p ->
         cal.timeInMillis = p.dueDate
-        cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month && cal.get(Calendar.DAY_OF_MONTH) == day
+        cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month
     }
 }

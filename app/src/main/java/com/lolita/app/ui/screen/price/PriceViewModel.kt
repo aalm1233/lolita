@@ -26,10 +26,9 @@ data class PriceEditUiState(
     val totalPrice: String = "",
     val deposit: String = "",
     val balance: String = "",
-    val purchaseDate: Long? = null,
+    val paymentDate: Long? = null,
     val isSaving: Boolean = false,
-    val error: String? = null,
-    val itemStatus: ItemStatus? = null
+    val error: String? = null
 )
 
 data class PaymentManageUiState(
@@ -99,26 +98,22 @@ class PriceEditViewModel(
     var hasUnsavedChanges: Boolean = false
         private set
 
-    fun loadItemStatus(itemId: Long) {
-        viewModelScope.launch {
-            val item = itemRepository.getItemById(itemId)
-            _uiState.update { it.copy(itemStatus = item?.status) }
-        }
-    }
-
     fun loadPrice(priceId: Long?) {
         if (priceId == null) return
 
         viewModelScope.launch {
             val price = priceRepository.getPriceById(priceId)
             price?.let { p ->
+                // Load paymentDate from first payment's paidDate
+                val payments = paymentRepository.getPaymentsByPriceList(p.id)
+                val firstPaidDate = payments.minByOrNull { it.createdAt }?.paidDate
                 _uiState.update {
                     it.copy(
                         priceType = p.type,
                         totalPrice = p.totalPrice.toString(),
                         deposit = p.deposit?.toString() ?: "",
                         balance = p.balance?.toString() ?: "",
-                        purchaseDate = p.purchaseDate
+                        paymentDate = firstPaidDate
                     )
                 }
             }
@@ -145,9 +140,9 @@ class PriceEditViewModel(
         _uiState.value = _uiState.value.copy(balance = value)
     }
 
-    fun updatePurchaseDate(date: Long?) {
+    fun updatePaymentDate(date: Long?) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(purchaseDate = date)
+        _uiState.value = _uiState.value.copy(paymentDate = date)
     }
 
     fun clearError() {
@@ -169,8 +164,7 @@ class PriceEditViewModel(
                 } else null,
                 balance = if (_uiState.value.priceType == PriceType.DEPOSIT_BALANCE) {
                     _uiState.value.balance.toDoubleOrNull()
-                } else null,
-                purchaseDate = _uiState.value.purchaseDate
+                } else null
             )
 
             val priceId = priceRepository.insertPrice(price)
@@ -178,43 +172,42 @@ class PriceEditViewModel(
             // Auto-create payment records
             val item = itemRepository.getItemById(itemId)
             val itemName = item?.name ?: "服饰"
-            val shouldRemind = item?.status == ItemStatus.OWNED
             val now = System.currentTimeMillis()
+            val paymentDate = _uiState.value.paymentDate
+            val isAlreadyPaid = paymentDate != null
 
             when (_uiState.value.priceType) {
                 PriceType.FULL -> {
-                    // Create one payment for the full amount
                     paymentRepository.insertPayment(
                         Payment(
                             priceId = priceId,
                             amount = totalPrice,
-                            dueDate = now,
-                            isPaid = false,
-                            reminderSet = shouldRemind,
-                            customReminderDays = if (shouldRemind) 1 else null
+                            dueDate = paymentDate ?: now,
+                            isPaid = isAlreadyPaid,
+                            paidDate = paymentDate,
+                            reminderSet = !isAlreadyPaid,
+                            customReminderDays = if (!isAlreadyPaid) 1 else null
                         ),
                         itemName
                     )
                 }
                 PriceType.DEPOSIT_BALANCE -> {
-                    // Create payment for deposit
                     val depositAmount = _uiState.value.deposit.toDoubleOrNull() ?: 0.0
                     val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
-
                     if (depositAmount > 0) {
                         paymentRepository.insertPayment(
                             Payment(
                                 priceId = priceId,
                                 amount = depositAmount,
-                                dueDate = now,
-                                isPaid = false,
-                                reminderSet = shouldRemind,
-                                customReminderDays = if (shouldRemind) 1 else null
+                                dueDate = paymentDate ?: now,
+                                isPaid = isAlreadyPaid,
+                                paidDate = paymentDate,
+                                reminderSet = !isAlreadyPaid,
+                                customReminderDays = if (!isAlreadyPaid) 1 else null
                             ),
                             itemName
                         )
                     }
-                    // Create payment for balance
                     if (balanceAmount > 0) {
                         paymentRepository.insertPayment(
                             Payment(
@@ -222,8 +215,8 @@ class PriceEditViewModel(
                                 amount = balanceAmount,
                                 dueDate = now,
                                 isPaid = false,
-                                reminderSet = shouldRemind,
-                                customReminderDays = if (shouldRemind) 1 else null
+                                reminderSet = true,
+                                customReminderDays = 1
                             ),
                             itemName
                         )
@@ -255,8 +248,7 @@ class PriceEditViewModel(
                 } else null,
                 balance = if (_uiState.value.priceType == PriceType.DEPOSIT_BALANCE) {
                     _uiState.value.balance.toDoubleOrNull()
-                } else null,
-                purchaseDate = _uiState.value.purchaseDate
+                } else null
             )
 
             priceRepository.updatePrice(price)
@@ -268,7 +260,8 @@ class PriceEditViewModel(
             if (typeChanged || amountChanged) {
                 val item = itemRepository.getItemById(existing.itemId)
                 val itemName = item?.name ?: "服饰"
-                val shouldRemind = item?.status == ItemStatus.OWNED
+                val paymentDate = _uiState.value.paymentDate
+                val isAlreadyPaid = paymentDate != null
                 database.withTransaction {
                     val oldPayments = paymentRepository.getPaymentsByPriceList(priceId)
                     // Delete old unpaid payments and recreate
@@ -277,9 +270,11 @@ class PriceEditViewModel(
                     when (_uiState.value.priceType) {
                         PriceType.FULL -> {
                             paymentRepository.insertPayment(
-                                Payment(priceId = priceId, amount = totalPrice, dueDate = now,
-                                    isPaid = false, reminderSet = shouldRemind,
-                                    customReminderDays = if (shouldRemind) 1 else null),
+                                Payment(priceId = priceId, amount = totalPrice,
+                                    dueDate = paymentDate ?: now,
+                                    isPaid = isAlreadyPaid, paidDate = paymentDate,
+                                    reminderSet = !isAlreadyPaid,
+                                    customReminderDays = if (!isAlreadyPaid) 1 else null),
                                 itemName
                             )
                         }
@@ -288,17 +283,20 @@ class PriceEditViewModel(
                             val balanceAmount = _uiState.value.balance.toDoubleOrNull() ?: 0.0
                             if (depositAmount > 0) {
                                 paymentRepository.insertPayment(
-                                    Payment(priceId = priceId, amount = depositAmount, dueDate = now,
-                                        isPaid = false, reminderSet = shouldRemind,
-                                        customReminderDays = if (shouldRemind) 1 else null),
+                                    Payment(priceId = priceId, amount = depositAmount,
+                                        dueDate = paymentDate ?: now,
+                                        isPaid = isAlreadyPaid, paidDate = paymentDate,
+                                        reminderSet = !isAlreadyPaid,
+                                        customReminderDays = if (!isAlreadyPaid) 1 else null),
                                     itemName
                                 )
                             }
                             if (balanceAmount > 0) {
                                 paymentRepository.insertPayment(
-                                    Payment(priceId = priceId, amount = balanceAmount, dueDate = now,
-                                        isPaid = false, reminderSet = shouldRemind,
-                                        customReminderDays = if (shouldRemind) 1 else null),
+                                    Payment(priceId = priceId, amount = balanceAmount,
+                                        dueDate = now,
+                                        isPaid = false, reminderSet = true,
+                                        customReminderDays = 1),
                                     itemName
                                 )
                             }

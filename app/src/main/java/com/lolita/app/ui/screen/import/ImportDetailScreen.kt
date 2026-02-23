@@ -242,7 +242,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = item.purchaseDate,
                         onValueChange = { v -> onUpdate { it.copy(purchaseDate = v) } },
-                        label = { Text("购买日期") },
+                        label = { Text("付款日期") },
                         modifier = Modifier.weight(1f),
                         singleLine = true,
                         readOnly = true
@@ -291,7 +291,7 @@ private fun ImportItemCard(
                     )
                 }
 
-                // 价格 + 购买日期 (一行两个)
+                // 价格 + 付款日期 (一行两个)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
                         value = priceText,
@@ -307,7 +307,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = item.purchaseDate,
                         onValueChange = { v -> onUpdate { it.copy(purchaseDate = v) } },
-                        label = { Text("购买日期") },
+                        label = { Text("付款日期") },
                         modifier = Modifier.weight(1f),
                         singleLine = true,
                         readOnly = true

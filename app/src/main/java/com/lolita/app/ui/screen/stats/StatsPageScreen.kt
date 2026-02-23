@@ -20,7 +20,7 @@ fun StatsPageScreen(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
     onNavigateToItemDetail: (Long) -> Unit = {}
 ) {
-    val tabs = listOf("总览", "消费分布", "消费趋势", "愿望单", "付款日历")
+    val tabs = listOf("总览", "付款日历", "消费分布", "消费趋势", "愿望单")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
 
@@ -66,16 +66,16 @@ fun StatsPageScreen(
                     onNavigateToFilteredList = onNavigateToFilteredList,
                     onNavigateToItemDetail = onNavigateToItemDetail
                 )
-                1 -> SpendingDistributionContent(
+                1 -> PaymentCalendarContent()
+                2 -> SpendingDistributionContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
-                2 -> SpendingTrendContent(
+                3 -> SpendingTrendContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
-                3 -> WishlistAnalysisContent(
+                4 -> WishlistAnalysisContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
-                4 -> PaymentCalendarContent()
             }
         }
     }

@@ -23,7 +23,7 @@ class SweetBubbleParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height + Random.nextFloat() * 100f
-        radius = 4f + Random.nextFloat() * 8f
+        radius = 8f + Random.nextFloat() * 16f
         speed = 0.3f + Random.nextFloat() * 0.5f
         alpha = 0.1f + Random.nextFloat() * 0.15f
         wobblePhase = Random.nextFloat() * 2f * PI.toFloat()
@@ -59,7 +59,7 @@ class SweetPetalParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = -Random.nextFloat() * 50f
-        petalSize = 6f + Random.nextFloat() * 8f
+        petalSize = 12f + Random.nextFloat() * 16f
         speed = 0.15f + Random.nextFloat() * 0.25f
         alpha = 0.12f + Random.nextFloat() * 0.15f
         wobblePhase = Random.nextFloat() * 2f * PI.toFloat()

@@ -25,7 +25,7 @@ class SweetStarParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = Random.nextFloat() * height
-        starSize = 8f + Random.nextFloat() * 7f
+        starSize = 16f + Random.nextFloat() * 14f
         baseAlpha = 0.15f + Random.nextFloat() * 0.2f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f

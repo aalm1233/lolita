@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.item
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -480,6 +481,8 @@ class ItemListViewModel(
         viewModelScope.launch {
             try {
                 itemRepository.deleteItem(item)
+            } catch (e: SQLiteConstraintException) {
+                _uiState.update { it.copy(errorMessage = "此服饰已被套装引用，无法删除。请先从套装中移除后再试。") }
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message ?: "删除失败") }
             }

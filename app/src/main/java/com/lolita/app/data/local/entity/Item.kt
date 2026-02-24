@@ -64,8 +64,11 @@ data class Item(
     @ColumnInfo(name = "id")
     val id: Long = 0,
 
-    @ColumnInfo(name = "image_url")
-    val imageUrl: String? = null,
+    @ColumnInfo(name = "image_urls")
+    val imageUrls: List<String> = emptyList(),
+
+    @ColumnInfo(name = "coordinate_order")
+    val coordinateOrder: Int = 0,
 
     @ColumnInfo(name = "name")
     val name: String,

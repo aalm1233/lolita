@@ -25,7 +25,7 @@ import com.lolita.app.data.local.entity.*
         Location::class,
         Source::class
     ],
-    version = 14,
+    version = 15,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -419,6 +419,68 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Rebuild items table: image_url -> image_urls, add coordinate_order
+                db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
+                    brand_id INTEGER NOT NULL,
+                    category_id INTEGER NOT NULL,
+                    created_at INTEGER NOT NULL,
+                    description TEXT NOT NULL,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    image_urls TEXT NOT NULL DEFAULT '[]',
+                    coordinate_order INTEGER NOT NULL DEFAULT 0,
+                    name TEXT NOT NULL,
+                    priority TEXT NOT NULL DEFAULT 'MEDIUM',
+                    status TEXT NOT NULL,
+                    coordinate_id INTEGER,
+                    colors TEXT,
+                    season TEXT,
+                    style TEXT,
+                    size TEXT,
+                    size_chart_image_url TEXT,
+                    location_id INTEGER,
+                    source TEXT,
+                    updated_at INTEGER NOT NULL,
+                    FOREIGN KEY(coordinate_id) REFERENCES coordinates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY(brand_id) REFERENCES brands(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(category_id) REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                )""")
+                db.execSQL("""INSERT INTO items_new (brand_id, category_id, created_at, description, id, image_urls, coordinate_order, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at)
+                    SELECT brand_id, category_id, created_at, description, id,
+                    CASE WHEN image_url IS NOT NULL AND image_url != '' THEN '["' || REPLACE(REPLACE(image_url, '\', '\\'), '"', '\"') || '"]' ELSE '[]' END,
+                    0, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at FROM items""")
+                db.execSQL("DROP TABLE items")
+                db.execSQL("ALTER TABLE items_new RENAME TO items")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_name ON items (name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_coordinate_id ON items (coordinate_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_brand_id ON items (brand_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_category_id ON items (category_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+
+                // Rebuild coordinates table: image_url -> image_urls
+                db.execSQL("""CREATE TABLE IF NOT EXISTS coordinates_new (
+                    created_at INTEGER NOT NULL,
+                    description TEXT NOT NULL,
+                    image_urls TEXT NOT NULL DEFAULT '[]',
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    name TEXT NOT NULL,
+                    updated_at INTEGER NOT NULL
+                )""")
+                db.execSQL("""INSERT INTO coordinates_new (created_at, description, image_urls, id, name, updated_at)
+                    SELECT created_at, description,
+                    CASE WHEN image_url IS NOT NULL AND image_url != '' THEN '["' || REPLACE(REPLACE(image_url, '\', '\\'), '"', '\"') || '"]' ELSE '[]' END,
+                    id, name, updated_at FROM coordinates""")
+                db.execSQL("DROP TABLE coordinates")
+                db.execSQL("ALTER TABLE coordinates_new RENAME TO coordinates")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_coordinates_name ON coordinates (name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_coordinates_created_at ON coordinates (created_at)")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -427,7 +489,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
                     .build()
                 INSTANCE = instance
                 instance

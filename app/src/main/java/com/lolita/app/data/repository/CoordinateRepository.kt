@@ -49,6 +49,9 @@ class CoordinateRepository(
         addedItemIds: Set<Long>,
         removedItemIds: Set<Long>
     ) {
+        val oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
+        val oldImageUrl = oldCoordinate?.imageUrl
+
         database.withTransaction {
             coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
             removedItemIds.forEach { itemId ->
@@ -60,10 +63,22 @@ class CoordinateRepository(
                 item?.let { itemDao.updateItem(it.copy(coordinateId = coordinate.id)) }
             }
         }
+
+        if (!oldImageUrl.isNullOrEmpty() && oldImageUrl != coordinate.imageUrl) {
+            try { ImageFileHelper.deleteImage(oldImageUrl) } catch (_: Exception) {}
+        }
     }
 
-    suspend fun updateCoordinate(coordinate: Coordinate) =
+    suspend fun updateCoordinate(coordinate: Coordinate) {
+        val oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
+        val oldImageUrl = oldCoordinate?.imageUrl
+
         coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
+
+        if (!oldImageUrl.isNullOrEmpty() && oldImageUrl != coordinate.imageUrl) {
+            try { ImageFileHelper.deleteImage(oldImageUrl) } catch (_: Exception) {}
+        }
+    }
 
     suspend fun deleteCoordinate(coordinate: Coordinate) {
         database.withTransaction {

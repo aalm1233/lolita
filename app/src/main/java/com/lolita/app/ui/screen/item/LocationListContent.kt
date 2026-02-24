@@ -26,6 +26,7 @@ import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 fun LocationListContent(
     locations: List<Location>,
     locationItemCounts: Map<Long, Int>,
+    locationItemImages: Map<Long, List<String>>,
     unassignedItemCount: Int,
     onLocationClick: (Long) -> Unit
 ) {
@@ -44,7 +45,8 @@ fun LocationListContent(
                     name = location.name,
                     description = location.description,
                     imageUrl = location.imageUrl,
-                    itemCount = locationItemCounts[location.id] ?: 0
+                    itemCount = locationItemCounts[location.id] ?: 0,
+                    itemImages = locationItemImages[location.id] ?: emptyList()
                 )
             }
         }
@@ -59,6 +61,7 @@ fun LocationListContent(
                         description = "未设置位置的服饰",
                         imageUrl = null,
                         itemCount = unassignedItemCount,
+                        itemImages = emptyList(),
                         isUnassigned = true
                     )
                 }
@@ -73,6 +76,7 @@ private fun LocationCardItem(
     description: String,
     imageUrl: String?,
     itemCount: Int,
+    itemImages: List<String> = emptyList(),
     isUnassigned: Boolean = false
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
@@ -80,17 +84,18 @@ private fun LocationCardItem(
             modifier = Modifier.fillMaxWidth().padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Location image - 56dp
             if (imageUrl != null) {
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = null,
-                    modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
             } else {
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceVariant,
-                    modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp))
+                    modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp))
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         SkinIcon(
@@ -107,17 +112,47 @@ private fun LocationCardItem(
                     Text(
                         description,
                         style = MaterialTheme.typography.bodySmall,
-                        maxLines = 2,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    "${itemCount} 件服饰",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Spacer(Modifier.height(6.dp))
+                // Item count badge
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        "${itemCount} 件服饰",
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                // Item thumbnail preview row
+                Spacer(Modifier.height(6.dp))
+                if (itemImages.isNotEmpty()) {
+                    Row {
+                        itemImages.forEachIndexed { index, url ->
+                            AsyncImage(
+                                model = url,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .offset(x = (-(index * 6)).dp)
+                                    .clip(RoundedCornerShape(6.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                } else {
+                    Text(
+                        "暂无服饰",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    )
+                }
             }
             SkinIcon(IconKey.KeyboardArrowRight, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }

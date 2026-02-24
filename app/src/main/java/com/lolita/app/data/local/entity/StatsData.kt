@@ -23,7 +23,7 @@ data class MonthlySpending(
 data class ItemWithSpending(
     val itemId: Long,
     val itemName: String,
-    val imageUrl: String?,
+    val imageUrls: List<String>,
     val totalSpending: Double
 )
 

@@ -146,8 +146,8 @@ interface ItemDao {
     fun getItemCountsByLocation(): Flow<List<LocationItemCount>>
 
     @Query("""
-        SELECT location_id, image_url FROM items
-        WHERE location_id IS NOT NULL AND image_url IS NOT NULL
+        SELECT location_id, image_urls FROM items
+        WHERE location_id IS NOT NULL AND image_urls != '[]'
         ORDER BY updated_at DESC
     """)
     fun getLocationItemImages(): Flow<List<LocationItemImage>>
@@ -193,5 +193,5 @@ data class LocationItemCount(
 
 data class LocationItemImage(
     @ColumnInfo(name = "location_id") val locationId: Long,
-    @ColumnInfo(name = "image_url") val imageUrl: String
+    @ColumnInfo(name = "image_urls") val imageUrls: List<String>
 )

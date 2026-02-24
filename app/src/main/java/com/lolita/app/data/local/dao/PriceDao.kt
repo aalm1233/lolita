@@ -121,7 +121,7 @@ interface PriceDao {
     fun getMonthlySpending(): Flow<List<MonthlySpending>>
 
     @Query("""
-        SELECT i.id AS itemId, i.name AS itemName, i.image_url AS imageUrl,
+        SELECT i.id AS itemId, i.name AS itemName, i.image_urls AS imageUrls,
                COALESCE(SUM(p.total_price), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id

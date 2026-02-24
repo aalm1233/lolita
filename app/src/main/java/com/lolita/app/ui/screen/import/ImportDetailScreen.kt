@@ -414,11 +414,11 @@ private fun ImportItemCard(
                 // 图片
                 Text("商品图片", style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (item.imageUrls.isNotEmpty()) {
+                if (item.imageUrl != null) {
                     Box(Modifier.fillMaxWidth()) {
                         val context = LocalContext.current
                         AsyncImage(
-                            model = ImageRequest.Builder(context).data(item.imageUrls.first()).crossfade(true).build(),
+                            model = ImageRequest.Builder(context).data(item.imageUrl).crossfade(true).build(),
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth().height(160.dp)
                                 .clip(RoundedCornerShape(8.dp)),

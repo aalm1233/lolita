@@ -137,6 +137,9 @@ class ItemListViewModel(
     private val _unassignedItemCount = MutableStateFlow(0)
     val unassignedItemCount: StateFlow<Int> = _unassignedItemCount.asStateFlow()
 
+    private val _locationItemImages = MutableStateFlow<Map<Long, List<String>>>(emptyMap())
+    val locationItemImages: StateFlow<Map<Long, List<String>>> = _locationItemImages.asStateFlow()
+
     init {
         loadItems()
         loadPreferences()
@@ -168,6 +171,13 @@ class ItemListViewModel(
         }
         viewModelScope.launch {
             locationRepository.countItemsWithNoLocation().collect { _unassignedItemCount.value = it }
+        }
+        viewModelScope.launch {
+            locationRepository.getLocationItemImages().collect { images ->
+                _locationItemImages.value = images
+                    .groupBy { it.locationId }
+                    .mapValues { (_, items) -> items.take(4).map { it.imageUrl } }
+            }
         }
     }
 

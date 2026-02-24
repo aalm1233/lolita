@@ -4,6 +4,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.LocationDao
 import com.lolita.app.data.local.dao.LocationItemCount
+import com.lolita.app.data.local.dao.LocationItemImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.Location
 import kotlinx.coroutines.flow.Flow
@@ -44,4 +45,6 @@ class LocationRepository(
     fun countItemsWithNoLocation(): Flow<Int> = itemDao.countItemsWithNoLocation()
 
     fun getItemCountsByLocation(): Flow<List<LocationItemCount>> = itemDao.getItemCountsByLocation()
+
+    fun getLocationItemImages(): Flow<List<LocationItemImage>> = itemDao.getLocationItemImages()
 }

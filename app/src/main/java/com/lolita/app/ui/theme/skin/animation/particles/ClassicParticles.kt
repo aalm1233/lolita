@@ -22,7 +22,7 @@ class ClassicSparkleParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = Random.nextFloat() * height
-        radius = 10f + Random.nextFloat() * 30f
+        radius = 20f + Random.nextFloat() * 60f
         baseAlpha = 0.1f + Random.nextFloat() * 0.15f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f

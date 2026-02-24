@@ -23,7 +23,7 @@ class ClassicDiamondParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = Random.nextFloat() * height
-        diamondSize = 6f + Random.nextFloat() * 6f
+        diamondSize = 12f + Random.nextFloat() * 12f
         baseAlpha = 0.15f + Random.nextFloat() * 0.2f
         alpha = baseAlpha
         sparklePhase = Random.nextFloat() * 6.28f

@@ -132,7 +132,7 @@ fun LolitaNavHost() {
                                 } == true) accent else Color.Gray
                             SkinIcon(item.iconKey, modifier = Modifier.size(22.dp), tint = tint)
                         },
-                        label = { Text(item.label, modifier = Modifier.offset(y = (-2).dp)) },
+                        label = { Text(item.label, modifier = Modifier.offset(y = (-4).dp)) },
                         selected = currentDestination?.hierarchy?.any {
                             it.route == item.screen.route
                         } == true,

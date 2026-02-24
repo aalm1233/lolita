@@ -2,7 +2,7 @@ package com.lolita.app.ui.screen.price
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.*
@@ -27,6 +27,8 @@ import java.util.Date
 import java.util.Locale
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,12 +73,14 @@ fun PaymentManageScreen(
                 CircularProgressIndicator()
             }
         } else {
+            val flingBehavior = rememberSkinFlingBehavior()
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                flingBehavior = flingBehavior
             ) {
                 // 统计卡片
                 item {
@@ -104,7 +108,7 @@ fun PaymentManageScreen(
                         )
                     }
                 } else {
-                    items(uiState.payments, key = { it.id }) { payment ->
+                    itemsIndexed(uiState.payments, key = { _, it -> it.id }) { index, payment ->
                         PaymentCard(
                             payment = payment,
                             onMarkPaid = {
@@ -113,7 +117,8 @@ fun PaymentManageScreen(
                                 }
                             },
                             onDelete = { paymentToDelete = payment },
-                            onClick = { onNavigateToPaymentEdit(payment.id) }
+                            onClick = { onNavigateToPaymentEdit(payment.id) },
+                            modifier = Modifier.skinItemAppear(index)
                         )
                     }
                 }
@@ -218,11 +223,12 @@ private fun PaymentCard(
     payment: Payment,
     onMarkPaid: () -> Unit,
     onDelete: () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LolitaCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

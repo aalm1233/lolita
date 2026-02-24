@@ -335,10 +335,12 @@ fun ItemListScreen(
                 0 -> {
                     val locations by viewModel.locations.collectAsState()
                     val locationItemCounts by viewModel.locationItemCounts.collectAsState()
+                    val locationItemImages by viewModel.locationItemImages.collectAsState()
                     val unassignedCount by viewModel.unassignedItemCount.collectAsState()
                     LocationListContent(
                         locations = locations,
                         locationItemCounts = locationItemCounts,
+                        locationItemImages = locationItemImages,
                         unassignedItemCount = unassignedCount,
                         onLocationClick = { locationId ->
                             onNavigateToLocationDetail(locationId)

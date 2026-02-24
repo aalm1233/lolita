@@ -24,6 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.PriceType
+import com.lolita.app.ui.component.FullScreenImageViewer
+import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import kotlinx.coroutines.launch
@@ -108,7 +110,7 @@ fun ItemDetailScreen(
         )
     }
 
-    val hasImage = uiState.item?.imageUrl != null
+    val hasImage = uiState.item?.imageUrls?.isNotEmpty() == true
 
     Scaffold(
         topBar = {
@@ -165,19 +167,30 @@ fun ItemDetailScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                     // Image section
-                    if (item.imageUrl != null) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(item.imageUrl)
-                                .crossfade(300)
-                                .build(),
-                            contentDescription = item.name,
+                    if (item.imageUrls.isNotEmpty()) {
+                        var showFullScreen by remember { mutableStateOf(false) }
+                        var selectedPage by remember { mutableIntStateOf(0) }
+
+                        ImageGalleryPager(
+                            imageUrls = item.imageUrls,
+                            onImageClick = { page ->
+                                selectedPage = page
+                                showFullScreen = true
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(380.dp)
-                                .clip(androidx.compose.foundation.shape.RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
-                            contentScale = ContentScale.Crop
+                                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
+                            contentDescription = item.name
                         )
+
+                        if (showFullScreen) {
+                            FullScreenImageViewer(
+                                imageUrls = item.imageUrls,
+                                initialPage = selectedPage,
+                                onDismiss = { showFullScreen = false }
+                            )
+                        }
                     } else {
                         Box(
                             modifier = Modifier

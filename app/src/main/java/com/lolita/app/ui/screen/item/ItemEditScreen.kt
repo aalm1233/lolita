@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.ColorSelector
@@ -271,11 +272,21 @@ fun ItemEditScreen(
                     singleLine = true
                 )
 
-                // Image upload placeholder
-                ImageUploaderSection(
-                    imageUrl = uiState.imageUrl,
-                    onImageChanged = { viewModel.updateImageUrl(it) }
-                )
+                // Image upload - multi-image editor
+                Column {
+                    Text(
+                        text = "图片",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MultiImageEditor(
+                        imageUrls = uiState.imageUrls,
+                        maxImages = 5,
+                        onAddImage = { viewModel.addImage(it) },
+                        onRemoveImage = { viewModel.removeImage(it) }
+                    )
+                }
 
                 // Size chart image
                 SizeChartImageSection(
@@ -571,89 +582,6 @@ private fun PrioritySelector(
                     },
                     modifier = Modifier.weight(1f)
                 )
-            }
-        }
-    }
-}
-
-/**
- * Image Uploader Section Component
- */
-@Composable
-private fun ImageUploaderSection(
-    imageUrl: String?,
-    onImageChanged: (String?) -> Unit
-) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        uri?.let {
-            coroutineScope.launch {
-                val internalPath = ImageFileHelper.copyToInternalStorage(context, it)
-                onImageChanged(internalPath)
-            }
-        }
-    }
-
-    Column {
-        Text(
-            text = "图片",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                photoPickerLauncher.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (imageUrl != null) {
-                    Box {
-                        AsyncImage(
-                            model = imageUrl,
-                            contentDescription = "服饰图片",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                        IconButton(
-                            onClick = {
-                                onImageChanged(null)
-                            },
-                            modifier = Modifier.align(Alignment.TopEnd),
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
-                            )
-                        ) {
-                            SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.onError)
-                        }
-                    }
-                } else {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "点击添加图片",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = "(从相册选择)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
             }
         }
     }

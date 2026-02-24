@@ -2,7 +2,7 @@ package com.lolita.app.ui.screen.price
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -28,6 +28,8 @@ import java.util.Date
 import java.util.Locale
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,12 +74,14 @@ fun PriceManageScreen(
                 CircularProgressIndicator()
             }
         } else {
+            val flingBehavior = rememberSkinFlingBehavior()
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                flingBehavior = flingBehavior
             ) {
                 if (uiState.prices.isEmpty()) {
                     item {
@@ -88,12 +92,13 @@ fun PriceManageScreen(
                         )
                     }
                 } else {
-                    items(uiState.prices, key = { it.price.id }) { priceWithPayments ->
+                    itemsIndexed(uiState.prices, key = { _, it -> it.price.id }) { index, priceWithPayments ->
                         PriceCard(
                             priceWithPayments = priceWithPayments,
                             onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
                             onEdit = { onNavigateToPriceEdit(priceWithPayments.price.id) },
-                            onDelete = { priceToDelete = priceWithPayments.price }
+                            onDelete = { priceToDelete = priceWithPayments.price },
+                            modifier = Modifier.skinItemAppear(index)
                         )
                     }
                 }
@@ -136,7 +141,8 @@ private fun PriceCard(
     priceWithPayments: PriceWithPayments,
     onClick: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val price = priceWithPayments.price
     val payments = priceWithPayments.payments
@@ -145,7 +151,7 @@ private fun PriceCard(
     val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
     LolitaCard(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

@@ -145,6 +145,13 @@ interface ItemDao {
     @Query("SELECT location_id, COUNT(*) as count FROM items WHERE location_id IS NOT NULL GROUP BY location_id")
     fun getItemCountsByLocation(): Flow<List<LocationItemCount>>
 
+    @Query("""
+        SELECT location_id, image_url FROM items
+        WHERE location_id IS NOT NULL AND image_url IS NOT NULL
+        ORDER BY updated_at DESC
+    """)
+    fun getLocationItemImages(): Flow<List<LocationItemImage>>
+
     @Query("UPDATE items SET source = :newName WHERE source = :oldName")
     suspend fun updateItemsSource(oldName: String, newName: String)
 
@@ -179,4 +186,9 @@ data class ItemWithFullDetails(
 data class LocationItemCount(
     @ColumnInfo(name = "location_id") val locationId: Long,
     @ColumnInfo(name = "count") val count: Int
+)
+
+data class LocationItemImage(
+    @ColumnInfo(name = "location_id") val locationId: Long,
+    @ColumnInfo(name = "image_url") val imageUrl: String
 )

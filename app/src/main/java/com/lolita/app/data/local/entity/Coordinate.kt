@@ -19,7 +19,7 @@ data class Coordinate(
     @ColumnInfo(name = "description")
     val description: String,
 
-    @ColumnInfo(name = "image_urls")
+    @ColumnInfo(name = "image_urls", defaultValue = "[]")
     val imageUrls: List<String> = emptyList(),
 
     @PrimaryKey(autoGenerate = true)

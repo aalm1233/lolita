@@ -64,10 +64,10 @@ data class Item(
     @ColumnInfo(name = "id")
     val id: Long = 0,
 
-    @ColumnInfo(name = "image_urls")
+    @ColumnInfo(name = "image_urls", defaultValue = "[]")
     val imageUrls: List<String> = emptyList(),
 
-    @ColumnInfo(name = "coordinate_order")
+    @ColumnInfo(name = "coordinate_order", defaultValue = "0")
     val coordinateOrder: Int = 0,
 
     @ColumnInfo(name = "name")

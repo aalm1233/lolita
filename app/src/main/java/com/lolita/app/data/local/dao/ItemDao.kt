@@ -171,6 +171,9 @@ interface ItemDao {
         )
     """)
     suspend fun refreshPendingBalanceStatus()
+
+    @Query("UPDATE items SET coordinate_order = :order WHERE id = :itemId")
+    suspend fun updateCoordinateOrder(itemId: Long, order: Int)
 }
 
 data class ItemWithFullDetails(

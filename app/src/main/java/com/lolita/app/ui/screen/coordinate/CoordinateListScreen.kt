@@ -243,9 +243,9 @@ private fun CoordinateCard(
                 .combinedClickable(onClick = onClick, onLongClick = { showMenu = true })
         ) {
             Row(modifier = Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                if (coordinate.imageUrl != null) {
+                if (coordinate.imageUrls.isNotEmpty()) {
                     AsyncImage(
-                        model = coordinate.imageUrl,
+                        model = coordinate.imageUrls.first(),
                         contentDescription = coordinate.name,
                         modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)),
                         contentScale = ContentScale.Crop
@@ -364,9 +364,9 @@ private fun CoordinateGridCard(
         ) {
             Column {
                 Box {
-                    if (coordinate.imageUrl != null) {
+                    if (coordinate.imageUrls.isNotEmpty()) {
                         AsyncImage(
-                            model = coordinate.imageUrl,
+                            model = coordinate.imageUrls.first(),
                             contentDescription = coordinate.name,
                             modifier = Modifier
                                 .fillMaxWidth()

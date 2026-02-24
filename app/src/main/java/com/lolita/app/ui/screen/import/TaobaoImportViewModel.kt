@@ -431,7 +431,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     categoryId = mainItem.categoryId,
                                     colors = mainItem.color.ifBlank { null },
                                     size = mainItem.size.ifBlank { null },
-                                    imageUrl = mainItem.imageUrl,
+                                    imageUrls = listOfNotNull(mainItem.imageUrl),
                                     status = ItemStatus.OWNED,
                                     description = ""
                                 )
@@ -464,7 +464,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     categoryId = importItem.categoryId,
                                     colors = importItem.color.ifBlank { null },
                                     size = importItem.size.ifBlank { null },
-                                    imageUrl = importItem.imageUrl,
+                                    imageUrls = listOfNotNull(importItem.imageUrl),
                                     status = ItemStatus.OWNED,
                                     description = ""
                                 )
@@ -508,7 +508,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     categoryId = importItem.categoryId,
                                     colors = importItem.color.ifBlank { null },
                                     size = importItem.size.ifBlank { null },
-                                    imageUrl = importItem.imageUrl,
+                                    imageUrls = listOfNotNull(importItem.imageUrl),
                                     status = ItemStatus.OWNED,
                                     description = ""
                                 )

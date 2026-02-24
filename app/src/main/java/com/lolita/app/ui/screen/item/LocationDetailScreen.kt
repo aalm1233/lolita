@@ -323,9 +323,9 @@ private fun LocationPickerItemRow(
                 )
             )
 
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(40.dp)
@@ -385,9 +385,9 @@ private fun LocationItemCard(
             modifier = Modifier.fillMaxWidth().padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = item.imageUrls.first(),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop

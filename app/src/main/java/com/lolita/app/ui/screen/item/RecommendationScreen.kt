@@ -113,9 +113,9 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Thumbnail
-            if (matchScore.item.imageUrl != null) {
+            if (matchScore.item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = File(matchScore.item.imageUrl),
+                    model = File(matchScore.item.imageUrls.first()),
                     contentDescription = null,
                     modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop

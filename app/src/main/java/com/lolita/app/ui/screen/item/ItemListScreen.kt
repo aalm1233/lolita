@@ -504,13 +504,13 @@ private fun ItemCard(
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 val context = LocalContext.current
                 val density = LocalDensity.current
                 val imageSizePx = with(density) { 80.dp.roundToPx() }
                 AsyncImage(
                     model = ImageRequest.Builder(context)
-                        .data(java.io.File(item.imageUrl!!))
+                        .data(java.io.File(item.imageUrls.first()))
                         .size(imageSizePx)
                         .crossfade(true)
                         .build(),
@@ -749,13 +749,13 @@ private fun ItemGridCard(
             Column {
                 // Image area with price overlay
                 Box {
-                    if (item.imageUrl != null) {
+                    if (item.imageUrls.isNotEmpty()) {
                         val context = LocalContext.current
                         val density = LocalDensity.current
                         val imageSizePx = with(density) { 200.dp.roundToPx() }
                         AsyncImage(
                             model = ImageRequest.Builder(context)
-                                .data(java.io.File(item.imageUrl!!))
+                                .data(java.io.File(item.imageUrls.first()))
                                 .size(imageSizePx)
                                 .crossfade(true)
                                 .build(),

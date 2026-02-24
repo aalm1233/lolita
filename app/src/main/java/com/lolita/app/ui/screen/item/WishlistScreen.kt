@@ -277,9 +277,9 @@ private fun WishlistItemCard(
             )
 
             // Thumbnail
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(72.dp)

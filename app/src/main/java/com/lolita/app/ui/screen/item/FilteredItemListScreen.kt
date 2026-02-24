@@ -103,9 +103,9 @@ private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(10.dp)),
                     contentScale = ContentScale.Crop

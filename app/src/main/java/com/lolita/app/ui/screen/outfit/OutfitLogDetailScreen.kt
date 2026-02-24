@@ -229,9 +229,9 @@ private fun DetailItemCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(48.dp)

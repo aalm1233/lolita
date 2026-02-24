@@ -199,9 +199,9 @@ fun StatsContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    if (item.imageUrl != null) {
+                    if (item.imageUrls.isNotEmpty()) {
                         AsyncImage(
-                            model = item.imageUrl,
+                            model = item.imageUrls.first(),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(56.dp)

@@ -152,9 +152,9 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box {
-            if (item.imageUrl != null) {
+            if (item.imageUrls.isNotEmpty()) {
                 AsyncImage(
-                    model = File(item.imageUrl),
+                    model = File(item.imageUrls.first()),
                     contentDescription = null,
                     modifier = Modifier.size(80.dp).clip(RoundedCornerShape(6.dp)),
                     contentScale = ContentScale.Crop

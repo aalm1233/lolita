@@ -104,8 +104,9 @@ class BackupRestoreViewModel : ViewModel() {
             backupManager.importFromJson(uri).fold(
                 onSuccess = { summary ->
                     val imageMsg = if (summary.imageCount > 0) "，恢复 ${summary.imageCount} 张图片" else ""
+                    val calendarMsg = if (summary.calendarEventsFailed > 0) "\n⚠ ${summary.calendarEventsFailed} 个日历事件创建失败（可能需要授予日历权限）" else ""
                     _uiState.value = _uiState.value.copy(
-                        message = "恢复完成！导入 ${summary.totalImported} 条数据$imageMsg"
+                        message = "恢复完成！导入 ${summary.totalImported} 条数据$imageMsg$calendarMsg"
                     )
                 },
                 onFailure = { _uiState.value = _uiState.value.copy(message = "恢复失败: ${it.message}") }

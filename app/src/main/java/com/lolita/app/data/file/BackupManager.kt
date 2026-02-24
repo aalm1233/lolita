@@ -264,6 +264,7 @@ class BackupManager(
             }
 
             // Recreate calendar events for unpaid payments with due dates
+            var calendarFailCount = 0
             try {
                 val unpaidPayments = database.paymentDao().getAllPaymentsList()
                     .filter { !it.isPaid && it.dueDate > System.currentTimeMillis() }
@@ -277,12 +278,16 @@ class BackupManager(
                         )
                         if (eventId != null) {
                             database.paymentDao().updateCalendarEventId(payment.id, eventId)
+                        } else {
+                            calendarFailCount++
                         }
                     } catch (e: Exception) {
+                        calendarFailCount++
                         Log.e("BackupManager", "Failed to create calendar event for payment ${payment.id}", e)
                     }
                 }
             } catch (e: Exception) {
+                calendarFailCount = -1
                 Log.e("BackupManager", "Failed to recreate calendar events during import", e)
             }
 
@@ -307,6 +312,7 @@ class BackupManager(
                 totalSkipped = 0,
                 totalErrors = 0,
                 imageCount = imageCount,
+                calendarEventsFailed = if (calendarFailCount > 0) calendarFailCount else 0,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -516,6 +522,7 @@ data class ImportSummary(
     val totalSkipped: Int,
     val totalErrors: Int = 0,
     val imageCount: Int = 0,
+    val calendarEventsFailed: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 )

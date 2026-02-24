@@ -39,6 +39,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.LolitaSkin
 
 // --- ViewModel ---
 
@@ -237,7 +239,7 @@ fun PaymentCalendarContent(
             }
             if (selectedPayments.isEmpty()) {
                 item {
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    LolitaCard(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             "当月无付款记录",
                             modifier = Modifier.padding(16.dp),
@@ -269,7 +271,7 @@ private fun YearHeader(
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -380,10 +382,11 @@ private fun MonthCard(
             .heightIn(min = 100.dp)
             .then(
                 if (isCurrentMonth) Modifier.border(
-                    2.dp, primaryColor, MaterialTheme.shapes.medium
+                    2.dp, primaryColor, LolitaSkin.current.cardShape
                 ) else Modifier
             )
             .clickable(onClick = onClick),
+        shape = LolitaSkin.current.cardShape,
         colors = CardDefaults.cardColors(containerColor = bgColor)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -471,9 +474,13 @@ private fun PaymentInfoCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
+        shape = LolitaSkin.current.cardShape,
         colors = if (isOverdue) CardDefaults.cardColors(
             containerColor = Color(0xFFD32F2F).copy(alpha = 0.06f)
-        ) else CardDefaults.cardColors()
+        ) else CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

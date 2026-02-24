@@ -24,8 +24,8 @@ class ChineseCloudParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height * 0.1f + Random.nextFloat() * height * 0.4f
-        cloudWidth = 80f + Random.nextFloat() * 60f
-        cloudHeight = 30f + Random.nextFloat() * 20f
+        cloudWidth = 160f + Random.nextFloat() * 120f
+        cloudHeight = 60f + Random.nextFloat() * 40f
         baseAlpha = 0.05f + Random.nextFloat() * 0.1f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f

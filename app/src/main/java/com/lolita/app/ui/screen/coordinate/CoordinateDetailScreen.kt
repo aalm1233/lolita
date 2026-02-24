@@ -1,15 +1,19 @@
 package com.lolita.app.ui.screen.coordinate
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,6 +31,8 @@ import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.ui.component.FullScreenImageViewer
+import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.parseColorsJson
@@ -144,6 +152,8 @@ fun CoordinateDetailScreen(
                 Text("套装不存在")
             }
         } else {
+            val dragState = remember { DragDropState() }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -205,7 +215,7 @@ fun CoordinateDetailScreen(
                         ) {
                             Column(
                                 modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
                                     "暂无服饰",
@@ -216,11 +226,26 @@ fun CoordinateDetailScreen(
                         }
                     }
                 } else {
-                    items(uiState.items, key = { it.id }) { item ->
+                    itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
                         CoordinateItemCard(
                             item = item,
+                            isDragging = index == dragState.draggedIndex,
+                            dragOffset = if (index == dragState.draggedIndex) dragState.draggedOffset else 0f,
                             onClick = { onNavigateToItem(item.id) },
-                            onRemove = { itemToRemove = item }
+                            onRemove = { itemToRemove = item },
+                            onDragStart = { dragState.onDragStart(index) },
+                            onDrag = { offset ->
+                                dragState.onDrag(offset, uiState.items.size)
+                            },
+                            onDragEnd = {
+                                val from = dragState.initialIndex
+                                val to = dragState.draggedIndex
+                                dragState.onDragEnd()
+                                if (from != to && from >= 0 && to >= 0) {
+                                    viewModel.reorderItems(from, to)
+                                }
+                            },
+                            onDragCancel = { dragState.onDragCancel() }
                         )
                     }
                 }
@@ -265,16 +290,30 @@ private fun CoordinateInfoCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (coordinate.imageUrl != null) {
-                AsyncImage(
-                    model = coordinate.imageUrl,
-                    contentDescription = "封面图",
+            if (coordinate.imageUrls.isNotEmpty()) {
+                var showFullScreen by remember { mutableStateOf(false) }
+                var selectedPage by remember { mutableIntStateOf(0) }
+
+                ImageGalleryPager(
+                    imageUrls = coordinate.imageUrls,
+                    onImageClick = { page ->
+                        selectedPage = page
+                        showFullScreen = true
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
                         .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                    contentDescription = "封面图"
                 )
+
+                if (showFullScreen) {
+                    FullScreenImageViewer(
+                        imageUrls = coordinate.imageUrls,
+                        initialPage = selectedPage,
+                        onDismiss = { showFullScreen = false }
+                    )
+                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -382,22 +421,68 @@ private fun CoordinateInfoCard(
 @Composable
 private fun CoordinateItemCard(
     item: Item,
+    isDragging: Boolean,
+    dragOffset: Float,
     onClick: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    onDragStart: () -> Unit,
+    onDrag: (Float) -> Unit,
+    onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit
 ) {
     LolitaCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                if (isDragging) {
+                    translationY = dragOffset
+                    scaleX = 1.02f
+                    scaleY = 1.02f
+                    shadowElevation = 8f
+                }
+            }
+            .pointerInput(Unit) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = { onDragStart() },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        onDrag(dragAmount.y)
+                    },
+                    onDragEnd = { onDragEnd() },
+                    onDragCancel = { onDragCancel() }
+                )
+            }
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Drag handle
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.padding(end = 4.dp)
+            ) {
+                repeat(3) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                        repeat(2) {
+                            Box(
+                                modifier = Modifier
+                                    .size(4.dp)
+                                    .clip(RoundedCornerShape(1.dp))
+                                    .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                            )
+                        }
+                    }
+                }
+            }
+
             // Thumbnail
-            if (item.imageUrl != null) {
+            val thumbUrl = item.imageUrls.firstOrNull()
+            if (thumbUrl != null) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = thumbUrl,
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(48.dp)
@@ -450,7 +535,6 @@ private fun CoordinateItemCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     StatusBadge(item.status)
-                    // Show color/style if available
                     val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
                     val details = listOfNotNull(colorDisplay, item.style).joinToString(" · ")
                     if (details.isNotEmpty()) {
@@ -620,9 +704,10 @@ private fun PickerItemRow(
             )
 
             // Thumbnail
-            if (item.imageUrl != null) {
+            val thumbUrl = item.imageUrls.firstOrNull()
+            if (thumbUrl != null) {
                 AsyncImage(
-                    model = item.imageUrl,
+                    model = thumbUrl,
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(40.dp)
@@ -677,5 +762,44 @@ private fun PickerItemRow(
                 }
             }
         }
+    }
+}
+
+private class DragDropState {
+    var draggedIndex by mutableIntStateOf(-1)
+        private set
+    var initialIndex: Int = -1
+        private set
+    var draggedOffset by mutableFloatStateOf(0f)
+        private set
+
+    private val itemHeight = 80f
+
+    fun onDragStart(index: Int) {
+        draggedIndex = index
+        initialIndex = index
+        draggedOffset = 0f
+    }
+
+    fun onDrag(offset: Float, itemCount: Int) {
+        draggedOffset += offset
+        if (draggedOffset > itemHeight && draggedIndex < itemCount - 1) {
+            draggedIndex++
+            draggedOffset -= itemHeight
+        } else if (draggedOffset < -itemHeight && draggedIndex > 0) {
+            draggedIndex--
+            draggedOffset += itemHeight
+        }
+    }
+
+    fun onDragEnd() {
+        draggedIndex = -1
+        draggedOffset = 0f
+    }
+
+    fun onDragCancel() {
+        draggedIndex = -1
+        initialIndex = -1
+        draggedOffset = 0f
     }
 }

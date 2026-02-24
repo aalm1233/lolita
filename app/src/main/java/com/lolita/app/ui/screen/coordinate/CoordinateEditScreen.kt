@@ -19,25 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import com.lolita.app.ui.screen.common.parseColorsJson
 import kotlinx.coroutines.launch
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import coil.compose.AsyncImage
-import com.lolita.app.data.file.ImageFileHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -51,19 +37,6 @@ fun CoordinateEditScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        uri?.let {
-            coroutineScope.launch {
-                val path = withContext(Dispatchers.IO) {
-                    ImageFileHelper.copyToInternalStorage(context, it)
-                }
-                path?.let { viewModel.updateImageUrl(it) }
-            }
-        }
-    }
     var showError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(coordinateId) {
@@ -137,30 +110,12 @@ fun CoordinateEditScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // 封面图选择
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable { imagePickerLauncher.launch("image/*") },
-                contentAlignment = Alignment.Center
-            ) {
-                if (uiState.imageUrl != null) {
-                    AsyncImage(
-                        model = uiState.imageUrl,
-                        contentDescription = "封面图",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
-                        Spacer(Modifier.height(4.dp))
-                        Text("添加封面图", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-                    }
-                }
-            }
+            MultiImageEditor(
+                imageUrls = uiState.imageUrls,
+                maxImages = 5,
+                onAddImage = { viewModel.addImage(it) },
+                onRemoveImage = { viewModel.removeImage(it) }
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(

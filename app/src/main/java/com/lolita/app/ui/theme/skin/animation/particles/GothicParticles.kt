@@ -21,7 +21,7 @@ class GothicSmokeParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height * 0.3f + Random.nextFloat() * height * 0.5f
-        radius = 60f + Random.nextFloat() * 60f
+        radius = 120f + Random.nextFloat() * 120f
         baseAlpha = 0.08f + Random.nextFloat() * 0.12f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f

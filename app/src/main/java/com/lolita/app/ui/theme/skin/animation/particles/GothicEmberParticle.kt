@@ -21,13 +21,13 @@ class GothicEmberParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height + Random.nextFloat() * 100f
-        emberSize = 3f + Random.nextFloat() * 5f
+        emberSize = 6f + Random.nextFloat() * 10f
         baseAlpha = 0.2f + Random.nextFloat() * 0.2f
         alpha = baseAlpha
         riseSpeed = 0.2f + Random.nextFloat() * 0.4f
         wobblePhase = Random.nextFloat() * 6.28f
         wobbleSpeed = 0.001f + Random.nextFloat() * 0.002f
-        tailLength = 15f + Random.nextFloat() * 10f
+        tailLength = 30f + Random.nextFloat() * 20f
     }
 
     override fun update(deltaMs: Long, width: Float, height: Float) {

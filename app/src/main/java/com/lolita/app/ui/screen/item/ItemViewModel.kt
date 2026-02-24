@@ -91,7 +91,8 @@ data class ItemEditUiState(
     val coordinateId: Long? = null,
     val status: ItemStatus = ItemStatus.OWNED,
     val priority: ItemPriority = ItemPriority.MEDIUM,
-    val imageUrl: String? = null,
+    val imageUrls: List<String> = emptyList(),
+    val imageUrlsToDelete: List<String> = emptyList(),
     val colors: List<String> = emptyList(),
     val seasons: List<String> = emptyList(),
     val style: String? = null,
@@ -155,7 +156,7 @@ class ItemListViewModel(
                 it.copy(
                     hasTodayOutfit = todayLog != null,
                     todayOutfitLogId = todayLog?.outfitLog?.id,
-                    todayOutfitItemImages = todayLog?.items?.take(3)?.map { item -> item.imageUrl } ?: emptyList()
+                    todayOutfitItemImages = todayLog?.items?.take(3)?.map { item -> item.imageUrls.firstOrNull() } ?: emptyList()
                 )
             }
         }
@@ -177,7 +178,7 @@ class ItemListViewModel(
             locationRepository.getLocationItemImages().collect { images ->
                 _locationItemImages.value = images
                     .groupBy { it.locationId }
-                    .mapValues { (_, items) -> items.take(4).map { it.imageUrl } }
+                    .mapValues { (_, items) -> items.take(4).map { it.imageUrls.firstOrNull() ?: "" } }
             }
         }
     }
@@ -560,7 +561,7 @@ class ItemEditViewModel(
                             coordinateId = item.coordinateId,
                             status = item.status,
                             priority = item.priority,
-                            imageUrl = item.imageUrl,
+                            imageUrls = item.imageUrls,
                             colors = parseColorsJson(item.colors),
                             seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
                             style = item.style,
@@ -616,13 +617,31 @@ class ItemEditViewModel(
         _uiState.value = _uiState.value.copy(priority = priority)
     }
 
-    fun updateImageUrl(imageUrl: String?) {
+    fun addImage(url: String) {
         hasUnsavedChanges = true
-        val oldUrl = _uiState.value.imageUrl
-        if (oldUrl != null && imageUrl != oldUrl) {
-            pendingImageDeletions.add(oldUrl)
-        }
-        _uiState.value = _uiState.value.copy(imageUrl = imageUrl)
+        val current = _uiState.value.imageUrls
+        if (current.size >= 5) return
+        _uiState.value = _uiState.value.copy(imageUrls = current + url)
+    }
+
+    fun removeImage(index: Int) {
+        hasUnsavedChanges = true
+        val current = _uiState.value.imageUrls.toMutableList()
+        if (index !in current.indices) return
+        val removed = current.removeAt(index)
+        _uiState.value = _uiState.value.copy(
+            imageUrls = current,
+            imageUrlsToDelete = _uiState.value.imageUrlsToDelete + removed
+        )
+    }
+
+    fun reorderImages(fromIndex: Int, toIndex: Int) {
+        hasUnsavedChanges = true
+        val current = _uiState.value.imageUrls.toMutableList()
+        if (fromIndex !in current.indices || toIndex !in current.indices) return
+        val item = current.removeAt(fromIndex)
+        current.add(toIndex, item)
+        _uiState.value = _uiState.value.copy(imageUrls = current)
     }
 
     fun updateColors(colors: List<String>) {
@@ -704,7 +723,7 @@ class ItemEditViewModel(
                     coordinateId = state.coordinateId,
                     status = state.status,
                     priority = state.priority,
-                    imageUrl = state.imageUrl,
+                    imageUrls = state.imageUrls,
                     colors = colorsJson,
                     season = seasonStr,
                     style = state.style,
@@ -723,7 +742,7 @@ class ItemEditViewModel(
                     categoryId = state.categoryId,
                     name = state.name,
                     description = state.description,
-                    imageUrl = state.imageUrl,
+                    imageUrls = state.imageUrls,
                     status = state.status,
                     priority = state.priority,
                     colors = colorsJson,
@@ -744,11 +763,13 @@ class ItemEditViewModel(
                 itemRepository.insertItem(item)
             }
             // Delete pending images after successful save
-            val deletions = pendingImageDeletions.toList()
-            pendingImageDeletions.clear()
-            deletions.forEach { path ->
+            state.imageUrlsToDelete.forEach { path ->
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
             }
+            pendingImageDeletions.forEach { path ->
+                try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
+            }
+            pendingImageDeletions.clear()
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)
         } catch (e: Exception) {

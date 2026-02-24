@@ -55,7 +55,7 @@ data class CoordinateDetailUiState(
 data class CoordinateEditUiState(
     val name: String = "",
     val description: String = "",
-    val imageUrl: String? = null,
+    val imageUrls: List<String> = emptyList(),
     val allItems: List<Item> = emptyList(),
     val selectedItemIds: Set<Long> = emptySet(),
     val coordinateNames: Map<Long, String> = emptyMap(),
@@ -95,7 +95,7 @@ class CoordinateListViewModel(
                 val imageMap = allItems
                     .filter { it.coordinateId != null }
                     .groupBy { it.coordinateId!! }
-                    .mapValues { (_, items) -> items.take(4).map { it.imageUrl } }
+                    .mapValues { (_, items) -> items.take(4).map { it.imageUrls.firstOrNull() } }
 
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
                 val coordPriceMap = allItems
@@ -217,7 +217,7 @@ class CoordinateDetailViewModel(
                 _uiState.update {
                     it.copy(
                         coordinate = result?.coordinate,
-                        items = result?.items ?: emptyList(),
+                        items = (result?.items ?: emptyList()).sortedBy { item -> item.coordinateOrder },
                         totalPrice = totalPrice,
                         paidAmount = paidAmounts.first,
                         unpaidAmount = paidAmounts.second,
@@ -232,6 +232,20 @@ class CoordinateDetailViewModel(
         viewModelScope.launch {
             val itemRepository = com.lolita.app.di.AppModule.itemRepository()
             itemRepository.updateItem(item.copy(coordinateId = null))
+        }
+    }
+
+    fun reorderItems(fromIndex: Int, toIndex: Int) {
+        val currentItems = _uiState.value.items.toMutableList()
+        if (fromIndex !in currentItems.indices || toIndex !in currentItems.indices) return
+        val item = currentItems.removeAt(fromIndex)
+        currentItems.add(toIndex, item)
+        _uiState.update { it.copy(items = currentItems) }
+        // Persist new order
+        viewModelScope.launch {
+            currentItems.forEachIndexed { index, orderedItem ->
+                itemRepository.updateCoordinateOrder(orderedItem.id, index)
+            }
         }
     }
 
@@ -292,6 +306,11 @@ class CoordinateDetailViewModel(
 
         viewModelScope.launch {
             coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
+            // Set coordinateOrder for newly added items
+            val maxOrder = _uiState.value.items.maxOfOrNull { it.coordinateOrder } ?: -1
+            addedIds.forEachIndexed { index, itemId ->
+                itemRepository.updateCoordinateOrder(itemId, maxOrder + 1 + index)
+            }
             onComplete()
         }
     }
@@ -307,7 +326,7 @@ class CoordinateEditViewModel(
 
     private var originalCreatedAt: Long = 0L
     private var originalSelectedItemIds: Set<Long> = emptySet()
-    private var originalImageUrl: String? = null
+    private var originalImageUrls: List<String> = emptyList()
     var hasUnsavedChanges: Boolean = false
         private set
 
@@ -334,11 +353,11 @@ class CoordinateEditViewModel(
             val coordinate = coordinateRepository.getCoordinateById(coordinateId)
             coordinate?.let {
                 originalCreatedAt = it.createdAt
-                originalImageUrl = it.imageUrl
+                originalImageUrls = it.imageUrls
                 _uiState.value = _uiState.value.copy(
                     name = it.name,
                     description = it.description,
-                    imageUrl = it.imageUrl
+                    imageUrls = it.imageUrls
                 )
             }
 
@@ -360,9 +379,28 @@ class CoordinateEditViewModel(
         _uiState.value = _uiState.value.copy(description = description)
     }
 
-    fun updateImageUrl(url: String?) {
+    fun addImage(url: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(imageUrl = url)
+        val current = _uiState.value.imageUrls
+        if (current.size >= 5) return
+        _uiState.value = _uiState.value.copy(imageUrls = current + url)
+    }
+
+    fun removeImage(index: Int) {
+        hasUnsavedChanges = true
+        val current = _uiState.value.imageUrls.toMutableList()
+        if (index !in current.indices) return
+        current.removeAt(index)
+        _uiState.value = _uiState.value.copy(imageUrls = current)
+    }
+
+    fun reorderImages(fromIndex: Int, toIndex: Int) {
+        hasUnsavedChanges = true
+        val current = _uiState.value.imageUrls.toMutableList()
+        if (fromIndex !in current.indices || toIndex !in current.indices) return
+        val item = current.removeAt(fromIndex)
+        current.add(toIndex, item)
+        _uiState.value = _uiState.value.copy(imageUrls = current)
     }
 
     fun toggleItemSelection(itemId: Long) {
@@ -384,7 +422,7 @@ class CoordinateEditViewModel(
             val coordinate = Coordinate(
                 name = _uiState.value.name,
                 description = _uiState.value.description,
-                imageUrl = _uiState.value.imageUrl,
+                imageUrls = _uiState.value.imageUrls,
                 createdAt = now,
                 updatedAt = now
             )
@@ -409,17 +447,17 @@ class CoordinateEditViewModel(
                 id = coordinateId,
                 name = _uiState.value.name,
                 description = _uiState.value.description,
-                imageUrl = _uiState.value.imageUrl,
+                imageUrls = _uiState.value.imageUrls,
                 createdAt = originalCreatedAt,
                 updatedAt = System.currentTimeMillis()
             )
             val removedIds = originalSelectedItemIds - _uiState.value.selectedItemIds
             val addedIds = _uiState.value.selectedItemIds - originalSelectedItemIds
             coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
-            // Clean up old image file if imageUrl changed
-            val newImageUrl = _uiState.value.imageUrl
-            if (!originalImageUrl.isNullOrEmpty() && originalImageUrl != newImageUrl) {
-                try { ImageFileHelper.deleteImage(originalImageUrl!!) } catch (_: Exception) {}
+            // Clean up removed image files
+            val removedImages = originalImageUrls - _uiState.value.imageUrls.toSet()
+            removedImages.forEach { url ->
+                try { ImageFileHelper.deleteImage(url) } catch (_: Exception) {}
             }
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)

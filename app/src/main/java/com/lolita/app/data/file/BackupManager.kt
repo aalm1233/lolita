@@ -93,16 +93,16 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_url,colors,season,style,size,size_chart_image_url,created_at,updated_at")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at")
             database.itemDao().getAllItemsList().forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrl)},${escapeCsv(i.colors)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
             }
 
             // Coordinates
             sb.appendLine("\n=== COORDINATES ===")
-            sb.appendLine("id,name,description,image_url,created_at,updated_at")
+            sb.appendLine("id,name,description,image_urls,created_at,updated_at")
             database.coordinateDao().getAllCoordinatesList().forEach { c ->
-                sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${escapeCsv(c.imageUrl)},${c.createdAt},${c.updatedAt}")
+                sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${escapeCsv(c.imageUrls.joinToString(";"))},${c.createdAt},${c.updatedAt}")
             }
 
             // Styles
@@ -387,11 +387,11 @@ class BackupManager(
             brand.logoUrl?.let { paths.add(it) }
         }
         backupData.items.forEach { item ->
-            item.imageUrl?.let { paths.add(it) }
+            item.imageUrls.forEach { paths.add(it) }
             item.sizeChartImageUrl?.let { paths.add(it) }
         }
         backupData.coordinates.forEach { coord ->
-            coord.imageUrl?.let { paths.add(it) }
+            coord.imageUrls.forEach { paths.add(it) }
         }
         backupData.outfitLogs.forEach { log ->
             log.imageUrls.forEach { paths.add(it) }
@@ -451,8 +451,8 @@ class BackupManager(
         }
         return backupData.copy(
             brands = backupData.brands.map { it.copy(logoUrl = remap(it.logoUrl)) },
-            items = backupData.items.map { it.copy(imageUrl = remap(it.imageUrl), sizeChartImageUrl = remap(it.sizeChartImageUrl)) },
-            coordinates = backupData.coordinates.map { it.copy(imageUrl = remap(it.imageUrl)) },
+            items = backupData.items.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }, sizeChartImageUrl = remap(it.sizeChartImageUrl)) },
+            coordinates = backupData.coordinates.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
             outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
             locations = backupData.locations.map { it.copy(imageUrl = remap(it.imageUrl)) }
         )
@@ -490,9 +490,18 @@ class BackupManager(
     /**
      * Pre-process backup JSON string for backward compatibility.
      * Renames old "color" field to "colors" so Gson can deserialize it.
+     * Converts old single "imageUrl" field to "imageUrls" list format.
      */
     private fun migrateJsonString(json: String): String {
-        return json.replace(Regex("\"color\"\\s*:"), "\"colors\":")
+        var result = json.replace(Regex("\"color\"\\s*:"), "\"colors\":")
+        // Convert "imageUrl":"some/path" → "imageUrls":["some/path"]
+        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*\"([^\"]+)\"")) { match ->
+            "\"imageUrls\":[\"${match.groupValues[1]}\"]"
+        }
+        // Convert "imageUrl":null or "imageUrl":"" → "imageUrls":[]
+        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*null"), "\"imageUrls\":[]")
+        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*\"\""), "\"imageUrls\":[]")
+        return result
     }
 
     /**

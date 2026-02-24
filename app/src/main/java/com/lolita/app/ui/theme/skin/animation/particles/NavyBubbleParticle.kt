@@ -25,7 +25,7 @@ class NavyBubbleParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = height + Random.nextFloat() * 100f
-        baseRadius = 4f + Random.nextFloat() * 8f
+        baseRadius = 8f + Random.nextFloat() * 16f
         radius = baseRadius
         baseAlpha = 0.10f + Random.nextFloat() * 0.12f
         alpha = baseAlpha

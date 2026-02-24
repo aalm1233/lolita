@@ -27,7 +27,7 @@ class NavyAnchorParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = Random.nextFloat() * height
-        anchorSize = 8f + Random.nextFloat() * 6f
+        anchorSize = 16f + Random.nextFloat() * 12f
         baseAlpha = 0.08f + Random.nextFloat() * 0.12f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f
@@ -108,7 +108,7 @@ class NavyRopeKnotParticle : AmbientParticle() {
     override fun reset(width: Float, height: Float) {
         x = Random.nextFloat() * width
         y = Random.nextFloat() * height
-        knotSize = 6f + Random.nextFloat() * 4f
+        knotSize = 12f + Random.nextFloat() * 8f
         baseAlpha = 0.08f + Random.nextFloat() * 0.10f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f

@@ -63,7 +63,7 @@ class ItemRepository(
                     }
                 }
             }
-            item.imageUrl?.let { ImageFileHelper.deleteImage(it) }
+            item.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
             item.sizeChartImageUrl?.let { ImageFileHelper.deleteImage(it) }
             itemDao.deleteItem(item)
         }
@@ -72,6 +72,10 @@ class ItemRepository(
         } else {
             doDelete()
         }
+    }
+
+    suspend fun updateCoordinateOrder(itemId: Long, order: Int) {
+        itemDao.updateCoordinateOrder(itemId, order)
     }
 
     suspend fun checkAndUpdatePendingBalanceStatus(itemId: Long) {

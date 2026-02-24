@@ -50,7 +50,6 @@ class CoordinateRepository(
         removedItemIds: Set<Long>
     ) {
         val oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
-        val oldImageUrl = oldCoordinate?.imageUrl
 
         database.withTransaction {
             coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
@@ -64,19 +63,20 @@ class CoordinateRepository(
             }
         }
 
-        if (!oldImageUrl.isNullOrEmpty() && oldImageUrl != coordinate.imageUrl) {
-            try { ImageFileHelper.deleteImage(oldImageUrl) } catch (_: Exception) {}
+        if (oldCoordinate != null) {
+            val removedImages = oldCoordinate.imageUrls.filter { it !in coordinate.imageUrls }
+            removedImages.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
         }
     }
 
     suspend fun updateCoordinate(coordinate: Coordinate) {
         val oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
-        val oldImageUrl = oldCoordinate?.imageUrl
 
         coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
 
-        if (!oldImageUrl.isNullOrEmpty() && oldImageUrl != coordinate.imageUrl) {
-            try { ImageFileHelper.deleteImage(oldImageUrl) } catch (_: Exception) {}
+        if (oldCoordinate != null) {
+            val removedImages = oldCoordinate.imageUrls.filter { it !in coordinate.imageUrls }
+            removedImages.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
         }
     }
 
@@ -89,9 +89,9 @@ class CoordinateRepository(
             }
             coordinateDao.deleteCoordinate(coordinate)
         }
-        // Clean up imageUrl file after transaction succeeds
-        if (!coordinate.imageUrl.isNullOrEmpty()) {
-            try { ImageFileHelper.deleteImage(coordinate.imageUrl) } catch (_: Exception) {}
+        // Clean up image files after transaction succeeds
+        coordinate.imageUrls.forEach {
+            try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {}
         }
     }
 }

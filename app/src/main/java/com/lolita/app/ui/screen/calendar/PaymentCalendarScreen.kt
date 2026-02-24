@@ -377,6 +377,7 @@ private fun MonthCard(
 
     Card(
         modifier = modifier
+            .heightIn(min = 100.dp)
             .then(
                 if (isCurrentMonth) Modifier.border(
                     2.dp, primaryColor, MaterialTheme.shapes.medium

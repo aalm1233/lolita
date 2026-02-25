@@ -436,7 +436,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     description = ""
                                 )
                             )
-                            priceRepository.insertPrice(
+                            val priceId = priceRepository.insertPrice(
                                 Price(
                                     itemId = itemId,
                                     type = PriceType.DEPOSIT_BALANCE,
@@ -444,6 +444,28 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
                                     deposit = depositItem.price,
                                     balance = balanceItem.price
                                 )
+                            )
+                            // 定金 Payment（已付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = depositItem.price,
+                                    isPaid = true,
+                                    paidDate = parseDateToMillis(depositItem.purchaseDate),
+                                    dueDate = parseDateToMillis(depositItem.purchaseDate) ?: System.currentTimeMillis()
+                                ),
+                                mainItem.name
+                            )
+                            // 尾款 Payment（已付）
+                            paymentRepository.insertPayment(
+                                Payment(
+                                    priceId = priceId,
+                                    amount = balanceItem.price,
+                                    isPaid = true,
+                                    paidDate = parseDateToMillis(balanceItem.purchaseDate),
+                                    dueDate = parseDateToMillis(balanceItem.purchaseDate) ?: System.currentTimeMillis()
+                                ),
+                                mainItem.name
                             )
                             processedIndices.add(index)
                             processedIndices.add(pairedIdx!!)

@@ -807,6 +807,23 @@ private class ChineseStatusIcons : BaseStatusIcons() {
             drawInkSplash(Offset(s * 0.5f, s * 0.5f), s * 0.05f, tint)
         }
     }
+
+    @Composable override fun Help(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = brushStroke(s)
+            // Jade disc
+            drawCircle(tint, s * 0.38f, Offset(s * 0.5f, s * 0.5f), style = st)
+            // Brush-style question mark
+            val q = Path().apply {
+                moveTo(s * 0.38f, s * 0.35f)
+                cubicTo(s * 0.38f, s * 0.2f, s * 0.62f, s * 0.2f, s * 0.62f, s * 0.38f)
+                cubicTo(s * 0.62f, s * 0.48f, s * 0.5f, s * 0.48f, s * 0.5f, s * 0.58f)
+            }
+            drawPath(q, tint, style = st)
+            // Ink splash dot
+            drawInkSplash(Offset(s * 0.5f, s * 0.72f), s * 0.04f, tint)
+        }
+    }
 }
 
 // ── Provider ────────────────────────────────────────────────────

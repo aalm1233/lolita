@@ -802,6 +802,28 @@ private class GothicStatusIcons : BaseStatusIcons() {
             drawLine(tint, Offset(s * 0.15f, s * 0.85f), Offset(s * 0.85f, s * 0.15f), strokeWidth = s * 0.06f)
         }
     }
+
+    @Composable override fun Help(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = gothicStroke(s)
+            // Diamond shape instead of circle
+            val diamond = Path().apply {
+                moveTo(s * 0.5f, s * 0.08f); lineTo(s * 0.92f, s * 0.5f)
+                lineTo(s * 0.5f, s * 0.92f); lineTo(s * 0.08f, s * 0.5f); close()
+            }
+            drawPath(diamond, tint, style = st)
+            // Sharp question mark
+            val q = Path().apply {
+                moveTo(s * 0.4f, s * 0.32f)
+                lineTo(s * 0.5f, s * 0.25f)
+                lineTo(s * 0.6f, s * 0.32f)
+                lineTo(s * 0.5f, s * 0.52f)
+            }
+            drawPath(q, tint, style = st)
+            // Cross dot
+            drawGothicCross(Offset(s * 0.5f, s * 0.68f), s * 0.04f, tint)
+        }
+    }
 }
 
 // ── Provider ────────────────────────────────────────────────────

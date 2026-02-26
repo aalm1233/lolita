@@ -805,6 +805,23 @@ private class SweetStatusIcons : BaseStatusIcons() {
                 strokeWidth = s * 0.07f, cap = StrokeCap.Round)
         }
     }
+
+    @Composable override fun Help(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = sweetStroke(s)
+            // Circle
+            drawCircle(tint, s * 0.38f, Offset(s * 0.5f, s * 0.5f), style = st)
+            // Question mark curve
+            val q = Path().apply {
+                moveTo(s * 0.38f, s * 0.35f)
+                cubicTo(s * 0.38f, s * 0.2f, s * 0.62f, s * 0.2f, s * 0.62f, s * 0.38f)
+                cubicTo(s * 0.62f, s * 0.48f, s * 0.5f, s * 0.48f, s * 0.5f, s * 0.58f)
+            }
+            drawPath(q, tint, style = st)
+            // Heart dot instead of circle dot
+            drawSweetHeart(Offset(s * 0.5f, s * 0.72f), s * 0.05f, tint)
+        }
+    }
 }
 
 // ── Provider ────────────────────────────────────────────────────

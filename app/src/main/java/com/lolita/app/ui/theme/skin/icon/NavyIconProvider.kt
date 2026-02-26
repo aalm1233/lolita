@@ -1136,6 +1136,25 @@ private class NavyStatusIcons : BaseStatusIcons() {
                 strokeWidth = s * 0.07f, cap = StrokeCap.Round)
         }
     }
+
+    @Composable override fun Help(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = navyStroke(s)
+            // Life preserver ring
+            drawCircle(tint, s * 0.38f, Offset(s * 0.5f, s * 0.5f), style = st)
+            drawCircle(tint, s * 0.28f, Offset(s * 0.5f, s * 0.5f), style = thinNavy(s))
+            // Flowing question mark
+            val q = Path().apply {
+                moveTo(s * 0.38f, s * 0.35f)
+                cubicTo(s * 0.38f, s * 0.2f, s * 0.62f, s * 0.2f, s * 0.62f, s * 0.38f)
+                cubicTo(s * 0.62f, s * 0.48f, s * 0.5f, s * 0.48f, s * 0.5f, s * 0.58f)
+            }
+            drawPath(q, tint, style = st)
+            // Wave dot
+            drawCircle(tint, s * 0.04f, Offset(s * 0.5f, s * 0.7f))
+            drawCircle(tint.copy(alpha = 0.3f), s * 0.06f, Offset(s * 0.5f, s * 0.7f))
+        }
+    }
 }
 
 // ── Provider ────────────────────────────────────────────────────

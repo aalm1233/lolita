@@ -870,6 +870,27 @@ private class ClassicStatusIcons : BaseStatusIcons() {
                 strokeWidth = s * 0.065f, cap = StrokeCap.Round)
         }
     }
+
+    @Composable override fun Help(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension; val st = classicStroke(s)
+            // Double circle (classic style)
+            drawCircle(tint, s * 0.38f, Offset(s * 0.5f, s * 0.5f), style = st)
+            drawCircle(tint, s * 0.33f, Offset(s * 0.5f, s * 0.5f), style = thinClassic(s))
+            // Elegant question mark with serifs
+            val q = Path().apply {
+                moveTo(s * 0.38f, s * 0.35f)
+                cubicTo(s * 0.38f, s * 0.2f, s * 0.62f, s * 0.2f, s * 0.62f, s * 0.38f)
+                cubicTo(s * 0.62f, s * 0.48f, s * 0.5f, s * 0.48f, s * 0.5f, s * 0.56f)
+            }
+            drawPath(q, tint, style = st)
+            // Serif on question mark stem
+            drawLine(tint, Offset(s * 0.45f, s * 0.56f), Offset(s * 0.55f, s * 0.56f),
+                strokeWidth = s * 0.03f, cap = StrokeCap.Round)
+            // Dot
+            drawCircle(tint, s * 0.04f, Offset(s * 0.5f, s * 0.68f))
+        }
+    }
 }
 
 // ── Provider ────────────────────────────────────────────────────

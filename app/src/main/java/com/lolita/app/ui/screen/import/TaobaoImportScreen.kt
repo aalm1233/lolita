@@ -25,6 +25,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun TaobaoImportScreen(
     onBack: () -> Unit,
     onNavigateToDetail: (selectedItemsJson: String) -> Unit,
+    onNavigateToGuide: () -> Unit = {},
     viewModel: TaobaoImportViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -39,12 +40,14 @@ fun TaobaoImportScreen(
         ImportStep.SELECT -> OrderSelectContent(
             uiState = uiState,
             viewModel = viewModel,
-            onBack = onBack
+            onBack = onBack,
+            onNavigateToGuide = onNavigateToGuide
         )
         ImportStep.PREPARE -> ImportPrepareContent(
             uiState = uiState,
             viewModel = viewModel,
-            onBack = { viewModel.goBackToSelectFromPrepare() }
+            onBack = { viewModel.goBackToSelectFromPrepare() },
+            onNavigateToGuide = onNavigateToGuide
         )
         ImportStep.DETAIL -> ImportDetailContent(
             uiState = uiState,
@@ -54,7 +57,8 @@ fun TaobaoImportScreen(
                 pendingImageIndex = index
                 imagePickerLauncher.launch(arrayOf("image/*"))
             },
-            onExecuteImport = { viewModel.executeImport() }
+            onExecuteImport = { viewModel.executeImport() },
+            onNavigateToGuide = onNavigateToGuide
         )
         ImportStep.IMPORTING -> ImportingContent()
         ImportStep.RESULT -> ImportResultContent(
@@ -70,7 +74,8 @@ fun TaobaoImportScreen(
 private fun OrderSelectContent(
     uiState: TaobaoImportUiState,
     viewModel: TaobaoImportViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigateToGuide: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val filePickerLauncher = rememberLauncherForActivityResult(
@@ -91,6 +96,11 @@ private fun OrderSelectContent(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         SkinIcon(IconKey.ArrowBack)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToGuide) {
+                        SkinIcon(IconKey.Help)
                     }
                 }
             )
@@ -269,7 +279,8 @@ private fun OrderCard(
 private fun ImportPrepareContent(
     uiState: TaobaoImportUiState,
     viewModel: TaobaoImportViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigateToGuide: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -292,6 +303,11 @@ private fun ImportPrepareContent(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         SkinIcon(IconKey.ArrowBack)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToGuide) {
+                        SkinIcon(IconKey.Help)
                     }
                 }
             )

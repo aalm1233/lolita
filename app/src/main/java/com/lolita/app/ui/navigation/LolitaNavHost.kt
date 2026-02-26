@@ -482,7 +482,8 @@ fun LolitaNavHost() {
                     onNavigateToDetail = { _ ->
                         // Navigate back to item list after import
                         navController.popBackStack()
-                    }
+                    },
+                    onNavigateToGuide = { navController.navigate(Screen.TaobaoImportGuide.route) }
                 )
             }
 

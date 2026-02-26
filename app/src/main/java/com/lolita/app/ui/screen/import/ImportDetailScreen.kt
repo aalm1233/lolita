@@ -33,7 +33,8 @@ fun ImportDetailContent(
     viewModel: TaobaoImportViewModel,
     onBack: () -> Unit,
     onPickLocalImage: (index: Int) -> Unit = { _ -> },
-    onExecuteImport: () -> Unit = {}
+    onExecuteImport: () -> Unit = {},
+    onNavigateToGuide: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var showBackConfirmDialog by remember { mutableStateOf(false) }
@@ -55,6 +56,11 @@ fun ImportDetailContent(
                 navigationIcon = {
                     IconButton(onClick = { showBackConfirmDialog = true }) {
                         SkinIcon(IconKey.ArrowBack)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToGuide) {
+                        SkinIcon(IconKey.Help)
                     }
                 }
             )

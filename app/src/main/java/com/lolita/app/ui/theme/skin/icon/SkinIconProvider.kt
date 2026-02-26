@@ -67,6 +67,7 @@ interface StatusIcons {
     @Composable fun Info(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Visibility(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun VisibilityOff(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun Help(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
 }
 
 interface SkinIconProvider {

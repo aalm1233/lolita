@@ -68,5 +68,6 @@ fun SkinIcon(
         IconKey.Info -> icons.status.Info(modifier, tint)
         IconKey.Visibility -> icons.status.Visibility(modifier, tint)
         IconKey.VisibilityOff -> icons.status.VisibilityOff(modifier, tint)
+        IconKey.Help -> icons.status.Help(modifier, tint)
     }
 }

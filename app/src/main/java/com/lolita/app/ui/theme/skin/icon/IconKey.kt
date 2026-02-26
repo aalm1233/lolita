@@ -11,5 +11,5 @@ enum class IconKey {
     // Arrow
     ArrowBack, ArrowForward, KeyboardArrowLeft, KeyboardArrowRight, ExpandMore, ExpandLess, ArrowDropDown, SwapVert, OpenInNew,
     // Status
-    CheckCircle, Warning, Error, Info, Visibility, VisibilityOff
+    CheckCircle, Warning, Error, Info, Visibility, VisibilityOff, Help
 }

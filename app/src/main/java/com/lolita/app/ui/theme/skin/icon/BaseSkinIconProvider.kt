@@ -165,6 +165,8 @@ open class BaseStatusIcons : StatusIcons {
         Icon(Icons.Filled.Visibility, null, modifier, tint)
     @Composable override fun VisibilityOff(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.VisibilityOff, null, modifier, tint)
+    @Composable override fun Help(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.Info, null, modifier, tint)
 }
 
 open class BaseSkinIconProvider : SkinIconProvider {

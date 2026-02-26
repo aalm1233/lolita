@@ -60,6 +60,7 @@ import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
+import com.lolita.app.ui.screen.`import`.TaobaoImportGuideScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
 import com.lolita.app.ui.screen.item.LocationDetailScreen
 import com.lolita.app.ui.screen.settings.LocationManageScreen
@@ -484,6 +485,14 @@ fun LolitaNavHost() {
                     }
                 )
             }
+
+            // Taobao Import Guide
+            composable(Screen.TaobaoImportGuide.route) {
+                TaobaoImportGuideScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
 
             // Location Detail
             composable(

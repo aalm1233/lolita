@@ -22,8 +22,8 @@ android {
         applicationId = "com.lolita.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 32
-        versionName = "2.17"
+        versionCode = 33
+        versionName = "2.18"
     }
 
     signingConfigs {
@@ -118,6 +118,9 @@ dependencies {
 
     // Coil (for image loading)
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Telephoto (zoomable image gestures)
+    implementation("me.saket.telephoto:zoomable:0.14.0")
 
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")

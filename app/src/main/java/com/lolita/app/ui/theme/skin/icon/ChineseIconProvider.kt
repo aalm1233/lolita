@@ -401,6 +401,19 @@ private class ChineseActionIcons : BaseActionIcons() {
             }
         }
     }
+    @Composable override fun Gallery(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = Stroke(s * 0.055f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            val gap = s * 0.08f
+            val colW = (s - gap * 3) / 2
+            val r = CornerRadius(colW * 0.1f)
+            drawRoundRect(tint, Offset(gap, gap), Size(colW, s * 0.48f), r, stroke)
+            drawRoundRect(tint, Offset(gap, gap + s * 0.48f + gap), Size(colW, s * 0.3f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap), Size(colW, s * 0.3f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap + s * 0.3f + gap), Size(colW, s * 0.48f), r, stroke)
+        }
+    }
 }
 
 // ── Content Icons ───────────────────────────────────────────────

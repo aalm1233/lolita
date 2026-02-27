@@ -521,6 +521,25 @@ private class NavyActionIcons : BaseActionIcons() {
             }
         }
     }
+    @Composable override fun Gallery(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = Stroke(s * 0.055f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            val gap = s * 0.08f
+            val colW = (s - gap * 3) / 2
+            val r = CornerRadius(colW * 0.28f)
+            drawRoundRect(tint, Offset(gap, gap), Size(colW, s * 0.5f), r, stroke)
+            drawRoundRect(tint, Offset(gap, gap + s * 0.5f + gap), Size(colW, s * 0.28f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap), Size(colW, s * 0.28f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap + s * 0.28f + gap), Size(colW, s * 0.5f), r, stroke)
+            // Small wave at bottom
+            val wavePath = Path().apply {
+                moveTo(gap, s - gap * 0.5f)
+                cubicTo(s * 0.3f, s - gap * 1.2f, s * 0.7f, s - gap * 0.2f, s - gap, s - gap * 0.5f)
+            }
+            drawPath(wavePath, tint, style = Stroke(s * 0.03f, cap = StrokeCap.Round))
+        }
+    }
 }
 
 // ── Content Icons ───────────────────────────────────────────────

@@ -98,6 +98,8 @@ open class BaseActionIcons : ActionIcons {
         Icon(Icons.Filled.GridView, null, modifier, tint)
     @Composable override fun Apps(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Apps, null, modifier, tint)
+    @Composable override fun Gallery(modifier: Modifier, tint: Color) =
+        Icon(Icons.Filled.Image, null, modifier, tint)
 }
 
 open class BaseContentIcons : ContentIcons {

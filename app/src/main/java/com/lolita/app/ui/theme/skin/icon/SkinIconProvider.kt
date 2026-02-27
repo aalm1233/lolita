@@ -29,6 +29,7 @@ interface ActionIcons {
     @Composable fun ViewAgenda(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun GridView(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Apps(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
+    @Composable fun Gallery(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
 }
 
 interface ContentIcons {

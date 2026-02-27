@@ -395,6 +395,22 @@ private class GothicActionIcons : BaseActionIcons() {
             }
         }
     }
+    @Composable override fun Gallery(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = Stroke(s * 0.05f, cap = StrokeCap.Butt, join = StrokeJoin.Miter)
+            val gap = s * 0.07f
+            val colW = (s - gap * 3) / 2
+            drawRect(tint, Offset(gap, gap), Size(colW, s * 0.52f), style = stroke)
+            drawRect(tint, Offset(gap, gap + s * 0.52f + gap), Size(colW, s * 0.26f), style = stroke)
+            drawRect(tint, Offset(gap * 2 + colW, gap), Size(colW, s * 0.26f), style = stroke)
+            drawRect(tint, Offset(gap * 2 + colW, gap + s * 0.26f + gap), Size(colW, s * 0.52f), style = stroke)
+            // Small cross in center
+            val cx = s / 2f; val cy = s / 2f; val cs = s * 0.05f
+            drawLine(tint, Offset(cx, cy - cs), Offset(cx, cy + cs), s * 0.04f, StrokeCap.Butt)
+            drawLine(tint, Offset(cx - cs, cy), Offset(cx + cs, cy), s * 0.04f, StrokeCap.Butt)
+        }
+    }
 }
 
 // ── Content Icons ───────────────────────────────────────────────

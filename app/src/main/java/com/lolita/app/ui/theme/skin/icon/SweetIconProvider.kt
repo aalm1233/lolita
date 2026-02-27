@@ -383,6 +383,27 @@ private class SweetActionIcons : BaseActionIcons() {
             }
         }
     }
+    @Composable override fun Gallery(modifier: Modifier, tint: Color) {
+        Canvas(modifier.size(24.dp)) {
+            val s = size.minDimension
+            val stroke = Stroke(s * 0.055f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            val gap = s * 0.08f
+            val colW = (s - gap * 3) / 2
+            val r = CornerRadius(colW * 0.3f)
+            drawRoundRect(tint, Offset(gap, gap), Size(colW, s * 0.5f), r, stroke)
+            drawRoundRect(tint, Offset(gap, gap + s * 0.5f + gap), Size(colW, s * 0.28f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap), Size(colW, s * 0.28f), r, stroke)
+            drawRoundRect(tint, Offset(gap * 2 + colW, gap + s * 0.28f + gap), Size(colW, s * 0.5f), r, stroke)
+            // Small heart in center
+            val cx = s / 2f; val cy = s / 2f; val hs = s * 0.06f
+            val heartPath = Path().apply {
+                moveTo(cx, cy + hs)
+                cubicTo(cx - hs, cy, cx - hs, cy - hs * 0.6f, cx, cy - hs * 0.2f)
+                cubicTo(cx + hs, cy - hs * 0.6f, cx + hs, cy, cx, cy + hs)
+            }
+            drawPath(heartPath, tint, style = Fill)
+        }
+    }
 }
 
 // ── Content Icons ───────────────────────────────────────────────

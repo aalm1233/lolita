@@ -36,6 +36,7 @@ fun SkinIcon(
         IconKey.ViewAgenda -> icons.action.ViewAgenda(modifier, tint)
         IconKey.GridView -> icons.action.GridView(modifier, tint)
         IconKey.Apps -> icons.action.Apps(modifier, tint)
+        IconKey.Gallery -> icons.action.Gallery(modifier, tint)
         // Content
         IconKey.Star -> icons.content.Star(modifier, tint)
         IconKey.StarBorder -> icons.content.StarBorder(modifier, tint)

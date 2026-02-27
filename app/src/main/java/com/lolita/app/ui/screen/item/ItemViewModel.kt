@@ -20,6 +20,7 @@ import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.data.repository.SeasonRepository
 import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.SortOption
+import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
@@ -71,6 +72,8 @@ data class ItemListUiState(
     val showTotalPrice: Boolean = false,
     val columnsPerRow: Int = 1,
     val sortOption: SortOption = SortOption.DEFAULT,
+    val viewMode: ViewMode = ViewMode.LIST,
+    val shuffledItems: List<Item> = emptyList(),
     val itemPrices: Map<Long, Double> = emptyMap(),
     val errorMessage: String? = null,
     val todayOutfitItemImages: List<String?> = emptyList(),
@@ -187,6 +190,16 @@ class ItemListViewModel(
         viewModelScope.launch {
             appPreferences.showTotalPrice.collect { show ->
                 _uiState.update { it.copy(showTotalPrice = show, itemCardDataList = buildItemCardDataList(it.filteredItems, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, show)) }
+            }
+        }
+        viewModelScope.launch {
+            appPreferences.viewMode.collect { mode ->
+                _uiState.update {
+                    it.copy(
+                        viewMode = mode,
+                        shuffledItems = if (mode == ViewMode.GALLERY) it.filteredItems.shuffled() else emptyList()
+                    )
+                }
             }
         }
     }
@@ -476,6 +489,20 @@ class ItemListViewModel(
 
     fun setColumns(count: Int) {
         _uiState.update { it.copy(columnsPerRow = count) }
+    }
+
+    fun setViewMode(mode: ViewMode) {
+        _uiState.update {
+            it.copy(
+                viewMode = mode,
+                shuffledItems = if (mode == ViewMode.GALLERY) it.filteredItems.shuffled() else emptyList()
+            )
+        }
+        viewModelScope.launch { appPreferences.setViewMode(mode) }
+    }
+
+    fun shuffleGalleryItems() {
+        _uiState.update { it.copy(shuffledItems = it.filteredItems.shuffled()) }
     }
 
     fun deleteItem(item: Item) {

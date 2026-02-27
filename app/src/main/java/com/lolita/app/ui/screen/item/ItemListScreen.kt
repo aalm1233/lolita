@@ -57,6 +57,13 @@ import com.google.gson.Gson
 import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
+import com.lolita.app.ui.screen.common.ViewMode
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import com.lolita.app.ui.screen.common.GalleryCard
+import com.lolita.app.ui.component.GalleryPreviewDialog
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -210,20 +217,37 @@ fun ItemListScreen(
                             val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
                             coordinateViewModel.setColumns(next)
                         } else {
-                            val next = when (uiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
-                            viewModel.setColumns(next)
+                            val nextMode = when (uiState.viewMode) {
+                                ViewMode.LIST -> ViewMode.GRID
+                                ViewMode.GRID -> ViewMode.GALLERY
+                                ViewMode.GALLERY -> ViewMode.LIST
+                            }
+                            viewModel.setViewMode(nextMode)
+                            if (nextMode != ViewMode.GALLERY) {
+                                viewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
+                            }
                         }
                     }
                 ) {
-                    val currentColumns = if (pagerState.currentPage == 2) coordinateUiState.columnsPerRow else uiState.columnsPerRow
-                    SkinIcon(
-                        when (currentColumns) {
-                            1 -> IconKey.ViewAgenda
-                            2 -> IconKey.GridView
-                            else -> IconKey.Apps
-                        },
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    if (pagerState.currentPage == 2) {
+                        SkinIcon(
+                            when (coordinateUiState.columnsPerRow) {
+                                1 -> IconKey.ViewAgenda
+                                2 -> IconKey.GridView
+                                else -> IconKey.Apps
+                            },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        SkinIcon(
+                            when (uiState.viewMode) {
+                                ViewMode.LIST -> IconKey.ViewAgenda
+                                ViewMode.GRID -> IconKey.GridView
+                                ViewMode.GALLERY -> IconKey.Gallery
+                            },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 
@@ -366,6 +390,46 @@ fun ItemListScreen(
                                 subtitle = "点击右下角 + 添加新服饰",
                                 modifier = Modifier.fillMaxSize()
                             )
+                        } else if (uiState.viewMode == ViewMode.GALLERY) {
+                            var showPreview by remember { mutableStateOf(false) }
+                            var previewStartIndex by remember { mutableIntStateOf(0) }
+                            val flingBehavior = rememberSkinFlingBehavior()
+                            val staggeredState = rememberLazyStaggeredGridState()
+                            val scrollingState = LocalIsListScrolling.current
+                            LaunchedEffect(staggeredState.isScrollInProgress, scrollingState) {
+                                scrollingState.value = staggeredState.isScrollInProgress
+                            }
+                            LazyVerticalStaggeredGrid(
+                                state = staggeredState,
+                                columns = StaggeredGridCells.Fixed(2),
+                                verticalItemSpacing = 8.dp,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp)
+                            ) {
+                                items(
+                                    items = uiState.galleryCardDataList,
+                                    key = { it.item.id }
+                                ) { data ->
+                                    val index = uiState.galleryCardDataList.indexOf(data)
+                                    GalleryCard(
+                                        data = data,
+                                        onClick = {
+                                            previewStartIndex = index
+                                            showPreview = true
+                                        },
+                                        onLongClick = { itemToDelete = data.item },
+                                        modifier = Modifier.skinItemAppear(index)
+                                    )
+                                }
+                            }
+                            if (showPreview) {
+                                GalleryPreviewDialog(
+                                    items = uiState.galleryCardDataList,
+                                    startIndex = previewStartIndex,
+                                    onDismiss = { showPreview = false },
+                                    onNavigateToDetail = onNavigateToDetail
+                                )
+                            }
                         } else if (uiState.columnsPerRow == 1) {
                             val flingBehavior = rememberSkinFlingBehavior()
                             val listState = rememberLazyListState()

@@ -73,7 +73,7 @@ data class ItemListUiState(
     val columnsPerRow: Int = 1,
     val sortOption: SortOption = SortOption.DEFAULT,
     val viewMode: ViewMode = ViewMode.LIST,
-    val shuffledItems: List<Item> = emptyList(),
+    val galleryCardDataList: List<ItemCardData> = emptyList(),
     val itemPrices: Map<Long, Double> = emptyMap(),
     val errorMessage: String? = null,
     val todayOutfitItemImages: List<String?> = emptyList(),
@@ -197,7 +197,9 @@ class ItemListViewModel(
                 _uiState.update {
                     it.copy(
                         viewMode = mode,
-                        shuffledItems = if (mode == ViewMode.GALLERY) it.filteredItems.shuffled() else emptyList()
+                        galleryCardDataList = if (mode == ViewMode.GALLERY) {
+                            it.itemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled()
+                        } else emptyList()
                     )
                 }
             }
@@ -495,14 +497,18 @@ class ItemListViewModel(
         _uiState.update {
             it.copy(
                 viewMode = mode,
-                shuffledItems = if (mode == ViewMode.GALLERY) it.filteredItems.shuffled() else emptyList()
+                galleryCardDataList = if (mode == ViewMode.GALLERY) {
+                    it.itemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled()
+                } else emptyList()
             )
         }
         viewModelScope.launch { appPreferences.setViewMode(mode) }
     }
 
     fun shuffleGalleryItems() {
-        _uiState.update { it.copy(shuffledItems = it.filteredItems.shuffled()) }
+        _uiState.update {
+            it.copy(galleryCardDataList = it.itemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled())
+        }
     }
 
     fun deleteItem(item: Item) {

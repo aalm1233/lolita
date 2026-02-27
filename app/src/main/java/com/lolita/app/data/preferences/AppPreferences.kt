@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.theme.SkinType
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +62,16 @@ class AppPreferences(private val context: Context) {
         context.dataStore.edit { it[AVATAR_PATH] = path }
     }
 
+    val viewMode: Flow<ViewMode> = context.dataStore.data
+        .map {
+            try { ViewMode.valueOf(it[VIEW_MODE] ?: "LIST") }
+            catch (_: Exception) { ViewMode.LIST }
+        }
+
+    suspend fun setViewMode(mode: ViewMode) {
+        context.dataStore.edit { it[VIEW_MODE] = mode.name }
+    }
+
     companion object {
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
@@ -68,5 +79,6 @@ class AppPreferences(private val context: Context) {
         private val SKIN_TYPE = stringPreferencesKey("skin_type")
         private val NICKNAME = stringPreferencesKey("nickname")
         private val AVATAR_PATH = stringPreferencesKey("avatar_path")
+        private val VIEW_MODE = stringPreferencesKey("view_mode")
     }
 }

@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.common
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -19,14 +20,15 @@ fun SortMenuButton(
     currentSort: SortOption,
     showPriceOptions: Boolean,
     onSortSelected: (SortOption) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconTint: Color? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     IconButton(onClick = { expanded = true }, modifier = modifier) {
         SkinIcon(
             IconKey.Sort,
-            tint = if (currentSort != SortOption.DEFAULT)
+            tint = iconTint ?: if (currentSort != SortOption.DEFAULT)
                 MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant
         )

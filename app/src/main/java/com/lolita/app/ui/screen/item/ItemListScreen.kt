@@ -1,10 +1,15 @@
 package com.lolita.app.ui.screen.item
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,6 +23,7 @@ import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,6 +49,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
+import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.BrandLogo
@@ -64,6 +71,12 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import com.lolita.app.ui.screen.common.GalleryCard
 import com.lolita.app.ui.component.GalleryPreviewDialog
+import com.lolita.app.ui.theme.LolitaSkin
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -83,12 +96,25 @@ fun ItemListScreen(
     val coordinateUiState by coordinateViewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
     var showFilterPanel by remember { mutableStateOf(false) }
+    var isSearchMode by remember { mutableStateOf(false) }
+    val searchFocusRequester = remember { FocusRequester() }
+    val skin = LolitaSkin.current
+    val topBarGradient = if (isSystemInDarkTheme()) {
+        Brush.horizontalGradient(skin.gradientColorsDark)
+    } else {
+        Brush.horizontalGradient(skin.gradientColors)
+    }
     val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
     val activeFilterCount = listOfNotNull(
         uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
         uiState.filterBrandId?.let { "" }
     ).size
+
+    // Auto-focus search field when entering search mode
+    LaunchedEffect(isSearchMode) {
+        if (isSearchMode) searchFocusRequester.requestFocus()
+    }
 
     // Sync pager -> filter
     LaunchedEffect(pagerState.currentPage) {
@@ -140,6 +166,7 @@ fun ItemListScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -158,95 +185,79 @@ fun ItemListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Search bar with filter + column toggle
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            // Unified top bar (Xiaohongshu-style: search icon | tabs | actions)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.Transparent
             ) {
-                OutlinedTextField(
-                    value = uiState.searchQuery,
-                    onValueChange = { viewModel.search(it) },
-                    placeholder = { Text("搜索服饰") },
-                    leadingIcon = { SkinIcon(IconKey.Search) },
-                    modifier = Modifier.weight(1f),
-                    singleLine = true,
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        cursorColor = MaterialTheme.colorScheme.primary
-                    )
-                )
-                Box {
-                    IconButton(onClick = { showFilterPanel = !showFilterPanel }) {
-                        SkinIcon(IconKey.FilterList, tint = if (activeFilterCount > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    if (activeFilterCount > 0) {
-                        Surface(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(4.dp)
-                                .size(16.dp),
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.primary
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text(
-                                    "$activeFilterCount",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontSize = 10.sp,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-                }
-                SortMenuButton(
-                    currentSort = if (pagerState.currentPage == 2) coordinateUiState.sortOption else uiState.sortOption,
-                    showPriceOptions = if (pagerState.currentPage == 2) coordinateUiState.showPrice else uiState.showTotalPrice,
-                    onSortSelected = {
-                        if (pagerState.currentPage == 2) coordinateViewModel.setSortOption(it)
-                        else viewModel.setSortOption(it)
-                    }
-                )
-                IconButton(
-                    onClick = {
-                        if (pagerState.currentPage == 2) {
-                            val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
-                            coordinateViewModel.setColumns(next)
-                        } else {
-                            val nextMode = when (uiState.viewMode) {
-                                ViewMode.LIST -> ViewMode.GRID
-                                ViewMode.GRID -> ViewMode.GALLERY
-                                ViewMode.GALLERY -> ViewMode.LIST
-                            }
-                            viewModel.setViewMode(nextMode)
-                            if (nextMode != ViewMode.GALLERY) {
-                                viewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
-                            }
-                        }
-                    }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(topBarGradient)
+                        .statusBarsPadding()
                 ) {
-                    if (pagerState.currentPage == 2) {
-                        SkinIcon(
-                            when (coordinateUiState.columnsPerRow) {
-                                1 -> IconKey.ViewAgenda
-                                2 -> IconKey.GridView
-                                else -> IconKey.Apps
-                            },
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    } else {
-                        SkinIcon(
-                            when (uiState.viewMode) {
-                                ViewMode.LIST -> IconKey.ViewAgenda
-                                ViewMode.GRID -> IconKey.GridView
-                                ViewMode.GALLERY -> IconKey.Gallery
-                            },
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    AnimatedContent(
+                        targetState = isSearchMode,
+                        transitionSpec = { fadeIn() togetherWith fadeOut() },
+                        label = "topBarMode"
+                    ) { searchMode ->
+                        if (searchMode) {
+                            // Search mode: pill TextField + cancel
+                            SearchModeBar(
+                                query = uiState.searchQuery,
+                                onQueryChange = { viewModel.search(it) },
+                                onCancel = {
+                                    viewModel.search("")
+                                    isSearchMode = false
+                                },
+                                focusRequester = searchFocusRequester
+                            )
+                        } else {
+                            // Normal mode: search icon | tabs | action icons
+                            NormalModeBar(
+                                pagerState = pagerState,
+                                onSearchClick = { isSearchMode = true },
+                                onTabSelected = { index ->
+                                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                                },
+                                showFilterPanel = showFilterPanel,
+                                onFilterClick = { showFilterPanel = !showFilterPanel },
+                                activeFilterCount = activeFilterCount,
+                                currentSort = if (pagerState.currentPage == 2) coordinateUiState.sortOption else uiState.sortOption,
+                                showPriceOptions = if (pagerState.currentPage == 2) coordinateUiState.showPrice else uiState.showTotalPrice,
+                                onSortSelected = {
+                                    if (pagerState.currentPage == 2) coordinateViewModel.setSortOption(it)
+                                    else viewModel.setSortOption(it)
+                                },
+                                onViewModeToggle = {
+                                    if (pagerState.currentPage == 2) {
+                                        val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
+                                        coordinateViewModel.setColumns(next)
+                                    } else {
+                                        val nextMode = when (uiState.viewMode) {
+                                            ViewMode.LIST -> ViewMode.GRID
+                                            ViewMode.GRID -> ViewMode.GALLERY
+                                            ViewMode.GALLERY -> ViewMode.LIST
+                                        }
+                                        viewModel.setViewMode(nextMode)
+                                        if (nextMode != ViewMode.GALLERY) {
+                                            viewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
+                                        }
+                                    }
+                                },
+                                viewModeIcon = if (pagerState.currentPage == 2) {
+                                    when (coordinateUiState.columnsPerRow) {
+                                        1 -> IconKey.ViewAgenda; 2 -> IconKey.GridView; else -> IconKey.Apps
+                                    }
+                                } else {
+                                    when (uiState.viewMode) {
+                                        ViewMode.LIST -> IconKey.ViewAgenda
+                                        ViewMode.GRID -> IconKey.GridView
+                                        ViewMode.GALLERY -> IconKey.Gallery
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -261,14 +272,6 @@ fun ItemListScreen(
                     onBrandSelected = { viewModel.filterByBrand(it) }
                 )
             }
-
-            // Tab row: 全部 / 已拥有 / 套装
-            ItemFilterTabRow(
-                selectedIndex = pagerState.currentPage,
-                onTabSelected = { index ->
-                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                }
-            )
 
             // 今日穿搭快捷卡片
             LolitaCard(
@@ -505,39 +508,174 @@ fun ItemListScreen(
 }
 
 @Composable
-private fun ItemFilterTabRow(
-    selectedIndex: Int,
-    onTabSelected: (Int) -> Unit
+private fun NormalModeBar(
+    pagerState: PagerState,
+    onSearchClick: () -> Unit,
+    onTabSelected: (Int) -> Unit,
+    showFilterPanel: Boolean,
+    onFilterClick: () -> Unit,
+    activeFilterCount: Int,
+    currentSort: SortOption,
+    showPriceOptions: Boolean,
+    onSortSelected: (SortOption) -> Unit,
+    onViewModeToggle: () -> Unit,
+    viewModeIcon: IconKey
 ) {
     val tabs = listOf("位置", "服饰", "套装")
-
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.primary,
-        divider = { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer) },
-        indicator = { tabPositions ->
-            SkinTabIndicator(
-                tabPositions = tabPositions,
-                selectedTabIndex = selectedIndex
-            )
-        }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        tabs.forEachIndexed { index, label ->
-            Tab(
-                selected = selectedIndex == index,
-                onClick = { onTabSelected(index) },
-                text = {
-                    Text(
-                        text = label,
-                        fontSize = 13.sp,
-                        fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Normal
-                    )
-                },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        // Search icon (left)
+        IconButton(
+            onClick = onSearchClick,
+            modifier = Modifier.size(40.dp)
+        ) {
+            SkinIcon(IconKey.Search, tint = Color.White)
+        }
+
+        // Tabs (centered)
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            modifier = Modifier.weight(1f),
+            containerColor = Color.Transparent,
+            contentColor = Color.White,
+            divider = {},
+            indicator = { tabPositions ->
+                SkinTabIndicator(
+                    tabPositions = tabPositions,
+                    selectedTabIndex = pagerState.currentPage
+                )
+            }
+        ) {
+            tabs.forEachIndexed { index, label ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = { onTabSelected(index) },
+                    modifier = Modifier.height(36.dp),
+                    text = {
+                        Text(
+                            text = label,
+                            fontSize = 14.sp,
+                            fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal
+                        )
+                    },
+                    selectedContentColor = Color.White,
+                    unselectedContentColor = Color.White.copy(alpha = 0.7f)
+                )
+            }
+        }
+
+        // Filter icon (right)
+        Box {
+            IconButton(
+                onClick = onFilterClick,
+                modifier = Modifier.size(36.dp)
+            ) {
+                SkinIcon(
+                    IconKey.FilterList,
+                    tint = if (activeFilterCount > 0) Color.White else Color.White.copy(alpha = 0.7f)
+                )
+            }
+            if (activeFilterCount > 0) {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(14.dp),
+                    shape = CircleShape,
+                    color = Color.White
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            "$activeFilterCount",
+                            fontSize = 9.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+
+        // Sort
+        SortMenuButton(
+            currentSort = currentSort,
+            showPriceOptions = showPriceOptions,
+            onSortSelected = onSortSelected,
+            modifier = Modifier.size(36.dp),
+            iconTint = Color.White.copy(alpha = 0.8f)
+        )
+
+        // View mode toggle
+        IconButton(
+            onClick = onViewModeToggle,
+            modifier = Modifier.size(36.dp)
+        ) {
+            SkinIcon(viewModeIcon, tint = Color.White.copy(alpha = 0.8f))
+        }
+    }
+}
+
+@Composable
+private fun SearchModeBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onCancel: () -> Unit,
+    focusRequester: FocusRequester
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Surface(
+            modifier = Modifier.weight(1f),
+            shape = RoundedCornerShape(20.dp),
+            color = Color.White.copy(alpha = 0.2f)
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .focusRequester(focusRequester),
+                singleLine = true,
+                textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
+                cursorBrush = SolidColor(Color.White),
+                decorationBox = { innerTextField ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp), tint = Color.White.copy(alpha = 0.7f))
+                        Spacer(Modifier.width(6.dp))
+                        Box(Modifier.weight(1f)) {
+                            if (query.isEmpty()) {
+                                Text("搜索服饰", color = Color.White.copy(alpha = 0.6f), fontSize = 14.sp)
+                            }
+                            innerTextField()
+                        }
+                        if (query.isNotEmpty()) {
+                            SkinIcon(
+                                IconKey.Close,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .clickable { onQueryChange("") },
+                                tint = Color.White.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                }
             )
         }
+        Text(
+            "取消",
+            color = Color.White,
+            fontSize = 14.sp,
+            modifier = Modifier.clickable { onCancel() }
+        )
     }
 }
 

@@ -226,12 +226,14 @@ class ItemListViewModel(
                 }.filter { it.isNotBlank() }.distinct().sorted()
                 ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
+                val currentState = _uiState.value
                 val filtered = applyFilters(
-                    data.items, _uiState.value.filterStatus, _uiState.value.searchQuery, _uiState.value.filterGroup,
-                    data.groupMap, _uiState.value.filterSeason, _uiState.value.filterStyle, _uiState.value.filterColor, _uiState.value.filterBrandId,
-                    _uiState.value.filterStatuses, _uiState.value.filterPendingBalanceOnly
+                    data.items, currentState.filterStatus, currentState.searchQuery, currentState.filterGroup,
+                    data.groupMap, currentState.filterSeason, currentState.filterStyle, currentState.filterColor, currentState.filterBrandId,
+                    currentState.filterStatuses, currentState.filterPendingBalanceOnly
                 )
-                val sorted = applySorting(filtered, _uiState.value.sortOption, data.priceMap)
+                val sorted = applySorting(filtered, currentState.sortOption, data.priceMap)
+                val newItemCardDataList = buildItemCardDataList(sorted, data.brandMap, data.brandLogoMap, data.categoryMap, data.priceMap, currentState.showTotalPrice)
                 _uiState.update {
                     it.copy(
                         items = data.items,
@@ -245,7 +247,14 @@ class ItemListViewModel(
                         styleOptions = data.styleOpts,
                         colorOptions = data.colorOpts,
                         isLoading = false,
-                        itemCardDataList = buildItemCardDataList(sorted, data.brandMap, data.brandLogoMap, data.categoryMap, data.priceMap, it.showTotalPrice)
+                        itemCardDataList = newItemCardDataList,
+                        galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                            if (it.galleryCardDataList.isEmpty()) {
+                                newItemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled()
+                            } else {
+                                it.galleryCardDataList
+                            }
+                        } else it.galleryCardDataList
                     )
                 }
                 updateTotalPrice(sorted)

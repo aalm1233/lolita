@@ -306,6 +306,29 @@ class ItemListViewModel(
         }
     }
 
+    private fun buildGalleryCardDataList(
+        filteredItems: List<Item>,
+        brandNames: Map<Long, String>,
+        brandLogoUrls: Map<Long, String?>,
+        categoryNames: Map<Long, String>,
+        itemPrices: Map<Long, Double>,
+        showPrice: Boolean
+    ): List<ItemCardData> {
+        return filteredItems
+            .filter { it.imageUrls.isNotEmpty() }
+            .map { item ->
+                ItemCardData(
+                    item = item,
+                    brandName = brandNames[item.brandId],
+                    brandLogoUrl = brandLogoUrls[item.brandId],
+                    categoryName = categoryNames[item.categoryId],
+                    itemPrice = itemPrices[item.id],
+                    showPrice = showPrice
+                )
+            }
+            .shuffled()
+    }
+
     fun filterByStatus(status: ItemStatus?) {
         val state = _uiState.value
         val filtered = applyFilters(

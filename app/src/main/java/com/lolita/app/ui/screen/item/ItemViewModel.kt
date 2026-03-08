@@ -526,7 +526,7 @@ class ItemListViewModel(
             it.copy(
                 viewMode = mode,
                 galleryCardDataList = if (mode == ViewMode.GALLERY) {
-                    it.itemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled()
+                    buildGalleryCardDataList(it.filteredItems, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
                 } else emptyList()
             )
         }

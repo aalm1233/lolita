@@ -249,12 +249,8 @@ class ItemListViewModel(
                         isLoading = false,
                         itemCardDataList = newItemCardDataList,
                         galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
-                            if (it.galleryCardDataList.isEmpty()) {
-                                newItemCardDataList.filter { d -> d.item.imageUrls.isNotEmpty() }.shuffled()
-                            } else {
-                                it.galleryCardDataList
-                            }
-                        } else it.galleryCardDataList
+                            buildGalleryCardDataList(sorted, data.brandMap, data.brandLogoMap, data.categoryMap, data.priceMap, currentState.showTotalPrice)
+                        } else emptyList()
                     )
                 }
                 updateTotalPrice(sorted)

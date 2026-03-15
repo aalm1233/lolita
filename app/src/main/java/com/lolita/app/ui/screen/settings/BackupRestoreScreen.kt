@@ -284,6 +284,7 @@ fun BackupRestoreScreen(
                     Text("风格: ${p.styleCount} 条")
                     Text("季节: ${p.seasonCount} 条")
                     Text("套装: ${p.coordinateCount} 条")
+                    Text("图鉴: ${p.catalogCount} 条")
                     Text("服饰: ${p.itemCount} 条")
                     Text("价格: ${p.priceCount} 条")
                     Text("付款: ${p.paymentCount} 条")

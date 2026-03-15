@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.withTransaction
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -12,6 +13,7 @@ import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.dao.PriceWithPayments as DaoPriceWithPayments
 import com.lolita.app.data.repository.BrandRepository
+import com.lolita.app.data.repository.CatalogRepository
 import com.lolita.app.data.repository.CategoryRepository
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
@@ -568,6 +570,7 @@ class ItemEditViewModel(
     private val styleRepository: StyleRepository = com.lolita.app.di.AppModule.styleRepository(),
     private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository(),
     private val sourceRepository: SourceRepository = com.lolita.app.di.AppModule.sourceRepository(),
+    private val catalogRepository: CatalogRepository = com.lolita.app.di.AppModule.catalogRepository(),
     private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
 ) : ViewModel() {
 
@@ -575,40 +578,25 @@ class ItemEditViewModel(
     val uiState: StateFlow<ItemEditUiState> = _uiState.asStateFlow()
 
     private val pendingImageDeletions = mutableListOf<String>()
+    private var locationJob: Job? = null
+    private var supportingDataLoaded = false
+    private var pendingCatalogLinkId: Long? = null
+    private var catalogPrefillImagePaths: Set<String> = emptySet()
     var hasUnsavedChanges: Boolean = false
         private set
 
-    fun loadItem(itemId: Long) {
+    fun loadItem(itemId: Long, defaultStatus: String = "", prefillCatalogEntryId: Long? = null) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-
-            // Load all reference data with .first() to avoid race conditions
-            val brands = brandRepository.getAllBrands().first()
-            val categories = categoryRepository.getAllCategories().first()
-            val coordinates = coordinateRepository.getAllCoordinates().first()
-            val styles = styleRepository.getAllStyles().first()
-            val seasons = seasonRepository.getAllSeasons().first()
-            val sources = sourceRepository.getAllSources().first()
-
-            _uiState.update {
-                it.copy(
-                    brands = brands,
-                    categories = categories,
-                    coordinates = coordinates,
-                    styleOptions = styles.map { s -> s.name },
-                    seasonOptions = seasons.map { s -> s.name },
-                    sourceOptions = sources.map { s -> s.name }
-                )
-            }
-
-            // Load locations
-            viewModelScope.launch {
-                locationRepository.getAllLocations().collect { locations ->
-                    _uiState.update { it.copy(locations = locations) }
-                }
-            }
+            loadReferenceData()
+            ensureLocationCollection()
+            pendingImageDeletions.clear()
+            hasUnsavedChanges = false
 
             if (itemId > 0) {
+                pendingCatalogLinkId = null
+                catalogPrefillImagePaths = emptySet()
+
                 val item = itemRepository.getItemById(itemId)
                 if (item != null) {
                     val prices = priceRepository.getPricesWithPaymentsByItem(itemId).first()
@@ -623,8 +611,9 @@ class ItemEditViewModel(
                             status = item.status,
                             priority = item.priority,
                             imageUrls = item.imageUrls,
+                            imageUrlsToDelete = emptyList(),
                             colors = parseColorsJson(item.colors),
-                            seasons = item.season?.split(",")?.filter { s -> s.isNotBlank() } ?: emptyList(),
+                            seasons = item.season?.split(",")?.filter { season -> season.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,
                             sizeChartImageUrl = item.sizeChartImageUrl,
@@ -637,8 +626,73 @@ class ItemEditViewModel(
                 } else {
                     _uiState.update { it.copy(isLoading = false) }
                 }
-            } else {
-                _uiState.update { it.copy(isLoading = false) }
+                return@launch
+            }
+
+            val prefillEntry = prefillCatalogEntryId?.let { catalogRepository.getCatalogEntryByIdOnce(it) }
+            pendingCatalogLinkId = prefillEntry?.takeIf { it.linkedItemId == null }?.id
+            catalogPrefillImagePaths = prefillEntry?.imageUrls?.toSet() ?: emptySet()
+
+            val defaultItemStatus = defaultStatus
+                .takeIf { it.isNotBlank() }
+                ?.let { runCatching { ItemStatus.valueOf(it) }.getOrNull() }
+                ?: ItemStatus.OWNED
+
+            _uiState.update { current ->
+                current.copy(
+                    item = null,
+                    name = prefillEntry?.name ?: "",
+                    description = prefillEntry?.description ?: "",
+                    brandId = prefillEntry?.brandId ?: 0L,
+                    categoryId = prefillEntry?.categoryId ?: 0L,
+                    coordinateId = null,
+                    status = defaultItemStatus,
+                    priority = ItemPriority.MEDIUM,
+                    imageUrls = prefillEntry?.imageUrls ?: emptyList(),
+                    imageUrlsToDelete = emptyList(),
+                    colors = prefillEntry?.colors ?: emptyList(),
+                    seasons = prefillEntry?.season?.takeIf { it.isNotBlank() }?.let(::listOf) ?: emptyList(),
+                    style = prefillEntry?.style,
+                    size = prefillEntry?.size,
+                    sizeChartImageUrl = null,
+                    source = prefillEntry?.source,
+                    pricesWithPayments = emptyList(),
+                    locationId = null,
+                    isLoading = false,
+                    isSaving = false
+                )
+            }
+        }
+    }
+
+    private suspend fun loadReferenceData() {
+        if (supportingDataLoaded) return
+
+        val brands = brandRepository.getAllBrands().first()
+        val categories = categoryRepository.getAllCategories().first()
+        val coordinates = coordinateRepository.getAllCoordinates().first()
+        val styles = styleRepository.getAllStyles().first()
+        val seasons = seasonRepository.getAllSeasons().first()
+        val sources = sourceRepository.getAllSources().first()
+
+        _uiState.update {
+            it.copy(
+                brands = brands,
+                categories = categories,
+                coordinates = coordinates,
+                styleOptions = styles.map { style -> style.name },
+                seasonOptions = seasons.map { season -> season.name },
+                sourceOptions = sources.map { source -> source.name }
+            )
+        }
+        supportingDataLoaded = true
+    }
+
+    private fun ensureLocationCollection() {
+        if (locationJob != null) return
+        locationJob = viewModelScope.launch {
+            locationRepository.getAllLocations().collect { locations ->
+                _uiState.update { it.copy(locations = locations) }
             }
         }
     }
@@ -690,9 +744,14 @@ class ItemEditViewModel(
         val current = _uiState.value.imageUrls.toMutableList()
         if (index !in current.indices) return
         val removed = current.removeAt(index)
+        val shouldDeleteRemovedImage = removed !in catalogPrefillImagePaths
         _uiState.value = _uiState.value.copy(
             imageUrls = current,
-            imageUrlsToDelete = _uiState.value.imageUrlsToDelete + removed
+            imageUrlsToDelete = if (shouldDeleteRemovedImage) {
+                _uiState.value.imageUrlsToDelete + removed
+            } else {
+                _uiState.value.imageUrlsToDelete
+            }
         )
     }
 
@@ -751,7 +810,7 @@ class ItemEditViewModel(
         return state.name.isNotBlank() && state.brandId != 0L && state.categoryId != 0L
     }
 
-    suspend fun saveItem(): Result<Unit> {
+    suspend fun saveItem(): Result<Long> {
         val state = _uiState.value
 
         if (state.name.isBlank()) {
@@ -767,6 +826,7 @@ class ItemEditViewModel(
         }
 
         _uiState.value = _uiState.value.copy(isSaving = true)
+        var duplicatedImagePaths = emptyList<String>()
 
         return try {
             val now = System.currentTimeMillis()
@@ -774,6 +834,13 @@ class ItemEditViewModel(
             val colorsJson = if (state.colors.isNotEmpty()) {
                 Gson().toJson(state.colors)
             } else null
+            val imageUrlsForSave = if (state.item == null && pendingCatalogLinkId != null) {
+                state.imageUrls.map { path ->
+                    ImageFileHelper.copyExistingImageToInternalStorage(com.lolita.app.di.AppModule.context(), path)
+                }.also { duplicatedImagePaths = it }
+            } else {
+                state.imageUrls
+            }
             val item = if (state.item != null) {
                 // Update existing item
                 state.item.copy(
@@ -784,7 +851,7 @@ class ItemEditViewModel(
                     coordinateId = state.coordinateId,
                     status = state.status,
                     priority = state.priority,
-                    imageUrls = state.imageUrls,
+                    imageUrls = imageUrlsForSave,
                     colors = colorsJson,
                     season = seasonStr,
                     style = state.style,
@@ -803,7 +870,7 @@ class ItemEditViewModel(
                     categoryId = state.categoryId,
                     name = state.name,
                     description = state.description,
-                    imageUrls = state.imageUrls,
+                    imageUrls = imageUrlsForSave,
                     status = state.status,
                     priority = state.priority,
                     colors = colorsJson,
@@ -818,8 +885,15 @@ class ItemEditViewModel(
                 )
             }
 
-            if (state.item != null) {
+            val savedItemId = if (state.item != null) {
                 itemRepository.updateItem(item)
+                item.id
+            } else if (pendingCatalogLinkId != null) {
+                com.lolita.app.di.AppModule.database().withTransaction {
+                    val newItemId = itemRepository.insertItem(item)
+                    catalogRepository.linkToItem(pendingCatalogLinkId!!, newItemId)
+                    newItemId
+                }
             } else {
                 itemRepository.insertItem(item)
             }
@@ -831,9 +905,20 @@ class ItemEditViewModel(
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
             }
             pendingImageDeletions.clear()
-            _uiState.value = _uiState.value.copy(isSaving = false)
-            Result.success(Unit)
+            pendingCatalogLinkId = null
+            catalogPrefillImagePaths = emptySet()
+            hasUnsavedChanges = false
+            _uiState.value = _uiState.value.copy(
+                item = item.copy(id = savedItemId),
+                imageUrls = imageUrlsForSave,
+                imageUrlsToDelete = emptyList(),
+                isSaving = false
+            )
+            Result.success(savedItemId)
         } catch (e: Exception) {
+            duplicatedImagePaths.forEach { path ->
+                try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
+            }
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.failure(e)
         }

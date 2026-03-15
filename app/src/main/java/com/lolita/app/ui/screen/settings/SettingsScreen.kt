@@ -284,7 +284,7 @@ private fun ProfileSection(
                     .apply { maximumFractionDigits = 0 }
                     .format(uiState.totalSpent)
                 Text(
-                    text = "服饰 ${uiState.totalItems}件 | 套装 ${uiState.totalCoordinates}套 | 总花费 ¥$formattedSpent",
+                    text = "服饰 ${uiState.totalItems}件 | 图鉴 ${uiState.totalCatalogEntries}条 | 套装 ${uiState.totalCoordinates}套 | 总花费 ¥$formattedSpent",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

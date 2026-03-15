@@ -50,6 +50,30 @@ object ImageFileHelper {
         }
     }
 
+    suspend fun copyExistingImageToInternalStorage(context: Context, sourcePath: String): String =
+        withContext(Dispatchers.IO) {
+            val sourceFile = File(sourcePath)
+            require(sourceFile.exists()) { "Image file does not exist: $sourcePath" }
+
+            val dir = File(context.filesDir, IMAGE_DIR)
+            if (!dir.exists()) dir.mkdirs()
+
+            val extension = sourceFile.extension
+                .lowercase()
+                .filter { it.isLetterOrDigit() }
+                .ifBlank { "jpg" }
+            val fileName = "${UUID.randomUUID()}.$extension"
+            val destFile = File(dir, fileName)
+
+            sourceFile.inputStream().use { input ->
+                destFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            destFile.absolutePath
+        }
+
     suspend fun downloadFromUrl(context: Context, imageUrl: String): String =
         withContext(Dispatchers.IO) {
             val dir = File(context.filesDir, IMAGE_DIR)

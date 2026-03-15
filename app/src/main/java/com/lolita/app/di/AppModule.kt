@@ -18,22 +18,29 @@ object AppModule {
         database = LolitaDatabase.getDatabase(context)
     }
 
-    // Database
     fun database() = database
 
-    // Repositories (lazy singletons)
     private val _coordinateRepository by lazy {
         CoordinateRepository(database.coordinateDao(), database.itemDao(), database)
     }
     fun coordinateRepository() = _coordinateRepository
 
-    private val _itemRepository by lazy { ItemRepository(database.itemDao(), _paymentRepository, _priceRepository, database, database.paymentDao()) }
+    private val _itemRepository by lazy {
+        ItemRepository(database.itemDao(), _paymentRepository, _priceRepository, database, database.paymentDao())
+    }
     fun itemRepository() = _itemRepository
 
-    private val _brandRepository by lazy { BrandRepository(database.brandDao(), database.itemDao()) }
+    private val _catalogRepository by lazy { CatalogRepository(database.catalogEntryDao()) }
+    fun catalogRepository() = _catalogRepository
+
+    private val _brandRepository by lazy {
+        BrandRepository(database.brandDao(), database.itemDao(), database.catalogEntryDao())
+    }
     fun brandRepository() = _brandRepository
 
-    private val _categoryRepository by lazy { CategoryRepository(database.categoryDao(), database.itemDao()) }
+    private val _categoryRepository by lazy {
+        CategoryRepository(database.categoryDao(), database.itemDao(), database.catalogEntryDao())
+    }
     fun categoryRepository() = _categoryRepository
 
     private val _priceRepository by lazy {
@@ -41,22 +48,30 @@ object AppModule {
     }
     fun priceRepository() = _priceRepository
 
-    private val _paymentRepository by lazy { PaymentRepository(database.paymentDao(), appContext, database.itemDao()) }
+    private val _paymentRepository by lazy {
+        PaymentRepository(database.paymentDao(), appContext, database.itemDao())
+    }
     fun paymentRepository() = _paymentRepository
 
     private val _outfitLogRepository by lazy { OutfitLogRepository(database.outfitLogDao(), database) }
     fun outfitLogRepository() = _outfitLogRepository
 
-    private val _styleRepository by lazy { StyleRepository(database.styleDao(), database.itemDao(), database) }
+    private val _styleRepository by lazy {
+        StyleRepository(database.styleDao(), database.itemDao(), database.catalogEntryDao(), database)
+    }
     fun styleRepository() = _styleRepository
 
-    private val _seasonRepository by lazy { SeasonRepository(database.seasonDao(), database.itemDao(), database) }
+    private val _seasonRepository by lazy {
+        SeasonRepository(database.seasonDao(), database.itemDao(), database.catalogEntryDao(), database)
+    }
     fun seasonRepository() = _seasonRepository
 
     private val _locationRepository by lazy { LocationRepository(database.locationDao(), database.itemDao()) }
     fun locationRepository() = _locationRepository
 
-    private val _sourceRepository by lazy { SourceRepository(database.sourceDao(), database.itemDao(), database) }
+    private val _sourceRepository by lazy {
+        SourceRepository(database.sourceDao(), database.itemDao(), database.catalogEntryDao(), database)
+    }
     fun sourceRepository() = _sourceRepository
 
     private val _backupManager by lazy { BackupManager(appContext, database) }

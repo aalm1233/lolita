@@ -77,6 +77,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import com.lolita.app.ui.screen.catalog.CatalogFilterPanel
+import com.lolita.app.ui.screen.catalog.CatalogListContent
+import com.lolita.app.ui.screen.catalog.CatalogListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -89,11 +92,15 @@ fun ItemListScreen(
     onNavigateToQuickOutfit: () -> Unit = {},
     onNavigateToLocationDetail: (Long) -> Unit = {},
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
+    onNavigateToCatalogDetail: (Long) -> Unit = {},
+    onNavigateToCatalogAdd: () -> Unit = {},
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coordinateViewModel: CoordinateListViewModel = viewModel()
     val coordinateUiState by coordinateViewModel.uiState.collectAsState()
+    val catalogViewModel: CatalogListViewModel = viewModel()
+    val catalogUiState by catalogViewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
     var showFilterPanel by remember { mutableStateOf(false) }
     var isSearchMode by remember { mutableStateOf(false) }
@@ -104,12 +111,20 @@ fun ItemListScreen(
     } else {
         Brush.horizontalGradient(skin.gradientColors)
     }
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
-    val activeFilterCount = listOfNotNull(
+    val itemActiveFilterCount = listOfNotNull(
         uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
         uiState.filterBrandId?.let { "" }
     ).size
+    val catalogActiveFilterCount = listOfNotNull(
+        catalogUiState.filterBrandId?.let { "" },
+        catalogUiState.filterCategoryId?.let { "" },
+        catalogUiState.filterStyle,
+        catalogUiState.filterSeason,
+        catalogUiState.filterColor
+    ).size
+    val activeFilterCount = if (pagerState.currentPage == 3) catalogActiveFilterCount else itemActiveFilterCount
 
     // Auto-focus search field when entering search mode
     LaunchedEffect(isSearchMode) {
@@ -170,8 +185,11 @@ fun ItemListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    if (pagerState.currentPage == 2) onNavigateToCoordinateAdd()
-                    else onNavigateToEdit(null)
+                    when (pagerState.currentPage) {
+                        2 -> onNavigateToCoordinateAdd()
+                        3 -> onNavigateToCatalogAdd()
+                        else -> onNavigateToEdit(null)
+                    }
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
@@ -204,13 +222,18 @@ fun ItemListScreen(
                         if (searchMode) {
                             // Search mode: pill TextField + cancel
                             SearchModeBar(
-                                query = uiState.searchQuery,
-                                onQueryChange = { viewModel.search(it) },
+                                query = if (pagerState.currentPage == 3) catalogUiState.searchQuery else uiState.searchQuery,
+                                onQueryChange = {
+                                    if (pagerState.currentPage == 3) catalogViewModel.search(it)
+                                    else viewModel.search(it)
+                                },
                                 onCancel = {
-                                    viewModel.search("")
+                                    if (pagerState.currentPage == 3) catalogViewModel.search("")
+                                    else viewModel.search("")
                                     isSearchMode = false
                                 },
-                                focusRequester = searchFocusRequester
+                                focusRequester = searchFocusRequester,
+                                placeholder = if (pagerState.currentPage == 3) "搜索图鉴" else "搜索服饰"
                             )
                         } else {
                             // Normal mode: search icon | tabs | action icons
@@ -221,18 +244,43 @@ fun ItemListScreen(
                                     coroutineScope.launch { pagerState.animateScrollToPage(index) }
                                 },
                                 showFilterPanel = showFilterPanel,
-                                onFilterClick = { showFilterPanel = !showFilterPanel },
+                                onFilterClick = {
+                                    if (pagerState.currentPage == 1 || pagerState.currentPage == 3) {
+                                        showFilterPanel = !showFilterPanel
+                                    }
+                                },
                                 activeFilterCount = activeFilterCount,
-                                currentSort = if (pagerState.currentPage == 2) coordinateUiState.sortOption else uiState.sortOption,
-                                showPriceOptions = if (pagerState.currentPage == 2) coordinateUiState.showPrice else uiState.showTotalPrice,
+                                currentSort = when (pagerState.currentPage) {
+                                    2 -> coordinateUiState.sortOption
+                                    3 -> catalogUiState.sortOption
+                                    else -> uiState.sortOption
+                                },
+                                showPriceOptions = when (pagerState.currentPage) {
+                                    1 -> uiState.showTotalPrice
+                                    2 -> coordinateUiState.showPrice
+                                    else -> false
+                                },
                                 onSortSelected = {
-                                    if (pagerState.currentPage == 2) coordinateViewModel.setSortOption(it)
-                                    else viewModel.setSortOption(it)
+                                    when (pagerState.currentPage) {
+                                        2 -> coordinateViewModel.setSortOption(it)
+                                        3 -> catalogViewModel.setSortOption(it)
+                                        else -> viewModel.setSortOption(it)
+                                    }
                                 },
                                 onViewModeToggle = {
                                     if (pagerState.currentPage == 2) {
                                         val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
                                         coordinateViewModel.setColumns(next)
+                                    } else if (pagerState.currentPage == 3) {
+                                        val nextMode = when (catalogUiState.viewMode) {
+                                            ViewMode.LIST -> ViewMode.GRID
+                                            ViewMode.GRID -> ViewMode.GALLERY
+                                            ViewMode.GALLERY -> ViewMode.LIST
+                                        }
+                                        catalogViewModel.setViewMode(nextMode)
+                                        if (nextMode != ViewMode.GALLERY) {
+                                            catalogViewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
+                                        }
                                     } else {
                                         val nextMode = when (uiState.viewMode) {
                                             ViewMode.LIST -> ViewMode.GRID
@@ -245,12 +293,18 @@ fun ItemListScreen(
                                         }
                                     }
                                 },
-                                viewModeIcon = if (pagerState.currentPage == 2) {
-                                    when (coordinateUiState.columnsPerRow) {
-                                        1 -> IconKey.ViewAgenda; 2 -> IconKey.GridView; else -> IconKey.Apps
+                                viewModeIcon = when (pagerState.currentPage) {
+                                    2 -> when (coordinateUiState.columnsPerRow) {
+                                        1 -> IconKey.ViewAgenda
+                                        2 -> IconKey.GridView
+                                        else -> IconKey.Apps
                                     }
-                                } else {
-                                    when (uiState.viewMode) {
+                                    3 -> when (catalogUiState.viewMode) {
+                                        ViewMode.LIST -> IconKey.ViewAgenda
+                                        ViewMode.GRID -> IconKey.GridView
+                                        ViewMode.GALLERY -> IconKey.Gallery
+                                    }
+                                    else -> when (uiState.viewMode) {
                                         ViewMode.LIST -> IconKey.ViewAgenda
                                         ViewMode.GRID -> IconKey.GridView
                                         ViewMode.GALLERY -> IconKey.Gallery
@@ -263,13 +317,24 @@ fun ItemListScreen(
             }
 
             // Filter panel
-            AnimatedVisibility(visible = showFilterPanel) {
+            AnimatedVisibility(visible = showFilterPanel && pagerState.currentPage == 1) {
                 FilterPanel(
                     uiState = uiState,
                     onSeasonSelected = { viewModel.filterBySeason(it) },
                     onStyleSelected = { viewModel.filterByStyle(it) },
                     onColorSelected = { viewModel.filterByColor(it) },
                     onBrandSelected = { viewModel.filterByBrand(it) }
+                )
+            }
+
+            AnimatedVisibility(visible = showFilterPanel && pagerState.currentPage == 3) {
+                CatalogFilterPanel(
+                    uiState = catalogUiState,
+                    onBrandSelected = { catalogViewModel.filterByBrand(it) },
+                    onCategorySelected = { catalogViewModel.filterByCategory(it) },
+                    onStyleSelected = { catalogViewModel.filterByStyle(it) },
+                    onSeasonSelected = { catalogViewModel.filterBySeason(it) },
+                    onColorSelected = { catalogViewModel.filterByColor(it) }
                 )
             }
 
@@ -501,6 +566,13 @@ fun ItemListScreen(
                         viewModel = coordinateViewModel
                     )
                 }
+                3 -> {
+                    CatalogListContent(
+                        uiState = catalogUiState,
+                        onNavigateToDetail = onNavigateToCatalogDetail,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
                 }
             }
         }
@@ -522,6 +594,7 @@ private fun NormalModeBar(
     viewModeIcon: IconKey
 ) {
     val tabs = listOf("位置", "服饰", "套装")
+    val pageTabs = listOf("位置", "服饰", "套装", "图鉴")
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -550,7 +623,7 @@ private fun NormalModeBar(
                 )
             }
         ) {
-            tabs.forEachIndexed { index, label ->
+            pageTabs.forEachIndexed { index, label ->
                 Tab(
                     selected = pagerState.currentPage == index,
                     onClick = { onTabSelected(index) },
@@ -623,7 +696,8 @@ private fun SearchModeBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onCancel: () -> Unit,
-    focusRequester: FocusRequester
+    focusRequester: FocusRequester,
+    placeholder: String
 ) {
     Row(
         modifier = Modifier

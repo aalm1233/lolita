@@ -43,6 +43,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun ItemEditScreen(
     itemId: Long?,
     defaultStatus: String = "",
+    prefillCatalogEntryId: Long? = null,
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
     viewModel: ItemEditViewModel = viewModel()
@@ -59,11 +60,12 @@ fun ItemEditScreen(
     )
 
     // Load item data if editing
-    LaunchedEffect(itemId) {
-        viewModel.loadItem(itemId ?: 0L)
-        if (itemId == null && defaultStatus == "WISHED") {
-            viewModel.updateStatus(ItemStatus.WISHED)
-        }
+    LaunchedEffect(itemId, defaultStatus, prefillCatalogEntryId) {
+        viewModel.loadItem(
+            itemId = itemId ?: 0L,
+            defaultStatus = defaultStatus,
+            prefillCatalogEntryId = prefillCatalogEntryId
+        )
     }
 
     // Show error dialog

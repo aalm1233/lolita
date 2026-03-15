@@ -28,6 +28,7 @@ data class BackupData(
     val brands: List<Brand>,
     val categories: List<Category>,
     val coordinates: List<Coordinate>,
+    val catalogEntries: List<CatalogEntry> = emptyList(),
     val items: List<Item>,
     val prices: List<Price>,
     val payments: List<Payment>,
@@ -63,6 +64,7 @@ class BackupManager(
                     brands = database.brandDao().getAllBrandsList(),
                     categories = database.categoryDao().getAllCategoriesList(),
                     coordinates = database.coordinateDao().getAllCoordinatesList(),
+                    catalogEntries = database.catalogEntryDao().getAllCatalogEntriesList(),
                     items = database.itemDao().getAllItemsList(),
                     prices = database.priceDao().getAllPricesList(),
                     payments = database.paymentDao().getAllPaymentsList(),
@@ -114,6 +116,13 @@ class BackupManager(
             sb.appendLine("id,name,description,image_urls,created_at,updated_at")
             database.coordinateDao().getAllCoordinatesList().forEach { c ->
                 sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${escapeCsv(c.imageUrls.joinToString(";"))},${c.createdAt},${c.updatedAt}")
+            }
+
+            // Catalog entries
+            sb.appendLine("\n=== CATALOG_ENTRIES ===")
+            sb.appendLine("id,name,brand_id,category_id,series_name,reference_url,image_urls,colors,style,season,size,source,description,linked_item_id,created_at,updated_at")
+            database.catalogEntryDao().getAllCatalogEntriesList().forEach { entry ->
+                sb.appendLine("${entry.id},${escapeCsv(entry.name)},${entry.brandId ?: ""},${entry.categoryId ?: ""},${escapeCsv(entry.seriesName)},${escapeCsv(entry.referenceUrl)},${escapeCsv(entry.imageUrls.joinToString(";"))},${escapeCsv(entry.colors.joinToString(";"))},${escapeCsv(entry.style)},${escapeCsv(entry.season)},${escapeCsv(entry.size)},${escapeCsv(entry.source)},${escapeCsv(entry.description)},${entry.linkedItemId ?: ""},${entry.createdAt},${entry.updatedAt}")
             }
 
             // Styles
@@ -185,6 +194,7 @@ class BackupManager(
                     brands = database.brandDao().getAllBrandsList(),
                     categories = database.categoryDao().getAllCategoriesList(),
                     coordinates = database.coordinateDao().getAllCoordinatesList(),
+                    catalogEntries = database.catalogEntryDao().getAllCatalogEntriesList(),
                     items = database.itemDao().getAllItemsList(),
                     prices = database.priceDao().getAllPricesList(),
                     payments = database.paymentDao().getAllPaymentsList(),
@@ -258,6 +268,7 @@ class BackupManager(
                 backupData.sources.forEach { database.sourceDao().insertSource(it); imported++ }
                 backupData.coordinates.forEach { database.coordinateDao().insertCoordinate(it); imported++ }
                 backupData.items.forEach { database.itemDao().insertItem(it); imported++ }
+                backupData.catalogEntries.forEach { database.catalogEntryDao().insertCatalogEntry(it); imported++ }
                 backupData.prices.forEach { database.priceDao().insertPrice(it); imported++ }
                 backupData.payments.forEach { database.paymentDao().insertPayment(it.copy(calendarEventId = null)); imported++ }
                 backupData.outfitLogs.forEach { database.outfitLogDao().insertOutfitLog(it); imported++ }
@@ -345,6 +356,7 @@ class BackupManager(
                 brandCount = backupData.brands.size,
                 categoryCount = backupData.categories.size,
                 coordinateCount = backupData.coordinates.size,
+                catalogCount = backupData.catalogEntries.size,
                 itemCount = backupData.items.size,
                 priceCount = backupData.prices.size,
                 paymentCount = backupData.payments.size,
@@ -367,6 +379,7 @@ class BackupManager(
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()
         database.priceDao().deleteAllPrices()
+        database.catalogEntryDao().deleteAllCatalogEntries()
         database.itemDao().deleteAllItems()
         database.locationDao().deleteAllLocations()
         database.coordinateDao().deleteAllCoordinates()
@@ -388,6 +401,9 @@ class BackupManager(
         }
         backupData.coordinates.forEach { coord ->
             coord.imageUrls.forEach { paths.add(it) }
+        }
+        backupData.catalogEntries.forEach { entry ->
+            entry.imageUrls.forEach { paths.add(it) }
         }
         backupData.outfitLogs.forEach { log ->
             log.imageUrls.forEach { paths.add(it) }
@@ -430,6 +446,9 @@ class BackupManager(
                     imageUrls = it.imageUrls.mapNotNull(::toZipRef),
                     sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
                 )
+            },
+            catalogEntries = backupData.catalogEntries.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
             },
             coordinates = backupData.coordinates.map {
                 it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
@@ -549,6 +568,9 @@ class BackupManager(
                     sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
                 )
             },
+            catalogEntries = backupData.catalogEntries.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
+            },
             coordinates = backupData.coordinates.map {
                 it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
             },
@@ -573,6 +595,9 @@ class BackupManager(
                     imageUrls = it.imageUrls.mapNotNull(::remap),
                     sizeChartImageUrl = remap(it.sizeChartImageUrl)
                 )
+            },
+            catalogEntries = backupData.catalogEntries.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
             },
             coordinates = backupData.coordinates.map {
                 it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
@@ -800,6 +825,7 @@ data class BackupPreview(
     val brandCount: Int,
     val categoryCount: Int,
     val coordinateCount: Int,
+    val catalogCount: Int = 0,
     val itemCount: Int,
     val priceCount: Int,
     val paymentCount: Int,
@@ -813,5 +839,5 @@ data class BackupPreview(
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount
+        get() = brandCount + categoryCount + coordinateCount + catalogCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount
 }

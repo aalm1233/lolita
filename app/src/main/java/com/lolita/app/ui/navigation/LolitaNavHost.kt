@@ -35,6 +35,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.lolita.app.ui.screen.catalog.CatalogDetailScreen
+import com.lolita.app.ui.screen.catalog.CatalogEditScreen
 import com.lolita.app.ui.screen.coordinate.CoordinateDetailScreen
 import com.lolita.app.ui.screen.coordinate.CoordinateEditScreen
 import com.lolita.app.ui.screen.price.PriceEditScreen
@@ -208,6 +210,12 @@ fun LolitaNavHost() {
                     },
                     onNavigateToFilteredList = { filterType, filterValue, title ->
                         navController.navigate(Screen.FilteredItemList.createRoute(filterType, filterValue, title))
+                    },
+                    onNavigateToCatalogDetail = { catalogEntryId ->
+                        navController.navigate(Screen.CatalogDetail.createRoute(catalogEntryId))
+                    },
+                    onNavigateToCatalogAdd = {
+                        navController.navigate(Screen.CatalogEdit.createRoute(null))
                     }
                 )
             }
@@ -236,14 +244,62 @@ fun LolitaNavHost() {
                 route = Screen.ItemEdit.route,
                 arguments = listOf(
                     navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
-                    navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" }
+                    navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("prefillCatalogEntryId") { type = NavType.LongType; defaultValue = 0L }
                 )
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
                 val defaultStatus = backStackEntry.arguments?.getString("defaultStatus") ?: ""
+                val prefillCatalogEntryId = backStackEntry.arguments?.getLong("prefillCatalogEntryId") ?: 0L
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
                     defaultStatus = defaultStatus,
+                    prefillCatalogEntryId = if (prefillCatalogEntryId == 0L) null else prefillCatalogEntryId,
+                    onBack = { navController.popBackStack() },
+                    onSaveSuccess = { navController.popBackStack() }
+                )
+            }
+
+            // Catalog Detail
+            composable(
+                route = Screen.CatalogDetail.route,
+                arguments = listOf(navArgument("catalogEntryId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val catalogEntryId = backStackEntry.arguments?.getLong("catalogEntryId") ?: return@composable
+                CatalogDetailScreen(
+                    catalogEntryId = catalogEntryId,
+                    onBack = { navController.popBackStack() },
+                    onEdit = { navController.navigate(Screen.CatalogEdit.createRoute(it)) },
+                    onNavigateToItem = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) },
+                    onAddToWishlist = { entryId ->
+                        navController.navigate(
+                            Screen.ItemEdit.createRoute(
+                                itemId = null,
+                                defaultStatus = "WISHED",
+                                prefillCatalogEntryId = entryId
+                            )
+                        )
+                    },
+                    onAddToOwned = { entryId ->
+                        navController.navigate(
+                            Screen.ItemEdit.createRoute(
+                                itemId = null,
+                                defaultStatus = "OWNED",
+                                prefillCatalogEntryId = entryId
+                            )
+                        )
+                    }
+                )
+            }
+
+            // Catalog Edit
+            composable(
+                route = Screen.CatalogEdit.route,
+                arguments = listOf(navArgument("catalogEntryId") { type = NavType.LongType; defaultValue = 0L })
+            ) { backStackEntry ->
+                val catalogEntryId = backStackEntry.arguments?.getLong("catalogEntryId") ?: 0L
+                CatalogEditScreen(
+                    catalogEntryId = if (catalogEntryId == 0L) null else catalogEntryId,
                     onBack = { navController.popBackStack() },
                     onSaveSuccess = { navController.popBackStack() }
                 )

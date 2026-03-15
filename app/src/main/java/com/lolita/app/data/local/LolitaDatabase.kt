@@ -23,9 +23,10 @@ import com.lolita.app.data.local.entity.*
         Style::class,
         Season::class,
         Location::class,
-        Source::class
+        Source::class,
+        CatalogEntry::class
     ],
-    version = 15,
+    version = 16,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -41,6 +42,7 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun seasonDao(): SeasonDao
     abstract fun locationDao(): LocationDao
     abstract fun sourceDao(): SourceDao
+    abstract fun catalogEntryDao(): CatalogEntryDao
 
     companion object {
         @Volatile
@@ -481,6 +483,39 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_15_16 = object : Migration(15, 16) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS catalog_entries (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        brand_id INTEGER,
+                        category_id INTEGER,
+                        series_name TEXT,
+                        reference_url TEXT,
+                        image_urls TEXT NOT NULL DEFAULT '[]',
+                        colors TEXT NOT NULL DEFAULT '[]',
+                        style TEXT,
+                        season TEXT,
+                        size TEXT,
+                        source TEXT,
+                        description TEXT NOT NULL DEFAULT '',
+                        linked_item_id INTEGER,
+                        created_at INTEGER NOT NULL,
+                        updated_at INTEGER NOT NULL,
+                        FOREIGN KEY(brand_id) REFERENCES brands(id) ON UPDATE NO ACTION ON DELETE SET NULL,
+                        FOREIGN KEY(category_id) REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE SET NULL,
+                        FOREIGN KEY(linked_item_id) REFERENCES items(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                    )"""
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_catalog_entries_name ON catalog_entries(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_catalog_entries_brand_id ON catalog_entries(brand_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_catalog_entries_category_id ON catalog_entries(category_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_catalog_entries_linked_item_id ON catalog_entries(linked_item_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_catalog_entries_updated_at ON catalog_entries(updated_at)")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -489,7 +524,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
                     .build()
                 INSTANCE = instance
                 instance

@@ -1,15 +1,17 @@
 package com.lolita.app.data.repository
 
+import androidx.room.withTransaction
+import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.local.dao.CatalogEntryDao
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.SeasonDao
 import com.lolita.app.data.local.entity.Season
-import com.lolita.app.data.local.LolitaDatabase
-import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 
 class SeasonRepository(
     private val seasonDao: SeasonDao,
     private val itemDao: ItemDao,
+    private val catalogEntryDao: CatalogEntryDao,
     private val database: LolitaDatabase
 ) {
     fun getAllSeasons(): Flow<List<Season>> = seasonDao.getAllSeasons()
@@ -26,9 +28,12 @@ class SeasonRepository(
                     if (oldName in seasons) {
                         val newSeasons = seasons.map { if (it == oldName) season.name else it }
                         item.copy(season = newSeasons.joinToString(","))
-                    } else null
+                    } else {
+                        null
+                    }
                 }
                 if (updated.isNotEmpty()) itemDao.updateItems(updated)
+                catalogEntryDao.updateEntriesSeason(oldName, season.name, System.currentTimeMillis())
             }
         }
     }
@@ -41,9 +46,12 @@ class SeasonRepository(
                 if (season.name in seasons) {
                     val remaining = seasons.filter { it != season.name }
                     item.copy(season = remaining.joinToString(",").ifBlank { null })
-                } else null
+                } else {
+                    null
+                }
             }
             if (updated.isNotEmpty()) itemDao.updateItems(updated)
+            catalogEntryDao.clearEntriesSeason(season.name, System.currentTimeMillis())
             seasonDao.deleteSeason(season)
         }
     }

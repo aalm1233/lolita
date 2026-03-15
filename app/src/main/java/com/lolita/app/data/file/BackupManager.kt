@@ -9,12 +9,17 @@ import com.lolita.app.data.local.entity.*
 import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.data.notification.PaymentReminderScheduler
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
@@ -36,14 +41,20 @@ data class BackupData(
     val appVersion: String = "1.0"
 )
 
+private data class PreparedBackup(
+    val backupData: BackupData,
+    val imageCount: Int,
+    val isZip: Boolean,
+    val stagingDir: File? = null
+)
+
 class BackupManager(
     private val context: Context,
     private val database: LolitaDatabase
 ) {
     private val gson = Gson()
-    private var cachedBackupData: BackupData? = null
+    private var cachedPreparedBackup: PreparedBackup? = null
     private var cachedBackupUri: Uri? = null
-    private var cachedImageCount: Int = 0
 
     suspend fun exportToJson(): Result<Uri> = withContext(Dispatchers.IO) {
         try {
@@ -186,8 +197,9 @@ class BackupManager(
                 )
             }
 
-            val imagePaths = collectImagePaths(backupData)
-            val jsonBytes = gson.toJson(backupData).toByteArray()
+            val imageArchiveNamesByPath = buildImageArchiveNames(collectImagePaths(backupData))
+            val zipBackupData = rewriteImagePathsForZip(backupData, imageArchiveNamesByPath)
+            val jsonBytes = gson.toJson(zipBackupData).toByteArray()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "lolita_backup_${timestamp}.zip"
 
@@ -198,10 +210,10 @@ class BackupManager(
                     zos.write(jsonBytes)
                     zos.closeEntry()
 
-                    imagePaths.forEach { path ->
+                    imageArchiveNamesByPath.forEach { (path, archiveName) ->
                         val file = File(path)
                         if (file.exists()) {
-                            val entryName = "images/${file.name}"
+                            val entryName = "images/$archiveName"
                             zos.putNextEntry(ZipEntry(entryName))
                             file.inputStream().use { it.copyTo(zos) }
                             zos.closeEntry()
@@ -217,28 +229,23 @@ class BackupManager(
     }
 
     suspend fun importFromJson(uri: Uri): Result<ImportSummary> = withContext(Dispatchers.IO) {
+        var activatedImages: ActivatedImages? = null
         try {
-            var imageCount = 0
-            var backupData: BackupData
-
-            if (cachedBackupUri == uri && cachedBackupData != null) {
-                backupData = cachedBackupData!!
-                imageCount = cachedImageCount
-            } else if (isZipFile(uri)) {
-                val (data, count) = parseZipBackup(uri)
-                backupData = remapImagePaths(data)
-                imageCount = count
+            val preparedBackup = prepareBackup(uri, cacheResult = true)
+            val backupData = if (preparedBackup.isZip) {
+                remapZipImageRefsToDirectory(
+                    preparedBackup.backupData,
+                    File(context.filesDir, IMAGE_DIR)
+                )
             } else {
-                val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
-                    ?: return@withContext Result.failure(Exception("无法读取文件"))
-                backupData = gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
+                preparedBackup.backupData
             }
-            backupData = migrateBackupData(backupData)
-            cachedBackupData = null
-            cachedBackupUri = null
-            cachedImageCount = 0
 
             var imported = 0
+
+            if (preparedBackup.isZip) {
+                activatedImages = activateStagedImages(preparedBackup)
+            }
 
             database.withTransaction {
                 clearAllTables()
@@ -257,13 +264,17 @@ class BackupManager(
                 backupData.outfitItemCrossRefs.forEach { database.outfitLogDao().insertOutfitItemCrossRef(it); imported++ }
             }
 
-            // Verify import
             val actualCount = database.itemDao().getItemCount()
             if (actualCount != backupData.items.size) {
-                return@withContext Result.failure(Exception("数据验证失败：期望 ${backupData.items.size} 条服饰，实际 $actualCount 条"))
+                throw Exception("数据验证失败：期望 ${backupData.items.size} 条服饰，实际 $actualCount 条")
             }
 
-            // Recreate calendar events for unpaid payments with due dates
+            activatedImages?.let {
+                commitActivatedImages(it)
+                activatedImages = null
+            }
+            clearPreparedBackupCache()
+
             var calendarFailCount = 0
             try {
                 val unpaidPayments = database.paymentDao().getAllPaymentsList()
@@ -291,7 +302,6 @@ class BackupManager(
                 Log.e("BackupManager", "Failed to recreate calendar events during import", e)
             }
 
-            // Reschedule reminders
             try {
                 val scheduler = PaymentReminderScheduler(context)
                 val allPayments = database.paymentDao().getAllPaymentsList()
@@ -311,33 +321,25 @@ class BackupManager(
                 totalImported = imported,
                 totalSkipped = 0,
                 totalErrors = 0,
-                imageCount = imageCount,
+                imageCount = preparedBackup.imageCount,
                 calendarEventsFailed = if (calendarFailCount > 0) calendarFailCount else 0,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
         } catch (e: Exception) {
+            activatedImages?.let {
+                rollbackActivatedImages(it)
+                activatedImages = null
+            }
+            clearPreparedBackupCache()
             Result.failure(e)
         }
     }
 
     suspend fun previewBackup(uri: Uri): Result<BackupPreview> = withContext(Dispatchers.IO) {
         try {
-            val backupData: BackupData
-            var imageCount = 0
-
-            if (isZipFile(uri)) {
-                val (data, count) = parseZipBackup(uri)
-                backupData = remapImagePaths(data)
-                imageCount = count
-            } else {
-                val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
-                    ?: return@withContext Result.failure(Exception("无法读取文件"))
-                backupData = gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
-            }
-            cachedBackupData = backupData
-            cachedBackupUri = uri
-            cachedImageCount = imageCount
+            val preparedBackup = prepareBackup(uri, cacheResult = true)
+            val backupData = preparedBackup.backupData
 
             Result.success(BackupPreview(
                 brandCount = backupData.brands.size,
@@ -351,7 +353,7 @@ class BackupManager(
                 seasonCount = backupData.seasons.size,
                 locationCount = backupData.locations.size,
                 sourceCount = backupData.sources.size,
-                imageCount = imageCount,
+                imageCount = preparedBackup.imageCount,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -361,12 +363,6 @@ class BackupManager(
     }
 
     private suspend fun clearAllTables() {
-        // Clean up orphaned image files before clearing database
-        val imagesDir = File(context.filesDir, "images")
-        if (imagesDir.exists()) {
-            imagesDir.listFiles()?.forEach { it.delete() }
-        }
-
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()
@@ -402,60 +398,290 @@ class BackupManager(
         return paths
     }
 
+    private fun buildImageArchiveNames(imagePaths: Set<String>): Map<String, String> {
+        return imagePaths
+            .filter { path -> File(path).isFile }
+            .associateWith { path -> buildArchiveImageName(path) }
+    }
+
+    private fun buildArchiveImageName(path: String): String {
+        val extension = File(path).extension
+            .lowercase(Locale.ROOT)
+            .filter { it.isLetterOrDigit() }
+        val digest = MessageDigest.getInstance("SHA-256")
+            .digest(path.toByteArray())
+            .joinToString("") { byte -> "%02x".format(byte) }
+        return if (extension.isNotBlank()) "$digest.$extension" else digest
+    }
+
+    private fun rewriteImagePathsForZip(
+        backupData: BackupData,
+        imageArchiveNamesByPath: Map<String, String>
+    ): BackupData {
+        fun toZipRef(path: String?): String? {
+            if (path == null) return null
+            return imageArchiveNamesByPath[path]?.let { "$ZIP_IMAGE_PREFIX$it" } ?: path
+        }
+
+        return backupData.copy(
+            brands = backupData.brands.map { it.copy(logoUrl = toZipRef(it.logoUrl)) },
+            items = backupData.items.map {
+                it.copy(
+                    imageUrls = it.imageUrls.mapNotNull(::toZipRef),
+                    sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
+                )
+            },
+            coordinates = backupData.coordinates.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
+            },
+            outfitLogs = backupData.outfitLogs.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
+            },
+            locations = backupData.locations.map { it.copy(imageUrl = toZipRef(it.imageUrl)) }
+        )
+    }
+
     private fun isZipFile(uri: Uri): Boolean {
         val bytes = ByteArray(2)
         context.contentResolver.openInputStream(uri)?.use { it.read(bytes) } ?: return false
         return bytes[0] == 0x50.toByte() && bytes[1] == 0x4B.toByte()
     }
 
-    private fun parseZipBackup(uri: Uri): Pair<BackupData, Int> {
-        val imagesDir = File(context.filesDir, "images")
-        if (!imagesDir.exists()) imagesDir.mkdirs()
-        var imageCount = 0
-        var jsonString: String? = null
+    private fun prepareBackup(uri: Uri, cacheResult: Boolean): PreparedBackup {
+        if (cachedBackupUri == uri && cachedPreparedBackup != null) {
+            return cachedPreparedBackup!!
+        }
 
-        context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            ZipInputStream(inputStream).use { zis ->
-                var entry = zis.nextEntry
-                while (entry != null) {
-                    when {
-                        entry.name == "data.json" -> {
-                            jsonString = zis.bufferedReader().readText()
-                        }
-                        entry.name.startsWith("images/") && !entry.isDirectory -> {
-                            val fileName = entry.name.substringAfter("images/")
-                            if (fileName.isNotBlank()) {
-                                File(imagesDir, fileName).outputStream().use { out ->
-                                    zis.copyTo(out)
-                                }
-                                imageCount++
-                            }
-                        }
-                    }
-                    zis.closeEntry()
-                    entry = zis.nextEntry
-                }
-            }
-        } ?: throw Exception("无法读取文件")
+        clearPreparedBackupCache()
 
-        val data = gson.fromJson(migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json")), BackupData::class.java)
-        return Pair(data, imageCount)
+        val prepared = if (isZipFile(uri)) {
+            parseZipBackup(uri)
+        } else {
+            val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
+                ?: throw Exception("无法读取文件")
+            PreparedBackup(
+                backupData = migrateBackupData(
+                    gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
+                ),
+                imageCount = 0,
+                isZip = false
+            )
+        }
+
+        if (cacheResult) {
+            cachedPreparedBackup = prepared
+            cachedBackupUri = uri
+        }
+        return prepared
     }
 
-    private fun remapImagePaths(backupData: BackupData): BackupData {
-        val imagesDir = File(context.filesDir, "images").absolutePath
-        fun remap(path: String?): String? {
-            if (path == null) return null
-            val fileName = File(path).name
-            return "$imagesDir/$fileName"
+    private fun parseZipBackup(uri: Uri): PreparedBackup {
+        val stagingDir = createStagingDir()
+        val stagedImagesDir = File(stagingDir, IMAGE_DIR).apply { mkdirs() }
+        var imageCount = 0
+        var jsonString: String? = null
+        val availableImageNames = mutableSetOf<String>()
+
+        try {
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                ZipInputStream(inputStream).use { zis ->
+                    var entry = zis.nextEntry
+                    while (entry != null) {
+                        when {
+                            entry.name == "data.json" -> {
+                                jsonString = zis.bufferedReader().readText()
+                            }
+                            entry.name.startsWith("images/") && !entry.isDirectory -> {
+                                val fileName = entry.name.substringAfterLast("/")
+                                if (fileName.isNotBlank()) {
+                                    File(stagedImagesDir, fileName).outputStream().use { out ->
+                                        zis.copyTo(out)
+                                    }
+                                    availableImageNames.add(fileName)
+                                    imageCount++
+                                }
+                            }
+                        }
+                        zis.closeEntry()
+                        entry = zis.nextEntry
+                    }
+                }
+            } ?: throw Exception("无法读取文件")
+
+            val data = gson.fromJson(
+                migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json")),
+                BackupData::class.java
+            )
+            return PreparedBackup(
+                backupData = migrateBackupData(
+                    rewriteImagePathsFromZipEntries(data, availableImageNames)
+                ),
+                imageCount = imageCount,
+                isZip = true,
+                stagingDir = stagingDir
+            )
+        } catch (e: Exception) {
+            deleteRecursivelyQuietly(stagingDir)
+            throw e
         }
+    }
+
+    private fun rewriteImagePathsFromZipEntries(
+        backupData: BackupData,
+        availableImageNames: Set<String>
+    ): BackupData {
+        fun toZipRef(path: String?): String? {
+            if (path == null) return null
+            if (path.startsWith(ZIP_IMAGE_PREFIX)) return path
+            val fileName = File(path).name
+            return if (fileName.isNotBlank() && fileName in availableImageNames) {
+                "$ZIP_IMAGE_PREFIX$fileName"
+            } else {
+                path
+            }
+        }
+
+        return backupData.copy(
+            brands = backupData.brands.map { it.copy(logoUrl = toZipRef(it.logoUrl)) },
+            items = backupData.items.map {
+                it.copy(
+                    imageUrls = it.imageUrls.mapNotNull(::toZipRef),
+                    sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
+                )
+            },
+            coordinates = backupData.coordinates.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
+            },
+            outfitLogs = backupData.outfitLogs.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
+            },
+            locations = backupData.locations.map { it.copy(imageUrl = toZipRef(it.imageUrl)) }
+        )
+    }
+
+    private fun remapZipImageRefsToDirectory(backupData: BackupData, imageDir: File): BackupData {
+        fun remap(path: String?): String? {
+            if (path == null || !path.startsWith(ZIP_IMAGE_PREFIX)) return path
+            val fileName = path.removePrefix(ZIP_IMAGE_PREFIX).substringAfterLast("/")
+            return File(imageDir, fileName).absolutePath
+        }
+
         return backupData.copy(
             brands = backupData.brands.map { it.copy(logoUrl = remap(it.logoUrl)) },
-            items = backupData.items.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }, sizeChartImageUrl = remap(it.sizeChartImageUrl)) },
-            coordinates = backupData.coordinates.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
-            outfitLogs = backupData.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map { url -> remap(url) ?: url }) },
+            items = backupData.items.map {
+                it.copy(
+                    imageUrls = it.imageUrls.mapNotNull(::remap),
+                    sizeChartImageUrl = remap(it.sizeChartImageUrl)
+                )
+            },
+            coordinates = backupData.coordinates.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
+            },
+            outfitLogs = backupData.outfitLogs.map {
+                it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
+            },
             locations = backupData.locations.map { it.copy(imageUrl = remap(it.imageUrl)) }
         )
+    }
+
+    private data class ActivatedImages(
+        val liveImagesDir: File,
+        val backupImagesDir: File?,
+        val stagingDir: File
+    )
+
+    private fun activateStagedImages(preparedBackup: PreparedBackup): ActivatedImages {
+        val stagingDir = preparedBackup.stagingDir
+            ?: throw IllegalStateException("备份图片暂存目录不存在")
+        val stagedImagesDir = File(stagingDir, IMAGE_DIR).apply { mkdirs() }
+        val liveImagesDir = File(context.filesDir, IMAGE_DIR)
+        val backupImagesDir = if (liveImagesDir.exists()) {
+            File(context.filesDir, "${IMAGE_DIR}_backup_${UUID.randomUUID()}")
+        } else {
+            null
+        }
+
+        if (backupImagesDir != null) {
+            moveDirectory(liveImagesDir, backupImagesDir)
+        }
+
+        try {
+            moveDirectory(stagedImagesDir, liveImagesDir)
+        } catch (e: Exception) {
+            if (backupImagesDir != null && !liveImagesDir.exists()) {
+                moveDirectory(backupImagesDir, liveImagesDir)
+            }
+            throw e
+        }
+
+        return ActivatedImages(
+            liveImagesDir = liveImagesDir,
+            backupImagesDir = backupImagesDir,
+            stagingDir = stagingDir
+        )
+    }
+
+    private fun commitActivatedImages(activatedImages: ActivatedImages) {
+        deleteRecursivelyQuietly(activatedImages.backupImagesDir)
+        deleteRecursivelyQuietly(activatedImages.stagingDir)
+    }
+
+    private fun rollbackActivatedImages(activatedImages: ActivatedImages) {
+        deleteRecursivelyQuietly(activatedImages.liveImagesDir)
+        activatedImages.backupImagesDir?.let { backupDir ->
+            moveDirectory(backupDir, activatedImages.liveImagesDir)
+        }
+        deleteRecursivelyQuietly(activatedImages.stagingDir)
+    }
+
+    private fun moveDirectory(sourceDir: File, targetDir: File) {
+        targetDir.parentFile?.mkdirs()
+        if (!sourceDir.exists()) {
+            if (!targetDir.exists()) targetDir.mkdirs()
+            return
+        }
+        if (targetDir.exists()) {
+            deleteRecursivelyQuietly(targetDir)
+        }
+        if (sourceDir.renameTo(targetDir)) return
+
+        copyDirectory(sourceDir, targetDir)
+        if (!sourceDir.deleteRecursively()) {
+            throw Exception("无法清理临时目录")
+        }
+    }
+
+    private fun copyDirectory(source: File, target: File) {
+        if (source.isDirectory) {
+            if (!target.exists()) target.mkdirs()
+            source.listFiles()?.forEach { child ->
+                copyDirectory(child, File(target, child.name))
+            }
+        } else {
+            target.parentFile?.mkdirs()
+            source.inputStream().use { input ->
+                target.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+
+    private fun createStagingDir(): File {
+        val root = File(context.filesDir, BACKUP_STAGING_DIR).apply { mkdirs() }
+        return File(root, "staging_${UUID.randomUUID()}").apply { mkdirs() }
+    }
+
+    private fun clearPreparedBackupCache() {
+        cachedPreparedBackup?.stagingDir?.let { deleteRecursivelyQuietly(it) }
+        cachedPreparedBackup = null
+        cachedBackupUri = null
+    }
+
+    private fun deleteRecursivelyQuietly(file: File?) {
+        if (file != null && file.exists()) {
+            file.deleteRecursively()
+        }
     }
 
     private fun createStreamInDownloads(fileName: String, mimeType: String): Pair<Uri, java.io.OutputStream> {
@@ -493,15 +719,43 @@ class BackupManager(
      * Converts old single "imageUrl" field to "imageUrls" list format.
      */
     private fun migrateJsonString(json: String): String {
-        var result = json.replace(Regex("\"color\"\\s*:"), "\"colors\":")
-        // Convert "imageUrl":"some/path" → "imageUrls":["some/path"]
-        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*\"([^\"]+)\"")) { match ->
-            "\"imageUrls\":[\"${match.groupValues[1]}\"]"
+        return try {
+            val root = JsonParser.parseString(json).asJsonObject
+            migrateArray(root, "items", migrateColor = true, migrateImageUrl = true)
+            migrateArray(root, "coordinates", migrateColor = false, migrateImageUrl = true)
+            migrateArray(root, "outfitLogs", migrateColor = false, migrateImageUrl = true)
+            root.toString()
+        } catch (_: Exception) {
+            json
         }
-        // Convert "imageUrl":null or "imageUrl":"" → "imageUrls":[]
-        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*null"), "\"imageUrls\":[]")
-        result = result.replace(Regex("\"imageUrl\"\\s*:\\s*\"\""), "\"imageUrls\":[]")
-        return result
+    }
+
+    private fun migrateArray(
+        root: JsonObject,
+        fieldName: String,
+        migrateColor: Boolean,
+        migrateImageUrl: Boolean
+    ) {
+        val array = root.getAsJsonArray(fieldName) ?: return
+        array.forEach { element ->
+            val obj = element as? JsonObject ?: return@forEach
+
+            if (migrateColor && obj.has("color") && !obj.has("colors")) {
+                obj.add("colors", obj.remove("color"))
+            }
+
+            if (migrateImageUrl && obj.has("imageUrl") && !obj.has("imageUrls")) {
+                val imageUrl = obj.remove("imageUrl")
+                val imageUrls = JsonArray()
+                if (imageUrl != null && !imageUrl.isJsonNull) {
+                    val value = imageUrl.asString
+                    if (value.isNotBlank()) {
+                        imageUrls.add(value)
+                    }
+                }
+                obj.add("imageUrls", imageUrls)
+            }
+        }
     }
 
     /**
@@ -518,11 +772,17 @@ class BackupManager(
                 item
             }
         }
-        return if (fixedItems !== backupData.items) {
+        return if (fixedItems != backupData.items) {
             backupData.copy(items = fixedItems)
         } else {
             backupData
         }
+    }
+
+    companion object {
+        private const val IMAGE_DIR = "images"
+        private const val BACKUP_STAGING_DIR = "backup_staging"
+        private const val ZIP_IMAGE_PREFIX = "zip://images/"
     }
 }
 

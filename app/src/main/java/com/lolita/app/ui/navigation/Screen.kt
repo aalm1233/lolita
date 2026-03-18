@@ -106,6 +106,10 @@ sealed interface Screen {
         override val route = "backup_restore"
     }
 
+    data object SharedLibrarySync : Screen {
+        override val route = "shared_library_sync"
+    }
+
     data object StyleManage : Screen {
         override val route = "style_manage"
     }

@@ -8,11 +8,15 @@ import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.CatalogEntry
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.RemoteBrand
+import com.lolita.app.data.local.entity.RemoteCatalogEntry
+import com.lolita.app.data.local.entity.RemoteCategory
 import com.lolita.app.data.repository.BrandRepository
 import com.lolita.app.data.repository.CatalogRepository
 import com.lolita.app.data.repository.CategoryRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.SeasonRepository
+import com.lolita.app.data.repository.SharedLibrarySyncRepository
 import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.ui.screen.common.SortOption
@@ -33,7 +37,8 @@ data class CatalogCardData(
     val brandName: String?,
     val brandLogoUrl: String?,
     val categoryName: String?,
-    val linkedItemStatus: ItemStatus?
+    val linkedItemStatus: ItemStatus?,
+    val isRemote: Boolean
 )
 
 data class CatalogListUiState(
@@ -65,7 +70,8 @@ data class CatalogDetailUiState(
     val brandName: String? = null,
     val brandLogoUrl: String? = null,
     val categoryName: String? = null,
-    val linkedItemStatus: ItemStatus? = null
+    val linkedItemStatus: ItemStatus? = null,
+    val isRemote: Boolean = false
 )
 
 data class CatalogEditUiState(
@@ -97,7 +103,8 @@ class CatalogListViewModel(
     private val catalogRepository: CatalogRepository = com.lolita.app.di.AppModule.catalogRepository(),
     private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
     private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
-    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val sharedLibrarySyncRepository: SharedLibrarySyncRepository = com.lolita.app.di.AppModule.sharedLibrarySyncRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CatalogListUiState())
@@ -111,25 +118,61 @@ class CatalogListViewModel(
 
     private fun observeCatalogEntries() {
         viewModelScope.launch {
-            combine(
+            val localDataFlow = combine(
                 catalogRepository.getAllCatalogEntries(),
                 brandRepository.getAllBrands(),
                 categoryRepository.getAllCategories(),
                 itemRepository.getAllItems()
             ) { entries, brands, categories, items ->
-                val brandMap = brands.associate { it.id to it.name }
-                val brandLogoMap = brands.associate { it.id to it.logoUrl }
-                val categoryMap = categories.associate { it.id to it.name }
-                val itemStatusMap = items.associate { it.id to it.status }
-                CatalogListData(
+                LocalCatalogData(
                     entries = entries,
-                    brandMap = brandMap,
-                    brandLogoMap = brandLogoMap,
-                    categoryMap = categoryMap,
-                    itemStatusMap = itemStatusMap,
-                    styleOptions = entries.mapNotNull { it.style?.takeIf(String::isNotBlank) }.distinct().sorted(),
-                    seasonOptions = entries.mapNotNull { it.season?.takeIf(String::isNotBlank) }.distinct().sorted(),
-                    colorOptions = entries.flatMap { it.colors }.filter(String::isNotBlank).distinct().sorted()
+                    brandMap = brands.associate { it.id to it.name },
+                    brandLogoMap = brands.associate { it.id to it.logoUrl },
+                    categoryMap = categories.associate { it.id to it.name },
+                    itemStatusMap = items.associate { it.id to it.status }
+                )
+            }
+            val remoteCoreFlow = combine(
+                sharedLibrarySyncRepository.observeRemoteCatalogEntries(),
+                sharedLibrarySyncRepository.observeRemoteBrands(),
+                sharedLibrarySyncRepository.observeRemoteCategories()
+            ) { remoteEntries, remoteBrands, remoteCategories ->
+                RemoteCatalogCore(
+                    entries = remoteEntries,
+                    brandMap = remoteBrands.toSyntheticNameMap(),
+                    brandLogoMap = remoteBrands.toSyntheticLogoMap(),
+                    categoryMap = remoteCategories.toSyntheticCategoryNameMap()
+                )
+            }
+            val remoteRefFlow = combine(
+                sharedLibrarySyncRepository.observeRemoteStyles(),
+                sharedLibrarySyncRepository.observeRemoteSeasons(),
+                sharedLibrarySyncRepository.observeRemoteSources()
+            ) { remoteStyles, remoteSeasons, remoteSources ->
+                CatalogRemoteRefs(
+                    styleNames = remoteStyles.associate { it.publicId to it.name },
+                    seasonNames = remoteSeasons.associate { it.publicId to it.name },
+                    sourceNames = remoteSources.associate { it.publicId to it.name }
+                )
+            }
+
+            combine(localDataFlow, remoteCoreFlow, remoteRefFlow) { localData, remoteCore, remoteRefs ->
+                val mergedEntries = localData.entries + remoteCore.entries.map { remoteEntry ->
+                    remoteEntry.toCatalogEntry(
+                        styleNames = remoteRefs.styleNames,
+                        seasonNames = remoteRefs.seasonNames,
+                        sourceNames = remoteRefs.sourceNames
+                    )
+                }
+                CatalogListData(
+                    entries = mergedEntries,
+                    brandMap = localData.brandMap + remoteCore.brandMap,
+                    brandLogoMap = localData.brandLogoMap + remoteCore.brandLogoMap,
+                    categoryMap = localData.categoryMap + remoteCore.categoryMap,
+                    itemStatusMap = localData.itemStatusMap,
+                    styleOptions = mergedEntries.mapNotNull { it.style?.takeIf(String::isNotBlank) }.distinct().sorted(),
+                    seasonOptions = mergedEntries.mapNotNull { it.season?.takeIf(String::isNotBlank) }.distinct().sorted(),
+                    colorOptions = mergedEntries.flatMap { it.colors }.filter(String::isNotBlank).distinct().sorted()
                 )
             }.collect { data ->
                 val currentState = _uiState.value
@@ -283,7 +326,8 @@ class CatalogListViewModel(
                 brandName = entry.brandId?.let(brandMap::get),
                 brandLogoUrl = entry.brandId?.let(brandLogoMap::get),
                 categoryName = entry.categoryId?.let(categoryMap::get),
-                linkedItemStatus = entry.linkedItemId?.let(itemStatusMap::get)
+                linkedItemStatus = entry.linkedItemId?.let(itemStatusMap::get),
+                isRemote = entry.id < 0L
             )
         }
     }
@@ -314,13 +358,30 @@ class CatalogListViewModel(
         val seasonOptions: List<String>,
         val colorOptions: List<String>
     )
+
+    private data class LocalCatalogData(
+        val entries: List<CatalogEntry>,
+        val brandMap: Map<Long, String>,
+        val brandLogoMap: Map<Long, String?>,
+        val categoryMap: Map<Long, String>,
+        val itemStatusMap: Map<Long, ItemStatus>
+    )
+
+    private data class RemoteCatalogCore(
+        val entries: List<RemoteCatalogEntry>,
+        val brandMap: Map<Long, String>,
+        val brandLogoMap: Map<Long, String?>,
+        val categoryMap: Map<Long, String>
+    )
+
 }
 
 class CatalogDetailViewModel(
     private val catalogRepository: CatalogRepository = com.lolita.app.di.AppModule.catalogRepository(),
     private val brandRepository: BrandRepository = com.lolita.app.di.AppModule.brandRepository(),
     private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
-    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository()
+    private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
+    private val sharedLibrarySyncRepository: SharedLibrarySyncRepository = com.lolita.app.di.AppModule.sharedLibrarySyncRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CatalogDetailUiState())
@@ -331,30 +392,85 @@ class CatalogDetailViewModel(
     fun loadCatalogEntry(catalogEntryId: Long) {
         observeJob?.cancel()
         observeJob = viewModelScope.launch {
-            combine(
-                catalogRepository.getCatalogEntryById(catalogEntryId),
+            val localDataFlow = combine(
+                catalogRepository.getAllCatalogEntries(),
                 brandRepository.getAllBrands(),
                 categoryRepository.getAllCategories(),
                 itemRepository.getAllItems()
-            ) { entry, brands, categories, items ->
-                val brand = entry?.brandId?.let { brandId -> brands.find { it.id == brandId } }
-                val category = entry?.categoryId?.let { categoryId -> categories.find { it.id == categoryId } }
-                val linkedItemStatus = entry?.linkedItemId?.let { linkedItemId ->
-                    items.find { it.id == linkedItemId }?.status
+            ) { entries, brands, categories, items ->
+                CatalogDetailLocalData(
+                    entries = entries,
+                    brands = brands.associateBy { it.id },
+                    categories = categories.associateBy { it.id },
+                    itemStatusMap = items.associate { it.id to it.status }
+                )
+            }
+            val remoteCoreFlow = combine(
+                sharedLibrarySyncRepository.observeRemoteCatalogEntries(),
+                sharedLibrarySyncRepository.observeRemoteBrands(),
+                sharedLibrarySyncRepository.observeRemoteCategories()
+            ) { remoteEntries, remoteBrands, remoteCategories ->
+                CatalogDetailRemoteCore(
+                    entries = remoteEntries,
+                    brands = remoteBrands.associateBy { it.publicId },
+                    categories = remoteCategories.associateBy { it.publicId }
+                )
+            }
+            val remoteRefFlow = combine(
+                sharedLibrarySyncRepository.observeRemoteStyles(),
+                sharedLibrarySyncRepository.observeRemoteSeasons(),
+                sharedLibrarySyncRepository.observeRemoteSources()
+            ) { remoteStyles, remoteSeasons, remoteSources ->
+                CatalogRemoteRefs(
+                    styleNames = remoteStyles.associate { it.publicId to it.name },
+                    seasonNames = remoteSeasons.associate { it.publicId to it.name },
+                    sourceNames = remoteSources.associate { it.publicId to it.name }
+                )
+            }
+
+            combine(localDataFlow, remoteCoreFlow, remoteRefFlow) { localData, remoteCore, remoteRefs ->
+                val localEntry = localData.entries.find { it.id == catalogEntryId }
+                if (localEntry != null) {
+                    val brand = localEntry.brandId?.let(localData.brands::get)
+                    val category = localEntry.categoryId?.let(localData.categories::get)
+                    return@combine CatalogDetailUiState(
+                        entry = localEntry,
+                        isLoading = false,
+                        brandName = brand?.name,
+                        brandLogoUrl = brand?.logoUrl,
+                        categoryName = category?.name,
+                        linkedItemStatus = localEntry.linkedItemId?.let(localData.itemStatusMap::get),
+                        isRemote = false
+                    )
                 }
+
+                val remoteEntry = remoteCore.entries.firstOrNull {
+                    SharedLibrarySyncRepository.syntheticCatalogEntryId(it.publicId) == catalogEntryId
+                }
+                val remoteBrand = remoteEntry?.brandPublicId?.let(remoteCore.brands::get)
+                val remoteCategory = remoteEntry?.categoryPublicId?.let(remoteCore.categories::get)
+                val mappedRemoteEntry = remoteEntry?.toCatalogEntry(
+                    styleNames = remoteRefs.styleNames,
+                    seasonNames = remoteRefs.seasonNames,
+                    sourceNames = remoteRefs.sourceNames
+                )
                 CatalogDetailUiState(
-                    entry = entry,
+                    entry = mappedRemoteEntry,
                     isLoading = false,
-                    brandName = brand?.name,
-                    brandLogoUrl = brand?.logoUrl,
-                    categoryName = category?.name,
-                    linkedItemStatus = linkedItemStatus
+                    brandName = remoteBrand?.name,
+                    brandLogoUrl = remoteBrand?.logoUrl,
+                    categoryName = remoteCategory?.name,
+                    linkedItemStatus = null,
+                    isRemote = mappedRemoteEntry != null
                 )
             }.collect { _uiState.value = it }
         }
     }
 
     suspend fun deleteCatalogEntry(): Result<Unit> {
+        if (_uiState.value.isRemote) {
+            return Result.failure(Exception("Shared catalog entries are read only"))
+        }
         val entry = _uiState.value.entry ?: return Result.failure(Exception("图鉴记录不存在"))
         return try {
             catalogRepository.deleteCatalogEntry(entry)
@@ -363,6 +479,62 @@ class CatalogDetailViewModel(
             Result.failure(e)
         }
     }
+}
+
+private data class CatalogRemoteRefs(
+    val styleNames: Map<String, String>,
+    val seasonNames: Map<String, String>,
+    val sourceNames: Map<String, String>
+)
+
+private data class CatalogDetailLocalData(
+    val entries: List<CatalogEntry>,
+    val brands: Map<Long, Brand>,
+    val categories: Map<Long, Category>,
+    val itemStatusMap: Map<Long, ItemStatus>
+)
+
+private data class CatalogDetailRemoteCore(
+    val entries: List<RemoteCatalogEntry>,
+    val brands: Map<String, RemoteBrand>,
+    val categories: Map<String, RemoteCategory>
+)
+
+private fun RemoteCatalogEntry.toCatalogEntry(
+    styleNames: Map<String, String>,
+    seasonNames: Map<String, String>,
+    sourceNames: Map<String, String>
+): CatalogEntry {
+    return CatalogEntry(
+        id = SharedLibrarySyncRepository.syntheticCatalogEntryId(publicId),
+        name = name,
+        brandId = brandPublicId?.let(SharedLibrarySyncRepository::syntheticRemoteId),
+        categoryId = categoryPublicId?.let(SharedLibrarySyncRepository::syntheticRemoteId),
+        seriesName = seriesName,
+        referenceUrl = referenceUrl,
+        imageUrls = imageUrls,
+        colors = colors,
+        style = stylePublicId?.let(styleNames::get),
+        season = seasonPublicId?.let(seasonNames::get),
+        size = size,
+        source = sourcePublicId?.let(sourceNames::get),
+        description = description,
+        linkedItemId = null,
+        createdAt = updatedAt,
+        updatedAt = updatedAt
+    )
+}
+
+private fun List<RemoteBrand>.toSyntheticNameMap(): Map<Long, String> {
+    return associate { SharedLibrarySyncRepository.syntheticRemoteId(it.publicId) to it.name }
+}
+
+private fun List<RemoteBrand>.toSyntheticLogoMap(): Map<Long, String?> {
+    return associate { SharedLibrarySyncRepository.syntheticRemoteId(it.publicId) to it.logoUrl }
+}
+
+private fun List<RemoteCategory>.toSyntheticCategoryNameMap(): Map<Long, String> {
+    return associate { SharedLibrarySyncRepository.syntheticRemoteId(it.publicId) to it.name }
 }
 
 class CatalogEditViewModel(

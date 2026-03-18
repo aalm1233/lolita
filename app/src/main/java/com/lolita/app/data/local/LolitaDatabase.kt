@@ -24,9 +24,19 @@ import com.lolita.app.data.local.entity.*
         Season::class,
         Location::class,
         Source::class,
-        CatalogEntry::class
+        CatalogEntry::class,
+        SharedLibrarySyncState::class,
+        RemoteBrand::class,
+        RemoteCategory::class,
+        RemoteStyle::class,
+        RemoteSeason::class,
+        RemoteSource::class,
+        RemoteCatalogEntry::class,
+        RemoteSharedCoordinate::class,
+        RemoteSharedItem::class,
+        RemoteSharedPricePlan::class
     ],
-    version = 16,
+    version = 17,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -43,6 +53,7 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
     abstract fun sourceDao(): SourceDao
     abstract fun catalogEntryDao(): CatalogEntryDao
+    abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
 
     companion object {
         @Volatile
@@ -516,6 +527,172 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_16_17 = object : Migration(16, 17) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS shared_library_sync_state (
+                        cache_key TEXT NOT NULL PRIMARY KEY,
+                        backend_base_url TEXT NOT NULL DEFAULT '',
+                        asset_base_url TEXT NOT NULL DEFAULT '',
+                        next_cursor INTEGER NOT NULL DEFAULT 0,
+                        schema_version INTEGER NOT NULL DEFAULT 0,
+                        last_synced_at INTEGER,
+                        last_error TEXT
+                    )
+                    """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_brands (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        logo_url TEXT,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_brands_name ON remote_brands(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_brands_updated_at ON remote_brands(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_categories (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        category_group TEXT NOT NULL DEFAULT 'CLOTHING',
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_categories_name ON remote_categories(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_categories_updated_at ON remote_categories(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_styles (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_styles_name ON remote_styles(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_styles_updated_at ON remote_styles(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_seasons (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_seasons_name ON remote_seasons(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_seasons_updated_at ON remote_seasons(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_sources (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_sources_name ON remote_sources(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_sources_updated_at ON remote_sources(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_catalog_entries (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        brand_public_id TEXT,
+                        category_public_id TEXT,
+                        style_public_id TEXT,
+                        season_public_id TEXT,
+                        source_public_id TEXT,
+                        series_name TEXT,
+                        reference_url TEXT,
+                        image_urls TEXT NOT NULL DEFAULT '[]',
+                        colors TEXT NOT NULL DEFAULT '[]',
+                        size TEXT,
+                        description TEXT NOT NULL DEFAULT '',
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_catalog_entries_name ON remote_catalog_entries(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_catalog_entries_updated_at ON remote_catalog_entries(updated_at)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_catalog_entries_brand_public_id ON remote_catalog_entries(brand_public_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_catalog_entries_category_public_id ON remote_catalog_entries(category_public_id)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_shared_coordinates (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        description TEXT NOT NULL DEFAULT '',
+                        image_urls TEXT NOT NULL DEFAULT '[]',
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_coordinates_name ON remote_shared_coordinates(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_coordinates_updated_at ON remote_shared_coordinates(updated_at)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_shared_items (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        description TEXT NOT NULL DEFAULT '',
+                        brand_public_id TEXT,
+                        category_public_id TEXT,
+                        style_public_id TEXT,
+                        season_public_id TEXT,
+                        source_public_id TEXT,
+                        catalog_entry_public_id TEXT,
+                        coordinate_public_id TEXT,
+                        coordinate_order INTEGER NOT NULL DEFAULT 0,
+                        image_urls TEXT NOT NULL DEFAULT '[]',
+                        colors TEXT NOT NULL DEFAULT '[]',
+                        size TEXT,
+                        size_chart_image_url TEXT,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_name ON remote_shared_items(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_updated_at ON remote_shared_items(updated_at)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_brand_public_id ON remote_shared_items(brand_public_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_category_public_id ON remote_shared_items(category_public_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_catalog_entry_public_id ON remote_shared_items(catalog_entry_public_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_items_coordinate_public_id ON remote_shared_items(coordinate_public_id)")
+
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS remote_shared_price_plans (
+                        public_id TEXT NOT NULL PRIMARY KEY,
+                        shared_item_public_id TEXT NOT NULL,
+                        price_type TEXT NOT NULL DEFAULT 'FULL',
+                        total_price REAL NOT NULL,
+                        deposit REAL,
+                        balance REAL,
+                        deposit_due_at INTEGER,
+                        balance_due_at INTEGER,
+                        updated_at INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_price_plans_shared_item_public_id ON remote_shared_price_plans(shared_item_public_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_remote_shared_price_plans_updated_at ON remote_shared_price_plans(updated_at)")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -524,7 +701,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
                     .build()
                 INSTANCE = instance
                 instance

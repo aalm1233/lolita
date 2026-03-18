@@ -18,6 +18,8 @@
 # 保留 BackupData 和所有 Entity 类字段名（Gson 通过反射访问）
 -keep class com.lolita.app.data.file.BackupData { *; }
 -keep class com.lolita.app.data.local.entity.** { *; }
+-keep class com.lolita.app.data.remote.** { *; }
+-keepattributes Signature,*Annotation*
 # 保留 Gson TypeToken 泛型信息
 -keep class com.google.gson.reflect.TypeToken { *; }
 -keep class * extends com.google.gson.reflect.TypeToken

@@ -94,7 +94,7 @@ fun CatalogDetailScreen(
         )
     }
 
-    if (showDeleteDialog) {
+    if (showDeleteDialog && !uiState.isRemote) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text("确认删除") },
@@ -132,11 +132,13 @@ fun CatalogDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { onEdit(catalogEntryId) }) {
-                        SkinIcon(IconKey.Edit)
-                    }
-                    IconButton(onClick = { showDeleteDialog = true }) {
-                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
+                    if (uiState.entry != null && !uiState.isRemote) {
+                        IconButton(onClick = { onEdit(catalogEntryId) }) {
+                            SkinIcon(IconKey.Edit)
+                        }
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
+                        }
                     }
                 }
             )
@@ -211,11 +213,14 @@ fun CatalogDetailScreen(
                             }
                             CatalogDetailLinkedStatus(
                                 linkedItemId = entry.linkedItemId,
-                                linkedItemStatus = uiState.linkedItemStatus
+                                linkedItemStatus = uiState.linkedItemStatus,
+                                isRemote = uiState.isRemote
                             )
                         }
 
-                        if (entry.linkedItemId == null || uiState.linkedItemStatus == null) {
+                        if (uiState.isRemote) {
+                            CatalogRemoteReadOnlyNotice()
+                        } else if (entry.linkedItemId == null || uiState.linkedItemStatus == null) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -426,8 +431,25 @@ private fun CatalogDetailRowWithBrand(
 @Composable
 private fun CatalogDetailLinkedStatus(
     linkedItemId: Long?,
-    linkedItemStatus: ItemStatus?
+    linkedItemStatus: ItemStatus?,
+    isRemote: Boolean
 ) {
+    if (isRemote) {
+        Surface(
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+            shape = RoundedCornerShape(999.dp)
+        ) {
+            Text(
+                text = "Shared catalog · read only",
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        return
+    }
+
     if (linkedItemId == null || linkedItemStatus == null) {
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
@@ -458,6 +480,22 @@ private fun CatalogDetailLinkedStatus(
             style = MaterialTheme.typography.labelMedium,
             color = color,
             fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+private fun CatalogRemoteReadOnlyNotice() {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+        )
+    ) {
+        Text(
+            text = "This shared catalog entry is synced from the backend. Editing and direct conversion are disabled for now.",
+            modifier = Modifier.padding(12.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

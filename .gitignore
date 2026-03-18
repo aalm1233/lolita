@@ -26,3 +26,16 @@ cross_audit_report.md
 
 # Worktrees
 .worktrees/
+
+# Backend runtime data
+backend/data/
+backend/config.yaml
+backend/.gocache/
+backend/.gomodcache/
+backend/*.exe
+backend/*.log
+
+# Local debugging artifacts
+tmp-*.png
+tmp-*.jpg
+tmp-*.xml

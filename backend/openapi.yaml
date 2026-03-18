@@ -1,0 +1,822 @@
+openapi: 3.0.3
+info:
+  title: Lolita Catalog Backend API
+  version: 1.0.0
+  description: >
+    Admin and sync APIs for the shared Lolita catalog, shared item library,
+    coordinates, and reference price plans.
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Admin Auth
+  - name: Admin Uploads
+  - name: Admin Resources
+  - name: Sync
+paths:
+  /healthz:
+    get:
+      tags: [Sync]
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeObject'
+  /api/admin/auth/login:
+    post:
+      tags: [Admin Auth]
+      summary: Login as the backend administrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeLogin'
+        '401':
+          description: Invalid credentials
+  /api/admin/uploads/images:
+    post:
+      tags: [Admin Uploads]
+      summary: Upload an image asset
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Upload succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeUpload'
+        '400':
+          description: Invalid upload
+        '401':
+          description: Unauthorized
+  /api/admin/{resource}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceParam'
+    get:
+      tags: [Admin Resources]
+      summary: List resources for the given admin collection
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource route not found
+    post:
+      tags: [Admin Resources]
+      summary: Create a resource in the given admin collection
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcePayload'
+      responses:
+        '201':
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '400':
+          description: Invalid payload
+        '401':
+          description: Unauthorized
+        '409':
+          description: Validation or dependency conflict
+  /api/admin/{resource}/{publicId}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceParam'
+      - $ref: '#/components/parameters/PublicIdParam'
+    get:
+      tags: [Admin Resources]
+      summary: Fetch a single admin resource
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+    put:
+      tags: [Admin Resources]
+      summary: Update a single admin resource
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcePayload'
+      responses:
+        '200':
+          description: Resource updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '400':
+          description: Invalid payload
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+        '409':
+          description: Validation or dependency conflict
+    delete:
+      tags: [Admin Resources]
+      summary: Soft delete a single admin resource
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeMessage'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+        '409':
+          description: Validation or dependency conflict
+  /api/admin/{resource}/{publicId}/publish:
+    parameters:
+      - $ref: '#/components/parameters/ResourceParam'
+      - $ref: '#/components/parameters/PublicIdParam'
+    post:
+      tags: [Admin Resources]
+      summary: Publish a resource
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+        '409':
+          description: Dependency conflict
+  /api/admin/{resource}/{publicId}/unpublish:
+    parameters:
+      - $ref: '#/components/parameters/ResourceParam'
+      - $ref: '#/components/parameters/PublicIdParam'
+    post:
+      tags: [Admin Resources]
+      summary: Unpublish a resource
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resource unpublished
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeAny'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+        '409':
+          description: Dependency conflict
+  /api/v1/sync/snapshot:
+    get:
+      tags: [Sync]
+      summary: Get the full published snapshot for app bootstrapping
+      responses:
+        '200':
+          description: Published snapshot payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeSnapshot'
+  /api/v1/sync/changes:
+    get:
+      tags: [Sync]
+      summary: Get incremental sync changes after a cursor
+      parameters:
+        - in: query
+          name: cursor
+          schema:
+            type: integer
+            format: uint64
+            minimum: 0
+          required: false
+          description: Return changes after this cursor.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 200
+          required: false
+          description: Maximum number of change events to inspect in this page.
+      responses:
+        '200':
+          description: Incremental sync payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvelopeChanges'
+        '400':
+          description: Invalid cursor or limit
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ResourceParam:
+      name: resource
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - brands
+          - categories
+          - styles
+          - seasons
+          - sources
+          - catalog-entries
+          - items
+          - coordinates
+          - price-plans
+    PublicIdParam:
+      name: publicId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    EnvelopeAny:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+      required: [code, message]
+    EnvelopeObject:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+      required: [code, message]
+    EnvelopeMessage:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required: [code, message]
+    EnvelopeLogin:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginResponse'
+      required: [code, message, data]
+    EnvelopeUpload:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UploadResponse'
+      required: [code, message, data]
+    EnvelopeSnapshot:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SnapshotPayload'
+      required: [code, message, data]
+    EnvelopeChanges:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ChangesPayload'
+      required: [code, message, data]
+    LoginRequest:
+      type: object
+      required: [password]
+      properties:
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresInSeconds:
+          type: integer
+      required: [token, tokenType, expiresInSeconds]
+    UploadResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          example: /uploads/images/9ce1683c-0ee0-4d9f-91f4-a5d6d97c9ec6.jpg
+      required: [url]
+    SnapshotPayload:
+      type: object
+      properties:
+        schemaVersion:
+          type: integer
+        assetBaseUrl:
+          type: string
+        nextCursor:
+          type: integer
+          format: uint64
+        data:
+          $ref: '#/components/schemas/SnapshotData'
+      required: [schemaVersion, assetBaseUrl, nextCursor, data]
+    ChangesPayload:
+      type: object
+      properties:
+        schemaVersion:
+          type: integer
+        assetBaseUrl:
+          type: string
+        nextCursor:
+          type: integer
+          format: uint64
+        changes:
+          $ref: '#/components/schemas/ChangeBatch'
+      required: [schemaVersion, assetBaseUrl, nextCursor, changes]
+    SnapshotData:
+      type: object
+      properties:
+        brands:
+          type: array
+          items:
+            $ref: '#/components/schemas/Brand'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        styles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Style'
+        seasons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Season'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        catalogEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogEntry'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SharedItem'
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+        pricePlans:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricePlan'
+      required:
+        - brands
+        - categories
+        - styles
+        - seasons
+        - sources
+        - catalogEntries
+        - items
+        - coordinates
+        - pricePlans
+    ChangeBatch:
+      type: object
+      properties:
+        brands:
+          $ref: '#/components/schemas/BrandChangeSet'
+        categories:
+          $ref: '#/components/schemas/CategoryChangeSet'
+        styles:
+          $ref: '#/components/schemas/StyleChangeSet'
+        seasons:
+          $ref: '#/components/schemas/SeasonChangeSet'
+        sources:
+          $ref: '#/components/schemas/SourceChangeSet'
+        catalogEntries:
+          $ref: '#/components/schemas/CatalogEntryChangeSet'
+        items:
+          $ref: '#/components/schemas/SharedItemChangeSet'
+        coordinates:
+          $ref: '#/components/schemas/CoordinateChangeSet'
+        pricePlans:
+          $ref: '#/components/schemas/PricePlanChangeSet'
+      required:
+        - brands
+        - categories
+        - styles
+        - seasons
+        - sources
+        - catalogEntries
+        - items
+        - coordinates
+        - pricePlans
+    ChangeSetBase:
+      type: object
+      properties:
+        deletedPublicIds:
+          type: array
+          items:
+            type: string
+      required: [deletedPublicIds]
+    BrandChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Brand'
+          required: [upserts]
+    CategoryChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+          required: [upserts]
+    StyleChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Style'
+          required: [upserts]
+    SeasonChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Season'
+          required: [upserts]
+    SourceChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Source'
+          required: [upserts]
+    CatalogEntryChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/CatalogEntry'
+          required: [upserts]
+    SharedItemChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/SharedItem'
+          required: [upserts]
+    CoordinateChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Coordinate'
+          required: [upserts]
+    PricePlanChangeSet:
+      allOf:
+        - $ref: '#/components/schemas/ChangeSetBase'
+        - type: object
+          properties:
+            upserts:
+              type: array
+              items:
+                $ref: '#/components/schemas/PricePlan'
+          required: [upserts]
+    Brand:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        logoUrl:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, updatedAt]
+    Category:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        group:
+          type: string
+          enum: [CLOTHING, ACCESSORY]
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, group, updatedAt]
+    Style:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, updatedAt]
+    Season:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, updatedAt]
+    Source:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, updatedAt]
+    CatalogEntry:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        brandPublicId:
+          type: string
+          format: uuid
+        categoryPublicId:
+          type: string
+          format: uuid
+        stylePublicId:
+          type: string
+          format: uuid
+        seasonPublicId:
+          type: string
+          format: uuid
+        sourcePublicId:
+          type: string
+          format: uuid
+        seriesName:
+          type: string
+        referenceUrl:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        colors:
+          type: array
+          items:
+            type: string
+        size:
+          type: string
+        description:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, imageUrls, colors, description, updatedAt]
+    SharedItem:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        brandPublicId:
+          type: string
+          format: uuid
+        categoryPublicId:
+          type: string
+          format: uuid
+        stylePublicId:
+          type: string
+          format: uuid
+        seasonPublicId:
+          type: string
+          format: uuid
+        sourcePublicId:
+          type: string
+          format: uuid
+        catalogEntryPublicId:
+          type: string
+          format: uuid
+        coordinatePublicId:
+          type: string
+          format: uuid
+        coordinateOrder:
+          type: integer
+        imageUrls:
+          type: array
+          items:
+            type: string
+        colors:
+          type: array
+          items:
+            type: string
+        size:
+          type: string
+        sizeChartImageUrl:
+          type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required:
+        - publicId
+        - name
+        - description
+        - coordinateOrder
+        - imageUrls
+        - colors
+        - updatedAt
+    Coordinate:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, name, description, imageUrls, updatedAt]
+    PricePlan:
+      type: object
+      properties:
+        publicId:
+          type: string
+          format: uuid
+        sharedItemPublicId:
+          type: string
+          format: uuid
+        priceType:
+          type: string
+          enum: [FULL, DEPOSIT_BALANCE]
+        totalPrice:
+          type: number
+          format: double
+        deposit:
+          type: number
+          format: double
+        balance:
+          type: number
+          format: double
+        depositDueAt:
+          type: integer
+          format: int64
+        balanceDueAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+      required: [publicId, sharedItemPublicId, priceType, totalPrice, updatedAt]
+    ResourcePayload:
+      description: Generic placeholder for admin resource create and update payloads.
+      oneOf:
+        - type: object
+          properties:
+            name:
+              type: string
+        - type: object
+          properties:
+            sharedItemPublicId:
+              type: string
+              format: uuid
+            priceType:
+              type: string

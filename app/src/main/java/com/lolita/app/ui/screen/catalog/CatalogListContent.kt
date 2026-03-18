@@ -373,7 +373,7 @@ private fun CatalogListCard(
                     )
                 }
                 CatalogMetaRow(data = data)
-                CatalogTagFlow(entry = entry, linkedItemStatus = data.linkedItemStatus)
+                CatalogTagFlow(entry = entry, linkedItemStatus = data.linkedItemStatus, isRemote = data.isRemote)
                 if (entry.description.isNotBlank()) {
                     Text(
                         text = entry.description,
@@ -444,6 +444,9 @@ private fun CatalogGridCard(
                 if (data.linkedItemStatus != null) {
                     CatalogLinkedBadge(status = data.linkedItemStatus)
                 }
+                if (data.isRemote) {
+                    CatalogSharedBadge()
+                }
             }
         }
     }
@@ -469,7 +472,7 @@ private fun CatalogGalleryCard(
             if (entry.imageUrls.isNotEmpty()) {
                 AsyncImage(
                     model = ImageRequest.Builder(context)
-                        .data(java.io.File(entry.imageUrls.first()))
+                        .data(resolveCatalogImageModel(entry.imageUrls.first()))
                         .size(imageSizePx)
                         .crossfade(true)
                         .build(),
@@ -498,6 +501,16 @@ private fun CatalogGalleryCard(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+            ) {
+                if (data.isRemote) {
+                    CatalogSharedBadge()
                 }
             }
 
@@ -550,7 +563,7 @@ private fun CatalogThumbnail(
     if (imagePath != null) {
         AsyncImage(
             model = ImageRequest.Builder(context)
-                .data(java.io.File(imagePath))
+                .data(resolveCatalogImageModel(imagePath))
                 .size(imageSizePx)
                 .crossfade(true)
                 .build(),
@@ -628,12 +641,16 @@ private fun CatalogMetaRow(data: CatalogCardData) {
 @Composable
 private fun CatalogTagFlow(
     entry: CatalogEntry,
-    linkedItemStatus: ItemStatus?
+    linkedItemStatus: ItemStatus?,
+    isRemote: Boolean
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
+        if (isRemote) {
+            CatalogSharedBadge()
+        }
         if (!entry.style.isNullOrBlank()) {
             CatalogTagChip(text = entry.style)
         }
@@ -675,6 +692,22 @@ private fun CatalogTagFlow(
 }
 
 @Composable
+private fun CatalogSharedBadge() {
+    Surface(
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+        shape = RoundedCornerShape(999.dp)
+    ) {
+        Text(
+            text = "Shared",
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
 private fun CatalogTagChip(text: String?) {
     if (text.isNullOrBlank()) return
     Surface(
@@ -708,5 +741,13 @@ private fun CatalogLinkedBadge(status: ItemStatus) {
             color = color,
             fontWeight = FontWeight.SemiBold
         )
+    }
+}
+
+private fun resolveCatalogImageModel(imagePath: String): Any {
+    return if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        imagePath
+    } else {
+        java.io.File(imagePath)
     }
 }

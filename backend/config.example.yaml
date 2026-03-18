@@ -1,0 +1,21 @@
+server:
+  addr: ":8080"
+  mode: debug
+  public_base_url: "http://localhost:8080"
+
+database:
+  path: "./data/lolita-backend.db"
+
+auth:
+  jwt_secret: "change-me"
+  admin_password_hash: ""
+  token_ttl_hours: 168
+
+upload:
+  path: "./data/uploads/images"
+  max_size_bytes: 10485760
+  allowed_types:
+    - jpg
+    - jpeg
+    - png
+    - webp

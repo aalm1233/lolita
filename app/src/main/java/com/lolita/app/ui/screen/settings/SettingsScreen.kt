@@ -43,6 +43,7 @@ fun SettingsScreen(
     onNavigateToAttributeManage: () -> Unit,
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
+    onNavigateToSharedLibrarySync: () -> Unit = {},
     onNavigateToThemeSelect: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel()
@@ -115,6 +116,14 @@ fun SettingsScreen(
             )
 
             // 穿搭提醒设置
+            SettingsMenuItem(
+                title = "Shared Library Sync",
+                description = "Connect to the backend and refresh the shared catalog cache",
+                icon = Icons.Default.CloudDownload,
+                iconTint = Color(0xFF4DB6AC),
+                onClick = onNavigateToSharedLibrarySync
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "穿搭提醒",

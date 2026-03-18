@@ -72,6 +72,13 @@ class AppPreferences(private val context: Context) {
         context.dataStore.edit { it[VIEW_MODE] = mode.name }
     }
 
+    val sharedLibraryBaseUrl: Flow<String> = context.dataStore.data
+        .map { it[SHARED_LIBRARY_BASE_URL] ?: "" }
+
+    suspend fun setSharedLibraryBaseUrl(url: String) {
+        context.dataStore.edit { it[SHARED_LIBRARY_BASE_URL] = url.trim() }
+    }
+
     companion object {
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
@@ -80,5 +87,6 @@ class AppPreferences(private val context: Context) {
         private val NICKNAME = stringPreferencesKey("nickname")
         private val AVATAR_PATH = stringPreferencesKey("avatar_path")
         private val VIEW_MODE = stringPreferencesKey("view_mode")
+        private val SHARED_LIBRARY_BASE_URL = stringPreferencesKey("shared_library_base_url")
     }
 }

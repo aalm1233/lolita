@@ -67,6 +67,7 @@ import com.lolita.app.ui.screen.stats.StatsPageScreen
 import com.lolita.app.ui.screen.item.LocationDetailScreen
 import com.lolita.app.ui.screen.settings.LocationManageScreen
 import com.lolita.app.ui.screen.settings.SourceManageScreen
+import com.lolita.app.ui.screen.settings.SharedLibrarySyncScreen
 
 interface BottomNavItem {
     val screen: Screen
@@ -474,6 +475,7 @@ fun LolitaNavHost() {
                     onNavigateToAttributeManage = { navController.navigate(Screen.AttributeManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
+                    onNavigateToSharedLibrarySync = { navController.navigate(Screen.SharedLibrarySync.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
                 )
             }
@@ -529,6 +531,11 @@ fun LolitaNavHost() {
             // Backup & Restore
             composable(Screen.BackupRestore.route) {
                 BackupRestoreScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Shared Library Sync
+            composable(Screen.SharedLibrarySync.route) {
+                SharedLibrarySyncScreen(onBack = { navController.popBackStack() })
             }
 
             // Taobao Import

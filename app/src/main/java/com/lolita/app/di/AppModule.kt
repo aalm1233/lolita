@@ -33,6 +33,11 @@ object AppModule {
     private val _catalogRepository by lazy { CatalogRepository(database.catalogEntryDao()) }
     fun catalogRepository() = _catalogRepository
 
+    private val _sharedLibrarySyncRepository by lazy {
+        SharedLibrarySyncRepository(database, database.sharedLibrarySyncDao())
+    }
+    fun sharedLibrarySyncRepository() = _sharedLibrarySyncRepository
+
     private val _brandRepository by lazy {
         BrandRepository(database.brandDao(), database.itemDao(), database.catalogEntryDao())
     }

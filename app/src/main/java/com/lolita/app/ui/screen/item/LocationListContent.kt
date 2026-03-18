@@ -36,25 +36,11 @@ fun LocationListContent(
         contentPadding = PaddingValues(vertical = 12.dp),
         flingBehavior = rememberSkinFlingBehavior()
     ) {
-        itemsIndexed(locations, key = { _, loc -> loc.id }) { index, location ->
-            SkinClickableBox(
-                onClick = { onLocationClick(location.id) },
-                modifier = Modifier.skinItemAppear(index)
-            ) {
-                LocationCardItem(
-                    name = location.name,
-                    description = location.description,
-                    imageUrl = location.imageUrl,
-                    itemCount = locationItemCounts[location.id] ?: 0,
-                    itemImages = locationItemImages[location.id] ?: emptyList()
-                )
-            }
-        }
         if (unassignedItemCount > 0) {
             item(key = "unassigned") {
                 SkinClickableBox(
                     onClick = { onLocationClick(-1L) },
-                    modifier = Modifier.skinItemAppear(locations.size)
+                    modifier = Modifier.skinItemAppear(0)
                 ) {
                     LocationCardItem(
                         name = "未分配",
@@ -65,6 +51,20 @@ fun LocationListContent(
                         isUnassigned = true
                     )
                 }
+            }
+        }
+        itemsIndexed(locations, key = { _, loc -> loc.id }) { index, location ->
+            SkinClickableBox(
+                onClick = { onLocationClick(location.id) },
+                modifier = Modifier.skinItemAppear(index + if (unassignedItemCount > 0) 1 else 0)
+            ) {
+                LocationCardItem(
+                    name = location.name,
+                    description = location.description,
+                    imageUrl = location.imageUrl,
+                    itemCount = locationItemCounts[location.id] ?: 0,
+                    itemImages = locationItemImages[location.id] ?: emptyList()
+                )
             }
         }
     }

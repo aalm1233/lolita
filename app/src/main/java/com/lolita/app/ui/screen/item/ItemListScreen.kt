@@ -598,13 +598,13 @@ private fun NormalModeBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 2.dp),
+            .padding(horizontal = 2.dp, vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Search icon (left)
         IconButton(
             onClick = onSearchClick,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(36.dp)
         ) {
             SkinIcon(IconKey.Search, tint = Color.White)
         }
@@ -612,7 +612,9 @@ private fun NormalModeBar(
         // Tabs (centered)
         TabRow(
             selectedTabIndex = pagerState.currentPage,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 2.dp),
             containerColor = Color.Transparent,
             contentColor = Color.White,
             divider = {},
@@ -627,12 +629,15 @@ private fun NormalModeBar(
                 Tab(
                     selected = pagerState.currentPage == index,
                     onClick = { onTabSelected(index) },
-                    modifier = Modifier.height(36.dp),
+                    modifier = Modifier.height(34.dp),
                     text = {
                         Text(
                             text = label,
-                            fontSize = 14.sp,
-                            fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal
+                            fontSize = 12.sp,
+                            fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Medium,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Clip
                         )
                     },
                     selectedContentColor = Color.White,
@@ -645,7 +650,7 @@ private fun NormalModeBar(
         Box {
             IconButton(
                 onClick = onFilterClick,
-                modifier = Modifier.size(36.dp)
+                modifier = Modifier.size(32.dp)
             ) {
                 SkinIcon(
                     IconKey.FilterList,
@@ -677,14 +682,14 @@ private fun NormalModeBar(
             currentSort = currentSort,
             showPriceOptions = showPriceOptions,
             onSortSelected = onSortSelected,
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(32.dp),
             iconTint = Color.White.copy(alpha = 0.8f)
         )
 
         // View mode toggle
         IconButton(
             onClick = onViewModeToggle,
-            modifier = Modifier.size(36.dp)
+            modifier = Modifier.size(32.dp)
         ) {
             SkinIcon(viewModeIcon, tint = Color.White.copy(alpha = 0.8f))
         }

@@ -117,8 +117,8 @@ fun SettingsScreen(
 
             // 穿搭提醒设置
             SettingsMenuItem(
-                title = "Shared Library Sync",
-                description = "Connect to the backend and refresh the shared catalog cache",
+                title = "共享资料同步",
+                description = "连接后端并刷新共享图鉴缓存",
                 icon = Icons.Default.CloudDownload,
                 iconTint = Color(0xFF4DB6AC),
                 onClick = onNavigateToSharedLibrarySync
@@ -292,13 +292,22 @@ private fun ProfileSection(
                 val formattedSpent = NumberFormat.getNumberInstance(Locale.CHINA)
                     .apply { maximumFractionDigits = 0 }
                     .format(uiState.totalSpent)
-                Text(
-                    text = "服饰 ${uiState.totalItems}件 | 图鉴 ${uiState.totalCatalogEntries}条 | 套装 ${uiState.totalCoordinates}套 | 总花费 ¥$formattedSpent",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(
+                        text = "服饰 ${uiState.totalItems}件 | 图鉴 ${uiState.totalCatalogEntries}条 | 套装 ${uiState.totalCoordinates}套",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "总花费 ¥$formattedSpent",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

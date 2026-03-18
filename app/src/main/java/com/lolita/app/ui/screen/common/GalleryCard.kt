@@ -33,7 +33,17 @@ fun GalleryCard(
 ) {
     val item = data.item
     val brandName = data.brandName
+    val categoryName = data.categoryName
     val cardShape = LolitaSkin.current.cardShape
+    val detailLine = remember(item.colors, item.size, categoryName) {
+        listOfNotNull(
+            categoryName?.takeIf { it.isNotBlank() },
+            item.size?.takeIf { it.isNotBlank() },
+            parseColorsJson(item.colors).firstOrNull()?.takeIf { it.isNotBlank() }
+        )
+            .distinct()
+            .joinToString(" · ")
+    }
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -93,7 +103,7 @@ fun GalleryCard(
                 }
             }
 
-            // Gradient overlay with name and brand
+            // Gradient overlay with name and quick identifiers
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,6 +129,15 @@ fun GalleryCard(
                             text = brandName,
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.8f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (detailLine.isNotEmpty()) {
+                        Text(
+                            text = detailLine,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.72f),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )

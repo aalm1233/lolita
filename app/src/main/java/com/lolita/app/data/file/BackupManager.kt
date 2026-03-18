@@ -375,6 +375,16 @@ class BackupManager(
     }
 
     private suspend fun clearAllTables() {
+        database.sharedLibrarySyncDao().clearPricePlans()
+        database.sharedLibrarySyncDao().clearSharedItems()
+        database.sharedLibrarySyncDao().clearCoordinates()
+        database.sharedLibrarySyncDao().clearCatalogEntries()
+        database.sharedLibrarySyncDao().clearSources()
+        database.sharedLibrarySyncDao().clearSeasons()
+        database.sharedLibrarySyncDao().clearStyles()
+        database.sharedLibrarySyncDao().clearCategories()
+        database.sharedLibrarySyncDao().clearBrands()
+        database.sharedLibrarySyncDao().deleteSyncState()
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()
@@ -746,12 +756,23 @@ class BackupManager(
     private fun migrateJsonString(json: String): String {
         return try {
             val root = JsonParser.parseString(json).asJsonObject
+            ensureArrayField(root, "catalogEntries")
+            ensureArrayField(root, "styles")
+            ensureArrayField(root, "seasons")
+            ensureArrayField(root, "locations")
+            ensureArrayField(root, "sources")
             migrateArray(root, "items", migrateColor = true, migrateImageUrl = true)
             migrateArray(root, "coordinates", migrateColor = false, migrateImageUrl = true)
             migrateArray(root, "outfitLogs", migrateColor = false, migrateImageUrl = true)
             root.toString()
         } catch (_: Exception) {
             json
+        }
+    }
+
+    private fun ensureArrayField(root: JsonObject, fieldName: String) {
+        if (!root.has(fieldName) || root.get(fieldName).isJsonNull) {
+            root.add(fieldName, JsonArray())
         }
     }
 

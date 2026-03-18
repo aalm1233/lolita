@@ -108,7 +108,7 @@ class SharedLibrarySyncViewModel(
             _uiState.value = _uiState.value.copy(
                 savedBackendBaseUrl = url,
                 hasUserEditedUrl = false,
-                message = "Backend URL saved."
+                message = "后端地址已保存。"
             )
         }
     }
@@ -121,17 +121,17 @@ class SharedLibrarySyncViewModel(
                 appPreferences.setSharedLibraryBaseUrl(url)
                 repository.sync(url, forceFull = forceFull)
             }.onSuccess { result ->
-                val modeLabel = if (result.fullSync) "Full sync" else "Incremental sync"
+                val modeLabel = if (result.fullSync) "全量重建" else "增量同步"
                 _uiState.value = _uiState.value.copy(
                     isSyncing = false,
                     savedBackendBaseUrl = url,
                     hasUserEditedUrl = false,
-                    message = "$modeLabel completed. Cursor ${result.nextCursor}."
+                    message = "$modeLabel 已完成，当前游标 ${result.nextCursor}。"
                 )
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isSyncing = false,
-                    message = error.message ?: "Sync failed."
+                    message = error.message ?: "同步失败。"
                 )
             }
         }
@@ -145,12 +145,12 @@ class SharedLibrarySyncViewModel(
             }.onSuccess {
                 _uiState.value = _uiState.value.copy(
                     isClearing = false,
-                    message = "Shared library cache cleared."
+                    message = "共享资料缓存已清空。"
                 )
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isClearing = false,
-                    message = error.message ?: "Clearing cache failed."
+                    message = error.message ?: "清空缓存失败。"
                 )
             }
         }
@@ -198,12 +198,12 @@ fun SharedLibrarySyncScreen(
     Scaffold(
         topBar = {
             GradientTopAppBar(
-                title = { Text("Shared Library Sync") },
+                title = { Text("共享资料同步") },
                 navigationIcon = {
                     TextButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "返回"
                         )
                     }
                 }
@@ -231,11 +231,11 @@ fun SharedLibrarySyncScreen(
             StatusSection(uiState.syncState, uiState.savedBackendBaseUrl)
             SummarySection(uiState.cacheSummary)
             PreviewSection(
-                title = "Recently synced shared items",
+                title = "最近同步的共享服饰",
                 items = uiState.recentSharedItems
             )
             PreviewSection(
-                title = "Recently synced catalog entries",
+                title = "最近同步的共享图鉴",
                 items = uiState.recentCatalogEntries
             )
         }
@@ -244,11 +244,10 @@ fun SharedLibrarySyncScreen(
     if (showClearDialog) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
-            title = { Text("Clear shared cache?") },
+            title = { Text("清空共享缓存？") },
             text = {
                 Text(
-                    "This only removes synchronized shared-library data. " +
-                        "It will not touch your own wardrobe, catalog, payments, or outfit records."
+                    "这只会删除已同步的共享资料缓存，不会影响你自己的衣橱、图鉴、付款记录和穿搭记录。"
                 )
             },
             confirmButton = {
@@ -258,12 +257,12 @@ fun SharedLibrarySyncScreen(
                         viewModel.clearCache()
                     }
                 ) {
-                    Text("Clear")
+                    Text("清空")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearDialog = false }) {
-                    Text("Cancel")
+                    Text("取消")
                 }
             }
         )
@@ -286,12 +285,12 @@ private fun UrlSection(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            SectionTitle("Backend")
+            SectionTitle("后端地址")
             OutlinedTextField(
                 value = uiState.backendBaseUrl,
                 onValueChange = onBackendUrlChange,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Example: http://192.168.1.10:8080") },
+                label = { Text("例如：http://192.168.1.10:8080") },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Link,
@@ -306,7 +305,7 @@ private fun UrlSection(
                     onClick = onSave,
                     enabled = !uiState.isSyncing && !uiState.isClearing
                 ) {
-                    Text("Save URL")
+                    Text("保存地址")
                 }
 
                 Button(
@@ -325,7 +324,7 @@ private fun UrlSection(
                         contentDescription = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Sync")
+                    Text("同步")
                 }
             }
 
@@ -339,7 +338,7 @@ private fun UrlSection(
                         contentDescription = null
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Full rebuild")
+                    Text("全量重建")
                 }
 
                 TextButton(
@@ -352,7 +351,7 @@ private fun UrlSection(
                         tint = Color(0xFFD32F2F)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Clear cache", color = Color(0xFFD32F2F))
+                    Text("清空缓存", color = Color(0xFFD32F2F))
                 }
             }
         }
@@ -371,14 +370,14 @@ private fun StatusSection(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            SectionTitle("Status")
-            DetailLine("Saved backend URL", savedBackendBaseUrl.ifBlank { "Not set" })
-            DetailLine("Asset base URL", syncState?.assetBaseUrl?.ifBlank { "Not synced yet" } ?: "Not synced yet")
-            DetailLine("Schema version", syncState?.schemaVersion?.toString() ?: "0")
-            DetailLine("Cursor", syncState?.nextCursor?.toString() ?: "0")
-            DetailLine("Last synced", formatTimestamp(syncState?.lastSyncedAt))
+            SectionTitle("同步状态")
+            DetailLine("已保存的后端地址", savedBackendBaseUrl.ifBlank { "未设置" })
+            DetailLine("资源地址", syncState?.assetBaseUrl?.ifBlank { "尚未同步" } ?: "尚未同步")
+            DetailLine("协议版本", syncState?.schemaVersion?.toString() ?: "0")
+            DetailLine("当前游标", syncState?.nextCursor?.toString() ?: "0")
+            DetailLine("上次同步时间", formatTimestamp(syncState?.lastSyncedAt))
             syncState?.lastError?.takeIf { it.isNotBlank() }?.let { lastError ->
-                DetailLine("Last error", lastError, MaterialTheme.colorScheme.error)
+                DetailLine("最近一次错误", lastError, MaterialTheme.colorScheme.error)
             }
         }
     }
@@ -393,16 +392,16 @@ private fun SummarySection(summary: SharedLibraryCacheSummary) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            SectionTitle("Cache Summary")
-            SummaryLine("Brands", summary.brandCount)
-            SummaryLine("Categories", summary.categoryCount)
-            SummaryLine("Styles", summary.styleCount)
-            SummaryLine("Seasons", summary.seasonCount)
-            SummaryLine("Sources", summary.sourceCount)
-            SummaryLine("Catalog entries", summary.catalogCount)
-            SummaryLine("Coordinates", summary.coordinateCount)
-            SummaryLine("Shared items", summary.itemCount)
-            SummaryLine("Price plans", summary.pricePlanCount)
+            SectionTitle("缓存概览")
+            SummaryLine("品牌", summary.brandCount)
+            SummaryLine("类别", summary.categoryCount)
+            SummaryLine("风格", summary.styleCount)
+            SummaryLine("季节", summary.seasonCount)
+            SummaryLine("来源", summary.sourceCount)
+            SummaryLine("图鉴", summary.catalogCount)
+            SummaryLine("套装", summary.coordinateCount)
+            SummaryLine("共享服饰", summary.itemCount)
+            SummaryLine("价格档期", summary.pricePlanCount)
         }
     }
 }
@@ -422,7 +421,7 @@ private fun PreviewSection(
             SectionTitle(title)
             if (items.isEmpty()) {
                 Text(
-                    text = "No synchronized data yet.",
+                    text = "还没有同步数据。",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -491,7 +490,7 @@ private fun SummaryLine(label: String, count: Int) {
 
 private fun formatTimestamp(value: Long?): String {
     if (value == null || value <= 0L) {
-        return "Never"
+        return "从未同步"
     }
     return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(value))
 }

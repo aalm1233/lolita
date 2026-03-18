@@ -324,7 +324,6 @@ class ItemListViewModel(
                     showPrice = showPrice
                 )
             }
-            .shuffled()
     }
 
     fun filterByStatus(status: ItemStatus?) {
@@ -537,7 +536,16 @@ class ItemListViewModel(
 
     fun shuffleGalleryItems() {
         _uiState.update {
-            it.copy(galleryCardDataList = buildGalleryCardDataList(it.filteredItems, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice))
+            it.copy(
+                galleryCardDataList = buildGalleryCardDataList(
+                    it.filteredItems,
+                    it.brandNames,
+                    it.brandLogoUrls,
+                    it.categoryNames,
+                    it.itemPrices,
+                    it.showTotalPrice
+                ).shuffled()
+            )
         }
     }
 

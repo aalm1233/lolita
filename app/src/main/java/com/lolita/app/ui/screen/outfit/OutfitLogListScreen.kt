@@ -9,10 +9,6 @@ import androidx.compose.foundation.lazy.items
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,9 +21,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -124,16 +120,16 @@ fun OutfitLogListScreen(
                     }
                 } else if (uiState.allLogs.isEmpty()) {
                     item {
-                        EmptyState(
-                            icon = Icons.Default.Create,
+                        SkinEmptyState(
+                            iconKey = IconKey.Edit,
                             title = "还没有穿搭日记",
                             subtitle = "记录每天的穿搭"
                         )
                     }
                 } else if (uiState.logs.isEmpty()) {
                     item {
-                        EmptyState(
-                            icon = Icons.Default.Search,
+                        SkinEmptyState(
+                            iconKey = IconKey.Search,
                             title = "无搜索结果",
                             subtitle = "试试其他关键词"
                         )
@@ -251,9 +247,8 @@ private fun OutfitLogListItemCard(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Default.PhotoCamera,
-                                contentDescription = null,
+                            SkinIcon(
+                                key = IconKey.Camera,
                                 modifier = Modifier.size(14.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )

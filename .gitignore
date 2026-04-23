@@ -39,3 +39,8 @@ backend/*.log
 tmp-*.png
 tmp-*.jpg
 tmp-*.xml
+
+
+.codex_tmp/
+
+.kotlin/

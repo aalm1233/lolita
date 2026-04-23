@@ -83,6 +83,7 @@ https://poi.apache.org/
 - Noto Serif SC: https://github.com/notofonts/noto-cjk
 - Playfair Display: https://github.com/clauseggers/Playfair-Display
 - Pacifico: https://github.com/googlefonts/Pacifico
+- Cormorant Garamond: https://github.com/google/fonts/tree/main/ofl/cormorantgaramond
 
 ---
 

@@ -29,8 +29,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items as staggeredItems
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
@@ -60,10 +58,11 @@ import coil.request.ImageRequest
 import com.lolita.app.data.local.entity.CatalogEntry
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.BrandLogo
-import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.screen.common.findColorHex
+import com.lolita.app.ui.theme.skin.icon.IconKey
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -79,8 +78,8 @@ fun CatalogListContent(
                 color = MaterialTheme.colorScheme.primary
             )
         } else if (uiState.filteredEntries.isEmpty()) {
-            EmptyState(
-                icon = Icons.Default.Home,
+            SkinEmptyState(
+                iconKey = IconKey.Home,
                 title = "暂无图鉴",
                 subtitle = "点击右下角添加第一条图鉴记录",
                 modifier = Modifier.fillMaxSize()
@@ -88,8 +87,8 @@ fun CatalogListContent(
         } else if (uiState.viewMode == ViewMode.GALLERY) {
             val galleryItems = uiState.galleryCardDataList
             if (galleryItems.isEmpty()) {
-                EmptyState(
-                    icon = Icons.Default.Home,
+                SkinEmptyState(
+                    iconKey = IconKey.Home,
                     title = "暂无带图图鉴",
                     subtitle = "切换到列表或网格模式查看更多记录",
                     modifier = Modifier.fillMaxSize()

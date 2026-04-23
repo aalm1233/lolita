@@ -7,8 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +28,8 @@ import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.DonutChart
 import com.lolita.app.ui.component.chart.PieChartData
 import com.lolita.app.ui.component.chart.StatsProgressBar
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -174,9 +174,8 @@ fun WishlistAnalysisContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Icon(
-                    Icons.Default.ShoppingCart,
-                    contentDescription = null,
+                SkinIcon(
+                    key = IconKey.AttachMoney,
                     tint = Color(0xFFFF69B4),
                     modifier = Modifier.size(28.dp)
                 )
@@ -298,4 +297,3 @@ private fun PriorityDetailRow(
         }
     }
 }
-

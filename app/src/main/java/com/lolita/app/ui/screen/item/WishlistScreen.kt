@@ -32,9 +32,9 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -206,15 +206,15 @@ fun WishlistScreen(
                     CircularProgressIndicator()
                 }
             } else if (uiState.allItems.isEmpty()) {
-                EmptyState(
-                    icon = Icons.Default.Favorite,
+                SkinEmptyState(
+                    iconKey = IconKey.Wishlist,
                     title = "愿望单为空",
                     subtitle = "添加心仪的服饰到愿望单",
                     modifier = Modifier.fillMaxSize()
                 )
             } else if (uiState.filteredItems.isEmpty()) {
-                EmptyState(
-                    icon = Icons.Default.Search,
+                SkinEmptyState(
+                    iconKey = IconKey.Search,
                     title = "无搜索结果",
                     subtitle = "试试其他关键词",
                     modifier = Modifier.fillMaxSize()
@@ -293,9 +293,8 @@ private fun WishlistItemCard(
                     shape = RoundedCornerShape(0.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            Icons.Default.Favorite,
-                            contentDescription = null,
+                        SkinIcon(
+                            key = IconKey.Wishlist,
                             tint = borderColor,
                             modifier = Modifier.size(28.dp)
                         )

@@ -28,6 +28,7 @@ fun getSkinConfig(skinType: SkinType): LolitaSkinConfig = when (skinType) {
     SkinType.CHINESE -> chineseSkinConfig()
     SkinType.CLASSIC -> classicSkinConfig()
     SkinType.NAVY -> navySkinConfig()
+    SkinType.COUNTRY -> countrySkinConfig()
 }
 
 private fun buildTypography(fontFamily: FontFamily): Typography {
@@ -277,5 +278,55 @@ fun navySkinConfig(): LolitaSkinConfig {
         topBarDecoration = "⚓", topBarDecorationAlpha = 0.6f,
         icons = NavyIconProvider(),
         animations = NavyAnimationProvider(),
+    )
+}
+
+fun countrySkinConfig(): LolitaSkinConfig {
+    val fontFamily = FontFamily(Font(R.font.cormorant_garamond))
+    val sage = Color(0xFF7C9A69)
+    val deepSage = Color(0xFF5D7751)
+    val berry = Color(0xFFC56759)
+    val butter = Color(0xFFE9CC89)
+    val cream = Color(0xFFF9F4E8)
+    val warmWhite = Color(0xFFFFFCF7)
+    val soil = Color(0xFF8B6747)
+    val darkBg = Color(0xFF1F261C)
+    val darkSurface = Color(0xFF2D3529)
+    return LolitaSkinConfig(
+        skinType = SkinType.COUNTRY,
+        name = "牧歌田园",
+        lightColorScheme = lightColorScheme(
+            primary = sage, onPrimary = White,
+            primaryContainer = Color(0xFFE3EDD8), onPrimaryContainer = deepSage,
+            secondary = berry, onSecondary = White,
+            secondaryContainer = Color(0xFFF6DDD7), onSecondaryContainer = Color(0xFF7A3F36),
+            tertiary = butter, onTertiary = Color(0xFF3B2F1F),
+            background = cream, onBackground = Color(0xFF31281F),
+            surface = warmWhite, onSurface = Color(0xFF31281F),
+            surfaceVariant = Color(0xFFF1E7D8),
+            error = Color(0xFFD45745), onError = White,
+            outline = Color(0xFFB9AA94), outlineVariant = Color(0xFFE6D7BF)
+        ),
+        darkColorScheme = darkColorScheme(
+            primary = Color(0xFF9DB88B), onPrimary = Color(0xFF17311B),
+            primaryContainer = deepSage, onPrimaryContainer = Color(0xFFE3EDD8),
+            secondary = Color(0xFFD78678), onSecondary = Color(0xFF2C1411),
+            secondaryContainer = Color(0xFF503530), onSecondaryContainer = Color(0xFFF7DDD6),
+            tertiary = butter, onTertiary = Color(0xFF3B2F1F),
+            background = darkBg, onBackground = Color(0xFFE5DFD3),
+            surface = darkSurface, onSurface = Color(0xFFE5DFD3),
+            surfaceVariant = Color(0xFF394235),
+            error = Color(0xFFFFB4A8), onError = Color(0xFF690005)
+        ),
+        gradientColors = listOf(sage, Color(0xFFF0D8A7)),
+        gradientColorsDark = listOf(Color(0xFF37442F), deepSage),
+        accentColor = berry, accentColorDark = Color(0xFFD78678),
+        cardColor = warmWhite, cardColorDark = darkSurface,
+        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        cardShape = RoundedCornerShape(20.dp),
+        buttonShape = RoundedCornerShape(18.dp),
+        topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
+        icons = CountryIconProvider(),
+        animations = CountryAnimationProvider(),
     )
 }

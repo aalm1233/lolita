@@ -11,17 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.DeleteSweep
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -52,6 +46,8 @@ import com.lolita.app.data.repository.SharedLibrarySyncRepository
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -200,11 +196,8 @@ fun SharedLibrarySyncScreen(
             GradientTopAppBar(
                 title = { Text("共享资料同步") },
                 navigationIcon = {
-                    TextButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "返回"
-                        )
+                    IconButton(onClick = onBack) {
+                        SkinIcon(IconKey.ArrowBack, modifier = Modifier.width(22.dp))
                     }
                 }
             )
@@ -246,9 +239,7 @@ fun SharedLibrarySyncScreen(
             onDismissRequest = { showClearDialog = false },
             title = { Text("清空共享缓存？") },
             text = {
-                Text(
-                    "这只会删除已同步的共享资料缓存，不会影响你自己的衣橱、图鉴、付款记录和穿搭记录。"
-                )
+                Text("这只会删除已同步的共享资料缓存，不会影响你自己的衣橱、图鉴、付款记录和穿搭记录。")
             },
             confirmButton = {
                 Button(
@@ -292,10 +283,7 @@ private fun UrlSection(
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("例如：http://192.168.1.10:8080") },
                 leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Link,
-                        contentDescription = null
-                    )
+                    SkinIcon(IconKey.Link)
                 },
                 singleLine = true
             )
@@ -319,10 +307,7 @@ private fun UrlSection(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Icon(
-                        imageVector = Icons.Default.CloudDownload,
-                        contentDescription = null
-                    )
+                    SkinIcon(IconKey.Refresh)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("同步")
                 }
@@ -333,10 +318,7 @@ private fun UrlSection(
                     onClick = onFullSync,
                     enabled = !uiState.isSyncing && !uiState.isClearing
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null
-                    )
+                    SkinIcon(IconKey.Refresh)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("全量重建")
                 }
@@ -345,9 +327,8 @@ private fun UrlSection(
                     onClick = onClearCache,
                     enabled = !uiState.isSyncing && !uiState.isClearing
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.DeleteSweep,
-                        contentDescription = null,
+                    SkinIcon(
+                        key = IconKey.Delete,
                         tint = Color(0xFFD32F2F)
                     )
                     Spacer(modifier = Modifier.width(8.dp))

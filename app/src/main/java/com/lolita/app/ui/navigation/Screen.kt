@@ -139,6 +139,10 @@ sealed interface Screen {
         override val route = "theme_select"
     }
 
+    data object SkinIconGallery : Screen {
+        override val route = "skin_icon_gallery"
+    }
+
     data object FilteredItemList : Screen {
         override val route = "filtered_item_list?filterType={filterType}&filterValue={filterValue}&title={title}"
         fun createRoute(filterType: String, filterValue: String, title: String): String {

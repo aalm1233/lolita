@@ -15,13 +15,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Checkroom
 import com.lolita.app.domain.usecase.MatchScore
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.parseColorsJson
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import java.io.File
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -66,8 +64,8 @@ fun RecommendationScreen(
             }
             uiState.recommendations.isEmpty() -> {
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    EmptyState(
-                        icon = Icons.Default.Checkroom,
+                    SkinEmptyState(
+                        iconKey = IconKey.Outfit,
                         title = "暂无推荐搭配",
                         subtitle = "添加更多服饰以获取搭配推荐"
                     )

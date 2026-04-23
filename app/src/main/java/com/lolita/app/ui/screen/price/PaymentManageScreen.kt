@@ -3,8 +3,6 @@ package com.lolita.app.ui.screen.price
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,9 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Payment
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -101,8 +99,8 @@ fun PaymentManageScreen(
 
                 if (uiState.payments.isEmpty()) {
                     item {
-                        EmptyState(
-                            icon = Icons.Default.Payment,
+                        SkinEmptyState(
+                            iconKey = IconKey.AttachMoney,
                             title = "暂无付款记录",
                             subtitle = "点击 + 添加付款记录"
                         )

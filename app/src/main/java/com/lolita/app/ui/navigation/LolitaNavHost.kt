@@ -4,11 +4,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,14 +18,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.SkinType
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimation
 import com.lolita.app.ui.theme.skin.animation.SkinNavigationOverlay
+import com.lolita.app.ui.theme.skin.icon.CountryBottomNavIcon
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -61,6 +66,7 @@ import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
+import com.lolita.app.ui.screen.settings.SkinIconGalleryScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportGuideScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
@@ -120,7 +126,7 @@ fun LolitaNavHost() {
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(52.dp),
+                modifier = Modifier.height(60.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = accent,
                 windowInsets = WindowInsets(0, 0, 0, 0)
@@ -129,17 +135,48 @@ fun LolitaNavHost() {
                 val currentDestination = navBackStackEntry?.destination
 
                 items.forEach { item ->
+                    val selected = currentDestination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } == true
+                    val badgeColor = when (item.iconKey) {
+                        IconKey.Home -> Color(0xFFC56759)
+                        IconKey.Wishlist -> Color(0xFF7C9A69)
+                        IconKey.Outfit -> Color(0xFFB85B6D)
+                        IconKey.Stats -> Color(0xFFD9B96E)
+                        IconKey.Settings -> Color(0xFF8A6AAE)
+                        else -> accent
+                    }
+                    val tint = if (skin.skinType == SkinType.COUNTRY) {
+                        if (selected) badgeColor else badgeColor.copy(alpha = 0.82f)
+                    } else if (selected) {
+                        accent
+                    } else {
+                        Color.Gray
+                    }
                     NavigationBarItem(
                         icon = {
-                            val tint = if (currentDestination?.hierarchy?.any {
-                                    it.route == item.screen.route
-                                } == true) accent else Color.Gray
-                            SkinIcon(item.iconKey, modifier = Modifier.size(22.dp), tint = tint)
+                            if (skin.skinType == SkinType.COUNTRY) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(
+                                            color = Color.Transparent,
+                                            shape = RoundedCornerShape(18.dp)
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CountryBottomNavIcon(
+                                        key = item.iconKey,
+                                        modifier = Modifier.size(if (selected) 32.dp else 30.dp),
+                                        tint = tint
+                                    )
+                                }
+                            } else {
+                                SkinIcon(item.iconKey, modifier = Modifier.size(26.dp), tint = tint)
+                            }
                         },
                         label = { Text(item.label, modifier = Modifier.offset(y = (-4).dp)) },
-                        selected = currentDestination?.hierarchy?.any {
-                            it.route == item.screen.route
-                        } == true,
+                        selected = selected,
                         onClick = {
                             navController.navigate(item.screen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -151,10 +188,18 @@ fun LolitaNavHost() {
                         },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = accent,
-                            selectedTextColor = accent,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedTextColor = if (skin.skinType == SkinType.COUNTRY) tint else accent,
+                            indicatorColor = if (skin.skinType == SkinType.COUNTRY) {
+                                Color.Transparent
+                            } else {
+                                MaterialTheme.colorScheme.primaryContainer
+                            },
                             unselectedIconColor = Color.Gray,
-                            unselectedTextColor = Color.Gray
+                            unselectedTextColor = if (skin.skinType == SkinType.COUNTRY) {
+                                Color(0xFF8F8677)
+                            } else {
+                                Color.Gray
+                            }
                         )
                     )
                 }
@@ -525,7 +570,15 @@ fun LolitaNavHost() {
 
             // Theme Select
             composable(Screen.ThemeSelect.route) {
-                ThemeSelectScreen(onBack = { navController.popBackStack() })
+                ThemeSelectScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToIconGallery = { navController.navigate(Screen.SkinIconGallery.route) }
+                )
+            }
+
+            // Skin Icon Gallery
+            composable(Screen.SkinIconGallery.route) {
+                SkinIconGalleryScreen(onBack = { navController.popBackStack() })
             }
 
             // Backup & Restore

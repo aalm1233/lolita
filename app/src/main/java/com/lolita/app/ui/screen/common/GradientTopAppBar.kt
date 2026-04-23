@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -54,7 +55,18 @@ fun GradientTopAppBar(
                         .padding(horizontal = 4.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    navigationIcon()
+                    if (skin.skinType == com.lolita.app.ui.theme.SkinType.COUNTRY) {
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                                .background(Color.White.copy(alpha = 0.14f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            navigationIcon()
+                        }
+                    } else {
+                        navigationIcon()
+                    }
                     ProvideTextStyle(
                         MaterialTheme.typography.titleMedium.copy(
                             color = Color.White,
@@ -94,7 +106,18 @@ fun GradientTopAppBar(
                         .padding(horizontal = 4.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    navigationIcon()
+                    if (skin.skinType == com.lolita.app.ui.theme.SkinType.COUNTRY) {
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                                .background(Color.White.copy(alpha = 0.14f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            navigationIcon()
+                        }
+                    } else {
+                        navigationIcon()
+                    }
                     ProvideTextStyle(
                         MaterialTheme.typography.titleMedium.copy(
                             color = Color.White,

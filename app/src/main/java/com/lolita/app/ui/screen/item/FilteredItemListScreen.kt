@@ -22,11 +22,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -65,8 +63,8 @@ fun FilteredItemListScreen(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                EmptyState(
-                    icon = Icons.Default.Search, // TODO: EmptyState uses ImageVector
+                SkinEmptyState(
+                    iconKey = IconKey.Search,
                     title = "暂无数据",
                     subtitle = "没有找到匹配的服饰"
                 )

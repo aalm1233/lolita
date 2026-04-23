@@ -87,6 +87,7 @@ fun SkinClickParticles(
                     SkinType.CHINESE -> drawInkDotParticle(drawP)
                     SkinType.CLASSIC -> drawSparkleParticle(drawP)
                     SkinType.NAVY -> drawBubbleClickParticle(drawP)
+                    SkinType.COUNTRY -> drawLeafClickParticle(drawP)
                 }
             }
         }
@@ -152,5 +153,21 @@ private fun DrawScope.drawBubbleClickParticle(p: ClickParticle) {
         radius = r,
         center = Offset(p.x, p.y),
         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
+    )
+}
+
+private fun DrawScope.drawLeafClickParticle(p: ClickParticle) {
+    val path = Path().apply {
+        moveTo(p.x, p.y - 6f * p.scale)
+        quadraticBezierTo(p.x + 4f * p.scale, p.y - 1f * p.scale, p.x, p.y + 6f * p.scale)
+        quadraticBezierTo(p.x - 4f * p.scale, p.y - 1f * p.scale, p.x, p.y - 6f * p.scale)
+        close()
+    }
+    drawPath(path, Color(0xFF7C9A69).copy(alpha = p.alpha), style = Fill)
+    drawLine(
+        color = Color.White.copy(alpha = p.alpha * 0.45f),
+        start = Offset(p.x, p.y - 3f * p.scale),
+        end = Offset(p.x, p.y + 3f * p.scale),
+        strokeWidth = 1.1f
     )
 }

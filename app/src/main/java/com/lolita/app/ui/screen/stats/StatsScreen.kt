@@ -7,13 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -44,6 +36,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.style.TextAlign
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -130,7 +124,7 @@ fun StatsContent(
             StatCard(
                 title = "已拥有",
                 targetValue = uiState.ownedCount,
-                icon = Icons.Default.Home,
+                iconKey = IconKey.Home,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f),
                 onClick = { onNavigateToFilteredList("status_owned", "", "已拥有") }
@@ -138,7 +132,7 @@ fun StatsContent(
             StatCard(
                 title = "愿望单",
                 targetValue = uiState.wishedCount,
-                icon = Icons.Default.Favorite,
+                iconKey = IconKey.Wishlist,
                 color = Color(0xFFFF6B6B),
                 modifier = Modifier.weight(1f),
                 onClick = { onNavigateToFilteredList("status_wished", "", "愿望单") }
@@ -151,14 +145,14 @@ fun StatsContent(
             StatCard(
                 title = "套装",
                 targetValue = uiState.coordinateCount,
-                icon = Icons.Default.Star,
+                iconKey = IconKey.Star,
                 color = Color(0xFFFFD93D),
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 title = "穿搭记录",
                 targetValue = uiState.outfitLogCount,
-                icon = Icons.Default.DateRange,
+                iconKey = IconKey.CalendarMonth,
                 color = Color(0xFF6BCF7F),
                 modifier = Modifier.weight(1f)
             )
@@ -167,7 +161,7 @@ fun StatsContent(
             SpendingCard(
                 title = "总消费",
                 targetValue = uiState.totalSpending,
-                icon = Icons.Default.ShoppingCart,
+                iconKey = IconKey.AttachMoney,
                 color = Color(0xFFE91E8C),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -178,7 +172,7 @@ fun StatsContent(
             SpendingCard(
                 title = "单品均价",
                 targetValue = uiState.averagePrice,
-                icon = Icons.Default.ShoppingCart,
+                iconKey = IconKey.AttachMoney,
                 color = Color(0xFFFF91A4),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -290,7 +284,7 @@ fun StatsContent(
 private fun StatCard(
     title: String,
     targetValue: Int,
-    icon: ImageVector,
+    iconKey: IconKey,
     color: Color,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
@@ -309,9 +303,8 @@ private fun StatCard(
         )
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Icon(
-                icon,
-                contentDescription = null,
+            SkinIcon(
+                key = iconKey,
                 tint = color,
                 modifier = Modifier.size(28.dp)
             )
@@ -335,7 +328,7 @@ private fun StatCard(
 private fun SpendingCard(
     title: String,
     targetValue: Double,
-    icon: ImageVector,
+    iconKey: IconKey,
     color: Color,
     modifier: Modifier = Modifier
 ) {
@@ -352,9 +345,8 @@ private fun SpendingCard(
         )
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Icon(
-                icon,
-                contentDescription = null,
+            SkinIcon(
+                key = iconKey,
                 tint = color,
                 modifier = Modifier.size(28.dp)
             )

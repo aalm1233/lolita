@@ -5,20 +5,42 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -26,16 +48,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.lolita.app.BuildConfig
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.notification.DailyOutfitReminderScheduler
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import java.io.File
-import com.lolita.app.BuildConfig
 import java.text.NumberFormat
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +106,6 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Profile section
             ProfileSection(
                 uiState = uiState,
                 onAvatarClick = { imagePickerLauncher.launch("image/*") },
@@ -94,32 +117,31 @@ fun SettingsScreen(
             SettingsMenuItem(
                 title = "属性管理",
                 description = "管理品牌、类型、风格、季节、位置、来源",
-                icon = Icons.Default.Build,
+                iconKey = IconKey.Category,
                 iconTint = Color(0xFF7E57C2),
                 onClick = onNavigateToAttributeManage
             )
 
             SettingsMenuItem(
                 title = "数据备份与恢复",
-                description = "导出/导入数据，支持JSON和CSV格式",
-                icon = Icons.Default.Build,
+                description = "导出/导入数据，支持 JSON 和 CSV 格式",
+                iconKey = IconKey.FileOpen,
                 iconTint = Color(0xFF64B5F6),
                 onClick = onNavigateToBackupRestore
             )
 
             SettingsMenuItem(
                 title = "淘宝订单导入",
-                description = "从淘宝订单Excel文件批量导入服饰",
-                icon = Icons.Default.ShoppingCart,
+                description = "从淘宝订单 Excel 文件批量导入服饰",
+                iconKey = IconKey.Link,
                 iconTint = Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
             )
 
-            // 穿搭提醒设置
             SettingsMenuItem(
                 title = "共享资料同步",
                 description = "连接后端并刷新共享图鉴缓存",
-                icon = Icons.Default.CloudDownload,
+                iconKey = IconKey.Refresh,
                 iconTint = Color(0xFF4DB6AC),
                 onClick = onNavigateToSharedLibrarySync
             )
@@ -139,20 +161,18 @@ fun SettingsScreen(
             SettingsToggleItem(
                 title = "每日穿搭提醒",
                 description = "每天 ${outfitReminderHour}:00 提醒记录穿搭",
-                icon = Icons.Default.Notifications,
+                iconKey = IconKey.Notifications,
                 iconTint = Color(0xFFE57373),
                 checked = outfitReminderEnabled,
                 onCheckedChange = { enabled ->
                     coroutineScope.launch {
                         appPreferences.setOutfitReminderEnabled(enabled)
                         val scheduler = DailyOutfitReminderScheduler(com.lolita.app.di.AppModule.context())
-                        if (enabled) scheduler.schedule(outfitReminderHour)
-                        else scheduler.cancel()
+                        if (enabled) scheduler.schedule(outfitReminderHour) else scheduler.cancel()
                     }
                 }
             )
 
-            // Display settings section
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "显示设置",
@@ -165,7 +185,7 @@ fun SettingsScreen(
             SettingsToggleItem(
                 title = "显示总价",
                 description = "在服饰列表右上角显示筛选结果的总价",
-                icon = Icons.Default.AttachMoney,
+                iconKey = IconKey.AttachMoney,
                 iconTint = Color(0xFFFFB74D),
                 checked = showTotalPrice,
                 onCheckedChange = {
@@ -176,14 +196,13 @@ fun SettingsScreen(
             SettingsMenuItem(
                 title = "皮肤选择",
                 description = "切换应用主题风格",
-                icon = Icons.Default.Palette,
+                iconKey = IconKey.Palette,
                 iconTint = Color(0xFF9C27B0),
                 onClick = onNavigateToThemeSelect
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // About section
             HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             Spacer(modifier = Modifier.height(16.dp))
             Column(
@@ -191,7 +210,7 @@ fun SettingsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "我的Lolita",
+                    "我的 Lolita",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -212,7 +231,6 @@ fun SettingsScreen(
         }
     }
 
-    // Nickname edit dialog
     if (showNicknameDialog) {
         NicknameEditDialog(
             currentNickname = uiState.nickname,
@@ -239,7 +257,6 @@ private fun ProfileSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(64.dp)
@@ -263,7 +280,6 @@ private fun ProfileSection(
                 }
             }
 
-            // Nickname + stats
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -275,26 +291,30 @@ private fun ProfileSection(
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = if (uiState.nickname.isEmpty())
+                        color = if (uiState.nickname.isEmpty()) {
                             MaterialTheme.colorScheme.onSurfaceVariant
-                        else MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        }
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = "编辑昵称",
+                    SkinIcon(
+                        key = IconKey.Edit,
                         modifier = Modifier.size(14.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 val formattedSpent = NumberFormat.getNumberInstance(Locale.CHINA)
                     .apply { maximumFractionDigits = 0 }
                     .format(uiState.totalSpent)
+
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
-                        text = "服饰 ${uiState.totalItems}件 | 图鉴 ${uiState.totalCatalogEntries}条 | 套装 ${uiState.totalCoordinates}套",
+                        text = "服饰 ${uiState.totalItems} 件 | 图鉴 ${uiState.totalCatalogEntries} 条 | 套装 ${uiState.totalCoordinates} 套",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -350,7 +370,7 @@ private fun NicknameEditDialog(
 private fun SettingsMenuItem(
     title: String,
     description: String,
-    icon: ImageVector,
+    iconKey: IconKey,
     iconTint: Color,
     onClick: () -> Unit
 ) {
@@ -365,21 +385,20 @@ private fun SettingsMenuItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
             Surface(
                 color = iconTint.copy(alpha = 0.1f),
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier.size(40.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        icon,
-                        contentDescription = null,
+                    SkinIcon(
+                        key = iconKey,
                         tint = iconTint,
                         modifier = Modifier.size(22.dp)
                     )
                 }
             }
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -392,9 +411,9 @@ private fun SettingsMenuItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
+
+            SkinIcon(
+                key = IconKey.ArrowForward,
                 modifier = Modifier.size(18.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -406,14 +425,12 @@ private fun SettingsMenuItem(
 private fun SettingsToggleItem(
     title: String,
     description: String,
-    icon: ImageVector,
+    iconKey: IconKey,
     iconTint: Color,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    LolitaCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -427,14 +444,14 @@ private fun SettingsToggleItem(
                 modifier = Modifier.size(40.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        icon,
-                        contentDescription = null,
+                    SkinIcon(
+                        key = iconKey,
                         tint = iconTint,
                         modifier = Modifier.size(22.dp)
                     )
                 }
             }
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -447,6 +464,7 @@ private fun SettingsToggleItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
@@ -458,4 +476,3 @@ private fun SettingsToggleItem(
         }
     }
 }
-

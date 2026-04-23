@@ -45,9 +45,7 @@ import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.CategoryGroup
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import com.lolita.app.ui.screen.common.EmptyState
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
@@ -452,8 +450,8 @@ fun ItemListScreen(
                                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                             }
                         } else if (uiState.filteredItems.isEmpty()) {
-                            EmptyState(
-                                icon = Icons.Default.Home,
+                            SkinEmptyState(
+                                iconKey = IconKey.Home,
                                 title = "暂无服饰",
                                 subtitle = "点击右下角 + 添加新服饰",
                                 modifier = Modifier.fillMaxSize()

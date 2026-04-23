@@ -7,9 +7,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -89,9 +86,8 @@ fun QuickOutfitLogScreen(
             ) {
                 Text("备注", style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Icon(
-                    if (uiState.showNote) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = null,
+                SkinIcon(
+                    key = if (uiState.showNote) IconKey.ExpandLess else IconKey.ExpandMore,
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Coordinate
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -156,8 +156,8 @@ fun CoordinateListContent(
             modifier = modifier.fillMaxSize().padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            EmptyState(
-                icon = Icons.Default.Star,
+            SkinEmptyState(
+                iconKey = IconKey.Star,
                 title = "暂无套装",
                 subtitle = "点击 + 创建第一个套装"
             )
@@ -167,8 +167,8 @@ fun CoordinateListContent(
             modifier = modifier.fillMaxSize().padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            EmptyState(
-                icon = Icons.Default.Search,
+            SkinEmptyState(
+                iconKey = IconKey.Search,
                 title = "无搜索结果",
                 subtitle = "试试其他关键词"
             )

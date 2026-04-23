@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.lolita.app.ui.theme.LolitaSkin
@@ -68,6 +69,7 @@ fun SkinNavigationOverlay(
                 SkinType.CHINESE -> drawInkSplashOverlay(x * size.width, y * size.height, particle.size, alpha)
                 SkinType.CLASSIC -> drawGoldSweepOverlay(p, alpha)
                 SkinType.NAVY -> drawWaveRippleOverlay(x * size.width, y * size.height, particle.size, alpha)
+                SkinType.COUNTRY -> drawLeafOverlay(x * size.width, y * size.height, particle.size, alpha)
             }
         }
     }
@@ -105,6 +107,13 @@ private fun createOverlayParticle(skinType: SkinType): OverlayParticle {
             endX = Random.nextFloat(), endY = -0.1f,
             size = 5f + Random.nextFloat() * 8f,
             rotationStart = 0f, rotationEnd = 0f
+        )
+        SkinType.COUNTRY -> OverlayParticle(
+            startX = Random.nextFloat(), startY = -0.1f,
+            endX = Random.nextFloat(), endY = 1.1f,
+            size = 7f + Random.nextFloat() * 10f,
+            rotationStart = Random.nextFloat() * 180f,
+            rotationEnd = Random.nextFloat() * 360f
         )
     }
 }
@@ -159,5 +168,23 @@ private fun DrawScope.drawWaveRippleOverlay(x: Float, y: Float, s: Float, alpha:
         radius = s,
         center = Offset(x, y),
         style = Stroke(width = 1.5f)
+    )
+}
+
+private fun DrawScope.drawLeafOverlay(x: Float, y: Float, s: Float, alpha: Float) {
+    val center = Offset(x, y)
+    val path = Path().apply {
+        moveTo(center.x, center.y - s)
+        quadraticBezierTo(center.x + s * 0.55f, center.y - s * 0.15f, center.x, center.y + s)
+        quadraticBezierTo(center.x - s * 0.55f, center.y - s * 0.15f, center.x, center.y - s)
+        close()
+    }
+    drawPath(path, Color(0xFF7C9A69).copy(alpha = alpha * 0.28f))
+    drawLine(
+        color = Color.White.copy(alpha = alpha * 0.25f),
+        start = Offset(center.x, center.y - s * 0.45f),
+        end = Offset(center.x, center.y + s * 0.45f),
+        strokeWidth = 1.4f,
+        cap = StrokeCap.Round
     )
 }

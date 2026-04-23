@@ -17,6 +17,8 @@ import com.lolita.app.ui.theme.skin.animation.particles.ClassicDiamondParticle
 import com.lolita.app.ui.theme.skin.animation.particles.ClassicSparkleParticle
 import com.lolita.app.ui.theme.skin.animation.particles.GothicEmberParticle
 import com.lolita.app.ui.theme.skin.animation.particles.GothicSmokeParticle
+import com.lolita.app.ui.theme.skin.animation.particles.CountryDaisyParticle
+import com.lolita.app.ui.theme.skin.animation.particles.CountryLeafParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetBubbleParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetPetalParticle
 import com.lolita.app.ui.theme.skin.animation.particles.SweetStarParticle
@@ -104,6 +106,11 @@ private fun createParticles(skinType: SkinType, count: Int): List<AmbientParticl
             val knots = List((count * 0.3f).toInt().coerceAtLeast(1)) { NavyRopeKnotParticle() }
             val bubbles = List((count * 0.3f).toInt().coerceAtLeast(1)) { NavyBubbleParticle() }
             anchors + knots + bubbles
+        }
+        SkinType.COUNTRY -> {
+            val daisies = List((count * 0.55f).toInt().coerceAtLeast(1)) { CountryDaisyParticle() }
+            val leaves = List((count * 0.45f).toInt().coerceAtLeast(1)) { CountryLeafParticle() }
+            daisies + leaves
         }
     }
 }

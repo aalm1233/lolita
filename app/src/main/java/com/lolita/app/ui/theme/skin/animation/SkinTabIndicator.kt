@@ -121,6 +121,26 @@ fun SkinTabIndicator(
                 }
                 drawPath(wavePath, skyBlue)
             }
+            SkinType.COUNTRY -> {
+                val sage = Color(0xFF7C9A69)
+                val berry = Color(0xFFC56759)
+                drawRoundRect(
+                    color = sage,
+                    topLeft = Offset(left + w * 0.12f, topY + indicatorH * 0.2f),
+                    size = Size(w * 0.76f, indicatorH * 0.65f),
+                    cornerRadius = CornerRadius(indicatorH, indicatorH)
+                )
+                drawCircle(
+                    color = berry,
+                    radius = indicatorH * 0.65f,
+                    center = Offset(left + w * 0.5f, topY + indicatorH * 0.52f)
+                )
+                drawCircle(
+                    color = Color(0xFFF7E9C0),
+                    radius = indicatorH * 0.3f,
+                    center = Offset(left + w * 0.5f, topY + indicatorH * 0.52f)
+                )
+            }
         }
     }
 }

@@ -3,8 +3,6 @@ package com.lolita.app.ui.screen.price
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,9 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
-import com.lolita.app.ui.screen.common.EmptyState
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -85,8 +83,8 @@ fun PriceManageScreen(
             ) {
                 if (uiState.prices.isEmpty()) {
                     item {
-                        EmptyState(
-                            icon = Icons.Default.ShoppingCart,
+                        SkinEmptyState(
+                            iconKey = IconKey.AttachMoney,
                             title = "暂无价格信息",
                             subtitle = "点击 + 添加价格"
                         )

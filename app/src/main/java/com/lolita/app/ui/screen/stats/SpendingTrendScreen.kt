@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +24,8 @@ import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.LineChart
 import com.lolita.app.ui.component.chart.LineChartData
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -173,9 +172,8 @@ fun SpendingTrendContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { viewModel.previousYear() }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "上一年",
+                SkinIcon(
+                    key = IconKey.KeyboardArrowLeft,
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -185,9 +183,8 @@ fun SpendingTrendContent(
                 fontWeight = FontWeight.Bold
             )
             IconButton(onClick = { viewModel.nextYear() }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "下一年",
+                SkinIcon(
+                    key = IconKey.KeyboardArrowRight,
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -252,4 +249,3 @@ fun SpendingTrendContent(
         }
     }
 }
-

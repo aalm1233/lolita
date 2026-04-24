@@ -22,8 +22,8 @@ android {
         applicationId = "com.lolita.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 42
-        versionName = "2.26"
+        versionCode = 43
+        versionName = "2.27"
     }
 
     signingConfigs {
@@ -70,8 +70,8 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -842,27 +843,40 @@ class BackupManager(
             migrateArray(root, "items", migrateColor = true, migrateImageUrl = true)
             migrateArray(root, "coordinates", migrateColor = false, migrateImageUrl = true)
             migrateArray(root, "outfitLogs", migrateColor = false, migrateImageUrl = true)
-            ensureColorArray(root)
+            migrateArray(root, "catalogEntries", migrateColor = true, migrateImageUrl = true)
+            ensureColorArray(root, "items")
+            ensureColorArray(root, "catalogEntries")
             root.toString() to 0
         } catch (e: Exception) {
-            Log.w("BackupManager", "JSON migration failed, using original", e)
-            json to 1
+            Log.w("BackupManager", "JSON migration failed", e)
+            throw Exception("备份格式迁移失败：${e.message}", e)
         }
     }
 
-    private fun ensureColorArray(root: JsonObject) {
-        val itemsArray = root.getAsJsonArray("items") ?: return
-        itemsArray.forEach { element ->
+    private fun ensureColorArray(root: JsonObject, fieldName: String = "items") {
+        val array = root.getAsJsonArray(fieldName) ?: return
+        array.forEach { element ->
             val obj = element as? JsonObject ?: return@forEach
-            if (obj.has("colors")) {
-                val colorsElement = obj.get("colors")
-                if (colorsElement.isJsonPrimitive && colorsElement.asString.let { !it.startsWith("[") }) {
-                    val arr = JsonArray()
-                    if (colorsElement.asString.isNotBlank()) {
-                        arr.add(colorsElement.asString)
+            when {
+                !obj.has("colors") || obj.get("colors").isJsonNull -> obj.add("colors", JsonArray())
+                obj.get("colors").isJsonArray -> { }
+                obj.get("colors").isJsonPrimitive -> {
+                    val str = obj.get("colors").asString
+                    if (str.startsWith("[")) {
+                        try {
+                            obj.add("colors", JsonParser.parseString(str).asJsonArray)
+                        } catch (_: Exception) {
+                            obj.add("colors", JsonArray())
+                        }
+                    } else if (str.isNotBlank()) {
+                        val arr = JsonArray()
+                        arr.add(str)
+                        obj.add("colors", arr)
+                    } else {
+                        obj.add("colors", JsonArray())
                     }
-                    obj.add("colors", arr)
                 }
+                else -> obj.add("colors", JsonArray())
             }
         }
     }
@@ -907,7 +921,25 @@ class BackupManager(
      * Old backups: "color": "粉色" → new format: "colors": "[\"粉色\"]"
      */
     private fun migrateBackupData(backupData: BackupData): BackupData {
-        return backupData
+        val fixedItems = backupData.items.map { item ->
+            val needsFix = item.colors.size == 1 && item.colors.first().let {
+                it.startsWith("[") && it.endsWith("]")
+            }
+            if (needsFix) {
+                try {
+                    val parsed = gson.fromJson<List<String>>(
+                        item.colors.first(),
+                        object : TypeToken<List<String>>() {}.type
+                    )
+                    item.copy(colors = parsed)
+                } catch (_: Exception) {
+                    item
+                }
+            } else {
+                item
+            }
+        }
+        return if (fixedItems != backupData.items) backupData.copy(items = fixedItems) else backupData
     }
 
     companion object {

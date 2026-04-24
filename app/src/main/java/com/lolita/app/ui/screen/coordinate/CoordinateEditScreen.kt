@@ -22,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
-import com.lolita.app.ui.screen.common.parseColorsJson
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -216,7 +215,7 @@ fun CoordinateEditScreen(
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
                                     )
-                                    val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
+                                    val colorDisplay = item.colors.joinToString("、").ifEmpty { null }
                                     val details = listOfNotNull(
                                         colorDisplay,
                                         item.season,

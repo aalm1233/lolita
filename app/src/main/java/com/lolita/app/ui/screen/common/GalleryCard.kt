@@ -39,7 +39,7 @@ fun GalleryCard(
         listOfNotNull(
             categoryName?.takeIf { it.isNotBlank() },
             item.size?.takeIf { it.isNotBlank() },
-            parseColorsJson(item.colors).firstOrNull()?.takeIf { it.isNotBlank() }
+            item.colors.firstOrNull()?.takeIf { it.isNotBlank() }
         )
             .distinct()
             .joinToString(" · ")

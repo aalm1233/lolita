@@ -49,16 +49,15 @@ class PriceRepository(
     }
 
     suspend fun deletePrice(price: Price) {
-        // Clean up calendar events and reminders before CASCADE delete
+        priceDao.deletePrice(price)
         val payments = paymentDao.getPaymentsByPriceList(price.id)
         if (context != null) {
             val scheduler = PaymentReminderScheduler(context)
             payments.forEach { payment ->
-                payment.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
+                payment.calendarEventId?.let { try { CalendarEventHelper.deleteEvent(context, it) } catch (_: Exception) {} }
                 try { scheduler.cancelReminder(payment.id) } catch (_: Exception) {}
             }
         }
-        priceDao.deletePrice(price)
     }
 
     fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<DaoPriceWithPayments>> =

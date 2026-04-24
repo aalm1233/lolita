@@ -207,8 +207,8 @@ fun LolitaNavHost() {
         }
     ) { paddingValues ->
         val navSpec = skin.animations.navigation
-        val navBackStackEntryForOverlay by navController.currentBackStackEntryAsState()
-        val isNavigating = navBackStackEntryForOverlay != null
+        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+        val isNavigating = currentBackStackEntry != null && navController.previousBackStackEntry != null
 
         val isListScrolling = remember { mutableStateOf(false) }
         CompositionLocalProvider(LocalIsListScrolling provides isListScrolling) {
@@ -595,9 +595,8 @@ fun LolitaNavHost() {
             composable(Screen.TaobaoImport.route) {
                 TaobaoImportScreen(
                     onBack = { navController.popBackStack() },
-                    onNavigateToDetail = { _ ->
-                        // Navigate back to item list after import
-                        navController.popBackStack()
+                    onNavigateToDetail = { itemId ->
+                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },
                     onNavigateToGuide = { navController.navigate(Screen.TaobaoImportGuide.route) }
                 )

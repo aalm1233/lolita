@@ -27,8 +27,10 @@ class LocationRepository(
         locationDao.updateLocation(location.copy(updatedAt = System.currentTimeMillis()))
 
     suspend fun deleteLocation(location: Location) {
-        location.imageUrl?.let { ImageFileHelper.deleteImage(it) }
+        val count = itemDao.countItemsByLocation(location.id)
+        if (count > 0) throw IllegalStateException("该位置下有 $count 条服饰，无法删除")
         locationDao.deleteLocation(location)
+        location.imageUrl?.let { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
     }
 
     suspend fun getLocationByName(name: String): Location? = locationDao.getLocationByName(name)

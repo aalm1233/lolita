@@ -58,9 +58,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import coil.request.ImageRequest
-import com.google.gson.Gson
 import com.lolita.app.ui.screen.common.findColorHex
-import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.screen.common.ViewMode
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -933,9 +931,8 @@ private fun ItemCard(
                             )
                         }
                     }
-                    item.colors?.let { colorsJson ->
-                        val colorList = parseColorsJson(colorsJson)
-                        if (colorList.isNotEmpty()) {
+                    item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
+                        if (colors.isNotEmpty()) {
                             Surface(
                                 color = MaterialTheme.colorScheme.outlineVariant,
                                 shape = RoundedCornerShape(4.dp)
@@ -945,7 +942,7 @@ private fun ItemCard(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    colorList.take(3).forEach { colorName ->
+                                    colors.take(3).forEach { colorName ->
                                         val hex = findColorHex(colorName)
                                         val chipColor = if (hex != null) Color(hex) else Color.Gray
                                         Box(
@@ -956,7 +953,7 @@ private fun ItemCard(
                                         )
                                     }
                                     Text(
-                                        text = colorList.joinToString("、"),
+                                        text = colors.joinToString("、"),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         maxLines = 1

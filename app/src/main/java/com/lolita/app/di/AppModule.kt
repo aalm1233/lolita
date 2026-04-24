@@ -39,12 +39,12 @@ object AppModule {
     fun sharedLibrarySyncRepository() = _sharedLibrarySyncRepository
 
     private val _brandRepository by lazy {
-        BrandRepository(database.brandDao(), database.itemDao(), database.catalogEntryDao())
+        BrandRepository(database.brandDao(), database.itemDao(), database.catalogEntryDao(), database)
     }
     fun brandRepository() = _brandRepository
 
     private val _categoryRepository by lazy {
-        CategoryRepository(database.categoryDao(), database.itemDao(), database.catalogEntryDao())
+        CategoryRepository(database.categoryDao(), database.itemDao(), database.catalogEntryDao(), database)
     }
     fun categoryRepository() = _categoryRepository
 

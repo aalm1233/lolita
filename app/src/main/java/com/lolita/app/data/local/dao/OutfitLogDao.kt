@@ -63,6 +63,9 @@ interface OutfitLogDao {
     @Query("DELETE FROM outfit_logs")
     suspend fun deleteAllOutfitLogs()
 
+    @Query("DELETE FROM outfit_item_cross_ref WHERE outfit_log_id = :logId")
+    suspend fun deleteOutfitItemCrossRefsByLogId(logId: Long)
+
     @Query("DELETE FROM outfit_item_cross_ref")
     suspend fun deleteAllOutfitItemCrossRefs()
 

@@ -35,7 +35,6 @@ import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -535,7 +534,7 @@ private fun CoordinateItemCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     StatusBadge(item.status)
-                    val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
+                    val colorDisplay = item.colors.joinToString("、").ifEmpty { null }
                     val details = listOfNotNull(colorDisplay, item.style).joinToString(" · ")
                     if (details.isNotEmpty()) {
                         Text(
@@ -744,7 +743,7 @@ private fun PickerItemRow(
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
-                val colorDisplay = parseColorsJson(item.colors).joinToString("、").ifEmpty { null }
+                val colorDisplay = item.colors.joinToString("、").ifEmpty { null }
                 val details = listOfNotNull(colorDisplay, item.style, item.season).joinToString(" · ")
                 if (details.isNotEmpty()) {
                     Text(

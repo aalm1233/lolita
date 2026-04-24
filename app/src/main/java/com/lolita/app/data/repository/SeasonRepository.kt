@@ -33,7 +33,18 @@ class SeasonRepository(
                     }
                 }
                 if (updated.isNotEmpty()) itemDao.updateItems(updated)
-                catalogEntryDao.updateEntriesSeason(oldName, season.name, System.currentTimeMillis())
+
+                val entries = catalogEntryDao.getAllCatalogEntriesList().filter { entry ->
+                    entry.season?.split(",")?.map { it.trim() }?.contains(oldName) == true
+                }
+                if (entries.isNotEmpty()) {
+                    val updatedEntries = entries.map { entry ->
+                        val seasons = entry.season!!.split(",").map { it.trim() }
+                        val newSeasons = seasons.map { if (it == oldName) season.name else it }
+                        entry.copy(season = newSeasons.joinToString(","), updatedAt = System.currentTimeMillis())
+                    }
+                    updatedEntries.forEach { catalogEntryDao.updateCatalogEntry(it) }
+                }
             }
         }
     }
@@ -51,7 +62,19 @@ class SeasonRepository(
                 }
             }
             if (updated.isNotEmpty()) itemDao.updateItems(updated)
-            catalogEntryDao.clearEntriesSeason(season.name, System.currentTimeMillis())
+
+            val entries = catalogEntryDao.getAllCatalogEntriesList().filter { entry ->
+                entry.season?.split(",")?.map { it.trim() }?.contains(season.name) == true
+            }
+            if (entries.isNotEmpty()) {
+                val updatedEntries = entries.map { entry ->
+                    val seasons = entry.season!!.split(",").map { it.trim() }
+                    val remaining = seasons.filter { it != season.name }
+                    entry.copy(season = remaining.joinToString(",").ifBlank { null }, updatedAt = System.currentTimeMillis())
+                }
+                updatedEntries.forEach { catalogEntryDao.updateCatalogEntry(it) }
+            }
+
             seasonDao.deleteSeason(season)
         }
     }

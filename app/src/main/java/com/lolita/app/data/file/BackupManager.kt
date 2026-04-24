@@ -46,7 +46,9 @@ private data class PreparedBackup(
     val backupData: BackupData,
     val imageCount: Int,
     val isZip: Boolean,
-    val stagingDir: File? = null
+    val stagingDir: File? = null,
+    val missingImageCount: Int = 0,
+    val migrationErrorCount: Int = 0
 )
 
 class BackupManager(
@@ -54,7 +56,10 @@ class BackupManager(
     private val database: LolitaDatabase
 ) {
     private val gson = Gson()
+    private val cacheLock = Any()
+    @Volatile
     private var cachedPreparedBackup: PreparedBackup? = null
+    @Volatile
     private var cachedBackupUri: Uri? = null
 
     suspend fun exportToJson(): Result<Uri> = withContext(Dispatchers.IO) {
@@ -108,7 +113,7 @@ class BackupManager(
             sb.appendLine("\n=== ITEMS ===")
             sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at")
             database.itemDao().getAllItemsList().forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors)},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
             }
 
             // Coordinates
@@ -207,7 +212,7 @@ class BackupManager(
                 )
             }
 
-            val imageArchiveNamesByPath = buildImageArchiveNames(collectImagePaths(backupData))
+            val (imageArchiveNamesByPath, missingImageCount) = buildImageArchiveNames(collectImagePaths(backupData))
             val zipBackupData = rewriteImagePathsForZip(backupData, imageArchiveNamesByPath)
             val jsonBytes = gson.toJson(zipBackupData).toByteArray()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
@@ -238,8 +243,10 @@ class BackupManager(
         }
     }
 
-    suspend fun importFromJson(uri: Uri): Result<ImportSummary> = withContext(Dispatchers.IO) {
+    suspend fun importBackup(uri: Uri): Result<ImportSummary> = withContext(Dispatchers.IO) {
         var activatedImages: ActivatedImages? = null
+        var dbBackupFile: File? = null
+        var imagesBackupDir: File? = null
         try {
             val preparedBackup = prepareBackup(uri, cacheResult = true)
             val backupData = if (preparedBackup.isZip) {
@@ -255,6 +262,32 @@ class BackupManager(
 
             if (preparedBackup.isZip) {
                 activatedImages = activateStagedImages(preparedBackup)
+            }
+
+            // C-02: Delete existing calendar events before clearing DB
+            try {
+                val existingPayments = database.paymentDao().getAllPaymentsList()
+                existingPayments.forEach { payment ->
+                    payment.calendarEventId?.let { eventId ->
+                        try { CalendarEventHelper.deleteEvent(context, eventId) } catch (_: Exception) {}
+                    }
+                }
+            } catch (_: Exception) {}
+
+            // C-01: Backup database file before clearing
+            val dbFile = context.getDatabasePath("lolita_database")
+            if (dbFile.exists()) {
+                val backupFile = File(dbFile.parent, "lolita_database.pre_import_bak")
+                dbFile.copyTo(backupFile, overwrite = true)
+                dbBackupFile = backupFile
+            }
+            val liveImagesDir = File(context.filesDir, IMAGE_DIR)
+            if (liveImagesDir.exists() && activatedImages == null) {
+                val backupDir = File(context.filesDir, "${IMAGE_DIR}_pre_import_backup")
+                if (!backupDir.exists()) {
+                    copyDirectory(liveImagesDir, backupDir)
+                    imagesBackupDir = backupDir
+                }
             }
 
             database.withTransaction {
@@ -286,6 +319,14 @@ class BackupManager(
             }
             clearPreparedBackupCache()
 
+            // Clean up pre-import backups on success
+            dbBackupFile?.delete()
+            dbBackupFile = null
+            if (imagesBackupDir != null) {
+                deleteRecursivelyQuietly(imagesBackupDir)
+                imagesBackupDir = null
+            }
+
             var calendarFailCount = 0
             try {
                 val unpaidPayments = database.paymentDao().getAllPaymentsList()
@@ -309,7 +350,8 @@ class BackupManager(
                     }
                 }
             } catch (e: Exception) {
-                calendarFailCount = -1
+                calendarFailCount += database.paymentDao().getAllPaymentsList()
+                    .count { !it.isPaid && it.dueDate > System.currentTimeMillis() }
                 Log.e("BackupManager", "Failed to recreate calendar events during import", e)
             }
 
@@ -331,8 +373,9 @@ class BackupManager(
             Result.success(ImportSummary(
                 totalImported = imported,
                 totalSkipped = 0,
-                totalErrors = 0,
+                totalErrors = calendarFailCount + preparedBackup.migrationErrorCount,
                 imageCount = preparedBackup.imageCount,
+                missingImageCount = preparedBackup.missingImageCount,
                 calendarEventsFailed = if (calendarFailCount > 0) calendarFailCount else 0,
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
@@ -341,6 +384,29 @@ class BackupManager(
             activatedImages?.let {
                 rollbackActivatedImages(it)
                 activatedImages = null
+            }
+            // C-01: Try to restore from pre-import backup on failure
+            dbBackupFile?.let { backupFile ->
+                try {
+                    val dbFile = context.getDatabasePath("lolita_database")
+                    database.close()
+                    if (backupFile.exists()) {
+                        backupFile.copyTo(dbFile, overwrite = true)
+                        backupFile.delete()
+                    }
+                } catch (restoreErr: Exception) {
+                    Log.e("BackupManager", "Failed to restore database from backup", restoreErr)
+                }
+            }
+            imagesBackupDir?.let { backupDir ->
+                try {
+                    val liveImagesDir = File(context.filesDir, IMAGE_DIR)
+                    if (backupDir.exists() && !liveImagesDir.exists()) {
+                        moveDirectory(backupDir, liveImagesDir)
+                    } else {
+                        deleteRecursivelyQuietly(backupDir)
+                    }
+                } catch (_: Exception) {}
             }
             clearPreparedBackupCache()
             Result.failure(e)
@@ -424,10 +490,10 @@ class BackupManager(
         return paths
     }
 
-    private fun buildImageArchiveNames(imagePaths: Set<String>): Map<String, String> {
-        return imagePaths
-            .filter { path -> File(path).isFile }
-            .associateWith { path -> buildArchiveImageName(path) }
+    private fun buildImageArchiveNames(imagePaths: Set<String>): Pair<Map<String, String>, Int> {
+        val existing = imagePaths.filter { path -> File(path).isFile }
+        val missingCount = imagePaths.size - existing.size
+        return existing.associateWith { path -> buildArchiveImageName(path) } to missingCount
     }
 
     private fun buildArchiveImageName(path: String): String {
@@ -477,8 +543,10 @@ class BackupManager(
     }
 
     private fun prepareBackup(uri: Uri, cacheResult: Boolean): PreparedBackup {
-        if (cachedBackupUri == uri && cachedPreparedBackup != null) {
-            return cachedPreparedBackup!!
+        synchronized(cacheLock) {
+            if (cachedBackupUri == uri && cachedPreparedBackup != null) {
+                return cachedPreparedBackup!!
+            }
         }
 
         clearPreparedBackupCache()
@@ -488,18 +556,22 @@ class BackupManager(
         } else {
             val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
                 ?: throw Exception("无法读取文件")
+            val (migratedJson, migrationErrorCount) = migrateJsonString(jsonString)
             PreparedBackup(
                 backupData = migrateBackupData(
-                    gson.fromJson(migrateJsonString(jsonString), BackupData::class.java)
+                    gson.fromJson(migratedJson, BackupData::class.java)
                 ),
                 imageCount = 0,
-                isZip = false
+                isZip = false,
+                migrationErrorCount = migrationErrorCount
             )
         }
 
         if (cacheResult) {
-            cachedPreparedBackup = prepared
-            cachedBackupUri = uri
+            synchronized(cacheLock) {
+                cachedPreparedBackup = prepared
+                cachedBackupUri = uri
+            }
         }
         return prepared
     }
@@ -537,17 +609,16 @@ class BackupManager(
                 }
             } ?: throw Exception("无法读取文件")
 
-            val data = gson.fromJson(
-                migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json")),
-                BackupData::class.java
-            )
+            val (migratedJson, migrationErrorCount) = migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json"))
+            val data = gson.fromJson(migratedJson, BackupData::class.java)
             return PreparedBackup(
                 backupData = migrateBackupData(
                     rewriteImagePathsFromZipEntries(data, availableImageNames)
                 ),
                 imageCount = imageCount,
                 isZip = true,
-                stagingDir = stagingDir
+                stagingDir = stagingDir,
+                migrationErrorCount = migrationErrorCount
             )
         } catch (e: Exception) {
             deleteRecursivelyQuietly(stagingDir)
@@ -662,9 +733,12 @@ class BackupManager(
     }
 
     private fun rollbackActivatedImages(activatedImages: ActivatedImages) {
-        deleteRecursivelyQuietly(activatedImages.liveImagesDir)
         activatedImages.backupImagesDir?.let { backupDir ->
-            moveDirectory(backupDir, activatedImages.liveImagesDir)
+            val liveImagesDir = activatedImages.liveImagesDir
+            if (liveImagesDir.exists()) {
+                deleteRecursivelyQuietly(liveImagesDir)
+            }
+            moveDirectory(backupDir, liveImagesDir)
         }
         deleteRecursivelyQuietly(activatedImages.stagingDir)
     }
@@ -708,9 +782,13 @@ class BackupManager(
     }
 
     private fun clearPreparedBackupCache() {
-        cachedPreparedBackup?.stagingDir?.let { deleteRecursivelyQuietly(it) }
-        cachedPreparedBackup = null
-        cachedBackupUri = null
+        val cached: PreparedBackup?
+        synchronized(cacheLock) {
+            cached = cachedPreparedBackup
+            cachedPreparedBackup = null
+            cachedBackupUri = null
+        }
+        cached?.stagingDir?.let { deleteRecursivelyQuietly(it) }
     }
 
     private fun deleteRecursivelyQuietly(file: File?) {
@@ -753,7 +831,7 @@ class BackupManager(
      * Renames old "color" field to "colors" so Gson can deserialize it.
      * Converts old single "imageUrl" field to "imageUrls" list format.
      */
-    private fun migrateJsonString(json: String): String {
+    private fun migrateJsonString(json: String): Pair<String, Int> {
         return try {
             val root = JsonParser.parseString(json).asJsonObject
             ensureArrayField(root, "catalogEntries")
@@ -764,9 +842,28 @@ class BackupManager(
             migrateArray(root, "items", migrateColor = true, migrateImageUrl = true)
             migrateArray(root, "coordinates", migrateColor = false, migrateImageUrl = true)
             migrateArray(root, "outfitLogs", migrateColor = false, migrateImageUrl = true)
-            root.toString()
-        } catch (_: Exception) {
-            json
+            ensureColorArray(root)
+            root.toString() to 0
+        } catch (e: Exception) {
+            Log.w("BackupManager", "JSON migration failed, using original", e)
+            json to 1
+        }
+    }
+
+    private fun ensureColorArray(root: JsonObject) {
+        val itemsArray = root.getAsJsonArray("items") ?: return
+        itemsArray.forEach { element ->
+            val obj = element as? JsonObject ?: return@forEach
+            if (obj.has("colors")) {
+                val colorsElement = obj.get("colors")
+                if (colorsElement.isJsonPrimitive && colorsElement.asString.let { !it.startsWith("[") }) {
+                    val arr = JsonArray()
+                    if (colorsElement.asString.isNotBlank()) {
+                        arr.add(colorsElement.asString)
+                    }
+                    obj.add("colors", arr)
+                }
+            }
         }
     }
 
@@ -810,19 +907,7 @@ class BackupManager(
      * Old backups: "color": "粉色" → new format: "colors": "[\"粉色\"]"
      */
     private fun migrateBackupData(backupData: BackupData): BackupData {
-        val fixedItems = backupData.items.map { item ->
-            if (item.colors != null && !item.colors.startsWith("[")) {
-                // Old format: plain string like "粉色" → convert to JSON array
-                item.copy(colors = gson.toJson(listOf(item.colors)))
-            } else {
-                item
-            }
-        }
-        return if (fixedItems != backupData.items) {
-            backupData.copy(items = fixedItems)
-        } else {
-            backupData
-        }
+        return backupData
     }
 
     companion object {
@@ -837,6 +922,7 @@ data class ImportSummary(
     val totalSkipped: Int,
     val totalErrors: Int = 0,
     val imageCount: Int = 0,
+    val missingImageCount: Int = 0,
     val calendarEventsFailed: Int = 0,
     val backupDate: Long,
     val backupVersion: String

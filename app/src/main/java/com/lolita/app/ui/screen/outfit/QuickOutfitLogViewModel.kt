@@ -44,15 +44,19 @@ class QuickOutfitLogViewModel(
             }
         }
         viewModelScope.launch {
-            val todayLog = outfitLogRepository.getTodayOutfitLog()
-            if (todayLog != null) {
-                _uiState.update {
-                    it.copy(
-                        existingLogId = todayLog.outfitLog.id,
-                        selectedItemIds = todayLog.items.map { item -> item.id }.toSet(),
-                        note = todayLog.outfitLog.note
-                    )
+            try {
+                val todayLog = outfitLogRepository.getTodayOutfitLog()
+                if (todayLog != null) {
+                    _uiState.update {
+                        it.copy(
+                            existingLogId = todayLog.outfitLog.id,
+                            selectedItemIds = todayLog.items.map { item -> item.id }.toSet(),
+                            note = todayLog.outfitLog.note
+                        )
+                    }
                 }
+            } catch (e: Exception) {
+                android.util.Log.w("QuickOutfitLogVM", "Failed to load today outfit log, falling back to new mode", e)
             }
         }
     }

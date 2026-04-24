@@ -23,10 +23,8 @@ import com.lolita.app.data.repository.SeasonRepository
 import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.ViewMode
-import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
-import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -37,6 +35,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Immutable
 data class ItemCardData(
@@ -224,7 +223,7 @@ class ItemListViewModel(
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
                 val colorOpts = items.flatMap { item ->
-                    parseColorsJson(item.colors)
+                    item.colors
                 }.filter { it.isNotBlank() }.distinct().sorted()
                 ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
             }.collect { data ->
@@ -479,8 +478,7 @@ class ItemListViewModel(
 
         if (color != null) {
             result = result.filter { item ->
-                val itemColors = parseColorsJson(item.colors)
-                itemColors.contains(color)
+                item.colors.contains(color)
             }
         }
 
@@ -585,9 +583,9 @@ class ItemEditViewModel(
     private val _uiState = MutableStateFlow(ItemEditUiState())
     val uiState: StateFlow<ItemEditUiState> = _uiState.asStateFlow()
 
-    private val pendingImageDeletions = mutableListOf<String>()
+    private val _pendingImageDeletions = MutableStateFlow(emptySet<String>())
     private var locationJob: Job? = null
-    private var supportingDataLoaded = false
+    private var supportingDataLoaded = AtomicBoolean(false)
     private var pendingCatalogLinkId: Long? = null
     private var catalogPrefillImagePaths: Set<String> = emptySet()
     var hasUnsavedChanges: Boolean = false
@@ -598,7 +596,7 @@ class ItemEditViewModel(
             _uiState.update { it.copy(isLoading = true) }
             loadReferenceData()
             ensureLocationCollection()
-            pendingImageDeletions.clear()
+            _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
 
             if (itemId > 0) {
@@ -620,7 +618,7 @@ class ItemEditViewModel(
                             priority = item.priority,
                             imageUrls = item.imageUrls,
                             imageUrlsToDelete = emptyList(),
-                            colors = parseColorsJson(item.colors),
+                            colors = item.colors,
                             seasons = item.season?.split(",")?.filter { season -> season.isNotBlank() } ?: emptyList(),
                             style = item.style,
                             size = item.size,
@@ -674,7 +672,7 @@ class ItemEditViewModel(
     }
 
     private suspend fun loadReferenceData() {
-        if (supportingDataLoaded) return
+        if (supportingDataLoaded.get()) return
 
         val brands = brandRepository.getAllBrands().first()
         val categories = categoryRepository.getAllCategories().first()
@@ -693,7 +691,7 @@ class ItemEditViewModel(
                 sourceOptions = sources.map { source -> source.name }
             )
         }
-        supportingDataLoaded = true
+        supportingDataLoaded.set(true)
     }
 
     private fun ensureLocationCollection() {
@@ -707,105 +705,115 @@ class ItemEditViewModel(
 
     fun updateName(name: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(name = name)
+        _uiState.update { it.copy(name = name) }
     }
 
     fun updateDescription(description: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(description = description)
+        _uiState.update { it.copy(description = description) }
     }
 
     fun updateBrand(brandId: Long) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(brandId = brandId)
+        _uiState.update { it.copy(brandId = brandId) }
     }
 
     fun updateCategory(categoryId: Long) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(categoryId = categoryId)
+        _uiState.update { it.copy(categoryId = categoryId) }
     }
 
     fun updateCoordinate(coordinateId: Long?) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(coordinateId = coordinateId)
+        _uiState.update { it.copy(coordinateId = coordinateId) }
     }
 
     fun updateStatus(status: ItemStatus) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(status = status)
+        _uiState.update { it.copy(status = status) }
     }
 
     fun updatePriority(priority: ItemPriority) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(priority = priority)
+        _uiState.update { it.copy(priority = priority) }
     }
 
     fun addImage(url: String) {
         hasUnsavedChanges = true
-        val current = _uiState.value.imageUrls
-        if (current.size >= 5) return
-        _uiState.value = _uiState.value.copy(imageUrls = current + url)
+        _uiState.update { current ->
+            if (current.imageUrls.size >= 5) current
+            else current.copy(imageUrls = current.imageUrls + url)
+        }
     }
 
     fun removeImage(index: Int) {
         hasUnsavedChanges = true
-        val current = _uiState.value.imageUrls.toMutableList()
-        if (index !in current.indices) return
-        val removed = current.removeAt(index)
-        val shouldDeleteRemovedImage = removed !in catalogPrefillImagePaths
-        _uiState.value = _uiState.value.copy(
-            imageUrls = current,
-            imageUrlsToDelete = if (shouldDeleteRemovedImage) {
-                _uiState.value.imageUrlsToDelete + removed
-            } else {
-                _uiState.value.imageUrlsToDelete
+        _uiState.update { current ->
+            val mutableUrls = current.imageUrls.toMutableList()
+            if (index !in mutableUrls.indices) current
+            else {
+                val removed = mutableUrls.removeAt(index)
+                val shouldDeleteRemovedImage = removed !in catalogPrefillImagePaths
+                current.copy(
+                    imageUrls = mutableUrls,
+                    imageUrlsToDelete = if (shouldDeleteRemovedImage) {
+                        current.imageUrlsToDelete + removed
+                    } else {
+                        current.imageUrlsToDelete
+                    }
+                )
             }
-        )
+        }
     }
 
     fun reorderImages(fromIndex: Int, toIndex: Int) {
         hasUnsavedChanges = true
-        val current = _uiState.value.imageUrls.toMutableList()
-        if (fromIndex !in current.indices || toIndex !in current.indices) return
-        val item = current.removeAt(fromIndex)
-        current.add(toIndex, item)
-        _uiState.value = _uiState.value.copy(imageUrls = current)
+        _uiState.update { current ->
+            val mutableUrls = current.imageUrls.toMutableList()
+            if (fromIndex !in mutableUrls.indices || toIndex !in mutableUrls.indices) current
+            else {
+                val item = mutableUrls.removeAt(fromIndex)
+                mutableUrls.add(toIndex, item)
+                current.copy(imageUrls = mutableUrls)
+            }
+        }
     }
 
     fun updateColors(colors: List<String>) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(colors = colors)
+        _uiState.update { it.copy(colors = colors) }
     }
 
     fun toggleSeason(season: String) {
         hasUnsavedChanges = true
-        val current = _uiState.value.seasons
-        val updated = if (season in current) current - season else current + season
-        _uiState.value = _uiState.value.copy(seasons = updated)
+        _uiState.update { current ->
+            val updated = if (season in current.seasons) current.seasons - season else current.seasons + season
+            current.copy(seasons = updated)
+        }
     }
 
     fun updateStyle(style: String?) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(style = style)
+        _uiState.update { it.copy(style = style) }
     }
 
     fun updateSource(source: String?) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(source = source)
+        _uiState.update { it.copy(source = source) }
     }
 
     fun updateSize(size: String?) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(size = size)
+        _uiState.update { it.copy(size = size) }
     }
 
     fun updateSizeChartImageUrl(url: String?) {
         hasUnsavedChanges = true
         val oldUrl = _uiState.value.sizeChartImageUrl
         if (oldUrl != null && url != oldUrl) {
-            pendingImageDeletions.add(oldUrl)
+            _pendingImageDeletions.update { it + oldUrl }
         }
-        _uiState.value = _uiState.value.copy(sizeChartImageUrl = url)
+        _uiState.update { it.copy(sizeChartImageUrl = url) }
     }
 
     fun updateLocation(locationId: Long?) {
@@ -820,6 +828,7 @@ class ItemEditViewModel(
 
     suspend fun saveItem(): Result<Long> {
         val state = _uiState.value
+        if (state.isSaving) return Result.failure(Exception("正在保存中"))
 
         if (state.name.isBlank()) {
             return Result.failure(Exception("请输入服饰名称"))
@@ -833,15 +842,12 @@ class ItemEditViewModel(
             return Result.failure(Exception("请选择类型"))
         }
 
-        _uiState.value = _uiState.value.copy(isSaving = true)
+        _uiState.update { it.copy(isSaving = true) }
         var duplicatedImagePaths = emptyList<String>()
 
         return try {
             val now = System.currentTimeMillis()
             val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
-            val colorsJson = if (state.colors.isNotEmpty()) {
-                Gson().toJson(state.colors)
-            } else null
             val imageUrlsForSave = if (state.item == null && pendingCatalogLinkId != null) {
                 state.imageUrls.map { path ->
                     ImageFileHelper.copyExistingImageToInternalStorage(com.lolita.app.di.AppModule.context(), path)
@@ -860,7 +866,7 @@ class ItemEditViewModel(
                     status = state.status,
                     priority = state.priority,
                     imageUrls = imageUrlsForSave,
-                    colors = colorsJson,
+                    colors = state.colors,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,
@@ -881,7 +887,7 @@ class ItemEditViewModel(
                     imageUrls = imageUrlsForSave,
                     status = state.status,
                     priority = state.priority,
-                    colors = colorsJson,
+                    colors = state.colors,
                     season = seasonStr,
                     style = state.style,
                     size = state.size,
@@ -909,25 +915,27 @@ class ItemEditViewModel(
             state.imageUrlsToDelete.forEach { path ->
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
             }
-            pendingImageDeletions.forEach { path ->
+            _pendingImageDeletions.value.forEach { path ->
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
             }
-            pendingImageDeletions.clear()
+            _pendingImageDeletions.update { emptySet() }
             pendingCatalogLinkId = null
             catalogPrefillImagePaths = emptySet()
             hasUnsavedChanges = false
-            _uiState.value = _uiState.value.copy(
-                item = item.copy(id = savedItemId),
-                imageUrls = imageUrlsForSave,
-                imageUrlsToDelete = emptyList(),
-                isSaving = false
-            )
+            _uiState.update {
+                it.copy(
+                    item = item.copy(id = savedItemId),
+                    imageUrls = imageUrlsForSave,
+                    imageUrlsToDelete = emptyList(),
+                    isSaving = false
+                )
+            }
             Result.success(savedItemId)
         } catch (e: Exception) {
             duplicatedImagePaths.forEach { path ->
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
             }
-            _uiState.value = _uiState.value.copy(isSaving = false)
+            _uiState.update { it.copy(isSaving = false) }
             Result.failure(e)
         }
     }

@@ -7,22 +7,47 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.lolita.app.R
 import com.lolita.app.ui.MainActivity
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class DailyOutfitReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
-        val hasLog = runBlocking {
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val repo = com.lolita.app.di.AppModule.outfitLogRepository()
-                repo.getTodayOutfitLog() != null
-            } catch (e: Exception) { false }
+                val hasLog = repo.getTodayOutfitLog() != null
+                if (!hasLog) {
+                    showReminderNotification(context)
+                }
+            } catch (e: Exception) {
+                Log.e("DailyOutfitReminder", "Failed to check today outfit log", e)
+            } finally {
+                rescheduleNextReminder(context)
+                pendingResult.finish()
+            }
         }
-        if (hasLog) return
+    }
 
+    private suspend fun rescheduleNextReminder(context: Context) {
+        try {
+            val appPreferences = com.lolita.app.di.AppModule.appPreferences()
+            val enabled = appPreferences.outfitReminderEnabled.first()
+            if (enabled) {
+                val hour = appPreferences.outfitReminderHour.first()
+                DailyOutfitReminderScheduler(context).schedule(hour)
+            }
+        } catch (_: Exception) {}
+    }
+
+    private fun showReminderNotification(context: Context) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
             as NotificationManager
 

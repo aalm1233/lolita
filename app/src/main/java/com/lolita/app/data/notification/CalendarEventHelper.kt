@@ -75,7 +75,8 @@ object CalendarEventHelper {
     private fun getPrimaryCalendarId(context: Context): Long? {
         val projection = arrayOf(
             CalendarContract.Calendars._ID,
-            CalendarContract.Calendars.IS_PRIMARY
+            CalendarContract.Calendars.IS_PRIMARY,
+            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
         )
         val cursor = try {
             context.contentResolver.query(
@@ -90,18 +91,27 @@ object CalendarEventHelper {
         } ?: return null
 
         cursor.use {
-            // Try to find the primary calendar first
+            val idIndex = it.getColumnIndex(CalendarContract.Calendars._ID)
+            val isPrimaryIndex = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+            val accessLevelIndex = it.getColumnIndex(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL)
+            if (idIndex < 0) return null
+
+            var firstWritableId: Long? = null
             while (it.moveToNext()) {
-                val isPrimary = it.getInt(1)
+                val id = it.getLong(idIndex)
+                val accessLevel = if (accessLevelIndex >= 0) it.getInt(accessLevelIndex) else -1
+                val isReadOnly = accessLevel == CalendarContract.Calendars.CAL_ACCESS_READ
+                if (isReadOnly) continue
+
+                if (firstWritableId == null) {
+                    firstWritableId = id
+                }
+                val isPrimary = if (isPrimaryIndex >= 0) it.getInt(isPrimaryIndex) else 0
                 if (isPrimary == 1) {
-                    return it.getLong(0)
+                    return id
                 }
             }
-            // Fallback to the first available calendar
-            if (it.moveToFirst()) {
-                return it.getLong(0)
-            }
+            return firstWritableId
         }
-        return null
     }
 }

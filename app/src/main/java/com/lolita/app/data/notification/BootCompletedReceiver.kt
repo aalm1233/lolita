@@ -3,6 +3,7 @@ package com.lolita.app.data.notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.lolita.app.di.AppModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,8 +47,8 @@ class BootCompletedReceiver : BroadcastReceiver() {
                         DailyOutfitReminderScheduler(context).schedule(hour)
                     }
                 }
-            } catch (_: Exception) {
-                // Silently fail — reminders won't be rescheduled but app won't crash
+            } catch (e: Exception) {
+                Log.w("BootCompletedReceiver", "Failed to reschedule reminders after reboot", e)
             } finally {
                 pendingResult.finish()
             }

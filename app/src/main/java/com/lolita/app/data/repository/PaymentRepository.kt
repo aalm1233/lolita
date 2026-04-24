@@ -34,17 +34,11 @@ class PaymentRepository(
 
     suspend fun insertPayment(payment: Payment, itemName: String = ""): Long {
         val id = paymentDao.insertPayment(payment)
-        // Schedule reminder if enabled
         if (payment.reminderSet && !payment.isPaid) {
             try {
                 val insertedPayment = payment.copy(id = id)
                 reminderScheduler.scheduleReminder(insertedPayment, itemName)
-            } catch (_: SecurityException) {
-                // Exact alarm permission not granted, reminder skipped
-            }
-        }
-        // Add calendar event only if reminder is set and not paid
-        if (payment.reminderSet && !payment.isPaid) {
+            } catch (_: SecurityException) {}
             val calendarEventId = try {
                 CalendarEventHelper.insertEvent(
                     context = context,
@@ -63,12 +57,11 @@ class PaymentRepository(
     }
 
     suspend fun updatePayment(payment: Payment, itemName: String = "") {
-        // Handle calendar event: always delete old
         val oldPayment = paymentDao.getPaymentById(payment.id)
         var updatedPayment = payment
+
+        // H-12: Create new calendar event first, then delete old one
         try {
-            oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
-            // Only create new calendar event if not paid and reminder is set
             if (!payment.isPaid && payment.reminderSet) {
                 val newEventId = CalendarEventHelper.insertEvent(
                     context = context,
@@ -77,20 +70,19 @@ class PaymentRepository(
                     startTimeMillis = payment.dueDate
                 )
                 updatedPayment = payment.copy(calendarEventId = newEventId)
+                // Delete old event only after new one is created
+                oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
             } else {
+                oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
                 updatedPayment = payment.copy(calendarEventId = null)
             }
-        } catch (_: Exception) {
-            // Calendar operation failed, proceed without calendar event
-        }
+        } catch (_: Exception) {}
 
         paymentDao.updatePayment(updatedPayment)
 
-        // Auto-toggle PENDING_BALANCE status based on unpaid balance payments
         checkAndUpdatePendingBalanceStatus(payment.id)
 
         try {
-            // Update reminder based on payment status
             if (payment.isPaid) {
                 reminderScheduler.cancelReminder(payment.id)
             } else if (payment.reminderSet) {
@@ -98,21 +90,15 @@ class PaymentRepository(
             } else {
                 reminderScheduler.cancelReminder(payment.id)
             }
-        } catch (_: SecurityException) {
-            // Exact alarm permission not granted, reminder skipped
-        }
+        } catch (_: SecurityException) {}
     }
 
     suspend fun deletePayment(payment: Payment) {
-        // Cancel reminder before deleting
-        reminderScheduler.cancelReminder(payment.id)
-        // Delete calendar event if exists
-        payment.calendarEventId?.let {
-            try {
-                CalendarEventHelper.deleteEvent(context, it)
-            } catch (_: Exception) { }
-        }
         paymentDao.deletePayment(payment)
+        try { reminderScheduler.cancelReminder(payment.id) } catch (_: Exception) {}
+        payment.calendarEventId?.let {
+            try { CalendarEventHelper.deleteEvent(context, it) } catch (_: Exception) {}
+        }
     }
 
     /**
@@ -121,7 +107,9 @@ class PaymentRepository(
      */
     fun scheduleReminderForPayment(payment: Payment, itemName: String = "") {
         if (payment.reminderSet && !payment.isPaid) {
-            reminderScheduler.scheduleReminder(payment, itemName)
+            try {
+                reminderScheduler.scheduleReminder(payment, itemName)
+            } catch (_: SecurityException) {}
         }
     }
 

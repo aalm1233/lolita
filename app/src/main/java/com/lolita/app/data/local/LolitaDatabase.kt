@@ -36,7 +36,7 @@ import com.lolita.app.data.local.entity.*
         RemoteSharedItem::class,
         RemoteSharedPricePlan::class
     ],
-    version = 17,
+    version = 18,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -99,11 +99,13 @@ abstract class LolitaDatabase : RoomDatabase() {
                 // Insert preset styles
                 val now = System.currentTimeMillis()
                 listOf("甜系", "古典", "哥特", "田园", "中华", "其他").forEach { name ->
-                    db.execSQL("INSERT OR IGNORE INTO styles (name, is_preset, created_at) VALUES ('$name', 1, $now)")
+                    val escaped = name.replace("'", "''")
+                    db.execSQL("INSERT OR IGNORE INTO styles (name, is_preset, created_at) VALUES ('$escaped', 1, $now)")
                 }
                 // Insert preset seasons
                 listOf("春", "夏", "秋", "冬", "四季").forEach { name ->
-                    db.execSQL("INSERT OR IGNORE INTO seasons (name, is_preset, created_at) VALUES ('$name', 1, $now)")
+                    val escaped = name.replace("'", "''")
+                    db.execSQL("INSERT OR IGNORE INTO seasons (name, is_preset, created_at) VALUES ('$escaped', 1, $now)")
                 }
             }
         }
@@ -116,7 +118,8 @@ abstract class LolitaDatabase : RoomDatabase() {
                 // Update accessory categories
                 val accessories = listOf("KC", "斗篷", "披肩", "发带", "Bonnet", "其他头饰", "袜子", "手套", "其他配饰")
                 accessories.forEach { name ->
-                    db.execSQL("UPDATE categories SET category_group = 'ACCESSORY' WHERE name = '$name'")
+                    val escaped = name.replace("'", "''")
+                    db.execSQL("UPDATE categories SET category_group = 'ACCESSORY' WHERE name = '$escaped'")
                 }
             }
         }
@@ -268,7 +271,8 @@ abstract class LolitaDatabase : RoomDatabase() {
                 // Insert preset sources
                 val now = System.currentTimeMillis()
                 listOf("淘宝", "咸鱼", "线下").forEach { name ->
-                    db.execSQL("INSERT OR IGNORE INTO sources (name, is_preset, created_at) VALUES ('$name', 1, $now)")
+                    val escaped = name.replace("'", "''")
+                    db.execSQL("INSERT OR IGNORE INTO sources (name, is_preset, created_at) VALUES ('$escaped', 1, $now)")
                 }
             }
         }
@@ -285,14 +289,14 @@ abstract class LolitaDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE items ADD COLUMN colors TEXT DEFAULT NULL")
                 // Migrate existing color data: single value -> JSON array
                 // e.g. "粉色" -> ["粉色"]
-                db.execSQL("""UPDATE items SET colors = '["' || color || '"]' WHERE color IS NOT NULL AND color != ''""")
+                db.execSQL("""UPDATE items SET colors = '["' || REPLACE(REPLACE(color, '\', '\\'), '"', '\"') || '"]' WHERE color IS NOT NULL AND color != ''""")
             }
         }
 
         private val MIGRATION_11_12 = object : Migration(11, 12) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Fix corrupted JSON from migration 10->11 that had literal backslashes
-                db.execSQL("""UPDATE items SET colors = REPLACE(colors, '\"', '"') WHERE colors IS NOT NULL AND colors LIKE '%\%'""")
+                db.execSQL("""UPDATE items SET colors = REPLACE(colors, '\"', '"') WHERE colors IS NOT NULL AND colors GLOB '*\\*'""")
 
                 // Rebuild items table to remove the old 'color' column
                 // Room schema validation requires exact column match — extra columns cause crash
@@ -693,6 +697,49 @@ abstract class LolitaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_17_18 = object : Migration(17, 18) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
+                    brand_id INTEGER NOT NULL,
+                    category_id INTEGER NOT NULL,
+                    created_at INTEGER NOT NULL,
+                    description TEXT NOT NULL,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    image_urls TEXT NOT NULL DEFAULT '[]',
+                    coordinate_order INTEGER NOT NULL DEFAULT 0,
+                    name TEXT NOT NULL,
+                    priority TEXT NOT NULL DEFAULT 'MEDIUM',
+                    status TEXT NOT NULL,
+                    coordinate_id INTEGER,
+                    colors TEXT NOT NULL DEFAULT '[]',
+                    season TEXT,
+                    style TEXT,
+                    size TEXT,
+                    size_chart_image_url TEXT,
+                    location_id INTEGER,
+                    source TEXT,
+                    updated_at INTEGER NOT NULL,
+                    FOREIGN KEY(coordinate_id) REFERENCES coordinates(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY(brand_id) REFERENCES brands(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(category_id) REFERENCES categories(id) ON UPDATE NO ACTION ON DELETE RESTRICT,
+                    FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE NO ACTION ON DELETE SET NULL
+                )""")
+                db.execSQL("""INSERT INTO items_new (brand_id, category_id, created_at, description, id, image_urls, coordinate_order, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at)
+                    SELECT brand_id, category_id, created_at, description, id, image_urls, coordinate_order, name, priority, status, coordinate_id,
+                    CASE WHEN colors IS NULL THEN '[]' WHEN colors = '' THEN '[]' ELSE colors END,
+                    season, style, size, size_chart_image_url, location_id, source, updated_at FROM items""")
+                db.execSQL("DROP TABLE items")
+                db.execSQL("ALTER TABLE items_new RENAME TO items")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_name ON items (name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_coordinate_id ON items (coordinate_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_brand_id ON items (brand_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_category_id ON items (category_id)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+            }
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -701,7 +748,7 @@ abstract class LolitaDatabase : RoomDatabase() {
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
                     .build()
                 INSTANCE = instance
                 instance

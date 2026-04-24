@@ -82,8 +82,8 @@ data class Item(
     @ColumnInfo(name = "coordinate_id")
     val coordinateId: Long? = null,
 
-    @ColumnInfo(name = "colors")
-    val colors: String? = null,
+    @ColumnInfo(name = "colors", defaultValue = "[]")
+    val colors: List<String> = emptyList(),
 
     @ColumnInfo(name = "season")
     val season: String? = null,

@@ -18,7 +18,6 @@ import coil.compose.AsyncImage
 import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.screen.common.parseColorsJson
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import java.io.File
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -143,8 +142,8 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                         Text(it, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    matchScore.item.colors?.let { colorsJson ->
-                        val colorDisplay = parseColorsJson(colorsJson).joinToString("、")
+                    matchScore.item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
+                        val colorDisplay = colors.joinToString("、")
                         if (colorDisplay.isNotEmpty()) {
                         Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -24,7 +24,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 @Composable
 fun TaobaoImportScreen(
     onBack: () -> Unit,
-    onNavigateToDetail: (selectedItemsJson: String) -> Unit,
+    onNavigateToDetail: (itemId: Long) -> Unit,
     onNavigateToGuide: () -> Unit = {},
     viewModel: TaobaoImportViewModel = viewModel()
 ) {

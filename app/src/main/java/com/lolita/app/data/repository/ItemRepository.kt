@@ -53,7 +53,6 @@ class ItemRepository(
 
     suspend fun deleteItem(item: Item) {
         val doDelete: suspend () -> Unit = {
-            // Clean up AlarmManager reminders and calendar events before CASCADE deletes payments
             if (paymentRepository != null && priceRepository != null) {
                 val prices = priceRepository.getPricesByItemList(item.id)
                 for (price in prices) {
@@ -63,8 +62,6 @@ class ItemRepository(
                     }
                 }
             }
-            item.imageUrls.forEach { ImageFileHelper.deleteImage(it) }
-            item.sizeChartImageUrl?.let { ImageFileHelper.deleteImage(it) }
             itemDao.deleteItem(item)
         }
         if (database != null) {
@@ -72,6 +69,8 @@ class ItemRepository(
         } else {
             doDelete()
         }
+        item.imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
+        item.sizeChartImageUrl?.let { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
     }
 
     suspend fun updateCoordinateOrder(itemId: Long, order: Int) {

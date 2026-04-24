@@ -25,7 +25,8 @@ data class OutfitLogListUiState(
     val allLogs: List<OutfitLogListItem> = emptyList(),
     val logs: List<OutfitLogListItem> = emptyList(),
     val searchQuery: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val error: String? = null
 )
 
 data class OutfitLogListItem(
@@ -51,6 +52,7 @@ data class OutfitLogEditUiState(
     val selectedItemIds: Set<Long> = emptySet(),
     val availableItems: List<Item> = emptyList(),
     val isSaving: Boolean = false,
+    val isDeleted: Boolean = false,
     val error: String? = null
 )
 
@@ -124,8 +126,8 @@ class OutfitLogListViewModel(
         viewModelScope.launch {
             try {
                 outfitLogRepository.deleteOutfitLogById(logId)
-            } catch (_: Exception) {
-                // Log already deleted or doesn't exist
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "删除失败") }
             }
         }
     }
@@ -149,11 +151,13 @@ class OutfitLogDetailViewModel(
     private fun loadOutfitLogDetail() {
         viewModelScope.launch {
             outfitLogRepository.getOutfitLogWithItems(logId).collect { result ->
-                _uiState.value = _uiState.value.copy(
-                    log = result?.outfitLog,
-                    items = result?.items ?: emptyList(),
-                    isLoading = false
-                )
+                _uiState.update {
+                    it.copy(
+                        log = result?.outfitLog,
+                        items = result?.items ?: emptyList(),
+                        isLoading = false
+                    )
+                }
             }
         }
     }
@@ -195,9 +199,7 @@ class OutfitLogEditViewModel(
     private fun loadAvailableItems() {
         viewModelScope.launch {
             itemRepository.getAllItems().collect { items ->
-                _uiState.value = _uiState.value.copy(
-                    availableItems = items
-                )
+                _uiState.update { it.copy(availableItems = items) }
             }
         }
     }
@@ -205,69 +207,66 @@ class OutfitLogEditViewModel(
     fun loadOutfitLog(logId: Long?) {
         editingLogId = logId
         if (logId == null) {
-            // New outfit log - set today's date
-            _uiState.value = _uiState.value.copy(
-                date = System.currentTimeMillis()
-            )
+            _uiState.update { it.copy(date = System.currentTimeMillis()) }
             return
         }
 
         viewModelScope.launch {
             val result = outfitLogRepository.getOutfitLogWithItems(logId).first()
-            result?.let { data ->
-                val itemIds = data.items.map { it.id }.toSet()
+            if (result == null) {
+                _uiState.update { it.copy(isDeleted = true) }
+            } else {
+                val itemIds = result.items.map { it.id }.toSet()
                 originalItemIds = itemIds
-                _uiState.value = _uiState.value.copy(
-                    date = data.outfitLog.date,
-                    note = data.outfitLog.note,
-                    imageUrls = data.outfitLog.imageUrls,
-                    selectedItemIds = itemIds
-                )
+                _uiState.update {
+                    it.copy(
+                        date = result.outfitLog.date,
+                        note = result.outfitLog.note,
+                        imageUrls = result.outfitLog.imageUrls,
+                        selectedItemIds = itemIds
+                    )
+                }
             }
         }
     }
 
     fun updateDate(date: Long) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(date = date)
+        _uiState.update { it.copy(date = date) }
     }
 
     fun updateNote(note: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(note = note)
+        _uiState.update { it.copy(note = note) }
     }
 
     fun addImage(imageUrl: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(
-            imageUrls = _uiState.value.imageUrls + imageUrl
-        )
+        _uiState.update { it.copy(imageUrls = it.imageUrls + imageUrl) }
     }
 
     fun removeImage(imageUrl: String) {
         hasUnsavedChanges = true
-        _uiState.value = _uiState.value.copy(
-            imageUrls = _uiState.value.imageUrls - imageUrl
-        )
+        _uiState.update { it.copy(imageUrls = it.imageUrls - imageUrl) }
     }
 
     fun toggleItemSelection(itemId: Long) {
         hasUnsavedChanges = true
-        val currentSelection = _uiState.value.selectedItemIds
-        val newSelection = if (currentSelection.contains(itemId)) {
-            currentSelection - itemId
-        } else {
-            currentSelection + itemId
+        _uiState.update {
+            val newSelection = if (itemId in it.selectedItemIds) it.selectedItemIds - itemId else it.selectedItemIds + itemId
+            it.copy(selectedItemIds = newSelection)
         }
-        _uiState.value = _uiState.value.copy(selectedItemIds = newSelection)
     }
 
     fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+        _uiState.update { it.copy(error = null) }
     }
 
     suspend fun save(): Result<Long> {
-        _uiState.value = _uiState.value.copy(isSaving = true)
+        if (_uiState.value.isDeleted) {
+            return Result.failure(Exception("原记录已被删除，无法保存"))
+        }
+        _uiState.update { it.copy(isSaving = true) }
         return try {
             val date = _uiState.value.date ?: System.currentTimeMillis()
             val outfitLog = OutfitLog(
@@ -284,10 +283,10 @@ class OutfitLogEditViewModel(
             val logId = outfitLogRepository.saveOutfitLogWithItems(
                 outfitLog, isNew, addedItems, removedItems
             )
-            _uiState.value = _uiState.value.copy(isSaving = false)
+            _uiState.update { it.copy(isSaving = false) }
             Result.success(logId)
         } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(isSaving = false, error = e.message ?: "保存失败")
+            _uiState.update { it.copy(isSaving = false, error = e.message ?: "保存失败") }
             Result.failure(e)
         }
     }

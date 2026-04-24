@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,9 +29,7 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.FlowRow
-import com.google.gson.Gson
 import com.lolita.app.ui.screen.common.findColorHex
-import com.lolita.app.ui.screen.common.parseColorsJson
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -55,12 +52,9 @@ fun ItemDetailScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
 
-    // Load item data — reload when screen is resumed (e.g. after editing)
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-    LaunchedEffect(itemId, lifecycleOwner) {
-        lifecycleOwner.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.RESUMED) {
-            viewModel.loadItem(itemId)
-        }
+    // Load item data
+    LaunchedEffect(itemId) {
+        viewModel.loadItem(itemId)
     }
 
     // Show error dialog
@@ -312,10 +306,9 @@ fun ItemDetailScreen(
                         }
 
                         // Color, Season, Style
-                        item.colors?.let { colorsJson ->
-                            val colorList = parseColorsJson(colorsJson)
-                            if (colorList.isNotEmpty()) {
-                                ColorChipsRow(label = "颜色", colors = colorList)
+                        item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
+                            if (colors.isNotEmpty()) {
+                                ColorChipsRow(label = "颜色", colors = colors)
                             }
                         }
                         item.season?.let { season ->

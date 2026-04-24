@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.item
 
 import android.net.Uri
+import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,6 +54,7 @@ fun ItemEditScreen(
     var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var showDiscardDialog by remember { mutableStateOf(false) }
 
     UnsavedChangesHandler(
         hasUnsavedChanges = viewModel.hasUnsavedChanges,
@@ -115,12 +117,38 @@ fun ItemEditScreen(
         )
     }
 
+    // Discard unsaved changes dialog
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { Text("确认返回") },
+            text = { Text("有未保存的修改，确定要返回吗？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDiscardDialog = false
+                    onBack()
+                }) { Text("返回") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDiscardDialog = false }) {
+                    Text("继续编辑")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = {
+                        if (viewModel.hasUnsavedChanges) {
+                            showDiscardDialog = true
+                        } else {
+                            onBack()
+                        }
+                    }) {
                         SkinIcon(IconKey.ArrowBack)
                     }
                 },
@@ -742,9 +770,14 @@ private fun SizeChartImageSection(
                 contentAlignment = Alignment.Center
             ) {
                 if (sizeChartImageUrl != null) {
+                    val imageModel = if (sizeChartImageUrl.startsWith("/") || sizeChartImageUrl.startsWith("data/")) {
+                        Uri.fromFile(File(sizeChartImageUrl))
+                    } else {
+                        sizeChartImageUrl
+                    }
                     Box {
                         AsyncImage(
-                            model = sizeChartImageUrl,
+                            model = imageModel,
                             contentDescription = "尺码表",
                             modifier = Modifier
                                 .fillMaxSize()

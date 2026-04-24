@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 data class RecommendationUiState(
     val targetItem: Item? = null,
@@ -31,8 +32,10 @@ class RecommendationViewModel(
     val uiState: StateFlow<RecommendationUiState> = _uiState.asStateFlow()
 
     private val matchingEngine = MatchingEngine()
+    private val isLoadingGuard = AtomicBoolean(false)
 
     fun loadRecommendations(itemId: Long) {
+        if (!isLoadingGuard.compareAndSet(false, true)) return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
@@ -75,6 +78,8 @@ class RecommendationViewModel(
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = e.message) }
+            } finally {
+                isLoadingGuard.set(false)
             }
         }
     }

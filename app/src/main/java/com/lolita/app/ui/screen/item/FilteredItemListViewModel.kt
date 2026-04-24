@@ -42,10 +42,14 @@ class FilteredItemListViewModel(
                 "style" -> itemRepository.getItemsByStyle(filterValue)
                 "season" -> itemRepository.getItemsBySeason(filterValue)
                 "month" -> priceRepository.getItemsByPurchaseMonth(filterValue)
-                "priority" -> itemRepository.getWishlistByPriorityFilter(
-                    ItemPriority.valueOf(filterValue)
-                )
-                "location" -> itemRepository.getItemsByLocationId(filterValue.toLong())
+                "priority" -> {
+                    val priority = try { ItemPriority.valueOf(filterValue) } catch (_: Exception) { ItemPriority.MEDIUM }
+                    itemRepository.getWishlistByPriorityFilter(priority)
+                }
+                "location" -> {
+                    val locationId = try { filterValue.toLong() } catch (_: Exception) { -1L }
+                    if (locationId >= 0) itemRepository.getItemsByLocationId(locationId) else itemRepository.getAllItems()
+                }
                 "location_unassigned" -> itemRepository.getItemsWithNoLocation()
                 else -> itemRepository.getAllItems()
             }

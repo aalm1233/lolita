@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import androidx.room.withTransaction
 
 
 data class LocationDetailUiState(
@@ -120,13 +121,15 @@ class LocationDetailViewModel(
         }
 
         viewModelScope.launch {
-            addedIds.forEach { itemId ->
-                val item = itemRepository.getItemById(itemId)
-                item?.let { itemRepository.updateItem(it.copy(locationId = locationId)) }
-            }
-            removedIds.forEach { itemId ->
-                val item = itemRepository.getItemById(itemId)
-                item?.let { itemRepository.updateItem(it.copy(locationId = null)) }
+            com.lolita.app.di.AppModule.database().withTransaction {
+                addedIds.forEach { itemId ->
+                    val item = itemRepository.getItemById(itemId)
+                    item?.let { itemRepository.updateItem(it.copy(locationId = locationId)) }
+                }
+                removedIds.forEach { itemId ->
+                    val item = itemRepository.getItemById(itemId)
+                    item?.let { itemRepository.updateItem(it.copy(locationId = null)) }
+                }
             }
             onComplete()
         }

@@ -278,14 +278,21 @@ fun ItemListScreen(
                                             catalogViewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
                                         }
                                     } else {
-                                        val nextMode = when (uiState.viewMode) {
-                                            ViewMode.LIST -> ViewMode.GRID
-                                            ViewMode.GRID -> ViewMode.GALLERY
-                                            ViewMode.GALLERY -> ViewMode.LIST
-                                        }
-                                        viewModel.setViewMode(nextMode)
-                                        if (nextMode != ViewMode.GALLERY) {
-                                            viewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
+                                        when {
+                                            uiState.viewMode == ViewMode.LIST -> {
+                                                viewModel.setViewMode(ViewMode.GRID)
+                                                viewModel.setColumns(2)
+                                            }
+                                            uiState.viewMode == ViewMode.GRID && uiState.columnsPerRow < 3 -> {
+                                                viewModel.setColumns(3)
+                                            }
+                                            uiState.viewMode == ViewMode.GRID -> {
+                                                viewModel.setViewMode(ViewMode.GALLERY)
+                                            }
+                                            else -> {
+                                                viewModel.setViewMode(ViewMode.LIST)
+                                                viewModel.setColumns(1)
+                                            }
                                         }
                                     }
                                 },
@@ -300,10 +307,11 @@ fun ItemListScreen(
                                         ViewMode.GRID -> IconKey.GridView
                                         ViewMode.GALLERY -> IconKey.Gallery
                                     }
-                                    else -> when (uiState.viewMode) {
-                                        ViewMode.LIST -> IconKey.ViewAgenda
-                                        ViewMode.GRID -> IconKey.GridView
-                                        ViewMode.GALLERY -> IconKey.Gallery
+                                    else -> when {
+                                        uiState.viewMode == ViewMode.LIST -> IconKey.ViewAgenda
+                                        uiState.viewMode == ViewMode.GRID && uiState.columnsPerRow == 2 -> IconKey.GridView
+                                        uiState.viewMode == ViewMode.GRID -> IconKey.Apps
+                                        else -> IconKey.Gallery
                                     }
                                 }
                             )

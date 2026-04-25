@@ -88,6 +88,7 @@ fun SkinClickParticles(
                     SkinType.CLASSIC -> drawSparkleParticle(drawP)
                     SkinType.NAVY -> drawBubbleClickParticle(drawP)
                     SkinType.COUNTRY -> drawLeafClickParticle(drawP)
+                    SkinType.VICTORIAN -> drawGoldDustClickParticle(drawP)
                 }
             }
         }
@@ -169,5 +170,16 @@ private fun DrawScope.drawLeafClickParticle(p: ClickParticle) {
         start = Offset(p.x, p.y - 3f * p.scale),
         end = Offset(p.x, p.y + 3f * p.scale),
         strokeWidth = 1.1f
+    )
+}
+
+private fun DrawScope.drawGoldDustClickParticle(p: ClickParticle) {
+    val r = (2f + 3f * p.scale)
+    val gold = Color(0xFFD4A843)
+    drawCircle(gold.copy(alpha = p.alpha), radius = r, center = Offset(p.x, p.y))
+    drawCircle(
+        gold.copy(alpha = p.alpha * 0.25f),
+        radius = r * 2.2f,
+        center = Offset(p.x, p.y)
     )
 }

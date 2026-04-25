@@ -141,6 +141,22 @@ fun SkinTabIndicator(
                     center = Offset(left + w * 0.5f, topY + indicatorH * 0.52f)
                 )
             }
+            SkinType.VICTORIAN -> {
+                val burgundy = Color(0xFF7B1E3A)
+                val gold = Color(0xFFB8860B)
+                drawRoundRect(
+                    color = gold.copy(alpha = 0.2f),
+                    topLeft = Offset(left + w * 0.05f, topY - indicatorH * 0.3f),
+                    size = Size(w * 0.9f, indicatorH * 1.6f),
+                    cornerRadius = CornerRadius(indicatorH)
+                )
+                drawRoundRect(
+                    color = burgundy,
+                    topLeft = Offset(left + w * 0.15f, topY + indicatorH * 0.2f),
+                    size = Size(w * 0.7f, indicatorH * 0.6f),
+                    cornerRadius = CornerRadius(indicatorH / 2f)
+                )
+            }
         }
     }
 }

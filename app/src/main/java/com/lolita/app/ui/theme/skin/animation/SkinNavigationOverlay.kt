@@ -70,6 +70,7 @@ fun SkinNavigationOverlay(
                 SkinType.CLASSIC -> drawGoldSweepOverlay(p, alpha)
                 SkinType.NAVY -> drawWaveRippleOverlay(x * size.width, y * size.height, particle.size, alpha)
                 SkinType.COUNTRY -> drawLeafOverlay(x * size.width, y * size.height, particle.size, alpha)
+                SkinType.VICTORIAN -> drawPetalOverlay(x * size.width, y * size.height, particle.size, alpha)
             }
         }
     }
@@ -112,6 +113,13 @@ private fun createOverlayParticle(skinType: SkinType): OverlayParticle {
             startX = Random.nextFloat(), startY = -0.1f,
             endX = Random.nextFloat(), endY = 1.1f,
             size = 7f + Random.nextFloat() * 10f,
+            rotationStart = Random.nextFloat() * 180f,
+            rotationEnd = Random.nextFloat() * 360f
+        )
+        SkinType.VICTORIAN -> OverlayParticle(
+            startX = Random.nextFloat(), startY = -0.1f,
+            endX = Random.nextFloat(), endY = 1.1f,
+            size = 6f + Random.nextFloat() * 8f,
             rotationStart = Random.nextFloat() * 180f,
             rotationEnd = Random.nextFloat() * 360f
         )

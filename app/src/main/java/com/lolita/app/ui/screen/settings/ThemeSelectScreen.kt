@@ -136,6 +136,7 @@ private fun SkinType.displayName(): String = when (this) {
     SkinType.CLASSIC -> "\u7ecf\u5178\u4f18\u96c5"
     SkinType.NAVY -> "\u6e05\u98ce\u6c34\u624b"
     SkinType.COUNTRY -> "\u7267\u6b4c\u7530\u56ed"
+    SkinType.VICTORIAN -> "\u7ef4\u591a\u5229\u4e9a"
 }
 
 @Composable

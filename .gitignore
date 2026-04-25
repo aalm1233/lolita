@@ -44,3 +44,6 @@ tmp-*.xml
 .codex_tmp/
 
 .kotlin/
+
+lolita_backup_*.zip
+gen_*.py

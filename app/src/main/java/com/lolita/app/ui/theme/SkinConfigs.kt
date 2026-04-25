@@ -29,6 +29,7 @@ fun getSkinConfig(skinType: SkinType): LolitaSkinConfig = when (skinType) {
     SkinType.CLASSIC -> classicSkinConfig()
     SkinType.NAVY -> navySkinConfig()
     SkinType.COUNTRY -> countrySkinConfig()
+    SkinType.VICTORIAN -> victorianSkinConfig()
 }
 
 private fun buildTypography(fontFamily: FontFamily): Typography {
@@ -328,5 +329,59 @@ fun countrySkinConfig(): LolitaSkinConfig {
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
         icons = CountryIconProvider(),
         animations = CountryAnimationProvider(),
+    )
+}
+
+fun victorianSkinConfig(): LolitaSkinConfig {
+    val fontFamily = FontFamily(Font(R.font.cormorant_garamond))
+    val burgundy = Color(0xFF7B1E3A)
+    val deepRose = Color(0xFF9C254D)
+    val darkGold = Color(0xFFB8860B)
+    val gold = Color(0xFFDAA520)
+    val ivory = Color(0xFFFFF8F0)
+    val cream = Color(0xFFFFF5E6)
+    val darkBrown = Color(0xFF3E2723)
+    val darkBg = Color(0xFF1A1210)
+    val darkSurface = Color(0xFF2C1E18)
+    val roseRed = Color(0xFFC4566A)
+    val brightGold = Color(0xFFD4A843)
+    val warmWhite = Color(0xFFF5E6D3)
+    val brightRose = Color(0xFFE07088)
+    return LolitaSkinConfig(
+        skinType = SkinType.VICTORIAN,
+        name = "维多利亚",
+        lightColorScheme = lightColorScheme(
+            primary = burgundy, onPrimary = White,
+            primaryContainer = Color(0xFFF0D8E0), onPrimaryContainer = deepRose,
+            secondary = darkGold, onSecondary = White,
+            secondaryContainer = Color(0xFFFFF8E1), onSecondaryContainer = darkGold,
+            tertiary = gold, onTertiary = darkBrown,
+            background = ivory, onBackground = darkBrown,
+            surface = cream, onSurface = darkBrown,
+            surfaceVariant = Color(0xFFF5E8E0),
+            error = Color(0xFFD32F2F), onError = White,
+            outline = Color(0xFFA09080), outlineVariant = Color(0xFFD0C0B0)
+        ),
+        darkColorScheme = darkColorScheme(
+            primary = roseRed, onPrimary = White,
+            primaryContainer = burgundy, onPrimaryContainer = Color(0xFFF0D8E0),
+            secondary = brightGold, onSecondary = darkBrown,
+            secondaryContainer = darkSurface,
+            tertiary = gold, onTertiary = darkBrown,
+            background = darkBg, onBackground = warmWhite,
+            surface = darkSurface, onSurface = warmWhite,
+            surfaceVariant = Color(0xFF3A2820),
+            error = Color(0xFFCF6679), onError = Black
+        ),
+        gradientColors = listOf(burgundy, darkGold),
+        gradientColorsDark = listOf(darkBg, roseRed),
+        accentColor = deepRose, accentColorDark = roseRed,
+        cardColor = cream, cardColorDark = darkSurface,
+        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        cardShape = RoundedCornerShape(12.dp),
+        buttonShape = RoundedCornerShape(8.dp),
+        topBarDecoration = "⚜", topBarDecorationAlpha = 0.5f,
+        icons = VictorianIconProvider(),
+        animations = VictorianAnimationProvider(),
     )
 }

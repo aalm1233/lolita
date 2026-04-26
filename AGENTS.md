@@ -43,7 +43,10 @@
 - 列表/详情/编辑页成套考虑。
 - `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。
 - `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`。
-- 卡片复用 `LolitaCard`。
+- 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。
+- 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。
+- 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
+- 详情页信息区块（基本信息/描述/尺码/价格/记录等）用 `LolitaCard` + `SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
@@ -53,6 +56,31 @@
 - 新页面/交互复用皮肤感知组件，不做脱节的普通 Material 页面。
 - 新增图标需同时补：`BaseSkinIconProvider` + **7 个**皮肤专属 provider（`SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`, `CountryIconProvider`, `VictorianIconProvider`）+ `IconKey` 枚举。图标是 Canvas 手绘，不是 Material icon。
 - 新增列表/切换/过渡效果优先复用现有 skin 动画体系（`SkinClickable`, `SkinItemAppear`, `SkinNavigationOverlay` 等）。
+
+### 视觉精致化令牌
+
+`LolitaSkinConfig` 包含以下视觉令牌，新组件/页面应消费它们而非硬编码：
+
+| 令牌 | 用途 | 示例值（DEFAULT / VICTORIAN） |
+|------|------|-------------------------------|
+| `cardElevation` | 卡片阴影 | 1dp / 3dp |
+| `cardBorderStroke` | 卡片边框（null = 无边框） | null / gold 1dp |
+| `imageFrameElevation` | 图片区阴影 | 2dp / 4dp |
+| `imageFrameStroke` | 图片边框 | null / gold 1dp |
+| `imageFramePadding` | 图片与边框间距 | 0dp / 3dp |
+| `sectionAccentColor/Dark` | 分区标题竖线颜色 | Pink400 / deepRose |
+| `sectionAccentWidth` | 竖线宽度 | 3dp |
+| `sectionDividerColor/Dark` | 分区分割线颜色 | Pink200 / gold |
+| `sectionDividerHeight` | 分割线粗细 | 1dp |
+
+新增视觉令牌时需同步：`LolitaSkinConfig` 数据类 + **7 个**皮肤工厂函数 + dark mode 变体。
+
+### 后续优化方向
+
+- 逐皮肤深化装饰层（如 `SkinDecorationProvider` 接口，华丽皮肤覆写提供 Canvas 角落花纹/画框金边等）
+- 其他详情页（`CoordinateDetailScreen`、`CatalogDetailScreen`、`OutfitLogDetailScreen`、`LocationDetailScreen`）应用同样的 `LolitaCard` + `SectionHeader` 模式
+- 对话框皮肤化
+- `ImageFrame` 应用到详情页图片区域
 
 ## 构建与验证
 
@@ -139,3 +167,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 构建通过后再提交。
 - commit message 用英文短句 + `feat:` / `fix:` / `chore:` 前缀。
 - 不提交 `.gradle-user-home/`、`.kotlin/`。
+
+## AGENTS.md 维护
+
+- 每次功能更新、架构变更或新增约定后，**必须刷新 `AGENTS.md`**，确保文档与代码同步。
+- 新增组件、令牌、接口、页面、测试等均需在对应章节补充说明。
+- 若不确定是否需要更新，默认更新。

@@ -72,7 +72,16 @@ fun ImportDetailContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val validCount = uiState.importItems.count { it.brandId > 0 && it.categoryId > 0 }
+                    val validCount = uiState.importItems.count { item ->
+                        if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
+                            item.price > 0
+                        } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+                            item.brandId > 0 && item.categoryId > 0
+                                && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
+                        } else {
+                            item.brandId > 0 && item.categoryId > 0
+                        }
+                    }
                     Text("${validCount}/${uiState.importItems.size} 件已完善",
                         style = MaterialTheme.typography.bodyMedium)
                     Button(
@@ -140,7 +149,14 @@ private fun ImportItemCard(
     onAddCategory: (String, CategoryGroup) -> Unit = { _, _ -> },
     onSetPaymentRole: (PaymentRole?) -> Unit = {}
 ) {
-    val isValid = item.brandId > 0 && item.categoryId > 0
+    val isValid = if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
+        item.price > 0
+    } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+        item.brandId > 0 && item.categoryId > 0
+            && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
+    } else {
+        item.brandId > 0 && item.categoryId > 0
+    }
     var priceText by remember(item.price) {
         mutableStateOf(if (item.price > 0) String.format("%.2f", item.price) else "")
     }

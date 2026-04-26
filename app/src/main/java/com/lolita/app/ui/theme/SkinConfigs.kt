@@ -1,5 +1,6 @@
 package com.lolita.app.ui.theme
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Typography
@@ -91,6 +92,17 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
         icons = SweetIconProvider(),
         animations = SweetAnimationProvider(),
+        cardElevation = 1.dp,
+        cardBorderStroke = null,
+        imageFrameElevation = 2.dp,
+        imageFrameStroke = null,
+        imageFramePadding = 0.dp,
+        sectionAccentColor = Pink400,
+        sectionAccentColorDark = Pink400,
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Pink200,
+        sectionDividerColorDark = Color(0xFF3A3A3A),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -138,6 +150,17 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "✝", topBarDecorationAlpha = 0.5f,
         icons = GothicIconProvider(),
         animations = GothicAnimationProvider(),
+        cardElevation = 2.dp,
+        cardBorderStroke = BorderStroke(0.5.dp, Color(0xFF4A0E4E)),
+        imageFrameElevation = 3.dp,
+        imageFrameStroke = BorderStroke(0.5.dp, Color(0xFF9B59B6).copy(alpha = 0.4f)),
+        imageFramePadding = 2.dp,
+        sectionAccentColor = purple,
+        sectionAccentColorDark = brightPurple,
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFD0C0D0),
+        sectionDividerColorDark = Color(0xFF3A3A50),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -185,6 +208,17 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "☁", topBarDecorationAlpha = 0.6f,
         icons = ChineseIconProvider(),
         animations = ChineseAnimationProvider(),
+        cardElevation = 1.dp,
+        cardBorderStroke = BorderStroke(0.5.dp, vermillion),
+        imageFrameElevation = 2.dp,
+        imageFrameStroke = BorderStroke(0.5.dp, vermillion.copy(alpha = 0.6f)),
+        imageFramePadding = 2.dp,
+        sectionAccentColor = vermillion,
+        sectionAccentColorDark = Color(0xFFE85050),
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFE0D0B0),
+        sectionDividerColorDark = Color(0xFF3A3028),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -232,6 +266,17 @@ fun classicSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "♠", topBarDecorationAlpha = 0.5f,
         icons = ClassicIconProvider(),
         animations = ClassicAnimationProvider(),
+        cardElevation = 2.dp,
+        cardBorderStroke = BorderStroke(0.5.dp, Color(0xFFB8860B)),
+        imageFrameElevation = 3.dp,
+        imageFrameStroke = BorderStroke(0.5.dp, Color(0xFFDAA520).copy(alpha = 0.5f)),
+        imageFramePadding = 2.dp,
+        sectionAccentColor = wine,
+        sectionAccentColorDark = Color(0xFFA05060),
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFD0C0B0),
+        sectionDividerColorDark = Color(0xFF3A3030),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -279,6 +324,17 @@ fun navySkinConfig(): LolitaSkinConfig {
         topBarDecoration = "⚓", topBarDecorationAlpha = 0.6f,
         icons = NavyIconProvider(),
         animations = NavyAnimationProvider(),
+        cardElevation = 1.dp,
+        cardBorderStroke = null,
+        imageFrameElevation = 2.dp,
+        imageFrameStroke = null,
+        imageFramePadding = 0.dp,
+        sectionAccentColor = skyBlue,
+        sectionAccentColorDark = lightSkyBlue,
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFBDD8EA),
+        sectionDividerColorDark = Color(0xFF253A50),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -329,6 +385,17 @@ fun countrySkinConfig(): LolitaSkinConfig {
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
         icons = CountryIconProvider(),
         animations = CountryAnimationProvider(),
+        cardElevation = 1.dp,
+        cardBorderStroke = null,
+        imageFrameElevation = 2.dp,
+        imageFrameStroke = null,
+        imageFramePadding = 0.dp,
+        sectionAccentColor = berry,
+        sectionAccentColorDark = Color(0xFFD78678),
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFE6D7BF),
+        sectionDividerColorDark = Color(0xFF394235),
+        sectionDividerHeight = 1.dp,
     )
 }
 
@@ -383,5 +450,16 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         topBarDecoration = "⚜", topBarDecorationAlpha = 0.5f,
         icons = VictorianIconProvider(),
         animations = VictorianAnimationProvider(),
+        cardElevation = 3.dp,
+        cardBorderStroke = BorderStroke(1.dp, gold),
+        imageFrameElevation = 4.dp,
+        imageFrameStroke = BorderStroke(1.dp, gold.copy(alpha = 0.7f)),
+        imageFramePadding = 3.dp,
+        sectionAccentColor = deepRose,
+        sectionAccentColorDark = roseRed,
+        sectionAccentWidth = 3.dp,
+        sectionDividerColor = Color(0xFFD0C0B0),
+        sectionDividerColorDark = Color(0xFF3A2820),
+        sectionDividerHeight = 1.dp,
     )
 }

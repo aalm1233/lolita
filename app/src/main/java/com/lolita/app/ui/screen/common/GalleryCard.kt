@@ -34,7 +34,8 @@ fun GalleryCard(
     val item = data.item
     val brandName = data.brandName
     val categoryName = data.categoryName
-    val cardShape = LolitaSkin.current.cardShape
+    val skin = LolitaSkin.current
+    val cardShape = skin.cardShape
     val detailLine = remember(item.colors, item.size, categoryName) {
         listOfNotNull(
             categoryName?.takeIf { it.isNotBlank() },
@@ -51,7 +52,8 @@ fun GalleryCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
+        border = skin.cardBorderStroke
     ) {
         Box(
             modifier = Modifier

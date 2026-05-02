@@ -2,6 +2,7 @@ package com.lolita.app.ui.theme.skin.animation
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -19,6 +20,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 private val SkyBlue = Color(0xFF4A90D9)
 
 class NavyAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.7f, stiffness = 450f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1600f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 380,

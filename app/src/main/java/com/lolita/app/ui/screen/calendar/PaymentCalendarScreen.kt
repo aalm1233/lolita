@@ -242,7 +242,6 @@ fun PaymentCalendarContent(
                     LolitaCard(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             "当月无付款记录",
-                            modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -272,7 +271,7 @@ private fun YearHeader(
     onNext: () -> Unit
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) { // intentional override of cardInnerPadding
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

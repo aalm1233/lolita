@@ -3,6 +3,8 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,6 +26,9 @@ private val Vermillion = Color(0xFFE34234)
 private val InkBlack = Color(0xFF1A1A2E)
 
 class ChineseAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.8f, stiffness = 350f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1400f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 450,

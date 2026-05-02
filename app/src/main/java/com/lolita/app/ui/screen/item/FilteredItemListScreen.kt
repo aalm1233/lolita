@@ -97,7 +97,7 @@ fun FilteredItemListScreen(
 private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
     LolitaCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

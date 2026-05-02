@@ -49,7 +49,7 @@ fun SectionHeader(
             Spacer(Modifier.width(8.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )

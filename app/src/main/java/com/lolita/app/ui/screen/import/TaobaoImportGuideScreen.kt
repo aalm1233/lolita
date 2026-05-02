@@ -46,7 +46,7 @@ fun TaobaoImportGuideScreen(
             // 概述
             item {
                 LolitaCard {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column {
                         Text(
                             "关于淘宝订单导入",
                             style = MaterialTheme.typography.titleMedium,
@@ -66,7 +66,7 @@ fun TaobaoImportGuideScreen(
             // 导出步骤
             item {
                 LolitaCard {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column {
                         Text(
                             "如何从手机导出淘宝订单",
                             style = MaterialTheme.typography.titleMedium,
@@ -127,7 +127,7 @@ fun TaobaoImportGuideScreen(
             // 注意事项
             item {
                 LolitaCard {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column {
                         Text(
                             "注意事项",
                             style = MaterialTheme.typography.titleMedium,

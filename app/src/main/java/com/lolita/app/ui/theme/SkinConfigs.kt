@@ -1,5 +1,6 @@
 package com.lolita.app.ui.theme
 
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
@@ -10,7 +11,9 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lolita.app.R
 import com.lolita.app.ui.theme.skin.animation.*
 import com.lolita.app.ui.theme.skin.icon.*
@@ -36,15 +39,20 @@ fun getSkinConfig(skinType: SkinType): LolitaSkinConfig = when (skinType) {
 private fun buildTypography(fontFamily: FontFamily): Typography {
     val default = Typography()
     return Typography(
-        displayLarge = default.displayLarge.copy(fontFamily = fontFamily),
-        displayMedium = default.displayMedium.copy(fontFamily = fontFamily),
-        displaySmall = default.displaySmall.copy(fontFamily = fontFamily),
-        headlineLarge = default.headlineLarge.copy(fontFamily = fontFamily),
-        headlineMedium = default.headlineMedium.copy(fontFamily = fontFamily),
-        headlineSmall = default.headlineSmall.copy(fontFamily = fontFamily),
-        titleLarge = default.titleLarge.copy(fontFamily = fontFamily),
-        titleMedium = default.titleMedium.copy(fontFamily = fontFamily),
-        titleSmall = default.titleSmall.copy(fontFamily = fontFamily),
+        displayLarge = default.displayLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.5).sp),
+        displayMedium = default.displayMedium.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
+        displaySmall = default.displaySmall.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
+        headlineLarge = default.headlineLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
+        headlineMedium = default.headlineMedium.copy(fontFamily = fontFamily, letterSpacing = (-0.15).sp),
+        headlineSmall = default.headlineSmall.copy(fontFamily = fontFamily, letterSpacing = (-0.1).sp),
+        titleLarge = default.titleLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.1).sp),
+        titleMedium = default.titleMedium.copy(fontFamily = fontFamily, letterSpacing = 0.05.sp),
+        titleSmall = default.titleSmall.copy(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 15.sp,
+            letterSpacing = 0.1.sp
+        ),
         bodyLarge = default.bodyLarge.copy(fontFamily = fontFamily),
         bodyMedium = default.bodyMedium.copy(fontFamily = fontFamily),
         bodySmall = default.bodySmall.copy(fontFamily = fontFamily),
@@ -103,6 +111,14 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Pink200,
         sectionDividerColorDark = Color(0xFF3A3A3A),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 16.dp, spacingExtraLarge = 24.dp,
+        cornerRadiusSmall = 8.dp, cornerRadiusMedium = 16.dp, cornerRadiusLarge = 24.dp,
+        spatialSpring = spring(dampingRatio = 0.75f, stiffness = 400f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1600f),
+        cardShadowAmbientAlpha = 0.08f, cardShadowSpotAlpha = 0.12f,
+        cardContainerColor = White.copy(alpha = 0.75f), cardContainerColorDark = Gray800.copy(alpha = 0.75f),
+        cardInnerPadding = 16.dp, cardGap = 8.dp,
+        accentDesaturationDark = 0.0f,
     )
 }
 
@@ -161,6 +177,14 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFD0C0D0),
         sectionDividerColorDark = Color(0xFF3A3A50),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 16.dp, spacingExtraLarge = 24.dp,
+        cornerRadiusSmall = 4.dp, cornerRadiusMedium = 8.dp, cornerRadiusLarge = 12.dp,
+        spatialSpring = spring(dampingRatio = 0.85f, stiffness = 300f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1200f),
+        cardShadowAmbientAlpha = 0.12f, cardShadowSpotAlpha = 0.18f,
+        cardContainerColor = White.copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.8f),
+        cardInnerPadding = 16.dp, cardGap = 8.dp,
+        accentDesaturationDark = 0.15f,
     )
 }
 
@@ -219,6 +243,14 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFE0D0B0),
         sectionDividerColorDark = Color(0xFF3A3028),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 14.dp, spacingExtraLarge = 20.dp,
+        cornerRadiusSmall = 2.dp, cornerRadiusMedium = 4.dp, cornerRadiusLarge = 8.dp,
+        spatialSpring = spring(dampingRatio = 0.8f, stiffness = 350f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1400f),
+        cardShadowAmbientAlpha = 0.06f, cardShadowSpotAlpha = 0.10f,
+        cardContainerColor = Color(0xFFFFFDF5).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
+        cardInnerPadding = 14.dp, cardGap = 6.dp,
+        accentDesaturationDark = 0.1f,
     )
 }
 
@@ -277,6 +309,14 @@ fun classicSkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFD0C0B0),
         sectionDividerColorDark = Color(0xFF3A3030),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 16.dp, spacingExtraLarge = 24.dp,
+        cornerRadiusSmall = 6.dp, cornerRadiusMedium = 12.dp, cornerRadiusLarge = 16.dp,
+        spatialSpring = spring(dampingRatio = 0.82f, stiffness = 350f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1400f),
+        cardShadowAmbientAlpha = 0.10f, cardShadowSpotAlpha = 0.14f,
+        cardContainerColor = Color(0xFFFFF8F5).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.8f),
+        cardInnerPadding = 16.dp, cardGap = 8.dp,
+        accentDesaturationDark = 0.1f,
     )
 }
 
@@ -335,6 +375,14 @@ fun navySkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFBDD8EA),
         sectionDividerColorDark = Color(0xFF253A50),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 16.dp, spacingExtraLarge = 24.dp,
+        cornerRadiusSmall = 8.dp, cornerRadiusMedium = 14.dp, cornerRadiusLarge = 20.dp,
+        spatialSpring = spring(dampingRatio = 0.7f, stiffness = 450f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1600f),
+        cardShadowAmbientAlpha = 0.06f, cardShadowSpotAlpha = 0.10f,
+        cardContainerColor = Color(0xFFF5FAFF).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
+        cardInnerPadding = 16.dp, cardGap = 8.dp,
+        accentDesaturationDark = 0.05f,
     )
 }
 
@@ -396,6 +444,14 @@ fun countrySkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFE6D7BF),
         sectionDividerColorDark = Color(0xFF394235),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 6.dp, spacingMedium = 10.dp, spacingLarge = 18.dp, spacingExtraLarge = 26.dp,
+        cornerRadiusSmall = 10.dp, cornerRadiusMedium = 20.dp, cornerRadiusLarge = 28.dp,
+        spatialSpring = spring(dampingRatio = 0.65f, stiffness = 400f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1600f),
+        cardShadowAmbientAlpha = 0.06f, cardShadowSpotAlpha = 0.10f,
+        cardContainerColor = warmWhite.copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
+        cardInnerPadding = 18.dp, cardGap = 10.dp,
+        accentDesaturationDark = 0.1f,
     )
 }
 
@@ -461,5 +517,13 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         sectionDividerColor = Color(0xFFD0C0B0),
         sectionDividerColorDark = Color(0xFF3A2820),
         sectionDividerHeight = 1.dp,
+        spacingSmall = 4.dp, spacingMedium = 8.dp, spacingLarge = 16.dp, spacingExtraLarge = 24.dp,
+        cornerRadiusSmall = 6.dp, cornerRadiusMedium = 12.dp, cornerRadiusLarge = 16.dp,
+        spatialSpring = spring(dampingRatio = 0.8f, stiffness = 300f),
+        effectsSpring = spring(dampingRatio = 1.0f, stiffness = 1200f),
+        cardShadowAmbientAlpha = 0.12f, cardShadowSpotAlpha = 0.18f,
+        cardContainerColor = cream.copy(alpha = 0.8f), cardContainerColorDark = darkSurface.copy(alpha = 0.85f),
+        cardInnerPadding = 20.dp, cardGap = 10.dp,
+        accentDesaturationDark = 0.15f,
     )
 }

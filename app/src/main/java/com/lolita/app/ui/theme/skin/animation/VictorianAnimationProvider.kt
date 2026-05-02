@@ -2,6 +2,7 @@ package com.lolita.app.ui.theme.skin.animation
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -21,6 +22,9 @@ private val VictorianGold = Color(0xFFB8860B)
 private val VictorianCream = Color(0xFFF5E6D3)
 
 class VictorianAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.8f, stiffness = 300f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1200f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 450,

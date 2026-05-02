@@ -192,7 +192,7 @@ fun StatsContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                        .padding(horizontal = 20.dp, vertical = 16.dp), // intentional override of cardInnerPadding
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -232,7 +232,7 @@ fun StatsContent(
 
         if (uiState.topBrands.isNotEmpty()) {
             LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
+                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) { // intentional override of cardInnerPadding
                     SectionHeader(title = "品牌 Top 5")
                     Spacer(modifier = Modifier.height(8.dp))
                     val maxCount = uiState.topBrands.maxOfOrNull { it.itemCount } ?: 1
@@ -301,7 +301,7 @@ private fun StatCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) { // intentional override of cardInnerPadding
             SkinIcon(
                 key = iconKey,
                 tint = iconTint,
@@ -341,7 +341,7 @@ private fun SpendingCard(
     )
 
     LolitaCard(modifier = modifier) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) { // intentional override of cardInnerPadding
             SkinIcon(
                 key = iconKey,
                 tint = iconTint,

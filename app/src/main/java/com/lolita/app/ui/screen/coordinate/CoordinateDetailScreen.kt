@@ -286,7 +286,6 @@ private fun CoordinateInfoCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (coordinate.imageUrls.isNotEmpty()) {
@@ -454,7 +453,7 @@ private fun CoordinateItemCard(
             }
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

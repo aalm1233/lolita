@@ -225,7 +225,7 @@ private fun DetailItemCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
-                .padding(12.dp),
+                .padding(12.dp), // intentional override of cardInnerPadding
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {

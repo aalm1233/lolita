@@ -5,6 +5,8 @@ import androidx.compose.material3.Typography
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontFamily
@@ -39,6 +41,37 @@ data class LolitaSkinConfig(
     val sectionDividerColor: Color,
     val sectionDividerColorDark: Color,
     val sectionDividerHeight: Dp,
+
+    // Spacing system (8pt grid inspired)
+    val spacingSmall: Dp = 4.dp,
+    val spacingMedium: Dp = 8.dp,
+    val spacingLarge: Dp = 16.dp,
+    val spacingExtraLarge: Dp = 24.dp,
+
+    // Unified corner radius system (3 levels)
+    val cornerRadiusSmall: Dp = 8.dp,
+    val cornerRadiusMedium: Dp = 16.dp,
+    val cornerRadiusLarge: Dp = 24.dp,
+
+    // Motion tokens (aligned with M3 Expressive MotionScheme)
+    val spatialSpring: SpringSpec<Float>,
+    val effectsSpring: SpringSpec<Float>,
+
+    // Shadow refinement
+    val cardShadowAmbientAlpha: Float = 0.08f,
+    val cardShadowSpotAlpha: Float = 0.12f,
+
+    // Card surface color (replaces runtime alpha blending)
+    val cardContainerColor: Color,
+    val cardContainerColorDark: Color,
+
+    // Card inner layout
+    val cardInnerPadding: Dp = 16.dp,
+    val cardGap: Dp = 8.dp,
+
+    // Dark mode accent desaturation factor (0.0 = no change, 0.3 = 30% desaturation)
+    val accentDesaturationDark: Float = 0.0f,
+
     val icons: SkinIconProvider,
     val animations: SkinAnimationProvider,
 )

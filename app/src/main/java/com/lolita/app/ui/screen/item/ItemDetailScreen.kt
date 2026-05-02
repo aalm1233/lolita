@@ -257,7 +257,7 @@ fun ItemDetailScreen(
                         }
 
                         LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 SectionHeader(title = "基本信息")
                                 Spacer(Modifier.height(8.dp))
                                 val brand = uiState.brands.find { it.id == item.brandId }
@@ -327,7 +327,7 @@ fun ItemDetailScreen(
 
                         if (item.description.isNotEmpty()) {
                             LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                                Column(modifier = Modifier.padding(16.dp)) {
+                                Column {
                                     SectionHeader(title = "描述")
                                     Spacer(Modifier.height(8.dp))
                                     Text(text = item.description, style = MaterialTheme.typography.bodyLarge)
@@ -337,7 +337,7 @@ fun ItemDetailScreen(
 
                         if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
                             LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     SectionHeader(title = "尺码信息")
                                     if (!item.size.isNullOrEmpty()) {
                                         Spacer(Modifier.height(8.dp))
@@ -362,7 +362,7 @@ fun ItemDetailScreen(
                         }
 
                         LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 SectionHeader(
                                     title = "价格信息",
                                     action = {
@@ -507,7 +507,7 @@ fun ItemDetailScreen(
                         }
 
                         LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 SectionHeader(title = "记录信息")
                                 Spacer(Modifier.height(8.dp))
                                 DetailRow(

@@ -343,7 +343,7 @@ private fun CatalogListCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             CatalogThumbnail(
@@ -406,7 +406,7 @@ private fun CatalogGridCard(
                     .aspectRatio(0.78f)
             )
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(10.dp), // intentional override of cardInnerPadding
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(

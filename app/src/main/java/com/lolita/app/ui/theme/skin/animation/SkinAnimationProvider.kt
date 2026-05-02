@@ -3,6 +3,7 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -84,10 +85,16 @@ interface SkinAnimationProvider {
     val cardAnimation: CardAnimationSpec
     val interactionFeedback: InteractionFeedbackSpec
 
+    val spatialSpring: SpringSpec<Float>
+        get() = spring(dampingRatio = 0.75f, stiffness = 400f)
+
+    val effectsSpring: SpringSpec<Float>
+        get() = spring(dampingRatio = 1.0f, stiffness = 1600f)
+
     val clickFeedback: SkinClickFeedbackSpec
         get() = SkinClickFeedbackSpec(
             pressScale = interactionFeedback.pressScale,
-            scaleAnimationSpec = spring(),
+            scaleAnimationSpec = spatialSpring,
             rippleColor = interactionFeedback.rippleColor,
             rippleDuration = 400,
             rippleStyle = RippleStyle.SOFT,
@@ -110,7 +117,7 @@ interface SkinAnimationProvider {
             appearDirection = AppearDirection.FROM_BOTTOM,
             appearOffsetPx = 60f,
             staggerDelayMs = 50,
-            animationSpec = tween(300),
+            animationSpec = spatialSpring,
             flingFrictionMultiplier = 1.0f
         )
 

@@ -272,8 +272,7 @@ private fun UrlSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SectionTitle("后端地址")
@@ -347,8 +346,7 @@ private fun StatusSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SectionTitle("同步状态")
@@ -369,8 +367,7 @@ private fun SummarySection(summary: SharedLibraryCacheSummary) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             SectionTitle("缓存概览")
@@ -395,8 +392,7 @@ private fun PreviewSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SectionTitle(title)

@@ -105,7 +105,7 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

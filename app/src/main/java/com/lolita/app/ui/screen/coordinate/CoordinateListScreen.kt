@@ -242,7 +242,8 @@ private fun CoordinateCard(
                 .fillMaxWidth()
                 .combinedClickable(onClick = onClick, onLongClick = { showMenu = true })
         ) {
-            Row(modifier = Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
+                horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 if (coordinate.imageUrls.isNotEmpty()) {
                     AsyncImage(
                         model = coordinate.imageUrls.first(),
@@ -424,7 +425,7 @@ private fun CoordinateGridCard(
                 }
                 // 信息区域
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(

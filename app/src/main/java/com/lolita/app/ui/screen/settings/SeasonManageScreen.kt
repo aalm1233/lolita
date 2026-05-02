@@ -121,7 +121,7 @@ fun SeasonManageScreen(
 private fun SeasonCard(season: Season, onEdit: () -> Unit, onDelete: () -> Unit) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

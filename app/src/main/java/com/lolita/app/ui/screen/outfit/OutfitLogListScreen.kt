@@ -225,7 +225,7 @@ private fun OutfitLogListItemCard(
             }
 
             // Content area
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) { // intentional override of cardInnerPadding
                 if (log.previewNote.isNotEmpty()) {
                     Text(
                         text = log.previewNote,

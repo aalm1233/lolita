@@ -348,7 +348,7 @@ fun ItemListScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp), // intentional override of cardInnerPadding
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -783,10 +783,10 @@ private fun ItemCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
-        Row(
+            Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (item.imageUrls.isNotEmpty()) {
@@ -1096,7 +1096,7 @@ private fun ItemGridCard(
 
                 // Info area
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(

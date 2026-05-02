@@ -72,6 +72,18 @@ data class LolitaSkinConfig(
     // Dark mode accent desaturation factor (0.0 = no change, 0.3 = 30% desaturation)
     val accentDesaturationDark: Float = 0.0f,
 
+    // Blur / glass effect tokens
+    val topBarBlurEnabled: Boolean = true,
+    val topBarBlurAlpha: Float = 0.7f,
+    val topBarBlurTint: Color,
+    val topBarBlurTintDark: Color,
+    val navBarBlurEnabled: Boolean = true,
+    val navBarBlurAlpha: Float = 0.7f,
+    val navBarBlurTint: Color,
+    val navBarBlurTintDark: Color,
+    val dialogBlurEnabled: Boolean = true,
+    val dialogBlurAlpha: Float = 0.6f,
+
     val icons: SkinIconProvider,
     val animations: SkinAnimationProvider,
 )

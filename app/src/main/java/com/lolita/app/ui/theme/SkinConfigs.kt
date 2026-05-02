@@ -119,6 +119,11 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         cardContainerColor = White.copy(alpha = 0.75f), cardContainerColorDark = Gray800.copy(alpha = 0.75f),
         cardInnerPadding = 16.dp, cardGap = 8.dp,
         accentDesaturationDark = 0.0f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.72f,
+        topBarBlurTint = Pink50, topBarBlurTintDark = Color(0xFF880E4F).copy(alpha = 0.3f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.75f,
+        navBarBlurTint = White, navBarBlurTintDark = Gray800.copy(alpha = 0.3f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.65f,
     )
 }
 
@@ -185,6 +190,11 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         cardContainerColor = White.copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.8f),
         cardInnerPadding = 16.dp, cardGap = 8.dp,
         accentDesaturationDark = 0.15f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.80f,
+        topBarBlurTint = Color(0xFFF3E5F5), topBarBlurTintDark = darkBg.copy(alpha = 0.6f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.82f,
+        navBarBlurTint = White, navBarBlurTintDark = darkSurface.copy(alpha = 0.5f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.70f,
     )
 }
 
@@ -251,6 +261,11 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         cardContainerColor = Color(0xFFFFFDF5).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
         cardInnerPadding = 14.dp, cardGap = 6.dp,
         accentDesaturationDark = 0.1f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.70f,
+        topBarBlurTint = Color(0xFFFFF8F0), topBarBlurTintDark = darkSurface.copy(alpha = 0.4f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.72f,
+        navBarBlurTint = Color(0xFFFFF8F0), navBarBlurTintDark = darkSurface.copy(alpha = 0.3f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.60f,
     )
 }
 
@@ -317,6 +332,11 @@ fun classicSkinConfig(): LolitaSkinConfig {
         cardContainerColor = Color(0xFFFFF8F5).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.8f),
         cardInnerPadding = 16.dp, cardGap = 8.dp,
         accentDesaturationDark = 0.1f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.75f,
+        topBarBlurTint = Color(0xFFFFF5F0), topBarBlurTintDark = darkSurface.copy(alpha = 0.4f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.78f,
+        navBarBlurTint = Color(0xFFFFF5F0), navBarBlurTintDark = darkSurface.copy(alpha = 0.35f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.65f,
     )
 }
 
@@ -383,6 +403,11 @@ fun navySkinConfig(): LolitaSkinConfig {
         cardContainerColor = Color(0xFFF5FAFF).copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
         cardInnerPadding = 16.dp, cardGap = 8.dp,
         accentDesaturationDark = 0.05f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.70f,
+        topBarBlurTint = Color(0xFFF0F8FF), topBarBlurTintDark = darkSurface.copy(alpha = 0.4f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.75f,
+        navBarBlurTint = Color(0xFFF0F8FF), navBarBlurTintDark = darkSurface.copy(alpha = 0.35f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.60f,
     )
 }
 
@@ -452,6 +477,11 @@ fun countrySkinConfig(): LolitaSkinConfig {
         cardContainerColor = warmWhite.copy(alpha = 0.75f), cardContainerColorDark = darkSurface.copy(alpha = 0.75f),
         cardInnerPadding = 18.dp, cardGap = 10.dp,
         accentDesaturationDark = 0.1f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.68f,
+        topBarBlurTint = cream, topBarBlurTintDark = darkSurface.copy(alpha = 0.35f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.70f,
+        navBarBlurTint = cream, navBarBlurTintDark = darkSurface.copy(alpha = 0.3f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.58f,
     )
 }
 
@@ -525,5 +555,10 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         cardContainerColor = cream.copy(alpha = 0.8f), cardContainerColorDark = darkSurface.copy(alpha = 0.85f),
         cardInnerPadding = 20.dp, cardGap = 10.dp,
         accentDesaturationDark = 0.15f,
+        topBarBlurEnabled = true, topBarBlurAlpha = 0.82f,
+        topBarBlurTint = cream.copy(alpha = 0.9f), topBarBlurTintDark = darkSurface.copy(alpha = 0.5f),
+        navBarBlurEnabled = true, navBarBlurAlpha = 0.85f,
+        navBarBlurTint = cream, navBarBlurTintDark = darkSurface.copy(alpha = 0.45f),
+        dialogBlurEnabled = true, dialogBlurAlpha = 0.72f,
     )
 }

@@ -24,6 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.navigation.LocalHazeState
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
 
 @Composable
 fun GradientTopAppBar(
@@ -31,7 +36,8 @@ fun GradientTopAppBar(
     modifier: Modifier = Modifier,
     compact: Boolean = true,
     navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
+    hazeState: HazeState? = LocalHazeState.current
 ) {
     val skin = LolitaSkin.current
     val gradient = if (isSystemInDarkTheme()) {
@@ -40,17 +46,35 @@ fun GradientTopAppBar(
         Brush.horizontalGradient(skin.gradientColors)
     }
 
+    val blurEnabled = skin.topBarBlurEnabled && hazeState != null
+
     if (compact) {
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .background(gradient),
+                .then(
+                    if (blurEnabled) {
+                        Modifier.hazeEffect(
+                            state = hazeState!!,
+                            style = HazeStyle(
+                                backgroundColor = if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                tint = HazeTint(
+                                    (if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                        .copy(alpha = skin.topBarBlurAlpha)
+                                ),
+                                blurRadius = 25.dp
+                            )
+                        )
+                    } else {
+                        Modifier.background(gradient)
+                    }
+                ),
             color = Color.Transparent
         ) {
             CompositionLocalProvider(LocalContentColor provides Color.White) {
                 Row(
                     modifier = Modifier
-                        .background(gradient)
+                        .then(if (blurEnabled) Modifier else Modifier.background(gradient))
                         .statusBarsPadding()
                         .padding(horizontal = 4.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -95,13 +119,29 @@ fun GradientTopAppBar(
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .background(gradient),
+                .then(
+                    if (blurEnabled) {
+                        Modifier.hazeEffect(
+                            state = hazeState!!,
+                            style = HazeStyle(
+                                backgroundColor = if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                tint = HazeTint(
+                                    (if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                        .copy(alpha = skin.topBarBlurAlpha)
+                                ),
+                                blurRadius = 25.dp
+                            )
+                        )
+                    } else {
+                        Modifier.background(gradient)
+                    }
+                ),
             color = Color.Transparent
         ) {
             CompositionLocalProvider(LocalContentColor provides Color.White) {
                 Row(
                     modifier = Modifier
-                        .background(gradient)
+                        .then(if (blurEnabled) Modifier else Modifier.background(gradient))
                         .statusBarsPadding()
                         .padding(horizontal = 4.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically

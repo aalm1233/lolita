@@ -41,8 +41,10 @@
 
 - 导航统一走 `Screen` sealed interface + `LolitaNavHost`，新增页面两边都补。
 - 列表/详情/编辑页成套考虑。
-- `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。
+- `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。顶栏支持 Haze 毛玻璃效果：当 `skin.topBarBlurEnabled && LocalHazeState.current != null` 时使用 `hazeEffect`，否则回退到原始渐变。
 - `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`。
+- 底部导航栏支持 Haze 毛玻璃效果：通过 `skin.navBarBlurEnabled` 控制，启用时 `containerColor` 使用半透明 tint 色。
+- `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
 - 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。
 - 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
@@ -72,6 +74,14 @@
 | `sectionAccentWidth` | 竖线宽度 | 3dp |
 | `sectionDividerColor/Dark` | 分区分割线颜色 | Pink200 / gold |
 | `sectionDividerHeight` | 分割线粗细 | 1dp |
+| `spacingS/M/L/XL` | 8pt 间距系统 | 4/8/16/24dp |
+| `cornerRadiusS/M/L` | 圆角半径 | 8/16/24dp / 6/12/16dp |
+| `spatialSpring` / `effectsSpring` | 统一弹簧动画 | 0.75,400 / 0.8,300 |
+| `cardContainerColor/Dark` | 卡片表面色（替代运行时 alpha） | White(0.75) / cream(0.8) |
+| `cardInnerPadding` / `cardGap` | 卡片内边距 / 卡片间距 | 16dp / 20dp |
+| `topBarBlurEnabled/Alpha/Tint/Dark` | 顶栏毛玻璃 | 0.72 / 0.82 |
+| `navBarBlurEnabled/Alpha/Tint/Dark` | 底栏毛玻璃 | 0.75 / 0.85 |
+| `dialogBlurEnabled/Alpha` | 对话框毛玻璃 | 0.65 / 0.72 |
 
 新增视觉令牌时需同步：`LolitaSkinConfig` 数据类 + **7 个**皮肤工厂函数 + dark mode 变体。
 
@@ -79,8 +89,12 @@
 
 - 逐皮肤深化装饰层（如 `SkinDecorationProvider` 接口，华丽皮肤覆写提供 Canvas 角落花纹/画框金边等）
 - 其他详情页（`CoordinateDetailScreen`、`CatalogDetailScreen`、`OutfitLogDetailScreen`、`LocationDetailScreen`）应用同样的 `LolitaCard` + `SectionHeader` 模式
-- 对话框皮肤化
+- 对话框皮肤化 + 毛玻璃（`dialogBlurEnabled`/`dialogBlurAlpha` 令牌已就绪，待创建 `LolitaDialog` 组件）
 - `ImageFrame` 应用到详情页图片区域
+- 加载态骨架屏（compose-shimmer）
+- 图片加载优化（Landscapist + circular reveal）
+- Hero 动画（SharedTransitionLayout）
+- 高级毛玻璃（Liquid Glass，API 33+ shader 效果）
 
 ## 构建与验证
 

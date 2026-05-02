@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -50,7 +51,7 @@ fun GalleryCard(
         modifier = modifier.fillMaxWidth(),
         shape = cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
+            containerColor = if (isSystemInDarkTheme()) skin.cardContainerColorDark else skin.cardContainerColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
         border = skin.cardBorderStroke

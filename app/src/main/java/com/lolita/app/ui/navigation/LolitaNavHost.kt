@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,12 @@ import com.lolita.app.ui.theme.skin.icon.CountryBottomNavIcon
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.foundation.isSystemInDarkTheme
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.rememberHazeState
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -111,6 +118,8 @@ data object BottomNavItems {
     )
 }
 
+val LocalHazeState = compositionLocalOf<HazeState?> { null }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LolitaNavHost() {
@@ -120,14 +129,39 @@ fun LolitaNavHost() {
 
     val skin = LolitaSkin.current
     val accent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
+    val hazeState = rememberHazeState()
 
+    CompositionLocalProvider(LocalHazeState provides hazeState) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(60.dp),
-                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .height(60.dp)
+                    .then(
+                        if (skin.navBarBlurEnabled) {
+                            Modifier.hazeEffect(
+                                state = hazeState,
+                                style = HazeStyle(
+                                    backgroundColor = if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint,
+                                    tint = HazeTint(
+                                        (if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint)
+                                            .copy(alpha = skin.navBarBlurAlpha)
+                                    ),
+                                    blurRadius = 20.dp
+                                )
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
+                containerColor = if (skin.navBarBlurEnabled) {
+                    (if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint)
+                        .copy(alpha = skin.navBarBlurAlpha)
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
                 contentColor = accent,
                 windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
@@ -212,7 +246,7 @@ fun LolitaNavHost() {
 
         val isListScrolling = remember { mutableStateOf(false) }
         CompositionLocalProvider(LocalIsListScrolling provides isListScrolling) {
-        Box {
+        Box(modifier = Modifier.hazeSource(state = hazeState)) {
             // Bottom layer: ambient background animation
             SkinBackgroundAnimation(
                 modifier = Modifier
@@ -680,5 +714,6 @@ fun LolitaNavHost() {
             )
         }
         }
+    }
     }
 }

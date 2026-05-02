@@ -10,6 +10,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import com.lolita.app.ui.navigation.LocalHazeState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -102,6 +106,8 @@ fun ItemListScreen(
     var isSearchMode by remember { mutableStateOf(false) }
     val searchFocusRequester = remember { FocusRequester() }
     val skin = LolitaSkin.current
+    val hazeState = LocalHazeState.current
+    val topBarBlurEnabled = skin.topBarBlurEnabled && hazeState != null
     val topBarGradient = if (isSystemInDarkTheme()) {
         Brush.horizontalGradient(skin.gradientColorsDark)
     } else {
@@ -201,13 +207,31 @@ fun ItemListScreen(
         ) {
             // Unified top bar (Xiaohongshu-style: search icon | tabs | actions)
             Surface(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (topBarBlurEnabled) {
+                            Modifier.hazeEffect(
+                                state = hazeState!!,
+                                style = HazeStyle(
+                                    backgroundColor = if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                    tint = HazeTint(
+                                        (if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                            .copy(alpha = skin.topBarBlurAlpha)
+                                    ),
+                                    blurRadius = 25.dp
+                                )
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
                 color = Color.Transparent
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(topBarGradient)
+                        .then(if (topBarBlurEnabled) Modifier else Modifier.background(topBarGradient))
                         .statusBarsPadding()
                 ) {
                     AnimatedContent(

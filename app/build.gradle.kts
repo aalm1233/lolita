@@ -22,8 +22,8 @@ android {
         applicationId = "com.lolita.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 47
-        versionName = "2.29.1"
+        versionCode = 48
+        versionName = "2.30.0"
     }
 
     signingConfigs {
@@ -117,6 +117,9 @@ dependencies {
 
     // Coil (for image loading)
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Haze (blur / frosted glass effects)
+    implementation("dev.chrisbanes.haze:haze:1.6.9")
 
     // Telephoto (zoomable image gestures)
     implementation("me.saket.telephoto:zoomable:0.14.0")

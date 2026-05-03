@@ -45,10 +45,11 @@
 - `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`。
 - 底部导航栏支持 Haze 毛玻璃效果：通过 `skin.navBarBlurEnabled` 控制，启用时 `containerColor` 使用半透明 tint 色。
 - `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
-- 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。
-- 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。
+- 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。支持 `variant` 参数：`CardVariant.DEFAULT`（默认）、`CardVariant.GALLERY`（无边框/无内边距/零阴影，图片主导）、`CardVariant.FEATURED`（高阴影/大内边距，突出展示）、`CardVariant.COMPACT`（低阴影/紧内边距/细边框，替代 raw Card）。
+- 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
+- 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
-- 详情页信息区块（基本信息/描述/尺码/价格/记录等）用 `LolitaCard` + `SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
+- 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
@@ -82,6 +83,9 @@
 | `topBarBlurEnabled/Alpha/Tint/Dark` | 顶栏毛玻璃 | 0.72 / 0.82 |
 | `navBarBlurEnabled/Alpha/Tint/Dark` | 底栏毛玻璃 | 0.75 / 0.85 |
 | `dialogBlurEnabled/Alpha` | 对话框毛玻璃 | 0.65 / 0.72 |
+| `galleryCardElevation/Border/InnerPadding` | 画廊卡片变体令牌 | 0dp/null/0dp / 0dp/gold0.3/0dp |
+| `featuredCardElevation/Border/InnerPadding` | 精选卡片变体令牌 | 2dp/null/20dp / 6dp/gold1/24dp |
+| `compactCardElevation/Border/InnerPadding` | 紧凑卡片变体令牌 | 0.5dp/null/8dp / 1dp/gold0.5/10dp |
 
 ### 加载态与图片
 

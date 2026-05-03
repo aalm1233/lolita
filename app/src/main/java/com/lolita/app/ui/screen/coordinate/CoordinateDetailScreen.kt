@@ -35,6 +35,8 @@ import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SectionHeader
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
@@ -218,49 +220,44 @@ fun CoordinateDetailScreen(
                 }
 
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "包含服饰 (${uiState.items.size})",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        SkinClickableBox(
-                            onClick = {
-                                viewModel.loadAllItemsForPicker()
-                                showItemPicker = true
-                            }
-                        ) {
-                            Surface(
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                shape = MaterialTheme.shapes.small
+                    SectionHeader(
+                        title = "包含服饰 (${uiState.items.size})",
+                        action = {
+                            SkinClickableBox(
+                                onClick = {
+                                    viewModel.loadAllItemsForPicker()
+                                    showItemPicker = true
+                                }
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                Surface(
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    shape = MaterialTheme.shapes.small
                                 ) {
-                                    SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
-                                    Text(
-                                        "添加服饰",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                                        Text(
+                                            "添加服饰",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
+                    )
                 }
 
                 if (uiState.items.isEmpty()) {
                     item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth()
+                        LolitaCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            variant = CardVariant.COMPACT
                         ) {
                             Column(
-                                modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(

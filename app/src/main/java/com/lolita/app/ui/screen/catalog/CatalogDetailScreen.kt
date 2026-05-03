@@ -21,8 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -52,6 +50,8 @@ import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.findColorHex
@@ -300,22 +300,25 @@ fun CatalogDetailScreen(
                             }
                         }
 
-                        CatalogDetailSection(title = "基础信息") {
-                            CatalogDetailRowWithBrand(
-                                label = "品牌",
-                                brandName = uiState.brandName,
-                                brandLogoUrl = uiState.brandLogoUrl
-                            )
-                            CatalogDetailRow("分类", uiState.categoryName ?: "未设置")
-                            entry.style?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("风格", it) }
-                            entry.season?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("季节", it) }
-                            entry.size?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("尺码", it) }
-                            entry.source?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("来源", it) }
+                        LolitaSection(title = "基础信息") {
+                            row {
+                                CatalogDetailRowWithBrand(
+                                    label = "品牌",
+                                    brandName = uiState.brandName,
+                                    brandLogoUrl = uiState.brandLogoUrl
+                                )
+                                CatalogDetailRow("分类", uiState.categoryName ?: "未设置")
+                                entry.style?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("风格", it) }
+                                entry.season?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("季节", it) }
+                                entry.size?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("尺码", it) }
+                                entry.source?.takeIf { it.isNotBlank() }?.let { CatalogDetailRow("来源", it) }
+                            }
                         }
 
                         if (entry.colors.isNotEmpty()) {
-                            CatalogDetailSection(title = "颜色") {
-                                FlowRow(
+                            LolitaSection(title = "颜色") {
+                                row {
+                                    FlowRow(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
@@ -347,52 +350,54 @@ fun CatalogDetailScreen(
                         }
 
                         if (entry.description.isNotBlank()) {
-                            CatalogDetailSection(title = "描述") {
-                                Text(
-                                    text = entry.description,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
+                            LolitaSection(title = "描述") {
+                                row {
+                                    Text(
+                                        text = entry.description,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
                             }
                         }
 
                         entry.referenceUrl?.takeIf { it.isNotBlank() }?.let { referenceUrl ->
-                            CatalogDetailSection(title = "来源链接") {
-                                Card(
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                                    )
-                                ) {
-                                    Column(
-                                        modifier = Modifier.padding(12.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Text(
-                                            text = referenceUrl,
-                                            style = MaterialTheme.typography.bodyMedium
-                                        )
-                                        OutlinedButton(
-                                            onClick = {
-                                                runCatching {
-                                                    context.startActivity(
-                                                        Intent(Intent.ACTION_VIEW, Uri.parse(referenceUrl))
-                                                    )
-                                                }.onFailure {
-                                                    showError = it.message ?: "无法打开链接"
-                                                }
-                                            }
+                            LolitaSection(title = "来源链接") {
+                                row {
+                                    LolitaCard(variant = CardVariant.COMPACT) {
+                                        Column(
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
                                         ) {
-                                            SkinIcon(IconKey.OpenInNew, modifier = Modifier.size(16.dp))
-                                            Spacer(modifier = Modifier.size(6.dp))
-                                            Text("打开链接")
+                                            Text(
+                                                text = referenceUrl,
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                            OutlinedButton(
+                                                onClick = {
+                                                    runCatching {
+                                                        context.startActivity(
+                                                            Intent(Intent.ACTION_VIEW, Uri.parse(referenceUrl))
+                                                        )
+                                                    }.onFailure {
+                                                        showError = it.message ?: "无法打开链接"
+                                                    }
+                                                }
+                                            ) {
+                                                SkinIcon(IconKey.OpenInNew, modifier = Modifier.size(16.dp))
+                                                Spacer(modifier = Modifier.size(6.dp))
+                                                Text("打开链接")
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        }
 
-                        CatalogDetailSection(title = "时间") {
-                            CatalogDetailRow("创建时间", formatCatalogTime(entry.createdAt))
-                            CatalogDetailRow("更新时间", formatCatalogTime(entry.updatedAt))
+                        LolitaSection(title = "时间") {
+                            row {
+                                CatalogDetailRow("创建时间", formatCatalogTime(entry.createdAt))
+                                CatalogDetailRow("更新时间", formatCatalogTime(entry.updatedAt))
+                            }
                         }
                     }
                 }
@@ -406,21 +411,6 @@ fun CatalogDetailScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun CatalogDetailSection(
-    title: String,
-    content: @Composable () -> Unit
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold
-        )
-        content()
     }
 }
 
@@ -539,14 +529,9 @@ private fun CatalogDetailLinkedStatus(
 
 @Composable
 private fun CatalogRemoteReadOnlyNotice() {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-        )
-    ) {
+    LolitaCard(variant = CardVariant.COMPACT) {
         Text(
             text = "This shared catalog entry is synced from the backend. Editing and direct conversion are disabled for now.",
-            modifier = Modifier.padding(12.dp),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface
         )

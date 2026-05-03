@@ -25,6 +25,8 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.CardVariant
+import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import java.text.SimpleDateFormat
@@ -163,14 +165,11 @@ fun OutfitLogDetailScreen(
                 // Note section
                 if (log.note.isNotEmpty()) {
                     item {
-                        Card(
+                        LolitaCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
+                            variant = CardVariant.COMPACT
                         ) {
                             Text(
                                 text = log.note,
@@ -184,12 +183,7 @@ fun OutfitLogDetailScreen(
                 // Photos section
                 if (log.imageUrls.isNotEmpty()) {
                     item {
-                        Text(
-                            text = "照片 (${log.imageUrls.size})",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
+                        SectionHeader(title = "照片 (${log.imageUrls.size})")
                     }
                     if (log.imageUrls.size == 1) {
                         item {
@@ -230,18 +224,7 @@ fun OutfitLogDetailScreen(
                 // Associated items section
                 if (uiState.items.isNotEmpty()) {
                     item {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            SkinIcon(IconKey.Save, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
-                            Text(
-                                text = "关联服饰 (${uiState.items.size})",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        SectionHeader(title = "关联服饰 (${uiState.items.size})")
                     }
                     items(uiState.items, key = { it.id }) { item ->
                         DetailItemCard(

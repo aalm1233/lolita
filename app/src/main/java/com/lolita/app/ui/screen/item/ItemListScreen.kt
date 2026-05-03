@@ -10,6 +10,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.material3.LocalContentColor
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -659,6 +661,8 @@ private fun NormalModeBar(
 ) {
     val tabs = listOf("位置", "服饰", "套装")
     val pageTabs = listOf("位置", "服饰", "套装", "图鉴")
+    val contentColor = LocalContentColor.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -670,7 +674,7 @@ private fun NormalModeBar(
             onClick = onSearchClick,
             modifier = Modifier.size(36.dp)
         ) {
-            SkinIcon(IconKey.Search, tint = Color.White)
+            SkinIcon(IconKey.Search, tint = contentColor)
         }
 
         // Tabs (centered)
@@ -680,7 +684,7 @@ private fun NormalModeBar(
                 .weight(1f)
                 .padding(horizontal = 2.dp),
             containerColor = Color.Transparent,
-            contentColor = Color.White,
+            contentColor = contentColor,
             divider = {},
             indicator = { tabPositions ->
                 SkinTabIndicator(
@@ -704,8 +708,8 @@ private fun NormalModeBar(
                             overflow = TextOverflow.Clip
                         )
                     },
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White.copy(alpha = 0.7f)
+                    selectedContentColor = contentColor,
+                    unselectedContentColor = contentColor.copy(alpha = 0.7f)
                 )
             }
         }
@@ -718,7 +722,7 @@ private fun NormalModeBar(
             ) {
                 SkinIcon(
                     IconKey.FilterList,
-                    tint = if (activeFilterCount > 0) Color.White else Color.White.copy(alpha = 0.7f)
+                    tint = if (activeFilterCount > 0) contentColor else contentColor.copy(alpha = 0.7f)
                 )
             }
             if (activeFilterCount > 0) {
@@ -747,7 +751,7 @@ private fun NormalModeBar(
             showPriceOptions = showPriceOptions,
             onSortSelected = onSortSelected,
             modifier = Modifier.size(32.dp),
-            iconTint = Color.White.copy(alpha = 0.8f)
+            iconTint = contentColor.copy(alpha = 0.8f)
         )
 
         // View mode toggle
@@ -755,7 +759,7 @@ private fun NormalModeBar(
             onClick = onViewModeToggle,
             modifier = Modifier.size(32.dp)
         ) {
-            SkinIcon(viewModeIcon, tint = Color.White.copy(alpha = 0.8f))
+            SkinIcon(viewModeIcon, tint = contentColor.copy(alpha = 0.8f))
         }
     }
 }
@@ -768,6 +772,7 @@ private fun SearchModeBar(
     focusRequester: FocusRequester,
     placeholder: String
 ) {
+    val contentColor = LocalContentColor.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -778,7 +783,7 @@ private fun SearchModeBar(
         Surface(
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(20.dp),
-            color = Color.White.copy(alpha = 0.2f)
+            color = contentColor.copy(alpha = 0.2f)
         ) {
             BasicTextField(
                 value = query,
@@ -788,15 +793,15 @@ private fun SearchModeBar(
                     .padding(horizontal = 12.dp, vertical = 8.dp)
                     .focusRequester(focusRequester),
                 singleLine = true,
-                textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                cursorBrush = SolidColor(Color.White),
+                textStyle = TextStyle(color = contentColor, fontSize = 14.sp),
+                cursorBrush = SolidColor(contentColor),
                 decorationBox = { innerTextField ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp), tint = Color.White.copy(alpha = 0.7f))
+                        SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp), tint = contentColor.copy(alpha = 0.7f))
                         Spacer(Modifier.width(6.dp))
                         Box(Modifier.weight(1f)) {
                             if (query.isEmpty()) {
-                                Text("搜索服饰", color = Color.White.copy(alpha = 0.6f), fontSize = 14.sp)
+                                Text("搜索服饰", color = contentColor.copy(alpha = 0.6f), fontSize = 14.sp)
                             }
                             innerTextField()
                         }
@@ -806,7 +811,7 @@ private fun SearchModeBar(
                                 modifier = Modifier
                                     .size(16.dp)
                                     .clickable { onQueryChange("") },
-                                tint = Color.White.copy(alpha = 0.7f)
+                                tint = contentColor.copy(alpha = 0.7f)
                             )
                         }
                     }
@@ -815,7 +820,7 @@ private fun SearchModeBar(
         }
         Text(
             "取消",
-            color = Color.White,
+            color = contentColor,
             fontSize = 14.sp,
             modifier = Modifier.clickable { onCancel() }
         )

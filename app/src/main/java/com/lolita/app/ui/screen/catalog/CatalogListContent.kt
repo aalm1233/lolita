@@ -57,6 +57,7 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.ViewMode
@@ -493,7 +494,7 @@ private fun CatalogGalleryCard(
 ) {
     val entry = data.entry
 
-    LolitaCard(modifier = Modifier.fillMaxWidth()) {
+    LolitaCard(modifier = Modifier.fillMaxWidth(), variant = CardVariant.GALLERY) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,11 +1,9 @@
 package com.lolita.app.ui.screen.common
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +15,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.item.ItemCardData
 import com.lolita.app.ui.theme.LolitaSkin
 
@@ -44,14 +41,9 @@ fun GalleryCard(
             .joinToString(" · ")
     }
 
-    Card(
+    LolitaCard(
         modifier = modifier.fillMaxWidth(),
-        shape = cardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSystemInDarkTheme()) skin.cardContainerColorDark else skin.cardContainerColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
-        border = skin.cardBorderStroke
+        variant = CardVariant.GALLERY
     ) {
         Box(
             modifier = Modifier

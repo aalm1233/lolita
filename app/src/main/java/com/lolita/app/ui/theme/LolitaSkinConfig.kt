@@ -84,6 +84,17 @@ data class LolitaSkinConfig(
     val dialogBlurEnabled: Boolean = true,
     val dialogBlurAlpha: Float = 0.6f,
 
+    // Card variant tokens
+    val galleryCardElevation: Dp = 0.dp,
+    val galleryCardBorderStroke: BorderStroke? = null,
+    val galleryCardInnerPadding: Dp = 0.dp,
+    val featuredCardElevation: Dp = 2.dp,
+    val featuredCardBorderStroke: BorderStroke? = null,
+    val featuredCardInnerPadding: Dp = 20.dp,
+    val compactCardElevation: Dp = 0.5.dp,
+    val compactCardBorderStroke: BorderStroke? = null,
+    val compactCardInnerPadding: Dp = 8.dp,
+
     val icons: SkinIconProvider,
     val animations: SkinAnimationProvider,
 )

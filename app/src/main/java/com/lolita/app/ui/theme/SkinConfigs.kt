@@ -195,6 +195,9 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.82f,
         navBarBlurTint = White, navBarBlurTintDark = darkSurface.copy(alpha = 0.5f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.70f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 4.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, Color(0xFF4A0E4E)), featuredCardInnerPadding = 20.dp,
+        compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.3.dp, Color(0xFF4A0E4E).copy(alpha = 0.5f)), compactCardInnerPadding = 8.dp,
     )
 }
 
@@ -266,6 +269,9 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.72f,
         navBarBlurTint = Color(0xFFFFF8F0), navBarBlurTintDark = darkSurface.copy(alpha = 0.3f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.60f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 2.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, vermillion), featuredCardInnerPadding = 18.dp,
+        compactCardElevation = 0.5.dp, compactCardBorderStroke = BorderStroke(0.3.dp, vermillion.copy(alpha = 0.4f)), compactCardInnerPadding = 6.dp,
     )
 }
 
@@ -337,6 +343,9 @@ fun classicSkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.78f,
         navBarBlurTint = Color(0xFFFFF5F0), navBarBlurTintDark = darkSurface.copy(alpha = 0.35f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.65f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 4.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, Color(0xFFB8860B)), featuredCardInnerPadding = 20.dp,
+        compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.3.dp, wine.copy(alpha = 0.5f)), compactCardInnerPadding = 8.dp,
     )
 }
 
@@ -408,6 +417,9 @@ fun navySkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.75f,
         navBarBlurTint = Color(0xFFF0F8FF), navBarBlurTintDark = darkSurface.copy(alpha = 0.35f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.60f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 3.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, gold), featuredCardInnerPadding = 20.dp,
+        compactCardElevation = 0.5.dp, compactCardBorderStroke = null, compactCardInnerPadding = 8.dp,
     )
 }
 
@@ -482,6 +494,9 @@ fun countrySkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.70f,
         navBarBlurTint = cream, navBarBlurTintDark = darkSurface.copy(alpha = 0.3f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.58f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 2.dp, featuredCardBorderStroke = null, featuredCardInnerPadding = 22.dp,
+        compactCardElevation = 0.5.dp, compactCardBorderStroke = null, compactCardInnerPadding = 10.dp,
     )
 }
 
@@ -560,5 +575,8 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.85f,
         navBarBlurTint = cream, navBarBlurTintDark = darkSurface.copy(alpha = 0.45f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.72f,
+        galleryCardElevation = 0.dp, galleryCardBorderStroke = BorderStroke(0.5.dp, gold.copy(alpha = 0.3f)), galleryCardInnerPadding = 0.dp,
+        featuredCardElevation = 6.dp, featuredCardBorderStroke = BorderStroke(1.dp, gold), featuredCardInnerPadding = 24.dp,
+        compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.5.dp, gold.copy(alpha = 0.5f)), compactCardInnerPadding = 10.dp,
     )
 }

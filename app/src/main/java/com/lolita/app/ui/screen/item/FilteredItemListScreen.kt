@@ -19,14 +19,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun FilteredItemListScreen(
@@ -54,10 +59,16 @@ fun FilteredItemListScreen(
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(5) {
+                    FilteredItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                }
+            }
         } else if (uiState.items.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(padding),
@@ -102,11 +113,12 @@ private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -176,6 +188,27 @@ private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
                         }
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilteredItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ShimmerRect(width = 80.dp, height = 80.dp, shape = RoundedCornerShape(10.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp)
             }
         }
     }

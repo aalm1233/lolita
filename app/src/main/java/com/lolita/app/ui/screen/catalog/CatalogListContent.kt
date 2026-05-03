@@ -47,22 +47,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.CatalogEntry
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -73,10 +75,42 @@ fun CatalogListContent(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         if (uiState.isLoading) {
-            androidx.compose.material3.CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = MaterialTheme.colorScheme.primary
-            )
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            if (uiState.viewMode == ViewMode.GALLERY) {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    verticalItemSpacing = 8.dp,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(4) {
+                        CatalogGalleryCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
+                }
+            } else if (uiState.columnsPerRow == 1) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(5) {
+                        CatalogListCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(uiState.columnsPerRow),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(6) {
+                        CatalogGridCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
+                }
+            }
         } else if (uiState.filteredEntries.isEmpty()) {
             SkinEmptyState(
                 iconKey = IconKey.Home,
@@ -458,9 +492,6 @@ private fun CatalogGalleryCard(
     onClick: () -> Unit
 ) {
     val entry = data.entry
-    val context = LocalContext.current
-    val density = LocalDensity.current
-    val imageSizePx = with(density) { 300.dp.roundToPx() }
 
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Box(
@@ -469,15 +500,12 @@ private fun CatalogGalleryCard(
                 .combinedClickable(onClick = onClick, onLongClick = onClick)
         ) {
             if (entry.imageUrls.isNotEmpty()) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(resolveCatalogImageModel(entry.imageUrls.first()))
-                        .size(imageSizePx)
-                        .crossfade(true)
-                        .build(),
+                LolitaShimmerImage(
+                    model = resolveCatalogImageModel(entry.imageUrls.first()),
                     contentDescription = entry.name,
                     modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = entry.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -555,20 +583,13 @@ private fun CatalogThumbnail(
     title: String,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val density = LocalDensity.current
-    val imageSizePx = with(density) { 220.dp.roundToPx() }
-
     if (imagePath != null) {
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(resolveCatalogImageModel(imagePath))
-                .size(imageSizePx)
-                .crossfade(true)
-                .build(),
+        LolitaShimmerImage(
+            model = resolveCatalogImageModel(imagePath),
             contentDescription = title,
             modifier = modifier.clip(RoundedCornerShape(14.dp)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholderInitial = title.firstOrNull()?.toString()
         )
     } else {
         Box(
@@ -748,5 +769,61 @@ private fun resolveCatalogImageModel(imagePath: String): Any {
         imagePath
     } else {
         java.io.File(imagePath)
+    }
+}
+
+@Composable
+private fun CatalogListCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ShimmerRect(
+                width = 96.dp,
+                height = 123.dp,
+                shape = RoundedCornerShape(14.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CatalogGridCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Column {
+            ShimmerRect(
+                width = 200.dp,
+                height = 160.dp,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier.padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CatalogGalleryCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        ShimmerRect(
+            width = 200.dp,
+            height = 240.dp,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

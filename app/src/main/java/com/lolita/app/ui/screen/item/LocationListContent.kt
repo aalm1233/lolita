@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -86,11 +86,12 @@ private fun LocationCardItem(
         ) {
             // Location image - 56dp
             if (imageUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = imageUrl,
                     contentDescription = null,
                     modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -135,7 +136,7 @@ private fun LocationCardItem(
                 if (itemImages.isNotEmpty()) {
                     Row {
                         itemImages.forEachIndexed { index, url ->
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = url,
                                 contentDescription = null,
                                 modifier = Modifier

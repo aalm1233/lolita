@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import java.io.File
@@ -149,11 +149,13 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
     ) {
         Box {
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = File(item.imageUrls.first()),
                     contentDescription = null,
                     modifier = Modifier.size(80.dp).clip(RoundedCornerShape(6.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString(),
+                    circularRevealEnabled = false
                 )
             } else {
                 Surface(

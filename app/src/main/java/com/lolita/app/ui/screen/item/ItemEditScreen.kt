@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -776,13 +776,14 @@ private fun SizeChartImageSection(
                         sizeChartImageUrl
                     }
                     Box {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = imageModel,
                             contentDescription = "尺码表",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = {

@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.GradientTopAppBar
@@ -156,11 +156,12 @@ private fun LocationCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (location.imageUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = location.imageUrl,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = location.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -256,11 +257,12 @@ private fun LocationEditDialog(
                 // Image picker
                 if (imageUrl != null) {
                     Box(modifier = Modifier.fillMaxWidth().height(120.dp)) {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = imageUrl,
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = { imageUrl = null },

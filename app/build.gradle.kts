@@ -121,6 +121,12 @@ dependencies {
     // Haze (blur / frosted glass effects)
     implementation("dev.chrisbanes.haze:haze:1.6.9")
 
+    // Shimmer & image loading polish
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+    implementation("com.github.skydoves:landscapist-coil:2.4.7")
+    implementation("com.github.skydoves:landscapist-placeholder:2.4.7")
+    implementation("com.github.skydoves:landscapist-animation:2.4.7")
+
     // Telephoto (zoomable image gestures)
     implementation("me.saket.telephoto:zoomable:0.14.0")
 

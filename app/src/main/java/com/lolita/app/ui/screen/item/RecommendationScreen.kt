@@ -14,14 +14,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import java.io.File
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,8 +57,14 @@ fun RecommendationScreen(
     ) { padding ->
         when {
             uiState.isLoading -> {
-                Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                val shimmer = rememberShimmer(ShimmerBounds.Window)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(5) {
+                        RecommendationItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
                 }
             }
             uiState.error != null -> {
@@ -111,11 +122,12 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
         ) {
             // Thumbnail
             if (matchScore.item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = File(matchScore.item.imageUrls.first()),
                     contentDescription = null,
                     modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = matchScore.item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -145,8 +157,8 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                     matchScore.item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
                         val colorDisplay = colors.joinToString("、")
                         if (colorDisplay.isNotEmpty()) {
-                        Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -163,6 +175,26 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecommendationItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ShimmerRect(width = 56.dp, height = 56.dp, shape = RoundedCornerShape(8.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 18.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
             }
         }
     }

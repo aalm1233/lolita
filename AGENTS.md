@@ -83,6 +83,15 @@
 | `navBarBlurEnabled/Alpha/Tint/Dark` | 底栏毛玻璃 | 0.75 / 0.85 |
 | `dialogBlurEnabled/Alpha` | 对话框毛玻璃 | 0.65 / 0.72 |
 
+### 加载态与图片
+
+- **骨架屏**：列表页全屏加载状态用 `ShimmerRect`/`ShimmerLine`/`ShimmerCircle`（`ui/screen/common/SkeletonShapes.kt`）构建骨架卡片，替换 `CircularProgressIndicator`。每个卡片类型有对应 `XxxCardSkeleton` 私有组合函数（定义在各自屏幕文件内）。
+- **ShimmerTheme**：`ui/theme/shimmer/ShimmerTheme.kt` 中 `skinShimmerTheme()` 从 `cardContainerColor` + `accentColor` 派生，通过 `LocalShimmerTheme` 在 `LolitaTheme` 中提供。
+- **LolitaShimmerImage**：`ui/screen/common/LolitaShimmerImage.kt`，皮肤感知的 `CoilImage` 封装，集成 `ShimmerPlugin`（加载态闪烁）+ `CircularRevealPlugin`（出场圆形揭示动画）+ 首字母失败回退。**所有图片加载统一用 `LolitaShimmerImage`，不再直接使用 Coil `AsyncImage`。**
+- **特殊场景**：全屏缩放查看器（`ImageGalleryPager`/`FullScreenImageViewer`/`ImagePreviewDialog`）和编辑页图片设 `circularRevealEnabled = false`（缩放/编辑需即时显示）。
+- **保留 CPI 的场景**：内联按钮 spinner（保存/同步操作指示器，如 `BackupRestoreScreen`、`TaobaoImportScreen`）保持 `CircularProgressIndicator`，不用骨架屏。
+- **依赖**：`compose-shimmer:1.3.2`（骨架屏 `Modifier.shimmer()`）、`landscapist-coil:2.4.7` + `landscapist-placeholder:2.4.7` + `landscapist-animation:2.4.7`（图片加载 + 闪烁 + 圆形揭示）。
+
 新增视觉令牌时需同步：`LolitaSkinConfig` 数据类 + **7 个**皮肤工厂函数 + dark mode 变体。
 
 ### 后续优化方向
@@ -91,8 +100,6 @@
 - 其他详情页（`CoordinateDetailScreen`、`CatalogDetailScreen`、`OutfitLogDetailScreen`、`LocationDetailScreen`）应用同样的 `LolitaCard` + `SectionHeader` 模式
 - 对话框皮肤化 + 毛玻璃（`dialogBlurEnabled`/`dialogBlurAlpha` 令牌已就绪，待创建 `LolitaDialog` 组件）
 - `ImageFrame` 应用到详情页图片区域
-- 加载态骨架屏（compose-shimmer）
-- 图片加载优化（Landscapist + circular reveal）
 - Hero 动画（SharedTransitionLayout）
 - 高级毛玻璃（Liquid Glass，API 33+ shader 效果）
 
@@ -173,7 +180,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=46, versionName="2.29.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=49, versionName="2.31.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交

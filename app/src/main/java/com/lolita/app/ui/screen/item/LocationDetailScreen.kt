@@ -17,15 +17,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,8 +66,49 @@ fun LocationDetailScreen(
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Hero image skeleton
+                ShimmerRect(
+                    width = 400.dp,
+                    height = 200.dp,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+                )
+                // Description skeleton
+                ShimmerLine(widthFraction = 0.9f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
+                ShimmerLine(widthFraction = 0.6f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
+                // Item count header
+                ShimmerLine(widthFraction = 0.4f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+                // Item list skeleton: 3 rows
+                repeat(3) {
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ShimmerRect(
+                                width = 64.dp,
+                                height = 64.dp,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                ShimmerLine(widthFraction = 0.7f, height = 16.dp)
+                                ShimmerLine(widthFraction = 0.5f, height = 12.dp)
+                            }
+                        }
+                    }
+                }
             }
         } else {
             LazyColumn(
@@ -76,14 +122,15 @@ fun LocationDetailScreen(
                     val loc = uiState.location!!
                     if (loc.imageUrl != null) {
                         item {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = loc.imageUrl,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(200.dp)
                                     .clip(RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                placeholderInitial = loc.name.firstOrNull()?.toString()
                             )
                         }
                     }
@@ -324,13 +371,14 @@ private fun LocationPickerItemRow(
             )
 
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(6.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -386,11 +434,12 @@ private fun LocationItemCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = null,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(

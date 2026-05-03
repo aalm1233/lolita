@@ -28,8 +28,13 @@ import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.DonutChart
 import com.lolita.app.ui.component.chart.PieChartData
 import com.lolita.app.ui.component.chart.StatsProgressBar
+import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -137,8 +142,38 @@ fun WishlistAnalysisContent(
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.isLoading) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        val shimmer = rememberShimmer(ShimmerBounds.Window)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Budget card skeleton
+            ShimmerRect(
+                width = 400.dp,
+                height = 80.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Progress bar skeleton
+            ShimmerRect(
+                width = 400.dp,
+                height = 24.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Chart skeleton
+            ShimmerRect(
+                width = 180.dp,
+                height = 200.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Priority detail rows skeleton
+            repeat(3) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+            }
         }
         return
     }

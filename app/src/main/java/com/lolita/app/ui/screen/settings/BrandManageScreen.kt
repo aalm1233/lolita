@@ -28,7 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.ui.screen.common.GradientTopAppBar
@@ -151,13 +151,14 @@ private fun BrandCard(
         ) {
             // Brand logo or placeholder
             if (brand.logoUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = brand.logoUrl,
                     contentDescription = brand.name,
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = brand.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -238,13 +239,14 @@ private fun AddBrandDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (logoUrl != null) {
                         Box {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = logoUrl,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                circularRevealEnabled = false
                             )
                             IconButton(
                                 onClick = { logoUrl = null },
@@ -361,13 +363,14 @@ private fun EditBrandDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (logoUrl != null) {
                         Box {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = logoUrl,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                circularRevealEnabled = false
                             )
                             IconButton(
                                 onClick = { logoUrl = null },

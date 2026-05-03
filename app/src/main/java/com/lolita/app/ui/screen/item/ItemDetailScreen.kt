@@ -16,9 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import androidx.compose.ui.platform.LocalContext
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -34,8 +32,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 /**
  * Item Detail Screen - 服饰详情界面
@@ -133,13 +136,59 @@ fun ItemDetailScreen(
         contentWindowInsets = if (hasImage) WindowInsets(0, 0, 0, 0) else ScaffoldDefaults.contentWindowInsets
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
+                    .padding(
+                        top = if (hasImage) 0.dp else padding.calculateTopPadding(),
+                        bottom = padding.calculateBottomPadding()
+                    )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                // Hero image skeleton
+                ShimmerRect(
+                    width = 400.dp,
+                    height = 380.dp,
+                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
+                    modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+                )
+                // Content section skeleton
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Name + status
+                    ShimmerLine(widthFraction = 0.7f, height = 24.dp, modifier = Modifier.shimmer(shimmer))
+                    ShimmerLine(widthFraction = 0.4f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+                    // Basic info card
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            ShimmerLine(widthFraction = 0.3f, height = 18.dp)
+                            ShimmerLine(widthFraction = 0.8f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.6f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.7f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+                        }
+                    }
+                    // Price info card
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            ShimmerLine(widthFraction = 0.3f, height = 18.dp)
+                            ShimmerLine(widthFraction = 0.9f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.6f, height = 14.dp)
+                        }
+                    }
+                }
             }
         } else {
             val item = uiState.item
@@ -345,16 +394,14 @@ fun ItemDetailScreen(
                                     }
                                     if (item.sizeChartImageUrl != null) {
                                         Spacer(Modifier.height(8.dp))
-                                        AsyncImage(
-                                            model = ImageRequest.Builder(LocalContext.current)
-                                                .data(item.sizeChartImageUrl)
-                                                .crossfade(300)
-                                                .build(),
+                                        LolitaShimmerImage(
+                                            model = item.sizeChartImageUrl,
                                             contentDescription = "尺码表",
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .clip(MaterialTheme.shapes.medium),
-                                            contentScale = ContentScale.FillWidth
+                                            contentScale = ContentScale.FillWidth,
+                                            placeholderInitial = "尺"
                                         )
                                     }
                                 }

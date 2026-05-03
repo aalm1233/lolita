@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 
 @Composable
 fun ImageGalleryPager(
@@ -37,13 +37,14 @@ fun ImageGalleryPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            AsyncImage(
+            LolitaShimmerImage(
                 model = imageUrls[page],
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable { onImageClick(page) }
+                    .clickable { onImageClick(page) },
+                circularRevealEnabled = false
             )
         }
 

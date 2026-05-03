@@ -21,15 +21,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,13 +91,52 @@ fun OutfitLogDetailScreen(
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
+                    .padding(padding)
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CircularProgressIndicator()
+                // Date header skeleton
+                ShimmerLine(widthFraction = 0.5f, height = 20.dp, modifier = Modifier.shimmer(shimmer))
+                // Note skeleton
+                LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        ShimmerLine(widthFraction = 0.9f, height = 14.dp)
+                        ShimmerLine(widthFraction = 0.7f, height = 14.dp)
+                    }
+                }
+                // Photo skeleton
+                ShimmerLine(widthFraction = 0.3f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
+                ShimmerRect(
+                    width = 400.dp,
+                    height = 300.dp,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+                )
+                // Associated items skeleton
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
+                repeat(2) {
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ShimmerRect(
+                                width = 48.dp,
+                                height = 48.dp,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            ShimmerLine(widthFraction = 0.6f, height = 16.dp, modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
             }
         } else {
             val log = uiState.log ?: return@Scaffold
@@ -149,14 +193,15 @@ fun OutfitLogDetailScreen(
                     }
                     if (log.imageUrls.size == 1) {
                         item {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = log.imageUrls.first(),
                                 contentDescription = "穿搭照片",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp)
                                     .clip(RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.FillWidth
+                                contentScale = ContentScale.FillWidth,
+                                placeholderInitial = "穿"
                             )
                         }
                     } else {
@@ -166,14 +211,15 @@ fun OutfitLogDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 items(log.imageUrls) { imageUrl ->
-                                    AsyncImage(
+                                    LolitaShimmerImage(
                                         model = imageUrl,
                                         contentDescription = "穿搭照片",
                                         modifier = Modifier
                                             .width(300.dp)
                                             .aspectRatio(0.75f)
                                             .clip(RoundedCornerShape(12.dp)),
-                                        contentScale = ContentScale.Crop
+                                        contentScale = ContentScale.Crop,
+                                        placeholderInitial = "穿"
                                     )
                                 }
                             }
@@ -230,13 +276,14 @@ private fun DetailItemCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(

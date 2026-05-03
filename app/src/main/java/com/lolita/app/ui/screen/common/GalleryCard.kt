@@ -14,13 +14,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.item.ItemCardData
 import com.lolita.app.ui.theme.LolitaSkin
 
@@ -65,20 +62,14 @@ fun GalleryCard(
                 )
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                val context = LocalContext.current
-                val density = LocalDensity.current
-                val imageSizePx = with(density) { 300.dp.roundToPx() }
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(java.io.File(item.imageUrls.first()))
-                        .size(imageSizePx)
-                        .crossfade(true)
-                        .build(),
+                LolitaShimmerImage(
+                    model = java.io.File(item.imageUrls.first()),
                     contentDescription = item.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(cardShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 val initial = item.name.firstOrNull()?.toString() ?: "?"

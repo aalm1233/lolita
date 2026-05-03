@@ -14,7 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.lolita.app.data.local.entity.Brand
 
 /**
@@ -28,13 +27,14 @@ fun BrandLogo(
     modifier: Modifier = Modifier
 ) {
     if (brand?.logoUrl != null) {
-        AsyncImage(
+        LolitaShimmerImage(
             model = brand.logoUrl,
             contentDescription = brand.name,
             modifier = modifier
                 .size(size)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholderInitial = brand.name.firstOrNull()?.toString()
         )
     } else {
         Box(
@@ -66,13 +66,14 @@ fun BrandLogo(
     modifier: Modifier = Modifier
 ) {
     if (logoUrl != null) {
-        AsyncImage(
+        LolitaShimmerImage(
             model = logoUrl,
             contentDescription = brandName,
             modifier = modifier
                 .size(size)
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholderInitial = brandName?.firstOrNull()?.toString()
         )
     } else {
         Box(

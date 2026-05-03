@@ -23,7 +23,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -52,9 +51,15 @@ import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -146,13 +151,61 @@ fun CatalogDetailScreen(
     ) { padding ->
         when {
             uiState.isLoading -> {
-                Box(
+                val shimmer = rememberShimmer(ShimmerBounds.Window)
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
+                        .padding(padding)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    // Hero image skeleton
+                    ShimmerRect(
+                        width = 400.dp,
+                        height = 360.dp,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+                    )
+                    // Content section skeleton
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Name + series
+                        ShimmerLine(widthFraction = 0.7f, height = 24.dp, modifier = Modifier.shimmer(shimmer))
+                        ShimmerLine(widthFraction = 0.5f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+                        // Button row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            ShimmerRect(
+                                width = 180.dp,
+                                height = 40.dp,
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.weight(1f).shimmer(shimmer)
+                            )
+                            ShimmerRect(
+                                width = 180.dp,
+                                height = 40.dp,
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.weight(1f).shimmer(shimmer)
+                            )
+                        }
+                        // Basic info section
+                        LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                ShimmerLine(widthFraction = 0.8f, height = 18.dp)
+                                ShimmerLine(widthFraction = 0.6f, height = 14.dp)
+                                ShimmerLine(widthFraction = 0.7f, height = 14.dp)
+                                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+                            }
+                        }
+                    }
                 }
             }
 

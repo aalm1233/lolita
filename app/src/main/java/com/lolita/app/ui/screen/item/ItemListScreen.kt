@@ -43,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
@@ -59,9 +59,6 @@ import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import coil.request.ImageRequest
 import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.screen.common.ViewMode
@@ -78,6 +75,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import com.lolita.app.ui.screen.catalog.CatalogFilterPanel
+import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerCircle
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import com.lolita.app.ui.screen.catalog.CatalogListContent
 import com.lolita.app.ui.screen.catalog.CatalogListViewModel
 
@@ -379,7 +382,7 @@ fun ItemListScreen(
                     if (uiState.hasTodayOutfit) {
                         uiState.todayOutfitItemImages.forEach { imageUrl ->
                             if (imageUrl != null) {
-                                AsyncImage(
+                                LolitaShimmerImage(
                                     model = java.io.File(imageUrl),
                                     contentDescription = null,
                                     modifier = Modifier.size(36.dp).clip(RoundedCornerShape(6.dp)),
@@ -473,11 +476,44 @@ fun ItemListScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         if (uiState.isLoading) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                            val shimmer = rememberShimmer(ShimmerBounds.Window)
+                            if (uiState.viewMode == ViewMode.GALLERY) {
+                                LazyVerticalStaggeredGrid(
+                                    columns = StaggeredGridCells.Fixed(2),
+                                    verticalItemSpacing = 8.dp,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(4) {
+                                        GalleryCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
+                            } else if (uiState.columnsPerRow == 1) {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(5) {
+                                        ItemCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
+                            } else {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(uiState.columnsPerRow),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(6) {
+                                        ItemGridCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
                             }
                         } else if (uiState.filteredItems.isEmpty()) {
                             SkinEmptyState(
@@ -814,20 +850,14 @@ private fun ItemCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                val context = LocalContext.current
-                val density = LocalDensity.current
-                val imageSizePx = with(density) { 80.dp.roundToPx() }
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(java.io.File(item.imageUrls.first()))
-                        .size(imageSizePx)
-                        .crossfade(true)
-                        .build(),
+                LolitaShimmerImage(
+                    model = java.io.File(item.imageUrls.first()),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 val categoryInitial = categoryName?.firstOrNull()?.toString() ?: "?"
@@ -1026,6 +1056,82 @@ private fun ItemCard(
     }
 }
 
+// region Skeleton composables for loading state
+
+@Composable
+private fun ItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ShimmerRect(
+                width = 80.dp,
+                height = 80.dp,
+                shape = RoundedCornerShape(12.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ItemGridCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column {
+            ShimmerRect(
+                width = 200.dp,
+                height = 160.dp,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun GalleryCardSkeleton(modifier: Modifier = Modifier) {
+    val skin = LolitaSkin.current
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = skin.cardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSystemInDarkTheme()) skin.cardContainerColorDark else skin.cardContainerColor
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
+        border = skin.cardBorderStroke
+    ) {
+        ShimmerRect(
+            width = 200.dp,
+            height = 240.dp,
+            shape = skin.cardShape,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+// endregion
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ItemGridCard(
@@ -1058,21 +1164,15 @@ private fun ItemGridCard(
                 // Image area with price overlay
                 Box {
                     if (item.imageUrls.isNotEmpty()) {
-                        val context = LocalContext.current
-                        val density = LocalDensity.current
-                        val imageSizePx = with(density) { 200.dp.roundToPx() }
-                        AsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .data(java.io.File(item.imageUrls.first()))
-                                .size(imageSizePx)
-                                .crossfade(true)
-                                .build(),
+                        LolitaShimmerImage(
+                            model = java.io.File(item.imageUrls.first()),
                             contentDescription = item.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholderInitial = item.name.firstOrNull()?.toString()
                         )
                     } else {
                         val initial = categoryName?.firstOrNull()?.toString() ?: "?"

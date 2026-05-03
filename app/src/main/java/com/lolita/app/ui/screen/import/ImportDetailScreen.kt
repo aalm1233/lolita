@@ -12,12 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
@@ -438,13 +436,13 @@ private fun ImportItemCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (item.imageUrl != null) {
                     Box(Modifier.fillMaxWidth()) {
-                        val context = LocalContext.current
-                        AsyncImage(
-                            model = ImageRequest.Builder(context).data(item.imageUrl).crossfade(true).build(),
+                        LolitaShimmerImage(
+                            model = item.imageUrl,
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth().height(160.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = { onUpdate { it.copy(imageUrl = null) } },

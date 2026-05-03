@@ -17,7 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -47,11 +47,12 @@ fun FullScreenImageViewer(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                AsyncImage(
+                LolitaShimmerImage(
                     model = imageUrls[page],
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    circularRevealEnabled = false
                 )
             }
 

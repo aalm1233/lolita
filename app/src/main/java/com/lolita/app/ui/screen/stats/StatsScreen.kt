@@ -28,7 +28,7 @@ import com.lolita.app.data.repository.PriceRepository
 
 import com.lolita.app.data.local.entity.BrandItemCount
 import com.lolita.app.data.local.entity.ItemWithSpending
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -197,13 +197,14 @@ fun StatsContent(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (item.imageUrls.isNotEmpty()) {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = item.imageUrls.first(),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(52.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholderInitial = item.itemName.firstOrNull()?.toString()
                         )
                     }
                     Column(modifier = Modifier.weight(1f)) {

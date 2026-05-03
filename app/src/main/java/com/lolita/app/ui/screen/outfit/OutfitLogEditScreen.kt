@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
@@ -255,14 +255,15 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Box {
-            AsyncImage(
+            LolitaShimmerImage(
                 model = imageUrl,
                 contentDescription = "穿搭照片",
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                circularRevealEnabled = false
             )
             IconButton(
                 onClick = onDelete,

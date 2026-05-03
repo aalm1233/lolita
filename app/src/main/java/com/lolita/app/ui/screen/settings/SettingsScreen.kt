@@ -47,7 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.BuildConfig
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.notification.DailyOutfitReminderScheduler
@@ -265,11 +265,12 @@ private fun ProfileSection(
                 contentAlignment = Alignment.Center
             ) {
                 if (uiState.avatarPath.isNotEmpty() && File(uiState.avatarPath).exists()) {
-                    AsyncImage(
+                    LolitaShimmerImage(
                         model = File(uiState.avatarPath),
                         contentDescription = "头像",
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        placeholderInitial = uiState.nickname.firstOrNull()?.toString()
                     )
                 } else {
                     Text(

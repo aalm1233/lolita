@@ -124,6 +124,11 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         navBarBlurEnabled = true, navBarBlurAlpha = 0.75f,
         navBarBlurTint = White, navBarBlurTintDark = Gray800.copy(alpha = 0.3f),
         dialogBlurEnabled = true, dialogBlurAlpha = 0.65f,
+        cardBorderStrokeDark = null,
+        imageFrameStrokeDark = null,
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = null,
+        compactCardBorderStrokeDark = null,
     )
 }
 
@@ -198,6 +203,11 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 4.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, Color(0xFF4A0E4E)), featuredCardInnerPadding = 20.dp,
         compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.3.dp, Color(0xFF4A0E4E).copy(alpha = 0.5f)), compactCardInnerPadding = 8.dp,
+        cardBorderStrokeDark = BorderStroke(0.5.dp, brightPurple),
+        imageFrameStrokeDark = BorderStroke(0.5.dp, brightPurple),
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = BorderStroke(0.5.dp, brightPurple),
+        compactCardBorderStrokeDark = BorderStroke(0.3.dp, brightPurple.copy(alpha = 0.6f)),
     )
 }
 
@@ -272,6 +282,11 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 2.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, vermillion), featuredCardInnerPadding = 18.dp,
         compactCardElevation = 0.5.dp, compactCardBorderStroke = BorderStroke(0.3.dp, vermillion.copy(alpha = 0.4f)), compactCardInnerPadding = 6.dp,
+        cardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050)),
+        imageFrameStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050).copy(alpha = 0.7f)),
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050)),
+        compactCardBorderStrokeDark = BorderStroke(0.3.dp, Color(0xFFE85050).copy(alpha = 0.5f)),
     )
 }
 
@@ -346,6 +361,11 @@ fun classicSkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 4.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, Color(0xFFB8860B)), featuredCardInnerPadding = 20.dp,
         compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.3.dp, wine.copy(alpha = 0.5f)), compactCardInnerPadding = 8.dp,
+        cardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFDAA520)),
+        imageFrameStrokeDark = BorderStroke(0.5.dp, Color(0xFFDAA520).copy(alpha = 0.6f)),
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFDAA520)),
+        compactCardBorderStrokeDark = BorderStroke(0.3.dp, Color(0xFFDAA520).copy(alpha = 0.5f)),
     )
 }
 
@@ -420,6 +440,11 @@ fun navySkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 3.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, gold), featuredCardInnerPadding = 20.dp,
         compactCardElevation = 0.5.dp, compactCardBorderStroke = null, compactCardInnerPadding = 8.dp,
+        cardBorderStrokeDark = null,
+        imageFrameStrokeDark = null,
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = BorderStroke(0.5.dp, gold),
+        compactCardBorderStrokeDark = null,
     )
 }
 
@@ -497,6 +522,11 @@ fun countrySkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 2.dp, featuredCardBorderStroke = null, featuredCardInnerPadding = 22.dp,
         compactCardElevation = 0.5.dp, compactCardBorderStroke = null, compactCardInnerPadding = 10.dp,
+        cardBorderStrokeDark = null,
+        imageFrameStrokeDark = null,
+        galleryCardBorderStrokeDark = null,
+        featuredCardBorderStrokeDark = null,
+        compactCardBorderStrokeDark = null,
     )
 }
 
@@ -578,5 +608,10 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = BorderStroke(0.5.dp, gold.copy(alpha = 0.3f)), galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 6.dp, featuredCardBorderStroke = BorderStroke(1.dp, gold), featuredCardInnerPadding = 24.dp,
         compactCardElevation = 1.dp, compactCardBorderStroke = BorderStroke(0.5.dp, gold.copy(alpha = 0.5f)), compactCardInnerPadding = 10.dp,
+        cardBorderStrokeDark = BorderStroke(1.dp, brightGold),
+        imageFrameStrokeDark = BorderStroke(1.dp, brightGold.copy(alpha = 0.8f)),
+        galleryCardBorderStrokeDark = BorderStroke(0.5.dp, brightGold.copy(alpha = 0.4f)),
+        featuredCardBorderStrokeDark = BorderStroke(1.dp, brightGold),
+        compactCardBorderStrokeDark = BorderStroke(0.5.dp, brightGold.copy(alpha = 0.6f)),
     )
 }

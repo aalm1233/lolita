@@ -185,7 +185,7 @@ fun LolitaNavHost() {
                     } else if (selected) {
                         accent
                     } else {
-                        Color.Gray
+                        MaterialTheme.colorScheme.onSurfaceVariant
                     }
                     NavigationBarItem(
                         icon = {
@@ -228,11 +228,11 @@ fun LolitaNavHost() {
                             } else {
                                 MaterialTheme.colorScheme.primaryContainer
                             },
-                            unselectedIconColor = Color.Gray,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = if (skin.skinType == SkinType.COUNTRY) {
                                 Color(0xFF8F8677)
                             } else {
-                                Color.Gray
+                                MaterialTheme.colorScheme.onSurfaceVariant
                             }
                         )
                     )

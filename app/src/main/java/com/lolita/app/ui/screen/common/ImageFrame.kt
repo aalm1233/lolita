@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -14,11 +15,13 @@ fun ImageFrame(
     content: @Composable () -> Unit
 ) {
     val skin = LolitaSkin.current
+    val isDark = isSystemInDarkTheme()
+    val border = if (isDark) skin.imageFrameStrokeDark ?: skin.imageFrameStroke else skin.imageFrameStroke
     Surface(
         modifier = modifier,
         shape = skin.cardShape,
         color = MaterialTheme.colorScheme.surface,
-        border = skin.imageFrameStroke,
+        border = border,
         shadowElevation = skin.imageFrameElevation
     ) {
         Box(modifier = Modifier.padding(skin.imageFramePadding)) {

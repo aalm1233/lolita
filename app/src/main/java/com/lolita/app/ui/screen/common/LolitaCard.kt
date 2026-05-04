@@ -23,7 +23,7 @@ fun LolitaCard(
     val isDark = isSystemInDarkTheme()
     val containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
 
-    val (elevation, border, innerPadding) = resolveVariantTokens(skin, variant)
+    val (elevation, border, innerPadding) = resolveVariantTokens(skin, variant, isDark)
 
     val cardColors = CardDefaults.cardColors(containerColor = containerColor)
     val cardElevation = CardDefaults.cardElevation(defaultElevation = elevation)
@@ -66,25 +66,25 @@ private data class VariantTokens(
     val innerPadding: Dp
 )
 
-private fun resolveVariantTokens(skin: LolitaSkinConfig, variant: CardVariant): VariantTokens = when (variant) {
+private fun resolveVariantTokens(skin: LolitaSkinConfig, variant: CardVariant, isDark: Boolean): VariantTokens = when (variant) {
     CardVariant.DEFAULT -> VariantTokens(
         elevation = skin.cardElevation,
-        border = skin.cardBorderStroke,
+        border = if (isDark) skin.cardBorderStrokeDark ?: skin.cardBorderStroke else skin.cardBorderStroke,
         innerPadding = skin.cardInnerPadding
     )
     CardVariant.GALLERY -> VariantTokens(
         elevation = skin.galleryCardElevation,
-        border = skin.galleryCardBorderStroke,
+        border = if (isDark) skin.galleryCardBorderStrokeDark ?: skin.galleryCardBorderStroke else skin.galleryCardBorderStroke,
         innerPadding = skin.galleryCardInnerPadding
     )
     CardVariant.FEATURED -> VariantTokens(
         elevation = skin.featuredCardElevation,
-        border = skin.featuredCardBorderStroke,
+        border = if (isDark) skin.featuredCardBorderStrokeDark ?: skin.featuredCardBorderStroke else skin.featuredCardBorderStroke,
         innerPadding = skin.featuredCardInnerPadding
     )
     CardVariant.COMPACT -> VariantTokens(
         elevation = skin.compactCardElevation,
-        border = skin.compactCardBorderStroke,
+        border = if (isDark) skin.compactCardBorderStrokeDark ?: skin.compactCardBorderStroke else skin.compactCardBorderStroke,
         innerPadding = skin.compactCardInnerPadding
     )
 }

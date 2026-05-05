@@ -86,6 +86,11 @@
 | `galleryCardElevation/Border/InnerPadding` | 画廊卡片变体令牌 | 0dp/null/0dp / 0dp/gold0.3/0dp |
 | `featuredCardElevation/Border/InnerPadding` | 精选卡片变体令牌 | 2dp/null/20dp / 6dp/gold1/24dp |
 | `compactCardElevation/Border/InnerPadding` | 紧凑卡片变体令牌 | 0.5dp/null/8dp / 1dp/gold0.5/10dp |
+| `cardBorderStroke/Dark` | 卡片边框（含暗色变体） | null / gold1dp |
+| `imageFrameStroke/Dark` | 图片边框（含暗色变体） | null / gold0.7dp |
+| `galleryCardBorderStroke/Dark` | 画廊卡片边框暗色变体 | null / gold0.3dp |
+| `featuredCardBorderStroke/Dark` | 精选卡片边框暗色变体 | null / gold1dp |
+| `compactCardBorderStroke/Dark` | 紧凑卡片边框暗色变体 | null / gold0.5dp |
 
 ### 加载态与图片
 
@@ -98,10 +103,20 @@
 
 新增视觉令牌时需同步：`LolitaSkinConfig` 数据类 + **7 个**皮肤工厂函数 + dark mode 变体。
 
+### 暗色模式适配规范
+
+- **卡片/图片边框**：`LolitaCard` 和 `ImageFrame` 通过 `isSystemInDarkTheme()` 自动解析 `*Dark` 变体边框令牌。有边框的皮肤（GOTHIC/CHINESE/CLASSIC/VICTORIAN）暗色变体使用更亮的色调以保证在深色背景上可见。
+- **状态颜色**（已付/逾期）：使用 `paidColor()` / `overdueColor()` 可组合函数，暗色模式使用 Material 300 色阶（更亮）。
+- **优先级颜色**（HIGH/MEDIUM/LOW）：暗色模式使用更亮的粉色/黄色/绿色变体。
+- **图标着色**：设置页/属性管理页图标使用 `if (isDark) bright300 else normal500` 模式。
+- **导航栏未选中图标**：使用 `MaterialTheme.colorScheme.onSurfaceVariant`（自动适配深浅模式）。
+- **筛选/排序强调色**：使用 `skin.accentColor` / `skin.accentColorDark` 而非硬编码橙色。
+- **错误色**：使用 `MaterialTheme.colorScheme.error` / `onError` 而非硬编码 `0xFFD32F2F`。
+- **渐变覆盖层文字**（`Color.Black.copy(alpha) + Color.White`）：图片上方的价格/日期标签仍使用黑底白字，这是正确的设计。
+
 ### 后续优化方向
 
 - 逐皮肤深化装饰层（如 `SkinDecorationProvider` 接口，华丽皮肤覆写提供 Canvas 角落花纹/画框金边等）
-- 其他详情页（`CoordinateDetailScreen`、`CatalogDetailScreen`、`OutfitLogDetailScreen`、`LocationDetailScreen`）应用同样的 `LolitaCard` + `SectionHeader` 模式
 - 对话框皮肤化 + 毛玻璃（`dialogBlurEnabled`/`dialogBlurAlpha` 令牌已就绪，待创建 `LolitaDialog` 组件）
 - `ImageFrame` 应用到详情页图片区域
 - Hero 动画（SharedTransitionLayout）

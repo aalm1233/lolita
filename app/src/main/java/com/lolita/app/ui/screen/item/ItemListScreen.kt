@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
@@ -864,6 +865,7 @@ private fun ItemCard(
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(80.dp)
+                        .heroSharedElement("itemImage-${item.id}")
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop,
                     placeholderInitial = item.name.firstOrNull()?.toString()
@@ -1181,6 +1183,7 @@ private fun ItemGridCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
+                                .heroSharedElement("itemImage-${item.id}")
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                             contentScale = ContentScale.Crop,
                             placeholderInitial = item.name.firstOrNull()?.toString()

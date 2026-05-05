@@ -59,6 +59,7 @@ fun GalleryCard(
                     contentDescription = item.name,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heroSharedElement("itemImage-${item.id}")
                         .clip(cardShape),
                     contentScale = ContentScale.Crop,
                     placeholderInitial = item.name.firstOrNull()?.toString()

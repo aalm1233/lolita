@@ -20,13 +20,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 
 @Composable
 fun ImageGalleryPager(
     imageUrls: List<String>,
     onImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String = ""
+    contentDescription: String = "",
+    sharedTransitionKey: String? = null
 ) {
     if (imageUrls.isEmpty()) return
 
@@ -37,13 +39,20 @@ fun ImageGalleryPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
+            val pageModifier = Modifier
+                .fillMaxSize()
+                .then(
+                    if (page == 0 && sharedTransitionKey != null) {
+                        Modifier.heroSharedElement(sharedTransitionKey)
+                    } else Modifier
+                )
+                .clickable { onImageClick(page) }
+
             LolitaShimmerImage(
                 model = imageUrls[page],
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { onImageClick(page) },
+                modifier = pageModifier,
                 circularRevealEnabled = false
             )
         }

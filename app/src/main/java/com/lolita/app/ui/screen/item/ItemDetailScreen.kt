@@ -227,7 +227,8 @@ fun ItemDetailScreen(
                                 .fillMaxWidth()
                                 .height(380.dp)
                                 .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
-                            contentDescription = item.name
+                            contentDescription = item.name,
+                            sharedTransitionKey = "itemImage-${item.id}"
                         )
 
                         if (showFullScreen) {

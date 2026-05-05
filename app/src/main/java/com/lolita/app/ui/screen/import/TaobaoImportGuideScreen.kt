@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.`import`
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -175,6 +176,10 @@ private fun GuideStep(number: String, text: String) {
 
 @Composable
 private fun ScreenshotPlaceholder(hint: String) {
+    val isDark = isSystemInDarkTheme()
+    val bgColor = if (isDark) Color(0xFF2A2A2A) else Color(0xFFF0F0F0)
+    val borderColor = if (isDark) Color(0xFF555555) else Color(0xFFCCCCCC)
+    val hintColor = if (isDark) Color(0xFFAAAAAA) else Color(0xFF999999)
     Spacer(modifier = Modifier.height(8.dp))
     Box(
         modifier = Modifier
@@ -184,11 +189,11 @@ private fun ScreenshotPlaceholder(hint: String) {
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawRoundRect(
-                color = Color(0xFFF0F0F0),
+                color = bgColor,
                 cornerRadius = CornerRadius(8.dp.toPx())
             )
             drawRoundRect(
-                color = Color(0xFFCCCCCC),
+                color = borderColor,
                 cornerRadius = CornerRadius(8.dp.toPx()),
                 style = Stroke(
                     width = 2.dp.toPx(),
@@ -200,7 +205,7 @@ private fun ScreenshotPlaceholder(hint: String) {
         }
         Text(
             hint,
-            color = Color(0xFF999999),
+            color = hintColor,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
         )

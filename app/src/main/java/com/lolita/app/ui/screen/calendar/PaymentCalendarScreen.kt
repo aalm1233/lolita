@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -293,10 +294,10 @@ private fun YearHeader(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatChip("已付", yearPaidTotal, yearPaidCount, Color(0xFF4CAF50))
+                StatChip("已付", yearPaidTotal, yearPaidCount, paidColor())
                 StatChip("待付", yearUnpaidTotal, yearUnpaidCount, MaterialTheme.colorScheme.primary)
                 if (yearOverdueAmount > 0) {
-                    StatChip("逾期", yearOverdueAmount, null, Color(0xFFD32F2F))
+                    StatChip("逾期", yearOverdueAmount, null, overdueColor())
                 }
             }
         }
@@ -401,18 +402,18 @@ private fun MonthCard(
                     Text(
                         "已付 ¥${String.format("%.0f", stats.paidTotal)}",
                         fontSize = 10.sp,
-                        color = Color(0xFF4CAF50),
+                        color = paidColor(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         "(${stats.paidCount}笔)",
                         fontSize = 9.sp,
-                        color = Color(0xFF4CAF50).copy(alpha = 0.7f)
+                        color = paidColor().copy(alpha = 0.7f)
                     )
                 }
                 if (stats.unpaidTotal > 0) {
-                    val unpaidColor = if (hasOverdue) Color(0xFFD32F2F) else primaryColor
+                    val unpaidColor = if (hasOverdue) overdueColor() else primaryColor
                     Text(
                         "待付 ¥${String.format("%.0f", stats.unpaidTotal)}",
                         fontSize = 10.sp,
@@ -430,7 +431,7 @@ private fun MonthCard(
                     Text(
                         "逾期 ¥${String.format("%.0f", stats.overdueAmount)}",
                         fontSize = 9.sp,
-                        color = Color(0xFFD32F2F)
+                        color = overdueColor()
                     )
                 }
             }
@@ -475,7 +476,7 @@ private fun PaymentInfoCard(
         modifier = Modifier.fillMaxWidth(),
         shape = LolitaSkin.current.cardShape,
         colors = if (isOverdue) CardDefaults.cardColors(
-            containerColor = Color(0xFFD32F2F).copy(alpha = 0.06f)
+            containerColor = overdueColor().copy(alpha = 0.06f)
         ) else CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
         ),
@@ -496,8 +497,8 @@ private fun PaymentInfoCard(
                     modifier = Modifier.weight(1f)
                 )
                 Surface(
-                    color = if (payment.isPaid) Color(0xFF4CAF50).copy(alpha = 0.1f)
-                    else if (isOverdue) Color(0xFFD32F2F).copy(alpha = 0.1f)
+                    color = if (payment.isPaid) paidColor().copy(alpha = 0.1f)
+                    else if (isOverdue) overdueColor().copy(alpha = 0.1f)
                     else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
                 ) {
@@ -505,8 +506,8 @@ private fun PaymentInfoCard(
                         if (payment.isPaid) "已付清" else if (isOverdue) "已逾期" else "待付款",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (payment.isPaid) Color(0xFF4CAF50)
-                        else if (isOverdue) Color(0xFFD32F2F)
+                        color = if (payment.isPaid) paidColor()
+                        else if (isOverdue) overdueColor()
                         else MaterialTheme.colorScheme.primary
                     )
                 }
@@ -545,4 +546,14 @@ private fun getPaymentsForMonth(
         cal.timeInMillis = p.dueDate
         cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month
     }
+}
+
+@Composable
+private fun paidColor(): Color {
+    return if (isSystemInDarkTheme()) Color(0xFF66BB6A) else Color(0xFF4CAF50)
+}
+
+@Composable
+private fun overdueColor(): Color {
+    return if (isSystemInDarkTheme()) Color(0xFFEF5350) else Color(0xFFD32F2F)
 }

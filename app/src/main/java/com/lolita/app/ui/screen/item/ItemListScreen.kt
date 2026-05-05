@@ -111,6 +111,8 @@ fun ItemListScreen(
     var isSearchMode by remember { mutableStateOf(false) }
     val searchFocusRequester = remember { FocusRequester() }
     val skin = LolitaSkin.current
+    val isDark = isSystemInDarkTheme()
+    val filterAccent = if (isDark) skin.accentColorDark else skin.accentColor
     val hazeState = LocalHazeState.current
     val topBarBlurEnabled = skin.topBarBlurEnabled && hazeState != null
     val topBarGradient = if (isSystemInDarkTheme()) {
@@ -435,8 +437,8 @@ fun ItemListScreen(
                         onClick = { viewModel.togglePendingBalanceOnly() },
                         label = { Text("待补尾款", fontSize = 12.sp) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF9800).copy(alpha = 0.15f),
-                            selectedLabelColor = Color(0xFFFF9800)
+                            selectedContainerColor = filterAccent.copy(alpha = 0.15f),
+                            selectedLabelColor = filterAccent
                         ),
                         modifier = Modifier.height(24.dp)
                     )
@@ -843,6 +845,8 @@ private fun ItemCard(
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
+    val skin = LolitaSkin.current
+    val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
 
     LolitaCard(
         onClick = onClick,
@@ -905,14 +909,14 @@ private fun ItemCard(
                     )
                     if (item.status == ItemStatus.PENDING_BALANCE) {
                         Surface(
-                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
+                            color = filterAccent.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
                                 text = "待补尾款",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFFFF9800)
+                                color = filterAccent
                             )
                         }
                     }
@@ -1153,6 +1157,8 @@ private fun ItemGridCard(
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
+    val skin = LolitaSkin.current
+    val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
 
     LolitaCard(
         modifier = modifier.fillMaxWidth()
@@ -1237,14 +1243,14 @@ private fun ItemGridCard(
                     )
                     if (item.status == ItemStatus.PENDING_BALANCE) {
                         Surface(
-                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
+                            color = filterAccent.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
                                 text = "待补尾款",
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFFFF9800)
+                                color = filterAccent
                             )
                         }
                     }

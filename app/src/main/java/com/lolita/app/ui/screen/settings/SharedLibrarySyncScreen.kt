@@ -328,10 +328,10 @@ private fun UrlSection(
                 ) {
                     SkinIcon(
                         key = IconKey.Delete,
-                        tint = Color(0xFFD32F2F)
+                        tint = MaterialTheme.colorScheme.error
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("清空缓存", color = Color(0xFFD32F2F))
+                    Text("清空缓存", color = MaterialTheme.colorScheme.error)
                 }
             }
         }

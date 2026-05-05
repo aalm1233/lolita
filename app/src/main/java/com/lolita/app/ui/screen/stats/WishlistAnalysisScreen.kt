@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -9,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -72,7 +74,11 @@ class WishlistAnalysisViewModel(
         loadData()
     }
 
-    private fun loadData() {
+    fun reloadForDarkMode(isDark: Boolean) {
+        loadData(isDark)
+    }
+
+    private fun loadData(isDark: Boolean = false) {
         viewModelScope.launch {
             combine(
                 priceRepository.getWishlistTotalBudget(),
@@ -87,7 +93,7 @@ class WishlistAnalysisViewModel(
                     PieChartData(
                         label = mapPriorityLabel(stat.priority),
                         value = stat.itemCount.toDouble(),
-                        color = mapPriorityColor(stat.priority)
+                        color = mapPriorityColor(stat.priority, isDark)
                     )
                 }
                 val details = priorityStats.map { stat ->
@@ -125,11 +131,11 @@ class WishlistAnalysisViewModel(
         else -> priority
     }
 
-    private fun mapPriorityColor(priority: String): Color = when (priority) {
-        "HIGH" -> Color(0xFFFF1493)
-        "MEDIUM" -> Color(0xFFFF69B4)
-        "LOW" -> Color(0xFFFFB6C1)
-        else -> Color(0xFFFFB6C1)
+    private fun mapPriorityColor(priority: String, isDark: Boolean = false): Color = when (priority) {
+        "HIGH" -> if (isDark) Color(0xFFFF69B4) else Color(0xFFFF1493)
+        "MEDIUM" -> if (isDark) Color(0xFFFF8DC7) else Color(0xFFFF69B4)
+        "LOW" -> if (isDark) Color(0xFFD4A0B0) else Color(0xFFFFB6C1)
+        else -> if (isDark) Color(0xFFD4A0B0) else Color(0xFFFFB6C1)
     }
 }
 
@@ -140,6 +146,10 @@ fun WishlistAnalysisContent(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isDark = isSystemInDarkTheme()
+    LaunchedEffect(isDark) {
+        viewModel.reloadForDarkMode(isDark)
+    }
 
     if (uiState.isLoading) {
         val shimmer = rememberShimmer(ShimmerBounds.Window)
@@ -197,11 +207,12 @@ fun WishlistAnalysisContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        val budgetAccent = if (isDark) Color(0xFFFF8DC7) else Color(0xFFFF69B4)
         // Budget card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFFF69B4).copy(alpha = 0.1f)
+                containerColor = budgetAccent.copy(alpha = 0.1f)
             )
         ) {
             Row(
@@ -211,7 +222,7 @@ fun WishlistAnalysisContent(
             ) {
                 SkinIcon(
                     key = IconKey.AttachMoney,
-                    tint = Color(0xFFFF69B4),
+                    tint = budgetAccent,
                     modifier = Modifier.size(28.dp)
                 )
                 Column {
@@ -225,14 +236,14 @@ fun WishlistAnalysisContent(
                             text = "¥${String.format("%.2f", uiState.totalBudget)}",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF69B4)
+                            color = budgetAccent
                         )
                     } else {
                         Text(
                             text = "¥***",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF69B4)
+                            color = budgetAccent
                         )
                     }
                 }
@@ -274,7 +285,7 @@ fun WishlistAnalysisContent(
                     PriorityDetailRow(
                         detail = detail,
                         color = uiState.priorityChartData.getOrNull(index)?.color
-                            ?: Color(0xFFFFB6C1),
+                            ?: budgetAccent,
                         showBudget = uiState.showTotalPrice,
                         onClick = { onNavigateToFilteredList("priority", priorityValue, detail.priorityLabel) }
                     )

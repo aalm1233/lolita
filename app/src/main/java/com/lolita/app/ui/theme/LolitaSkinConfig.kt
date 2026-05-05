@@ -85,6 +85,7 @@ data class LolitaSkinConfig(
     val navBarBlurTintDark: Color,
     val dialogBlurEnabled: Boolean = true,
     val dialogBlurAlpha: Float = 0.6f,
+    val heroTransitionEnabled: Boolean = true,
 
     // Card variant tokens
     val galleryCardElevation: Dp = 0.dp,

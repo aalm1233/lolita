@@ -643,11 +643,12 @@ private fun StatusBadge(status: ItemStatus) {
  */
 @Composable
 private fun PriorityBadge(priority: ItemPriority) {
+    val isDark = isSystemInDarkTheme()
     Surface(
         color = when (priority) {
-            ItemPriority.HIGH -> androidx.compose.ui.graphics.Color(0xFFFF6B6B).copy(alpha = 0.3f)
-            ItemPriority.MEDIUM -> androidx.compose.ui.graphics.Color(0xFFFFD93D).copy(alpha = 0.3f)
-            ItemPriority.LOW -> androidx.compose.ui.graphics.Color(0xFF6BCF7F).copy(alpha = 0.3f)
+            ItemPriority.HIGH -> (if (isDark) Color(0xFFFF8A8A) else Color(0xFFFF6B6B)).copy(alpha = 0.3f)
+            ItemPriority.MEDIUM -> (if (isDark) Color(0xFFFFE082) else Color(0xFFFFD93D)).copy(alpha = 0.3f)
+            ItemPriority.LOW -> (if (isDark) Color(0xFFA5D6A7) else Color(0xFF6BCF7F)).copy(alpha = 0.3f)
         },
         shape = MaterialTheme.shapes.small
     ) {

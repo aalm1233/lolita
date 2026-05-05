@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.item
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -266,10 +267,11 @@ private fun WishlistItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isDark = isSystemInDarkTheme()
     val borderColor = when (item.priority) {
-        ItemPriority.HIGH -> Color(0xFFFF6B6B)
-        ItemPriority.MEDIUM -> Color(0xFFFFD93D)
-        ItemPriority.LOW -> Color(0xFF6BCF7F)
+        ItemPriority.HIGH -> if (isDark) Color(0xFFFF8A8A) else Color(0xFFFF6B6B)
+        ItemPriority.MEDIUM -> if (isDark) Color(0xFFFFE082) else Color(0xFFFFD93D)
+        ItemPriority.LOW -> if (isDark) Color(0xFFA5D6A7) else Color(0xFF6BCF7F)
     }
 
     LolitaCard(

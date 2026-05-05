@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,6 +73,7 @@ fun SettingsScreen(
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
+    val isDark = isSystemInDarkTheme()
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
     val uiState by settingsViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -118,7 +120,7 @@ fun SettingsScreen(
                 title = "属性管理",
                 description = "管理品牌、类型、风格、季节、位置、来源",
                 iconKey = IconKey.Category,
-                iconTint = Color(0xFF7E57C2),
+                iconTint = if (isDark) Color(0xFFB39DDB) else Color(0xFF7E57C2),
                 onClick = onNavigateToAttributeManage
             )
 
@@ -126,7 +128,7 @@ fun SettingsScreen(
                 title = "数据备份与恢复",
                 description = "导出/导入数据，支持 JSON 和 CSV 格式",
                 iconKey = IconKey.FileOpen,
-                iconTint = Color(0xFF64B5F6),
+                iconTint = if (isDark) Color(0xFF90CAF9) else Color(0xFF64B5F6),
                 onClick = onNavigateToBackupRestore
             )
 
@@ -134,7 +136,7 @@ fun SettingsScreen(
                 title = "淘宝订单导入",
                 description = "从淘宝订单 Excel 文件批量导入服饰",
                 iconKey = IconKey.Link,
-                iconTint = Color(0xFFFF8A65),
+                iconTint = if (isDark) Color(0xFFFFAB91) else Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
             )
 
@@ -142,7 +144,7 @@ fun SettingsScreen(
                 title = "共享资料同步",
                 description = "连接后端并刷新共享图鉴缓存",
                 iconKey = IconKey.Refresh,
-                iconTint = Color(0xFF4DB6AC),
+                iconTint = if (isDark) Color(0xFF80CBC4) else Color(0xFF4DB6AC),
                 onClick = onNavigateToSharedLibrarySync
             )
 
@@ -162,7 +164,7 @@ fun SettingsScreen(
                 title = "每日穿搭提醒",
                 description = "每天 ${outfitReminderHour}:00 提醒记录穿搭",
                 iconKey = IconKey.Notifications,
-                iconTint = Color(0xFFE57373),
+                iconTint = if (isDark) Color(0xFFEF9A9A) else Color(0xFFE57373),
                 checked = outfitReminderEnabled,
                 onCheckedChange = { enabled ->
                     coroutineScope.launch {
@@ -186,7 +188,7 @@ fun SettingsScreen(
                 title = "显示总价",
                 description = "在服饰列表右上角显示筛选结果的总价",
                 iconKey = IconKey.AttachMoney,
-                iconTint = Color(0xFFFFB74D),
+                iconTint = if (isDark) Color(0xFFFFCC80) else Color(0xFFFFB74D),
                 checked = showTotalPrice,
                 onCheckedChange = {
                     coroutineScope.launch { appPreferences.setShowTotalPrice(it) }
@@ -197,7 +199,7 @@ fun SettingsScreen(
                 title = "皮肤选择",
                 description = "切换应用主题风格",
                 iconKey = IconKey.Palette,
-                iconTint = Color(0xFF9C27B0),
+                iconTint = if (isDark) Color(0xFFCE93D8) else Color(0xFF9C27B0),
                 onClick = onNavigateToThemeSelect
             )
 

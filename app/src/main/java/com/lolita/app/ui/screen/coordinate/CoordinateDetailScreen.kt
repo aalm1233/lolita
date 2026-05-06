@@ -346,7 +346,8 @@ private fun CoordinateInfoCard(
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
                         .clip(RoundedCornerShape(12.dp)),
-                    contentDescription = "封面图"
+                    contentDescription = "封面图",
+                    sharedTransitionKey = "coordinateImage-${coordinate.id}"
                 )
 
                 if (showFullScreen) {

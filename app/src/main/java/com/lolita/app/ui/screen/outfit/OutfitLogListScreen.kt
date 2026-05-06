@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
@@ -198,6 +199,7 @@ private fun OutfitLogListItemCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(220.dp)
+                            .heroSharedElement("outfitLogImage-${log.id}")
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                         contentScale = ContentScale.Crop,
                         placeholderInitial = "穿"

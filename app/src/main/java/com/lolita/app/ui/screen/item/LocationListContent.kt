@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -63,7 +64,8 @@ fun LocationListContent(
                     description = location.description,
                     imageUrl = location.imageUrl,
                     itemCount = locationItemCounts[location.id] ?: 0,
-                    itemImages = locationItemImages[location.id] ?: emptyList()
+                    itemImages = locationItemImages[location.id] ?: emptyList(),
+                    locationId = location.id
                 )
             }
         }
@@ -77,7 +79,8 @@ private fun LocationCardItem(
     imageUrl: String?,
     itemCount: Int,
     itemImages: List<String> = emptyList(),
-    isUnassigned: Boolean = false
+    isUnassigned: Boolean = false,
+    locationId: Long? = null
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -86,10 +89,15 @@ private fun LocationCardItem(
         ) {
             // Location image - 56dp
             if (imageUrl != null) {
+                val imageModifier = if (locationId != null) {
+                    Modifier.size(56.dp).heroSharedElement("locationImage-$locationId").clip(RoundedCornerShape(8.dp))
+                } else {
+                    Modifier.size(56.dp).clip(RoundedCornerShape(8.dp))
+                }
                 LolitaShimmerImage(
                     model = imageUrl,
                     contentDescription = null,
-                    modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = imageModifier,
                     contentScale = ContentScale.Crop,
                     placeholderInitial = name.firstOrNull()?.toString()
                 )

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
@@ -193,6 +194,7 @@ fun OutfitLogDetailScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp)
+                                    .heroSharedElement("outfitLogImage-${log.id}")
                                     .clip(RoundedCornerShape(12.dp)),
                                 contentScale = ContentScale.FillWidth,
                                 placeholderInitial = "穿"
@@ -205,13 +207,14 @@ fun OutfitLogDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 items(log.imageUrls) { imageUrl ->
+                                    val imageModifier = Modifier
+                                        .width(300.dp)
+                                        .aspectRatio(0.75f)
+                                        .clip(RoundedCornerShape(12.dp))
                                     LolitaShimmerImage(
                                         model = imageUrl,
                                         contentDescription = "穿搭照片",
-                                        modifier = Modifier
-                                            .width(300.dp)
-                                            .aspectRatio(0.75f)
-                                            .clip(RoundedCornerShape(12.dp)),
+                                        modifier = imageModifier,
                                         contentScale = ContentScale.Crop,
                                         placeholderInitial = "穿"
                                     )

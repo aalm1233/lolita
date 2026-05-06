@@ -241,7 +241,8 @@ fun CatalogDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(360.dp),
-                            contentDescription = entry.name
+                            contentDescription = entry.name,
+                            sharedTransitionKey = "catalogImage-${entry.id}"
                         )
                     }
 

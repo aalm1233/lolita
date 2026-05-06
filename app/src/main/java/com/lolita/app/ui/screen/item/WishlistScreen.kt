@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.icons.Icons
@@ -296,6 +297,7 @@ private fun WishlistItemCard(
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(72.dp)
+                        .heroSharedElement("itemImage-${item.id}")
                         .clip(RoundedCornerShape(0.dp)),
                     contentScale = ContentScale.Crop,
                     placeholderInitial = item.name.firstOrNull()?.toString()

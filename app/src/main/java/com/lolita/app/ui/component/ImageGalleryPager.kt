@@ -39,14 +39,14 @@ fun ImageGalleryPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            val pageModifier = Modifier
-                .fillMaxSize()
-                .then(
-                    if (page == 0 && sharedTransitionKey != null) {
-                        Modifier.heroSharedElement(sharedTransitionKey)
-                    } else Modifier
-                )
-                .clickable { onImageClick(page) }
+            val pageModifier = if (page == 0 && sharedTransitionKey != null) {
+                Modifier.fillMaxSize()
+                    .heroSharedElement(sharedTransitionKey)
+                    .clickable { onImageClick(page) }
+            } else {
+                Modifier.fillMaxSize()
+                    .clickable { onImageClick(page) }
+            }
 
             LolitaShimmerImage(
                 model = imageUrls[page],

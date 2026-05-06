@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.CatalogEntry
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.BrandLogo
@@ -386,7 +387,8 @@ private fun CatalogListCard(
                 title = entry.name,
                 modifier = Modifier
                     .width(96.dp)
-                    .aspectRatio(0.78f)
+                    .aspectRatio(0.78f),
+                sharedTransitionKey = "catalogImage-${entry.id}"
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -438,7 +440,8 @@ private fun CatalogGridCard(
                 title = entry.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(0.78f)
+                    .aspectRatio(0.78f),
+                sharedTransitionKey = "catalogImage-${entry.id}"
             )
             Column(
                 modifier = Modifier.padding(10.dp), // intentional override of cardInnerPadding
@@ -504,7 +507,7 @@ private fun CatalogGalleryCard(
                 LolitaShimmerImage(
                     model = resolveCatalogImageModel(entry.imageUrls.first()),
                     contentDescription = entry.name,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().heroSharedElement("catalogImage-${entry.id}"),
                     contentScale = ContentScale.Crop,
                     placeholderInitial = entry.name.firstOrNull()?.toString()
                 )
@@ -582,13 +585,19 @@ private fun CatalogGalleryCard(
 private fun CatalogThumbnail(
     imagePath: String?,
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sharedTransitionKey: String? = null
 ) {
     if (imagePath != null) {
+        val imageModifier = if (sharedTransitionKey != null) {
+            modifier.heroSharedElement(sharedTransitionKey).clip(RoundedCornerShape(14.dp))
+        } else {
+            modifier.clip(RoundedCornerShape(14.dp))
+        }
         LolitaShimmerImage(
             model = resolveCatalogImageModel(imagePath),
             contentDescription = title,
-            modifier = modifier.clip(RoundedCornerShape(14.dp)),
+            modifier = imageModifier,
             contentScale = ContentScale.Crop,
             placeholderInitial = title.firstOrNull()?.toString()
         )

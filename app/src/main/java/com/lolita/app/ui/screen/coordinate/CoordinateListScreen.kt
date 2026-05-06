@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Coordinate
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
@@ -271,7 +272,7 @@ private fun CoordinateCard(
                     LolitaShimmerImage(
                         model = coordinate.imageUrls.first(),
                         contentDescription = coordinate.name,
-                        modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)),
+                        modifier = Modifier.size(80.dp).heroSharedElement("coordinateImage-${coordinate.id}").clip(RoundedCornerShape(12.dp)),
                         contentScale = ContentScale.Crop,
                         placeholderInitial = coordinate.name.firstOrNull()?.toString()
                     )
@@ -396,6 +397,7 @@ private fun CoordinateGridCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
+                                .heroSharedElement("coordinateImage-${coordinate.id}")
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                             contentScale = ContentScale.Crop,
                             placeholderInitial = coordinate.name.firstOrNull()?.toString()

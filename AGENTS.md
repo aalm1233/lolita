@@ -114,12 +114,25 @@
 - **错误色**：使用 `MaterialTheme.colorScheme.error` / `onError` 而非硬编码 `0xFFD32F2F`。
 - **渐变覆盖层文字**（`Color.Black.copy(alpha) + Color.White`）：图片上方的价格/日期标签仍使用黑底白字，这是正确的设计。
 
+### Hero 动画（SharedTransitionLayout）
+
+- **`SharedTransitionLayout`** 包裹 `LolitaNavHost` 的 `Scaffold`，通过 `CompositionLocal` 向子组件提供 `SharedTransitionScope` 和 `AnimatedVisibilityScope`。
+- **`heroTransitionEnabled`** 皮肤令牌控制是否启用 hero 动画（默认 `true`）。
+- **`Modifier.heroSharedElement(key)`**：封装 `sharedElement` + 皮肤令牌检查 + 作用域空值保护的组合修饰符。定义在 `ui/screen/common/HeroSharedElement.kt`。
+- **修饰符顺序规则**：尺寸修饰符 → `heroSharedElement()` → `clip()`。尺寸必须在 `sharedElement` 之前，`clip` 必须在之后。
+- **`ImageGalleryPager`** 接受 `sharedTransitionKey` 参数，仅对第一页（`page == 0`）应用 hero 动画。
+- **5 种实体的 hero 动画**：Item、Coordinate、Catalog、OutfitLog（仅单图模式）、Location。WishlistScreen 的卡片也导航到 ItemDetail 并使用相同的 `itemImage-${id}` key。
+- **详情页路由过渡**：使用 hero 动画的路由（ItemDetail、CoordinateDetail、CatalogDetail、OutfitLogDetail、LocationDetail）使用 `fadeIn/fadeOut` 替代默认的 slide 过渡，避免与 hero 动画冲突。
+- **`@OptIn(ExperimentalSharedTransitionApi::class)`**：BOM 2024.12.01 → Compose Animation 1.7.x，API 仍为实验性（但 API 冻结，与 1.10.0 稳定版相同）。
+- **共享元素 key 命名**：`itemImage-${id}`、`coordinateImage-${id}`、`catalogImage-${id}`、`outfitLogImage-${id}`、`locationImage-${id}`。
+- **GalleryPreviewDialog 边缘情况**：通过画廊预览对话框导航到详情页时不触发 hero 动画（对话框不在 `SharedTransitionScope` 内），这是可接受的降级。
+
 ### 后续优化方向
 
 - 逐皮肤深化装饰层（如 `SkinDecorationProvider` 接口，华丽皮肤覆写提供 Canvas 角落花纹/画框金边等）
 - 对话框皮肤化 + 毛玻璃（`dialogBlurEnabled`/`dialogBlurAlpha` 令牌已就绪，待创建 `LolitaDialog` 组件）
 - `ImageFrame` 应用到详情页图片区域
-- Hero 动画（SharedTransitionLayout）
+- 皮肤切换 Crossfade 过渡
 - 高级毛玻璃（Liquid Glass，API 33+ shader 效果）
 
 ## 构建与验证

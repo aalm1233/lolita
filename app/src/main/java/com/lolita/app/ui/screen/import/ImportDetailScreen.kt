@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.`import`
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -390,7 +391,7 @@ private fun ImportItemCard(
                             singleLine = true,
                             prefix = { Text("¥") }
                         )
-                        Box(modifier = Modifier.weight(1f).clickable { showBalanceDatePicker = true }) {
+                        Box(modifier = Modifier.weight(1f).skinClickable { showBalanceDatePicker = true }) {
                             OutlinedTextField(
                                 value = item.balanceDueDate?.let {
                                     java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
@@ -484,7 +485,7 @@ private fun ImportItemCard(
                         items(candidates) { (idx, candidate) ->
                             Column(
                                 Modifier.fillMaxWidth()
-                                    .clickable { onManualPair(idx); showPairDialog = false }
+                                    .skinClickable { onManualPair(idx); showPairDialog = false }
                                     .padding(vertical = 10.dp, horizontal = 4.dp)
                             ) {
                                 Text("#${idx + 1} ${candidate.name}",
@@ -521,7 +522,7 @@ private fun ImportBrandSelector(
     val selectedName = brands.find { it.id == selectedBrandId }?.name ?: ""
     val isError = selectedBrandId == 0L
 
-    Box(Modifier.fillMaxWidth().clickable { showDialog = true }) {
+    Box(Modifier.fillMaxWidth().skinClickable { showDialog = true }) {
         OutlinedTextField(
             value = selectedName,
             onValueChange = {},
@@ -568,7 +569,7 @@ private fun ImportBrandSelector(
                             Text(
                                 brand.name,
                                 modifier = Modifier.fillMaxWidth()
-                                    .clickable { onBrandSelected(brand.id); showDialog = false }
+                                    .skinClickable { onBrandSelected(brand.id); showDialog = false }
                                     .padding(vertical = 12.dp, horizontal = 4.dp),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary

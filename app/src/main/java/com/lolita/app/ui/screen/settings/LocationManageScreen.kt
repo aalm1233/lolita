@@ -24,6 +24,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.launch
@@ -79,13 +80,17 @@ fun LocationManageScreen(
             item {
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
-            items(uiState.locations, key = { it.id }) { location ->
-                LocationCard(
-                    location = location,
-                    itemCount = uiState.locationItemCounts[location.id] ?: 0,
-                    onEdit = { viewModel.showEditDialog(location) },
-                    onDelete = { viewModel.showDeleteConfirm(location) }
-                )
+            if (uiState.locations.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Location, title = "暂无位置") }
+            } else {
+                items(uiState.locations, key = { it.id }) { location ->
+                    LocationCard(
+                        location = location,
+                        itemCount = uiState.locationItemCounts[location.id] ?: 0,
+                        onEdit = { viewModel.showEditDialog(location) },
+                        onDelete = { viewModel.showDeleteConfirm(location) }
+                    )
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -156,7 +157,7 @@ private fun SkinPreviewCard(
         modifier = Modifier
             .fillMaxWidth()
             .then(borderModifier)
-            .clickable(onClick = onClick),
+            .skinClickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

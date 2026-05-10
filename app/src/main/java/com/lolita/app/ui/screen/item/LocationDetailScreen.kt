@@ -21,6 +21,7 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.ShimmerLine
@@ -124,17 +125,19 @@ fun LocationDetailScreen(
                     val loc = uiState.location!!
                     if (loc.imageUrl != null) {
                         item {
-                            LolitaShimmerImage(
-                                model = loc.imageUrl,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp)
-                                    .heroSharedElement("locationImage-${loc.id}")
-                                    .clip(RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.Crop,
-                                placeholderInitial = loc.name.firstOrNull()?.toString()
-                            )
+                            ImageFrame {
+                                LolitaShimmerImage(
+                                    model = loc.imageUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .heroSharedElement("locationImage-${loc.id}")
+                                        .clip(RoundedCornerShape(12.dp)),
+                                    contentScale = ContentScale.Crop,
+                                    placeholderInitial = loc.name.firstOrNull()?.toString()
+                                )
+                            }
                         }
                     }
                     if (loc.description.isNotBlank()) {

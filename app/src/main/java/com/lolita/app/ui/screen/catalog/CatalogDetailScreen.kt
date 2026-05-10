@@ -364,29 +364,27 @@ fun CatalogDetailScreen(
                         entry.referenceUrl?.takeIf { it.isNotBlank() }?.let { referenceUrl ->
                             LolitaSection(title = "来源链接") {
                                 row {
-                                    LolitaCard(variant = CardVariant.COMPACT) {
-                                        Column(
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            Text(
-                                                text = referenceUrl,
-                                                style = MaterialTheme.typography.bodyMedium
-                                            )
-                                            OutlinedButton(
-                                                onClick = {
-                                                    runCatching {
-                                                        context.startActivity(
-                                                            Intent(Intent.ACTION_VIEW, Uri.parse(referenceUrl))
-                                                        )
-                                                    }.onFailure {
-                                                        showError = it.message ?: "无法打开链接"
-                                                    }
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = referenceUrl,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        OutlinedButton(
+                                            onClick = {
+                                                runCatching {
+                                                    context.startActivity(
+                                                        Intent(Intent.ACTION_VIEW, Uri.parse(referenceUrl))
+                                                    )
+                                                }.onFailure {
+                                                    showError = it.message ?: "无法打开链接"
                                                 }
-                                            ) {
-                                                SkinIcon(IconKey.OpenInNew, modifier = Modifier.size(16.dp))
-                                                Spacer(modifier = Modifier.size(6.dp))
-                                                Text("打开链接")
                                             }
+                                        ) {
+                                            SkinIcon(IconKey.OpenInNew, modifier = Modifier.size(16.dp))
+                                            Spacer(modifier = Modifier.size(6.dp))
+                                            Text("打开链接")
                                         }
                                     }
                                 }

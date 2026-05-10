@@ -33,6 +33,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.launch
@@ -93,12 +94,16 @@ fun BrandManageScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
 
-            items(uiState.brands, key = { it.id }) { brand ->
-                BrandCard(
-                    brand = brand,
-                    onEdit = { viewModel.showEditDialog(brand) },
-                    onDelete = { viewModel.showDeleteConfirm(brand) }
-                )
+            if (uiState.brands.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Info, title = "暂无品牌") }
+            } else {
+                items(uiState.brands, key = { it.id }) { brand ->
+                    BrandCard(
+                        brand = brand,
+                        onEdit = { viewModel.showEditDialog(brand) },
+                        onDelete = { viewModel.showDeleteConfirm(brand) }
+                    )
+                }
             }
         }
     }

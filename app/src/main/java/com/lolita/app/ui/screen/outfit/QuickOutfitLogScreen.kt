@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.outfit
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,6 +24,7 @@ import com.lolita.app.ui.screen.common.GradientTopAppBar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.material3.CircularProgressIndicator
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -49,12 +51,12 @@ fun QuickOutfitLogScreen(
                     }
                 },
                 actions = {
-                    TextButton(
-                        onClick = { viewModel.save() },
-                        enabled = uiState.selectedItemIds.isNotEmpty() && !uiState.isSaving
-                    ) {
-                        Text("保存", color = if (uiState.selectedItemIds.isNotEmpty()) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurfaceVariant)
+                    IconButton(onClick = { viewModel.save() }, enabled = !uiState.isSaving) {
+                        if (uiState.isSaving) {
+                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                        } else {
+                            SkinIcon(IconKey.Save, tint = MaterialTheme.colorScheme.onPrimary)
+                        }
                     }
                 },
                 compact = true
@@ -81,7 +83,7 @@ fun QuickOutfitLogScreen(
 
             // Collapsible note
             Row(
-                modifier = Modifier.clickable { viewModel.toggleShowNote() },
+                modifier = Modifier.skinClickable { viewModel.toggleShowNote() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("备注", style = MaterialTheme.typography.bodyMedium,
@@ -143,7 +145,7 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .border(borderWidth, borderColor, RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
+            .skinClickable(onClick = onClick)
             .padding(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -170,7 +172,7 @@ private fun QuickItemCard(item: Item, isSelected: Boolean, onClick: () -> Unit) 
                     shape = RoundedCornerShape(10.dp),
                     color = MaterialTheme.colorScheme.primary
                 ) {
-                    SkinIcon(IconKey.Save, modifier = Modifier.padding(2.dp), tint = MaterialTheme.colorScheme.onPrimary)
+                    SkinIcon(IconKey.CheckCircle, modifier = Modifier.padding(2.dp), tint = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }

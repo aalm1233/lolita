@@ -15,12 +15,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.PriceType
 
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -217,11 +219,8 @@ fun PriceEditScreen(
                     val sum = deposit + balance
 
                     if (total > 0 && sum != total) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer
-                            )
+                        LolitaCard(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
                                 "定金 + 尾款 (¥${String.format("%.2f", sum)}) 应等于总价 (¥${String.format("%.2f", total)})",
@@ -238,7 +237,7 @@ fun PriceEditScreen(
             var showDatePicker by remember { mutableStateOf(false) }
             val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
 
-            Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
+            Box(modifier = Modifier.fillMaxWidth().skinClickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
                 OutlinedTextField(
                     value = uiState.paymentDate?.let { dateFormat.format(Date(it)) } ?: "",
                     onValueChange = {},

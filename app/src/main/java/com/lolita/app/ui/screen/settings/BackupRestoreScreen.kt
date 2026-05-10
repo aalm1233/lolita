@@ -26,6 +26,7 @@ import java.util.Date
 import java.util.Locale
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.screen.common.LolitaCard
 
 data class BackupRestoreUiState(
     val isExporting: Boolean = false,
@@ -177,7 +178,7 @@ fun BackupRestoreScreen(
             // Export section
             Text("数据导出", style = MaterialTheme.typography.titleMedium)
 
-            Card(modifier = Modifier.fillMaxWidth()) {
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -198,7 +199,7 @@ fun BackupRestoreScreen(
                 }
             }
 
-            Card(modifier = Modifier.fillMaxWidth()) {
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -219,7 +220,7 @@ fun BackupRestoreScreen(
                 }
             }
 
-            Card(modifier = Modifier.fillMaxWidth()) {
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -245,7 +246,7 @@ fun BackupRestoreScreen(
             // Import section
             Text("数据恢复", style = MaterialTheme.typography.titleMedium)
 
-            Card(modifier = Modifier.fillMaxWidth()) {
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)

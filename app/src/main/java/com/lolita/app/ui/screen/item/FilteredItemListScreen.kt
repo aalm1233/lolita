@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -84,7 +87,8 @@ fun FilteredItemListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                flingBehavior = rememberSkinFlingBehavior()
             ) {
                 item {
                     Text(
@@ -93,11 +97,13 @@ fun FilteredItemListScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                items(uiState.items, key = { it.id }) { item ->
-                    FilteredItemCard(
-                        item = item,
-                        onClick = { onNavigateToDetail(item.id) }
-                    )
+                itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
+                    Column(modifier = Modifier.skinItemAppear(index)) {
+                        FilteredItemCard(
+                            item = item,
+                            onClick = { onNavigateToDetail(item.id) }
+                        )
+                    }
                 }
             }
         }

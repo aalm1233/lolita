@@ -9,7 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -201,9 +205,10 @@ fun CoordinateListContent(
         LazyColumn(
             modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(vertical = 8.dp),
+            flingBehavior = rememberSkinFlingBehavior()
         ) {
-            items(uiState.coordinates, key = { it.id }) { coordinate ->
+            itemsIndexed(uiState.coordinates, key = { _, coordinate -> coordinate.id }) { index, coordinate ->
                 SwipeToDeleteContainer(
                     onDelete = { coordinateToDelete = coordinate }
                 ) {
@@ -216,7 +221,7 @@ fun CoordinateListContent(
                         onClick = { onNavigateToDetail(coordinate.id) },
                         onEdit = { onNavigateToEdit(coordinate.id) },
                         onDelete = { coordinateToDelete = coordinate },
-                        modifier = Modifier.animateItem()
+                        modifier = Modifier.skinItemAppear(index).animateItem()
                     )
                 }
             }
@@ -227,19 +232,22 @@ fun CoordinateListContent(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            flingBehavior = rememberSkinFlingBehavior()
         ) {
-            items(uiState.coordinates, key = { it.id }) { coordinate ->
-                CoordinateGridCard(
-                    coordinate = coordinate,
-                    itemCount = uiState.itemCounts[coordinate.id] ?: 0,
-                    itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
-                    totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
-                    showPrice = uiState.showPrice,
-                    onClick = { onNavigateToDetail(coordinate.id) },
-                    onEdit = { onNavigateToEdit(coordinate.id) },
-                    onDelete = { coordinateToDelete = coordinate }
-                )
+            itemsIndexed(uiState.coordinates, key = { _, coordinate -> coordinate.id }) { index, coordinate ->
+                Column(modifier = Modifier.skinItemAppear(index)) {
+                    CoordinateGridCard(
+                        coordinate = coordinate,
+                        itemCount = uiState.itemCounts[coordinate.id] ?: 0,
+                        itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
+                        totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
+                        showPrice = uiState.showPrice,
+                        onClick = { onNavigateToDetail(coordinate.id) },
+                        onEdit = { onNavigateToEdit(coordinate.id) },
+                        onDelete = { coordinateToDelete = coordinate }
+                    )
+                }
             }
         }
     }
@@ -361,7 +369,12 @@ private fun CoordinateCard(
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(text = { Text("编辑") }, onClick = { showMenu = false; onEdit() })
-                DropdownMenuItem(text = { Text("删除") }, onClick = { showMenu = false; onDelete() })
+                DropdownMenuItem(
+                    text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                    onClick = { showMenu = false; onDelete() },
+                    leadingIcon = { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) },
+                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                )
             }
         }
     }
@@ -491,7 +504,12 @@ private fun CoordinateGridCard(
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(text = { Text("编辑") }, onClick = { showMenu = false; onEdit() })
-                DropdownMenuItem(text = { Text("删除") }, onClick = { showMenu = false; onDelete() })
+                DropdownMenuItem(
+                    text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                    onClick = { showMenu = false; onDelete() },
+                    leadingIcon = { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) },
+                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                )
             }
         }
     }

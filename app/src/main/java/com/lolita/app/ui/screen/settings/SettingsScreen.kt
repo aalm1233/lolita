@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -263,7 +264,7 @@ private fun ProfileSection(
                     .size(64.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                    .clickable(onClick = onAvatarClick),
+                    .skinClickable(onClick = onAvatarClick),
                 contentAlignment = Alignment.Center
             ) {
                 if (uiState.avatarPath.isNotEmpty() && File(uiState.avatarPath).exists()) {
@@ -275,17 +276,14 @@ private fun ProfileSection(
                         placeholderInitial = uiState.nickname.firstOrNull()?.toString()
                     )
                 } else {
-                    Text(
-                        "🎀",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
+                    SkinIcon(IconKey.Wishlist, modifier = Modifier.size(40.dp))
                 }
             }
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable(onClick = onNicknameClick)
+                    modifier = Modifier.skinClickable(onClick = onNicknameClick)
                 ) {
                     Text(
                         text = uiState.nickname.ifEmpty { "点击设置昵称" },

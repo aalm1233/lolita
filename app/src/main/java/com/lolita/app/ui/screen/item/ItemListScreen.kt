@@ -909,19 +909,6 @@ private fun ItemCard(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
-                    if (item.status == ItemStatus.PENDING_BALANCE) {
-                        Surface(
-                            color = filterAccent.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = "待补尾款",
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = filterAccent
-                            )
-                        }
-                    }
                     if (showPrice && itemPrice != null && itemPrice > 0) {
                         Text(
                             text = "¥%.0f".format(itemPrice),
@@ -1244,19 +1231,6 @@ private fun ItemGridCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (item.status == ItemStatus.PENDING_BALANCE) {
-                        Surface(
-                            color = filterAccent.copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = "待补尾款",
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = filterAccent
-                            )
-                        }
-                    }
                     brandName?.let {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

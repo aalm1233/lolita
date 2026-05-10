@@ -21,6 +21,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -80,12 +81,16 @@ fun CategoryManageScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
 
-            items(uiState.categories, key = { it.id }) { category ->
-                CategoryCard(
-                    category = category,
-                    onEdit = { viewModel.showEditDialog(category) },
-                    onDelete = { viewModel.showDeleteConfirm(category) }
-                )
+            if (uiState.categories.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Category, title = "暂无类型") }
+            } else {
+                items(uiState.categories, key = { it.id }) { category ->
+                    CategoryCard(
+                        category = category,
+                        onEdit = { viewModel.showEditDialog(category) },
+                        onDelete = { viewModel.showDeleteConfirm(category) }
+                    )
+                }
             }
         }
     }

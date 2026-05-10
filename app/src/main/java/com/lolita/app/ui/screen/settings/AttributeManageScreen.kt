@@ -64,7 +64,7 @@ fun AttributeManageScreen(
             AttributeMenuItem(
                 title = "品牌管理",
                 description = "管理预置和自定义品牌",
-                iconKey = IconKey.Wishlist,
+                iconKey = IconKey.Apps,
                 iconTint = if (isDark) Color(0xFFFF8DC7) else Color(0xFFFF69B4),
                 onClick = onNavigateToBrand
             )

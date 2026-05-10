@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -202,7 +204,7 @@ fun PaymentEditScreen(
                 enabled = !uiState.isSaving
             )
 
-            Box(modifier = Modifier.fillMaxWidth().clickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
+            Box(modifier = Modifier.fillMaxWidth().skinClickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
                 OutlinedTextField(
                     value = uiState.dueDate?.let { formatDate(it) } ?: "",
                     onValueChange = {},
@@ -224,7 +226,7 @@ fun PaymentEditScreen(
                 )
             }
 
-            Card(modifier = Modifier.fillMaxWidth()) {
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -268,7 +270,6 @@ fun PaymentEditScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

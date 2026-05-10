@@ -3,6 +3,9 @@ package com.lolita.app.ui.screen.item
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,6 +21,7 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
@@ -69,7 +73,11 @@ fun RecommendationScreen(
             }
             uiState.error != null -> {
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    Text(uiState.error ?: "未知错误")
+                    SkinEmptyState(
+                        iconKey = IconKey.Info,
+                        title = "加载失败",
+                        subtitle = uiState.error ?: "未知错误"
+                    )
                 }
             }
             uiState.recommendations.isEmpty() -> {
@@ -84,22 +92,20 @@ fun RecommendationScreen(
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    flingBehavior = rememberSkinFlingBehavior()
                 ) {
                     uiState.recommendations.forEach { (categoryName, scores) ->
                         item {
-                            Text(
-                                text = categoryName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
+                            SectionHeader(title = categoryName)
                         }
-                        items(scores) { matchScore ->
-                            RecommendationItemCard(
-                                matchScore = matchScore,
-                                onClick = { onNavigateToItem(matchScore.item.id) }
-                            )
+                        itemsIndexed(scores) { index, matchScore ->
+                            Column(modifier = Modifier.skinItemAppear(index)) {
+                                RecommendationItemCard(
+                                    matchScore = matchScore,
+                                    onClick = { onNavigateToItem(matchScore.item.id) }
+                                )
+                            }
                         }
                         item { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp) }
                     }

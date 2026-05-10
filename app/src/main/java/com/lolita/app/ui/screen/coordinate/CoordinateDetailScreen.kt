@@ -34,13 +34,16 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.valentinilk.shimmer.ShimmerBounds
@@ -345,7 +348,7 @@ private fun CoordinateInfoCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
-                        .clip(RoundedCornerShape(12.dp)),
+                        .clip(LolitaSkin.current.cardShape),
                     contentDescription = "封面图",
                     sharedTransitionKey = "coordinateImage-${coordinate.id}"
                 )
@@ -398,15 +401,7 @@ private fun CoordinateInfoCard(
 
             // Price summary
             if (totalPrice > 0) {
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Text(
-                    "价格汇总",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
-                )
+                SectionHeader(title = "价格汇总")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -524,15 +519,17 @@ private fun CoordinateItemCard(
             // Thumbnail
             val thumbUrl = item.imageUrls.firstOrNull()
             if (thumbUrl != null) {
-                LolitaShimmerImage(
-                    model = thumbUrl,
-                    contentDescription = item.name,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop,
-                    placeholderInitial = item.name.firstOrNull()?.toString()
-                )
+                ImageFrame {
+                    LolitaShimmerImage(
+                        model = thumbUrl,
+                        contentDescription = item.name,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholderInitial = item.name.firstOrNull()?.toString()
+                    )
+                }
             } else {
                 Surface(
                     modifier = Modifier.size(48.dp),

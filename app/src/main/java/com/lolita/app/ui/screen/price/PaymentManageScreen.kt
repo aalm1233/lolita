@@ -59,7 +59,7 @@ fun PaymentManageScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
-                SkinIcon(IconKey.Add, tint = androidx.compose.ui.graphics.Color.White)
+                SkinIcon(IconKey.Add, tint = MaterialTheme.colorScheme.onPrimary)
             }
         }
     ) { padding ->
@@ -306,7 +306,7 @@ private fun PaymentStatusChip(isPaid: Boolean) {
 }
 
 private fun formatDate(timestamp: Long): String {
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val sdf = SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault())
     return sdf.format(Date(timestamp))
 }
 

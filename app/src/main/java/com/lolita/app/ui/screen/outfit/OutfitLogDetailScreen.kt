@@ -25,6 +25,7 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.SectionHeader
@@ -188,17 +189,18 @@ fun OutfitLogDetailScreen(
                     }
                     if (log.imageUrls.size == 1) {
                         item {
-                            LolitaShimmerImage(
-                                model = log.imageUrls.first(),
-                                contentDescription = "穿搭照片",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .heroSharedElement("outfitLogImage-${log.id}")
-                                    .clip(RoundedCornerShape(12.dp)),
-                                contentScale = ContentScale.FillWidth,
-                                placeholderInitial = "穿"
-                            )
+                            ImageFrame(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                LolitaShimmerImage(
+                                    model = log.imageUrls.first(),
+                                    contentDescription = "穿搭照片",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heroSharedElement("outfitLogImage-${log.id}")
+                                        .clip(RoundedCornerShape(12.dp)),
+                                    contentScale = ContentScale.FillWidth,
+                                    placeholderInitial = "穿"
+                                )
+                            }
                         }
                     } else {
                         item {
@@ -278,7 +280,7 @@ private fun DetailItemCard(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        SkinIcon(IconKey.Save, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        SkinIcon(IconKey.Image, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }

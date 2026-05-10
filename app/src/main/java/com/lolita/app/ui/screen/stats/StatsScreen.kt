@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -109,6 +110,13 @@ fun StatsContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
+
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     Column(
         modifier = modifier
@@ -222,7 +230,7 @@ fun StatsContent(
                         )
                     }
                     Text(
-                        text = "¥${String.format("%.2f", item.totalSpending)}",
+                        text = "¥%,.0f".format(item.totalSpending),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -242,7 +250,7 @@ fun StatsContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(4.dp))
-                                .clickable { onNavigateToFilteredList("brand", brand.brandName, "品牌: ${brand.brandName}") }
+                                .skinClickable { onNavigateToFilteredList("brand", brand.brandName, "品牌: ${brand.brandName}") }
                                 .padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -302,26 +310,29 @@ private fun StatCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) { // intentional override of cardInnerPadding
-            SkinIcon(
-                key = iconKey,
-                tint = iconTint,
-                modifier = Modifier.size(22.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SkinIcon(key = iconKey, tint = iconTint, modifier = Modifier.size(18.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = animatedValue.toString(),
+                text = "%,d".format(animatedValue),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.sp
                 ),
                 color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -342,26 +353,29 @@ private fun SpendingCard(
     )
 
     LolitaCard(modifier = modifier) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) { // intentional override of cardInnerPadding
-            SkinIcon(
-                key = iconKey,
-                tint = iconTint,
-                modifier = Modifier.size(22.dp)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SkinIcon(key = iconKey, tint = iconTint, modifier = Modifier.size(18.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "¥${String.format("%.2f", animatedValue)}",
+                text = "¥%,.0f".format(animatedValue),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.sp
                 ),
                 color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

@@ -23,10 +23,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items as gridItems
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items as staggeredItems
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -135,13 +140,16 @@ fun CatalogListContent(
                     verticalItemSpacing = 8.dp,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    flingBehavior = rememberSkinFlingBehavior()
                 ) {
-                    staggeredItems(galleryItems, key = { it.entry.id }) { data ->
-                        CatalogGalleryCard(
-                            data = data,
-                            onClick = { onNavigateToDetail(data.entry.id) }
-                        )
+                    itemsIndexed(galleryItems, key = { _, data -> data.entry.id }) { index, data ->
+                        Column(modifier = Modifier.skinItemAppear(index)) {
+                            CatalogGalleryCard(
+                                data = data,
+                                onClick = { onNavigateToDetail(data.entry.id) }
+                            )
+                        }
                     }
                 }
             }
@@ -149,13 +157,16 @@ fun CatalogListContent(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                flingBehavior = rememberSkinFlingBehavior()
             ) {
-                items(uiState.cardDataList, key = { it.entry.id }) { data ->
-                    CatalogListCard(
-                        data = data,
-                        onClick = { onNavigateToDetail(data.entry.id) }
-                    )
+                itemsIndexed(uiState.cardDataList, key = { _, data -> data.entry.id }) { index, data ->
+                    Column(modifier = Modifier.skinItemAppear(index)) {
+                        CatalogListCard(
+                            data = data,
+                            onClick = { onNavigateToDetail(data.entry.id) }
+                        )
+                    }
                 }
             }
         } else {
@@ -164,13 +175,16 @@ fun CatalogListContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                flingBehavior = rememberSkinFlingBehavior()
             ) {
-                gridItems(uiState.cardDataList, key = { it.entry.id }) { data ->
-                    CatalogGridCard(
-                        data = data,
-                        onClick = { onNavigateToDetail(data.entry.id) }
-                    )
+                itemsIndexed(uiState.cardDataList, key = { _, data -> data.entry.id }) { index, data ->
+                    Column(modifier = Modifier.skinItemAppear(index)) {
+                        CatalogGridCard(
+                            data = data,
+                            onClick = { onNavigateToDetail(data.entry.id) }
+                        )
+                    }
                 }
             }
         }
@@ -728,7 +742,7 @@ private fun CatalogSharedBadge() {
         shape = RoundedCornerShape(999.dp)
     ) {
         Text(
-            text = "Shared",
+            text = "共享",
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.primary,

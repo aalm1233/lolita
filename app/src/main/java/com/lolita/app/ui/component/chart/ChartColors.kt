@@ -4,31 +4,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// Non-composable fallback for use in ViewModels
+// Refined categorical palette: muted, distinct hues for data visualization.
+// Avoids the pink-heavy overload — each slice is visually distinguishable.
 val ChartPalette = listOf(
-    Color(0xFFFF69B4), // Pink400
-    Color(0xFFFF91A4), // Pink300
-    Color(0xFFFF1493), // Pink500
-    Color(0xFFE91E8C), // Pink600
-    Color(0xFFFFB6C1), // Pink200
-    Color(0xFFFF007F), // Rose
-    Color(0xFFE6E6FA), // Lavender
-    Color(0xFFFFD93D), // Yellow
-    Color(0xFF6BCF7F), // Green
-    Color(0xFFFF6B6B), // Red
+    Color(0xFFC97B84), // Dusty Rose
+    Color(0xFF6CA0A8), // Muted Teal
+    Color(0xFFCC9E6E), // Warm Gold
+    Color(0xFF8D7BA0), // Soft Violet
+    Color(0xFF7DA87B), // Sage Green
+    Color(0xFFC48B8B), // Dusty Rose Light
+    Color(0xFF6B8AAD), // Steel Blue
+    Color(0xFFD0AA7A), // Sand
+    Color(0xFF9B8BA8), // Lavender Gray
+    Color(0xFFB8987A), // Warm Taupe
 )
 
-// Skin-aware palette for use in @Composable functions
+// Skin-aware palette: first two slices pick up the active skin's identity.
 @Composable
 fun chartPalette(): List<Color> = listOf(
-    MaterialTheme.colorScheme.primary,    // was Pink400
-    MaterialTheme.colorScheme.tertiary,   // was Pink300
-    Color(0xFFFF1493), // Pink500
-    Color(0xFFE91E8C), // Pink600
-    Color(0xFFFFB6C1), // Pink200
-    Color(0xFFFF007F), // Rose
-    Color(0xFFE6E6FA), // Lavender
-    Color(0xFFFFD93D), // Yellow
-    Color(0xFF6BCF7F), // Green
-    Color(0xFFFF6B6B), // Red
+    MaterialTheme.colorScheme.primary,
+    MaterialTheme.colorScheme.tertiary,
+    Color(0xFFCC9E6E), // Warm Gold
+    Color(0xFF8D7BA0), // Soft Violet
+    Color(0xFF7DA87B), // Sage Green
+    Color(0xFFC48B8B), // Dusty Rose Light
+    Color(0xFF6B8AAD), // Steel Blue
+    Color(0xFFD0AA7A), // Sand
+    Color(0xFF9B8BA8), // Lavender Gray
+    Color(0xFFB8987A), // Warm Taupe
 )

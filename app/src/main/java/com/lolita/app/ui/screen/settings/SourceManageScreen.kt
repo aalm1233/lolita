@@ -23,6 +23,7 @@ import com.lolita.app.data.local.entity.Source
 import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -174,8 +175,12 @@ fun SourceManageScreen(
             item {
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
-            items(uiState.sources, key = { it.id }) { source ->
-                SourceCard(source = source, onEdit = { viewModel.showEditDialog(source) }, onDelete = { viewModel.showDeleteConfirm(source) })
+            if (uiState.sources.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Apps, title = "暂无来源") }
+            } else {
+                items(uiState.sources, key = { it.id }) { source ->
+                    SourceCard(source = source, onEdit = { viewModel.showEditDialog(source) }, onDelete = { viewModel.showDeleteConfirm(source) })
+                }
             }
         }
     }
@@ -221,7 +226,7 @@ fun SourceManageScreen(
 private fun SourceCard(source: Source, onEdit: () -> Unit, onDelete: () -> Unit) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

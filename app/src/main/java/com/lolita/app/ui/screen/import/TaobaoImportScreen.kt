@@ -221,7 +221,7 @@ private fun OrderCard(
 ) {
     val isClosed = order.orderStatus == "交易关闭"
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column {
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                 Column {
                     Text(order.shopName, style = MaterialTheme.typography.titleSmall,
@@ -411,7 +411,7 @@ private fun MissingDataRow(
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp), // intentional override of cardInnerPadding
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(

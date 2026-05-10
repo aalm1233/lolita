@@ -10,6 +10,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.material3.LocalContentColor
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import com.lolita.app.ui.navigation.LocalHazeState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -39,7 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
@@ -55,9 +62,6 @@ import com.lolita.app.ui.screen.coordinate.CoordinateListContent
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import coil.request.ImageRequest
 import com.lolita.app.ui.screen.common.findColorHex
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.screen.common.ViewMode
@@ -74,6 +78,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import com.lolita.app.ui.screen.catalog.CatalogFilterPanel
+import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerCircle
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import com.lolita.app.ui.screen.catalog.CatalogListContent
 import com.lolita.app.ui.screen.catalog.CatalogListViewModel
 
@@ -102,6 +112,10 @@ fun ItemListScreen(
     var isSearchMode by remember { mutableStateOf(false) }
     val searchFocusRequester = remember { FocusRequester() }
     val skin = LolitaSkin.current
+    val isDark = isSystemInDarkTheme()
+    val filterAccent = if (isDark) skin.accentColorDark else skin.accentColor
+    val hazeState = LocalHazeState.current
+    val topBarBlurEnabled = skin.topBarBlurEnabled && hazeState != null
     val topBarGradient = if (isSystemInDarkTheme()) {
         Brush.horizontalGradient(skin.gradientColorsDark)
     } else {
@@ -201,13 +215,31 @@ fun ItemListScreen(
         ) {
             // Unified top bar (Xiaohongshu-style: search icon | tabs | actions)
             Surface(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (topBarBlurEnabled) {
+                            Modifier.hazeEffect(
+                                state = hazeState!!,
+                                style = HazeStyle(
+                                    backgroundColor = if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                    tint = HazeTint(
+                                        (if (isSystemInDarkTheme()) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                            .copy(alpha = skin.topBarBlurAlpha)
+                                    ),
+                                    blurRadius = 25.dp
+                                )
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
                 color = Color.Transparent
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(topBarGradient)
+                        .then(if (topBarBlurEnabled) Modifier else Modifier.background(topBarGradient))
                         .statusBarsPadding()
                 ) {
                     AnimatedContent(
@@ -348,14 +380,14 @@ fun ItemListScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp), // intentional override of cardInnerPadding
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (uiState.hasTodayOutfit) {
                         uiState.todayOutfitItemImages.forEach { imageUrl ->
                             if (imageUrl != null) {
-                                AsyncImage(
+                                LolitaShimmerImage(
                                     model = java.io.File(imageUrl),
                                     contentDescription = null,
                                     modifier = Modifier.size(36.dp).clip(RoundedCornerShape(6.dp)),
@@ -406,8 +438,8 @@ fun ItemListScreen(
                         onClick = { viewModel.togglePendingBalanceOnly() },
                         label = { Text("待补尾款", fontSize = 12.sp) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF9800).copy(alpha = 0.15f),
-                            selectedLabelColor = Color(0xFFFF9800)
+                            selectedContainerColor = filterAccent.copy(alpha = 0.15f),
+                            selectedLabelColor = filterAccent
                         ),
                         modifier = Modifier.height(24.dp)
                     )
@@ -449,11 +481,44 @@ fun ItemListScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         if (uiState.isLoading) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                            val shimmer = rememberShimmer(ShimmerBounds.Window)
+                            if (uiState.viewMode == ViewMode.GALLERY) {
+                                LazyVerticalStaggeredGrid(
+                                    columns = StaggeredGridCells.Fixed(2),
+                                    verticalItemSpacing = 8.dp,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(4) {
+                                        GalleryCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
+                            } else if (uiState.columnsPerRow == 1) {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(5) {
+                                        ItemCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
+                            } else {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(uiState.columnsPerRow),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp)
+                                ) {
+                                    items(6) {
+                                        ItemGridCardSkeleton(
+                                            modifier = Modifier.shimmer(shimmer)
+                                        )
+                                    }
+                                }
                             }
                         } else if (uiState.filteredItems.isEmpty()) {
                             SkinEmptyState(
@@ -599,6 +664,8 @@ private fun NormalModeBar(
 ) {
     val tabs = listOf("位置", "服饰", "套装")
     val pageTabs = listOf("位置", "服饰", "套装", "图鉴")
+    val contentColor = LocalContentColor.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -610,7 +677,7 @@ private fun NormalModeBar(
             onClick = onSearchClick,
             modifier = Modifier.size(36.dp)
         ) {
-            SkinIcon(IconKey.Search, tint = Color.White)
+            SkinIcon(IconKey.Search, tint = contentColor)
         }
 
         // Tabs (centered)
@@ -620,7 +687,7 @@ private fun NormalModeBar(
                 .weight(1f)
                 .padding(horizontal = 2.dp),
             containerColor = Color.Transparent,
-            contentColor = Color.White,
+            contentColor = contentColor,
             divider = {},
             indicator = { tabPositions ->
                 SkinTabIndicator(
@@ -644,8 +711,8 @@ private fun NormalModeBar(
                             overflow = TextOverflow.Clip
                         )
                     },
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White.copy(alpha = 0.7f)
+                    selectedContentColor = contentColor,
+                    unselectedContentColor = contentColor.copy(alpha = 0.7f)
                 )
             }
         }
@@ -658,7 +725,7 @@ private fun NormalModeBar(
             ) {
                 SkinIcon(
                     IconKey.FilterList,
-                    tint = if (activeFilterCount > 0) Color.White else Color.White.copy(alpha = 0.7f)
+                    tint = if (activeFilterCount > 0) contentColor else contentColor.copy(alpha = 0.7f)
                 )
             }
             if (activeFilterCount > 0) {
@@ -687,7 +754,7 @@ private fun NormalModeBar(
             showPriceOptions = showPriceOptions,
             onSortSelected = onSortSelected,
             modifier = Modifier.size(32.dp),
-            iconTint = Color.White.copy(alpha = 0.8f)
+            iconTint = contentColor.copy(alpha = 0.8f)
         )
 
         // View mode toggle
@@ -695,7 +762,7 @@ private fun NormalModeBar(
             onClick = onViewModeToggle,
             modifier = Modifier.size(32.dp)
         ) {
-            SkinIcon(viewModeIcon, tint = Color.White.copy(alpha = 0.8f))
+            SkinIcon(viewModeIcon, tint = contentColor.copy(alpha = 0.8f))
         }
     }
 }
@@ -708,6 +775,7 @@ private fun SearchModeBar(
     focusRequester: FocusRequester,
     placeholder: String
 ) {
+    val contentColor = LocalContentColor.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -718,7 +786,7 @@ private fun SearchModeBar(
         Surface(
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(20.dp),
-            color = Color.White.copy(alpha = 0.2f)
+            color = contentColor.copy(alpha = 0.2f)
         ) {
             BasicTextField(
                 value = query,
@@ -728,15 +796,15 @@ private fun SearchModeBar(
                     .padding(horizontal = 12.dp, vertical = 8.dp)
                     .focusRequester(focusRequester),
                 singleLine = true,
-                textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                cursorBrush = SolidColor(Color.White),
+                textStyle = TextStyle(color = contentColor, fontSize = 14.sp),
+                cursorBrush = SolidColor(contentColor),
                 decorationBox = { innerTextField ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp), tint = Color.White.copy(alpha = 0.7f))
+                        SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp), tint = contentColor.copy(alpha = 0.7f))
                         Spacer(Modifier.width(6.dp))
                         Box(Modifier.weight(1f)) {
                             if (query.isEmpty()) {
-                                Text("搜索服饰", color = Color.White.copy(alpha = 0.6f), fontSize = 14.sp)
+                                Text("搜索服饰", color = contentColor.copy(alpha = 0.6f), fontSize = 14.sp)
                             }
                             innerTextField()
                         }
@@ -746,7 +814,7 @@ private fun SearchModeBar(
                                 modifier = Modifier
                                     .size(16.dp)
                                     .clickable { onQueryChange("") },
-                                tint = Color.White.copy(alpha = 0.7f)
+                                tint = contentColor.copy(alpha = 0.7f)
                             )
                         }
                     }
@@ -755,7 +823,7 @@ private fun SearchModeBar(
         }
         Text(
             "取消",
-            color = Color.White,
+            color = contentColor,
             fontSize = 14.sp,
             modifier = Modifier.clickable { onCancel() }
         )
@@ -778,32 +846,29 @@ private fun ItemCard(
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
+    val skin = LolitaSkin.current
+    val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
 
     LolitaCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
-        Row(
+            Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                val context = LocalContext.current
-                val density = LocalDensity.current
-                val imageSizePx = with(density) { 80.dp.roundToPx() }
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(java.io.File(item.imageUrls.first()))
-                        .size(imageSizePx)
-                        .crossfade(true)
-                        .build(),
+                LolitaShimmerImage(
+                    model = java.io.File(item.imageUrls.first()),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(80.dp)
+                        .heroSharedElement("itemImage-${item.id}")
                         .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 val categoryInitial = categoryName?.firstOrNull()?.toString() ?: "?"
@@ -844,19 +909,6 @@ private fun ItemCard(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
-                    if (item.status == ItemStatus.PENDING_BALANCE) {
-                        Surface(
-                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = "待补尾款",
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFFFF9800)
-                            )
-                        }
-                    }
                     if (showPrice && itemPrice != null && itemPrice > 0) {
                         Text(
                             text = "¥%.0f".format(itemPrice),
@@ -1002,6 +1054,82 @@ private fun ItemCard(
     }
 }
 
+// region Skeleton composables for loading state
+
+@Composable
+private fun ItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ShimmerRect(
+                width = 80.dp,
+                height = 80.dp,
+                shape = RoundedCornerShape(12.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ItemGridCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column {
+            ShimmerRect(
+                width = 200.dp,
+                height = 160.dp,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun GalleryCardSkeleton(modifier: Modifier = Modifier) {
+    val skin = LolitaSkin.current
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = skin.cardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSystemInDarkTheme()) skin.cardContainerColorDark else skin.cardContainerColor
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
+        border = skin.cardBorderStroke
+    ) {
+        ShimmerRect(
+            width = 200.dp,
+            height = 240.dp,
+            shape = skin.cardShape,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+// endregion
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ItemGridCard(
@@ -1018,6 +1146,8 @@ private fun ItemGridCard(
     val itemPrice = data.itemPrice
     val showPrice = data.showPrice
     var showMenu by remember { mutableStateOf(false) }
+    val skin = LolitaSkin.current
+    val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
 
     LolitaCard(
         modifier = modifier.fillMaxWidth()
@@ -1034,21 +1164,16 @@ private fun ItemGridCard(
                 // Image area with price overlay
                 Box {
                     if (item.imageUrls.isNotEmpty()) {
-                        val context = LocalContext.current
-                        val density = LocalDensity.current
-                        val imageSizePx = with(density) { 200.dp.roundToPx() }
-                        AsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .data(java.io.File(item.imageUrls.first()))
-                                .size(imageSizePx)
-                                .crossfade(true)
-                                .build(),
+                        LolitaShimmerImage(
+                            model = java.io.File(item.imageUrls.first()),
                             contentDescription = item.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
+                                .heroSharedElement("itemImage-${item.id}")
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholderInitial = item.name.firstOrNull()?.toString()
                         )
                     } else {
                         val initial = categoryName?.firstOrNull()?.toString() ?: "?"
@@ -1096,7 +1221,7 @@ private fun ItemGridCard(
 
                 // Info area
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
@@ -1106,19 +1231,6 @@ private fun ItemGridCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (item.status == ItemStatus.PENDING_BALANCE) {
-                        Surface(
-                            color = Color(0xFFFF9800).copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = "待补尾款",
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFFFF9800)
-                            )
-                        }
-                    }
                     brandName?.let {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

@@ -41,9 +41,15 @@
 
 - 导航统一走 `Screen` sealed interface + `LolitaNavHost`，新增页面两边都补。
 - 列表/详情/编辑页成套考虑。
-- `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。
+- `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。顶栏支持 Haze 毛玻璃效果：当 `skin.topBarBlurEnabled && LocalHazeState.current != null` 时使用 `hazeEffect`，否则回退到原始渐变。
 - `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`。
-- 卡片复用 `LolitaCard`。
+- 底部导航栏支持 Haze 毛玻璃效果：通过 `skin.navBarBlurEnabled` 控制，启用时 `containerColor` 使用半透明 tint 色。
+- `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
+- 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。支持 `variant` 参数：`CardVariant.DEFAULT`（默认）、`CardVariant.GALLERY`（无边框/无内边距/零阴影，图片主导）、`CardVariant.FEATURED`（高阴影/大内边距，突出展示）、`CardVariant.COMPACT`（低阴影/紧内边距/细边框，替代 raw Card）。
+- 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
+- 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
+- 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
+- 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
@@ -53,6 +59,81 @@
 - 新页面/交互复用皮肤感知组件，不做脱节的普通 Material 页面。
 - 新增图标需同时补：`BaseSkinIconProvider` + **7 个**皮肤专属 provider（`SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`, `CountryIconProvider`, `VictorianIconProvider`）+ `IconKey` 枚举。图标是 Canvas 手绘，不是 Material icon。
 - 新增列表/切换/过渡效果优先复用现有 skin 动画体系（`SkinClickable`, `SkinItemAppear`, `SkinNavigationOverlay` 等）。
+
+### 视觉精致化令牌
+
+`LolitaSkinConfig` 包含以下视觉令牌，新组件/页面应消费它们而非硬编码：
+
+| 令牌 | 用途 | 示例值（DEFAULT / VICTORIAN） |
+|------|------|-------------------------------|
+| `cardElevation` | 卡片阴影 | 1dp / 3dp |
+| `cardBorderStroke` | 卡片边框（null = 无边框） | null / gold 1dp |
+| `imageFrameElevation` | 图片区阴影 | 2dp / 4dp |
+| `imageFrameStroke` | 图片边框 | null / gold 1dp |
+| `imageFramePadding` | 图片与边框间距 | 0dp / 3dp |
+| `sectionAccentColor/Dark` | 分区标题竖线颜色 | Pink400 / deepRose |
+| `sectionAccentWidth` | 竖线宽度 | 3dp |
+| `sectionDividerColor/Dark` | 分区分割线颜色 | Pink200 / gold |
+| `sectionDividerHeight` | 分割线粗细 | 1dp |
+| `spacingS/M/L/XL` | 8pt 间距系统 | 4/8/16/24dp |
+| `cornerRadiusS/M/L` | 圆角半径 | 8/16/24dp / 6/12/16dp |
+| `spatialSpring` / `effectsSpring` | 统一弹簧动画 | 0.75,400 / 0.8,300 |
+| `cardContainerColor/Dark` | 卡片表面色（替代运行时 alpha） | White(0.75) / cream(0.8) |
+| `cardInnerPadding` / `cardGap` | 卡片内边距 / 卡片间距 | 16dp / 20dp |
+| `topBarBlurEnabled/Alpha/Tint/Dark` | 顶栏毛玻璃 | 0.72 / 0.82 |
+| `navBarBlurEnabled/Alpha/Tint/Dark` | 底栏毛玻璃 | 0.75 / 0.85 |
+| `dialogBlurEnabled/Alpha` | 对话框毛玻璃 | 0.65 / 0.72 |
+| `galleryCardElevation/Border/InnerPadding` | 画廊卡片变体令牌 | 0dp/null/0dp / 0dp/gold0.3/0dp |
+| `featuredCardElevation/Border/InnerPadding` | 精选卡片变体令牌 | 2dp/null/20dp / 6dp/gold1/24dp |
+| `compactCardElevation/Border/InnerPadding` | 紧凑卡片变体令牌 | 0.5dp/null/8dp / 1dp/gold0.5/10dp |
+| `cardBorderStroke/Dark` | 卡片边框（含暗色变体） | null / gold1dp |
+| `imageFrameStroke/Dark` | 图片边框（含暗色变体） | null / gold0.7dp |
+| `galleryCardBorderStroke/Dark` | 画廊卡片边框暗色变体 | null / gold0.3dp |
+| `featuredCardBorderStroke/Dark` | 精选卡片边框暗色变体 | null / gold1dp |
+| `compactCardBorderStroke/Dark` | 紧凑卡片边框暗色变体 | null / gold0.5dp |
+
+### 加载态与图片
+
+- **骨架屏**：列表页全屏加载状态用 `ShimmerRect`/`ShimmerLine`/`ShimmerCircle`（`ui/screen/common/SkeletonShapes.kt`）构建骨架卡片，替换 `CircularProgressIndicator`。每个卡片类型有对应 `XxxCardSkeleton` 私有组合函数（定义在各自屏幕文件内）。
+- **ShimmerTheme**：`ui/theme/shimmer/ShimmerTheme.kt` 中 `skinShimmerTheme()` 从 `cardContainerColor` + `accentColor` 派生，通过 `LocalShimmerTheme` 在 `LolitaTheme` 中提供。
+- **LolitaShimmerImage**：`ui/screen/common/LolitaShimmerImage.kt`，皮肤感知的 `CoilImage` 封装，集成 `ShimmerPlugin`（加载态闪烁）+ `CircularRevealPlugin`（出场圆形揭示动画）+ 首字母失败回退。**所有图片加载统一用 `LolitaShimmerImage`，不再直接使用 Coil `AsyncImage`。**
+- **特殊场景**：全屏缩放查看器（`ImageGalleryPager`/`FullScreenImageViewer`/`ImagePreviewDialog`）和编辑页图片设 `circularRevealEnabled = false`（缩放/编辑需即时显示）。
+- **保留 CPI 的场景**：内联按钮 spinner（保存/同步操作指示器，如 `BackupRestoreScreen`、`TaobaoImportScreen`）保持 `CircularProgressIndicator`，不用骨架屏。
+- **依赖**：`compose-shimmer:1.3.2`（骨架屏 `Modifier.shimmer()`）、`landscapist-coil:2.4.7` + `landscapist-placeholder:2.4.7` + `landscapist-animation:2.4.7`（图片加载 + 闪烁 + 圆形揭示）。
+
+新增视觉令牌时需同步：`LolitaSkinConfig` 数据类 + **7 个**皮肤工厂函数 + dark mode 变体。
+
+### 暗色模式适配规范
+
+- **卡片/图片边框**：`LolitaCard` 和 `ImageFrame` 通过 `isSystemInDarkTheme()` 自动解析 `*Dark` 变体边框令牌。有边框的皮肤（GOTHIC/CHINESE/CLASSIC/VICTORIAN）暗色变体使用更亮的色调以保证在深色背景上可见。
+- **状态颜色**（已付/逾期）：使用 `paidColor()` / `overdueColor()` 可组合函数，暗色模式使用 Material 300 色阶（更亮）。
+- **优先级颜色**（HIGH/MEDIUM/LOW）：暗色模式使用更亮的粉色/黄色/绿色变体。
+- **图标着色**：设置页/属性管理页图标使用 `if (isDark) bright300 else normal500` 模式。
+- **导航栏未选中图标**：使用 `MaterialTheme.colorScheme.onSurfaceVariant`（自动适配深浅模式）。
+- **筛选/排序强调色**：使用 `skin.accentColor` / `skin.accentColorDark` 而非硬编码橙色。
+- **错误色**：使用 `MaterialTheme.colorScheme.error` / `onError` 而非硬编码 `0xFFD32F2F`。
+- **渐变覆盖层文字**（`Color.Black.copy(alpha) + Color.White`）：图片上方的价格/日期标签仍使用黑底白字，这是正确的设计。
+
+### Hero 动画（SharedTransitionLayout）
+
+- **`SharedTransitionLayout`** 包裹 `LolitaNavHost` 的 `Scaffold`，通过 `CompositionLocal` 向子组件提供 `SharedTransitionScope` 和 `AnimatedVisibilityScope`。
+- **`heroTransitionEnabled`** 皮肤令牌控制是否启用 hero 动画（默认 `true`）。
+- **`Modifier.heroSharedElement(key)`**：封装 `sharedElement` + 皮肤令牌检查 + 作用域空值保护的组合修饰符。定义在 `ui/screen/common/HeroSharedElement.kt`。
+- **修饰符顺序规则**：尺寸修饰符 → `heroSharedElement()` → `clip()`。尺寸必须在 `sharedElement` 之前，`clip` 必须在之后。
+- **`ImageGalleryPager`** 接受 `sharedTransitionKey` 参数，仅对第一页（`page == 0`）应用 hero 动画。
+- **5 种实体的 hero 动画**：Item、Coordinate、Catalog、OutfitLog（仅单图模式）、Location。WishlistScreen 的卡片也导航到 ItemDetail 并使用相同的 `itemImage-${id}` key。
+- **详情页路由过渡**：使用 hero 动画的路由（ItemDetail、CoordinateDetail、CatalogDetail、OutfitLogDetail、LocationDetail）使用 `fadeIn/fadeOut` 替代默认的 slide 过渡，避免与 hero 动画冲突。
+- **`@OptIn(ExperimentalSharedTransitionApi::class)`**：BOM 2024.12.01 → Compose Animation 1.7.x，API 仍为实验性（但 API 冻结，与 1.10.0 稳定版相同）。
+- **共享元素 key 命名**：`itemImage-${id}`、`coordinateImage-${id}`、`catalogImage-${id}`、`outfitLogImage-${id}`、`locationImage-${id}`。
+- **GalleryPreviewDialog 边缘情况**：通过画廊预览对话框导航到详情页时不触发 hero 动画（对话框不在 `SharedTransitionScope` 内），这是可接受的降级。
+
+### 后续优化方向
+
+- 逐皮肤深化装饰层（如 `SkinDecorationProvider` 接口，华丽皮肤覆写提供 Canvas 角落花纹/画框金边等）
+- 对话框皮肤化 + 毛玻璃（`dialogBlurEnabled`/`dialogBlurAlpha` 令牌已就绪，待创建 `LolitaDialog` 组件）
+- `ImageFrame` 应用到详情页图片区域
+- 皮肤切换 Crossfade 过渡
+- 高级毛玻璃（Liquid Glass，API 33+ shader 效果）
 
 ## 构建与验证
 
@@ -131,7 +212,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=46, versionName="2.29.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=49, versionName="2.31.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -139,3 +220,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 构建通过后再提交。
 - commit message 用英文短句 + `feat:` / `fix:` / `chore:` 前缀。
 - 不提交 `.gradle-user-home/`、`.kotlin/`。
+
+## AGENTS.md 维护
+
+- 每次功能更新、架构变更或新增约定后，**必须刷新 `AGENTS.md`**，确保文档与代码同步。
+- 新增组件、令牌、接口、页面、测试等均需在对应章节补充说明。
+- 若不确定是否需要更新，默认更新。

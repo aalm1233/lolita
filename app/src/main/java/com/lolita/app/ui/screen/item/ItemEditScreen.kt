@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -31,6 +32,7 @@ import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.ColorSelector
+import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -359,7 +361,7 @@ private fun BrandSelector(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showDialog = true }
+            .skinClickable { showDialog = true }
     ) {
         OutlinedTextField(
             value = brands.find { it.id == selectedBrandId }?.name ?: "",
@@ -409,7 +411,7 @@ private fun BrandSelector(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
+                                    .skinClickable {
                                         onBrandSelected(brand.id)
                                         showDialog = false
                                     }
@@ -755,7 +757,7 @@ private fun SizeChartImageSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        Card(
+        LolitaCard(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 photoPickerLauncher.launch(
@@ -776,13 +778,14 @@ private fun SizeChartImageSection(
                         sizeChartImageUrl
                     }
                     Box {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = imageModel,
                             contentDescription = "尺码表",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = {

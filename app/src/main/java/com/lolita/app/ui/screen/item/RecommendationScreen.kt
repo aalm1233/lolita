@@ -3,6 +3,9 @@ package com.lolita.app.ui.screen.item
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,14 +17,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.domain.usecase.MatchScore
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SectionHeader
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import java.io.File
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,13 +61,23 @@ fun RecommendationScreen(
     ) { padding ->
         when {
             uiState.isLoading -> {
-                Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                val shimmer = rememberShimmer(ShimmerBounds.Window)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(5) {
+                        RecommendationItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
                 }
             }
             uiState.error != null -> {
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                    Text(uiState.error ?: "未知错误")
+                    SkinEmptyState(
+                        iconKey = IconKey.Info,
+                        title = "加载失败",
+                        subtitle = uiState.error ?: "未知错误"
+                    )
                 }
             }
             uiState.recommendations.isEmpty() -> {
@@ -73,22 +92,20 @@ fun RecommendationScreen(
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    flingBehavior = rememberSkinFlingBehavior()
                 ) {
                     uiState.recommendations.forEach { (categoryName, scores) ->
                         item {
-                            Text(
-                                text = categoryName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
+                            SectionHeader(title = categoryName)
                         }
-                        items(scores) { matchScore ->
-                            RecommendationItemCard(
-                                matchScore = matchScore,
-                                onClick = { onNavigateToItem(matchScore.item.id) }
-                            )
+                        itemsIndexed(scores) { index, matchScore ->
+                            Column(modifier = Modifier.skinItemAppear(index)) {
+                                RecommendationItemCard(
+                                    matchScore = matchScore,
+                                    onClick = { onNavigateToItem(matchScore.item.id) }
+                                )
+                            }
                         }
                         item { HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp) }
                     }
@@ -105,17 +122,18 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Thumbnail
             if (matchScore.item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = File(matchScore.item.imageUrls.first()),
                     contentDescription = null,
                     modifier = Modifier.size(56.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = matchScore.item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -145,8 +163,8 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                     matchScore.item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
                         val colorDisplay = colors.joinToString("、")
                         if (colorDisplay.isNotEmpty()) {
-                        Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(colorDisplay, style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -163,6 +181,26 @@ private fun RecommendationItemCard(matchScore: MatchScore, onClick: () -> Unit) 
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecommendationItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ShimmerRect(width = 56.dp, height = 56.dp, shape = RoundedCornerShape(8.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 18.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
             }
         }
     }

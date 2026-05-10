@@ -28,11 +28,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.launch
@@ -93,12 +94,16 @@ fun BrandManageScreen(
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
 
-            items(uiState.brands, key = { it.id }) { brand ->
-                BrandCard(
-                    brand = brand,
-                    onEdit = { viewModel.showEditDialog(brand) },
-                    onDelete = { viewModel.showDeleteConfirm(brand) }
-                )
+            if (uiState.brands.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Info, title = "暂无品牌") }
+            } else {
+                items(uiState.brands, key = { it.id }) { brand ->
+                    BrandCard(
+                        brand = brand,
+                        onEdit = { viewModel.showEditDialog(brand) },
+                        onDelete = { viewModel.showDeleteConfirm(brand) }
+                    )
+                }
             }
         }
     }
@@ -145,20 +150,20 @@ private fun BrandCard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Brand logo or placeholder
             if (brand.logoUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = brand.logoUrl,
                     contentDescription = brand.name,
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = brand.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -239,13 +244,14 @@ private fun AddBrandDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (logoUrl != null) {
                         Box {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = logoUrl,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                circularRevealEnabled = false
                             )
                             IconButton(
                                 onClick = { logoUrl = null },
@@ -362,13 +368,14 @@ private fun EditBrandDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (logoUrl != null) {
                         Box {
-                            AsyncImage(
+                            LolitaShimmerImage(
                                 model = logoUrl,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(48.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                circularRevealEnabled = false
                             )
                             IconButton(
                                 onClick = { logoUrl = null },

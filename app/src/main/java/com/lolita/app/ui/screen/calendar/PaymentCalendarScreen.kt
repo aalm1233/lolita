@@ -4,7 +4,9 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 
@@ -242,7 +244,6 @@ fun PaymentCalendarContent(
                     LolitaCard(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             "当月无付款记录",
-                            modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -271,33 +272,84 @@ private fun YearHeader(
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
-    LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp)) {
+    val isDark = isSystemInDarkTheme()
+    val skin = LolitaSkin.current
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = skin.cardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
+        border = if (isDark) skin.cardBorderStrokeDark else skin.cardBorderStroke
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Year selector
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onPrevious) {
-                    SkinIcon(IconKey.KeyboardArrowLeft)
+                IconButton(onClick = onPrevious, modifier = Modifier.size(32.dp)) {
+                    SkinIcon(IconKey.KeyboardArrowLeft, modifier = Modifier.size(20.dp))
                 }
                 Text(
                     "${year}年",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                IconButton(onClick = onNext) {
-                    SkinIcon(IconKey.KeyboardArrowRight)
+                IconButton(onClick = onNext, modifier = Modifier.size(32.dp)) {
+                    SkinIcon(IconKey.KeyboardArrowRight, modifier = Modifier.size(20.dp))
                 }
             }
+
+            Spacer(Modifier.height(8.dp))
+
+            // Stats row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatChip("已付", yearPaidTotal, yearPaidCount, Color(0xFF4CAF50))
-                StatChip("待付", yearUnpaidTotal, yearUnpaidCount, MaterialTheme.colorScheme.primary)
-                if (yearOverdueAmount > 0) {
-                    StatChip("逾期", yearOverdueAmount, null, Color(0xFFD32F2F))
+                StatBlock(
+                    label = "已付",
+                    amount = yearPaidTotal,
+                    count = yearPaidCount,
+                    color = paidColor()
+                )
+                StatBlock(
+                    label = "待付",
+                    amount = yearUnpaidTotal,
+                    count = yearUnpaidCount,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            if (yearOverdueAmount > 0) {
+                Spacer(Modifier.height(8.dp))
+                Surface(
+                    color = overdueColor().copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "⚠",
+                            fontSize = 12.sp
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            "逾期  ¥${formatAmount(yearOverdueAmount)}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = overdueColor(),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }
@@ -305,24 +357,24 @@ private fun YearHeader(
 }
 
 @Composable
-private fun StatChip(label: String, amount: Double, count: Int?, color: Color) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(label, style = MaterialTheme.typography.labelSmall, color = color)
-        Spacer(Modifier.width(4.dp))
+private fun StatBlock(label: String, amount: Double, count: Int, color: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            "¥${String.format("%.0f", amount)}",
-            style = MaterialTheme.typography.labelMedium,
+            "¥${formatAmount(amount)}",
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = color
         )
-        if (count != null) {
-            Text(
-                "(${count})",
-                style = MaterialTheme.typography.labelSmall,
-                color = color.copy(alpha = 0.7f)
-            )
-        }
+        Text(
+            "$label  ${count}笔",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
+}
+
+private fun formatAmount(amount: Double): String {
+    return "%,.0f".format(amount)
 }
 
 @Composable
@@ -336,11 +388,11 @@ private fun MonthCardGrid(
     val isCurrentYear = todayCal.get(Calendar.YEAR) == currentYear
     val currentMonth = if (isCurrentYear) todayCal.get(Calendar.MONTH) else -1
 
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         repeat(3) { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 repeat(4) { col ->
                     val month = row * 4 + col
@@ -367,75 +419,85 @@ private fun MonthCard(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
+    val skin = LolitaSkin.current
+    val isDark = isSystemInDarkTheme()
     val primaryColor = MaterialTheme.colorScheme.primary
     val hasPayments = stats != null
     val hasOverdue = (stats?.overdueAmount ?: 0.0) > 0
+    val containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
 
     val bgColor by animateColorAsState(
         if (isSelected) primaryColor.copy(alpha = 0.15f)
-        else MaterialTheme.colorScheme.surface,
+        else containerColor,
         animationSpec = tween(200), label = "monthBg"
     )
 
     Card(
         modifier = modifier
-            .heightIn(min = 100.dp)
+            .heightIn(min = 80.dp)
             .then(
                 if (isCurrentMonth) Modifier.border(
-                    2.dp, primaryColor, LolitaSkin.current.cardShape
+                    2.dp, primaryColor, skin.cardShape
                 ) else Modifier
             )
             .clickable(onClick = onClick),
-        shape = LolitaSkin.current.cardShape,
-        colors = CardDefaults.cardColors(containerColor = bgColor)
+        shape = skin.cardShape,
+        colors = CardDefaults.cardColors(containerColor = bgColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
+        border = if (isDark) skin.cardBorderStrokeDark else skin.cardBorderStroke
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
                 "${month + 1}月",
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (hasPayments) MaterialTheme.colorScheme.onSurface
-                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
             )
             if (stats != null) {
                 if (stats.paidTotal > 0) {
                     Text(
-                        "已付 ¥${String.format("%.0f", stats.paidTotal)}",
+                        "已 ¥${formatCompactAmount(stats.paidTotal)}",
                         fontSize = 10.sp,
-                        color = Color(0xFF4CAF50),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        "(${stats.paidCount}笔)",
-                        fontSize = 9.sp,
-                        color = Color(0xFF4CAF50).copy(alpha = 0.7f)
+                        color = paidColor(),
+                        maxLines = 1
                     )
                 }
                 if (stats.unpaidTotal > 0) {
-                    val unpaidColor = if (hasOverdue) Color(0xFFD32F2F) else primaryColor
+                    val unpaidColor = if (hasOverdue) overdueColor() else primaryColor
                     Text(
-                        "待付 ¥${String.format("%.0f", stats.unpaidTotal)}",
+                        "待 ¥${formatCompactAmount(stats.unpaidTotal)}",
                         fontSize = 10.sp,
                         color = unpaidColor,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        "(${stats.unpaidCount}笔)",
-                        fontSize = 9.sp,
-                        color = unpaidColor.copy(alpha = 0.7f)
+                        maxLines = 1
                     )
                 }
-                if (hasOverdue) {
+                if (hasOverdue && stats.overdueAmount > 0) {
                     Text(
-                        "逾期 ¥${String.format("%.0f", stats.overdueAmount)}",
+                        "逾期",
                         fontSize = 9.sp,
-                        color = Color(0xFFD32F2F)
+                        color = overdueColor(),
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
         }
+    }
+}
+
+/**
+ * Formats amounts over 9999 as "1.2万" for compact display in month cards.
+ */
+private fun formatCompactAmount(amount: Double): String {
+    return if (amount >= 10000) {
+        val wan = amount / 10000.0
+        "%.1f万".format(wan)
+    } else {
+        "%.0f".format(amount)
     }
 }
 
@@ -472,15 +534,8 @@ private fun PaymentInfoCard(
         )
     }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = LolitaSkin.current.cardShape,
-        colors = if (isOverdue) CardDefaults.cardColors(
-            containerColor = Color(0xFFD32F2F).copy(alpha = 0.06f)
-        ) else CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    LolitaCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -497,8 +552,8 @@ private fun PaymentInfoCard(
                     modifier = Modifier.weight(1f)
                 )
                 Surface(
-                    color = if (payment.isPaid) Color(0xFF4CAF50).copy(alpha = 0.1f)
-                    else if (isOverdue) Color(0xFFD32F2F).copy(alpha = 0.1f)
+                    color = if (payment.isPaid) paidColor().copy(alpha = 0.1f)
+                    else if (isOverdue) overdueColor().copy(alpha = 0.1f)
                     else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                     shape = MaterialTheme.shapes.small
                 ) {
@@ -506,8 +561,8 @@ private fun PaymentInfoCard(
                         if (payment.isPaid) "已付清" else if (isOverdue) "已逾期" else "待付款",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (payment.isPaid) Color(0xFF4CAF50)
-                        else if (isOverdue) Color(0xFFD32F2F)
+                        color = if (payment.isPaid) paidColor()
+                        else if (isOverdue) overdueColor()
                         else MaterialTheme.colorScheme.primary
                     )
                 }
@@ -547,3 +602,9 @@ private fun getPaymentsForMonth(
         cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month
     }
 }
+
+@Composable
+private fun paidColor(): Color = Color(0xFF4CAF50)
+
+@Composable
+private fun overdueColor(): Color = MaterialTheme.colorScheme.error

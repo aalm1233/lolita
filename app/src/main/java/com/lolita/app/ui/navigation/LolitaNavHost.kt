@@ -1,7 +1,12 @@
 package com.lolita.app.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -14,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +38,12 @@ import com.lolita.app.ui.theme.skin.icon.CountryBottomNavIcon
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.foundation.isSystemInDarkTheme
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.rememberHazeState
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -111,7 +123,14 @@ data object BottomNavItems {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+val LocalHazeState = compositionLocalOf<HazeState?> { null }
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
+
+val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun LolitaNavHost() {
     val navController = rememberNavController()
@@ -120,14 +139,41 @@ fun LolitaNavHost() {
 
     val skin = LolitaSkin.current
     val accent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
+    val hazeState = rememberHazeState()
 
+    SharedTransitionLayout {
+    CompositionLocalProvider(LocalSharedTransitionScope provides this@SharedTransitionLayout) {
+    CompositionLocalProvider(LocalHazeState provides hazeState) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.height(60.dp),
-                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .height(60.dp)
+                    .then(
+                        if (skin.navBarBlurEnabled) {
+                            Modifier.hazeEffect(
+                                state = hazeState,
+                                style = HazeStyle(
+                                    backgroundColor = if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint,
+                                    tint = HazeTint(
+                                        (if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint)
+                                            .copy(alpha = skin.navBarBlurAlpha)
+                                    ),
+                                    blurRadius = 20.dp
+                                )
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
+                containerColor = if (skin.navBarBlurEnabled) {
+                    (if (isSystemInDarkTheme()) skin.navBarBlurTintDark else skin.navBarBlurTint)
+                        .copy(alpha = skin.navBarBlurAlpha)
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
                 contentColor = accent,
                 windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
@@ -151,7 +197,7 @@ fun LolitaNavHost() {
                     } else if (selected) {
                         accent
                     } else {
-                        Color.Gray
+                        MaterialTheme.colorScheme.onSurfaceVariant
                     }
                     NavigationBarItem(
                         icon = {
@@ -194,11 +240,11 @@ fun LolitaNavHost() {
                             } else {
                                 MaterialTheme.colorScheme.primaryContainer
                             },
-                            unselectedIconColor = Color.Gray,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = if (skin.skinType == SkinType.COUNTRY) {
                                 Color(0xFF8F8677)
                             } else {
-                                Color.Gray
+                                MaterialTheme.colorScheme.onSurfaceVariant
                             }
                         )
                     )
@@ -212,7 +258,7 @@ fun LolitaNavHost() {
 
         val isListScrolling = remember { mutableStateOf(false) }
         CompositionLocalProvider(LocalIsListScrolling provides isListScrolling) {
-        Box {
+        Box(modifier = Modifier.hazeSource(state = hazeState)) {
             // Bottom layer: ambient background animation
             SkinBackgroundAnimation(
                 modifier = Modifier
@@ -232,6 +278,7 @@ fun LolitaNavHost() {
             ) {
             // Item List
             composable(Screen.ItemList.route) {
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 ItemListScreen(
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
@@ -264,14 +311,20 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.CatalogEdit.createRoute(null))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Item Detail
             composable(
                 route = Screen.ItemDetail.route,
-                arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType }),
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                popExitTransition = { fadeOut(animationSpec = tween(300)) }
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 ItemDetailScreen(
                     itemId = itemId,
                     onBack = { navController.popBackStack() },
@@ -283,6 +336,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.Recommendation.createRoute(id))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Item Edit
@@ -309,9 +363,14 @@ fun LolitaNavHost() {
             // Catalog Detail
             composable(
                 route = Screen.CatalogDetail.route,
-                arguments = listOf(navArgument("catalogEntryId") { type = NavType.LongType })
+                arguments = listOf(navArgument("catalogEntryId") { type = NavType.LongType }),
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                popExitTransition = { fadeOut(animationSpec = tween(300)) }
             ) { backStackEntry ->
                 val catalogEntryId = backStackEntry.arguments?.getLong("catalogEntryId") ?: return@composable
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 CatalogDetailScreen(
                     catalogEntryId = catalogEntryId,
                     onBack = { navController.popBackStack() },
@@ -336,6 +395,7 @@ fun LolitaNavHost() {
                         )
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Catalog Edit
@@ -420,6 +480,7 @@ fun LolitaNavHost() {
 
             // Wishlist
             composable(Screen.Wishlist.route) {
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 WishlistScreen(
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
@@ -428,14 +489,20 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemEdit.createRoute(itemId, defaultStatus = "WISHED"))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Coordinate Detail
             composable(
                 route = Screen.CoordinateDetail.route,
-                arguments = listOf(navArgument("coordinateId") { type = NavType.LongType })
+                arguments = listOf(navArgument("coordinateId") { type = NavType.LongType }),
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                popExitTransition = { fadeOut(animationSpec = tween(300)) }
             ) { backStackEntry ->
                 val coordinateId = backStackEntry.arguments?.getLong("coordinateId") ?: return@composable
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 CoordinateDetailScreen(
                     coordinateId = coordinateId,
                     onBack = { navController.popBackStack() },
@@ -445,6 +512,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
             // Coordinate Edit
             composable(
@@ -461,6 +529,7 @@ fun LolitaNavHost() {
 
             // Outfit Log List
             composable(Screen.OutfitLogList.route) {
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 OutfitLogListScreen(
                     onNavigateToDetail = { logId ->
                         navController.navigate(Screen.OutfitLogDetail.createRoute(logId))
@@ -469,14 +538,20 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.OutfitLogEdit.createRoute(logId))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Outfit Log Detail
             composable(
                 route = Screen.OutfitLogDetail.route,
-                arguments = listOf(navArgument("logId") { type = NavType.LongType })
+                arguments = listOf(navArgument("logId") { type = NavType.LongType }),
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                popExitTransition = { fadeOut(animationSpec = tween(300)) }
             ) { backStackEntry ->
                 val logId = backStackEntry.arguments?.getLong("logId") ?: return@composable
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 OutfitLogDetailScreen(
                     logId = logId,
                     onBack = { navController.popBackStack() },
@@ -487,6 +562,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Outfit Log Edit
@@ -504,6 +580,7 @@ fun LolitaNavHost() {
 
             // Stats
             composable(Screen.Stats.route) {
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 StatsPageScreen(
                     onNavigateToFilteredList = { filterType, filterValue, title ->
                         navController.navigate(Screen.FilteredItemList.createRoute(filterType, filterValue, title))
@@ -512,6 +589,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Settings
@@ -613,14 +691,20 @@ fun LolitaNavHost() {
             // Location Detail
             composable(
                 route = Screen.LocationDetail.route,
-                arguments = listOf(navArgument("locationId") { type = NavType.LongType })
+                arguments = listOf(navArgument("locationId") { type = NavType.LongType }),
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(300)) },
+                popExitTransition = { fadeOut(animationSpec = tween(300)) }
             ) { backStackEntry ->
                 val locationId = backStackEntry.arguments?.getLong("locationId") ?: return@composable
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 LocationDetailScreen(
                     locationId = locationId,
                     onBack = { navController.popBackStack() },
                     onItemClick = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
 
             // Recommendation
@@ -661,6 +745,7 @@ fun LolitaNavHost() {
                 val filterType = backStackEntry.arguments?.getString("filterType") ?: ""
                 val filterValue = backStackEntry.arguments?.getString("filterValue") ?: ""
                 val title = backStackEntry.arguments?.getString("title") ?: ""
+                CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 FilteredItemListScreen(
                     title = title,
                     filterType = filterType,
@@ -670,6 +755,7 @@ fun LolitaNavHost() {
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     }
                 )
+                } // LocalNavAnimatedVisibilityScope
             }
         }
 
@@ -681,4 +767,7 @@ fun LolitaNavHost() {
         }
         }
     }
+    }
+    } // LocalSharedTransitionScope
+    } // SharedTransitionLayout
 }

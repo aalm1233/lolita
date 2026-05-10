@@ -19,11 +19,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.launch
@@ -79,13 +80,17 @@ fun LocationManageScreen(
             item {
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
-            items(uiState.locations, key = { it.id }) { location ->
-                LocationCard(
-                    location = location,
-                    itemCount = uiState.locationItemCounts[location.id] ?: 0,
-                    onEdit = { viewModel.showEditDialog(location) },
-                    onDelete = { viewModel.showDeleteConfirm(location) }
-                )
+            if (uiState.locations.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.Location, title = "暂无位置") }
+            } else {
+                items(uiState.locations, key = { it.id }) { location ->
+                    LocationCard(
+                        location = location,
+                        itemCount = uiState.locationItemCounts[location.id] ?: 0,
+                        onEdit = { viewModel.showEditDialog(location) },
+                        onDelete = { viewModel.showDeleteConfirm(location) }
+                    )
+                }
             }
         }
     }
@@ -152,15 +157,16 @@ private fun LocationCard(
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(12.dp), // intentional override of cardInnerPadding
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (location.imageUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = location.imageUrl,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = location.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(
@@ -256,11 +262,12 @@ private fun LocationEditDialog(
                 // Image picker
                 if (imageUrl != null) {
                     Box(modifier = Modifier.fillMaxWidth().height(120.dp)) {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = imageUrl,
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = { imageUrl = null },

@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.catalog
 
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,6 +68,7 @@ fun CatalogEditScreen(
     var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var showDiscardDialog by remember { mutableStateOf(false) }
 
     UnsavedChangesHandler(
         hasUnsavedChanges = viewModel.hasUnsavedChanges,
@@ -118,12 +120,39 @@ fun CatalogEditScreen(
         )
     }
 
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { Text("放弃更改？") },
+            text = { Text("有未保存的更改，确定要放弃吗？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDiscardDialog = false
+                    onBack()
+                }) {
+                    Text("放弃", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDiscardDialog = false }) {
+                    Text("继续编辑")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (catalogEntryId == null) "新建图鉴" else "编辑图鉴") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = {
+                        if (viewModel.hasUnsavedChanges) {
+                            showDiscardDialog = true
+                        } else {
+                            onBack()
+                        }
+                    }) {
                         SkinIcon(IconKey.ArrowBack)
                     }
                 },
@@ -300,7 +329,7 @@ private fun CatalogBrandSelector(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showDialog = true }
+            .skinClickable { showDialog = true }
     ) {
         OutlinedTextField(
             value = selectedName,
@@ -356,7 +385,7 @@ private fun CatalogBrandSelector(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
+                                    .skinClickable {
                                         onBrandSelected(brand.id)
                                         showDialog = false
                                     }
@@ -400,7 +429,7 @@ private fun CatalogCategorySelector(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showDialog = true }
+            .skinClickable { showDialog = true }
     ) {
         OutlinedTextField(
             value = selectedName,
@@ -456,7 +485,7 @@ private fun CatalogCategorySelector(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
+                                    .skinClickable {
                                         onCategorySelected(category.id)
                                         showDialog = false
                                     }

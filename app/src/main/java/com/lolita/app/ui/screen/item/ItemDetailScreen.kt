@@ -2,7 +2,6 @@ package com.lolita.app.ui.screen.item
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,9 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import androidx.compose.ui.platform.LocalContext
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
@@ -30,9 +27,21 @@ import com.lolita.app.ui.screen.common.BrandLogo
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.FlowRow
 import com.lolita.app.ui.screen.common.findColorHex
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import com.lolita.app.ui.screen.common.SectionHeader
+import com.lolita.app.ui.screen.common.ImageFrame
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 /**
  * Item Detail Screen - 服饰详情界面
@@ -130,13 +139,62 @@ fun ItemDetailScreen(
         contentWindowInsets = if (hasImage) WindowInsets(0, 0, 0, 0) else ScaffoldDefaults.contentWindowInsets
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
+                    .padding(
+                        top = if (hasImage) 0.dp else padding.calculateTopPadding(),
+                        bottom = padding.calculateBottomPadding()
+                    )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                // Hero image skeleton
+                ShimmerRect(
+                    width = 400.dp,
+                    height = 380.dp,
+                    shape = (LolitaSkin.current.cardShape as RoundedCornerShape).copy(
+                        topStart = CornerSize(0.dp),
+                        topEnd = CornerSize(0.dp)
+                    ),
+                    modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+                )
+                // Content section skeleton
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Name + status
+                    ShimmerLine(widthFraction = 0.7f, height = 24.dp, modifier = Modifier.shimmer(shimmer))
+                    ShimmerLine(widthFraction = 0.4f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+                    // Basic info card
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            ShimmerLine(widthFraction = 0.3f, height = 18.dp)
+                            ShimmerLine(widthFraction = 0.8f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.6f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.7f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+                        }
+                    }
+                    // Price info card
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            ShimmerLine(widthFraction = 0.3f, height = 18.dp)
+                            ShimmerLine(widthFraction = 0.9f, height = 14.dp)
+                            ShimmerLine(widthFraction = 0.6f, height = 14.dp)
+                        }
+                    }
+                }
             }
         } else {
             val item = uiState.item
@@ -174,8 +232,12 @@ fun ItemDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(380.dp)
-                                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
-                            contentDescription = item.name
+                                .clip((LolitaSkin.current.cardShape as RoundedCornerShape).copy(
+                                topStart = CornerSize(0.dp),
+                                topEnd = CornerSize(0.dp)
+                            )),
+                            contentDescription = item.name,
+                            sharedTransitionKey = "itemImage-${item.id}"
                         )
 
                         if (showFullScreen) {
@@ -229,7 +291,7 @@ fun ItemDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         // Name and status
                         Column {
@@ -253,174 +315,131 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-
-                        // Brand and Category
-                        val brand = uiState.brands.find { it.id == item.brandId }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Surface(
-                                    modifier = Modifier.size(6.dp),
-                                    shape = MaterialTheme.shapes.extraLarge,
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                ) {}
-                                Text(
-                                    text = "品牌",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                BrandLogo(brand = brand, size = 20.dp)
-                                Text(
-                                    text = brand?.name ?: "未知",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                        }
-
-                        DetailRow(
-                            label = "类型",
-                            value = uiState.categories.find { it.id == item.categoryId }?.name ?: "未知"
-                        )
-
-                        // Coordinate (if any)
-                        item.coordinateId?.let { coordinateId ->
-                            DetailRow(
-                                label = "所属套装",
-                                value = uiState.coordinates.find { it.id == coordinateId }?.name ?: "未知"
-                            )
-                        }
-
-                        // Color, Season, Style
-                        item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
-                            if (colors.isNotEmpty()) {
-                                ColorChipsRow(label = "颜色", colors = colors)
-                            }
-                        }
-                        item.season?.let { season ->
-                            if (season.isNotEmpty()) DetailRow(label = "季节", value = season.replace(",", "、"))
-                        }
-                        item.style?.let { style ->
-                            if (style.isNotEmpty()) DetailRow(label = "风格", value = style)
-                        }
-                        item.source?.let { source ->
-                            if (source.isNotEmpty()) DetailRow(label = "来源", value = source)
-                        }
-
-                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-
-                        // Description
-                        if (item.description.isNotEmpty()) {
-                            Column {
-                                Text(
-                                    text = "描述",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = item.description,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-                        }
-
-                        // Size info
-                        if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
-                            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-
-                            Column {
-                                Text(
-                                    text = "尺码信息",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                if (!item.size.isNullOrEmpty()) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    DetailRow(label = "尺码", value = item.size!!)
-                                }
-                                if (item.sizeChartImageUrl != null) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    AsyncImage(
-                                        model = ImageRequest.Builder(LocalContext.current)
-                                            .data(item.sizeChartImageUrl)
-                                            .crossfade(300)
-                                            .build(),
-                                        contentDescription = "尺码表",
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(MaterialTheme.shapes.medium),
-                                        contentScale = ContentScale.FillWidth
-                                    )
-                                }
-                            }
-                        }
-
-                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-
-                        // Price Management Section
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "价格信息",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                OutlinedButton(
-                                    onClick = onNavigateToPriceManage,
-                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+                        LolitaSection(title = "基本信息") {
+                            val brand = uiState.brands.find { it.id == item.brandId }
+                            row {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text("管理价格", style = MaterialTheme.typography.labelMedium)
-                                    Spacer(Modifier.width(4.dp))
-                                    SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp))
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            if (uiState.pricesWithPayments.isEmpty()) {
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
-                                    )
-                                ) {
-                                    Column(
-                                        modifier = Modifier.padding(16.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Surface(
+                                            modifier = Modifier.size(6.dp),
+                                            shape = MaterialTheme.shapes.extraLarge,
+                                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                        ) {}
                                         Text(
-                                            "暂无价格信息，点击图标添加",
+                                            text = "品牌",
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        BrandLogo(brand = brand, size = 20.dp)
+                                        Text(
+                                            text = brand?.name ?: "未知",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
                                 }
-                            } else {
-                        val dateFormat = remember { java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault()) }
-                                uiState.pricesWithPayments.forEach { priceWithPayments ->
-                                    val price = priceWithPayments.price
-                                    val payments = priceWithPayments.payments
-                                    val paidAmount = payments.filter { it.isPaid }.sumOf { it.amount }
+                            }
 
+                            row {
+                                DetailRow(
+                                    label = "类型",
+                                    value = uiState.categories.find { it.id == item.categoryId }?.name ?: "未知"
+                                )
+                            }
+
+                            item.coordinateId?.let { coordinateId ->
+                                row {
+                                    DetailRow(
+                                        label = "所属套装",
+                                        value = uiState.coordinates.find { it.id == coordinateId }?.name ?: "未知"
+                                    )
+                                }
+                            }
+
+                            item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
+                                if (colors.isNotEmpty()) {
+                                    row {
+                                        ColorChipsRow(label = "颜色", colors = colors)
+                                    }
+                                }
+                            }
+                            item.season?.let { season ->
+                                if (season.isNotEmpty()) row { DetailRow(label = "季节", value = season.replace(",", "、")) }
+                            }
+                            item.style?.let { style ->
+                                if (style.isNotEmpty()) row { DetailRow(label = "风格", value = style) }
+                            }
+                            item.source?.let { source ->
+                                if (source.isNotEmpty()) row { DetailRow(label = "来源", value = source) }
+                            }
+                        }
+
+                        if (item.description.isNotEmpty()) {
+                            LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                                Column {
+                                    SectionHeader(title = "描述")
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(text = item.description, style = MaterialTheme.typography.bodyLarge)
+                                }
+                            }
+                        }
+
+                        if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
+                            LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    SectionHeader(title = "尺码信息")
+                                    if (!item.size.isNullOrEmpty()) {
+                                        Spacer(Modifier.height(8.dp))
+                                        DetailRow(label = "尺码", value = item.size!!)
+                                    }
+                                    if (item.sizeChartImageUrl != null) {
+                                        Spacer(Modifier.height(8.dp))
+                                        LolitaShimmerImage(
+                                            model = item.sizeChartImageUrl,
+                                            contentDescription = "尺码表",
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(MaterialTheme.shapes.medium),
+                                            contentScale = ContentScale.FillWidth,
+                                            placeholderInitial = "尺"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                SectionHeader(
+                                    title = "价格信息",
+                                    action = {
+                                        OutlinedButton(
+                                            onClick = onNavigateToPriceManage,
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+                                        ) {
+                                            Text("管理价格", style = MaterialTheme.typography.labelMedium)
+                                            Spacer(Modifier.width(4.dp))
+                                            SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp))
+                                        }
+                                    }
+                                )
+                                Spacer(Modifier.height(8.dp))
+
+                                if (uiState.pricesWithPayments.isEmpty()) {
                                     Card(
                                         modifier = Modifier.fillMaxWidth(),
                                         colors = CardDefaults.cardColors(
@@ -429,114 +448,139 @@ fun ItemDetailScreen(
                                     ) {
                                         Column(
                                             modifier = Modifier.padding(16.dp),
-                                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
                                         ) {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            Text(
+                                                "暂无价格信息，点击图标添加",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    val dateFormat = remember { java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault()) }
+                                    uiState.pricesWithPayments.forEach { priceWithPayments ->
+                                        val price = priceWithPayments.price
+                                        val payments = priceWithPayments.payments
+                                        val paidAmount = payments.filter { it.isPaid }.sumOf { it.amount }
+
+                                        Card(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
+                                            )
+                                        ) {
+                                            Column(
+                                                modifier = Modifier.padding(16.dp),
+                                                verticalArrangement = Arrangement.spacedBy(6.dp)
                                             ) {
-                                                Text(
-                                                    when (price.type) {
-                                                        PriceType.FULL -> "全价"
-                                                        PriceType.DEPOSIT_BALANCE -> "定金+尾款"
-                                                    },
-                                                    style = MaterialTheme.typography.labelMedium,
-                                                    color = MaterialTheme.colorScheme.primary
-                                                )
-                                                Text(
-                                                    "¥${String.format("%.2f", price.totalPrice)}",
-                                                    style = MaterialTheme.typography.titleMedium,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = MaterialTheme.colorScheme.primary
-                                                )
-                                            }
-
-                                            if (price.type == PriceType.DEPOSIT_BALANCE) {
                                                 Row(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalArrangement = Arrangement.SpaceBetween
                                                 ) {
                                                     Text(
-                                                        "定金 ¥${String.format("%.2f", price.deposit ?: 0.0)}",
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                    Text(
-                                                        "尾款 ¥${String.format("%.2f", price.balance ?: 0.0)}",
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                }
-                                            }
-
-                                            if (payments.isNotEmpty()) {
-                                                val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
-                                                Row(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    horizontalArrangement = Arrangement.SpaceBetween
-                                                ) {
-                                                    Text(
-                                                        "已付 ¥${String.format("%.2f", paidAmount)}",
-                                                        style = MaterialTheme.typography.bodySmall,
+                                                        when (price.type) {
+                                                            PriceType.FULL -> "全价"
+                                                            PriceType.DEPOSIT_BALANCE -> "定金+尾款"
+                                                        },
+                                                        style = MaterialTheme.typography.labelMedium,
                                                         color = MaterialTheme.colorScheme.primary
                                                     )
-                                                    if (unpaidAmount > 0) {
+                                                    Text(
+                                                        "¥${String.format("%.2f", price.totalPrice)}",
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = MaterialTheme.colorScheme.primary
+                                                    )
+                                                }
+
+                                                if (price.type == PriceType.DEPOSIT_BALANCE) {
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.SpaceBetween
+                                                    ) {
                                                         Text(
-                                                            "待付 ¥${String.format("%.2f", unpaidAmount)}",
+                                                            "定金 ¥${String.format("%.2f", price.deposit ?: 0.0)}",
                                                             style = MaterialTheme.typography.bodySmall,
-                                                            color = MaterialTheme.colorScheme.error
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                        Text(
+                                                            "尾款 ¥${String.format("%.2f", price.balance ?: 0.0)}",
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     }
                                                 }
-                                            }
 
-                                            payments.filter { it.isPaid }
-                                                .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
-                                                ?.paidDate?.let { date ->
-                                                    Text(
-                                                        "付款日期: ${dateFormat.format(java.util.Date(date))}",
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
+                                                if (payments.isNotEmpty()) {
+                                                    val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.SpaceBetween
+                                                    ) {
+                                                        Text(
+                                                            "已付 ¥${String.format("%.2f", paidAmount)}",
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = MaterialTheme.colorScheme.primary
+                                                        )
+                                                        if (unpaidAmount > 0) {
+                                                            Text(
+                                                                "待付 ¥${String.format("%.2f", unpaidAmount)}",
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                                color = MaterialTheme.colorScheme.error
+                                                            )
+                                                        }
+                                                    }
                                                 }
+
+                                                payments.filter { it.isPaid }
+                                                    .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
+                                                    ?.paidDate?.let { date ->
+                                                        Text(
+                                                            "付款日期: ${dateFormat.format(java.util.Date(date))}",
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    }
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
+
+                                if (item.status == ItemStatus.OWNED) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        OutlinedButton(
+                                            onClick = { onNavigateToRecommendation(item.id) },
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                                        ) {
+                                            SkinIcon(IconKey.Star, modifier = Modifier.size(18.dp))
+                                            Spacer(Modifier.width(6.dp))
+                                            Text("推荐搭配")
                                         }
                                     }
-                                    Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
                         }
 
-                        // 推荐搭配按钮
-                        if (item.status == ItemStatus.OWNED) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                OutlinedButton(
-                                    onClick = { onNavigateToRecommendation(item.id) },
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
-                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-                                ) {
-                                    SkinIcon(IconKey.Star, modifier = Modifier.size(18.dp))
-                                    Spacer(Modifier.width(6.dp))
-                                    Text("推荐搭配")
-                                }
+                        LolitaSection(title = "记录信息") {
+                            row {
+                                DetailRow(
+                                    label = "创建时间",
+                                    value = formatDate(item.createdAt)
+                                )
                             }
-                            HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
+                            row {
+                                DetailRow(
+                                    label = "更新时间",
+                                    value = formatDate(item.updatedAt)
+                                )
+                            }
                         }
-
-                        HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-
-                        // Metadata
-                        DetailRow(
-                            label = "创建时间",
-                            value = formatDate(item.createdAt)
-                        )
-
-                        DetailRow(
-                            label = "更新时间",
-                            value = formatDate(item.updatedAt)
-                        )
                     }
                 }
 
@@ -612,12 +656,13 @@ private fun StatusBadge(status: ItemStatus) {
  */
 @Composable
 private fun PriorityBadge(priority: ItemPriority) {
+    val priorityColor = when (priority) {
+        ItemPriority.HIGH -> MaterialTheme.colorScheme.primary
+        ItemPriority.MEDIUM -> MaterialTheme.colorScheme.tertiary
+        ItemPriority.LOW -> MaterialTheme.colorScheme.secondary
+    }
     Surface(
-        color = when (priority) {
-            ItemPriority.HIGH -> androidx.compose.ui.graphics.Color(0xFFFF6B6B).copy(alpha = 0.3f)
-            ItemPriority.MEDIUM -> androidx.compose.ui.graphics.Color(0xFFFFD93D).copy(alpha = 0.3f)
-            ItemPriority.LOW -> androidx.compose.ui.graphics.Color(0xFF6BCF7F).copy(alpha = 0.3f)
-        },
+        color = priorityColor.copy(alpha = 0.3f),
         shape = MaterialTheme.shapes.small
     ) {
         Text(

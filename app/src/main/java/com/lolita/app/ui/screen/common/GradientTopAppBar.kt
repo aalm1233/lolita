@@ -24,6 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.navigation.LocalHazeState
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
 
 @Composable
 fun GradientTopAppBar(
@@ -31,7 +36,8 @@ fun GradientTopAppBar(
     modifier: Modifier = Modifier,
     compact: Boolean = true,
     navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
+    hazeState: HazeState? = LocalHazeState.current
 ) {
     val skin = LolitaSkin.current
     val gradient = if (isSystemInDarkTheme()) {
@@ -40,17 +46,37 @@ fun GradientTopAppBar(
         Brush.horizontalGradient(skin.gradientColors)
     }
 
+    val blurEnabled = skin.topBarBlurEnabled && hazeState != null
+    val isDark = isSystemInDarkTheme()
+    val topBarContentColor = if (isDark) Color.White else Color(0xFF1A1A2E)
+
     if (compact) {
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .background(gradient),
+                .then(
+                    if (blurEnabled) {
+                        Modifier.hazeEffect(
+                            state = hazeState!!,
+                            style = HazeStyle(
+                                backgroundColor = if (isDark) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                tint = HazeTint(
+                                    (if (isDark) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                        .copy(alpha = skin.topBarBlurAlpha)
+                                ),
+                                blurRadius = 25.dp
+                            )
+                        )
+                    } else {
+                        Modifier.background(gradient)
+                    }
+                ),
             color = Color.Transparent
         ) {
-            CompositionLocalProvider(LocalContentColor provides Color.White) {
+            CompositionLocalProvider(LocalContentColor provides topBarContentColor) {
                 Row(
                     modifier = Modifier
-                        .background(gradient)
+                        .then(if (blurEnabled) Modifier else Modifier.background(gradient))
                         .statusBarsPadding()
                         .padding(horizontal = 4.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -59,7 +85,7 @@ fun GradientTopAppBar(
                         Box(
                             modifier = Modifier
                                 .padding(start = 4.dp)
-                                .background(Color.White.copy(alpha = 0.14f), CircleShape),
+                                .background(topBarContentColor.copy(alpha = 0.14f), CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             navigationIcon()
@@ -69,7 +95,7 @@ fun GradientTopAppBar(
                     }
                     ProvideTextStyle(
                         MaterialTheme.typography.titleMedium.copy(
-                            color = Color.White,
+                            color = topBarContentColor,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -79,11 +105,11 @@ fun GradientTopAppBar(
                             contentAlignment = Alignment.Center
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                AnimatedDecoration(skin)
+                                AnimatedDecoration(skin, isDark)
                                 Spacer(modifier = Modifier.width(6.dp))
                                 title()
                                 Spacer(modifier = Modifier.width(6.dp))
-                                AnimatedDecoration(skin)
+                                AnimatedDecoration(skin, isDark)
                             }
                         }
                     }
@@ -95,13 +121,29 @@ fun GradientTopAppBar(
         Surface(
             modifier = modifier
                 .fillMaxWidth()
-                .background(gradient),
+                .then(
+                    if (blurEnabled) {
+                        Modifier.hazeEffect(
+                            state = hazeState!!,
+                            style = HazeStyle(
+                                backgroundColor = if (isDark) skin.topBarBlurTintDark else skin.topBarBlurTint,
+                                tint = HazeTint(
+                                    (if (isDark) skin.topBarBlurTintDark else skin.topBarBlurTint)
+                                        .copy(alpha = skin.topBarBlurAlpha)
+                                ),
+                                blurRadius = 25.dp
+                            )
+                        )
+                    } else {
+                        Modifier.background(gradient)
+                    }
+                ),
             color = Color.Transparent
         ) {
-            CompositionLocalProvider(LocalContentColor provides Color.White) {
+            CompositionLocalProvider(LocalContentColor provides topBarContentColor) {
                 Row(
                     modifier = Modifier
-                        .background(gradient)
+                        .then(if (blurEnabled) Modifier else Modifier.background(gradient))
                         .statusBarsPadding()
                         .padding(horizontal = 4.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -110,7 +152,7 @@ fun GradientTopAppBar(
                         Box(
                             modifier = Modifier
                                 .padding(start = 4.dp)
-                                .background(Color.White.copy(alpha = 0.14f), CircleShape),
+                                .background(topBarContentColor.copy(alpha = 0.14f), CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             navigationIcon()
@@ -120,7 +162,7 @@ fun GradientTopAppBar(
                     }
                     ProvideTextStyle(
                         MaterialTheme.typography.titleMedium.copy(
-                            color = Color.White,
+                            color = topBarContentColor,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -140,14 +182,15 @@ fun GradientTopAppBar(
 }
 
 @Composable
-private fun AnimatedDecoration(skin: com.lolita.app.ui.theme.LolitaSkinConfig) {
+private fun AnimatedDecoration(skin: com.lolita.app.ui.theme.LolitaSkinConfig, isDark: Boolean) {
     val animateDecorations = skin.animations.ambientAnimation.topBarDecorationAnimated
+    val decoColor = if (isDark) Color.White else Color(0xFF1A1A2E)
 
     if (!animateDecorations) {
         Text(
             skin.topBarDecoration,
             fontSize = 12.sp,
-            color = Color.White.copy(alpha = skin.topBarDecorationAlpha)
+            color = decoColor.copy(alpha = skin.topBarDecorationAlpha)
         )
         return
     }
@@ -177,7 +220,7 @@ private fun AnimatedDecoration(skin: com.lolita.app.ui.theme.LolitaSkinConfig) {
     Text(
         skin.topBarDecoration,
         fontSize = 12.sp,
-        color = Color.White.copy(alpha = skin.topBarDecorationAlpha * glowAlpha),
+        color = decoColor.copy(alpha = skin.topBarDecorationAlpha * glowAlpha),
         modifier = Modifier.graphicsLayer {
             scaleX = breathScale
             scaleY = breathScale

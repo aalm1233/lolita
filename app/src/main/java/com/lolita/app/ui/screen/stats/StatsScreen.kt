@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,9 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,14 +29,13 @@ import com.lolita.app.data.repository.PriceRepository
 
 import com.lolita.app.data.local.entity.BrandItemCount
 import com.lolita.app.data.local.entity.ItemWithSpending
-import coil.compose.AsyncImage
-import androidx.compose.foundation.layout.aspectRatio
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.style.TextAlign
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -109,13 +109,20 @@ fun StatsContent(
     onNavigateToItemDetail: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
+
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,7 +132,7 @@ fun StatsContent(
                 title = "已拥有",
                 targetValue = uiState.ownedCount,
                 iconKey = IconKey.Home,
-                color = MaterialTheme.colorScheme.primary,
+                iconTint = iconTint,
                 modifier = Modifier.weight(1f),
                 onClick = { onNavigateToFilteredList("status_owned", "", "已拥有") }
             )
@@ -133,7 +140,7 @@ fun StatsContent(
                 title = "愿望单",
                 targetValue = uiState.wishedCount,
                 iconKey = IconKey.Wishlist,
-                color = Color(0xFFFF6B6B),
+                iconTint = iconTint,
                 modifier = Modifier.weight(1f),
                 onClick = { onNavigateToFilteredList("status_wished", "", "愿望单") }
             )
@@ -146,130 +153,134 @@ fun StatsContent(
                 title = "套装",
                 targetValue = uiState.coordinateCount,
                 iconKey = IconKey.Star,
-                color = Color(0xFFFFD93D),
+                iconTint = iconTint,
                 modifier = Modifier.weight(1f)
             )
             StatCard(
                 title = "穿搭记录",
                 targetValue = uiState.outfitLogCount,
                 iconKey = IconKey.CalendarMonth,
-                color = Color(0xFF6BCF7F),
+                iconTint = iconTint,
                 modifier = Modifier.weight(1f)
             )
         }
+
         if (uiState.showTotalPrice) {
-            SpendingCard(
-                title = "总消费",
-                targetValue = uiState.totalSpending,
-                iconKey = IconKey.AttachMoney,
-                color = Color(0xFFE91E8C),
-                modifier = Modifier.fillMaxWidth()
-            )
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 4.dp))
+            SectionHeader(title = "消费概览")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SpendingCard(
+                    title = "总消费",
+                    targetValue = uiState.totalSpending,
+                    iconKey = IconKey.AttachMoney,
+                    iconTint = iconTint,
+                    modifier = Modifier.weight(1f)
+                )
+                if (uiState.ownedCount > 0) {
+                    SpendingCard(
+                        title = "单品均价",
+                        targetValue = uiState.averagePrice,
+                        iconKey = IconKey.AttachMoney,
+                        iconTint = iconTint,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
 
-        // Average price card
-        if (uiState.showTotalPrice && uiState.ownedCount > 0) {
-            SpendingCard(
-                title = "单品均价",
-                targetValue = uiState.averagePrice,
-                iconKey = IconKey.AttachMoney,
-                color = Color(0xFFFF91A4),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        // Most expensive item
         if (uiState.showTotalPrice && uiState.mostExpensiveItem != null) {
             val item = uiState.mostExpensiveItem!!
-            Card(
+            LolitaCard(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { onNavigateToItemDetail(item.itemId) },
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFF1493).copy(alpha = 0.1f)
-                )
+                onClick = { onNavigateToItemDetail(item.itemId) }
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 16.dp), // intentional override of cardInnerPadding
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (item.imageUrls.isNotEmpty()) {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = item.imageUrls.first(),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(56.dp)
+                                .size(52.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholderInitial = item.itemName.firstOrNull()?.toString()
                         )
                     }
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "最贵单品",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = item.itemName,
                             style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1
                         )
                     }
                     Text(
-                        text = "¥${String.format("%.2f", item.totalSpending)}",
+                        text = "¥%,.0f".format(item.totalSpending),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFF1493)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         }
-        // Brand Top 5
+
         if (uiState.topBrands.isNotEmpty()) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "品牌 Top 5",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+            LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) { // intentional override of cardInnerPadding
+                    SectionHeader(title = "品牌 Top 5")
+                    Spacer(modifier = Modifier.height(8.dp))
                     val maxCount = uiState.topBrands.maxOfOrNull { it.itemCount } ?: 1
-                    uiState.topBrands.forEach { brand ->
+                    uiState.topBrands.forEachIndexed { index, brand ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(4.dp))
-                                .clickable { onNavigateToFilteredList("brand", brand.brandName, "品牌: ${brand.brandName}") }
-                                .padding(vertical = 4.dp),
+                                .skinClickable { onNavigateToFilteredList("brand", brand.brandName, "品牌: ${brand.brandName}") }
+                                .padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
+                                text = "${index + 1}",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.width(20.dp)
+                            )
+                            Text(
                                 text = brand.brandName,
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.width(80.dp),
+                                modifier = Modifier.width(72.dp),
                                 maxLines = 1
                             )
                             LinearProgressIndicator(
                                 progress = { brand.itemCount.toFloat() / maxCount },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(8.dp)
-                                    .clip(RoundedCornerShape(4.dp)),
+                                    .height(6.dp)
+                                    .clip(RoundedCornerShape(3.dp)),
                                 color = MaterialTheme.colorScheme.primary,
-                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
                             )
                             Text(
                                 text = "${brand.itemCount}",
                                 style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.width(32.dp),
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.width(28.dp),
                                 textAlign = TextAlign.End
                             )
                         }
@@ -285,7 +296,7 @@ private fun StatCard(
     title: String,
     targetValue: Int,
     iconKey: IconKey,
-    color: Color,
+    iconTint: androidx.compose.ui.graphics.Color,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
@@ -295,30 +306,33 @@ private fun StatCard(
         label = "statCount"
     )
 
-    Card(
+    LolitaCard(
         modifier = modifier,
-        onClick = { onClick?.invoke() },
-        colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.1f)
-        )
+        onClick = onClick
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            SkinIcon(
-                key = iconKey,
-                tint = color,
-                modifier = Modifier.size(28.dp)
-            )
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SkinIcon(key = iconKey, tint = iconTint, modifier = Modifier.size(18.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = animatedValue.toString(),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = color
+                text = "%,d".format(animatedValue),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.sp
+                ),
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -329,7 +343,7 @@ private fun SpendingCard(
     title: String,
     targetValue: Double,
     iconKey: IconKey,
-    color: Color,
+    iconTint: androidx.compose.ui.graphics.Color,
     modifier: Modifier = Modifier
 ) {
     val animatedValue by animateFloatAsState(
@@ -338,29 +352,30 @@ private fun SpendingCard(
         label = "spendingAmount"
     )
 
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.1f)
-        )
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            SkinIcon(
-                key = iconKey,
-                tint = color,
-                modifier = Modifier.size(28.dp)
-            )
+    LolitaCard(modifier = modifier) {
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SkinIcon(key = iconKey, tint = iconTint, modifier = Modifier.size(18.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = "¥${String.format("%.2f", animatedValue)}",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = color
+                text = "¥%,.0f".format(animatedValue),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.sp
+                ),
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

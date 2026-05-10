@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,14 +22,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun FilteredItemListScreen(
@@ -54,10 +62,16 @@ fun FilteredItemListScreen(
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(5) {
+                    FilteredItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                }
+            }
         } else if (uiState.items.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(padding),
@@ -73,7 +87,8 @@ fun FilteredItemListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                flingBehavior = rememberSkinFlingBehavior()
             ) {
                 item {
                     Text(
@@ -82,11 +97,13 @@ fun FilteredItemListScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                items(uiState.items, key = { it.id }) { item ->
-                    FilteredItemCard(
-                        item = item,
-                        onClick = { onNavigateToDetail(item.id) }
-                    )
+                itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
+                    Column(modifier = Modifier.skinItemAppear(index)) {
+                        FilteredItemCard(
+                            item = item,
+                            onClick = { onNavigateToDetail(item.id) }
+                        )
+                    }
                 }
             }
         }
@@ -97,16 +114,17 @@ fun FilteredItemListScreen(
 private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
     LolitaCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier.size(64.dp).clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -176,6 +194,27 @@ private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
                         }
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilteredItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ShimmerRect(width = 80.dp, height = 80.dp, shape = RoundedCornerShape(10.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp)
             }
         }
     }

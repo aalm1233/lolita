@@ -2,6 +2,7 @@ package com.lolita.app.ui.theme.skin.animation
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -24,6 +25,9 @@ private val CountryBerry = Color(0xFFC56759)
 private val CountryButter = Color(0xFFEACB87)
 
 class CountryAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.65f, stiffness = 400f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1600f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 420,

@@ -60,7 +60,7 @@ fun PriceManageScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
             ) {
-                SkinIcon(IconKey.Add, tint = androidx.compose.ui.graphics.Color.White)
+                SkinIcon(IconKey.Add, tint = MaterialTheme.colorScheme.onPrimary)
             }
         }
     ) { padding ->
@@ -152,7 +152,6 @@ private fun PriceCard(
         modifier = modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
@@ -169,7 +168,7 @@ private fun PriceCard(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconButton(onClick = onEdit) {
-                        SkinIcon(IconKey.ArrowForward)
+                        SkinIcon(IconKey.Edit)
                     }
                     IconButton(
                         onClick = onDelete,

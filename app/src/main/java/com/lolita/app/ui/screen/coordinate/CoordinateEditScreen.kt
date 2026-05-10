@@ -3,7 +3,9 @@ package com.lolita.app.ui.screen.coordinate
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +39,7 @@ fun CoordinateEditScreen(
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     var showError by remember { mutableStateOf<String?>(null) }
+    var showDiscardDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(coordinateId) {
         viewModel.loadCoordinate(coordinateId)
@@ -55,6 +58,27 @@ fun CoordinateEditScreen(
         )
     }
 
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { Text("放弃更改？") },
+            text = { Text("有未保存的更改，确定要放弃吗？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDiscardDialog = false
+                    onBack()
+                }) {
+                    Text("放弃", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDiscardDialog = false }) {
+                    Text("继续编辑")
+                }
+            }
+        )
+    }
+
     UnsavedChangesHandler(
         hasUnsavedChanges = viewModel.hasUnsavedChanges,
         onBack = onBack
@@ -65,7 +89,13 @@ fun CoordinateEditScreen(
             GradientTopAppBar(
                 title = { Text(if (coordinateId == null) "新建套装" else "编辑套装") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = {
+                        if (viewModel.hasUnsavedChanges) {
+                            showDiscardDialog = true
+                        } else {
+                            onBack()
+                        }
+                    }) {
                         SkinIcon(IconKey.ArrowBack)
                     }
                 },
@@ -105,6 +135,7 @@ fun CoordinateEditScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 

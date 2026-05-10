@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.item.ItemCardData
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -61,13 +61,15 @@ fun GalleryPreviewDialog(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    AsyncImage(
+                    LolitaShimmerImage(
                         model = java.io.File(data.item.imageUrls.first()),
                         contentDescription = data.item.name,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .zoomable(zoomState)
+                            .zoomable(zoomState),
+                        placeholderInitial = data.item.name.firstOrNull()?.toString(),
+                        circularRevealEnabled = false
                     )
                 }
             }

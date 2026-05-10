@@ -27,18 +27,28 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.component.ImageGalleryPager
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
+import com.lolita.app.ui.screen.common.SectionHeader
+import com.lolita.app.ui.screen.common.CardVariant
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 import kotlinx.coroutines.launch
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,13 +143,55 @@ fun CoordinateDetailScreen(
         }
     ) { padding ->
         if (uiState.isLoading) {
-            Box(
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CircularProgressIndicator()
+                // Info card skeleton
+                LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        ShimmerRect(
+                            width = 400.dp,
+                            height = 180.dp,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        ShimmerLine(widthFraction = 0.6f, height = 24.dp)
+                        ShimmerLine(widthFraction = 0.9f, height = 14.dp)
+                        ShimmerLine(widthFraction = 0.4f, height = 14.dp)
+                    }
+                }
+                // Item list skeleton: header + 3 rows
+                ShimmerLine(widthFraction = 0.5f, height = 20.dp, modifier = Modifier.shimmer(shimmer))
+                repeat(3) {
+                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ShimmerRect(
+                                width = 48.dp,
+                                height = 48.dp,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                ShimmerLine(widthFraction = 0.7f, height = 16.dp)
+                                ShimmerLine(widthFraction = 0.5f, height = 12.dp)
+                            }
+                        }
+                    }
+                }
             }
         } else if (uiState.coordinate == null) {
             Box(
@@ -171,49 +223,44 @@ fun CoordinateDetailScreen(
                 }
 
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "包含服饰 (${uiState.items.size})",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        SkinClickableBox(
-                            onClick = {
-                                viewModel.loadAllItemsForPicker()
-                                showItemPicker = true
-                            }
-                        ) {
-                            Surface(
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                shape = MaterialTheme.shapes.small
+                    SectionHeader(
+                        title = "包含服饰 (${uiState.items.size})",
+                        action = {
+                            SkinClickableBox(
+                                onClick = {
+                                    viewModel.loadAllItemsForPicker()
+                                    showItemPicker = true
+                                }
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                Surface(
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    shape = MaterialTheme.shapes.small
                                 ) {
-                                    SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
-                                    Text(
-                                        "添加服饰",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                                        Text(
+                                            "添加服饰",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
+                    )
                 }
 
                 if (uiState.items.isEmpty()) {
                     item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth()
+                        LolitaCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            variant = CardVariant.COMPACT
                         ) {
                             Column(
-                                modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
@@ -286,7 +333,6 @@ private fun CoordinateInfoCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (coordinate.imageUrls.isNotEmpty()) {
@@ -302,8 +348,9 @@ private fun CoordinateInfoCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16f / 9f)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentDescription = "封面图"
+                        .clip(LolitaSkin.current.cardShape),
+                    contentDescription = "封面图",
+                    sharedTransitionKey = "coordinateImage-${coordinate.id}"
                 )
 
                 if (showFullScreen) {
@@ -354,15 +401,7 @@ private fun CoordinateInfoCard(
 
             // Price summary
             if (totalPrice > 0) {
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Text(
-                    "价格汇总",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
-                )
+                SectionHeader(title = "价格汇总")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -454,7 +493,7 @@ private fun CoordinateItemCard(
             }
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -480,14 +519,17 @@ private fun CoordinateItemCard(
             // Thumbnail
             val thumbUrl = item.imageUrls.firstOrNull()
             if (thumbUrl != null) {
-                AsyncImage(
-                    model = thumbUrl,
-                    contentDescription = item.name,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                ImageFrame {
+                    LolitaShimmerImage(
+                        model = thumbUrl,
+                        contentDescription = item.name,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholderInitial = item.name.firstOrNull()?.toString()
+                    )
+                }
             } else {
                 Surface(
                     modifier = Modifier.size(48.dp),
@@ -705,13 +747,14 @@ private fun PickerItemRow(
             // Thumbnail
             val thumbUrl = item.imageUrls.firstOrNull()
             if (thumbUrl != null) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = thumbUrl,
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(6.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Box(

@@ -29,7 +29,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
@@ -52,6 +53,7 @@ fun OutfitLogEditScreen(
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    var showDiscardDialog by remember { mutableStateOf(false) }
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -86,13 +88,40 @@ fun OutfitLogEditScreen(
         onBack = onBack
     )
 
+    if (showDiscardDialog) {
+        AlertDialog(
+            onDismissRequest = { showDiscardDialog = false },
+            title = { Text("放弃更改？") },
+            text = { Text("有未保存的更改，确定要放弃吗？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDiscardDialog = false
+                    onBack()
+                }) {
+                    Text("放弃", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDiscardDialog = false }) {
+                    Text("继续编辑")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (logId == null) "添加穿搭" else "编辑穿搭") },
                 compact = true,
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = {
+                        if (viewModel.hasUnsavedChanges) {
+                            showDiscardDialog = true
+                        } else {
+                            onBack()
+                        }
+                    }) {
                         SkinIcon(IconKey.ArrowBack)
                     }
                 },
@@ -181,7 +210,7 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
     val dateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
     var showDatePicker by remember { mutableStateOf(false) }
 
-    Card(modifier = Modifier.fillMaxWidth()) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "日期",
@@ -228,7 +257,7 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
 
 @Composable
 private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "备注",
@@ -250,19 +279,19 @@ private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
 
 @Composable
 private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+    LolitaCard(
+        modifier = Modifier.fillMaxWidth()
     ) {
         Box {
-            AsyncImage(
+            LolitaShimmerImage(
                 model = imageUrl,
                 contentDescription = "穿搭照片",
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                circularRevealEnabled = false
             )
             IconButton(
                 onClick = onDelete,
@@ -279,10 +308,10 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
 
 @Composable
 private fun AddPhotoCard(onAddPhoto: () -> Unit) {
-    Card(
-        onClick = onAddPhoto,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+    LolitaCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onAddPhoto)
     ) {
         Box(
             modifier = Modifier
@@ -314,7 +343,7 @@ private fun ItemSelectionCard(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Card(
+    LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

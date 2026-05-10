@@ -112,7 +112,7 @@ fun ColorSelector(
             selectedColors.filter { it !in predefinedNames }.forEach { custom ->
                 ColorChip(
                     name = custom,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.outline,
                     isSelected = true,
                     onClick = {
                         onColorsChanged(selectedColors - custom)

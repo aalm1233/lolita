@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.`import`
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
@@ -72,7 +71,16 @@ fun ImportDetailContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val validCount = uiState.importItems.count { it.brandId > 0 && it.categoryId > 0 }
+                    val validCount = uiState.importItems.count { item ->
+                        if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
+                            item.price > 0
+                        } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+                            item.brandId > 0 && item.categoryId > 0
+                                && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
+                        } else {
+                            item.brandId > 0 && item.categoryId > 0
+                        }
+                    }
                     Text("${validCount}/${uiState.importItems.size} 件已完善",
                         style = MaterialTheme.typography.bodyMedium)
                     Button(
@@ -140,14 +148,21 @@ private fun ImportItemCard(
     onAddCategory: (String, CategoryGroup) -> Unit = { _, _ -> },
     onSetPaymentRole: (PaymentRole?) -> Unit = {}
 ) {
-    val isValid = item.brandId > 0 && item.categoryId > 0
+    val isValid = if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
+        item.price > 0
+    } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
+        item.brandId > 0 && item.categoryId > 0
+            && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
+    } else {
+        item.brandId > 0 && item.categoryId > 0
+    }
     var priceText by remember(item.price) {
         mutableStateOf(if (item.price > 0) String.format("%.2f", item.price) else "")
     }
     var showPairDialog by remember { mutableStateOf(false) }
 
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             // 序号 + 状态标签
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -376,7 +391,7 @@ private fun ImportItemCard(
                             singleLine = true,
                             prefix = { Text("¥") }
                         )
-                        Box(modifier = Modifier.weight(1f).clickable { showBalanceDatePicker = true }) {
+                        Box(modifier = Modifier.weight(1f).skinClickable { showBalanceDatePicker = true }) {
                             OutlinedTextField(
                                 value = item.balanceDueDate?.let {
                                     java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
@@ -422,13 +437,13 @@ private fun ImportItemCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (item.imageUrl != null) {
                     Box(Modifier.fillMaxWidth()) {
-                        val context = LocalContext.current
-                        AsyncImage(
-                            model = ImageRequest.Builder(context).data(item.imageUrl).crossfade(true).build(),
+                        LolitaShimmerImage(
+                            model = item.imageUrl,
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth().height(160.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            circularRevealEnabled = false
                         )
                         IconButton(
                             onClick = { onUpdate { it.copy(imageUrl = null) } },
@@ -470,7 +485,7 @@ private fun ImportItemCard(
                         items(candidates) { (idx, candidate) ->
                             Column(
                                 Modifier.fillMaxWidth()
-                                    .clickable { onManualPair(idx); showPairDialog = false }
+                                    .skinClickable { onManualPair(idx); showPairDialog = false }
                                     .padding(vertical = 10.dp, horizontal = 4.dp)
                             ) {
                                 Text("#${idx + 1} ${candidate.name}",
@@ -507,7 +522,7 @@ private fun ImportBrandSelector(
     val selectedName = brands.find { it.id == selectedBrandId }?.name ?: ""
     val isError = selectedBrandId == 0L
 
-    Box(Modifier.fillMaxWidth().clickable { showDialog = true }) {
+    Box(Modifier.fillMaxWidth().skinClickable { showDialog = true }) {
         OutlinedTextField(
             value = selectedName,
             onValueChange = {},
@@ -554,7 +569,7 @@ private fun ImportBrandSelector(
                             Text(
                                 brand.name,
                                 modifier = Modifier.fillMaxWidth()
-                                    .clickable { onBrandSelected(brand.id); showDialog = false }
+                                    .skinClickable { onBrandSelected(brand.id); showDialog = false }
                                     .padding(vertical = 12.dp, horizontal = 4.dp),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = if (brand.id == selectedBrandId) MaterialTheme.colorScheme.primary

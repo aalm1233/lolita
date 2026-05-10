@@ -3,6 +3,8 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,6 +25,9 @@ private val GothicPurple = Color(0xFF4A0E4E)
 private val BloodRed = Color(0xFF8B0000)
 
 class GothicAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.85f, stiffness = 300f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1200f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 600,

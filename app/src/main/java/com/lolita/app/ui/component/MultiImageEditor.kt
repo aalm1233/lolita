@@ -26,7 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -65,11 +65,12 @@ fun MultiImageEditor(
                     .size(100.dp, 120.dp)
                     .clip(shape)
             ) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.matchParentSize().clip(shape)
+                    modifier = Modifier.matchParentSize().clip(shape),
+                    circularRevealEnabled = false
                 )
                 IconButton(
                     onClick = { onRemoveImage(index) },

@@ -272,8 +272,7 @@ private fun UrlSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SectionTitle("后端地址")
@@ -329,10 +328,10 @@ private fun UrlSection(
                 ) {
                     SkinIcon(
                         key = IconKey.Delete,
-                        tint = Color(0xFFD32F2F)
+                        tint = MaterialTheme.colorScheme.error
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("清空缓存", color = Color(0xFFD32F2F))
+                    Text("清空缓存", color = MaterialTheme.colorScheme.error)
                 }
             }
         }
@@ -347,8 +346,7 @@ private fun StatusSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SectionTitle("同步状态")
@@ -369,8 +367,7 @@ private fun SummarySection(summary: SharedLibraryCacheSummary) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             SectionTitle("缓存概览")
@@ -395,8 +392,7 @@ private fun PreviewSection(
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SectionTitle(title)

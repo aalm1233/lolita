@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -219,7 +220,7 @@ fun SpendingDistributionContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(4.dp))
-                        .clickable {
+                        .skinClickable {
                             if (item.name != "其他") {
                                 onNavigateToFilteredList(filterType, item.name, "$dimensionLabel: ${item.name}")
                             }

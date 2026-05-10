@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Season
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
@@ -74,8 +75,12 @@ fun SeasonManageScreen(
             item {
                 HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
             }
-            items(uiState.seasons, key = { it.id }) { season ->
-                SeasonCard(season = season, onEdit = { viewModel.showEditDialog(season) }, onDelete = { viewModel.showDeleteConfirm(season) })
+            if (uiState.seasons.isEmpty()) {
+                item { SkinEmptyState(iconKey = IconKey.CalendarMonth, title = "暂无季节") }
+            } else {
+                items(uiState.seasons, key = { it.id }) { season ->
+                    SeasonCard(season = season, onEdit = { viewModel.showEditDialog(season) }, onDelete = { viewModel.showDeleteConfirm(season) })
+                }
             }
         }
     }
@@ -121,7 +126,7 @@ fun SeasonManageScreen(
 private fun SeasonCard(season: Season, onEdit: () -> Unit, onDelete: () -> Unit) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -7,6 +7,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.lolita.app.ui.theme.shimmer.skinShimmerTheme
+import com.valentinilk.shimmer.LocalShimmerTheme
 
 @Composable
 fun LolitaTheme(
@@ -16,6 +18,7 @@ fun LolitaTheme(
 ) {
     val skin = getSkinConfig(skinType)
     val colors = if (darkTheme) skin.darkColorScheme else skin.lightColorScheme
+    val shimmerTheme = skinShimmerTheme()
 
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -25,7 +28,10 @@ fun LolitaTheme(
         }
     }
 
-    CompositionLocalProvider(LocalLolitaSkin provides skin) {
+    CompositionLocalProvider(
+        LocalLolitaSkin provides skin,
+        LocalShimmerTheme provides shimmerTheme,
+    ) {
         MaterialTheme(
             colorScheme = colors,
             typography = skin.typography,

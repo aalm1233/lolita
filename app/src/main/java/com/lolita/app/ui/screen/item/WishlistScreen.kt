@@ -22,7 +22,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.icons.Icons
@@ -34,8 +35,13 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -199,11 +205,17 @@ fun WishlistScreen(
                 )
             }
             if (uiState.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                val shimmer = rememberShimmer(ShimmerBounds.Window)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    CircularProgressIndicator()
+                    items(5) {
+                        WishlistItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                    }
                 }
             } else if (uiState.allItems.isEmpty()) {
                 SkinEmptyState(
@@ -256,9 +268,9 @@ private fun WishlistItemCard(
     modifier: Modifier = Modifier
 ) {
     val borderColor = when (item.priority) {
-        ItemPriority.HIGH -> Color(0xFFFF6B6B)
-        ItemPriority.MEDIUM -> Color(0xFFFFD93D)
-        ItemPriority.LOW -> Color(0xFF6BCF7F)
+        ItemPriority.HIGH -> MaterialTheme.colorScheme.primary
+        ItemPriority.MEDIUM -> MaterialTheme.colorScheme.tertiary
+        ItemPriority.LOW -> MaterialTheme.colorScheme.secondary
     }
 
     LolitaCard(
@@ -278,13 +290,15 @@ private fun WishlistItemCard(
 
             // Thumbnail
             if (item.imageUrls.isNotEmpty()) {
-                AsyncImage(
+                LolitaShimmerImage(
                     model = item.imageUrls.first(),
                     contentDescription = item.name,
                     modifier = Modifier
                         .size(72.dp)
+                        .heroSharedElement("itemImage-${item.id}")
                         .clip(RoundedCornerShape(0.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
                 Surface(
@@ -353,6 +367,24 @@ private fun WishlistItemCard(
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WishlistItemCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+            ShimmerRect(width = 4.dp, height = 72.dp, shape = RoundedCornerShape(0.dp))
+            ShimmerRect(width = 72.dp, height = 72.dp, shape = RoundedCornerShape(0.dp))
+            Column(
+                modifier = Modifier.weight(1f).padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.3f, height = 14.dp)
             }
         }
     }

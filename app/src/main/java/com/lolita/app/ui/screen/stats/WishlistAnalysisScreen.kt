@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
@@ -28,8 +30,14 @@ import com.lolita.app.di.AppModule
 import com.lolita.app.ui.component.chart.DonutChart
 import com.lolita.app.ui.component.chart.PieChartData
 import com.lolita.app.ui.component.chart.StatsProgressBar
+import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,7 +90,7 @@ class WishlistAnalysisViewModel(
                     PieChartData(
                         label = mapPriorityLabel(stat.priority),
                         value = stat.itemCount.toDouble(),
-                        color = mapPriorityColor(stat.priority)
+                        color = Color.Unspecified
                     )
                 }
                 val details = priorityStats.map { stat ->
@@ -120,12 +128,6 @@ class WishlistAnalysisViewModel(
         else -> priority
     }
 
-    private fun mapPriorityColor(priority: String): Color = when (priority) {
-        "HIGH" -> Color(0xFFFF1493)
-        "MEDIUM" -> Color(0xFFFF69B4)
-        "LOW" -> Color(0xFFFFB6C1)
-        else -> Color(0xFFFFB6C1)
-    }
 }
 
 @Composable
@@ -137,8 +139,38 @@ fun WishlistAnalysisContent(
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.isLoading) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        val shimmer = rememberShimmer(ShimmerBounds.Window)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Budget card skeleton
+            ShimmerRect(
+                width = 400.dp,
+                height = 80.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Progress bar skeleton
+            ShimmerRect(
+                width = 400.dp,
+                height = 24.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Chart skeleton
+            ShimmerRect(
+                width = 180.dp,
+                height = 200.dp,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth().shimmer(shimmer)
+            )
+            // Priority detail rows skeleton
+            repeat(3) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
+            }
         }
         return
     }
@@ -162,12 +194,10 @@ fun WishlistAnalysisContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        val budgetAccent = MaterialTheme.colorScheme.primary
         // Budget card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFFF69B4).copy(alpha = 0.1f)
-            )
+        LolitaCard(
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -176,7 +206,7 @@ fun WishlistAnalysisContent(
             ) {
                 SkinIcon(
                     key = IconKey.AttachMoney,
-                    tint = Color(0xFFFF69B4),
+                    tint = budgetAccent,
                     modifier = Modifier.size(28.dp)
                 )
                 Column {
@@ -190,14 +220,14 @@ fun WishlistAnalysisContent(
                             text = "¥${String.format("%.2f", uiState.totalBudget)}",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF69B4)
+                            color = budgetAccent
                         )
                     } else {
                         Text(
                             text = "¥***",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF69B4)
+                            color = budgetAccent
                         )
                     }
                 }
@@ -214,12 +244,21 @@ fun WishlistAnalysisContent(
 
         // Priority distribution donut chart
         if (uiState.priorityChartData.isNotEmpty()) {
+            val chartData = uiState.priorityChartData.map { data ->
+                val priority = when (data.label) {
+                    "高优先级" -> ItemPriority.HIGH
+                    "中优先级" -> ItemPriority.MEDIUM
+                    "低优先级" -> ItemPriority.LOW
+                    else -> ItemPriority.LOW
+                }
+                data.copy(color = mapPriorityColor(priority))
+            }
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 DonutChart(
-                    data = uiState.priorityChartData,
+                    data = chartData,
                     modifier = Modifier.size(180.dp),
                     centerText = "${uiState.wishedCount}件",
                     selectedIndex = uiState.selectedPriorityIndex,
@@ -236,16 +275,30 @@ fun WishlistAnalysisContent(
                         "低优先级" -> "LOW"
                         else -> ""
                     }
+                    val priorityEnum = when (detail.priorityLabel) {
+                        "高优先级" -> ItemPriority.HIGH
+                        "中优先级" -> ItemPriority.MEDIUM
+                        "低优先级" -> ItemPriority.LOW
+                        else -> ItemPriority.LOW
+                    }
                     PriorityDetailRow(
                         detail = detail,
-                        color = uiState.priorityChartData.getOrNull(index)?.color
-                            ?: Color(0xFFFFB6C1),
+                        color = mapPriorityColor(priorityEnum),
                         showBudget = uiState.showTotalPrice,
                         onClick = { onNavigateToFilteredList("priority", priorityValue, detail.priorityLabel) }
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun mapPriorityColor(priority: ItemPriority): Color {
+    return when (priority) {
+        ItemPriority.HIGH -> MaterialTheme.colorScheme.primary
+        ItemPriority.MEDIUM -> MaterialTheme.colorScheme.tertiary
+        ItemPriority.LOW -> MaterialTheme.colorScheme.secondary
     }
 }
 
@@ -260,7 +313,7 @@ private fun PriorityDetailRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
-            .clickable(onClick = onClick)
+            .skinClickable(onClick = onClick)
             .padding(horizontal = 4.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

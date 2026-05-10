@@ -9,7 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,15 +36,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Coordinate
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.ShimmerLine
+import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun CoordinateListScreen(
@@ -145,11 +155,29 @@ fun CoordinateListContent(
         )
     }
     if (uiState.isLoading) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+        val shimmer = rememberShimmer(ShimmerBounds.Window)
+        if (uiState.columnsPerRow == 1) {
+            LazyColumn(
+                modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(5) {
+                    CoordinateCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                }
+            }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(uiState.columnsPerRow),
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                items(6) {
+                    CoordinateGridCardSkeleton(modifier = Modifier.shimmer(shimmer))
+                }
+            }
         }
     } else if (uiState.allCoordinates.isEmpty()) {
         Box(
@@ -177,9 +205,10 @@ fun CoordinateListContent(
         LazyColumn(
             modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(vertical = 8.dp),
+            flingBehavior = rememberSkinFlingBehavior()
         ) {
-            items(uiState.coordinates, key = { it.id }) { coordinate ->
+            itemsIndexed(uiState.coordinates, key = { _, coordinate -> coordinate.id }) { index, coordinate ->
                 SwipeToDeleteContainer(
                     onDelete = { coordinateToDelete = coordinate }
                 ) {
@@ -192,7 +221,7 @@ fun CoordinateListContent(
                         onClick = { onNavigateToDetail(coordinate.id) },
                         onEdit = { onNavigateToEdit(coordinate.id) },
                         onDelete = { coordinateToDelete = coordinate },
-                        modifier = Modifier.animateItem()
+                        modifier = Modifier.skinItemAppear(index).animateItem()
                     )
                 }
             }
@@ -203,19 +232,22 @@ fun CoordinateListContent(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            flingBehavior = rememberSkinFlingBehavior()
         ) {
-            items(uiState.coordinates, key = { it.id }) { coordinate ->
-                CoordinateGridCard(
-                    coordinate = coordinate,
-                    itemCount = uiState.itemCounts[coordinate.id] ?: 0,
-                    itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
-                    totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
-                    showPrice = uiState.showPrice,
-                    onClick = { onNavigateToDetail(coordinate.id) },
-                    onEdit = { onNavigateToEdit(coordinate.id) },
-                    onDelete = { coordinateToDelete = coordinate }
-                )
+            itemsIndexed(uiState.coordinates, key = { _, coordinate -> coordinate.id }) { index, coordinate ->
+                Column(modifier = Modifier.skinItemAppear(index)) {
+                    CoordinateGridCard(
+                        coordinate = coordinate,
+                        itemCount = uiState.itemCounts[coordinate.id] ?: 0,
+                        itemImages = uiState.itemImagesByCoordinate[coordinate.id] ?: emptyList(),
+                        totalPrice = uiState.priceByCoordinate[coordinate.id] ?: 0.0,
+                        showPrice = uiState.showPrice,
+                        onClick = { onNavigateToDetail(coordinate.id) },
+                        onEdit = { onNavigateToEdit(coordinate.id) },
+                        onDelete = { coordinateToDelete = coordinate }
+                    )
+                }
             }
         }
     }
@@ -242,13 +274,15 @@ private fun CoordinateCard(
                 .fillMaxWidth()
                 .combinedClickable(onClick = onClick, onLongClick = { showMenu = true })
         ) {
-            Row(modifier = Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
+                horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 if (coordinate.imageUrls.isNotEmpty()) {
-                    AsyncImage(
+                    LolitaShimmerImage(
                         model = coordinate.imageUrls.first(),
                         contentDescription = coordinate.name,
-                        modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp)),
-                        contentScale = ContentScale.Crop
+                        modifier = Modifier.size(80.dp).heroSharedElement("coordinateImage-${coordinate.id}").clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholderInitial = coordinate.name.firstOrNull()?.toString()
                     )
                 } else {
                     Surface(
@@ -317,7 +351,7 @@ private fun CoordinateCard(
                             Spacer(Modifier.width(4.dp))
                             Box {
                                 itemImages.take(4).filterNotNull().forEachIndexed { index, imageUrl ->
-                                    AsyncImage(
+                                    LolitaShimmerImage(
                                         model = imageUrl,
                                         contentDescription = null,
                                         modifier = Modifier
@@ -335,7 +369,12 @@ private fun CoordinateCard(
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(text = { Text("编辑") }, onClick = { showMenu = false; onEdit() })
-                DropdownMenuItem(text = { Text("删除") }, onClick = { showMenu = false; onDelete() })
+                DropdownMenuItem(
+                    text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                    onClick = { showMenu = false; onDelete() },
+                    leadingIcon = { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) },
+                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                )
             }
         }
     }
@@ -365,14 +404,16 @@ private fun CoordinateGridCard(
             Column {
                 Box {
                     if (coordinate.imageUrls.isNotEmpty()) {
-                        AsyncImage(
+                        LolitaShimmerImage(
                             model = coordinate.imageUrls.first(),
                             contentDescription = coordinate.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
+                                .heroSharedElement("coordinateImage-${coordinate.id}")
                                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            placeholderInitial = coordinate.name.firstOrNull()?.toString()
                         )
                     } else {
                         Box(
@@ -424,7 +465,7 @@ private fun CoordinateGridCard(
                 }
                 // 信息区域
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
@@ -446,7 +487,7 @@ private fun CoordinateGridCard(
                     if (itemImages.isNotEmpty()) {
                         Box(modifier = Modifier.padding(top = 2.dp)) {
                             itemImages.take(4).filterNotNull().forEachIndexed { index, imageUrl ->
-                                AsyncImage(
+                                LolitaShimmerImage(
                                     model = imageUrl,
                                     contentDescription = null,
                                     modifier = Modifier
@@ -463,7 +504,12 @@ private fun CoordinateGridCard(
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(text = { Text("编辑") }, onClick = { showMenu = false; onEdit() })
-                DropdownMenuItem(text = { Text("删除") }, onClick = { showMenu = false; onDelete() })
+                DropdownMenuItem(
+                    text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                    onClick = { showMenu = false; onDelete() },
+                    leadingIcon = { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) },
+                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                )
             }
         }
     }
@@ -472,4 +518,44 @@ private fun CoordinateGridCard(
 private fun formatCoordinateDate(timestamp: Long): String {
     val dateFormat = java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault())
     return dateFormat.format(java.util.Date(timestamp))
+}
+
+@Composable
+private fun CoordinateCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ShimmerRect(width = 80.dp, height = 80.dp, shape = RoundedCornerShape(12.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.7f, height = 20.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 16.dp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CoordinateGridCardSkeleton(modifier: Modifier = Modifier) {
+    LolitaCard(modifier = modifier.fillMaxWidth()) {
+        Column {
+            ShimmerRect(
+                width = 200.dp,
+                height = 160.dp,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                ShimmerLine(widthFraction = 0.8f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+            }
+        }
+    }
 }

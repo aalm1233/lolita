@@ -3,6 +3,8 @@ package com.lolita.app.ui.theme.skin.animation
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,6 +25,9 @@ private val WineColor = Color(0xFF722F37)
 private val GoldAccent = Color(0xFFD4AF37)
 
 class ClassicAnimationProvider : SkinAnimationProvider {
+
+    override val spatialSpring: SpringSpec<Float> = spring(dampingRatio = 0.82f, stiffness = 350f)
+    override val effectsSpring: SpringSpec<Float> = spring(dampingRatio = 1.0f, stiffness = 1400f)
 
     override val skinTransition = SkinTransitionSpec(
         durationMs = 400,

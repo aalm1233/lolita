@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -216,7 +217,7 @@ fun SpendingTrendContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable {
+                    .skinClickable {
                         if (detail.amount > 0) {
                             onNavigateToFilteredList("month", yearMonth, "${uiState.selectedYear}年${detail.month}")
                         }

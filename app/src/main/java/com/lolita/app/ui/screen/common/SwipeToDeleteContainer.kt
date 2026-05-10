@@ -56,7 +56,7 @@ fun SwipeToDeleteContainer(
             ) {
                 SkinIcon(
                     IconKey.Delete,
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onError
                 )
             }
         }

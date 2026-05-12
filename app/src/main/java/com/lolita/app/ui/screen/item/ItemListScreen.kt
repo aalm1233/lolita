@@ -56,6 +56,7 @@ import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.coordinate.CoordinateListContent
@@ -77,15 +78,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
-import com.lolita.app.ui.screen.catalog.CatalogFilterPanel
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerCircle
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import com.lolita.app.ui.screen.catalog.CatalogListContent
-import com.lolita.app.ui.screen.catalog.CatalogListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -98,15 +96,11 @@ fun ItemListScreen(
     onNavigateToQuickOutfit: () -> Unit = {},
     onNavigateToLocationDetail: (Long) -> Unit = {},
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
-    onNavigateToCatalogDetail: (Long) -> Unit = {},
-    onNavigateToCatalogAdd: () -> Unit = {},
     viewModel: ItemListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coordinateViewModel: CoordinateListViewModel = viewModel()
     val coordinateUiState by coordinateViewModel.uiState.collectAsState()
-    val catalogViewModel: CatalogListViewModel = viewModel()
-    val catalogUiState by catalogViewModel.uiState.collectAsState()
     var itemToDelete by remember { mutableStateOf<Item?>(null) }
     var showFilterPanel by remember { mutableStateOf(false) }
     var isSearchMode by remember { mutableStateOf(false) }
@@ -123,18 +117,10 @@ fun ItemListScreen(
     }
     val pagerState = rememberPagerState(pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
-    val itemActiveFilterCount = listOfNotNull(
+    val activeFilterCount = listOfNotNull(
         uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
         uiState.filterBrandId?.let { "" }
     ).size
-    val catalogActiveFilterCount = listOfNotNull(
-        catalogUiState.filterBrandId?.let { "" },
-        catalogUiState.filterCategoryId?.let { "" },
-        catalogUiState.filterStyle,
-        catalogUiState.filterSeason,
-        catalogUiState.filterColor
-    ).size
-    val activeFilterCount = if (pagerState.currentPage == 3) catalogActiveFilterCount else itemActiveFilterCount
 
     // Auto-focus search field when entering search mode
     LaunchedEffect(isSearchMode) {
@@ -197,7 +183,7 @@ fun ItemListScreen(
                 onClick = {
                     when (pagerState.currentPage) {
                         2 -> onNavigateToCoordinateAdd()
-                        3 -> onNavigateToCatalogAdd()
+                        3 -> onNavigateToEdit(null)
                         else -> onNavigateToEdit(null)
                     }
                 },
@@ -250,18 +236,14 @@ fun ItemListScreen(
                         if (searchMode) {
                             // Search mode: pill TextField + cancel
                             SearchModeBar(
-                                query = if (pagerState.currentPage == 3) catalogUiState.searchQuery else uiState.searchQuery,
-                                onQueryChange = {
-                                    if (pagerState.currentPage == 3) catalogViewModel.search(it)
-                                    else viewModel.search(it)
-                                },
+                                query = uiState.searchQuery,
+                                onQueryChange = { viewModel.search(it) },
                                 onCancel = {
-                                    if (pagerState.currentPage == 3) catalogViewModel.search("")
-                                    else viewModel.search("")
+                                    viewModel.search("")
                                     isSearchMode = false
                                 },
                                 focusRequester = searchFocusRequester,
-                                placeholder = if (pagerState.currentPage == 3) "搜索图鉴" else "搜索服饰"
+                                placeholder = "搜索服饰"
                             )
                         } else {
                             // Normal mode: search icon | tabs | action icons
@@ -273,14 +255,13 @@ fun ItemListScreen(
                                 },
                                 showFilterPanel = showFilterPanel,
                                 onFilterClick = {
-                                    if (pagerState.currentPage == 1 || pagerState.currentPage == 3) {
+                                    if (pagerState.currentPage == 1) {
                                         showFilterPanel = !showFilterPanel
                                     }
                                 },
                                 activeFilterCount = activeFilterCount,
                                 currentSort = when (pagerState.currentPage) {
                                     2 -> coordinateUiState.sortOption
-                                    3 -> catalogUiState.sortOption
                                     else -> uiState.sortOption
                                 },
                                 showPriceOptions = when (pagerState.currentPage) {
@@ -291,7 +272,6 @@ fun ItemListScreen(
                                 onSortSelected = {
                                     when (pagerState.currentPage) {
                                         2 -> coordinateViewModel.setSortOption(it)
-                                        3 -> catalogViewModel.setSortOption(it)
                                         else -> viewModel.setSortOption(it)
                                     }
                                 },
@@ -299,16 +279,6 @@ fun ItemListScreen(
                                     if (pagerState.currentPage == 2) {
                                         val next = when (coordinateUiState.columnsPerRow) { 1 -> 2; 2 -> 3; else -> 1 }
                                         coordinateViewModel.setColumns(next)
-                                    } else if (pagerState.currentPage == 3) {
-                                        val nextMode = when (catalogUiState.viewMode) {
-                                            ViewMode.LIST -> ViewMode.GRID
-                                            ViewMode.GRID -> ViewMode.GALLERY
-                                            ViewMode.GALLERY -> ViewMode.LIST
-                                        }
-                                        catalogViewModel.setViewMode(nextMode)
-                                        if (nextMode != ViewMode.GALLERY) {
-                                            catalogViewModel.setColumns(if (nextMode == ViewMode.LIST) 1 else 2)
-                                        }
                                     } else {
                                         when {
                                             uiState.viewMode == ViewMode.LIST -> {
@@ -334,11 +304,6 @@ fun ItemListScreen(
                                         2 -> IconKey.GridView
                                         else -> IconKey.Apps
                                     }
-                                    3 -> when (catalogUiState.viewMode) {
-                                        ViewMode.LIST -> IconKey.ViewAgenda
-                                        ViewMode.GRID -> IconKey.GridView
-                                        ViewMode.GALLERY -> IconKey.Gallery
-                                    }
                                     else -> when {
                                         uiState.viewMode == ViewMode.LIST -> IconKey.ViewAgenda
                                         uiState.viewMode == ViewMode.GRID && uiState.columnsPerRow == 2 -> IconKey.GridView
@@ -363,24 +328,14 @@ fun ItemListScreen(
                 )
             }
 
-            AnimatedVisibility(visible = showFilterPanel && pagerState.currentPage == 3) {
-                CatalogFilterPanel(
-                    uiState = catalogUiState,
-                    onBrandSelected = { catalogViewModel.filterByBrand(it) },
-                    onCategorySelected = { catalogViewModel.filterByCategory(it) },
-                    onStyleSelected = { catalogViewModel.filterByStyle(it) },
-                    onSeasonSelected = { catalogViewModel.filterBySeason(it) },
-                    onColorSelected = { catalogViewModel.filterByColor(it) }
-                )
-            }
-
             // 今日穿搭快捷卡片
             LolitaCard(
                 onClick = onNavigateToQuickOutfit,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
+                variant = CardVariant.COMPACT
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp), // intentional override of cardInnerPadding
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp), // intentional override of cardInnerPadding
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -636,10 +591,9 @@ fun ItemListScreen(
                     )
                 }
                 3 -> {
-                    CatalogListContent(
-                        uiState = catalogUiState,
-                        onNavigateToDetail = onNavigateToCatalogDetail,
-                        modifier = Modifier.fillMaxSize()
+                    WishlistContent(
+                        onNavigateToDetail = onNavigateToDetail,
+                        onNavigateToEdit = onNavigateToEdit
                     )
                 }
                 }
@@ -663,7 +617,7 @@ private fun NormalModeBar(
     viewModeIcon: IconKey
 ) {
     val tabs = listOf("位置", "服饰", "套装")
-    val pageTabs = listOf("位置", "服饰", "套装", "图鉴")
+    val pageTabs = listOf("位置", "服饰", "套装", "心愿")
     val contentColor = LocalContentColor.current
 
     Row(

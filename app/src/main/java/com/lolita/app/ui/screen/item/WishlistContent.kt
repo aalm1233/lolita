@@ -26,14 +26,10 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.common.heroSharedElement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Search
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
-import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
@@ -119,7 +115,7 @@ class WishlistViewModel(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WishlistScreen(
+fun WishlistContent(
     onNavigateToDetail: (Long) -> Unit,
     onNavigateToEdit: (Long?) -> Unit,
     viewModel: WishlistViewModel = viewModel()
@@ -165,95 +161,75 @@ fun WishlistScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            GradientTopAppBar(
-                title = { Text("愿望单") },
-                compact = true
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (uiState.allItems.isNotEmpty()) {
+            OutlinedTextField(
+                value = uiState.searchQuery,
+                onValueChange = { viewModel.search(it) },
+                placeholder = { Text("搜索愿望单") },
+                leadingIcon = { SkinIcon(IconKey.Search) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                )
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onNavigateToEdit(null) },
-                containerColor = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                SkinIcon(IconKey.Add, tint = Color.White)
-            }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            if (uiState.allItems.isNotEmpty()) {
-                OutlinedTextField(
-                    value = uiState.searchQuery,
-                    onValueChange = { viewModel.search(it) },
-                    placeholder = { Text("搜索愿望单") },
-                    leadingIcon = { SkinIcon(IconKey.Search) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                    singleLine = true,
-                    shape = RoundedCornerShape(12.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        cursorColor = MaterialTheme.colorScheme.primary
-                    )
-                )
-            }
-            if (uiState.isLoading) {
-                val shimmer = rememberShimmer(ShimmerBounds.Window)
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(5) {
-                        WishlistItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
-                    }
+        if (uiState.isLoading) {
+            val shimmer = rememberShimmer(ShimmerBounds.Window)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(5) {
+                    WishlistItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
                 }
-            } else if (uiState.allItems.isEmpty()) {
-                SkinEmptyState(
-                    iconKey = IconKey.Wishlist,
-                    title = "愿望单为空",
-                    subtitle = "添加心仪的服饰到愿望单",
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else if (uiState.filteredItems.isEmpty()) {
-                SkinEmptyState(
-                    iconKey = IconKey.Search,
-                    title = "无搜索结果",
-                    subtitle = "试试其他关键词",
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                val flingBehavior = rememberSkinFlingBehavior()
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    flingBehavior = flingBehavior
-                ) {
-                    items(uiState.filteredItems, key = { it.id }) { item ->
-                        val index = uiState.filteredItems.indexOf(item)
-                        SwipeToDeleteContainer(
-                            onDelete = { itemToDelete = item }
-                        ) {
-                            WishlistItemCard(
-                                item = item,
-                                onClick = { onNavigateToDetail(item.id) },
-                                modifier = Modifier
-                                    .skinItemAppear(index)
-                                    .animateItem()
-                            )
-                        }
+            }
+        } else if (uiState.allItems.isEmpty()) {
+            SkinEmptyState(
+                iconKey = IconKey.Wishlist,
+                title = "愿望单为空",
+                subtitle = "添加心仪的服饰到愿望单",
+                modifier = Modifier.fillMaxSize()
+            )
+        } else if (uiState.filteredItems.isEmpty()) {
+            SkinEmptyState(
+                iconKey = IconKey.Search,
+                title = "无搜索结果",
+                subtitle = "试试其他关键词",
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            val flingBehavior = rememberSkinFlingBehavior()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                flingBehavior = flingBehavior
+            ) {
+                items(uiState.filteredItems, key = { it.id }) { item ->
+                    val index = uiState.filteredItems.indexOf(item)
+                    SwipeToDeleteContainer(
+                        onDelete = { itemToDelete = item }
+                    ) {
+                        WishlistItemCard(
+                            item = item,
+                            onClick = { onNavigateToDetail(item.id) },
+                            modifier = Modifier
+                                .skinItemAppear(index)
+                                .animateItem()
+                        )
                     }
                 }
             }

@@ -259,7 +259,8 @@ fun ItemListScreen(
                                         showFilterPanel = !showFilterPanel
                                     }
                                 },
-                                activeFilterCount = activeFilterCount,
+                                activeFilterCount = if (pagerState.currentPage == 1) activeFilterCount else 0,
+                                showViewControls = pagerState.currentPage == 1,
                                 currentSort = when (pagerState.currentPage) {
                                     2 -> coordinateUiState.sortOption
                                     else -> uiState.sortOption
@@ -612,6 +613,7 @@ private fun NormalModeBar(
     activeFilterCount: Int,
     currentSort: SortOption,
     showPriceOptions: Boolean,
+    showViewControls: Boolean = true,
     onSortSelected: (SortOption) -> Unit,
     onViewModeToggle: () -> Unit,
     viewModeIcon: IconKey
@@ -702,21 +704,23 @@ private fun NormalModeBar(
             }
         }
 
-        // Sort
-        SortMenuButton(
-            currentSort = currentSort,
-            showPriceOptions = showPriceOptions,
-            onSortSelected = onSortSelected,
-            modifier = Modifier.size(32.dp),
-            iconTint = contentColor.copy(alpha = 0.8f)
-        )
+        // Sort (only on pages with view controls)
+        if (showViewControls) {
+            SortMenuButton(
+                currentSort = currentSort,
+                showPriceOptions = showPriceOptions,
+                onSortSelected = onSortSelected,
+                modifier = Modifier.size(32.dp),
+                iconTint = contentColor.copy(alpha = 0.8f)
+            )
 
-        // View mode toggle
-        IconButton(
-            onClick = onViewModeToggle,
-            modifier = Modifier.size(32.dp)
-        ) {
-            SkinIcon(viewModeIcon, tint = contentColor.copy(alpha = 0.8f))
+            // View mode toggle
+            IconButton(
+                onClick = onViewModeToggle,
+                modifier = Modifier.size(32.dp)
+            ) {
+                SkinIcon(viewModeIcon, tint = contentColor.copy(alpha = 0.8f))
+            }
         }
     }
 }

@@ -69,7 +69,8 @@ fun SettingsScreen(
     onNavigateToAttributeManage: () -> Unit,
     onNavigateToBackupRestore: () -> Unit,
     onNavigateToTaobaoImport: () -> Unit = {},
-    onNavigateToSharedLibrarySync: () -> Unit = {},
+
+
     onNavigateToThemeSelect: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel()
@@ -141,13 +142,6 @@ fun SettingsScreen(
                 onClick = onNavigateToTaobaoImport
             )
 
-            SettingsMenuItem(
-                title = "共享资料同步",
-                description = "连接后端并刷新共享图鉴缓存",
-                iconKey = IconKey.Refresh,
-                iconTint = if (isDark) Color(0xFF80CBC4) else Color(0xFF4DB6AC),
-                onClick = onNavigateToSharedLibrarySync
-            )
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -314,7 +308,7 @@ private fun ProfileSection(
 
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
-                        text = "服饰 ${uiState.totalItems} 件 | 图鉴 ${uiState.totalCatalogEntries} 条 | 套装 ${uiState.totalCoordinates} 套",
+                        text = "服饰 ${uiState.totalItems} 件 | 套装 ${uiState.totalCoordinates} 套",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

@@ -13,29 +13,17 @@ sealed interface Screen {
     }
 
     data object ItemEdit : Screen {
-        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}&prefillCatalogEntryId={prefillCatalogEntryId}"
+        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}"
         fun createRoute(
             itemId: Long? = null,
-            defaultStatus: String? = null,
-            prefillCatalogEntryId: Long? = null
+            defaultStatus: String? = null
         ): String {
             val id = itemId ?: 0L
             val queryParams = buildList {
                 if (defaultStatus != null) add("defaultStatus=$defaultStatus")
-                if (prefillCatalogEntryId != null) add("prefillCatalogEntryId=$prefillCatalogEntryId")
             }.joinToString("&")
             return if (queryParams.isNotEmpty()) "item_edit/$id?$queryParams" else "item_edit/$id"
         }
-    }
-
-    data object CatalogDetail : Screen {
-        override val route = "catalog_detail/{catalogEntryId}"
-        fun createRoute(catalogEntryId: Long) = "catalog_detail/$catalogEntryId"
-    }
-
-    data object CatalogEdit : Screen {
-        override val route = "catalog_edit/{catalogEntryId}"
-        fun createRoute(catalogEntryId: Long? = null) = if (catalogEntryId != null) "catalog_edit/$catalogEntryId" else "catalog_edit/0"
     }
 
     data object PriceManage : Screen {
@@ -56,10 +44,6 @@ sealed interface Screen {
     data object PaymentEdit : Screen {
         override val route = "payment_edit/{priceId}/{paymentId}"
         fun createRoute(priceId: Long, paymentId: Long? = null) = if (paymentId != null) "payment_edit/$priceId/$paymentId" else "payment_edit/$priceId/0"
-    }
-
-    data object Wishlist : Screen {
-        override val route = "wishlist"
     }
 
     data object CoordinateDetail : Screen {

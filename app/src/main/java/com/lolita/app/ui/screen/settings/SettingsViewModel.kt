@@ -3,7 +3,6 @@ package com.lolita.app.ui.screen.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.preferences.AppPreferences
-import com.lolita.app.data.repository.CatalogRepository
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
@@ -14,14 +13,12 @@ data class SettingsUiState(
     val nickname: String = "",
     val avatarPath: String = "",
     val totalItems: Int = 0,
-    val totalCatalogEntries: Int = 0,
     val totalCoordinates: Int = 0,
     val totalSpent: Double = 0.0
 )
 
 private data class SettingsStats(
     val itemCount: Int,
-    val catalogCount: Int,
     val coordinateCount: Int,
     val totalSpent: Double
 )
@@ -29,7 +26,6 @@ private data class SettingsStats(
 class SettingsViewModel(
     private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     private val itemRepository: ItemRepository = com.lolita.app.di.AppModule.itemRepository(),
-    private val catalogRepository: CatalogRepository = com.lolita.app.di.AppModule.catalogRepository(),
     private val coordinateRepository: CoordinateRepository = com.lolita.app.di.AppModule.coordinateRepository(),
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository()
 ) : ViewModel() {
@@ -48,13 +44,11 @@ class SettingsViewModel(
 
             val statsFlow = combine(
                 itemRepository.getAllItems().map { it.size },
-                catalogRepository.getCatalogEntryCount(),
                 coordinateRepository.getCoordinateCount(),
                 priceRepository.getTotalSpending()
-            ) { itemCount, catalogCount, coordCount, totalSpent ->
+            ) { itemCount, coordCount, totalSpent ->
                 SettingsStats(
                     itemCount = itemCount,
-                    catalogCount = catalogCount,
                     coordinateCount = coordCount,
                     totalSpent = totalSpent
                 )
@@ -65,7 +59,6 @@ class SettingsViewModel(
                     nickname = profile.first,
                     avatarPath = profile.second,
                     totalItems = stats.itemCount,
-                    totalCatalogEntries = stats.catalogCount,
                     totalCoordinates = stats.coordinateCount,
                     totalSpent = stats.totalSpent
                 )

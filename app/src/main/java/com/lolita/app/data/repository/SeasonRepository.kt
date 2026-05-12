@@ -2,7 +2,6 @@ package com.lolita.app.data.repository
 
 import androidx.room.withTransaction
 import com.lolita.app.data.local.LolitaDatabase
-import com.lolita.app.data.local.dao.CatalogEntryDao
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.SeasonDao
 import com.lolita.app.data.local.entity.Season
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 class SeasonRepository(
     private val seasonDao: SeasonDao,
     private val itemDao: ItemDao,
-    private val catalogEntryDao: CatalogEntryDao,
     private val database: LolitaDatabase
 ) {
     fun getAllSeasons(): Flow<List<Season>> = seasonDao.getAllSeasons()
@@ -33,18 +31,6 @@ class SeasonRepository(
                     }
                 }
                 if (updated.isNotEmpty()) itemDao.updateItems(updated)
-
-                val entries = catalogEntryDao.getAllCatalogEntriesList().filter { entry ->
-                    entry.season?.split(",")?.map { it.trim() }?.contains(oldName) == true
-                }
-                if (entries.isNotEmpty()) {
-                    val updatedEntries = entries.map { entry ->
-                        val seasons = entry.season!!.split(",").map { it.trim() }
-                        val newSeasons = seasons.map { if (it == oldName) season.name else it }
-                        entry.copy(season = newSeasons.joinToString(","), updatedAt = System.currentTimeMillis())
-                    }
-                    updatedEntries.forEach { catalogEntryDao.updateCatalogEntry(it) }
-                }
             }
         }
     }
@@ -62,18 +48,6 @@ class SeasonRepository(
                 }
             }
             if (updated.isNotEmpty()) itemDao.updateItems(updated)
-
-            val entries = catalogEntryDao.getAllCatalogEntriesList().filter { entry ->
-                entry.season?.split(",")?.map { it.trim() }?.contains(season.name) == true
-            }
-            if (entries.isNotEmpty()) {
-                val updatedEntries = entries.map { entry ->
-                    val seasons = entry.season!!.split(",").map { it.trim() }
-                    val remaining = seasons.filter { it != season.name }
-                    entry.copy(season = remaining.joinToString(",").ifBlank { null }, updatedAt = System.currentTimeMillis())
-                }
-                updatedEntries.forEach { catalogEntryDao.updateCatalogEntry(it) }
-            }
 
             seasonDao.deleteSeason(season)
         }

@@ -30,21 +30,18 @@ object AppModule {
     }
     fun itemRepository() = _itemRepository
 
-    private val _catalogRepository by lazy { CatalogRepository(database.catalogEntryDao()) }
-    fun catalogRepository() = _catalogRepository
-
     private val _sharedLibrarySyncRepository by lazy {
         SharedLibrarySyncRepository(database, database.sharedLibrarySyncDao())
     }
     fun sharedLibrarySyncRepository() = _sharedLibrarySyncRepository
 
     private val _brandRepository by lazy {
-        BrandRepository(database.brandDao(), database.itemDao(), database.catalogEntryDao(), database)
+        BrandRepository(database.brandDao(), database.itemDao(), database)
     }
     fun brandRepository() = _brandRepository
 
     private val _categoryRepository by lazy {
-        CategoryRepository(database.categoryDao(), database.itemDao(), database.catalogEntryDao(), database)
+        CategoryRepository(database.categoryDao(), database.itemDao(), database)
     }
     fun categoryRepository() = _categoryRepository
 
@@ -62,12 +59,12 @@ object AppModule {
     fun outfitLogRepository() = _outfitLogRepository
 
     private val _styleRepository by lazy {
-        StyleRepository(database.styleDao(), database.itemDao(), database.catalogEntryDao(), database)
+        StyleRepository(database.styleDao(), database.itemDao(), database)
     }
     fun styleRepository() = _styleRepository
 
     private val _seasonRepository by lazy {
-        SeasonRepository(database.seasonDao(), database.itemDao(), database.catalogEntryDao(), database)
+        SeasonRepository(database.seasonDao(), database.itemDao(), database)
     }
     fun seasonRepository() = _seasonRepository
 
@@ -75,7 +72,7 @@ object AppModule {
     fun locationRepository() = _locationRepository
 
     private val _sourceRepository by lazy {
-        SourceRepository(database.sourceDao(), database.itemDao(), database.catalogEntryDao(), database)
+        SourceRepository(database.sourceDao(), database.itemDao(), database)
     }
     fun sourceRepository() = _sourceRepository
 

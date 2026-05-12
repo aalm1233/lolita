@@ -1,6 +1,5 @@
 package com.lolita.app.data.repository
 
-import com.lolita.app.data.local.dao.CatalogEntryDao
 import com.lolita.app.data.local.dao.CategoryDao
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.entity.Category
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 class CategoryRepository(
     private val categoryDao: CategoryDao,
     private val itemDao: ItemDao,
-    private val catalogEntryDao: CatalogEntryDao,
     private val database: LolitaDatabase
 ) {
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()
@@ -23,9 +21,7 @@ class CategoryRepository(
     suspend fun deleteCategory(category: Category) {
         database.withTransaction {
             val itemCount = itemDao.countItemsByCategory(category.id)
-            val catalogCount = catalogEntryDao.countEntriesByCategory(category.id)
-            val totalCount = itemCount + catalogCount
-            if (totalCount > 0) throw IllegalStateException("该类型下有 $totalCount 条记录，无法删除")
+            if (itemCount > 0) throw IllegalStateException("该类型下有 $itemCount 条记录，无法删除")
             categoryDao.deleteCategory(category)
         }
     }

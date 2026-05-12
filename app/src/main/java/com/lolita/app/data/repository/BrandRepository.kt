@@ -1,7 +1,6 @@
 package com.lolita.app.data.repository
 
 import com.lolita.app.data.local.dao.BrandDao
-import com.lolita.app.data.local.dao.CatalogEntryDao
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.LolitaDatabase
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 class BrandRepository(
     private val brandDao: BrandDao,
     private val itemDao: ItemDao,
-    private val catalogEntryDao: CatalogEntryDao,
     private val database: LolitaDatabase
 ) {
     fun getAllBrands(): Flow<List<Brand>> = brandDao.getAllBrands()
@@ -23,9 +21,7 @@ class BrandRepository(
     suspend fun deleteBrand(brand: Brand) {
         database.withTransaction {
             val itemCount = itemDao.countItemsByBrand(brand.id)
-            val catalogCount = catalogEntryDao.countEntriesByBrand(brand.id)
-            val totalCount = itemCount + catalogCount
-            if (totalCount > 0) throw IllegalStateException("该品牌下有 $totalCount 条记录，无法删除")
+            if (itemCount > 0) throw IllegalStateException("该品牌下有 $itemCount 条记录，无法删除")
             brandDao.deleteBrand(brand)
         }
     }

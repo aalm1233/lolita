@@ -119,60 +119,6 @@ data class RemoteSource(
 )
 
 @Entity(
-    tableName = "remote_catalog_entries",
-    indices = [
-        Index(value = ["name"]),
-        Index(value = ["updated_at"]),
-        Index(value = ["brand_public_id"]),
-        Index(value = ["category_public_id"])
-    ]
-)
-data class RemoteCatalogEntry(
-    @PrimaryKey
-    @ColumnInfo(name = "public_id")
-    val publicId: String,
-
-    @ColumnInfo(name = "name")
-    val name: String,
-
-    @ColumnInfo(name = "brand_public_id")
-    val brandPublicId: String? = null,
-
-    @ColumnInfo(name = "category_public_id")
-    val categoryPublicId: String? = null,
-
-    @ColumnInfo(name = "style_public_id")
-    val stylePublicId: String? = null,
-
-    @ColumnInfo(name = "season_public_id")
-    val seasonPublicId: String? = null,
-
-    @ColumnInfo(name = "source_public_id")
-    val sourcePublicId: String? = null,
-
-    @ColumnInfo(name = "series_name")
-    val seriesName: String? = null,
-
-    @ColumnInfo(name = "reference_url")
-    val referenceUrl: String? = null,
-
-    @ColumnInfo(name = "image_urls")
-    val imageUrls: List<String> = emptyList(),
-
-    @ColumnInfo(name = "colors")
-    val colors: List<String> = emptyList(),
-
-    @ColumnInfo(name = "size")
-    val size: String? = null,
-
-    @ColumnInfo(name = "description")
-    val description: String = "",
-
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
-)
-
-@Entity(
     tableName = "remote_shared_coordinates",
     indices = [Index(value = ["name"]), Index(value = ["updated_at"])]
 )
@@ -305,9 +251,6 @@ data class SharedLibraryCacheSummary(
 
     @ColumnInfo(name = "sourceCount")
     val sourceCount: Int = 0,
-
-    @ColumnInfo(name = "catalogCount")
-    val catalogCount: Int = 0,
 
     @ColumnInfo(name = "coordinateCount")
     val coordinateCount: Int = 0,

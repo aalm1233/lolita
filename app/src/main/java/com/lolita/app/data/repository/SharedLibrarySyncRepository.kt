@@ -7,7 +7,7 @@ import com.lolita.app.data.local.dao.SharedLibrarySyncDao
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.data.local.entity.RemoteBrand
-import com.lolita.app.data.local.entity.RemoteCatalogEntry
+
 import com.lolita.app.data.local.entity.RemoteCategory
 import com.lolita.app.data.local.entity.RemoteSeason
 import com.lolita.app.data.local.entity.RemoteSharedCoordinate
@@ -20,7 +20,6 @@ import com.lolita.app.data.local.entity.SharedLibraryCacheSummary
 import com.lolita.app.data.local.entity.SharedLibraryPreviewItem
 import com.lolita.app.data.local.entity.SharedLibrarySyncState
 import com.lolita.app.data.remote.BrandSyncDto
-import com.lolita.app.data.remote.CatalogEntrySyncDto
 import com.lolita.app.data.remote.CategorySyncDto
 import com.lolita.app.data.remote.ChangeBatchDto
 import com.lolita.app.data.remote.ChangesPayloadDto
@@ -44,7 +43,6 @@ data class SharedLibrarySyncOverview(
     val syncState: SharedLibrarySyncState? = null,
     val cacheSummary: SharedLibraryCacheSummary = SharedLibraryCacheSummary(),
     val recentSharedItems: List<SharedLibraryPreviewItem> = emptyList(),
-    val recentCatalogEntries: List<SharedLibraryPreviewItem> = emptyList()
 )
 
 data class SharedLibrarySyncResult(
@@ -58,9 +56,7 @@ class SharedLibrarySyncRepository(
     private val dao: SharedLibrarySyncDao,
     private val api: SharedLibrarySyncApi = SharedLibrarySyncApi()
 ) {
-    fun observeRemoteCatalogEntries(): Flow<List<RemoteCatalogEntry>> = dao.observeAllRemoteCatalogEntries()
-
-    fun observeRemoteBrands(): Flow<List<RemoteBrand>> = dao.observeAllRemoteBrands()
+fun observeRemoteBrands(): Flow<List<RemoteBrand>> = dao.observeAllRemoteBrands()
 
     fun observeRemoteCategories(): Flow<List<RemoteCategory>> = dao.observeAllRemoteCategories()
 
@@ -74,14 +70,12 @@ class SharedLibrarySyncRepository(
         return combine(
             dao.observeSyncState(),
             dao.observeCacheSummary(),
-            dao.observeRecentSharedItems(limit = 5),
-            dao.observeRecentCatalogEntries(limit = 5)
-        ) { syncState, summary, recentItems, recentCatalogEntries ->
+            dao.observeRecentSharedItems(limit = 5)
+        ) { syncState, summary, recentItems ->
             SharedLibrarySyncOverview(
                 syncState = syncState,
                 cacheSummary = summary,
-                recentSharedItems = recentItems,
-                recentCatalogEntries = recentCatalogEntries
+                recentSharedItems = recentItems
             )
         }
     }
@@ -115,12 +109,7 @@ class SharedLibrarySyncRepository(
         }
     }
 
-    suspend fun getRemoteCatalogEntryBySyntheticId(catalogEntryId: Long): RemoteCatalogEntry? = withContext(Dispatchers.IO) {
-        dao.getAllRemoteCatalogEntriesList()
-            .firstOrNull { syntheticCatalogEntryId(it.publicId) == catalogEntryId }
-    }
-
-    suspend fun getRemoteBrand(publicId: String?): RemoteBrand? = withContext(Dispatchers.IO) {
+suspend fun getRemoteBrand(publicId: String?): RemoteBrand? = withContext(Dispatchers.IO) {
         val normalizedPublicId = publicId?.takeIf { it.isNotBlank() } ?: return@withContext null
         dao.getRemoteBrand(normalizedPublicId)
     }
@@ -139,7 +128,6 @@ class SharedLibrarySyncRepository(
             dao.upsertStyles(snapshot.data.styles.map { it.toEntity() })
             dao.upsertSeasons(snapshot.data.seasons.map { it.toEntity() })
             dao.upsertSources(snapshot.data.sources.map { it.toEntity() })
-            dao.upsertCatalogEntries(snapshot.data.catalogEntries.map { it.toEntity(assetBaseUrl) })
             dao.upsertCoordinates(snapshot.data.coordinates.map { it.toEntity(assetBaseUrl) })
             dao.upsertSharedItems(snapshot.data.items.map { it.toEntity(assetBaseUrl) })
             dao.upsertPricePlans(snapshot.data.pricePlans.map { it.toEntity() })
@@ -228,9 +216,6 @@ class SharedLibrarySyncRepository(
         if (changes.sources.upserts.isNotEmpty()) dao.upsertSources(changes.sources.upserts.map { it.toEntity() })
         if (changes.sources.deletedPublicIds.isNotEmpty()) dao.deleteSources(changes.sources.deletedPublicIds)
 
-        if (changes.catalogEntries.upserts.isNotEmpty()) dao.upsertCatalogEntries(changes.catalogEntries.upserts.map { it.toEntity(assetBaseUrl) })
-        if (changes.catalogEntries.deletedPublicIds.isNotEmpty()) dao.deleteCatalogEntries(changes.catalogEntries.deletedPublicIds)
-
         if (changes.coordinates.upserts.isNotEmpty()) dao.upsertCoordinates(changes.coordinates.upserts.map { it.toEntity(assetBaseUrl) })
         if (changes.coordinates.deletedPublicIds.isNotEmpty()) dao.deleteCoordinates(changes.coordinates.deletedPublicIds)
 
@@ -257,7 +242,6 @@ class SharedLibrarySyncRepository(
         dao.clearPricePlans()
         dao.clearSharedItems()
         dao.clearCoordinates()
-        dao.clearCatalogEntries()
         dao.clearSources()
         dao.clearSeasons()
         dao.clearStyles()
@@ -301,26 +285,7 @@ class SharedLibrarySyncRepository(
         return RemoteSource(publicId = publicId, name = name, updatedAt = normalizeRemoteTimestamp(updatedAt))
     }
 
-    private fun CatalogEntrySyncDto.toEntity(assetBaseUrl: String): RemoteCatalogEntry {
-        return RemoteCatalogEntry(
-            publicId = publicId,
-            name = name,
-            brandPublicId = brandPublicId,
-            categoryPublicId = categoryPublicId,
-            stylePublicId = stylePublicId,
-            seasonPublicId = seasonPublicId,
-            sourcePublicId = sourcePublicId,
-            seriesName = seriesName,
-            referenceUrl = referenceUrl,
-            imageUrls = imageUrls.mapNotNull { resolveAssetUrl(assetBaseUrl, it) },
-            colors = colors.filter { it.isNotBlank() },
-            size = size,
-            description = description,
-            updatedAt = normalizeRemoteTimestamp(updatedAt)
-        )
-    }
-
-    private fun SharedCoordinateSyncDto.toEntity(assetBaseUrl: String): RemoteSharedCoordinate {
+private fun SharedCoordinateSyncDto.toEntity(assetBaseUrl: String): RemoteSharedCoordinate {
         return RemoteSharedCoordinate(
             publicId = publicId,
             name = name,
@@ -340,7 +305,6 @@ class SharedLibrarySyncRepository(
             stylePublicId = stylePublicId,
             seasonPublicId = seasonPublicId,
             sourcePublicId = sourcePublicId,
-            catalogEntryPublicId = catalogEntryPublicId,
             coordinatePublicId = coordinatePublicId,
             coordinateOrder = coordinateOrder,
             imageUrls = imageUrls.mapNotNull { resolveAssetUrl(assetBaseUrl, it) },
@@ -405,11 +369,7 @@ class SharedLibrarySyncRepository(
             return if (negative == 0L) -1L else negative
         }
 
-        fun syntheticCatalogEntryId(publicId: String): Long {
-            return syntheticRemoteId(publicId)
-        }
-
-        private const val SUPPORTED_SCHEMA_VERSION = 1
+private const val SUPPORTED_SCHEMA_VERSION = 1
         private const val CHANGE_PAGE_SIZE = 200
         private const val MAX_CHANGE_PAGES = 50
         private const val SECOND_TIMESTAMP_THRESHOLD = 10_000_000_000L

@@ -102,7 +102,6 @@ data class SnapshotDataDto(
     val styles: List<StyleSyncDto> = emptyList(),
     val seasons: List<SeasonSyncDto> = emptyList(),
     val sources: List<SourceSyncDto> = emptyList(),
-    val catalogEntries: List<CatalogEntrySyncDto> = emptyList(),
     val items: List<SharedItemSyncDto> = emptyList(),
     val coordinates: List<SharedCoordinateSyncDto> = emptyList(),
     val pricePlans: List<SharedPricePlanSyncDto> = emptyList()
@@ -121,7 +120,6 @@ data class ChangeBatchDto(
     val styles: ResourceChangeSetDto<StyleSyncDto> = ResourceChangeSetDto(),
     val seasons: ResourceChangeSetDto<SeasonSyncDto> = ResourceChangeSetDto(),
     val sources: ResourceChangeSetDto<SourceSyncDto> = ResourceChangeSetDto(),
-    val catalogEntries: ResourceChangeSetDto<CatalogEntrySyncDto> = ResourceChangeSetDto(),
     val items: ResourceChangeSetDto<SharedItemSyncDto> = ResourceChangeSetDto(),
     val coordinates: ResourceChangeSetDto<SharedCoordinateSyncDto> = ResourceChangeSetDto(),
     val pricePlans: ResourceChangeSetDto<SharedPricePlanSyncDto> = ResourceChangeSetDto()
@@ -164,23 +162,6 @@ data class SourceSyncDto(
     val updatedAt: Long = 0
 )
 
-data class CatalogEntrySyncDto(
-    val publicId: String = "",
-    val name: String = "",
-    val brandPublicId: String? = null,
-    val categoryPublicId: String? = null,
-    val stylePublicId: String? = null,
-    val seasonPublicId: String? = null,
-    val sourcePublicId: String? = null,
-    val seriesName: String? = null,
-    val referenceUrl: String? = null,
-    val imageUrls: List<String> = emptyList(),
-    val colors: List<String> = emptyList(),
-    val size: String? = null,
-    val description: String = "",
-    val updatedAt: Long = 0
-)
-
 data class SharedItemSyncDto(
     val publicId: String = "",
     val name: String = "",
@@ -190,7 +171,6 @@ data class SharedItemSyncDto(
     val stylePublicId: String? = null,
     val seasonPublicId: String? = null,
     val sourcePublicId: String? = null,
-    val catalogEntryPublicId: String? = null,
     val coordinatePublicId: String? = null,
     val coordinateOrder: Int = 0,
     val imageUrls: List<String> = emptyList(),

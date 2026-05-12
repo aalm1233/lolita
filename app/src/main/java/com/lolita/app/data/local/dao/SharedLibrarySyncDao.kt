@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.lolita.app.data.local.entity.RemoteBrand
-import com.lolita.app.data.local.entity.RemoteCatalogEntry
 import com.lolita.app.data.local.entity.RemoteCategory
 import com.lolita.app.data.local.entity.RemoteSeason
 import com.lolita.app.data.local.entity.RemoteSharedCoordinate
@@ -26,10 +25,7 @@ interface SharedLibrarySyncDao {
     @Query("SELECT * FROM shared_library_sync_state WHERE cache_key = :cacheKey LIMIT 1")
     suspend fun getSyncState(cacheKey: String = SHARED_LIBRARY_SYNC_CACHE_KEY): SharedLibrarySyncState?
 
-    @Query("SELECT * FROM remote_catalog_entries ORDER BY updated_at DESC, name ASC")
-    fun observeAllRemoteCatalogEntries(): Flow<List<RemoteCatalogEntry>>
-
-    @Query("SELECT * FROM remote_brands ORDER BY name ASC")
+@Query("SELECT * FROM remote_brands ORDER BY name ASC")
     fun observeAllRemoteBrands(): Flow<List<RemoteBrand>>
 
     @Query("SELECT * FROM remote_categories ORDER BY name ASC")
@@ -44,10 +40,7 @@ interface SharedLibrarySyncDao {
     @Query("SELECT * FROM remote_sources ORDER BY name ASC")
     fun observeAllRemoteSources(): Flow<List<RemoteSource>>
 
-    @Query("SELECT * FROM remote_catalog_entries ORDER BY updated_at DESC, name ASC")
-    suspend fun getAllRemoteCatalogEntriesList(): List<RemoteCatalogEntry>
-
-    @Query("SELECT * FROM remote_brands WHERE public_id = :publicId LIMIT 1")
+@Query("SELECT * FROM remote_brands WHERE public_id = :publicId LIMIT 1")
     suspend fun getRemoteBrand(publicId: String): RemoteBrand?
 
     @Query("SELECT * FROM remote_categories WHERE public_id = :publicId LIMIT 1")
@@ -74,10 +67,7 @@ interface SharedLibrarySyncDao {
     @Upsert
     suspend fun upsertSources(items: List<RemoteSource>)
 
-    @Upsert
-    suspend fun upsertCatalogEntries(items: List<RemoteCatalogEntry>)
-
-    @Upsert
+@Upsert
     suspend fun upsertCoordinates(items: List<RemoteSharedCoordinate>)
 
     @Upsert
@@ -101,10 +91,7 @@ interface SharedLibrarySyncDao {
     @Query("DELETE FROM remote_sources WHERE public_id IN (:publicIds)")
     suspend fun deleteSources(publicIds: List<String>)
 
-    @Query("DELETE FROM remote_catalog_entries WHERE public_id IN (:publicIds)")
-    suspend fun deleteCatalogEntries(publicIds: List<String>)
-
-    @Query("DELETE FROM remote_shared_coordinates WHERE public_id IN (:publicIds)")
+@Query("DELETE FROM remote_shared_coordinates WHERE public_id IN (:publicIds)")
     suspend fun deleteCoordinates(publicIds: List<String>)
 
     @Query("DELETE FROM remote_shared_items WHERE public_id IN (:publicIds)")
@@ -122,10 +109,7 @@ interface SharedLibrarySyncDao {
     @Query("DELETE FROM remote_shared_coordinates")
     suspend fun clearCoordinates()
 
-    @Query("DELETE FROM remote_catalog_entries")
-    suspend fun clearCatalogEntries()
-
-    @Query("DELETE FROM remote_sources")
+@Query("DELETE FROM remote_sources")
     suspend fun clearSources()
 
     @Query("DELETE FROM remote_seasons")
@@ -148,8 +132,7 @@ interface SharedLibrarySyncDao {
             (SELECT COUNT(*) FROM remote_styles) AS styleCount,
             (SELECT COUNT(*) FROM remote_seasons) AS seasonCount,
             (SELECT COUNT(*) FROM remote_sources) AS sourceCount,
-            (SELECT COUNT(*) FROM remote_catalog_entries) AS catalogCount,
-            (SELECT COUNT(*) FROM remote_shared_coordinates) AS coordinateCount,
+(SELECT COUNT(*) FROM remote_shared_coordinates) AS coordinateCount,
             (SELECT COUNT(*) FROM remote_shared_items) AS itemCount,
             (SELECT COUNT(*) FROM remote_shared_price_plans) AS pricePlanCount
         """
@@ -166,13 +149,4 @@ interface SharedLibrarySyncDao {
     )
     fun observeRecentSharedItems(limit: Int): Flow<List<SharedLibraryPreviewItem>>
 
-    @Query(
-        """
-        SELECT public_id AS publicId, name, updated_at AS updatedAt
-        FROM remote_catalog_entries
-        ORDER BY updated_at DESC, name ASC
-        LIMIT :limit
-        """
-    )
-    fun observeRecentCatalogEntries(limit: Int): Flow<List<SharedLibraryPreviewItem>>
 }

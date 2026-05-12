@@ -106,9 +106,6 @@ sealed interface Screen {
         override val route = "backup_restore"
     }
 
-    data object SharedLibrarySync : Screen {
-        override val route = "shared_library_sync"
-    }
 
     data object StyleManage : Screen {
         override val route = "style_manage"
@@ -137,10 +134,6 @@ sealed interface Screen {
 
     data object ThemeSelect : Screen {
         override val route = "theme_select"
-    }
-
-    data object SkinIconGallery : Screen {
-        override val route = "skin_icon_gallery"
     }
 
     data object FilteredItemList : Screen {

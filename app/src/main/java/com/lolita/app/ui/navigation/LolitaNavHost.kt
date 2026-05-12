@@ -78,14 +78,13 @@ import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
-import com.lolita.app.ui.screen.settings.SkinIconGalleryScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportGuideScreen
 import com.lolita.app.ui.screen.stats.StatsPageScreen
 import com.lolita.app.ui.screen.item.LocationDetailScreen
 import com.lolita.app.ui.screen.settings.LocationManageScreen
 import com.lolita.app.ui.screen.settings.SourceManageScreen
-import com.lolita.app.ui.screen.settings.SharedLibrarySyncScreen
+
 
 interface BottomNavItem {
     val screen: Screen
@@ -598,7 +597,6 @@ fun LolitaNavHost() {
                     onNavigateToAttributeManage = { navController.navigate(Screen.AttributeManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
-                    onNavigateToSharedLibrarySync = { navController.navigate(Screen.SharedLibrarySync.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
                 )
             }
@@ -649,14 +647,8 @@ fun LolitaNavHost() {
             // Theme Select
             composable(Screen.ThemeSelect.route) {
                 ThemeSelectScreen(
-                    onBack = { navController.popBackStack() },
-                    onNavigateToIconGallery = { navController.navigate(Screen.SkinIconGallery.route) }
+                    onBack = { navController.popBackStack() }
                 )
-            }
-
-            // Skin Icon Gallery
-            composable(Screen.SkinIconGallery.route) {
-                SkinIconGalleryScreen(onBack = { navController.popBackStack() })
             }
 
             // Backup & Restore
@@ -664,10 +656,6 @@ fun LolitaNavHost() {
                 BackupRestoreScreen(onBack = { navController.popBackStack() })
             }
 
-            // Shared Library Sync
-            composable(Screen.SharedLibrarySync.route) {
-                SharedLibrarySyncScreen(onBack = { navController.popBackStack() })
-            }
 
             // Taobao Import
             composable(Screen.TaobaoImport.route) {

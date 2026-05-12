@@ -14,18 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ThemeSelectScreen(
     onBack: () -> Unit,
-    onNavigateToIconGallery: () -> Unit = {},
     appPreferences: AppPreferences = AppModule.appPreferences()
 ) {
     val currentSkin by appPreferences.skinType.collectAsState(initial = SkinType.DEFAULT)
@@ -82,41 +77,6 @@ fun ThemeSelectScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(14.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = "\u5f53\u524d\u76ae\u80a4\uff1a" + currentSkin.displayName(),
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "\u5982\u679c\u4f60\u6000\u7591\u56fe\u6807\u6ca1\u5207\u6210\u529f\uff0c\u53ef\u4ee5\u76f4\u63a5\u6253\u5f00\u603b\u89c8\u9875\u770b\u5168\u90e8 51 \u4e2a\u81ea\u5b9a\u4e49\u56fe\u6807\u3002",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        OutlinedButton(onClick = onNavigateToIconGallery) {
-                            SkinIcon(
-                                IconKey.Visibility,
-                                modifier = Modifier.size(18.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("\u67e5\u770b\u5f53\u524d\u76ae\u80a4\u56fe\u6807\u603b\u89c8")
-                        }
-                    }
-                }
-            }
-
             items(SkinType.entries.toList()) { skinType ->
                 SkinPreviewCard(
                     skinType = skinType,

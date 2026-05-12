@@ -345,7 +345,16 @@ class ItemListViewModel(
             statuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterStatuses = statuses, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterStatuses = statuses,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -358,7 +367,16 @@ class ItemListViewModel(
             state.filterStatuses, newValue
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterPendingBalanceOnly = newValue, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterPendingBalanceOnly = newValue,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -370,7 +388,16 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterGroup = group, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterGroup = group,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -382,7 +409,16 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterSeason = season, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterSeason = season,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -394,7 +430,16 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterStyle = style, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterStyle = style,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -406,7 +451,16 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterColor = color, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterColor = color,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -418,7 +472,16 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-        _uiState.update { it.copy(filterBrandId = brandId, filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filterBrandId = brandId,
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 
@@ -434,7 +497,15 @@ class ItemListViewModel(
                 state.filterStatuses, state.filterPendingBalanceOnly
             )
             val sorted = applySorting(filtered, _uiState.value.sortOption, _uiState.value.itemPrices)
-            _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+            _uiState.update {
+                it.copy(
+                    filteredItems = sorted,
+                    itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                    galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                        buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                    } else emptyList()
+                )
+            }
             updateTotalPrice(sorted)
         }
     }
@@ -512,7 +583,15 @@ class ItemListViewModel(
             state.filterStatuses, state.filterPendingBalanceOnly
         )
         val sorted = applySorting(filtered, option, state.itemPrices)
-        _uiState.update { it.copy(filteredItems = sorted, itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)) }
+        _uiState.update {
+            it.copy(
+                filteredItems = sorted,
+                itemCardDataList = buildItemCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+                galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) {
+                    buildGalleryCardDataList(sorted, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice)
+                } else emptyList()
+            )
+        }
         updateTotalPrice(sorted)
     }
 

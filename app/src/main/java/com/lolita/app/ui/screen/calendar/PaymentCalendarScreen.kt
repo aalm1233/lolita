@@ -381,7 +381,7 @@ fun PaymentCalendarContent(
                     item {
                         Card(
                             modifier = (if (hasBackground) hazeModifier else Modifier).fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(0.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = if (hasBackground) Color.Transparent
                                 else if (isSystemInDarkTheme()) LolitaSkin.current.cardContainerColorDark
@@ -505,7 +505,7 @@ private fun YearHeader(
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (frosted) Color.Transparent
             else if (isDark) skin.cardContainerColorDark
@@ -642,7 +642,7 @@ private fun MonthCard(
         modifier = modifier
             .height(42.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(containerColor = bgColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -758,7 +758,7 @@ private fun PaymentInfoCard(
     val skin = LolitaSkin.current
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (frosted) Color.Transparent
             else if (isDark) skin.cardContainerColorDark

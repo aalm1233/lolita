@@ -60,7 +60,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -327,11 +326,17 @@ fun PaymentCalendarContent(
                         // LazyColumn's scrollable already consumed.
                         awaitFirstDown(requireUnconsumed = false)
                         val timedOut = withTimeoutOrNull(5000L) {
-                            waitForUpOrCancellation()
+                            // Wait for all pointers to go up.
+                            do {
+                                val event = awaitPointerEvent()
+                            } while (event.changes.any { it.pressed })
                         }
                         if (timedOut == null) {
                             showBottomSheet = true
-                            waitForUpOrCancellation()
+                            // Consume remaining up events.
+                            do {
+                                val event = awaitPointerEvent()
+                            } while (event.changes.any { it.pressed })
                         }
                     }
                 },

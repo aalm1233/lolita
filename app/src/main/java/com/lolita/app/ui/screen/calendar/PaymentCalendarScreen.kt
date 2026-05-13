@@ -308,7 +308,8 @@ fun PaymentCalendarContent(
         // Layer 1: Background image
         if (hasBackground && backgroundPath != null) {
             LolitaShimmerImage(
-                imageUrl = backgroundPath,
+                model = backgroundPath,
+                contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()

@@ -589,10 +589,7 @@ private fun MonthCardGrid(
     cardModifier: Modifier = Modifier,
     frosted: Boolean = false
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = Modifier.padding(horizontal = 8.dp)
-    ) {
+    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
         repeat(3) { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),

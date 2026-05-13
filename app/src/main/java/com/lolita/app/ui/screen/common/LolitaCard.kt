@@ -3,6 +3,7 @@ package com.lolita.app.ui.screen.common
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -19,12 +20,14 @@ fun LolitaCard(
     onClick: (() -> Unit)? = null,
     variant: CardVariant = CardVariant.DEFAULT,
     containerColor: Color? = null,
+    shape: CornerBasedShape? = null,
     content: @Composable () -> Unit
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
     val resolvedContainerColor = containerColor
         ?: if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+    val resolvedShape = shape ?: skin.cardShape
 
     val (elevation, border, innerPadding) = resolveVariantTokens(skin, variant, isDark)
 
@@ -35,7 +38,7 @@ fun LolitaCard(
         Card(
             onClick = onClick,
             modifier = modifier,
-            shape = skin.cardShape,
+            shape = resolvedShape,
             colors = cardColors,
             elevation = cardElevation,
             border = border
@@ -49,7 +52,7 @@ fun LolitaCard(
     } else {
         Card(
             modifier = modifier,
-            shape = skin.cardShape,
+            shape = resolvedShape,
             colors = cardColors,
             elevation = cardElevation,
             border = border

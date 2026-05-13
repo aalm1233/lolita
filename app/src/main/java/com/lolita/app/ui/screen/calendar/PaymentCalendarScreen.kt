@@ -43,7 +43,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.component.FullScreenImageViewer
@@ -380,13 +379,18 @@ fun PaymentCalendarContent(
                 }
                 if (selectedPayments.isEmpty()) {
                     item {
-                        LolitaCard(
+                        Card(
                             modifier = (if (hasBackground) hazeModifier else Modifier).fillMaxWidth(),
-                            containerColor = if (hasBackground) Color.Transparent else null,
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (hasBackground) Color.Transparent
+                                else if (isSystemInDarkTheme()) LolitaSkin.current.cardContainerColorDark
+                                else LolitaSkin.current.cardContainerColor
+                            )
                         ) {
                             Text(
                                 "当月无付款记录",
+                                modifier = Modifier.padding(12.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -583,7 +587,10 @@ private fun MonthCardGrid(
     cardModifier: Modifier = Modifier,
     frosted: Boolean = false
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(3.dp),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    ) {
         repeat(3) { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -744,12 +751,18 @@ private fun PaymentInfoCard(
         )
     }
 
-    LolitaCard(
+    val isDark = isSystemInDarkTheme()
+    val skin = LolitaSkin.current
+    Card(
         modifier = modifier.fillMaxWidth(),
-        containerColor = if (frosted) Color.Transparent else null,
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (frosted) Color.Transparent
+            else if (isDark) skin.cardContainerColorDark
+            else skin.cardContainerColor
+        )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

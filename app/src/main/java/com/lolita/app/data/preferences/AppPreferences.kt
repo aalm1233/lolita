@@ -79,6 +79,13 @@ class AppPreferences(private val context: Context) {
         context.dataStore.edit { it[SHARED_LIBRARY_BASE_URL] = url.trim() }
     }
 
+    val paymentCalendarBackgroundPath: Flow<String?> = context.dataStore.data
+        .map { it[PAYMENT_CALENDAR_BACKGROUND_PATH] }
+
+    suspend fun setPaymentCalendarBackgroundPath(path: String?) {
+        context.dataStore.edit { it[PAYMENT_CALENDAR_BACKGROUND_PATH] = path }
+    }
+
     companion object {
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
@@ -88,5 +95,6 @@ class AppPreferences(private val context: Context) {
         private val AVATAR_PATH = stringPreferencesKey("avatar_path")
         private val VIEW_MODE = stringPreferencesKey("view_mode")
         private val SHARED_LIBRARY_BASE_URL = stringPreferencesKey("shared_library_base_url")
+        private val PAYMENT_CALENDAR_BACKGROUND_PATH = stringPreferencesKey("payment_calendar_background_path")
     }
 }

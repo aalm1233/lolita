@@ -38,6 +38,7 @@ import com.lolita.app.di.AppModule
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.text.SimpleDateFormat
 import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -56,7 +57,10 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -317,9 +321,20 @@ fun PaymentCalendarContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .pointerInput(hasBackground) {
-                    if (hasBackground) {
-                        detectTapGestures(onLongPress = { showBottomSheet = true })
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        // requireUnconsumed = false lets us see events that
+                        // LazyColumn's scrollable already consumed.
+                        awaitFirstDown(requireUnconsumed = false)
+                        val timedOut = withTimeoutOrNull(
+                            viewConfiguration.longPressTimeoutMillis
+                        ) {
+                            waitForUpOrCancellation()
+                        }
+                        if (timedOut == null) {
+                            showBottomSheet = true
+                            waitForUpOrCancellation()
+                        }
                     }
                 },
             verticalArrangement = Arrangement.spacedBy(12.dp),

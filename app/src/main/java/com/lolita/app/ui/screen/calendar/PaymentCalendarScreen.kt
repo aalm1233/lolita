@@ -386,7 +386,8 @@ fun PaymentCalendarContent(
                                 containerColor = if (hasBackground) Color.Transparent
                                 else if (isSystemInDarkTheme()) LolitaSkin.current.cardContainerColorDark
                                 else LolitaSkin.current.cardContainerColor
-                            )
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                         ) {
                             Text(
                                 "当月无付款记录",
@@ -509,7 +510,8 @@ private fun YearHeader(
             containerColor = if (frosted) Color.Transparent
             else if (isDark) skin.cardContainerColorDark
             else skin.cardContainerColor
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
@@ -589,7 +591,7 @@ private fun MonthCardGrid(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = Modifier.padding(horizontal = 8.dp)
     ) {
         repeat(3) { row ->
             Row(
@@ -641,7 +643,8 @@ private fun MonthCard(
             .height(42.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = bgColor)
+        colors = CardDefaults.cardColors(containerColor = bgColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -760,7 +763,8 @@ private fun PaymentInfoCard(
             containerColor = if (frosted) Color.Transparent
             else if (isDark) skin.cardContainerColorDark
             else skin.cardContainerColor
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(

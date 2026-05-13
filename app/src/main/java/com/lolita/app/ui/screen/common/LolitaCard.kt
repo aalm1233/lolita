@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
@@ -17,15 +18,17 @@ fun LolitaCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     variant: CardVariant = CardVariant.DEFAULT,
+    containerColor: Color? = null,
     content: @Composable () -> Unit
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
-    val containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+    val resolvedContainerColor = containerColor
+        ?: if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
 
     val (elevation, border, innerPadding) = resolveVariantTokens(skin, variant, isDark)
 
-    val cardColors = CardDefaults.cardColors(containerColor = containerColor)
+    val cardColors = CardDefaults.cardColors(containerColor = resolvedContainerColor)
     val cardElevation = CardDefaults.cardElevation(defaultElevation = elevation)
 
     if (onClick != null) {

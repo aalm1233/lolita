@@ -293,8 +293,8 @@ fun PaymentCalendarContent(
         Modifier.hazeEffect(
             state = hazeState,
             style = HazeStyle(
-                backgroundColor = Color.White.copy(alpha = 0.3f),
-                tint = HazeTint(Color.White.copy(alpha = 0.3f)),
+                backgroundColor = Color.White.copy(alpha = 0.65f),
+                tint = HazeTint(Color.White.copy(alpha = 0.65f)),
                 blurRadius = 8.dp
             )
         )
@@ -326,9 +326,7 @@ fun PaymentCalendarContent(
                         // requireUnconsumed = false lets us see events that
                         // LazyColumn's scrollable already consumed.
                         awaitFirstDown(requireUnconsumed = false)
-                        val timedOut = withTimeoutOrNull(
-                            viewConfiguration.longPressTimeoutMillis
-                        ) {
+                        val timedOut = withTimeoutOrNull(5000L) {
                             waitForUpOrCancellation()
                         }
                         if (timedOut == null) {
@@ -350,7 +348,8 @@ fun PaymentCalendarContent(
                     yearOverdueAmount = uiState.yearOverdueAmount,
                     onPrevious = viewModel::previousYear,
                     onNext = viewModel::nextYear,
-                    modifier = hazeModifier
+                    modifier = hazeModifier,
+                    frosted = hasBackground
                 )
             }
             item {
@@ -359,7 +358,8 @@ fun PaymentCalendarContent(
                     selectedMonth = uiState.selectedMonth,
                     currentYear = uiState.currentYear,
                     onMonthClick = viewModel::selectMonth,
-                    cardModifier = hazeModifier
+                    cardModifier = hazeModifier,
+                    frosted = hasBackground
                 )
             }
 
@@ -378,7 +378,8 @@ fun PaymentCalendarContent(
                 if (selectedPayments.isEmpty()) {
                     item {
                         LolitaCard(
-                            modifier = (if (hasBackground) hazeModifier else Modifier).fillMaxWidth()
+                            modifier = (if (hasBackground) hazeModifier else Modifier).fillMaxWidth(),
+                            containerColor = if (hasBackground) Color.Transparent else null
                         ) {
                             Text(
                                 "当月无付款记录",
@@ -392,7 +393,8 @@ fun PaymentCalendarContent(
                         PaymentInfoCard(
                             payment = payment,
                             onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null,
-                            modifier = if (hasBackground) hazeModifier else Modifier
+                            modifier = if (hasBackground) hazeModifier else Modifier,
+                            frosted = hasBackground
                         )
                     }
                 }
@@ -487,7 +489,8 @@ private fun YearHeader(
     yearOverdueAmount: Double,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    frosted: Boolean = false
 ) {
     val isDark = isSystemInDarkTheme()
     val skin = LolitaSkin.current
@@ -496,7 +499,9 @@ private fun YearHeader(
         modifier = modifier.fillMaxWidth(),
         shape = skin.cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+            containerColor = if (frosted) Color.Transparent
+            else if (isDark) skin.cardContainerColorDark
+            else skin.cardContainerColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = skin.cardElevation),
         border = if (isDark) skin.cardBorderStrokeDark else skin.cardBorderStroke
@@ -600,7 +605,8 @@ private fun MonthCardGrid(
     selectedMonth: Int?,
     currentYear: Int,
     onMonthClick: (Int) -> Unit,
-    cardModifier: Modifier = Modifier
+    cardModifier: Modifier = Modifier,
+    frosted: Boolean = false
 ) {
     val todayCal = Calendar.getInstance()
     val isCurrentYear = todayCal.get(Calendar.YEAR) == currentYear
@@ -619,6 +625,7 @@ private fun MonthCardGrid(
                         stats = monthStatsMap[month],
                         isCurrentMonth = month == currentMonth,
                         isSelected = month == selectedMonth,
+                        frosted = frosted,
                         modifier = Modifier.weight(1f).then(cardModifier),
                         onClick = { onMonthClick(month) }
                     )
@@ -635,14 +642,17 @@ private fun MonthCard(
     isCurrentMonth: Boolean,
     isSelected: Boolean,
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    frosted: Boolean = false
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
     val primaryColor = MaterialTheme.colorScheme.primary
     val hasPayments = stats != null
     val hasOverdue = (stats?.overdueAmount ?: 0.0) > 0
-    val containerColor = if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+    val containerColor = if (frosted) Color.Transparent
+        else if (isDark) skin.cardContainerColorDark
+        else skin.cardContainerColor
 
     val bgColor by animateColorAsState(
         if (isSelected) primaryColor.copy(alpha = 0.15f)
@@ -742,7 +752,8 @@ private fun formatCompactAmount(amount: Double): String {
 private fun PaymentInfoCard(
     payment: PaymentWithItemInfo,
     onMarkPaid: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    frosted: Boolean = false
 ) {
     val typeLabel = when (payment.priceType) {
         PriceType.DEPOSIT_BALANCE -> "定金尾款"
@@ -773,7 +784,8 @@ private fun PaymentInfoCard(
     }
 
     LolitaCard(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        containerColor = if (frosted) Color.Transparent else null
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(

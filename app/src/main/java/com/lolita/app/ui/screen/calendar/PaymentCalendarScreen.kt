@@ -457,7 +457,7 @@ fun PaymentCalendarContent(
     // Full screen viewer
     if (showFullScreen && backgroundPath != null) {
         FullScreenImageViewer(
-            imageUrls = listOf(backgroundPath),
+            imageUrls = listOfNotNull(backgroundPath),
             onDismiss = { showFullScreen = false }
         )
     }

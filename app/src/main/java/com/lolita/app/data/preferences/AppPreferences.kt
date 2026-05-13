@@ -83,7 +83,13 @@ class AppPreferences(private val context: Context) {
         .map { it[PAYMENT_CALENDAR_BACKGROUND_PATH] }
 
     suspend fun setPaymentCalendarBackgroundPath(path: String?) {
-        context.dataStore.edit { it[PAYMENT_CALENDAR_BACKGROUND_PATH] = path }
+        context.dataStore.edit { prefs ->
+            if (path != null) {
+                prefs[PAYMENT_CALENDAR_BACKGROUND_PATH] = path
+            } else {
+                prefs.remove(PAYMENT_CALENDAR_BACKGROUND_PATH)
+            }
+        }
     }
 
     companion object {

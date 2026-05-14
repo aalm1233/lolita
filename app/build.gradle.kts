@@ -22,8 +22,8 @@ android {
         applicationId = "com.lolita.app"
         minSdk = 26
         targetSdk = 35
-versionCode = 72
-versionName = "2.36.10"
+versionCode = 73
+versionName = "2.36.11"
     }
 
     signingConfigs {

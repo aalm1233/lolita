@@ -626,8 +626,8 @@ private fun MonthCard(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize().padding(top = 4.dp)
         ) {
             Text(
                 "${month + 1}月",
@@ -636,7 +636,7 @@ private fun MonthCard(
                 color = if (hasPayments) MaterialTheme.colorScheme.onSurface
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
             )
-            if (stats != null) {
+            if (hasPayments) {
                 if (stats.paidTotal > 0) {
                     Text(
                         "已 ¥${formatCompactAmount(stats.paidTotal)}",

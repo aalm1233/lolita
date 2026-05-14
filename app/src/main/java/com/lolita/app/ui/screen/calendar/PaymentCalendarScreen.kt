@@ -44,7 +44,9 @@ import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.screen.common.GlassSurface
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.theme.shape.SquircleShape
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.preferences.AppPreferences
@@ -70,6 +72,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 
@@ -351,7 +354,8 @@ fun PaymentCalendarContent(
                     onPrevious = viewModel::previousYear,
                     onNext = viewModel::nextYear,
                     modifier = hazeModifier,
-                    frosted = hasBackground
+                    frosted = hasBackground,
+                    hazeState = hazeState
                 )
             }
             item {
@@ -497,24 +501,20 @@ private fun YearHeader(
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     modifier: Modifier = Modifier,
-    frosted: Boolean = false
+    frosted: Boolean = false,
+    hazeState: HazeState? = null
 ) {
     val isDark = isSystemInDarkTheme()
     val skin = LolitaSkin.current
     val primaryColor = if (isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary
 
-    Card(
+    GlassSurface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(0.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (frosted) Color.Transparent
-            else if (isDark) skin.cardContainerColorDark
-            else skin.cardContainerColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        shape = SquircleShape(20.dp),
+        hazeState = if (frosted) hazeState else null,
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Single row: <  ¥xx已  2026年  ¥xx待  >
@@ -589,11 +589,11 @@ private fun MonthCardGrid(
     cardModifier: Modifier = Modifier,
     frosted: Boolean = false
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         repeat(3) { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 repeat(4) { col ->
                     val month = row * 4 + col

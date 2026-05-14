@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -46,9 +47,11 @@ fun GlassSurface(
         )
     )
 
+    // Clip to shape first so glass fill doesn't bleed outside the squircle
     // Shadow + blur + background modifier chain
     val glassModifier = if (hazeState != null) {
         modifier
+            .clip(shape)
             .shadow(elevation, shape, clip = false)
             .hazeEffect(
                 state = hazeState,
@@ -60,6 +63,7 @@ fun GlassSurface(
             )
     } else {
         modifier
+            .clip(shape)
             .shadow(elevation, shape, clip = false)
             .background(glassColor, shape)
     }

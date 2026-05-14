@@ -2,11 +2,10 @@ package com.lolita.app.ui.screen.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.shadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +33,6 @@ fun GlassSurface(
     contentPadding: PaddingValues = PaddingValues(12.dp),
     content: @Composable () -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
 
     // Base glass color — semi-transparent white
     val glassColor = Color.White.copy(alpha = glassAlpha)

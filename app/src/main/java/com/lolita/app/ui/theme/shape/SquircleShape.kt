@@ -1,8 +1,10 @@
 package com.lolita.app.ui.theme.shape
 
-import android.graphics.Path
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -24,8 +26,8 @@ class SquircleShape(private val radius: Dp) : Shape {
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline {
-        val r = with(density) { radius.toPx() }.coerceAtMost(size.minDimension() / 2f)
-        if (r <= 0f) return Outline.Rectangle(size.toRect())
+        val r = with(density) { radius.toPx() }.coerceAtMost(size.minDimension / 2f)
+        if (r <= 0f) return Outline.Rectangle(Rect(Offset.Zero, size))
 
         val c = r * 0.63f // control point distance — 0.63 = squircle, 0.552 = standard
 

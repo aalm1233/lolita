@@ -504,9 +504,7 @@ private fun YearHeader(
     frosted: Boolean = false,
     hazeState: HazeState? = null
 ) {
-    val isDark = isSystemInDarkTheme()
-    val skin = LolitaSkin.current
-    val primaryColor = if (isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary
+    val primaryColor = MaterialTheme.colorScheme.primary
 
     GlassSurface(
         modifier = modifier.fillMaxWidth(),

@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.calendar
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -365,7 +366,8 @@ fun PaymentCalendarContent(
                     currentYear = uiState.currentYear,
                     onMonthClick = viewModel::selectMonth,
                     cardModifier = hazeModifier,
-                    frosted = hasBackground
+                    frosted = hasBackground,
+                    hazeState = hazeState
                 )
             }
 
@@ -383,19 +385,14 @@ fun PaymentCalendarContent(
                 }
                 if (selectedPayments.isEmpty()) {
                     item {
-                        Card(
-                            modifier = (if (hasBackground) hazeModifier else Modifier).fillMaxWidth(),
-                            shape = RoundedCornerShape(0.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (hasBackground) Color.Transparent
-                                else if (isSystemInDarkTheme()) LolitaSkin.current.cardContainerColorDark
-                                else LolitaSkin.current.cardContainerColor
-                            ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                        GlassSurface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = SquircleShape(16.dp),
+                            hazeState = if (hasBackground) hazeState else null,
+                            contentPadding = PaddingValues(12.dp)
                         ) {
                             Text(
                                 "当月无付款记录",
-                                modifier = Modifier.padding(12.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -407,7 +404,8 @@ fun PaymentCalendarContent(
                             payment = payment,
                             onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null,
                             modifier = if (hasBackground) hazeModifier else Modifier,
-                            frosted = hasBackground
+                            frosted = hasBackground,
+                            hazeState = hazeState
                         )
                     }
                 }
@@ -585,7 +583,8 @@ private fun MonthCardGrid(
     currentYear: Int,
     onMonthClick: (Int) -> Unit,
     cardModifier: Modifier = Modifier,
-    frosted: Boolean = false
+    frosted: Boolean = false,
+    hazeState: HazeState? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         repeat(3) { row ->
@@ -600,6 +599,7 @@ private fun MonthCardGrid(
                         stats = monthStatsMap[month],
                         isSelected = month == selectedMonth,
                         frosted = frosted,
+                        hazeState = hazeState,
                         modifier = Modifier.weight(1f).then(cardModifier),
                         onClick = { onMonthClick(month) }
                     )
@@ -616,38 +616,42 @@ private fun MonthCard(
     isSelected: Boolean,
     modifier: Modifier,
     onClick: () -> Unit,
-    frosted: Boolean = false
+    frosted: Boolean = false,
+    hazeState: HazeState? = null
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
     val primaryColor = MaterialTheme.colorScheme.primary
     val hasPayments = stats != null
     val hasOverdue = (stats?.overdueAmount ?: 0.0) > 0
-    val containerColor = if (frosted) Color.Transparent
-        else if (isDark) skin.cardContainerColorDark
-        else skin.cardContainerColor
 
     val bgColor by animateColorAsState(
         if (isSelected) primaryColor.copy(alpha = 0.15f)
-        else containerColor,
+        else Color.Transparent,
         animationSpec = tween(200), label = "monthBg"
     )
 
-    Card(
-        modifier = modifier
-            .height(42.dp)
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(0.dp),
-        colors = CardDefaults.cardColors(containerColor = bgColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    // When selected, overlay the tint on top of the glass background
+    val selectedOverlay = if (isSelected) {
+        Modifier.background(bgColor, SquircleShape(12.dp))
+    } else Modifier
+
+    GlassSurface(
+        onClick = onClick,
+        modifier = modifier.height(48.dp).then(selectedOverlay),
+        shape = SquircleShape(12.dp),
+        hazeState = if (frosted) hazeState else null,
+        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+        elevation = 1.dp
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 "${month + 1}月",
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (hasPayments) MaterialTheme.colorScheme.onSurface
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
@@ -656,7 +660,7 @@ private fun MonthCard(
                 if (stats.paidTotal > 0) {
                     Text(
                         "已 ¥${formatCompactAmount(stats.paidTotal)}",
-                        fontSize = 9.sp,
+                        fontSize = 8.sp,
                         color = paidColor(),
                         maxLines = 1
                     )
@@ -665,7 +669,7 @@ private fun MonthCard(
                     val unpaidColor = if (hasOverdue) overdueColor() else primaryColor
                     Text(
                         "待 ¥${formatCompactAmount(stats.unpaidTotal)}",
-                        fontSize = 9.sp,
+                        fontSize = 8.sp,
                         color = unpaidColor,
                         maxLines = 1
                     )
@@ -673,7 +677,7 @@ private fun MonthCard(
                 if (hasOverdue && stats.overdueAmount > 0) {
                     Text(
                         "逾期",
-                        fontSize = 8.sp,
+                        fontSize = 7.sp,
                         color = overdueColor(),
                         fontWeight = FontWeight.SemiBold
                     )
@@ -719,7 +723,8 @@ private fun PaymentInfoCard(
     payment: PaymentWithItemInfo,
     onMarkPaid: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    frosted: Boolean = false
+    frosted: Boolean = false,
+    hazeState: HazeState? = null
 ) {
     val typeLabel = when (payment.priceType) {
         PriceType.DEPOSIT_BALANCE -> "定金尾款"
@@ -749,19 +754,13 @@ private fun PaymentInfoCard(
         )
     }
 
-    val isDark = isSystemInDarkTheme()
-    val skin = LolitaSkin.current
-    Card(
+    GlassSurface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(0.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (frosted) Color.Transparent
-            else if (isDark) skin.cardContainerColorDark
-            else skin.cardContainerColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        shape = SquircleShape(16.dp),
+        hazeState = if (frosted) hazeState else null,
+        contentPadding = PaddingValues(12.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

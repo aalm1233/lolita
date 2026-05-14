@@ -288,18 +288,6 @@ fun PaymentCalendarContent(
         }
     }
 
-    // Haze modifier applied to all cards when background is set
-    val hazeModifier = if (hasBackground) {
-        Modifier.hazeEffect(
-            state = hazeState,
-            style = HazeStyle(
-                backgroundColor = Color.White.copy(alpha = 0.65f),
-                tint = HazeTint(Color.White.copy(alpha = 0.65f)),
-                blurRadius = 8.dp
-            )
-        )
-    } else Modifier
-
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -352,7 +340,6 @@ fun PaymentCalendarContent(
                     yearOverdueAmount = uiState.yearOverdueAmount,
                     onPrevious = viewModel::previousYear,
                     onNext = viewModel::nextYear,
-                    modifier = hazeModifier,
                     frosted = hasBackground,
                     hazeState = hazeState
                 )
@@ -363,7 +350,6 @@ fun PaymentCalendarContent(
                     selectedMonth = uiState.selectedMonth,
                     currentYear = uiState.currentYear,
                     onMonthClick = viewModel::selectMonth,
-                    cardModifier = hazeModifier,
                     frosted = hasBackground,
                     hazeState = hazeState
                 )
@@ -401,7 +387,6 @@ fun PaymentCalendarContent(
                         PaymentInfoCard(
                             payment = payment,
                             onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null,
-                            modifier = if (hasBackground) hazeModifier else Modifier,
                             frosted = hasBackground,
                             hazeState = hazeState
                         )
@@ -580,7 +565,6 @@ private fun MonthCardGrid(
     selectedMonth: Int?,
     currentYear: Int,
     onMonthClick: (Int) -> Unit,
-    cardModifier: Modifier = Modifier,
     frosted: Boolean = false,
     hazeState: HazeState? = null
 ) {
@@ -598,7 +582,7 @@ private fun MonthCardGrid(
                         isSelected = month == selectedMonth,
                         frosted = frosted,
                         hazeState = hazeState,
-                        modifier = Modifier.weight(1f).then(cardModifier),
+                        modifier = Modifier.weight(1f),
                         onClick = { onMonthClick(month) }
                     )
                 }

@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,7 +43,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.screen.common.GlassSurface
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.theme.shape.SquircleShape
@@ -619,8 +617,6 @@ private fun MonthCard(
     frosted: Boolean = false,
     hazeState: HazeState? = null
 ) {
-    val skin = LolitaSkin.current
-    val isDark = isSystemInDarkTheme()
     val primaryColor = MaterialTheme.colorScheme.primary
     val hasPayments = stats != null
     val hasOverdue = (stats?.overdueAmount ?: 0.0) > 0

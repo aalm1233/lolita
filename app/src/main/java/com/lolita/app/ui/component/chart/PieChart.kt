@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,7 +24,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lolita.app.ui.theme.Gray800
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -63,11 +63,12 @@ fun DonutChart(
 
     val sweepAngles = data.map { (it.value / total * 360.0).toFloat() }
 
-    val centerPaint = remember(centerText) {
+    val centerTextColor = MaterialTheme.colorScheme.onSurface
+    val centerPaint = remember(centerTextColor, centerTextSize) {
         Paint().apply {
             textAlign = Paint.Align.CENTER
             textSize = centerTextSize
-            color = Gray800.toArgb()
+            color = centerTextColor.toArgb()
             isAntiAlias = true
         }
     }

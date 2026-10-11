@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,8 +21,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lolita.app.ui.theme.Gray200
-import com.lolita.app.ui.theme.Gray800
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -34,7 +33,7 @@ data class LineChartData(
 fun LineChart(
     data: List<LineChartData>,
     modifier: Modifier = Modifier,
-    lineColor: Color = Color(0xFFFF69B4),
+    lineColor: Color = MaterialTheme.colorScheme.primary,
     selectedIndex: Int = -1,
     onPointClick: (Int) -> Unit = {}
 ) {
@@ -50,7 +49,10 @@ fun LineChart(
     val lineStrokeWidth = with(density) { 2.dp.toPx() }
     val axisLabelSize = with(density) { 10.sp.toPx() }
     val tooltipTextSize = with(density) { 11.sp.toPx() }
-    val gridLineColor = Gray200
+    val gridLineColor = MaterialTheme.colorScheme.outlineVariant
+    val axisLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val tooltipBackgroundColor = MaterialTheme.colorScheme.inverseSurface
+    val tooltipTextColor = MaterialTheme.colorScheme.inverseOnSurface
 
     // Calculate Y-axis ticks: 4-5 nice tick marks
     val tickCount = 5
@@ -66,17 +68,17 @@ fun LineChart(
     val actualTickCount = (niceMax / niceStep).toInt() + 1
     val ticks = (0 until actualTickCount).map { it * niceStep }
 
-    val axisLabelPaint = remember {
+    val axisLabelPaint = remember(axisLabelColor, axisLabelSize) {
         Paint().apply {
             textSize = axisLabelSize
-            color = Gray800.toArgb()
+            color = axisLabelColor.toArgb()
             isAntiAlias = true
         }
     }
-    val tooltipPaint = remember {
+    val tooltipPaint = remember(tooltipTextColor, tooltipTextSize) {
         Paint().apply {
             textSize = tooltipTextSize
-            color = android.graphics.Color.WHITE
+            color = tooltipTextColor.toArgb()
             isAntiAlias = true
         }
     }
@@ -218,7 +220,7 @@ fun LineChart(
             val tooltipY = pt.y - selectedPointRadius - tooltipH - 4f
 
             drawRoundRect(
-                color = Gray800,
+                color = tooltipBackgroundColor,
                 topLeft = Offset(tooltipX, tooltipY),
                 size = Size(tooltipW, tooltipH),
                 cornerRadius = CornerRadius(4.dp.toPx())

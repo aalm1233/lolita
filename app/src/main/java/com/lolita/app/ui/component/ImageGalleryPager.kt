@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.screen.common.heroSharedElement
@@ -28,7 +30,10 @@ fun ImageGalleryPager(
     onImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String = "",
-    sharedTransitionKey: String? = null
+    sharedTransitionKey: String? = null,
+    contentScale: ContentScale = ContentScale.Crop,
+    imageShape: Shape? = null,
+    imageBackgroundColor: Color = Color.Transparent
 ) {
     if (imageUrls.isEmpty()) return
 
@@ -42,17 +47,20 @@ fun ImageGalleryPager(
             val pageModifier = if (page == 0 && sharedTransitionKey != null) {
                 Modifier.fillMaxSize()
                     .heroSharedElement(sharedTransitionKey)
-                    .clickable { onImageClick(page) }
             } else {
                 Modifier.fillMaxSize()
-                    .clickable { onImageClick(page) }
             }
+
+            // Clip after the shared element so its bounds can animate freely.
+            val clippedModifier = if (imageShape != null) pageModifier.clip(imageShape) else pageModifier
 
             LolitaShimmerImage(
                 model = imageUrls[page],
                 contentDescription = contentDescription,
-                contentScale = ContentScale.Crop,
-                modifier = pageModifier,
+                contentScale = contentScale,
+                modifier = clippedModifier
+                    .background(imageBackgroundColor)
+                    .clickable { onImageClick(page) },
                 circularRevealEnabled = false
             )
         }

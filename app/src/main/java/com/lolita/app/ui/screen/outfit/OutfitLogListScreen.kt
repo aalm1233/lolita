@@ -28,6 +28,7 @@ import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.valentinilk.shimmer.ShimmerBounds
@@ -181,7 +182,7 @@ private fun OutfitLogListItemCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    LolitaCard(modifier = modifier.fillMaxWidth()) {
+    LolitaCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues(0.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -200,7 +201,7 @@ private fun OutfitLogListItemCard(
                             .fillMaxWidth()
                             .height(220.dp)
                             .heroSharedElement("outfitLogImage-${log.id}")
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                            .clip(RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium)),
                         contentScale = ContentScale.Crop,
                         placeholderInitial = "穿"
                     )
@@ -226,7 +227,7 @@ private fun OutfitLogListItemCard(
                         .fillMaxWidth()
                         .background(
                             MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
-                            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                            RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium)
                         )
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
@@ -240,7 +241,7 @@ private fun OutfitLogListItemCard(
             }
 
             // Content area
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) { // intentional override of cardInnerPadding
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
                 if (log.previewNote.isNotEmpty()) {
                     Text(
                         text = log.previewNote,
@@ -314,12 +315,12 @@ private fun OutfitLogListItemCard(
 
 @Composable
 private fun OutfitLogListItemCardSkeleton(modifier: Modifier = Modifier) {
-    LolitaCard(modifier = modifier.fillMaxWidth()) {
+    LolitaCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues(0.dp)) {
         Column {
             ShimmerRect(
                 width = 200.dp,
                 height = 220.dp,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                shape = RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium),
                 modifier = Modifier.fillMaxWidth()
             )
             Column(

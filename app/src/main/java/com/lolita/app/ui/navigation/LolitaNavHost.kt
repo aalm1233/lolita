@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
@@ -222,7 +223,7 @@ fun LolitaNavHost() {
             NavHost(
                 navController = navController,
                 startDestination = Screen.ItemList.route,
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
                 enterTransition = { navSpec.enterTransition },
                 exitTransition = { navSpec.exitTransition },
                 popEnterTransition = { navSpec.popEnterTransition },

@@ -46,6 +46,7 @@ import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.valentinilk.shimmer.ShimmerBounds
@@ -274,7 +275,7 @@ private fun CoordinateCard(
                 .fillMaxWidth()
                 .combinedClickable(onClick = onClick, onLongClick = { showMenu = true })
         ) {
-            Row(modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
+            Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 if (coordinate.imageUrls.isNotEmpty()) {
                     LolitaShimmerImage(
@@ -395,7 +396,7 @@ private fun CoordinateGridCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    LolitaCard(modifier = modifier.fillMaxWidth()) {
+    LolitaCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues(0.dp)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -411,7 +412,7 @@ private fun CoordinateGridCard(
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
                                 .heroSharedElement("coordinateImage-${coordinate.id}")
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium)),
                             contentScale = ContentScale.Crop,
                             placeholderInitial = coordinate.name.firstOrNull()?.toString()
                         )
@@ -420,7 +421,7 @@ private fun CoordinateGridCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                                .clip(RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium))
                                 .background(
                                     Brush.linearGradient(listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)))
                                 ),
@@ -465,7 +466,7 @@ private fun CoordinateGridCard(
                 }
                 // 信息区域
                 Column(
-                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
+                    modifier = Modifier.padding(8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
@@ -524,7 +525,7 @@ private fun formatCoordinateDate(timestamp: Long): String {
 private fun CoordinateCardSkeleton(modifier: Modifier = Modifier) {
     LolitaCard(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ShimmerRect(width = 80.dp, height = 80.dp, shape = RoundedCornerShape(12.dp))
@@ -541,13 +542,13 @@ private fun CoordinateCardSkeleton(modifier: Modifier = Modifier) {
 
 @Composable
 private fun CoordinateGridCardSkeleton(modifier: Modifier = Modifier) {
-    LolitaCard(modifier = modifier.fillMaxWidth()) {
+    LolitaCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues(0.dp)) {
         Column {
             ShimmerRect(
                 width = 200.dp,
                 height = 160.dp,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                modifier = Modifier.fillMaxWidth()
+                shape = RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium),
+                modifier = Modifier.fillMaxWidth().aspectRatio(0.8f)
             )
             Column(
                 modifier = Modifier.padding(8.dp),

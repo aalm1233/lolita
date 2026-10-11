@@ -84,7 +84,7 @@ private fun LocationCardItem(
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp), // intentional override of cardInnerPadding
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Location image - 56dp

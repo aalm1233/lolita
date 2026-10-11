@@ -2,18 +2,26 @@ package com.lolita.app.ui.screen.common
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.LolitaSkinConfig
 
+/**
+ * Skin-aware card with one surface and one layer of content padding.
+ * [contentPadding] replaces the variant padding; null keeps the skin default.
+ */
 @Composable
 fun LolitaCard(
     modifier: Modifier = Modifier,
@@ -21,15 +29,29 @@ fun LolitaCard(
     variant: CardVariant = CardVariant.DEFAULT,
     containerColor: Color? = null,
     shape: CornerBasedShape? = null,
+    contentPadding: PaddingValues? = null,
     content: @Composable () -> Unit
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
-    val resolvedContainerColor = containerColor
+    val surfaceTint = containerColor
         ?: if (isDark) skin.cardContainerColorDark else skin.cardContainerColor
+    // Resolve translucent tints once, so every part of the rounded surface has
+    // the same color. Explicitly transparent image cards remain transparent.
+    val resolvedContainerColor = if (surfaceTint.alpha > 0f && surfaceTint.alpha < 1f) {
+        surfaceTint.compositeOver(MaterialTheme.colorScheme.surface)
+    } else {
+        surfaceTint
+    }
     val resolvedShape = shape ?: skin.cardShape
 
     val (elevation, border, innerPadding) = resolveVariantTokens(skin, variant, isDark)
+    val resolvedContentPadding = contentPadding ?: PaddingValues(innerPadding)
+    val layoutDirection = LocalLayoutDirection.current
+    val hasContentPadding = resolvedContentPadding.calculateLeftPadding(layoutDirection) > 0.dp ||
+        resolvedContentPadding.calculateRightPadding(layoutDirection) > 0.dp ||
+        resolvedContentPadding.calculateTopPadding() > 0.dp ||
+        resolvedContentPadding.calculateBottomPadding() > 0.dp
 
     val cardColors = CardDefaults.cardColors(containerColor = resolvedContainerColor)
     val cardElevation = CardDefaults.cardElevation(defaultElevation = elevation)
@@ -43,8 +65,8 @@ fun LolitaCard(
             elevation = cardElevation,
             border = border
         ) {
-            if (innerPadding > 0.dp) {
-                Box(modifier = Modifier.padding(innerPadding)) { content() }
+            if (hasContentPadding) {
+                Box(modifier = Modifier.padding(resolvedContentPadding)) { content() }
             } else {
                 content()
             }
@@ -57,8 +79,8 @@ fun LolitaCard(
             elevation = cardElevation,
             border = border
         ) {
-            if (innerPadding > 0.dp) {
-                Box(modifier = Modifier.padding(innerPadding)) { content() }
+            if (hasContentPadding) {
+                Box(modifier = Modifier.padding(resolvedContentPadding)) { content() }
             } else {
                 content()
             }

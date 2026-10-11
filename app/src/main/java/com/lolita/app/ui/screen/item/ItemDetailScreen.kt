@@ -13,7 +13,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,8 +36,8 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.screen.common.SectionHeader
-import com.lolita.app.ui.screen.common.ImageFrame
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
@@ -62,6 +64,12 @@ fun ItemDetailScreen(
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val skin = LolitaSkin.current
+    val heroHeight = (LocalConfiguration.current.screenHeightDp * 0.36f).dp.coerceIn(240.dp, 320.dp)
+    val heroShape = (skin.cardShape as? CornerBasedShape)?.copy(
+        topStart = CornerSize(0.dp),
+        topEnd = CornerSize(0.dp)
+    ) ?: RoundedCornerShape(bottomStart = skin.cornerRadiusMedium, bottomEnd = skin.cornerRadiusMedium)
     val coroutineScope = rememberCoroutineScope()
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
@@ -199,7 +207,7 @@ fun ItemDetailScreen(
                 )
             }
         },
-        contentWindowInsets = if (hasImage) WindowInsets(0, 0, 0, 0) else ScaffoldDefaults.contentWindowInsets
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         if (uiState.isLoading) {
             val shimmer = rememberShimmer(ShimmerBounds.Window)
@@ -216,11 +224,8 @@ fun ItemDetailScreen(
                 // Hero image skeleton
                 ShimmerRect(
                     width = 400.dp,
-                    height = 380.dp,
-                    shape = (LolitaSkin.current.cardShape as RoundedCornerShape).copy(
-                        topStart = CornerSize(0.dp),
-                        topEnd = CornerSize(0.dp)
-                    ),
+                    height = heroHeight,
+                    shape = heroShape,
                     modifier = Modifier.fillMaxWidth().shimmer(shimmer)
                 )
                 // Content section skeleton
@@ -236,7 +241,6 @@ fun ItemDetailScreen(
                     // Basic info card
                     LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             ShimmerLine(widthFraction = 0.3f, height = 18.dp)
@@ -249,7 +253,6 @@ fun ItemDetailScreen(
                     // Price info card
                     LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             ShimmerLine(widthFraction = 0.3f, height = 18.dp)
@@ -294,13 +297,12 @@ fun ItemDetailScreen(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(380.dp)
-                                .clip((LolitaSkin.current.cardShape as RoundedCornerShape).copy(
-                                topStart = CornerSize(0.dp),
-                                topEnd = CornerSize(0.dp)
-                            )),
+                                .height(heroHeight),
                             contentDescription = item.name,
-                            sharedTransitionKey = "itemImage-${item.id}"
+                            sharedTransitionKey = "itemImage-${item.id}",
+                            contentScale = ContentScale.Fit,
+                            imageShape = heroShape,
+                            imageBackgroundColor = MaterialTheme.colorScheme.surface
                         )
 
                         if (showFullScreen) {
@@ -353,8 +355,8 @@ fun ItemDetailScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                            .padding(skin.spacingLarge),
+                        verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)
                     ) {
                         // Name and status
                         Column {
@@ -366,7 +368,10 @@ fun ItemDetailScreen(
                                 Text(
                                     text = item.name,
                                     style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.weight(1f).padding(end = skin.spacingMedium),
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
                                 )
 
                                 StatusBadge(item.status)
@@ -377,6 +382,13 @@ fun ItemDetailScreen(
                                 PriorityBadge(item.priority)
                             }
                         }
+
+                        ItemOrderSummary(
+                            item = item,
+                            uiState = uiState,
+                            onNavigateToPriceManage = onNavigateToPriceManage,
+                            onNavigateToItem = onNavigateToItem
+                        )
 
                         LolitaSection(title = "基本信息") {
                             val brand = uiState.brands.find { it.id == item.brandId }
@@ -467,39 +479,57 @@ fun ItemDetailScreen(
                             }
                         }
                         if (item.parentItemId == null) {
-                            LolitaSection(title = "所属小物", action = {
-                                TextButton(onClick = { onCreateChild(item.id) }) {
-                                    SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp))
-                                    Spacer(Modifier.width(4.dp))
-                                    Text("新增小物")
-                                }
-                            }) {
-                                uiState.children.forEach { child ->
-                                    row {
-                                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                                            Row(modifier = Modifier.weight(1f).skinClickable { onNavigateToItem(child.id) }
-                                                .padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                                LolitaShimmerImage(model = child.imageUrls.firstOrNull(), contentDescription = child.name,
-                                                    modifier = Modifier.size(48.dp).clip(MaterialTheme.shapes.small),
-                                                    contentScale = ContentScale.Crop, placeholderInitial = child.name.firstOrNull()?.toString())
-                                                Spacer(Modifier.width(12.dp))
-                                                Column(Modifier.weight(1f)) {
-                                                    Text(child.name, style = MaterialTheme.typography.bodyMedium)
-                                                    Text(if (child.includedInParentPrice) "包含在主件价格中" else "独立计价",
-                                                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                    Text(itemStatusLabel(child.status), style = MaterialTheme.typography.labelSmall,
-                                                        color = MaterialTheme.colorScheme.primary)
-                                                }
-                                            }
-                                            TextButton(onClick = { childToDetach = child }) { Text("解除") }
+                            if (uiState.children.isEmpty()) {
+                                LolitaCard(modifier = Modifier.fillMaxWidth(), variant = CardVariant.COMPACT) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)
+                                    ) {
+                                        Text("小物", modifier = Modifier.weight(1f),
+                                            style = MaterialTheme.typography.labelLarge,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        TextButton(onClick = { onCreateChild(item.id) }) {
+                                            SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp))
+                                            Spacer(Modifier.width(skin.spacingSmall))
+                                            Text("新增小物")
                                         }
+                                        TextButton(onClick = { showAttachPicker = true }) { Text("挂入已有") }
                                     }
                                 }
-                                row {
-                                    if (uiState.children.isEmpty()) Text("暂无所属小物", style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    OutlinedButton(onClick = { showAttachPicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                        Text("挂入已有小物")
+                            } else {
+                                LolitaSection(title = "所属小物", action = {
+                                    TextButton(onClick = { onCreateChild(item.id) }) {
+                                        SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp))
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("新增小物")
+                                    }
+                                }) {
+                                    uiState.children.forEach { child ->
+                                        row {
+                                            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                                Row(modifier = Modifier.weight(1f).skinClickable { onNavigateToItem(child.id) }
+                                                    .padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                                    LolitaShimmerImage(model = child.imageUrls.firstOrNull(), contentDescription = child.name,
+                                                        modifier = Modifier.size(48.dp).clip(MaterialTheme.shapes.small),
+                                                        contentScale = ContentScale.Crop, placeholderInitial = child.name.firstOrNull()?.toString())
+                                                    Spacer(Modifier.width(12.dp))
+                                                    Column(Modifier.weight(1f)) {
+                                                        Text(child.name, style = MaterialTheme.typography.bodyMedium)
+                                                        Text(if (child.includedInParentPrice) "包含在主件价格中" else "独立计价",
+                                                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                        Text(itemStatusLabel(child.status), style = MaterialTheme.typography.labelSmall,
+                                                            color = MaterialTheme.colorScheme.primary)
+                                                    }
+                                                }
+                                                TextButton(onClick = { childToDetach = child }) { Text("解除") }
+                                            }
+                                        }
+                                    }
+                                    row {
+                                        OutlinedButton(onClick = { showAttachPicker = true }, modifier = Modifier.fillMaxWidth()) {
+                                            Text("挂入已有小物")
+                                        }
                                     }
                                 }
                             }
@@ -752,6 +782,73 @@ fun ItemDetailScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ItemOrderSummary(
+    item: Item,
+    uiState: ItemEditUiState,
+    onNavigateToPriceManage: () -> Unit,
+    onNavigateToItem: (Long) -> Unit
+) {
+    val skin = LolitaSkin.current
+    val currentOrder = uiState.pricesWithPayments.singleOrNull()
+    val sharedParentId = item.parentItemId.takeIf { item.includedInParentPrice }
+
+    LolitaCard(
+        modifier = Modifier.fillMaxWidth(),
+        variant = CardVariant.COMPACT,
+        onClick = {
+            if (sharedParentId != null) onNavigateToItem(sharedParentId)
+            else onNavigateToPriceManage()
+        }
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+            SectionHeader(title = "价格与付款", action = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(if (sharedParentId != null) "查看主件" else "查看",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary)
+                    Spacer(Modifier.width(skin.spacingSmall))
+                    SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary)
+                }
+            })
+            when {
+                item.includedInParentPrice -> Text(
+                    "已包含在主件价格中",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                currentOrder != null -> {
+                    val paidAmount = OrderAccounting.sum(currentOrder.payments.filter { it.isPaid }.map { it.amount })
+                    val remainingAmount = OrderAccounting.remaining(currentOrder.price.totalPrice, paidAmount)
+                    Text("¥${String.format("%.2f", currentOrder.price.totalPrice)}",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(skin.spacingLarge),
+                        verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
+                    ) {
+                        Text("实付 ¥${String.format("%.2f", paidAmount)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("待付 ¥${String.format("%.2f", remainingAmount)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (remainingAmount > 0) MaterialTheme.colorScheme.error
+                                else MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                else -> Text(
+                    if (uiState.legacyPriceCount > 0) "历史价格待核对" else "尚未录入价格",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

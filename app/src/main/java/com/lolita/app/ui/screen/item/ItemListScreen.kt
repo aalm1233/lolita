@@ -856,219 +856,154 @@ private fun ItemCard(
     modifier: Modifier = Modifier
 ) {
     val item = data.item
-    val brandName = data.brandName
-    val brandLogoUrl = data.brandLogoUrl
-    val categoryName = data.categoryName
-    val itemPrice = data.itemPrice
-    val showPrice = data.showPrice
-    var showMenu by remember { mutableStateOf(false) }
     val skin = LolitaSkin.current
-    val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
+    var showMenu by remember { mutableStateOf(false) }
+    val imageShape = RoundedCornerShape(skin.cornerRadiusSmall)
+    val details = listOfNotNull(
+        data.categoryName?.takeIf { it.isNotBlank() },
+        item.colors.takeIf { it.isNotEmpty() }?.joinToString("、")
+    ).joinToString(" · ")
 
-    LolitaCard(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth()
-    ) {
-            Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp), // intentional override of cardInnerPadding
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+    LolitaCard(onClick = onClick, modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)
         ) {
             if (item.imageUrls.isNotEmpty()) {
                 LolitaShimmerImage(
-                    model = java.io.File(item.imageUrls.first()),
+                    model = item.imageUrls.firstOrNull()?.let { java.io.File(it) },
                     contentDescription = item.name,
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(88.dp)
                         .heroSharedElement("itemImage-${item.id}")
-                        .clip(RoundedCornerShape(12.dp)),
+                        .clip(imageShape),
                     contentScale = ContentScale.Crop,
                     placeholderInitial = item.name.firstOrNull()?.toString()
                 )
             } else {
-                val categoryInitial = categoryName?.firstOrNull()?.toString() ?: "?"
-                Surface(
-                    modifier = Modifier.size(80.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.Transparent
+                Box(
+                    modifier = Modifier.size(88.dp).clip(imageShape).background(
+                        Brush.linearGradient(listOf(
+                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                        ))
+                    ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.linearGradient(listOf(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f), MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)))
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = categoryInitial,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Text(
+                        text = data.categoryName?.firstOrNull()?.toString() ?: "?",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
-                    if (showPrice && itemPrice != null && itemPrice > 0) {
+                    if (data.showPrice && data.itemPrice != null && data.itemPrice > 0) {
                         Text(
-                            text = "¥%.0f".format(itemPrice),
+                            text = "¥%.0f".format(data.itemPrice),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(end = 4.dp)
+                            modifier = Modifier.padding(start = skin.spacingSmall)
                         )
                     }
                     Box {
                         IconButton(onClick = { showMenu = true }) {
                             SkinIcon(IconKey.Edit, tint = MaterialTheme.colorScheme.primary)
                         }
-                        if (showMenu) {
-                            DropdownMenu(
-                                expanded = true,
-                                onDismissRequest = { showMenu = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text("编辑") },
-                                    onClick = { showMenu = false; onEdit() },
-                                    leadingIcon = { SkinIcon(IconKey.Edit) }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("删除") },
-                                    onClick = { showMenu = false; onDelete() },
-                                    leadingIcon = {
-                                        SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error)
-                                    },
-                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
-                                )
-                            }
+                        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                            DropdownMenuItem(
+                                text = { Text("编辑") },
+                                onClick = { showMenu = false; onEdit() },
+                                leadingIcon = { SkinIcon(IconKey.Edit) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("删除") },
+                                onClick = { showMenu = false; onDelete() },
+                                leadingIcon = { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) },
+                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.error)
+                            )
                         }
                     }
                 }
-
-                if (item.description.isNotEmpty()) {
+                data.brandName?.let { brand ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)
+                    ) {
+                        BrandLogo(logoUrl = data.brandLogoUrl, brandName = brand, size = 14.dp)
+                        Text(
+                            text = brand,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+                if (details.isNotEmpty()) {
+                    Text(
+                        text = details,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (item.parentItemId != null) {
+                    Text(
+                        text = if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (item.description.isNotBlank()) {
                     Text(
                         text = item.description,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (item.parentItemId != null) {
-                        Text(if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
-                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    brandName?.let {
-                        Surface(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                BrandLogo(logoUrl = brandLogoUrl, brandName = brandName, size = 14.dp)
-                                Text(
-                                    text = it,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    maxLines = 1
-                                )
+                    Box(
+                        modifier = Modifier.size(6.dp).clip(CircleShape).background(
+                            when (item.status) {
+                                ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
+                                ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
+                                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary
                             }
-                        }
-                    }
-                    categoryName?.let {
-                        Surface(
-                            color = MaterialTheme.colorScheme.tertiaryContainer,
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = it,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                maxLines = 1
-                            )
-                        }
-                    }
-                    item.colors.takeIf { it.isNotEmpty() }?.let { colors ->
-                        if (colors.isNotEmpty()) {
-                            Surface(
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    colors.take(3).forEach { colorName ->
-                                        val hex = findColorHex(colorName)
-                                        val chipColor = if (hex != null) Color(hex) else Color.Gray
-                                        Box(
-                                            modifier = Modifier
-                                                .size(8.dp)
-                                                .clip(CircleShape)
-                                                .background(chipColor)
-                                        )
-                                    }
-                                    Text(
-                                        text = colors.joinToString("、"),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 1
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Surface(
-                    color = when (item.status) {
-                        ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
-                        ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                        ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
-                    },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SkinIcon(IconKey.Save, modifier = Modifier.size(12.dp))
-                        Text(
-                            text = when (item.status) {
-                                ItemStatus.OWNED -> "已拥有"
-                                ItemStatus.WISHED -> "愿望单"
-                                ItemStatus.PENDING_BALANCE -> "待补尾款"
-                                ItemStatus.PENDING_PAYMENT -> "待付款"
-                            },
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Medium
                         )
-                    }
+                    )
+                    Text(
+                        text = when (item.status) {
+                            ItemStatus.OWNED -> "已拥有"
+                            ItemStatus.WISHED -> "愿望单"
+                            ItemStatus.PENDING_BALANCE -> "待补尾款"
+                            ItemStatus.PENDING_PAYMENT -> "待付款"
+                        },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
@@ -1083,14 +1018,12 @@ private fun ItemCardSkeleton(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ShimmerRect(
-                width = 80.dp,
-                height = 80.dp,
+                width = 88.dp,
+                height = 88.dp,
                 shape = RoundedCornerShape(12.dp)
             )
             Column(
@@ -1108,21 +1041,23 @@ private fun ItemCardSkeleton(modifier: Modifier = Modifier) {
 @Composable
 private fun ItemGridCardSkeleton(modifier: Modifier = Modifier) {
     LolitaCard(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(0.dp)
     ) {
         Column {
             ShimmerRect(
                 width = 200.dp,
                 height = 160.dp,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                modifier = Modifier.fillMaxWidth()
+                shape = RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium),
+                modifier = Modifier.fillMaxWidth().aspectRatio(0.8f)
             )
             Column(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                ShimmerLine(widthFraction = 0.8f, height = 16.dp)
+                ShimmerLine(widthFraction = 0.8f, height = 40.dp)
                 ShimmerLine(widthFraction = 0.5f, height = 14.dp)
+                ShimmerLine(widthFraction = 0.4f, height = 14.dp)
             }
         }
     }
@@ -1171,7 +1106,8 @@ private fun ItemGridCard(
     val filterAccent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
 
     LolitaCard(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(0.dp)
     ) {
         Box(
             modifier = Modifier
@@ -1192,7 +1128,7 @@ private fun ItemGridCard(
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
                                 .heroSharedElement("itemImage-${item.id}")
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium)),
                             contentScale = ContentScale.Crop,
                             placeholderInitial = item.name.firstOrNull()?.toString()
                         )
@@ -1202,7 +1138,7 @@ private fun ItemGridCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(0.8f)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                                .clip(RoundedCornerShape(topStart = LolitaSkin.current.cornerRadiusMedium, topEnd = LolitaSkin.current.cornerRadiusMedium))
                                 .background(
                                     Brush.linearGradient(
                                         listOf(
@@ -1242,14 +1178,15 @@ private fun ItemGridCard(
 
                 // Info area
                 Column(
-                    modifier = Modifier.padding(8.dp), // intentional override of cardInnerPadding
+                    modifier = Modifier.padding(horizontal = skin.spacingMedium, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
+                        maxLines = 2,
+                        minLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                     if (item.parentItemId != null) {

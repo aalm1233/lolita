@@ -44,16 +44,20 @@
 - 导航统一走 `Screen` sealed interface + `LolitaNavHost`，新增页面两边都补。
 - 列表/详情/编辑页成套考虑。
 - `GradientTopAppBar` 是标准顶栏，默认 `compact = true`，无明确理由不改。顶栏支持 Haze 毛玻璃效果：当 `skin.topBarBlurEnabled && LocalHazeState.current != null` 时使用 `hazeEffect`，否则回退到原始渐变。
-- `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`。
+- `LolitaNavHost` 外层 `Scaffold` 设 `contentWindowInsets = WindowInsets(0,0,0,0)`，`GradientTopAppBar` 内部处理 `statusBarsPadding()`；NavHost 应用外层 padding 后调用 `consumeWindowInsets(paddingValues)`，避免编辑页 IME 重复计算已占用的底栏空间。
 - 底部导航栏支持 Haze 毛玻璃效果：通过 `skin.navBarBlurEnabled` 控制，启用时 `containerColor` 使用半透明 tint 色。
 - `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
 - 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。支持 `variant` 参数：`CardVariant.DEFAULT`（默认）、`CardVariant.GALLERY`（无边框/无内边距/零阴影，图片主导）、`CardVariant.FEATURED`（高阴影/大内边距，突出展示）、`CardVariant.COMPACT`（低阴影/紧内边距/细边框，替代 raw Card）。
+- `LolitaCard.contentPadding` 可覆盖变体默认内边距，避免内容层重复 padding；图文列表卡的图片贴边时传 `PaddingValues(0.dp)`，仅文字区保留一次内边距，图片顶部圆角使用皮肤 `cornerRadiusMedium`，网格骨架同步实际 0.8 宽高比。半透明卡片 tint 在公共组件内一次合成到当前 `surface`，完全透明卡片仍保持透明。
 - 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
 - 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
 - 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
 - 首页今日穿搭入口使用 `TodayOutfitShortcut`：紧凑卡片、穿搭图标/单张缩略图、标题与状态副文案、记录/查看操作；两种状态共享布局，颜色/圆角/内边距消费皮肤令牌，并合并无障碍语义。
+- 快捷穿搭记录支持名称/品牌搜索、分类筛选和已选缩略图移除；筛选不得清除隐藏的已选物品。控制区随网格滚动，底部保留数量保存按钮。编辑已有记录时保留照片、原日期及创建时间，读取失败或未完成时禁止保存。
+- 服饰详情主图完整 Fit 预览，高度随屏幕受限，标题后优先展示当前订单价格/实付/待付摘要；无小物时显示紧凑新增/挂入操作，已有小物管理完整保留。`ImageGalleryPager` 支持可选 `contentScale`、`imageShape` 与 `imageBackgroundColor`，默认展示保持兼容。
+- 首页顶栏保留搜索、四个 Tab 和筛选/排序/视图控制的一行布局。本轮列表、详情和穿搭实拍归档：`docs/visuals/2026-10-11-layout-refinement.png`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
 ## 皮肤系统
@@ -82,8 +86,8 @@
 | `sectionAccentWidth` | 竖线宽度 | 3dp |
 | `sectionDividerColor/Dark` | 分区分割线颜色 | Pink200 / gold |
 | `sectionDividerHeight` | 分割线粗细 | 1dp |
-| `spacingS/M/L/XL` | 8pt 间距系统 | 4/8/16/24dp |
-| `cornerRadiusS/M/L` | 圆角半径 | 8/16/24dp / 6/12/16dp |
+| `spacingSmall/Medium/Large/ExtraLarge` | 8pt 间距系统 | 4/8/16/24dp |
+| `cornerRadiusSmall/Medium/Large` | 圆角半径 | 8/16/24dp / 6/12/16dp |
 | `spatialSpring` / `effectsSpring` | 统一弹簧动画 | 0.75,400 / 0.8,300 |
 | `cardContainerColor/Dark` | 卡片表面色（替代运行时 alpha） | White(0.75) / cream(0.8) |
 | `cardInnerPadding` / `cardGap` | 卡片内边距 / 卡片间距 | 16dp / 20dp |
@@ -118,6 +122,7 @@
 - **图标着色**：设置页/属性管理页图标使用 `if (isDark) bright300 else normal500` 模式。
 - **导航栏未选中图标**：使用 `MaterialTheme.colorScheme.onSurfaceVariant`（自动适配深浅模式）。
 - **筛选/排序强调色**：使用 `skin.accentColor` / `skin.accentColorDark` 而非硬编码橙色。
+- **Canvas 图表文字**：圆环中心金额和折线坐标文字跟随 `onSurface` / `onSurfaceVariant`，Paint 的 remember key 包含主题颜色与文字像素尺寸；网格用 `outlineVariant`，曲线默认使用主题 primary。
 - **错误色**：使用 `MaterialTheme.colorScheme.error` / `onError` 而非硬编码 `0xFFD32F2F`。
 - **渐变覆盖层文字**（`Color.Black.copy(alpha) + Color.White`）：图片上方的价格/日期标签仍使用黑底白字，这是正确的设计。
 
@@ -219,7 +224,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=78, versionName="2.38.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=79, versionName="2.39.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -245,7 +250,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 备份格式 version 3、schemaVersion 21；完整 JSON/ZIP 覆盖 24 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。
-- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`。
+- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
 
 - 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。
 

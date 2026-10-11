@@ -232,7 +232,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=83, versionName="2.39.4"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=84, versionName="2.39.5"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -282,10 +282,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 付款补录页展示服饰、来源、订单总价、已录实付与保留的淘宝订单说明；“填入参考金额”仅提供可编辑参考，不自动保存或据总价生成实付。`OrderRepository.recordHistoricalPayment` 明确限定当前历史已购绑定，整数分校验不变，完整保留历史已购证据。
 
-- 首页 `PurchaseReviewShortcut` 汇总所有 `PENDING_REVIEW` 主件与小物，并进入 `status_review` 购买状态核对清单；数量来自全部服饰，不受首页搜索/分类筛选影响。清单由 Room Flow 驱动，确认后实时移除，归档订单不自动纳入当前购买状态待核对。
-- 服饰详情顶部 `ItemOrderSummary` 明确提供“核对购买状态”，共用价格的小物直接进入主件价格核对；价格页也提供“前往主件核对”。无绑定旧价格必须先选定当前订单，确认继续复用 `OrderLedger`；完全无价格时提供“核对服饰状态”进入既有编辑页，确认后仍无虚构价格或实付。有当前绑定或共价的小物不得手动覆盖订单状态。
-- 入口与购买核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest` 和 `PriceManageScreenReviewTest`，覆盖可见按钮、主件跳转、清单实时变化、勾选门槛与价格/阶段/实付原值保全，使用独立内存 Room。
+- `ItemDao.getPurchaseReviews()` 通过单条 Room SQL 投影 `ItemPurchaseReview`：无当前订单的非愿望服饰、当前订单非 `TRACKED`、当前真实付款日期未知均纳入资料核对。共价小物按主件订单判断，独立小物按自己判断；归档原账本不改写，有完整当前订单时不因归档资料重复纳入。首页、`status_review` 清单、详情与统计统一订阅 `ItemRepository.getPurchaseReviews()`，展示相同件数与核对原因，不受搜索/分类过滤影响。首页及统计的 `PurchaseReviewShortcut` 常驻，零件也能进入空清单。
+- 服饰详情顶部 `ItemOrderSummary` 明确提供“核对购买资料”，共用价格的小物直接进入主件价格核对；价格页也提供“前往主件核对”。无绑定旧价格必须先选定当前订单，确认继续复用 `OrderLedger`；完全无价格时提供“核对服饰状态”进入既有编辑页，确认拥有后仍保留价格资料待办，不生成价格或实付。有当前绑定或共价的小物不得手动覆盖订单状态。
+- 入口与购买资料核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest`、`PurchaseReviewConsistencyTest` 和 `PriceManageScreenReviewTest`，覆盖常驻入口、主件跳转、首页/清单/详情/统计一致联动、历史确认及部分/全部补录后待办保留、明确核对账本后移除、未知日期更正与价格/阶段/实付原值保全，使用独立内存 Room及独立设置。
 
+- 拥有状态与资料完整性必须分开：确认历史已购只更新购买证据并保留 `OWNED`，不能将资料待办移除；部分或全部补录都不自动切换 `TRACKED`。用户明确核对付款完整及余额一致后才解除账本待办，日期未知的实付仍单列待补；未知日期不得自动补造，也不影响已明确核对余额的正常付款跟踪。统计按当前订单去重计笔，快捷核对按服饰计件并明确单位。
 - 历史核对入口覆盖仍有余额的正常账本，包括部分实付；“确认历史已购”不生成付款。“核对账本并启用跟踪”展示总价、已录实付与计算待付，要求用户确认真实付款已全部录入且计算余额等于实际待付；`confirmTrackedOrder` 在领域层也拒绝未确认请求。回归位于 `PersistentOrderEvidenceTest`，覆盖归档小物共用价格后重绑、订单切换、22→23 原值保全、归档证据备份恢复及确认失败事务不变。
 - 付款通知使用 `PaymentReminderIdentity`（阶段代理 ID、价格 ID、到期日、提前天数）与本机 `PaymentReminderDeliveryStore` 持久送达记录。同一配置成功送达后，重启或修改其他订单不得重复补发；权限关闭或发送失败不记送达。应用和日历使用一致的提前天数，日历最少提前一分钟。策略与清理回归位于 `PaymentReminderPolicyTest`、`ReminderCleanupTest`、`ReminderJournalTest` 和 `PaymentReminderDeliveryStoreTest`（独立 SharedPreferences，覆盖送达持久化）。
 - 今日穿搭用 Room Flow 订阅本地当天半开区间 `[start, nextDayStart)`，同日多条按日期、ID 倒序选择最新记录；保存、编辑、删除自动刷新。跨日、回到前台与系统日期/时间/时区变更须切换查询范围，次日边界用 Calendar 计算以兼容夏令时。回归位于 `TodayOutfitViewModelTest`。

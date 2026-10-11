@@ -8,6 +8,7 @@ import androidx.room.withTransaction
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.Payment
@@ -84,7 +85,8 @@ data class ItemListUiState(
     val todayOutfitItemImages: List<String?> = emptyList(),
     val hasTodayOutfit: Boolean = false,
     val todayOutfitLogId: Long? = null,
-    val itemCardDataList: List<ItemCardData> = emptyList()
+    val itemCardDataList: List<ItemCardData> = emptyList(),
+    val purchaseReviews: List<ItemPurchaseReview> = emptyList()
 )
 
 /**
@@ -122,7 +124,9 @@ data class ItemEditUiState(
     val sourceOptions: List<String> = emptyList(),
     val pricesWithPayments: List<DaoPriceWithPayments> = emptyList(),
     val locationId: Long? = null,
-    val locations: List<com.lolita.app.data.local.entity.Location> = emptyList()
+    val locations: List<com.lolita.app.data.local.entity.Location> = emptyList(),
+    val purchaseReviews: List<ItemPurchaseReview> = emptyList(),
+    val purchaseReviewsLoaded: Boolean = false
 )
 
 /**
@@ -249,8 +253,9 @@ class ItemListViewModel(
                 itemRepository.getAllItems(),
                 brandRepository.getAllBrands(),
                 categoryRepository.getAllCategories(),
-                priceRepository.getItemPriceSums()
-            ) { items, brands, categories, priceSums ->
+                priceRepository.getItemPriceSums(),
+                itemRepository.getPurchaseReviews()
+            ) { items, brands, categories, priceSums, reviews ->
                 val brandMap = brands.associate { it.id to it.name }
                 val brandLogoMap = brands.associate { it.id to it.logoUrl }
                 val categoryMap = categories.associate { it.id to it.name }
@@ -261,7 +266,7 @@ class ItemListViewModel(
                 val colorOpts = items.flatMap { item ->
                     item.colors
                 }.filter { it.isNotBlank() }.distinct().sorted()
-                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts)
+                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts, reviews)
             }.collect { data ->
                 val currentState = _uiState.value
                 val filtered = applyFilters(
@@ -274,6 +279,7 @@ class ItemListViewModel(
                 _uiState.update {
                     it.copy(
                         items = data.items,
+                        purchaseReviews = data.purchaseReviews,
                         filteredItems = sorted,
                         brandNames = data.brandMap,
                         brandLogoUrls = data.brandLogoMap,
@@ -304,7 +310,8 @@ class ItemListViewModel(
         val priceMap: Map<Long, Double>,
         val seasonOpts: List<String>,
         val styleOpts: List<String>,
-        val colorOpts: List<String>
+        val colorOpts: List<String>,
+        val purchaseReviews: List<ItemPurchaseReview>
     )
 
     private fun updateTotalPrice(filteredItems: List<Item>) {
@@ -801,7 +808,9 @@ class ItemEditViewModel(
 
     private fun observeHierarchy(itemId: Long) {
         hierarchyJob = viewModelScope.launch {
-            itemRepository.getAllItems().collect { items ->
+            combine(itemRepository.getAllItems(), itemRepository.getPurchaseReviews()) { items, reviews ->
+                items to reviews
+            }.collect { (items, reviews) ->
                 _uiState.update { current ->
                     val persisted = items.find { it.id == itemId }
                     val parent = items.find { it.id == current.parentItemId }
@@ -809,6 +818,8 @@ class ItemEditViewModel(
                         else if (current.pricesWithPayments.isNotEmpty()) persisted?.status else null
                     current.copy(
                         allItems = items,
+                        purchaseReviews = reviews,
+                        purchaseReviewsLoaded = true,
                         children = items.filter { it.parentItemId == itemId && itemId > 0 },
                         item = if (!hasUnsavedChanges && persisted != null) persisted else current.item,
                         status = ledgerStatus ?: current.status

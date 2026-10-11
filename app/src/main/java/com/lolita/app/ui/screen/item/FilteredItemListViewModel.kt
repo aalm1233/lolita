@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 data class FilteredItemListUiState(
     val items: List<Item> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val purchaseReviews: List<ItemPurchaseReview> = emptyList()
 )
 
 class FilteredItemListViewModel(
@@ -34,10 +36,17 @@ class FilteredItemListViewModel(
 
     private fun loadItems() {
         viewModelScope.launch {
+            if (filterType == "status_review") {
+                itemRepository.getPurchaseReviews().collect { reviews ->
+                    _uiState.value = FilteredItemListUiState(
+                        items = reviews.map { it.item }, isLoading = false, purchaseReviews = reviews
+                    )
+                }
+                return@launch
+            }
             val flow = when (filterType) {
                 "status_owned" -> itemRepository.getItemsByStatus(ItemStatus.OWNED)
                 "status_wished" -> itemRepository.getItemsByStatus(ItemStatus.WISHED)
-                "status_review" -> itemRepository.getItemsByStatus(ItemStatus.PENDING_REVIEW)
                 "brand" -> itemRepository.getItemsByBrandName(filterValue)
                 "category" -> itemRepository.getItemsByCategoryName(filterValue)
                 "style" -> itemRepository.getItemsByStyle(filterValue)

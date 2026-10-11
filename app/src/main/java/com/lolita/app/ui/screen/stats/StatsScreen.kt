@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.item.PurchaseReviewShortcut
 import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -56,7 +58,8 @@ data class StatsUiState(
     val isLoading: Boolean = true,
     val averagePrice: Double = 0.0,
     val mostExpensiveItem: ItemWithSpending? = null,
-    val topBrands: List<BrandItemCount> = emptyList()
+    val topBrands: List<BrandItemCount> = emptyList(),
+    val purchaseReviews: List<ItemPurchaseReview> = emptyList()
 )
 
 class StatsViewModel(
@@ -96,6 +99,8 @@ class StatsViewModel(
                 state.copy(allRecordedSpending = allRecorded)
             }.combine(priceRepository.getIncompleteCurrentOrderCount()) { state, incompleteCount ->
                 state.copy(incompleteCurrentOrderCount = incompleteCount)
+            }.combine(itemRepository.getPurchaseReviews()) { state, reviews ->
+                state.copy(purchaseReviews = reviews)
             }.combine(priceRepository.getAverageOwnedPrice()) { state, average ->
                 state.copy(averagePrice = average)
             }.combine(appPreferences.showTotalPrice) { state, showPrice ->
@@ -132,6 +137,11 @@ fun StatsContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        PurchaseReviewShortcut(
+            reviewCount = uiState.purchaseReviews.size,
+            onClick = { onNavigateToFilteredList("status_review", "", "待核对购买资料") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -205,7 +215,7 @@ fun StatsContent(
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("付款资料待补：${uiState.incompleteCurrentOrderCount} 笔当前订单",
                             style = MaterialTheme.typography.labelLarge)
-                        Text("历史资料缺失的金额为未知，不据此认定实付为零或仍然欠款。",
+                        Text("上方清单按服饰与小物计件，此处按当前订单计笔，包括账本未核对或实付日期待补。历史缺失金额为未知，不据此认定仍然欠款。",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }

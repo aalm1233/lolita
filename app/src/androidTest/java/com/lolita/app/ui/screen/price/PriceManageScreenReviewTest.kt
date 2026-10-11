@@ -28,6 +28,7 @@ import com.lolita.app.data.local.entity.PurchaseRecordStatus
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.OrderRepository
 import com.lolita.app.ui.theme.LolitaTheme
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -64,7 +65,8 @@ class PriceManageScreenReviewTest {
 
     @Test fun historicalConfirmationPreservesPartialActualPaymentsAndTheirDates() {
         val original = runBlocking { seedReviewOrder() }
-        showPriceScreen(original.item.id)
+        val paymentDestinations = mutableListOf<Long>()
+        showPriceScreen(original.item.id, onNavigateToPayment = { paymentDestinations += it })
         scrollTo("reviewHistoricalEntry")
         compose.onNodeWithTag("reviewHistoricalEntry").assertIsDisplayed().performClick()
         compose.onNodeWithTag("purchaseReviewDialog").assertIsDisplayed()
@@ -74,12 +76,21 @@ class PriceManageScreenReviewTest {
         runBlocking {
             assertEquals(original.item.copy(status = ItemStatus.OWNED), database.itemDao().getItemById(original.item.id))
             assertOrderPreserved(original, PurchaseRecordStatus.HISTORICAL_OWNED)
+            val review = items.getPurchaseReviews().first().single()
+            assertEquals(original.item.id, review.item.id)
+            assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED, review.purchaseRecordStatus)
+            assertTrue(review.hasUnknownPaymentDates)
+            assertTrue(review.needsRecordVerification)
         }
         compose.onNodeWithTag("purchaseReviewDialog").assertDoesNotExist()
         compose.runOnIdle {
             assertEquals(null, viewModel.uiState.value.order!!.knownRemainingAmount)
             assertEquals(321.09, viewModel.uiState.value.order!!.paidAmount, 0.0)
         }
+        scrollTo("reviewSupplementPaymentEntry")
+        compose.onNodeWithTag("reviewSupplementPaymentEntry").assertIsDisplayed().performClick()
+        compose.runOnIdle { assertEquals(listOf(original.price.id), paymentDestinations) }
+        runBlocking { assertOrderPreserved(original, PurchaseRecordStatus.HISTORICAL_OWNED) }
     }
 
     @Test fun trackingRequiresExplicitVerificationAndCancelKeepsEveryOriginalRecord() {
@@ -101,6 +112,10 @@ class PriceManageScreenReviewTest {
         runBlocking {
             assertEquals(original.item.copy(status = ItemStatus.PENDING_BALANCE), database.itemDao().getItemById(original.item.id))
             assertOrderPreserved(original, PurchaseRecordStatus.TRACKED)
+            // The amount/remaining balance can be verified while an original date is unknown.
+            val review = items.getPurchaseReviews().first().single()
+            assertFalse(review.needsRecordVerification)
+            assertTrue(review.hasUnknownPaymentDates)
         }
         compose.runOnIdle {
             assertEquals(321.09, viewModel.uiState.value.order!!.paidAmount, 0.0)
@@ -163,7 +178,8 @@ class PriceManageScreenReviewTest {
     }
 
     private fun showPriceScreen(itemId: Long, expectOrder: Boolean = true,
-        onNavigateToItemEdit: (Long) -> Unit = {}, onNavigateToParent: (Long) -> Unit = {}) {
+        onNavigateToItemEdit: (Long) -> Unit = {}, onNavigateToPayment: (Long) -> Unit = {},
+        onNavigateToParent: (Long) -> Unit = {}) {
         compose.runOnIdle {
             viewModel = PriceManageViewModel(orderRepository = orders, itemRepository = items, itemId = itemId)
             viewModelStore.put("isolated-review-price", viewModel)
@@ -171,7 +187,7 @@ class PriceManageScreenReviewTest {
         compose.setContent {
             LolitaTheme {
                 PriceManageScreen(itemId = itemId, onBack = {}, onNavigateToPriceEdit = {},
-                    onNavigateToPaymentManage = {}, onNavigateToParentPriceManage = onNavigateToParent,
+                    onNavigateToPaymentManage = onNavigateToPayment, onNavigateToParentPriceManage = onNavigateToParent,
                     onNavigateToItemEdit = onNavigateToItemEdit,
                     viewModel = viewModel)
             }

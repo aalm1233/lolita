@@ -16,6 +16,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.entity.BrandItemCount
 import com.lolita.app.data.local.entity.Price
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,27 @@ interface ItemDao {
 
     @Query("SELECT * FROM items WHERE status = :status ORDER BY updated_at DESC")
     fun getItemsByStatus(status: ItemStatus): Flow<List<Item>>
+
+    // One query keeps every review entry, reason and count on the same Room snapshot.
+    // Shared accessories use the parent's current ledger; archived orders stay untouched.
+    @Query("""
+        SELECT i.*, owner.id AS orderItemId, b.price_id AS priceId,
+            b.purchase_record_status AS purchaseRecordStatus,
+            EXISTS(SELECT 1 FROM payments p WHERE p.price_id=b.price_id
+                AND p.is_paid=1 AND p.paid_date IS NULL) AS hasUnknownPaymentDates
+        FROM items i
+        JOIN items owner ON owner.id=CASE
+            WHEN i.included_in_parent_price=1 AND i.parent_item_id IS NOT NULL
+                THEN i.parent_item_id ELSE i.id END
+        LEFT JOIN order_bindings b ON b.item_id=owner.id
+        WHERE i.status='PENDING_REVIEW'
+            OR b.purchase_record_status<>'TRACKED'
+            OR (b.item_id IS NULL AND owner.status<>'WISHED')
+            OR EXISTS(SELECT 1 FROM payments p WHERE p.price_id=b.price_id
+                AND p.is_paid=1 AND p.paid_date IS NULL)
+        ORDER BY i.updated_at DESC, i.id DESC
+    """)
+    fun getPurchaseReviews(): Flow<List<ItemPurchaseReview>>
 
     @Query("SELECT * FROM items WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
     fun searchItemsByName(query: String): Flow<List<Item>>

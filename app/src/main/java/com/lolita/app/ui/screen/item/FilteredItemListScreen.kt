@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
@@ -50,6 +51,8 @@ fun FilteredItemListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isReviewList = filterType == "status_review"
+    val visibleItems = if (isReviewList) uiState.purchaseReviews.map { it.item } else uiState.items
+    val reviewsByItem = uiState.purchaseReviews.associateBy { it.item.id }
 
     Scaffold(
         topBar = {
@@ -74,15 +77,15 @@ fun FilteredItemListScreen(
                     FilteredItemCardSkeleton(modifier = Modifier.shimmer(shimmer))
                 }
             }
-        } else if (uiState.items.isEmpty()) {
+        } else if (visibleItems.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center
             ) {
                 SkinEmptyState(
                     iconKey = IconKey.Search,
-                    title = if (isReviewList) "暂无待核对服饰" else "暂无数据",
-                    subtitle = if (isReviewList) "购买状态已核对" else "没有找到匹配的服饰"
+                    title = if (isReviewList) "暂无待核对购买资料" else "暂无数据",
+                    subtitle = if (isReviewList) "当前购买资料已核对" else "没有找到匹配的服饰"
                 )
             }
         } else {
@@ -96,7 +99,7 @@ fun FilteredItemListScreen(
                     item(key = "reviewInstructions") {
                         LolitaCard(modifier = Modifier.fillMaxWidth().testTag("reviewItemInstructions")) {
                             Text(
-                                "点击服饰进入详情，在顶部核对购买状态。共用价格的小物随主件确认；独立计价的小物需单独核对。",
+                                "确认拥有后，价格、付款账本或实付日期未补齐的服饰仍留在清单。点击服饰补全资料；共用价格的小物随主件核对，独立计价的小物单独核对。",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -105,15 +108,16 @@ fun FilteredItemListScreen(
                 }
                 item {
                     Text(
-                        "${uiState.items.size} 件",
+                        "${visibleItems.size} 件",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
+                itemsIndexed(visibleItems, key = { _, item -> item.id }) { index, item ->
                     Column(modifier = Modifier.skinItemAppear(index)) {
                         FilteredItemCard(
                             item = item,
+                            review = if (isReviewList) reviewsByItem[item.id] else null,
                             onClick = { onNavigateToDetail(item.id) }
                         )
                     }
@@ -124,7 +128,7 @@ fun FilteredItemListScreen(
 }
 
 @Composable
-private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
+private fun FilteredItemCard(item: Item, review: ItemPurchaseReview? = null, onClick: () -> Unit) {
     LolitaCard(onClick = onClick, modifier = Modifier.fillMaxWidth().testTag("filteredItem-${item.id}")) {
         Row(
             modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
@@ -182,6 +186,14 @@ private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
+                    )
+                }
+                review?.let {
+                    Text(
+                        text = (if (it.orderItemId != item.id) "随主件核对：" else "") + it.reasonText,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.testTag("reviewReason-${item.id}")
                     )
                 }
                 Surface(

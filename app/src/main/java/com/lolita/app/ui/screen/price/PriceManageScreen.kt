@@ -69,8 +69,17 @@ fun PriceManageScreen(
                         },
                         onConfirmTracked = if (state.includedInParentPrice) null else {
                             { purchaseConfirmation = PurchaseRecordStatus.TRACKED }
+                        },
+                        onSupplementPayment = if (state.includedInParentPrice || order.purchaseRecordStatus != PurchaseRecordStatus.HISTORICAL_OWNED) null else {
+                            { onNavigateToPaymentManage(order.price.id) }
                         }
                     )
+                }
+                if (order != null && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.payments.any { it.isPaid && it.paidDate == null }) item {
+                    LolitaSection("实付日期待补") { row {
+                        Text("账本金额已核对，但仍有真实付款日期未知。请在付款记录中补全日期；补齐前仍留在待核对购买资料清单。",
+                            style = MaterialTheme.typography.bodyMedium)
+                    } }
                 }
                 if (order != null) item {
                     LolitaSection(if (state.includedInParentPrice) "主件订单" else "当前订单", action = if (state.includedInParentPrice) null else {
@@ -156,7 +165,7 @@ fun PriceManageScreen(
             onDismissRequest = { purchaseConfirmation = null },
             title = { Text(if (historical) "确认历史已购" else "核对账本并启用跟踪") },
             text = {
-                if (historical) Text("确认这件服饰已购入，但历史付款资料没有补全。订单价格、所有原始阶段和付款记录保留；不会生成实付金额或付款日期，未付余额仍为未知。")
+                if (historical) Text("此次仅确认这件服饰已拥有，历史付款资料仍待补齐，确认后仍留在待核对购买资料清单。订单价格、所有原始阶段和付款记录保留；不会生成实付金额或付款日期，未付余额仍为未知。")
                 else Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     Text("请先核对真实付款记录是否已全部录入。启用后将按以下余额计算付款状态和提醒，不会自动补录缺失付款。")
                     if (order != null) {
@@ -178,6 +187,9 @@ fun PriceManageScreen(
                         Text("真实付款记录已全部录入，余额与实际待付一致", style = MaterialTheme.typography.bodyMedium)
                     }
                     Text("资料未补齐时请取消，余额继续保持未知。已购服饰可先确认历史已购，再补录能够确认的真实付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (order?.payments?.any { it.isPaid && it.paidDate == null } == true) Text(
+                        "实付日期尚未补齐，启用跟踪后仍留在待核对购买资料清单。",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
             confirmButton = { TextButton(modifier = Modifier.testTag(if (historical) "reviewConfirmHistorical" else "reviewConfirmTracked"), enabled = !state.isUpdating && order != null && (historical || paymentRecordsVerified), onClick = {
@@ -197,14 +209,15 @@ internal fun PurchaseRecordNotice(
     isWorking: Boolean = false,
     onConfirmHistorical: (() -> Unit)? = null,
     onConfirmTracked: (() -> Unit)? = null,
-    onReturnToReview: (() -> Unit)? = null
+    onReturnToReview: (() -> Unit)? = null,
+    onSupplementPayment: (() -> Unit)? = null
 ) {
     if (status == PurchaseRecordStatus.TRACKED) return
     val historical = status == PurchaseRecordStatus.HISTORICAL_OWNED
     LolitaSection(if (historical) "历史已购" else "历史付款资料待核对") {
         row {
             Column(verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.spacingMedium)) {
-                Text(if (historical) "付款记录未补全。订单价格和原始记录保留，未付余额为未知。"
+                Text(if (historical) "已确认拥有，付款资料仍待核对。订单价格和原始记录保留，未付余额为未知；资料补齐前仍留在核对清单。"
                     else "原价格和记录保留。核对前暂不修改付款阶段或实付记录，也不根据缺失资料认定欠款。",
                     style = MaterialTheme.typography.bodyMedium)
                 Text(if (historical) "历史付款阶段只读，可补录或更正能够确认的真实实付。付款资料补齐后，可核对账本并启用后续付款跟踪。"
@@ -213,12 +226,16 @@ internal fun PurchaseRecordNotice(
                 if (!historical && onConfirmHistorical != null) Button(
                     onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewHistoricalEntry")
                 ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
+                if (historical && onSupplementPayment != null) Button(
+                    onClick = onSupplementPayment, enabled = !isWorking,
+                    modifier = Modifier.fillMaxWidth().testTag("reviewSupplementPaymentEntry")
+                ) { Text("补录真实付款") }
                 if (onConfirmTracked != null) OutlinedButton(
                     onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewTrackedEntry")
                 ) { Text("核对账本并启用跟踪") }
                 if (onReturnToReview != null) TextButton(
                     onClick = onReturnToReview, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
-                ) { Text("返回核对购买状态") }
+                ) { Text("返回核对购买资料") }
             }
         }
     }

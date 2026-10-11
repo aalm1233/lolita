@@ -15,6 +15,7 @@ import com.lolita.app.data.local.dao.PaymentDao
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.file.ImageFileHelper
 import androidx.room.withTransaction
@@ -32,6 +33,8 @@ class ItemRepository(
 
     fun getItemsByStatus(status: ItemStatus): Flow<List<Item>> =
         itemDao.getItemsByStatus(status)
+
+    fun getPurchaseReviews(): Flow<List<ItemPurchaseReview>> = itemDao.getPurchaseReviews()
 
     fun getWishlistByPriority(): Flow<List<Item>> =
         itemDao.getWishlistByPriority()

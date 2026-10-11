@@ -90,44 +90,63 @@ class ReviewItemListViewModelTest {
     }
 
     private suspend fun assertIds(viewModel: FilteredItemListViewModel, expected: Set<Long>) {
+        val authoritative = items.getPurchaseReviews().first().sortedBy { it.item.id }
+        assertEquals(expected, authoritative.map { it.item.id }.toSet())
         val state = withTimeout(10_000) {
-            viewModel.uiState.first { !it.isLoading && it.items.map { item -> item.id }.toSet() == expected }
+            viewModel.uiState.first {
+                !it.isLoading && it.items.map { item -> item.id }.toSet() == expected &&
+                    it.purchaseReviews.sortedBy { review -> review.item.id } == authoritative
+            }
         }
         assertEquals(expected, state.items.map { it.id }.toSet())
         assertEquals(expected.size, state.items.size)
+        assertEquals(expected, state.purchaseReviews.map { it.item.id }.toSet())
+        assertEquals(expected.size, state.purchaseReviews.size)
     }
 
     private suspend fun reviewOrder(itemId: Long, total: Double, paid: Double): Long {
+        return seededOrder(itemId, total, paid, PurchaseRecordStatus.NEEDS_REVIEW)
+    }
+
+    private suspend fun seededOrder(
+        itemId: Long,
+        total: Double,
+        paid: Double,
+        evidence: PurchaseRecordStatus,
+        paidDate: Long? = 1_700_000_000_000L
+    ): Long {
         val priceId = database.priceDao().insertPrice(Price(
             id = nextPriceId++, itemId = itemId, type = PriceType.FULL, totalPrice = total, shipping = 3.01,
-            purchaseRecordStatus = PurchaseRecordStatus.NEEDS_REVIEW, createdAt = 17
+            purchaseRecordStatus = evidence, createdAt = 17
         ))
         val stageId = database.orderDao().insertStage(PaymentStage(
             id = nextStageId++, priceId = priceId, name = "保留的原计划", amount = total, reminderSet = false
         ))
         database.paymentDao().insertPayment(Payment(
             id = nextPaymentId++, priceId = priceId, stageId = stageId, amount = paid, isPaid = true,
-            dueDate = 1_700_000_000_000L, paidDate = 1_700_000_000_000L, createdAt = 18
+            dueDate = paidDate ?: 0L, paidDate = paidDate, createdAt = 18
         ))
         orders.bindHistoricalOrder(itemId, priceId)
         return priceId
     }
 
     @Test
-    fun reviewFilterExcludesOtherStatesAndIncludesIndependentAccessories() = runBlocking<Unit> {
+    fun reviewQueueUsesLedgerCompletenessAndIncludesUnpricedOwnedAccessories() = runBlocking<Unit> {
         val parentId = item("待核对主裙")
         val sharedId = item("共价头饰", parentId = parentId, includedInPrice = true)
-        val ownedParentId = item("已拥有主裙", ItemStatus.OWNED)
-        val independentId = item("独立计价小物", parentId = ownedParentId)
+        val ownedParentId = item("付款资料完整的已拥有主裙", ItemStatus.OWNED)
+        seededOrder(ownedParentId, total = 10.01, paid = 10.01, evidence = PurchaseRecordStatus.TRACKED)
+        val independentId = item("尚未录入价格的独立小物", parentId = ownedParentId)
+        val unpricedOwnedId = item("确认拥有但尚无付款资料的裙子", ItemStatus.OWNED)
         item("愿望裙", ItemStatus.WISHED)
-        item("待付款裙", ItemStatus.PENDING_PAYMENT)
-        item("待补尾款裙", ItemStatus.PENDING_BALANCE)
+        val owingId = item("已完整核对但尚待付款的裙子", ItemStatus.PENDING_PAYMENT)
+        seededOrder(owingId, total = 20.05, paid = 5.01, evidence = PurchaseRecordStatus.TRACKED)
 
-        assertIds(viewModel(), setOf(parentId, sharedId, independentId))
+        assertIds(viewModel(), setOf(parentId, sharedId, independentId, unpricedOwnedId))
     }
 
     @Test
-    fun unpricedOwnershipConfirmationRemovesParentAndSharedChildWithoutCreatingLedgerRows() = runBlocking<Unit> {
+    fun unpricedOwnershipConfirmationKeepsMissingDataVisibleWithoutCreatingLedgerRows() = runBlocking<Unit> {
         val parentId = item("没有购买金额的历史主裙")
         val sharedId = item("共价且没有购买金额的小物", parentId = parentId, includedInPrice = true)
         val originalParent = items.getItemById(parentId)!!
@@ -142,7 +161,8 @@ class ReviewItemListViewModelTest {
         // Without a current order, the existing edit flow can record explicit ownership evidence.
         items.updateItem(originalParent.copy(status = ItemStatus.OWNED))
 
-        assertIds(queue, emptySet())
+        assertIds(queue, setOf(parentId, sharedId))
+        assertTrue(queue.uiState.value.purchaseReviews.all { it.priceId == null && it.orderItemId == parentId })
         val savedParent = items.getItemById(parentId)!!
         val savedShared = items.getItemById(sharedId)!!
         assertEquals(originalParent.copy(status = ItemStatus.OWNED, updatedAt = savedParent.updatedAt), savedParent)
@@ -155,7 +175,7 @@ class ReviewItemListViewModelTest {
     }
 
     @Test
-    fun historicalConfirmationRemovesParentAndSharedChildButKeepsIndependentChild() = runBlocking<Unit> {
+    fun historicalOwnershipConfirmationKeepsParentAndAccessoriesUntilTheirLedgersAreVerified() = runBlocking<Unit> {
         val parentId = item("历史主裙")
         val parentPriceId = reviewOrder(parentId, total = 100.01, paid = 30.02)
         val sharedId = item("共价小物", parentId = parentId, includedInPrice = true)
@@ -170,7 +190,7 @@ class ReviewItemListViewModelTest {
 
         orders.confirmHistoricalPurchase(parentId)
 
-        assertIds(queue, setOf(independentId))
+        assertIds(queue, setOf(parentId, sharedId, independentId))
         assertEquals(ItemStatus.OWNED, items.getItemById(parentId)!!.status)
         assertEquals(ItemStatus.OWNED, items.getItemById(sharedId)!!.status)
         assertEquals(ItemStatus.PENDING_REVIEW, items.getItemById(independentId)!!.status)
@@ -181,8 +201,80 @@ class ReviewItemListViewModelTest {
         assertEquals(originalStages, database.orderDao().getAllStages().sortedBy { it.id })
 
         orders.confirmHistoricalPurchase(independentId)
+        assertIds(queue, setOf(parentId, sharedId, independentId))
+        assertEquals(originalPayments, database.paymentDao().getAllPaymentsList().sortedBy { it.id })
+
+        orders.confirmTrackedOrder(parentId, paymentRecordsVerified = true)
+        assertIds(queue, setOf(independentId))
+        orders.confirmTrackedOrder(independentId, paymentRecordsVerified = true)
         assertIds(queue, emptySet())
         assertEquals(originalPayments, database.paymentDao().getAllPaymentsList().sortedBy { it.id })
+        assertEquals(originalStages, database.orderDao().getAllStages().sortedBy { it.id })
+    }
+
+    @Test
+    fun partialAndFullHistoricalSupplementsStayVisibleUntilExplicitLedgerVerification() = runBlocking<Unit> {
+        val parentId = item("已购但付款资料分批补录的裙子")
+        val priceId = reviewOrder(parentId, total = 100.01, paid = 30.02)
+        val sharedId = item("共价小物", parentId = parentId, includedInPrice = true)
+        val originalPrice = database.priceDao().getPriceById(priceId)!!
+        val originalPayments = database.paymentDao().getAllPaymentsList()
+        val originalStages = database.orderDao().getAllStages()
+        val queue = viewModel()
+        assertIds(queue, setOf(parentId, sharedId))
+
+        orders.confirmHistoricalPurchase(parentId)
+        assertIds(queue, setOf(parentId, sharedId))
+        orders.recordHistoricalPayment(priceId, 20.01, paidDate = 1_700_000_100_000L)
+        assertIds(queue, setOf(parentId, sharedId))
+        orders.recordHistoricalPayment(priceId, 49.98, paidDate = 1_700_000_200_000L)
+        assertIds(queue, setOf(parentId, sharedId))
+        assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED, queue.uiState.value.purchaseReviews.first().purchaseRecordStatus)
+        assertEquals(100.01, orders.currentOrder(parentId).first()!!.paidAmount, 0.0)
+        val fullySupplemented = database.paymentDao().getAllPaymentsList().sortedBy { it.id }
+        assertTrue(fullySupplemented.containsAll(originalPayments))
+        assertEquals(originalStages, database.orderDao().getAllStages())
+        assertEquals(originalPrice.copy(purchaseRecordStatus = PurchaseRecordStatus.HISTORICAL_OWNED),
+            database.priceDao().getPriceById(priceId))
+
+        orders.confirmTrackedOrder(parentId, paymentRecordsVerified = true)
+        assertIds(queue, emptySet())
+        assertEquals(fullySupplemented, database.paymentDao().getAllPaymentsList().sortedBy { it.id })
+        assertEquals(originalStages, database.orderDao().getAllStages())
+        assertEquals(originalPrice.copy(purchaseRecordStatus = PurchaseRecordStatus.TRACKED),
+            database.priceDao().getPriceById(priceId))
+    }
+
+    @Test
+    fun trackedPaymentsWithUnknownDatesRemainVisibleUntilTheirRealDatesAreCorrected() = runBlocking<Unit> {
+        val parentId = item("金额已录完整但实付日期待补的裙子")
+        val priceId = seededOrder(parentId, total = 100.01, paid = 100.01,
+            evidence = PurchaseRecordStatus.HISTORICAL_OWNED, paidDate = null)
+        val sharedId = item("共价小物", parentId = parentId, includedInPrice = true)
+        val originalPayment = database.paymentDao().getPaymentsByPriceList(priceId).single()
+        val originalPrice = database.priceDao().getPriceById(priceId)!!
+        val originalStages = database.orderDao().getAllStages()
+        val queue = viewModel()
+        assertIds(queue, setOf(parentId, sharedId))
+
+        orders.confirmTrackedOrder(parentId, paymentRecordsVerified = true)
+        assertIds(queue, setOf(parentId, sharedId))
+        val reviewRows = withTimeout(10_000) { queue.uiState.first { state ->
+            state.purchaseReviews.size == 2 && state.purchaseReviews.all {
+                it.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && it.hasUnknownPaymentDates
+            }
+        } }.purchaseReviews
+        assertEquals(setOf(parentId, sharedId), reviewRows.map { it.item.id }.toSet())
+        assertEquals(originalPayment, database.paymentDao().getPaymentById(originalPayment.id))
+        assertEquals(ItemStatus.OWNED, items.getItemById(parentId)!!.status)
+
+        val corrected = originalPayment.copy(paidDate = 1_700_000_300_000L)
+        orders.editPayment(corrected)
+        assertIds(queue, emptySet())
+        assertEquals(corrected, database.paymentDao().getPaymentById(originalPayment.id))
+        assertEquals(originalStages, database.orderDao().getAllStages())
+        assertEquals(originalPrice.copy(purchaseRecordStatus = PurchaseRecordStatus.TRACKED),
+            database.priceDao().getPriceById(priceId))
     }
 
     @Test

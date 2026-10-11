@@ -45,6 +45,8 @@ import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import androidx.compose.ui.platform.testTag
+import com.lolita.app.data.local.entity.ItemPurchaseReview
+import com.lolita.app.data.local.entity.PurchaseRecordStatus
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
@@ -811,8 +813,21 @@ internal fun ItemOrderSummary(
     val skin = LolitaSkin.current
     val currentOrder = uiState.pricesWithPayments.singleOrNull()
     val sharedParentId = item.parentItemId.takeIf { item.includedInParentPrice }
-    val needsPurchaseReview = item.status == ItemStatus.PENDING_REVIEW ||
-        currentOrder?.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.NEEDS_REVIEW
+    val orderStatus = currentOrder?.binding?.purchaseRecordStatus ?: currentOrder?.price?.purchaseRecordStatus
+    val hasUnknownPaymentDates = currentOrder?.payments?.any { it.isPaid && it.paidDate == null } == true
+    // The Room projection is authoritative, including inherited parent data. The fallback also
+    // supports an isolated summary before the full detail subscription supplies its projection.
+    val fallbackNeedsReview = when {
+        sharedParentId != null -> item.status == ItemStatus.PENDING_REVIEW
+        currentOrder != null -> item.status == ItemStatus.PENDING_REVIEW ||
+            orderStatus != PurchaseRecordStatus.TRACKED || hasUnknownPaymentDates
+        else -> item.status != ItemStatus.WISHED
+    }
+    val projectedReview = uiState.purchaseReviews.firstOrNull { it.item.id == item.id }
+    val purchaseReview = if (uiState.purchaseReviewsLoaded) projectedReview else {
+        projectedReview ?: if (fallbackNeedsReview) ItemPurchaseReview(item, sharedParentId ?: item.id,
+            currentOrder?.price?.id, orderStatus, hasUnknownPaymentDates) else null
+    }
 
     LolitaCard(
         modifier = Modifier.fillMaxWidth(),
@@ -874,10 +889,11 @@ internal fun ItemOrderSummary(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            if (needsPurchaseReview) {
-                Text(if (sharedParentId != null) "共用价格的小物随主件确认购买状态。"
-                    else if (currentOrder == null && uiState.legacyPriceCount > 0) "先选择一笔历史订单，再确认购买状态。"
-                    else "请确认是否历史已购，或核对真实付款记录后启用跟踪。",
+            if (purchaseReview != null) {
+                if (currentOrder == null && uiState.legacyPriceCount > 0 && sharedParentId == null) Text(
+                    "先选择一笔历史订单，再核对购买资料。",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text((if (sharedParentId != null) "共用价格的小物随主件补全资料。" else "") + purchaseReview.reasonText,
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Button(
                     onClick = {
@@ -885,7 +901,7 @@ internal fun ItemOrderSummary(
                         else onNavigateToPriceManage()
                     },
                     modifier = Modifier.fillMaxWidth().testTag("reviewPurchaseStatusButton")
-                ) { Text(if (sharedParentId != null) "核对主件购买状态" else "核对购买状态") }
+                ) { Text(if (sharedParentId != null) "核对主件购买资料" else "核对购买资料") }
             }
         }
     }

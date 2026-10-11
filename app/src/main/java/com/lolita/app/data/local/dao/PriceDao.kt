@@ -62,7 +62,10 @@ interface PriceDao {
     """)
     fun getAllRecordedSpending(): Flow<Double>
 
-    @Query("SELECT COUNT(*) FROM order_bindings WHERE purchase_record_status <> 'TRACKED'")
+    @Query("""SELECT COUNT(*) FROM order_bindings b
+        WHERE b.purchase_record_status <> 'TRACKED'
+            OR EXISTS(SELECT 1 FROM payments p WHERE p.price_id=b.price_id
+                AND p.is_paid=1 AND p.paid_date IS NULL)""")
     fun getIncompleteCurrentOrderCount(): Flow<Int>
 
     @Query("""SELECT COALESCE(AVG(p.total_price),0) FROM prices p JOIN order_bindings b ON b.price_id=p.id

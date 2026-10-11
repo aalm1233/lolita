@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -371,6 +372,12 @@ fun ItemListScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = skin.spacingSmall)
             )
 
+            PurchaseReviewShortcut(
+                reviewCount = uiState.items.count { it.status == ItemStatus.PENDING_REVIEW },
+                onClick = { onNavigateToFilteredList("status_review", "", "待核对购买状态") },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = skin.spacingSmall)
+            )
+
             // Category group filter + total price (only on item tabs)
             if (pagerState.currentPage == 1) {
                 Row(
@@ -607,6 +614,28 @@ fun ItemListScreen(
                 }
                 }
             }
+        }
+    }
+}
+
+@Composable
+internal fun PurchaseReviewShortcut(reviewCount: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    if (reviewCount <= 0) return
+    val skin = LolitaSkin.current
+    LolitaCard(
+        onClick = onClick,
+        modifier = modifier.testTag("purchaseReviewShortcut").semantics(mergeDescendants = true) {},
+        variant = CardVariant.COMPACT,
+        contentPadding = PaddingValues(skin.spacingMedium)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                Text("待核对购买状态", style = MaterialTheme.typography.titleSmall)
+                Text("$reviewCount 件服饰与小物 · 查看并确认", style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("去核对", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
         }
     }
 }

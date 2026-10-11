@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ fun FilteredItemListScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isReviewList = filterType == "status_review"
 
     Scaffold(
         topBar = {
@@ -79,17 +81,28 @@ fun FilteredItemListScreen(
             ) {
                 SkinEmptyState(
                     iconKey = IconKey.Search,
-                    title = "暂无数据",
-                    subtitle = "没有找到匹配的服饰"
+                    title = if (isReviewList) "暂无待核对服饰" else "暂无数据",
+                    subtitle = if (isReviewList) "购买状态已核对" else "没有找到匹配的服饰"
                 )
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding),
+                modifier = Modifier.fillMaxSize().padding(padding).testTag("filteredItemList"),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 flingBehavior = rememberSkinFlingBehavior()
             ) {
+                if (isReviewList) {
+                    item(key = "reviewInstructions") {
+                        LolitaCard(modifier = Modifier.fillMaxWidth().testTag("reviewItemInstructions")) {
+                            Text(
+                                "点击服饰进入详情，在顶部核对购买状态。共用价格的小物随主件确认；独立计价的小物需单独核对。",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
                 item {
                     Text(
                         "${uiState.items.size} 件",
@@ -112,7 +125,7 @@ fun FilteredItemListScreen(
 
 @Composable
 private fun FilteredItemCard(item: Item, onClick: () -> Unit) {
-    LolitaCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    LolitaCard(onClick = onClick, modifier = Modifier.fillMaxWidth().testTag("filteredItem-${item.id}")) {
         Row(
             modifier = Modifier.padding(12.dp), // intentional override of cardInnerPadding
             horizontalArrangement = Arrangement.spacedBy(12.dp),

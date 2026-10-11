@@ -53,7 +53,8 @@ data class PriceManageUiState(
     val isLoading: Boolean = true,
     val error: String? = null,
     val isUpdating: Boolean = false,
-    val loadFailed: Boolean = false
+    val loadFailed: Boolean = false,
+    val parentItemId: Long? = null
 )
 
 data class PriceEditUiState(
@@ -122,7 +123,7 @@ class PriceManageViewModel(
                 val parentId = item?.parentItemId?.takeIf { item.includedInParentPrice }
                 val parent = parentId?.let { itemRepository.getItemById(it) }
                 combine(orderRepository.currentOrder(parentId ?: itemId), orderRepository.historicalOrders(itemId)) { order, history ->
-                    PriceManageUiState(order, history, parentId != null, parent?.name, false)
+                    PriceManageUiState(order, history, parentId != null, parent?.name, false, parentItemId = parentId)
                 }.collect { state ->
                     _uiState.update { state.copy(isUpdating = it.isUpdating, error = it.error) }
                 }

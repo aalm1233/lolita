@@ -44,6 +44,7 @@ import com.lolita.app.ui.screen.common.ShimmerRect
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import androidx.compose.ui.platform.testTag
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
@@ -61,6 +62,7 @@ fun ItemDetailScreen(
     onNavigateToRecommendation: (Long) -> Unit = {},
     onNavigateToItem: (Long) -> Unit = {},
     onCreateChild: (Long) -> Unit = {},
+    onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem,
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -387,7 +389,8 @@ fun ItemDetailScreen(
                             item = item,
                             uiState = uiState,
                             onNavigateToPriceManage = onNavigateToPriceManage,
-                            onNavigateToItem = onNavigateToItem
+                            onNavigateToItem = onNavigateToItem,
+                            onNavigateToParentPriceManage = onNavigateToParentPriceManage
                         )
 
                         LolitaSection(title = "基本信息") {
@@ -798,15 +801,18 @@ fun ItemDetailScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ItemOrderSummary(
+internal fun ItemOrderSummary(
     item: Item,
     uiState: ItemEditUiState,
     onNavigateToPriceManage: () -> Unit,
-    onNavigateToItem: (Long) -> Unit
+    onNavigateToItem: (Long) -> Unit,
+    onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem
 ) {
     val skin = LolitaSkin.current
     val currentOrder = uiState.pricesWithPayments.singleOrNull()
     val sharedParentId = item.parentItemId.takeIf { item.includedInParentPrice }
+    val needsPurchaseReview = item.status == ItemStatus.PENDING_REVIEW ||
+        currentOrder?.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.NEEDS_REVIEW
 
     LolitaCard(
         modifier = Modifier.fillMaxWidth(),
@@ -867,6 +873,19 @@ private fun ItemOrderSummary(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            if (needsPurchaseReview) {
+                Text(if (sharedParentId != null) "共用价格的小物随主件确认购买状态。"
+                    else if (currentOrder == null && uiState.legacyPriceCount > 0) "先选择一笔历史订单，再确认购买状态。"
+                    else "请确认是否历史已购，或核对真实付款记录后启用跟踪。",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Button(
+                    onClick = {
+                        if (sharedParentId != null) onNavigateToParentPriceManage(sharedParentId)
+                        else onNavigateToPriceManage()
+                    },
+                    modifier = Modifier.fillMaxWidth().testTag("reviewPurchaseStatusButton")
+                ) { Text(if (sharedParentId != null) "核对主件购买状态" else "核对购买状态") }
             }
         }
     }

@@ -232,7 +232,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=82, versionName="2.39.3"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=83, versionName="2.39.4"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -281,6 +281,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 历史购买修复与源备份验收说明：`docs/historical-purchase-fix-2026-10-11.md`。旧程序已生成的付款无原始来源证据时不得自动删除；测试库纠正通过原始 ZIP 官方恢复并独立逐字段/图片 SHA256 核对。
 
 - 付款补录页展示服饰、来源、订单总价、已录实付与保留的淘宝订单说明；“填入参考金额”仅提供可编辑参考，不自动保存或据总价生成实付。`OrderRepository.recordHistoricalPayment` 明确限定当前历史已购绑定，整数分校验不变，完整保留历史已购证据。
+
+- 首页 `PurchaseReviewShortcut` 汇总所有 `PENDING_REVIEW` 主件与小物，并进入 `status_review` 购买状态核对清单；数量来自全部服饰，不受首页搜索/分类筛选影响。清单由 Room Flow 驱动，确认后实时移除，归档订单不自动纳入当前购买状态待核对。
+- 服饰详情顶部 `ItemOrderSummary` 明确提供“核对购买状态”，共用价格的小物直接进入主件价格核对；价格页也提供“前往主件核对”。无绑定旧价格必须先选定当前订单，确认继续复用 `OrderLedger`；完全无价格时提供“核对服饰状态”进入既有编辑页，确认后仍无虚构价格或实付。有当前绑定或共价的小物不得手动覆盖订单状态。
+- 入口与购买核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest` 和 `PriceManageScreenReviewTest`，覆盖可见按钮、主件跳转、清单实时变化、勾选门槛与价格/阶段/实付原值保全，使用独立内存 Room。
 
 - 历史核对入口覆盖仍有余额的正常账本，包括部分实付；“确认历史已购”不生成付款。“核对账本并启用跟踪”展示总价、已录实付与计算待付，要求用户确认真实付款已全部录入且计算余额等于实际待付；`confirmTrackedOrder` 在领域层也拒绝未确认请求。回归位于 `PersistentOrderEvidenceTest`，覆盖归档小物共用价格后重绑、订单切换、22→23 原值保全、归档证据备份恢复及确认失败事务不变。
 - 付款通知使用 `PaymentReminderIdentity`（阶段代理 ID、价格 ID、到期日、提前天数）与本机 `PaymentReminderDeliveryStore` 持久送达记录。同一配置成功送达后，重启或修改其他订单不得重复补发；权限关闭或发送失败不记送达。应用和日历使用一致的提前天数，日历最少提前一分钟。策略与清理回归位于 `PaymentReminderPolicyTest`、`ReminderCleanupTest`、`ReminderJournalTest` 和 `PaymentReminderDeliveryStoreTest`（独立 SharedPreferences，覆盖送达持久化）。

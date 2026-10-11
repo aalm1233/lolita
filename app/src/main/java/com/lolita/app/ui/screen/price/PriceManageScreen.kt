@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Price
@@ -27,6 +28,8 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun PriceManageScreen(
     itemId: Long, onBack: () -> Unit, onNavigateToPriceEdit: (Long?) -> Unit,
     onNavigateToPaymentManage: (Long) -> Unit,
+    onNavigateToParentPriceManage: (Long) -> Unit = {},
+    onNavigateToItemEdit: (Long) -> Unit = {},
     viewModel: PriceManageViewModel = viewModel(factory = PriceManageViewModelFactory(itemId))
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -36,7 +39,7 @@ fun PriceManageScreen(
     var purchaseConfirmation by remember { mutableStateOf<PurchaseRecordStatus?>(null) }
     Scaffold(topBar = { GradientTopAppBar(title = { Text("价格与付款") },
         navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }) }) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge),
+        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge).testTag("priceManageList"),
             contentPadding = PaddingValues(vertical = skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap),
             flingBehavior = rememberSkinFlingBehavior()) {
             if (state.isLoading) item { PricingSkeleton() }
@@ -49,6 +52,11 @@ fun PriceManageScreen(
                     LolitaSection("共用主件价格") { row {
                         Text("已包含在${state.parentName ?: "主件"}价格中，小物不重复记账。", style = MaterialTheme.typography.bodyMedium)
                         Text("付款状态随主件同步。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Button(
+                            enabled = !state.isUpdating && state.parentItemId != null,
+                            onClick = { state.parentItemId?.let(onNavigateToParentPriceManage) },
+                            modifier = Modifier.fillMaxWidth().testTag("reviewParentPriceEntry")
+                        ) { Text("前往主件核对") }
                     } }
                 }
                 val order = state.order
@@ -97,6 +105,13 @@ fun PriceManageScreen(
                     LolitaSection("尚未设置价格") { row {
                         SkinEmptyState(iconKey = IconKey.AttachMoney, title = "暂无订单价格", subtitle = "每件独立计价的服饰只有一笔当前订单")
                         Button(onClick = { onNavigateToPriceEdit(null) }, modifier = Modifier.fillMaxWidth()) { Text("设置价格") }
+                        Text("没有价格时可先核对服饰状态，价格和真实付款可稍后补全。",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        OutlinedButton(
+                            enabled = !state.isUpdating,
+                            onClick = { onNavigateToItemEdit(itemId) },
+                            modifier = Modifier.fillMaxWidth().testTag("reviewUnpricedItemEntry")
+                        ) { Text("核对服饰状态") }
                     } }
                 } else if (state.includedInParentPrice) item {
                     LolitaSection("主件价格待录入") { row { Text("请先在主件详情设置价格。无价格不会被当作零元付清。") } }
@@ -137,6 +152,7 @@ fun PriceManageScreen(
         val order = state.order
         var paymentRecordsVerified by remember(status, order) { mutableStateOf(false) }
         AlertDialog(
+            modifier = Modifier.testTag("purchaseReviewDialog"),
             onDismissRequest = { purchaseConfirmation = null },
             title = { Text(if (historical) "确认历史已购" else "核对账本并启用跟踪") },
             text = {
@@ -149,7 +165,7 @@ fun PriceManageScreen(
                         PricingValueRow("核对后待付余额", formatPriceAmount(order.remainingAmount.coerceAtLeast(0.0)))
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().toggleable(
+                        modifier = Modifier.fillMaxWidth().testTag("reviewPaymentRecordsVerified").toggleable(
                             value = paymentRecordsVerified,
                             enabled = !state.isUpdating && order != null,
                             role = Role.Checkbox,
@@ -164,11 +180,11 @@ fun PriceManageScreen(
                     Text("资料未补齐时请取消，余额继续保持未知。已购服饰可先确认历史已购，再补录能够确认的真实付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
-            confirmButton = { TextButton(enabled = !state.isUpdating && order != null && (historical || paymentRecordsVerified), onClick = {
+            confirmButton = { TextButton(modifier = Modifier.testTag(if (historical) "reviewConfirmHistorical" else "reviewConfirmTracked"), enabled = !state.isUpdating && order != null && (historical || paymentRecordsVerified), onClick = {
                 if (historical) viewModel.confirmHistoricalPurchase() else viewModel.confirmTrackedOrder(paymentRecordsVerified)
                 purchaseConfirmation = null
             }) { Text(if (historical) "确认历史已购" else "确认并启用跟踪") } },
-            dismissButton = { TextButton(onClick = { purchaseConfirmation = null }) { Text("取消") } }
+            dismissButton = { TextButton(modifier = Modifier.testTag("reviewCancel"), onClick = { purchaseConfirmation = null }) { Text("取消") } }
         )
     }
     state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("提示") }, text = { Text(error) },
@@ -195,10 +211,10 @@ internal fun PurchaseRecordNotice(
                     else "确认历史已购不会补造付款金额或日期；真实付款记录完整且余额核对一致后，才启用付款跟踪。",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (!historical && onConfirmHistorical != null) Button(
-                    onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
+                    onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewHistoricalEntry")
                 ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
                 if (onConfirmTracked != null) OutlinedButton(
-                    onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
+                    onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewTrackedEntry")
                 ) { Text("核对账本并启用跟踪") }
                 if (onReturnToReview != null) TextButton(
                     onClick = onReturnToReview, enabled = !isWorking, modifier = Modifier.fillMaxWidth()

@@ -259,7 +259,7 @@ When adding new features, follow these rules to maintain data structure and feat
 
 ### Version Bumping
 
-- Every feature update must bump the version in `app/build.gradle.kts`: increment `versionCode` by 1, and update `versionName` accordingly (current: versionCode=82, versionName="2.39.3")
+- Every feature update must bump the version in `app/build.gradle.kts`: increment `versionCode` by 1, and update `versionName` accordingly (current: versionCode=83, versionName="2.39.4")
 - Bug fixes: bump patch version (e.g. 2.0 -> 2.0.1)
 - New features: bump minor version (e.g. 2.0 -> 2.1)
 - Breaking/major changes: bump major version (e.g. 2.0 -> 3.0)

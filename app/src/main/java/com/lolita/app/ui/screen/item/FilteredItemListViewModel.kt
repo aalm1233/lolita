@@ -37,6 +37,7 @@ class FilteredItemListViewModel(
             val flow = when (filterType) {
                 "status_owned" -> itemRepository.getItemsByStatus(ItemStatus.OWNED)
                 "status_wished" -> itemRepository.getItemsByStatus(ItemStatus.WISHED)
+                "status_review" -> itemRepository.getItemsByStatus(ItemStatus.PENDING_REVIEW)
                 "brand" -> itemRepository.getItemsByBrandName(filterValue)
                 "category" -> itemRepository.getItemsByCategoryName(filterValue)
                 "style" -> itemRepository.getItemsByStyle(filterValue)

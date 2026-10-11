@@ -291,6 +291,9 @@ fun LolitaNavHost(
                     onNavigateToPriceManage = {
                         navController.navigate(Screen.PriceManage.createRoute(itemId))
                     },
+                    onNavigateToParentPriceManage = { parentId ->
+                        navController.navigate(Screen.PriceManage.createRoute(parentId))
+                    },
                     onNavigateToRecommendation = { id ->
                         navController.navigate(Screen.Recommendation.createRoute(id))
                     }
@@ -327,11 +330,17 @@ fun LolitaNavHost(
                 PriceManageScreen(
                     itemId = itemId,
                     onBack = { navController.popBackStack() },
+                    onNavigateToItemEdit = { id ->
+                        navController.navigate(Screen.ItemEdit.createRoute(id))
+                    },
                     onNavigateToPriceEdit = { priceId ->
                         navController.navigate(Screen.PriceEdit.createRoute(itemId, priceId))
                     },
                     onNavigateToPaymentManage = { priceId ->
                         navController.navigate(Screen.PaymentManage.createRoute(priceId))
+                    },
+                    onNavigateToParentPriceManage = { parentId ->
+                        navController.navigate(Screen.PriceManage.createRoute(parentId))
                     }
                 )
             }

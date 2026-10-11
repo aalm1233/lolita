@@ -1,10 +1,13 @@
 package com.lolita.app.ui.screen.settings
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -32,12 +35,15 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +59,7 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.BuildConfig
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.notification.DailyOutfitReminderScheduler
+import com.lolita.app.data.notification.NotificationChannelSetup
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
@@ -61,6 +68,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +90,38 @@ fun SettingsScreen(
     val context = LocalContext.current
 
     var showNicknameDialog by remember { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    var showNotificationSettings by rememberSaveable { mutableStateOf(false) }
+    var savingReminder by remember { mutableStateOf(false) }
+    val reminderConfig by appPreferences.outfitReminderConfig.collectAsState(initial = null)
+
+    fun saveReminderEnabled(enabled: Boolean) {
+        coroutineScope.launch {
+            savingReminder = true
+            try {
+                appPreferences.setOutfitReminderEnabled(enabled)
+                DailyOutfitReminderScheduler(context).reschedule()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.e("SettingsScreen", "Failed to update outfit reminder", e)
+                Toast.makeText(context, "提醒设置失败，请重试", Toast.LENGTH_SHORT).show()
+            } finally {
+                savingReminder = false
+            }
+        }
+    }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted && NotificationChannelSetup.canShowOutfitNotifications(context)) {
+            saveReminderEnabled(true)
+        } else {
+            savingReminder = false
+            showNotificationSettings = true
+        }
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
@@ -152,23 +192,39 @@ fun SettingsScreen(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
 
-            val outfitReminderEnabled by appPreferences.outfitReminderEnabled.collectAsState(initial = false)
-            val outfitReminderHour by appPreferences.outfitReminderHour.collectAsState(initial = 20)
-
+            val reminderTime = reminderConfig?.let { String.format(Locale.CHINA, "%02d:%02d", it.hour, it.minute) }
             SettingsToggleItem(
                 title = "每日穿搭提醒",
-                description = "每天 ${outfitReminderHour}:00 提醒记录穿搭",
+                description = reminderTime?.let { "每天 $it 提醒记录穿搭" } ?: "正在读取提醒设置",
                 iconKey = IconKey.Notifications,
                 iconTint = if (isDark) Color(0xFFEF9A9A) else Color(0xFFE57373),
-                checked = outfitReminderEnabled,
+                checked = reminderConfig?.enabled == true,
+                enabled = reminderConfig != null && !savingReminder,
                 onCheckedChange = { enabled ->
-                    coroutineScope.launch {
-                        appPreferences.setOutfitReminderEnabled(enabled)
-                        val scheduler = DailyOutfitReminderScheduler(com.lolita.app.di.AppModule.context())
-                        if (enabled) scheduler.schedule(outfitReminderHour) else scheduler.cancel()
+                    if (!enabled) {
+                        saveReminderEnabled(false)
+                    } else if (Build.VERSION.SDK_INT >= 33 &&
+                        context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        savingReminder = true
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else if (!NotificationChannelSetup.canShowOutfitNotifications(context)) {
+                        showNotificationSettings = true
+                    } else {
+                        saveReminderEnabled(true)
                     }
                 }
             )
+
+            if (reminderConfig?.enabled == true) {
+                SettingsMenuItem(
+                    title = "提醒时间",
+                    description = reminderTime.orEmpty(),
+                    iconKey = IconKey.CalendarMonth,
+                    iconTint = MaterialTheme.colorScheme.primary,
+                    onClick = { if (!savingReminder) showTimePicker = true }
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -226,6 +282,53 @@ fun SettingsScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    if (showTimePicker && reminderConfig != null) {
+        val config = reminderConfig!!
+        val timeState = rememberTimePickerState(initialHour = config.hour, initialMinute = config.minute, is24Hour = true)
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            title = { Text("提醒时间") },
+            text = { TimeInput(state = timeState) },
+            confirmButton = {
+                TextButton(onClick = {
+                    val hour = timeState.hour
+                    val minute = timeState.minute
+                    showTimePicker = false
+                    coroutineScope.launch {
+                        savingReminder = true
+                        try {
+                            appPreferences.setOutfitReminderTime(hour, minute)
+                            DailyOutfitReminderScheduler(context).reschedule()
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            android.util.Log.e("SettingsScreen", "Failed to save outfit reminder time", e)
+                            Toast.makeText(context, "提醒时间保存失败，请重试", Toast.LENGTH_SHORT).show()
+                        } finally {
+                            savingReminder = false
+                        }
+                    }
+                }) { Text("确定") }
+            },
+            dismissButton = { TextButton(onClick = { showTimePicker = false }) { Text("取消") } }
+        )
+    }
+
+    if (showNotificationSettings) {
+        AlertDialog(
+            onDismissRequest = { showNotificationSettings = false },
+            title = { Text("请允许通知") },
+            text = { Text("系统通知或穿搭提醒通知渠道未开启，无法发送提醒。请在系统设置允许穿搭提醒，然后开启每日穿搭提醒。") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showNotificationSettings = false
+                    context.startActivity(NotificationChannelSetup.outfitNotificationSettingsIntent(context))
+                }) { Text("打开系统设置") }
+            },
+            dismissButton = { TextButton(onClick = { showNotificationSettings = false }) { Text("取消") } }
+        )
     }
 
     if (showNicknameDialog) {
@@ -421,7 +524,8 @@ private fun SettingsToggleItem(
     iconKey: IconKey,
     iconTint: Color,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -459,6 +563,7 @@ private fun SettingsToggleItem(
 
             Switch(
                 checked = checked,
+                enabled = enabled,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,

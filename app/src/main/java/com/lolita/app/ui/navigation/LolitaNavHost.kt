@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
@@ -121,8 +122,17 @@ val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun LolitaNavHost() {
+fun LolitaNavHost(
+    openQuickOutfit: Boolean = false,
+    onQuickOutfitOpened: () -> Unit = {}
+) {
     val navController = rememberNavController()
+    LaunchedEffect(openQuickOutfit) {
+        if (openQuickOutfit) {
+            navController.navigate(Screen.QuickOutfitLog.route) { launchSingleTop = true }
+            onQuickOutfitOpened()
+        }
+    }
     val items = BottomNavItems.items
     val snackbarHostState = remember { SnackbarHostState() }
 

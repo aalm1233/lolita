@@ -475,13 +475,19 @@ class BackupManager(
             val reminderName = "$itemName · ${stage.name}"
             try {
                 scheduler.scheduleReminder(payment, reminderName)
-                if (payment.dueDate > System.currentTimeMillis() && stage.calendarEventId == null &&
-                    CalendarEventHelper.hasCalendarPermission(context)) {
-                    val event = CalendarEventHelper.insertEvent(context, "付款提醒 · $reminderName",
+                if (payment.dueDate > System.currentTimeMillis() && stage.calendarEventId == null) {
+                    when (val event = CalendarEventHelper.insertEventChecked(context, "付款提醒 · $reminderName",
                         "付款金额: ¥${payment.amount}", payment.dueDate,
-                        reminderMinutes = com.lolita.app.domain.usecase.PaymentReminderPolicy.calendarReminderMinutes(stage.customReminderDays))
-                    if (event == null) Log.w("BackupManager", "Calendar unavailable; installment alarm remains active for ${stage.id}")
-                    else database.orderDao().updateStageCalendarEventId(stage.id, event)
+                        reminderMinutes = com.lolita.app.domain.usecase.PaymentReminderPolicy.calendarReminderMinutes(stage.customReminderDays))) {
+                        is CalendarEventHelper.InsertResult.Created ->
+                            database.orderDao().updateStageCalendarEventId(stage.id, event.eventId)
+                        CalendarEventHelper.InsertResult.Unavailable ->
+                            Log.i("BackupManager", "Calendar sync unavailable; installment alarm remains active for ${stage.id}")
+                        CalendarEventHelper.InsertResult.Failed -> {
+                            failures++
+                            Log.w("BackupManager", "Calendar sync failed; retaining reminder journal for ${stage.id}")
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 failures++

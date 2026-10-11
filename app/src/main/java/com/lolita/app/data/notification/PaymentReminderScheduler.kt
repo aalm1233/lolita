@@ -83,6 +83,12 @@ class PaymentReminderScheduler(private val context: Context) {
                 reminderTimeMillis,
                 pendingIntent
             )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                reminderTimeMillis,
+                pendingIntent
+            )
         } else {
             alarmManager.set(
                 AlarmManager.RTC_WAKEUP,

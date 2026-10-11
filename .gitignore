@@ -1,5 +1,6 @@
 # Build outputs
 .gradle/
+.gradle-user-home/
 build/
 app/build/
 

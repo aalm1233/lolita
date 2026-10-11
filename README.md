@@ -7,16 +7,19 @@
 ### 服饰管理
 - 列表 / 网格 / 画廊三种视图切换（1/2/3 列）
 - 多条件筛选：季节、风格、颜色、品牌、分类（服装 / 配饰）、位置
-- 文本搜索、状态追踪（已拥有 / 愿望单 / 待付尾款）
-- 价格展示（全款 / 定金-尾款模式）与总消费统计
+- 文本搜索、状态追踪（已拥有 / 愿望单 / 待付款 / 历史付款资料待核对）
+- 每件独立计价服饰只有一笔当前订单，支持全款、定金尾款和多段付款；邮费计入总价，计划与实付分开
+- 小物可挂在主件下面，支持独立计价或共用主件价格与付款状态
+- 保留历史订单和购买证据，不根据缺失付款记录自动认定欠款
 - 品牌 Logo 展示，滑动删除（RESTRICT 约束保护）
 
 ### 套装搭配
 - 命名套装组合，预览缩略图
 - 关联多件服饰，支持编辑与删除
 
-### 图鉴
-- 独立图鉴库，收录服饰参考信息与图片
+### 心愿与历史资料
+- 首页心愿页管理待购服饰与优先级
+- 旧图鉴资料完整归档并纳入备份
 
 ### 穿搭日志
 - 基于照片的每日穿搭记录，支持多图
@@ -36,15 +39,15 @@
 
 ### 皮肤系统
 - 7 套完整皮肤：甜美粉、哥特暗黑、中华风韵、经典优雅、清风水手、田园牧歌、维多利亚
-- 每套皮肤独立配色、字体、形状、图标（45+ Canvas 手绘图标）、动画（入场 / 转场 / 涟漪 / 粒子）
+- 每套皮肤独立配色、字体、形状、图标（51 个 Canvas 手绘图标）、动画（入场 / 转场 / 涟漪 / 粒子）
 - 深色模式自适应
 
 ### 设置与数据
 - 品牌 / 分类 / 风格 / 季节 / 位置 / 购买渠道管理（预设 + 自定义）
-- 数据备份与恢复（JSON / CSV），导入预览
+- 数据备份与恢复（JSON / ZIP），图片 SHA256 清单、导入预览与事务校验；另支持 CSV 导出
 - 淘宝订单导入（Excel .xlsx 解析，Apache POI）
 - 付款提醒（AlarmManager 精确闹钟）+ 日历事件同步
-- 每日穿搭提醒
+- 每日穿搭提醒，可设置小时和分钟，当天已有记录或已提醒时不重复通知
 - 开机自动恢复提醒调度
 
 ## 技术栈
@@ -54,7 +57,7 @@
 | 语言 | Kotlin 2.1.0 |
 | UI | Jetpack Compose (BOM 2024.12.01) |
 | 架构 | MVVM + Repository，手动 DI (AppModule) |
-| 数据库 | Room 2.7.0 (版本 19，23 实体) |
+| 数据库 | Room 2.7.0 (版本 23，25 实体) |
 | 导航 | Navigation Compose 2.8.5 |
 | 图片加载 | Coil 2.7.0 + Landscapist 2.4.7 (shimmer / circular reveal) |
 | 模糊效果 | Haze 1.6.9 (毛玻璃顶栏 / 底栏 / 对话框) |
@@ -74,10 +77,10 @@
 
 ```bash
 # Debug 构建
-./gradlew.bat assembleDebug
+./gradlew assembleDebug
 
 # Release 构建（需先 clean）
-./gradlew.bat clean assembleRelease
+./gradlew clean assembleRelease
 ```
 
 Release 签名需要 `local.properties` 配置 `STORE_PASSWORD`、`KEY_ALIAS`、`KEY_PASSWORD`，密钥库为项目根目录的 `lolita-release.jks`。
@@ -102,31 +105,27 @@ app/src/main/java/com/lolita/app/
 ├── data/
 │   ├── local/        # Room 实体、DAO、数据库、TypeConverter
 │   ├── notification/ # 提醒调度、日历同步、广播接收器
+│   ├── file/         # 图片、备份和导入工具
 │   ├── preferences/  # DataStore 偏好设置
 │   └── repository/   # 数据仓库层
 ├── di/               # AppModule 手动依赖注入
 ├── domain/
 │   ├── model/        # 领域模型
-│   └── usecase/      # 业务逻辑（MatchingEngine）
+│   └── usecase/      # 订单记账、阶段投影、提醒策略和搭配逻辑
 ├── ui/
 │   ├── component/    # 通用 UI 组件
 │   ├── navigation/   # 导航图与路由定义
 │   ├── screen/
 │   │   ├── calendar/ # 付款年历
-│   │   ├── catalog/  # 图鉴
 │   │   ├── common/   # 共享组件（LolitaCard、ImageFrame、Shimmer 等）
 │   │   ├── coordinate/ # 套装
 │   │   ├── item/     # 服饰列表、详情、编辑
-│   │   ├── location/ # 位置管理
-│   │   ├── outfitlog/ # 穿搭日志
+│   │   ├── outfit/ # 穿搭日志
 │   │   ├── price/    # 价格与付款管理
-│   │   ├── recommend/ # 智能推荐
 │   │   ├── settings/ # 设置页
-│   │   ├── source/   # 购买渠道
 │   │   └── stats/    # 统计面板
 │   └── theme/
 │       └── skin/     # 7 套皮肤（颜色、字体、图标、动画、粒子）
-├── util/             # 工具类（图片、备份、淘宝解析等）
 └── LolitaApplication.kt
 ```
 

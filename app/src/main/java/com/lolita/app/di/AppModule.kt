@@ -15,7 +15,7 @@ object AppModule {
     @Synchronized
     fun init(context: Context) {
         if (::appContext.isInitialized) return
-        appContext = context
+        appContext = context.applicationContext
         database = LolitaDatabase.getDatabase(context)
         ImageFileHelper.configure(appContext, database)
     }

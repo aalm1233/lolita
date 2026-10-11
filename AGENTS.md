@@ -6,7 +6,7 @@
 - 数据流：`Entity (Room) -> DAO -> Repository -> ViewModel (StateFlow) -> Composable`
 - DI 不是 Hilt/Dagger，是 `AppModule` 手写 service locator；`LolitaApplication.onCreate()` 初始化。ViewModel 通过构造参数默认值从 `AppModule` 取仓库。
 - Room 注解处理用 **KSP**（不是 Kapt）。Schema 导出目录 `app/schemas/`。
-- USB 设备测试套件：`bash run_device_test.sh`（需 `export MSYS_NO_PATHCONV=1`），验证以编译 + 设备测试为主。
+- USB 设备测试套件：`bash run_device_test.sh`，验证以编译 + 设备测试为主。
 - UI 文案使用中文。
 ## 开始工作前
 
@@ -30,7 +30,7 @@
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
 - 新功能状态若由历史数据推导，需考虑一次性历史刷新，优先批量 SQL 而非逐条循环，在 `LolitaApplication.onCreate()` 调用。
 
-- 服饰与价格改造：`docs/plans/2026-10-11-item-pricing-redesign.md`；实现与回归记录：`docs/item-pricing-implementation-2026-10-11.md`。
+- 服饰与价格改造已实现：`docs/plans/2026-10-11-item-pricing-redesign.md`；实现与回归记录：`docs/item-pricing-implementation-2026-10-11.md`。
 
 ## 备份兼容
 
@@ -161,43 +161,51 @@
 - 编译失败先修到通过再给结论。
 - **增量编译缓存陷阱**：Kotlin 增量编译可能未正确重编译跨文件依赖（如 `VictorianIconProvider` 依赖 `VictorianDecorativeIcons`），导致 release 包运行时回退到基类默认行为（图标变成 Material 默认图标）。debug 包因编译路径不同可能不受影响。**出 release 包前必须 `clean`**，遇到"debug 正常但 release 异常"的症状优先尝试 `clean assembleRelease`。
 
+## 本机安卓模拟器调试
+
+- Apple Silicon 本机 AVD：`Lolita_API_35`（Android 15 / API 35，Google APIs ARM64，Pixel 7）。
+- `bash scripts/debug_emulator.sh` 启动模拟器、等待系统就绪、构建 Debug APK、安装并打开应用；默认使用 `emulator-5554`，保留模拟器数据；安装前核对 AVD 名称、包名、签名和版本，拒绝降版且不卸载/清数据。
+- SDK 默认路径 `~/Library/Android/sdk`，可用 `ANDROID_HOME` 覆盖；AVD 名可用 `LOLITA_AVD` 覆盖，端口用 `LOLITA_EMULATOR_PORT`，序列号用 `LOLITA_EMULATOR_SERIAL`（回退 `ANDROID_SERIAL`）；配置必须一致。日志默认 `/tmp/lolita-emulator-5554.log`，端口变化时同步变化。
+- Android Studio 的 Device Manager 可启动同一 AVD，再选择它运行/调试 app。
+- macOS 启动脚本通过 `launchctl submit` 独立管理模拟器进程，避免调试命令结束后进程被回收；使用 host GPU 和冷启动。
+- 现有 USB 自动化脚本按 1116×2480 真机坐标编写，不能直接作为 Pixel 7 模拟器的验证结果；模拟器使用定向启动、UI 检查与 logcat 验证。
+
 ## USB 设备测试
 
 ```bash
-export MSYS_NO_PATHCONV=1          # Git Bash 路径转换修复（必须）
 bash run_device_test.sh            # 运行 UI 自动化测试套件
 ```
 
 - 测试基于 `adb` + `uiautomator` + `screencap`，无需额外依赖。
-- 前提：USB 连接 Android 设备（debug APK 已安装，USB 调试已开启）。
-- 验证方式：截图大小对比判断页面切换，UI 树文字检查，logcat 崩溃检测。
-- **Compose 限制**：`uiautomator dump` 对 Compose 页面仅能获取导航标签等静态文字，无法可靠检测动态内容；页面变化判断依赖截图像素差异。
-- `ADB` 路径默认 `C:/Users/User/AppData/Local/Android/Sdk/platform-tools/adb.exe`，可通过环境变量 `ADB` 覆盖。
-- 结果输出：`test_results.txt`，截图存 `test_screenshots/`。
+- 前提：USB 连接 Android 设备（debug APK 已安装，USB 调试已开启），分辨率 1116×2480、480dpi；其他尺寸拒绝运行。用 `ANDROID_SERIAL` 指定 USB 目标，未指定时仅自动选取唯一已授权本机 USB 设备，拒绝模拟器与网络传输。
+- 验证方式：按 UI 树边界点击与选中状态核对，保存截图、UI 树和前台活动证据，logcat 仅检测本次运行。FAIL 返回 1，前提错误返回 2，未执行为 SKIP；滚动证据单独记录。
+- **Compose 限制**：部分内容可能无法被 `uiautomator dump` 读取，缺少证据应失败或明确跳过，不凭截图文件大小或固定 PASS 认定成功。底部点击限定在可点击祖先与手势区上方的安全交集。
+- `ADB` 路径默认 `~/Library/Android/sdk/platform-tools/adb`（macOS）或 `C:/Users/User/AppData/Local/Android/Sdk/platform-tools/adb.exe`（Windows），可通过环境变量 `ADB` 覆盖。
+- 结果输出：`test_results.txt`，每次截图、UI 树、活动日志存入独立 `test_screenshots/usb-*/`。可用 `LOLITA_RESULTS_FILE`、`LOLITA_SCREENSHOT_DIR`、`LOLITA_UI_WAIT_SECONDS` 覆盖。
 
 ### 测试覆盖范围（14 组）
 
 | 组 | 测试内容 | 验证方式 |
 |----|----------|----------|
-| G1 | 应用启动、底部导航 5 tab 可见、顶部 4 tab 可见 | UI 树文字 + 截图 |
-| G2 | 底部导航切换（首页→愿望单→穿搭→统计→个人→首页） | 截图大小变化 |
-| G3 | 首页 4 个 top tab 切换（位置/服饰/套装/图鉴） | 截图大小变化 |
-| G4 | 服饰 tab FAB 打开新增服饰页 | 截图大小变化 |
-| G5 | 套装 tab FAB 打开新增套装页 | 截图大小变化 |
-| G6 | 图鉴 tab FAB 打开新增图鉴页 | 截图大小变化 |
-| G7 | 个人/设置页加载与滚动 | 截图大小变化 |
-| G8 | 统计页加载与滚动 | 截图大小变化 |
-| G9 | 穿搭日志页加载 | 截图 |
-| G10 | 愿望单页加载 | 截图 |
-| G11 | 编辑页返回导航 | 截图大小变化 |
-| G12 | 崩溃与 ANR 检测 | logcat |
-| G13 | 数据备份与恢复（滚动至导入区→打开文件选择器→安全返回） | 截图大小变化 + activity 检测 |
-| G14 | 淘宝订单导入（选择 Excel → 订单列表 → 下一步） | 截图大小变化 |
+| G1 | 应用启动、底部 4 tab 和首页顶部 4 tab | UI 树文字 + 截图 + 前台活动 |
+| G2 | 首页/穿搭/统计/个人切换 | 选中状态 + 页面文字 |
+| G3 | 位置/服饰/套装/心愿切换 | 顶部选中状态 |
+| G4 | 新增服饰入口与回退 | 编辑页标题 + 回退选中状态 |
+| G5 | 新建套装入口与回退 | 编辑页标题 + 回退选中状态 |
+| G6 | 心愿页新增入口与回退 | 页面证据；保存记录 SKIP |
+| G7 | 个人页加载；滚动单独记录 | 文本/位置变化，未溢出或无位移证据为 SKIP |
+| G8 | 统计页加载；滚动单独记录 | 文本/位置变化，未溢出或无位移证据为 SKIP |
+| G9 | 穿搭日记页加载 | 标题 + 底部选中状态 |
+| G10 | 首页心愿页加载 | 顶部选中状态 |
+| G11 | 空白编辑页返回 | 进入编辑页并返回原页签 |
+| G12 | 本次应用崩溃与 ANR | 带开始时间的应用日志 |
+| G13 | 备份选择器打开及返回 | 系统文件活动 + 返回标题；实际恢复与数据核对 SKIP |
+| G14 | 淘宝选择器打开及返回 | 系统文件活动 + 返回标题；Excel 解析、下一步及导入 SKIP |
 
 ### 设备坐标参考（1116×2480 @ 480dpi）
 
-- 底部导航 y=2330（手势导航区域 y≥2372 会被系统拦截）：首页 x=102 / 愿望单 x=330 / 穿搭 x=558 / 统计 x=786 / 个人 x=1014
-- 顶部 tab y=159：位置 x=207 / 服饰 x=381 / 套装 x=555 / 图鉴 x=720
+- 底部导航为首页/穿搭/统计/个人 4 项；脚本从 UI 树定位可点击边界，点击 y 必须小于 2372，不能复用旧 5 项导航的 x 坐标。
+- 顶部为位置/服饰/套装/心愿；脚本从 UI 树精确标签和边界定位，不复用旧图鉴入口。
 - FAB：(984, 2168)
 - 设置页菜单（视觉 y 需 +350 左右为实际触摸坐标）：属性管理 ≈ y=850 / 数据备份与恢复 ≈ y=1050 / 淘宝订单导入 ≈ y=1200
 - 备份恢复页需向下滚动（swipe 1800→1000）才能露出导入区，「选择备份文件」按钮中心：(557, 2100)
@@ -224,7 +232,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=81, versionName="2.39.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=82, versionName="2.39.3"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -240,7 +248,6 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 若不确定是否需要更新，默认更新。
 
 ## 数据完整性验证
-
 
 - 审计报告：`docs/data-integrity-audit-2026-10-11.md`；升级与备份用例：`docs/data-integrity-test-plan.md`。
 - 运行 `python3 scripts/audit_data_integrity.py` 可用临时 SQLite 复现迁移与 WAL 快照问题；退出码 1 表示数据保留断言失败，2 表示工具错误。不能代替 Android Room 和图片恢复测试。
@@ -279,3 +286,13 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 付款通知使用 `PaymentReminderIdentity`（阶段代理 ID、价格 ID、到期日、提前天数）与本机 `PaymentReminderDeliveryStore` 持久送达记录。同一配置成功送达后，重启或修改其他订单不得重复补发；权限关闭或发送失败不记送达。应用和日历使用一致的提前天数，日历最少提前一分钟。策略与清理回归位于 `PaymentReminderPolicyTest`、`ReminderCleanupTest`、`ReminderJournalTest` 和 `PaymentReminderDeliveryStoreTest`（独立 SharedPreferences，覆盖送达持久化）。
 - 今日穿搭用 Room Flow 订阅本地当天半开区间 `[start, nextDayStart)`，同日多条按日期、ID 倒序选择最新记录；保存、编辑、删除自动刷新。跨日、回到前台与系统日期/时间/时区变更须切换查询范围，次日边界用 Calendar 计算以兼容夏令时。回归位于 `TodayOutfitViewModelTest`。
 - 统计概览分别展示“当前订单实付”和包含归档订单的“全部已录实付”；后者仅汇总真实已付记录，归档、共用主件价格不得删减原实付。显示当前缺付款资料订单数；“订单参考均价”明确来自当前已拥有订单总价。分布、趋势继续使用当前绑定订单口径，回归位于 `SpendingOverviewTest`。
+
+## 提醒联动与残余改动回归
+
+- 每日穿搭提醒配置通过 `AppPreferences.outfitReminderConfig` 原子读取 enabled/hour/minute；旧设置没有 minute 时默认 0，保存时间必须调用 `setOutfitReminderTime`，更新后从最新配置 `reschedule()`，不能用 UI 旧快照安排闹钟。
+- 每日提醒使用 `DailyOutfitReminderPolicy` 按本地日期、时区及墙上时间计算下一次，广播校验当前配置和目标日期；关闭、改时间、已有今日穿搭或当天已成功送达时不再次通知。送达回执保存在独立本机设置，不改服饰/账本或穿搭记录。
+- 设置页开启提醒前申请 Android 13+ 通知权限，拒绝、应用总通知关闭或穿搭提醒渠道关闭时提供对应系统通知设置入口；UI 和 Receiver 共用 `NotificationChannelSetup.canShowOutfitNotifications`；时间输入保留分钟且使用 Compose 对话框。通知的快捷穿搭入口由 `MainActivity` 冷/热启动统一消费，导航恢复时不重复打开。
+- 日历创建需要 READ+WRITE，删除仅需要 WRITE。只选 `CAL_ACCESS_CONTRIBUTOR` 及以上日历；Events 与 Reminders 使用批量操作和回引用共同提交。无权限/无可写日历可仅保留应用闹钟；Provider 实际操作失败必须保留 `RestoreJournal` 重试，不能当成同步成功。
+- 本轮残余改动业务审计与验证记录：`docs/remaining-changes-business-audit-2026-10-11.md`。外部日历测试使用独立内存 Provider，每日设置测试使用独立 DataStore，禁止读写用户数据库和系统真实日历。
+
+- 付款管理同一个 LazyColumn 混合显示付款阶段与真实实付，key 必须分别使用 `stage-${id}` / `payment-${id}`，不能直接共用两张表各自的 Long 主键。`PaymentManageScreenTest` 用独立内存 Room 与真实 Compose 渲染相同 ID 的两组记录，覆盖同屏及往返滚动，并核对原 ID/金额不变。

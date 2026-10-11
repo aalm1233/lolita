@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.PaymentStage
@@ -45,7 +46,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
 
     Scaffold(topBar = { GradientTopAppBar(title = { Text("付款阶段与实付") },
         navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }) }) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge),
+        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge).testTag("paymentManageList"),
             contentPadding = PaddingValues(vertical = skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap),
             flingBehavior = rememberSkinFlingBehavior()) {
             if (state.isLoading) item { PricingSkeleton() }
@@ -88,9 +89,10 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                     if (state.stages.sumOf { it.amount } > state.totalPrice + 0.005) Text("历史计划金额超过订单总额，请核对原始记录。", color = MaterialTheme.colorScheme.error)
                 } } }
                 val stagePaidAmounts = com.lolita.app.domain.usecase.StageAccounting.effectivePaid(state.stages, state.payments)
-                itemsIndexed(state.stages, key = { _, value -> value.id }) { index, stage ->
+                // Stage and payment IDs come from different tables and can have the same value.
+                itemsIndexed(state.stages, key = { _, value -> "stage-${value.id}" }) { index, stage ->
                     val paid = stagePaidAmounts[stage.id] ?: 0.0
-                    LolitaSection(stage.name, modifier = Modifier.skinItemAppear(index), action = {
+                    LolitaSection(stage.name, modifier = Modifier.skinItemAppear(index).testTag("paymentStage-${stage.id}"), action = {
                         Row {
                             IconButton(enabled = canEditStages, onClick = { editingStage = StageDraft(stage.id, stage.name, moneyText(stage.amount), stage.dueDate, stage.reminderSet, stage.customReminderDays?.toString() ?: "1", stage.calendarEventId) }) { SkinIcon(IconKey.Edit) }
                             IconButton(enabled = canEditStages, onClick = { stageToDelete = stage }) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }
@@ -116,9 +118,9 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         }
                     } }
                 }
-                itemsIndexed(state.payments, key = { _, value -> value.id }) { index, payment ->
+                itemsIndexed(state.payments, key = { _, value -> "payment-${value.id}" }) { index, payment ->
                     val stage = state.stages.firstOrNull { it.id == payment.stageId }
-                    LolitaSection("实付 ${formatPriceAmount(payment.amount)}", modifier = Modifier.skinItemAppear(index), action = {
+                    LolitaSection("实付 ${formatPriceAmount(payment.amount)}", modifier = Modifier.skinItemAppear(index).testTag("actualPayment-${payment.id}"), action = {
                         Row {
                             IconButton(enabled = canEditPayments, onClick = { onNavigateToPaymentEdit(payment.id) }) { SkinIcon(IconKey.Edit) }
                             IconButton(enabled = canEditPayments, onClick = { paymentToDelete = payment }) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }

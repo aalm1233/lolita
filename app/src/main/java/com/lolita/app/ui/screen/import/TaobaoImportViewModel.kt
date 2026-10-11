@@ -15,6 +15,10 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
+import com.lolita.app.data.local.entity.PaymentStage
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.ParsePosition
 import com.lolita.app.data.model.TaobaoOrder
 import com.lolita.app.data.model.TaobaoOrderItem
 import com.lolita.app.data.repository.BrandRepository
@@ -54,7 +58,12 @@ data class ImportItemState(
     val paymentRole: PaymentRole? = null,
     val pairedWith: Int? = null,
     val manualBalance: Double? = null,
-    val balanceDueDate: Long? = null
+    val balanceDueDate: Long? = null,
+    val shipping: Double = 0.0,
+    val paidAmount: Double = 0.0,
+    val financialConfirmed: Boolean = false,
+    val sourceLineIndex: Int = 0,
+    val sourceUnitIndex: Int = 0
 )
 
 data class ImportResult(
@@ -101,7 +110,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
     private val categoryRepository: CategoryRepository = AppModule.categoryRepository()
     private val itemRepository: ItemRepository = AppModule.itemRepository()
     private val priceRepository: PriceRepository = AppModule.priceRepository()
-    private val paymentRepository = AppModule.paymentRepository()
+    private val orderRepository = AppModule.orderRepository()
     private val database: LolitaDatabase = AppModule.database()
 
     private val _uiState = MutableStateFlow(TaobaoImportUiState())
@@ -308,39 +317,37 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
      * 构建 ImportItemState 列表并进入完善步骤
      */
     private fun buildDetailItems() {
-        val selected = getSelectedItems()
-        if (selected.isEmpty()) return
-
+        if (_uiState.value.selectedItems.isEmpty()) return
         val brands = _uiState.value.brands
         val categories = _uiState.value.categories
-
-        val importItems = selected.map { item ->
-            val matchedBrand = matchBrand(item.shopName, brands)
-            val matchedCategory = matchCategory(item.parsedType, categories)
-            val role = detectPaymentRole(item.name)
-
-            ImportItemState(
-                originalItem = item,
-                name = cleanItemName(item.name),
-                brandId = matchedBrand?.id ?: 0L,
-                categoryId = matchedCategory?.id ?: 0L,
-                color = item.parsedColor ?: "",
-                size = item.parsedSize ?: "",
-                price = item.price,
-                purchaseDate = item.orderTime,
-                styleSpec = item.styleSpec,
-                paymentRole = role
-            )
-        }
-
-        // 自动匹配定金尾款
-        val matched = autoMatchDepositBalance(importItems)
-
-        _uiState.value = _uiState.value.copy(
-            currentStep = ImportStep.DETAIL,
-            importItems = matched,
-            currentItemIndex = 0
-        )
+        val importItems = mutableListOf<ImportItemState>()
+        try {
+            _uiState.value.orders.forEach { order ->
+                require(order.items.all { it.quantity in 1..100 }) { "订单 ${order.orderId} 商品数量无效或超过100，请先核对文件" }
+                val pieces = order.items.flatMapIndexed { line, item -> List(item.quantity) { unit -> Triple(line, unit, item) } }
+                // Allocate against every original piece before selection. Skipped pieces keep their share.
+                val shipping = allocateImportMoney(order.shipping, List(pieces.size) { 1.0 })
+                val paid = allocateImportMoney(order.totalPaid, pieces.map { it.third.price.coerceAtLeast(0.0) })
+                val fullyPaid = order.orderStatus == "交易成功"
+                pieces.forEachIndexed { pieceIndex, (line, unit, item) ->
+                    if ("${order.orderId}:$line" in _uiState.value.selectedItems) {
+                        val amountPaid = if (fullyPaid) paid[pieceIndex] else 0.0
+                        val merchandise = if (fullyPaid && paid[pieceIndex] >= shipping[pieceIndex]) importSubtract(paid[pieceIndex], shipping[pieceIndex]) else item.price
+                        importItems += ImportItemState(
+                            originalItem = item, name = cleanItemName(item.name),
+                            brandId = matchBrand(item.shopName, brands)?.id ?: 0L,
+                            categoryId = matchCategory(item.parsedType, categories)?.id ?: 0L,
+                            color = item.parsedColor ?: "", size = item.parsedSize ?: "",
+                            price = merchandise, purchaseDate = item.orderTime, styleSpec = item.styleSpec,
+                            paymentRole = detectPaymentRole(item.name), shipping = shipping[pieceIndex], paidAmount = amountPaid,
+                            sourceLineIndex = line, sourceUnitIndex = unit
+                        )
+                    }
+                }
+            }
+            _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL,
+                importItems = autoMatchDepositBalance(importItems), currentItemIndex = 0)
+        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "金额解析失败") }
     }
 
     private fun guessCategoryGroup(parsedType: String): String {
@@ -357,7 +364,10 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
     fun updateImportItem(index: Int, update: (ImportItemState) -> ImportItemState) {
         val items = _uiState.value.importItems.toMutableList()
         if (index in items.indices) {
-            items[index] = update(items[index])
+            val old = items[index]
+            val changed = update(old)
+            val moneyChanged = old.price != changed.price || old.shipping != changed.shipping || old.paidAmount != changed.paidAmount || old.purchaseDate != changed.purchaseDate || old.manualBalance != changed.manualBalance
+            items[index] = if (moneyChanged) changed.copy(financialConfirmed = false) else changed
             _uiState.value = _uiState.value.copy(importItems = items)
         }
     }
@@ -380,216 +390,85 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
      * 执行批量导入 — 使用 ImportItemState 中的预匹配结果
      */
     fun executeImport() {
+        if (_uiState.value.currentStep == ImportStep.IMPORTING) return
         val allItems = _uiState.value.importItems
-        val validIndices = allItems.indices.filter { idx ->
-            val item = allItems[idx]
-            if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith != null) {
-                // 已配对的尾款项只需价格有效
-                item.price > 0
-            } else if (item.paymentRole == PaymentRole.DEPOSIT && item.pairedWith == null) {
-                // 未配对的定金项需要品牌、分类、手动尾款金额和尾款截止日期
-                item.brandId > 0 && item.categoryId > 0
-                    && (item.manualBalance ?: 0.0) > 0 && item.balanceDueDate != null
-            } else {
-                // 普通项和未配对尾款项需要品牌和分类
-                item.brandId > 0 && item.categoryId > 0
+        val validIndices = allItems.indices.filter { isImportItemReady(it, allItems) }.toSet()
+        if (validIndices.isEmpty()) { _uiState.value = _uiState.value.copy(errorMessage = "请先完善品牌、类型并核对商品金额、邮费和实付"); return }
+        try {
+            val byOrder = validIndices.map { allItems[it] }.groupBy { it.originalItem.orderId }
+            byOrder.forEach { (orderId, rows) ->
+                val original = _uiState.value.orders.first { it.orderId == orderId }
+                require(importCents(importSum(rows.map { it.shipping })) <= importCents(original.shipping)) { "订单 $orderId 分摊邮费超过源订单邮费，请核对，不能重复计费" }
+                require(importCents(importSum(rows.map { it.paidAmount })) <= importCents(original.totalPaid)) { "订单 $orderId 导入实付超过源订单实付，请核对分配" }
             }
-        }.toSet()
-        if (validIndices.isEmpty()) return
-
+        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message); return }
         _uiState.value = _uiState.value.copy(currentStep = ImportStep.IMPORTING)
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val processedIndices = mutableSetOf<Int>()
+                val processed = mutableSetOf<Int>()
                 var importedCount = 0
                 var mergedCount = 0
-
                 database.withTransaction {
                     for (index in allItems.indices) {
-                        if (index !in validIndices || index in processedIndices) continue
-                        val importItem = allItems[index]
-
-                        val pairedIdx = importItem.pairedWith
-                        val isPaired = pairedIdx != null && pairedIdx in allItems.indices
-                            && pairedIdx in validIndices
-                            && allItems[pairedIdx].pairedWith == index
-
-                        if (isPaired && importItem.paymentRole != null) {
-                            // 定金尾款合并导入 — 使用定金项作为主数据源
-                            val depositItem = if (importItem.paymentRole == PaymentRole.DEPOSIT)
-                                importItem else allItems[pairedIdx!!]
-                            val balanceItem = if (importItem.paymentRole == PaymentRole.BALANCE)
-                                importItem else allItems[pairedIdx!!]
-                            val mainItem = depositItem
-                            val totalPrice = depositItem.price + balanceItem.price
-
-                            val itemId = itemRepository.insertItem(
-                                Item(
-                                    name = mainItem.name,
-                                    brandId = mainItem.brandId,
-                                    categoryId = mainItem.categoryId,
-                                    colors = mainItem.color.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: emptyList(),
-                                    size = mainItem.size.ifBlank { null },
-                                    imageUrls = listOfNotNull(mainItem.imageUrl),
-                                    status = ItemStatus.OWNED,
-                                    description = ""
-                                )
-                            )
-                            val priceId = priceRepository.insertPrice(
-                                Price(
-                                    itemId = itemId,
-                                    type = PriceType.DEPOSIT_BALANCE,
-                                    totalPrice = totalPrice,
-                                    deposit = depositItem.price,
-                                    balance = balanceItem.price
-                                )
-                            )
-                            // 定金 Payment（已付）
-                            paymentRepository.insertPayment(
-                                Payment(
-                                    priceId = priceId,
-                                    amount = depositItem.price,
-                                    isPaid = true,
-                                    paidDate = parseDateToMillis(depositItem.purchaseDate),
-                                    dueDate = parseDateToMillis(depositItem.purchaseDate) ?: System.currentTimeMillis()
-                                ),
-                                mainItem.name
-                            )
-                            // 尾款 Payment（已付）
-                            paymentRepository.insertPayment(
-                                Payment(
-                                    priceId = priceId,
-                                    amount = balanceItem.price,
-                                    isPaid = true,
-                                    paidDate = parseDateToMillis(balanceItem.purchaseDate),
-                                    dueDate = parseDateToMillis(balanceItem.purchaseDate) ?: System.currentTimeMillis()
-                                ),
-                                mainItem.name
-                            )
-                            processedIndices.add(index)
-                            processedIndices.add(pairedIdx!!)
-                            importedCount++
-                            mergedCount++
-                        } else if (importItem.paymentRole == PaymentRole.DEPOSIT
-                            && importItem.pairedWith == null
-                            && importItem.manualBalance != null && importItem.manualBalance > 0) {
-                            // 未配对定金 + 手动尾款导入
-                            val deposit = importItem.price
-                            val balance = importItem.manualBalance
-                            val totalPrice = deposit + balance
-
-                            val itemId = itemRepository.insertItem(
-                                Item(
-                                    name = importItem.name,
-                                    brandId = importItem.brandId,
-                                    categoryId = importItem.categoryId,
-                                    colors = importItem.color.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: emptyList(),
-                                    size = importItem.size.ifBlank { null },
-                                    imageUrls = listOfNotNull(importItem.imageUrl),
-                                    status = ItemStatus.OWNED,
-                                    description = ""
-                                )
-                            )
-                            val priceId = priceRepository.insertPrice(
-                                Price(
-                                    itemId = itemId,
-                                    type = PriceType.DEPOSIT_BALANCE,
-                                    totalPrice = totalPrice,
-                                    deposit = deposit,
-                                    balance = balance
-                                )
-                            )
-                            // 定金付款记录（已付）
-                            paymentRepository.insertPayment(
-                                Payment(
-                                    priceId = priceId,
-                                    amount = deposit,
-                                    isPaid = true,
-                                    paidDate = parseDateToMillis(importItem.purchaseDate),
-                                    dueDate = parseDateToMillis(importItem.purchaseDate) ?: System.currentTimeMillis()
-                                )
-                            )
-                            // 尾款付款记录（未付）
-                            paymentRepository.insertPayment(
-                                Payment(
-                                    priceId = priceId,
-                                    amount = balance,
-                                    isPaid = false,
-                                    dueDate = importItem.balanceDueDate!!
-                                )
-                            )
-                            processedIndices.add(index)
-                            importedCount++
+                        if (index !in validIndices || index in processed) continue
+                        val row = allItems[index]
+                        val pairIndex = row.pairedWith?.takeIf { it in validIndices && allItems[it].pairedWith == index }
+                        val pair = pairIndex?.let { allItems[it] }
+                        val main = if (row.paymentRole == PaymentRole.BALANCE && pair != null) pair else row
+                        val sourceRows = if (pair != null) listOf(main, if (main == row) pair else row) else listOf(row)
+                        val stages: List<Triple<String, Double, Long?>>
+                        val shipping = importSum(sourceRows.map { it.shipping })
+                        val total: Double
+                        val type: PriceType
+                        if (pair != null) {
+                            type = PriceType.DEPOSIT_BALANCE
+                            val deposit = sourceRows.first { it.paymentRole == PaymentRole.DEPOSIT }
+                            val balance = sourceRows.first { it.paymentRole == PaymentRole.BALANCE }
+                            stages = listOf(Triple("定金", importSum(listOf(deposit.price, deposit.shipping)), null),
+                                Triple("尾款", importSum(listOf(balance.price, balance.shipping)), null))
+                            total = importSum(stages.map { it.second })
+                        } else if (main.paymentRole == PaymentRole.DEPOSIT) {
+                            type = PriceType.DEPOSIT_BALANCE
+                            stages = listOf(Triple("定金", importSum(listOf(main.price, main.shipping)), null),
+                                Triple("尾款", main.manualBalance!!, main.balanceDueDate))
+                            total = importSum(stages.map { it.second })
                         } else {
-                            // 普通商品导入
-                            val itemId = itemRepository.insertItem(
-                                Item(
-                                    name = importItem.name,
-                                    brandId = importItem.brandId,
-                                    categoryId = importItem.categoryId,
-                                    colors = importItem.color.takeIf { it.isNotBlank() }?.let { listOf(it) } ?: emptyList(),
-                                    size = importItem.size.ifBlank { null },
-                                    imageUrls = listOfNotNull(importItem.imageUrl),
-                                    status = ItemStatus.OWNED,
-                                    description = ""
-                                )
-                            )
-                            val priceId = priceRepository.insertPrice(
-                                Price(
-                                    itemId = itemId,
-                                    type = PriceType.FULL,
-                                    totalPrice = importItem.price
-                                )
-                            )
-                            // Create paid Payment record for imported item
-                            val purchaseMillis = parseDateToMillis(importItem.purchaseDate)
-                            val paidDate = purchaseMillis ?: System.currentTimeMillis()
-                            paymentRepository.insertPayment(
-                                Payment(
-                                    priceId = priceId,
-                                    amount = importItem.price,
-                                    dueDate = paidDate,
-                                    isPaid = true,
-                                    paidDate = paidDate,
-                                    reminderSet = false
-                                ),
-                                importItem.name
-                            )
-                            processedIndices.add(index)
-                            importedCount++
+                            type = PriceType.FULL
+                            total = importSum(listOf(main.price, main.shipping))
+                            stages = listOf(Triple("全款", total, null))
                         }
+                        val metadata = sourceRows.joinToString("\n") { source ->
+                            "淘宝订单：${source.originalItem.orderId}；原行：${source.sourceLineIndex + 1}；件号：${source.sourceUnitIndex + 1}/${source.originalItem.quantity}；原商品金额：${source.originalItem.price}；分摊邮费：${source.shipping}；核对实付：${source.paidAmount}"
+                        }
+                        val itemId = itemRepository.insertItem(Item(
+                            name = main.name, brandId = main.brandId, categoryId = main.categoryId,
+                            colors = main.color.takeIf { it.isNotBlank() }?.let(::listOf) ?: emptyList(),
+                            size = main.size.ifBlank { null }, imageUrls = sourceRows.mapNotNull { it.imageUrl }.distinct(),
+                            status = ItemStatus.PENDING_PAYMENT, description = metadata))
+                        val priceId = priceRepository.insertPrice(Price(itemId = itemId, type = type, totalPrice = total, shipping = shipping,
+                            deposit = if (type == PriceType.DEPOSIT_BALANCE) stages[0].second else null,
+                            balance = if (type == PriceType.DEPOSIT_BALANCE) stages[1].second else null))
+                        stages.forEachIndexed { stageIndex, (name, amount, dueDate) ->
+                            val stageId = database.orderDao().insertStage(PaymentStage(priceId = priceId, name = name, amount = amount, dueDate = dueDate))
+                            val source = sourceRows.getOrNull(stageIndex)
+                            if (source != null && source.paidAmount > 0) {
+                                val paidDate = parseImportDate(source.purchaseDate) ?: error("请核对实际付款日期")
+                                database.paymentDao().insertPayment(Payment(priceId = priceId, stageId = stageId, amount = source.paidAmount,
+                                    dueDate = paidDate, isPaid = true, paidDate = paidDate))
+                            }
+                        }
+                        processed += index
+                        pairIndex?.let { processed += it; mergedCount++ }
+                        importedCount++
                     }
+                    database.orderDao().refreshStatuses()
                 }
-
-                val skipped = allItems.size - validIndices.size
-                _uiState.value = _uiState.value.copy(
-                    currentStep = ImportStep.RESULT,
-                    importResult = ImportResult(
-                        importedCount = importedCount,
-                        mergedCount = mergedCount,
-                        skippedCount = skipped
-                    )
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    currentStep = ImportStep.DETAIL,
-                    errorMessage = "导入失败: ${e.message}"
-                )
-            }
-        }
-    }
-
-    private fun parseDateToMillis(dateStr: String): Long? {
-        if (dateStr.isBlank()) return null
-        return try {
-            val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
-            format.parse(dateStr)?.time
-        } catch (_: Exception) {
-            try {
-                val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-                format.parse(dateStr)?.time
-            } catch (_: Exception) { null }
+                // All external reminders are reconciled only after the complete import commits.
+                runCatching { orderRepository.reconcileReminders() }
+                    .onFailure { android.util.Log.w("TaobaoImport", "Import committed; reminders will retry", it) }
+                _uiState.value = _uiState.value.copy(currentStep = ImportStep.RESULT,
+                    importResult = ImportResult(importedCount, mergedCount, allItems.size - processed.size))
+            } catch (e: Exception) { _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL, errorMessage = "导入失败: ${e.message}") }
         }
     }
 
@@ -642,6 +521,9 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
             for (bIdx in balances) {
                 if (bIdx in used) continue
                 val bal = result[bIdx]
+                if (dep.size.isNotBlank() && bal.size.isNotBlank() && dep.size != bal.size) continue
+                if (dep.color.isNotBlank() && bal.color.isNotBlank() && dep.color != bal.color) continue
+                if (dep.originalItem.parsedType != null && bal.originalItem.parsedType != null && dep.originalItem.parsedType != bal.originalItem.parsedType) continue
                 val urlBal = bal.originalItem.productUrl
                 val shopBal = bal.originalItem.shopName
 
@@ -789,8 +671,8 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
         items[indexB].pairedWith?.let { old ->
             if (old in items.indices) items[old] = items[old].copy(pairedWith = null)
         }
-        items[indexA] = items[indexA].copy(pairedWith = indexB)
-        items[indexB] = items[indexB].copy(pairedWith = indexA)
+        items[indexA] = items[indexA].copy(pairedWith = indexB, financialConfirmed = false)
+        items[indexB] = items[indexB].copy(pairedWith = indexA, financialConfirmed = false)
         _uiState.value = _uiState.value.copy(importItems = items)
     }
 
@@ -809,7 +691,7 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
             }
             items[index] = items[index].copy(pairedWith = null)
         }
-        items[index] = items[index].copy(paymentRole = role)
+        items[index] = items[index].copy(paymentRole = role, financialConfirmed = false)
         _uiState.value = _uiState.value.copy(importItems = items)
     }
 
@@ -902,4 +784,56 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
             .replace(Regex("\\s+"), " ")               // 合并多余空格
             .trim()
     }
+}
+internal fun importCents(value: Double): Long {
+    require(value.isFinite() && value >= 0 && value <= 999999999.99) { "金额须非负、最多两位小数" }
+    return BigDecimal.valueOf(value).setScale(2, RoundingMode.UNNECESSARY).movePointRight(2).longValueExact()
+}
+internal fun importSum(values: List<Double>): Double = values.fold(BigDecimal.ZERO) { total, value -> total.add(BigDecimal.valueOf(value)) }.toDouble()
+private fun importSubtract(first: Double, second: Double): Double = BigDecimal.valueOf(first).subtract(BigDecimal.valueOf(second)).toDouble()
+
+/** Largest-remainder allocation conserves source cents, including shares belonging to skipped pieces. */
+internal fun allocateImportMoney(total: Double, weights: List<Double>): List<Double> {
+    val cents = importCents(total)
+    if (weights.isEmpty()) return emptyList()
+    require(weights.all { it.isFinite() && it >= 0 }) { "商品金额无效" }
+    val normalized = if (weights.any { it > 0 }) weights else List(weights.size) { 1.0 }
+    val weightSum = normalized.fold(BigDecimal.ZERO) { sum, weight -> sum.add(BigDecimal.valueOf(weight)) }
+    val exact = normalized.map { BigDecimal.valueOf(cents).multiply(BigDecimal.valueOf(it)).divide(weightSum, 16, RoundingMode.DOWN) }
+    val allocated = exact.map { it.setScale(0, RoundingMode.DOWN).longValueExact() }.toMutableList()
+    val remainder = (cents - allocated.sum()).toInt()
+    exact.indices.sortedByDescending { exact[it].subtract(BigDecimal.valueOf(allocated[it])) }.take(remainder).forEach { allocated[it]++ }
+    return allocated.map { BigDecimal.valueOf(it, 2).toDouble() }
+}
+
+internal fun parseImportDate(value: String): Long? {
+    for (pattern in listOf("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd")) {
+        val position = ParsePosition(0)
+        val date = SimpleDateFormat(pattern, Locale.CHINA).apply { isLenient = false }.parse(value.trim(), position)
+        if (date != null && position.index == value.trim().length) return date.time
+    }
+    return null
+}
+
+internal fun isImportItemReady(index: Int, items: List<ImportItemState>): Boolean {
+    val item = items.getOrNull(index) ?: return false
+    fun validMoney(row: ImportItemState): Boolean = try {
+        val total = importCents(importSum(listOf(row.price, row.shipping)))
+        val paid = importCents(row.paidAmount)
+        importCents(row.price); importCents(row.shipping)
+        row.financialConfirmed && total > 0 && paid <= total && (paid == 0L || parseImportDate(row.purchaseDate) != null)
+    } catch (_: Exception) { false }
+    fun validIdentity(row: ImportItemState) = row.name.isNotBlank() && row.brandId > 0 && row.categoryId > 0
+    if (!validMoney(item)) return false
+    val paired = item.pairedWith
+    if (paired != null) {
+        val other = items.getOrNull(paired) ?: return false
+        if (other.pairedWith != index || paired == index || !validMoney(other)) return false
+        if (setOf(item.paymentRole, other.paymentRole) != setOf(PaymentRole.DEPOSIT, PaymentRole.BALANCE)) return false
+        return validIdentity(if (item.paymentRole == PaymentRole.DEPOSIT) item else other)
+    }
+    if (!validIdentity(item)) return false
+    if (item.paymentRole == PaymentRole.DEPOSIT) return try { item.manualBalance != null && importCents(item.manualBalance) > 0 } catch (_: Exception) { false }
+    // A lone balance cannot establish the original full price: it must be paired or explicitly reclassified.
+    return item.paymentRole != PaymentRole.BALANCE
 }

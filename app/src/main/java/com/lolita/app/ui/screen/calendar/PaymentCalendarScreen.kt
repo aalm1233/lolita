@@ -182,13 +182,15 @@ class PaymentCalendarViewModel(
             val item = price?.let { itemRepository.getItemById(it.itemId) }
             val itemName = item?.name ?: "服饰"
 
-            val fullPayment = paymentRepository.getPaymentById(payment.paymentId)
-            if (fullPayment != null && !fullPayment.isPaid) {
-                paymentRepository.updatePayment(
-                    fullPayment.copy(isPaid = true, paidDate = System.currentTimeMillis()),
-                    itemName
-                )
+            try {
+                if (payment.paymentId < 0) {
+                    val stage = AppModule.orderRepository().getStage(-payment.paymentId) ?: return@launch
+                    AppModule.orderRepository().recordPayment(stage.priceId, payment.amount, System.currentTimeMillis(), stage.id)
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("PaymentCalendar", "Payment changed; reload before marking paid", e)
             }
+
         }
     }
 
@@ -711,6 +713,7 @@ private fun PaymentInfoCard(
     val typeLabel = when (payment.priceType) {
         PriceType.DEPOSIT_BALANCE -> "定金尾款"
         PriceType.FULL -> "全款"
+        PriceType.MULTI_STAGE -> "多段付款"
     }
     val now = System.currentTimeMillis()
     val isOverdue = !payment.isPaid && payment.dueDate < now
@@ -763,7 +766,7 @@ private fun PaymentInfoCard(
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
-                        if (payment.isPaid) "已付清" else if (isOverdue) "已逾期" else "待付款",
+                        if (payment.isPaid) "已付款" else if (isOverdue) "已逾期" else "待付款",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (payment.isPaid) paidColor()
@@ -779,7 +782,7 @@ private fun PaymentInfoCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "$typeLabel ¥${String.format("%.2f", payment.amount)}  应付: ${sdf.format(Date(payment.dueDate))}",
+                    "$typeLabel ¥${String.format("%.2f", payment.amount)}  ${if (payment.isPaid) "实付" else "应付"}: ${sdf.format(Date(payment.dueDate))}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

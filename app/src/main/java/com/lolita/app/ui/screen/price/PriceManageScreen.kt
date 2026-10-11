@@ -4,254 +4,112 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.local.dao.PriceWithPayments
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.SkinEmptyState
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import com.lolita.app.ui.theme.skin.icon.IconKey
-import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.icon.IconKey
+import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceManageScreen(
-    itemId: Long,
-    onBack: () -> Unit,
-    onNavigateToPriceEdit: (Long?) -> Unit,
+    itemId: Long, onBack: () -> Unit, onNavigateToPriceEdit: (Long?) -> Unit,
     onNavigateToPaymentManage: (Long) -> Unit,
-    viewModel: PriceManageViewModel = viewModel(
-        factory = PriceManageViewModelFactory(itemId)
-    )
+    viewModel: PriceManageViewModel = viewModel(factory = PriceManageViewModelFactory(itemId))
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    var priceToDelete by remember { mutableStateOf<Price?>(null) }
-
-    Scaffold(
-        topBar = {
-            GradientTopAppBar(
-                title = { Text("价格管理") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        SkinIcon(IconKey.ArrowBack)
-                    }
+    val state by viewModel.uiState.collectAsState()
+    val skin = LolitaSkin.current
+    var orderToBind by remember { mutableStateOf<Price?>(null) }
+    var confirmArchive by remember { mutableStateOf(false) }
+    Scaffold(topBar = { GradientTopAppBar(title = { Text("价格与付款") },
+        navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }) }) { padding ->
+        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge),
+            contentPadding = PaddingValues(vertical = skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap),
+            flingBehavior = rememberSkinFlingBehavior()) {
+            if (state.isLoading) item { PricingSkeleton() } else {
+                if (state.includedInParentPrice) item {
+                    LolitaSection("共用主件价格") { row {
+                        Text("已包含在${state.parentName ?: "主件"}价格中，小物不重复记账。", style = MaterialTheme.typography.bodyMedium)
+                        Text("付款状态随主件同步。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } }
                 }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onNavigateToPriceEdit(null) },
-                containerColor = MaterialTheme.colorScheme.primary,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-            ) {
-                SkinIcon(IconKey.Add, tint = MaterialTheme.colorScheme.onPrimary)
-            }
-        }
-    ) { padding ->
-        if (uiState.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            val flingBehavior = rememberSkinFlingBehavior()
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                flingBehavior = flingBehavior
-            ) {
-                if (uiState.prices.isEmpty()) {
-                    item {
-                        SkinEmptyState(
-                            iconKey = IconKey.AttachMoney,
-                            title = "暂无价格信息",
-                            subtitle = "点击 + 添加价格"
-                        )
+                val order = state.order
+                if (order != null) item {
+                    LolitaSection(if (state.includedInParentPrice) "主件订单" else "当前订单", action = if (state.includedInParentPrice) null else {
+                        { IconButton(onClick = { onNavigateToPriceEdit(order.price.id) }) { SkinIcon(IconKey.Edit) } }
+                    }) {
+                        row {
+                            PricingValueRow("付款形式", order.price.type.priceLabel())
+                            PricingValueRow("商品金额", formatPriceAmount(order.price.totalPrice - order.price.shipping))
+                            PricingValueRow("邮费", formatPriceAmount(order.price.shipping))
+                            PricingValueRow("应付总额", formatPriceAmount(order.price.totalPrice))
+                        }
+                        row {
+                            PricingValueRow("实际已付", formatPriceAmount(order.paidAmount), MaterialTheme.colorScheme.primary)
+                            PricingValueRow("未付余额", formatPriceAmount(order.remainingAmount.coerceAtLeast(0.0)), if (order.remainingAmount > 0.005) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
+                            if (order.paidAmount > order.price.totalPrice + 0.005) Text("历史实付超过订单总额，请核对原始付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                            Button(onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text(if (state.includedInParentPrice) "查看主件付款" else "付款阶段与实付记录") }
+                            if (!state.includedInParentPrice) TextButton(onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("保留历史并解除当前订单") }
+                        }
                     }
-                } else {
-                    itemsIndexed(uiState.prices, key = { _, it -> it.price.id }) { index, priceWithPayments ->
-                        PriceCard(
-                            priceWithPayments = priceWithPayments,
-                            onClick = { onNavigateToPaymentManage(priceWithPayments.price.id) },
-                            onEdit = { onNavigateToPriceEdit(priceWithPayments.price.id) },
-                            onDelete = { priceToDelete = priceWithPayments.price },
-                            modifier = Modifier.skinItemAppear(index)
-                        )
+                } else if (!state.includedInParentPrice && state.historicalOrders.isEmpty()) item {
+                    LolitaSection("尚未设置价格") { row {
+                        SkinEmptyState(iconKey = IconKey.AttachMoney, title = "暂无订单价格", subtitle = "每件独立计价的服饰只有一笔当前订单")
+                        Button(onClick = { onNavigateToPriceEdit(null) }, modifier = Modifier.fillMaxWidth()) { Text("设置价格") }
+                    } }
+                } else if (state.includedInParentPrice) item {
+                    LolitaSection("主件价格待录入") { row { Text("请先在主件详情设置价格。无价格不会被当作零元付清。") } }
+                }
+                if (state.historicalOrders.isNotEmpty()) {
+                    item { LolitaSection(if (state.includedInParentPrice) "小物原有价格归档" else "历史价格待核对") { row {
+                        Text(if (state.includedInParentPrice) "共用主件价格前的独立账目完整保留，可查看原始记录。" else if (order == null) "存在旧价格，请选择一笔作为当前订单。" else "以下旧价格完整保留，不计入当前订单。")
+                        Text("选择不会相加、合并或删除原有付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } } }
+                    itemsIndexed(state.historicalOrders, key = { _, value -> value.price.id }) { index, historical ->
+                        val paid = historical.payments.filter { it.isPaid }.sumOf { it.amount }
+                        LolitaSection("历史订单 #${historical.price.id}", modifier = Modifier.skinItemAppear(index)) {
+                            row {
+                                PricingValueRow("应付总额", formatPriceAmount(historical.price.totalPrice))
+                                PricingValueRow("原始已付", formatPriceAmount(paid))
+                                PricingValueRow("付款记录", "${historical.payments.size} 笔")
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    TextButton(onClick = { onNavigateToPaymentManage(historical.price.id) }) { Text("查看原记录") }
+                                    if (!state.includedInParentPrice) OutlinedButton(onClick = { orderToBind = historical.price }) { Text("设为当前订单") }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
-    // Delete confirmation dialog
-    if (priceToDelete != null) {
-        AlertDialog(
-            onDismissRequest = { priceToDelete = null },
-            title = { Text("确认删除") },
-            text = { Text("确定要删除这条价格记录吗？相关的付款记录也会被删除。") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        priceToDelete?.let { viewModel.deletePrice(it) }
-                        priceToDelete = null
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
-                    Spacer(Modifier.width(4.dp))
-                    Text("删除")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { priceToDelete = null }) {
-                    Text("取消")
-                }
-            }
-        )
-    }
+    if (confirmArchive) AlertDialog(onDismissRequest = { confirmArchive = false }, title = { Text("归档当前订单") },
+        text = { Text("完整保留价格、阶段和实付记录，解除当前订单绑定。此后可将小物切换为共用主件价格，或重新选定历史订单。归档的订单不再计入当前消费统计。") },
+        confirmButton = { TextButton(onClick = { viewModel.archiveCurrentOrder(); confirmArchive = false }) { Text("保留并归档") } },
+        dismissButton = { TextButton(onClick = { confirmArchive = false }) { Text("取消") } })
+    orderToBind?.let { price -> AlertDialog(onDismissRequest = { orderToBind = null }, title = { Text("确认当前订单") },
+        text = { Text("选择应付 ${formatPriceAmount(price.totalPrice)} 的历史订单作为本服饰唯一当前价格。其他价格与付款记录完整保留。付款状态将按所选订单重新计算。") },
+        confirmButton = { TextButton(onClick = { viewModel.bindHistoricalOrder(price.id); orderToBind = null }) { Text("确认选择") } },
+        dismissButton = { TextButton(onClick = { orderToBind = null }) { Text("取消") } }) }
+    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("提示") }, text = { Text(error) },
+        confirmButton = { TextButton(onClick = viewModel::clearError) { Text("确定") } }) }
 }
 
-@Composable
-private fun PriceCard(
-    priceWithPayments: PriceWithPayments,
-    onClick: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val price = priceWithPayments.price
-    val payments = priceWithPayments.payments
-    val paidAmount = payments.filter { it.isPaid }.sumOf { it.amount }
-    val unpaidAmount = payments.filter { !it.isPaid }.sumOf { it.amount }
-    val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
-
-    LolitaCard(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    when (price.type) {
-                        PriceType.FULL -> "全价"
-                        PriceType.DEPOSIT_BALANCE -> "定金+尾款"
-                    },
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    IconButton(onClick = onEdit) {
-                        SkinIcon(IconKey.Edit)
-                    }
-                    IconButton(
-                        onClick = onDelete,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        SkinIcon(IconKey.Delete)
-                    }
-                }
-            }
-
-            HorizontalDivider()
-
-            when (price.type) {
-                PriceType.FULL -> {
-                    PriceRow("总价", "¥${String.format("%.2f", price.totalPrice)}")
-                }
-                PriceType.DEPOSIT_BALANCE -> {
-                    PriceRow("总价", "¥${String.format("%.2f", price.totalPrice)}")
-                    PriceRow("定金", "¥${String.format("%.2f", price.deposit ?: 0.0)}")
-                    PriceRow("尾款", "¥${String.format("%.2f", price.balance ?: 0.0)}")
-                }
-            }
-
-            payments.filter { it.isPaid }
-                .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
-                ?.paidDate?.let { date ->
-                    PriceRow("付款日期", dateFormat.format(Date(date)))
-                }
-
-            if (payments.isNotEmpty()) {
-                HorizontalDivider()
-                PriceRow(
-                    "已付款",
-                    "¥${String.format("%.2f", paidAmount)}",
-                    MaterialTheme.colorScheme.primary
-                )
-                PriceRow(
-                    "未付款",
-                    "¥${String.format("%.2f", unpaidAmount)}",
-                    if (unpaidAmount > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            if (payments.isNotEmpty()) {
-                Button(
-                    onClick = onClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("查看付款详情 (${payments.size})")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun PriceRow(label: String, value: String, color: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            value,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = color
-        )
-    }
+internal fun PriceType.priceLabel(): String = when (this) {
+    PriceType.FULL -> "全款"
+    PriceType.DEPOSIT_BALANCE -> "定金尾款"
+    PriceType.MULTI_STAGE -> "多段付款"
 }
 
 class PriceManageViewModelFactory(private val itemId: Long) : androidx.lifecycle.ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-        return PriceManageViewModel(
-            priceRepository = com.lolita.app.di.AppModule.priceRepository(),
-            itemId = itemId
-        ) as T
-    }
+    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = PriceManageViewModel(itemId = itemId) as T
 }

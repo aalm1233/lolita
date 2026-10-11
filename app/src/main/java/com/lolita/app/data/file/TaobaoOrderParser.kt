@@ -63,7 +63,11 @@ object TaobaoOrderParser {
 
             val productUrl = getCellString(row.getCell(5))
             val styleSpec = getCellString(row.getCell(6))
-            val quantity = getCellString(row.getCell(7)).toIntOrNull() ?: 1
+            val quantityText = getCellString(row.getCell(7)).trim()
+            val quantity = if (quantityText.isBlank()) 1 else runCatching {
+                quantityText.toBigDecimalOrNull()?.intValueExact()
+            }.getOrNull() ?: throw IllegalArgumentException("订单 $currentOrderId 的商品数量无效，请填写1至100的整数")
+            require(quantity in 1..100) { "订单 $currentOrderId 的商品数量无效，请填写1至100的整数" }
             val price = parsePrice(getCellString(row.getCell(8)))
 
             val parsed = parseStyleSpec(styleSpec)

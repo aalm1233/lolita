@@ -57,7 +57,9 @@ data class BackupData(
     val remoteSources: List<RemoteSource> = emptyList(),
     val remoteCoordinates: List<RemoteSharedCoordinate> = emptyList(),
     val remoteItems: List<RemoteSharedItem> = emptyList(),
-    val remotePricePlans: List<RemoteSharedPricePlan> = emptyList()
+    val remotePricePlans: List<RemoteSharedPricePlan> = emptyList(),
+    val orderBindings: List<OrderBinding> = emptyList(),
+    val paymentStages: List<PaymentStage> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -73,7 +75,7 @@ class BackupManager(
     private val database: LolitaDatabase
 ) {
     private val gson = Gson()
-    private val operationMutex = Mutex()
+    private val operationMutex = sharedOperationMutex
     private var cachedBackupDigest: String? = null
     private suspend fun <T> serialized(block: suspend () -> T): T =
         withContext(Dispatchers.IO) { operationMutex.withLock { block() } }
@@ -97,8 +99,10 @@ class BackupManager(
             remoteCategories = sync.getAllCategoriesList(), remoteStyles = sync.getAllStylesList(),
             remoteSeasons = sync.getAllSeasonsList(), remoteSources = sync.getAllSourcesList(),
             remoteCoordinates = sync.getAllCoordinatesList(), remoteItems = sync.getAllItemsList(),
-            remotePricePlans = sync.getAllPricePlansList()
-        )
+            remotePricePlans = sync.getAllPricePlansList(),
+            orderBindings = database.orderDao().getAllBindings(),
+            paymentStages = database.orderDao().getAllStages()
+        ).also(BackupFormat::validate)
     }
 
     private fun validateStoredValues() {
@@ -171,9 +175,9 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order,parent_item_id,included_in_parent_price")
             backupData.items.forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder},${i.parentItemId ?: ""},${i.includedInParentPrice}")
             }
 
             // Coordinates
@@ -213,16 +217,25 @@ class BackupManager(
 
             // Prices
             sb.appendLine("\n=== PRICES ===")
-            sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at")
+            sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at,shipping")
             backupData.prices.forEach { p ->
-                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.createdAt}")
+                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.createdAt},${p.shipping}")
             }
 
             // Payments
             sb.appendLine("\n=== PAYMENTS ===")
-            sb.appendLine("id,price_id,amount,due_date,is_paid,paid_date,reminder_set,custom_reminder_days,calendar_event_id,created_at")
+            sb.appendLine("id,price_id,amount,due_date,is_paid,paid_date,reminder_set,custom_reminder_days,calendar_event_id,created_at,stage_id")
             backupData.payments.forEach { p ->
-                sb.appendLine("${p.id},${p.priceId},${p.amount},${p.dueDate},${p.isPaid},${p.paidDate},${p.reminderSet},${p.customReminderDays},${p.calendarEventId},${p.createdAt}")
+                sb.appendLine("${p.id},${p.priceId},${p.amount},${p.dueDate},${p.isPaid},${p.paidDate},${p.reminderSet},${p.customReminderDays},${p.calendarEventId},${p.createdAt},${p.stageId ?: ""}")
+            }
+
+            sb.appendLine("\n=== ORDER_BINDINGS ===")
+            sb.appendLine("item_id,price_id")
+            backupData.orderBindings.forEach { sb.appendLine("${it.itemId},${it.priceId}") }
+            sb.appendLine("\n=== PAYMENT_STAGES ===")
+            sb.appendLine("id,price_id,name,amount,due_date,reminder_set,custom_reminder_days,calendar_event_id")
+            backupData.paymentStages.forEach {
+                sb.appendLine("${it.id},${it.priceId},${escapeCsv(it.name)},${it.amount},${it.dueDate ?: ""},${it.reminderSet},${it.customReminderDays ?: ""},${it.calendarEventId ?: ""}")
             }
 
             // OutfitLogs
@@ -320,7 +333,11 @@ class BackupManager(
                     importedData = images!!.data
                 }
                 database.withTransaction {
-                    previousPayments = database.paymentDao().getAllPaymentsList()
+                    previousPayments = database.paymentDao().getAllPaymentsList() +
+                        database.orderDao().getAllStages().map { stageReminder(it) } +
+                        (database.restoreJournalDao().get()?.previousPaymentsJson?.let {
+                            gson.fromJson(it, Array<Payment>::class.java).toList()
+                        } ?: emptyList())
                     clearAllTables()
                     importedData.brands.forEach { database.brandDao().insertBrand(it) }
                     importedData.categories.forEach { database.categoryDao().insertCategory(it) }
@@ -329,8 +346,10 @@ class BackupManager(
                     importedData.locations.forEach { database.locationDao().insertLocation(it) }
                     importedData.sources.forEach { database.sourceDao().insertSource(it) }
                     importedData.coordinates.forEach { database.coordinateDao().insertCoordinate(it) }
-                    importedData.items.forEach { database.itemDao().insertItem(it) }
+                    importedData.items.sortedBy { it.parentItemId != null }.forEach { database.itemDao().insertItem(it) }
                     importedData.prices.forEach { database.priceDao().insertPrice(it) }
+                    importedData.orderBindings.forEach { database.orderDao().insertBinding(it) }
+                    importedData.paymentStages.forEach { database.orderDao().insertStage(it.copy(calendarEventId = null)) }
                     importedData.payments.forEach { database.paymentDao().insertPayment(it.copy(calendarEventId = null)) }
                     importedData.outfitLogs.forEach { database.outfitLogDao().insertOutfitLog(it) }
                     importedData.outfitItemCrossRefs.forEach { database.outfitLogDao().insertOutfitItemCrossRef(it) }
@@ -342,6 +361,8 @@ class BackupManager(
                     sync.upsertSources(importedData.remoteSources); sync.upsertCoordinates(importedData.remoteCoordinates)
                     sync.upsertSharedItems(importedData.remoteItems); sync.upsertPricePlans(importedData.remotePricePlans)
                     verifyRestoredData(importedData)
+                    // Ownership is derived from the active order; ambiguous legacy orders stay untouched.
+                    database.orderDao().refreshStatuses()
                     database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(previousPayments)))
                 }
                 committed = true
@@ -367,7 +388,7 @@ class BackupManager(
         data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
         data.legacyCatalogArchives, data.syncStates, data.remoteBrands, data.remoteCategories,
         data.remoteStyles, data.remoteSeasons, data.remoteSources, data.remoteCoordinates,
-        data.remoteItems, data.remotePricePlans
+        data.remoteItems, data.remotePricePlans, data.orderBindings, data.paymentStages
     ).sumOf { it.size }
 
     private suspend fun verifyRestoredData(expected: BackupData) {
@@ -379,6 +400,8 @@ class BackupManager(
             equal(actual.coordinates, expected.coordinates) { it.id.toString() } &&
             equal(actual.items, expected.items) { it.id.toString() } &&
             equal(actual.prices, expected.prices) { it.id.toString() } &&
+            equal(actual.orderBindings, expected.orderBindings) { it.itemId.toString() } &&
+            equal(actual.paymentStages, expected.paymentStages.map { it.copy(calendarEventId = null) }) { it.id.toString() } &&
             equal(actual.payments, expected.payments.map { it.copy(calendarEventId = null) }) { it.id.toString() } &&
             equal(actual.outfitLogs, expected.outfitLogs) { it.id.toString() } &&
             equal(actual.outfitItemCrossRefs, expected.outfitItemCrossRefs) { "${it.outfitLogId}:${it.itemId}" } &&
@@ -407,33 +430,67 @@ class BackupManager(
         val journal = database.restoreJournalDao().get() ?: return 0
         val previous: List<Payment> = gson.fromJson(journal.previousPaymentsJson, object : TypeToken<List<Payment>>() {}.type)
         val failures = reconcileReminders(previous)
-        if (failures == 0) database.restoreJournalDao().clear()
+        if (failures == 0) database.withTransaction {
+            if (database.restoreJournalDao().get() == journal) database.restoreJournalDao().clear()
+        }
         return failures
     }
 
     private suspend fun reconcileReminders(previous: List<Payment>): Int {
         val scheduler = PaymentReminderScheduler(context)
         var failures = 0
+        val stagePointers = database.orderDao().getAllStages().associateBy { it.id }
         previous.forEach { payment ->
             if (runCatching { scheduler.cancelReminder(payment.id) }.isFailure) failures++
-            payment.calendarEventId?.let { if (!CalendarEventHelper.deleteEventChecked(context, it)) failures++ }
+            payment.calendarEventId?.let { eventId ->
+                if (!CalendarEventHelper.deleteEventChecked(context, eventId)) failures++
+                else if (payment.id < 0) {
+                    stagePointers[-payment.id]?.takeIf { it.calendarEventId == eventId }?.let {
+                        database.orderDao().updateStageCalendarEventId(it.id, null)
+                    }
+                }
+            }
         }
-        val payments = database.paymentDao().getAllPaymentsList()
-        payments.filter { !it.isPaid && it.reminderSet }.forEach { payment ->
+        val activePrices = database.orderDao().getAllBindings().map { it.priceId }.toSet()
+        val payments = database.paymentDao().getAllPaymentsList().filter { it.isPaid && it.priceId in activePrices }
+        val prices = database.priceDao().getAllPricesList().associateBy { it.id }
+        val items = database.itemDao().getAllItemsList().associateBy { it.id }
+        val stages = database.orderDao().getAllStages().filter { it.priceId in activePrices }
+        val paymentsByPrice = payments.groupBy { it.priceId }
+        val remainingByStage = stages.groupBy { it.priceId }.flatMap { (priceId, orderStages) ->
+            com.lolita.app.domain.usecase.StageAccounting.remainingByStage(
+                orderStages, paymentsByPrice[priceId].orEmpty(), prices[priceId]?.totalPrice ?: 0.0
+            ).entries.map { it.key to it.value }
+        }.toMap()
+        stages.forEach { stage ->
+            val remaining = remainingByStage[stage.id] ?: 0.0
+            if (stage.dueDate == null || !stage.reminderSet || remaining <= 0.0) return@forEach
+            val payment = stageReminder(stage, remaining)
+            val itemName = prices[stage.priceId]?.itemId?.let { items[it]?.name } ?: "服饰"
+            val reminderName = "$itemName · ${stage.name}"
             try {
-                scheduler.scheduleReminder(payment, "付款提醒")
-                if (payment.dueDate > System.currentTimeMillis() && payment.calendarEventId == null) {
-                    val event = CalendarEventHelper.insertEvent(context, "付款提醒",
+                scheduler.scheduleReminder(payment, reminderName)
+                if (payment.dueDate > System.currentTimeMillis() && stage.calendarEventId == null &&
+                    CalendarEventHelper.hasCalendarPermission(context)) {
+                    val event = CalendarEventHelper.insertEvent(context, "付款提醒 · $reminderName",
                         "付款金额: ¥${payment.amount}", payment.dueDate)
-                    if (event == null) failures++ else database.paymentDao().updateCalendarEventId(payment.id, event)
+                    if (event == null) Log.w("BackupManager", "Calendar unavailable; installment alarm remains active for ${stage.id}")
+                    else database.orderDao().updateStageCalendarEventId(stage.id, event)
                 }
             } catch (e: Exception) {
                 failures++
-                Log.e("BackupManager", "Failed to restore reminder ${payment.id}", e)
+                Log.e("BackupManager", "Failed to restore installment reminder ${stage.id}", e)
             }
         }
         return failures
     }
+
+    /** Negative ids keep installment reminders separate from preserved legacy payment alarms. */
+    private fun stageReminder(stage: PaymentStage, amount: Double = stage.amount) = Payment(
+        id = -stage.id, priceId = stage.priceId, stageId = stage.id, amount = amount,
+        dueDate = stage.dueDate ?: 0L, reminderSet = stage.reminderSet,
+        customReminderDays = stage.customReminderDays, calendarEventId = stage.calendarEventId
+    )
 
     suspend fun previewBackup(uri: Uri): Result<BackupPreview> = serialized {
         try {
@@ -447,6 +504,8 @@ class BackupManager(
                 itemCount = backupData.items.size,
                 priceCount = backupData.prices.size,
                 paymentCount = backupData.payments.size,
+                orderBindingCount = backupData.orderBindings.size,
+                paymentStageCount = backupData.paymentStages.size,
                 outfitLogCount = backupData.outfitLogs.size,
                 styleCount = backupData.styles.size,
                 seasonCount = backupData.seasons.size,
@@ -455,7 +514,7 @@ class BackupManager(
                 imageCount = preparedBackup.imageCount,
                 missingImageCount = preparedBackup.missingImageCount,
                 archiveCount = backupData.legacyCatalogArchives.size,
-                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size),
+                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size),
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -479,6 +538,8 @@ class BackupManager(
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()
+        database.orderDao().clearStages()
+        database.orderDao().clearBindings()
         database.priceDao().deleteAllPrices()
         database.itemDao().deleteAllItems()
         database.locationDao().deleteAllLocations()
@@ -618,7 +679,7 @@ class BackupManager(
                 }
             } ?: error("无法读取文件")
             val data = BackupFormat.parse(json ?: error("ZIP 中未找到 data.json"))
-            if (data.formatVersion >= BackupFormat.VERSION) require(manifest != null) { "ZIP 缺少图片校验清单" }
+            if (data.formatVersion >= 2) require(manifest != null) { "ZIP 缺少图片校验清单" }
             manifest?.let { hashes ->
                 require(hashes.keySet() == names) { "图片清单与 ZIP 内容不一致" }
                 names.forEach { require(hashes[it].asString == sha256(File(imagesDir, it))) { "图片校验失败：$it" } }
@@ -732,6 +793,7 @@ class BackupManager(
     }
 
     companion object {
+        private val sharedOperationMutex = Mutex()
         private const val IMAGE_DIR = "images"
         private const val BACKUP_STAGING_DIR = "backup_staging"
         private const val ZIP_IMAGE_PREFIX = "zip://images/"
@@ -763,11 +825,13 @@ data class BackupPreview(
     val sourceCount: Int = 0,
     val archiveCount: Int = 0,
     val additionalRecordCount: Int = 0,
+    val orderBindingCount: Int = 0,
+    val paymentStageCount: Int = 0,
     val missingImageCount: Int = 0,
     val imageCount: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount
 }

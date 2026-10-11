@@ -314,6 +314,8 @@ fun LolitaNavHost() {
                     itemId = itemId,
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
+                    onNavigateToItem = { navController.navigate(Screen.ItemDetail.createRoute(it)) },
+                    onCreateChild = { navController.navigate(Screen.ItemEdit.createRoute(parentId = it)) },
                     onNavigateToPriceManage = {
                         navController.navigate(Screen.PriceManage.createRoute(itemId))
                     },
@@ -329,7 +331,8 @@ fun LolitaNavHost() {
                 route = Screen.ItemEdit.route,
                 arguments = listOf(
                     navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
-                    navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" }
+                    navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("parentId") { type = NavType.LongType; defaultValue = 0L }
                 )
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
@@ -337,6 +340,7 @@ fun LolitaNavHost() {
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
                     defaultStatus = defaultStatus,
+                    defaultParentItemId = backStackEntry.arguments?.getLong("parentId")?.takeIf { it != 0L },
                     onBack = { navController.popBackStack() },
                     onSaveSuccess = { navController.popBackStack() }
                 )

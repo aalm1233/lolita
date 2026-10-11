@@ -87,9 +87,11 @@ class StatsViewModel(
                     coordinateCount = coordCount,
                     outfitLogCount = logs.size,
                     totalSpending = spending,
-                    averagePrice = if (owned.isNotEmpty()) spending / owned.size else 0.0,
+                    averagePrice = 0.0,
                     isLoading = false
                 )
+            }.combine(priceRepository.getAverageOwnedPrice()) { state, average ->
+                state.copy(averagePrice = average)
             }.combine(appPreferences.showTotalPrice) { state, showPrice ->
                 state.copy(showTotalPrice = showPrice)
             }.combine(priceRepository.getMostExpensiveItem()) { state, item ->

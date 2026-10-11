@@ -28,6 +28,18 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE id = :id")
     suspend fun getItemById(id: Long): Item?
 
+    @Query("SELECT * FROM items WHERE id = :id")
+    fun observeItem(id: Long): Flow<Item?>
+
+    @Query("SELECT * FROM items WHERE parent_item_id = :parentId ORDER BY coordinate_order, created_at, id")
+    fun getChildren(parentId: Long): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE parent_item_id = :parentId ORDER BY coordinate_order, created_at, id")
+    suspend fun getChildrenList(parentId: Long): List<Item>
+
+    @Query("UPDATE items SET status = :status WHERE parent_item_id = :parentId AND included_in_parent_price = 1")
+    suspend fun updateSharedChildrenStatus(parentId: Long, status: String)
+
     @Query("SELECT * FROM items WHERE status = :status ORDER BY updated_at DESC")
     fun getItemsByStatus(status: ItemStatus): Flow<List<Item>>
 
@@ -96,8 +108,17 @@ interface ItemDao {
     @Query("SELECT COUNT(*) FROM items WHERE status = 'WISHED'")
     fun getWishedCount(): Flow<Int>
 
+    @Query("UPDATE items SET parent_item_id = NULL, included_in_parent_price = 0")
+    suspend fun clearAllParentLinks()
+
     @Query("DELETE FROM items")
-    suspend fun deleteAllItems()
+    suspend fun deleteAllItemRows()
+
+    @Transaction
+    suspend fun deleteAllItems() {
+        clearAllParentLinks()
+        deleteAllItemRows()
+    }
 
     @Query("SELECT COUNT(*) FROM items")
     suspend fun getItemCount(): Int

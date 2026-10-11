@@ -15,6 +15,8 @@ import com.lolita.app.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.lolita.app.di.AppModule
+import kotlinx.coroutines.*
 
 /**
  * BroadcastReceiver for handling payment reminder notifications
@@ -22,14 +24,34 @@ import java.util.Locale
 class PaymentReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val paymentId = intent.getLongExtra(PAYMENT_ID, -1L)
+        val paymentId = intent.getLongExtra(PAYMENT_ID, Long.MIN_VALUE)
         val amount = intent.getDoubleExtra(AMOUNT, 0.0)
         val itemName = intent.getStringExtra(ITEM_NAME) ?: "服饰"
         val dueDate = intent.getLongExtra(DUE_DATE, System.currentTimeMillis())
 
-        if (paymentId == -1L) return
+        if (!intent.hasExtra(PAYMENT_ID) || paymentId == Long.MIN_VALUE) return
 
-        showNotification(context, paymentId, amount, itemName, dueDate)
+        // Alarm extras can be stale after editing or restoring an order. Re-check committed data.
+        if (paymentId >= 0) return
+        val result = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                AppModule.init(context)
+                val db = AppModule.database()
+                val stage = db.orderDao().getStage(-paymentId) ?: return@launch
+                val price = db.priceDao().getPriceById(stage.priceId) ?: return@launch
+                if (db.orderDao().getBinding(price.itemId)?.priceId != price.id || !stage.reminderSet || stage.dueDate == null) return@launch
+                val actual = db.paymentDao().getPaymentsByPriceList(price.id).filter { it.isPaid }
+                val stageRemaining = com.lolita.app.domain.usecase.StageAccounting.remainingByStage(
+                    db.orderDao().getStages(price.id),actual,price.totalPrice)[stage.id] ?: 0.0
+                if (stageRemaining <= 0) return@launch
+                val name = db.itemDao().getItemById(price.itemId)?.name ?: itemName
+                showNotification(context, paymentId, stageRemaining, name + " · " + stage.name, stage.dueDate)
+            } catch (e: Exception) {
+                android.util.Log.w("PaymentReminder", "Ignoring invalid or changed installment", e)
+            } finally { result.finish() }
+        }
+
     }
 
     private fun showNotification(
@@ -39,6 +61,7 @@ class PaymentReminderReceiver : BroadcastReceiver() {
         itemName: String,
         dueDate: Long
     ) {
+        NotificationChannelSetup.createNotificationChannel(context)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = NotificationChannelSetup.getNotificationChannelId()
 
@@ -52,7 +75,7 @@ class PaymentReminderReceiver : BroadcastReceiver() {
 
         // Create intent to open app when notification is tapped
         val appIntent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
 
         val pendingIntent = PendingIntent.getActivity(

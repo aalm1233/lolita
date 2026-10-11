@@ -34,6 +34,12 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["location_id"],
             onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = Item::class,
+            parentColumns = ["id"],
+            childColumns = ["parent_item_id"],
+            onDelete = ForeignKey.RESTRICT
         )
     ],
     indices = [
@@ -43,7 +49,8 @@ import androidx.room.PrimaryKey
         Index(value = ["category_id"]),
         Index(value = ["status"]),
         Index(value = ["priority"]),
-        Index(value = ["location_id"])
+        Index(value = ["location_id"]),
+        Index(value = ["parent_item_id"])
     ]
 )
 @Immutable
@@ -102,6 +109,12 @@ data class Item(
 
     @ColumnInfo(name = "source")
     val source: String? = null,
+
+    @ColumnInfo(name = "parent_item_id")
+    val parentItemId: Long? = null,
+
+    @ColumnInfo(name = "included_in_parent_price", defaultValue = "0")
+    val includedInParentPrice: Boolean = false,
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = System.currentTimeMillis()

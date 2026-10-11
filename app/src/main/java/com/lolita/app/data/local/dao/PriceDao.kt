@@ -45,76 +45,85 @@ interface PriceDao {
     @Query("SELECT * FROM prices WHERE id = :id")
     fun getPriceWithPayments(id: Long): Flow<PriceWithPayments?>
 
+    @Transaction
+    @Query("SELECT * FROM prices WHERE item_id=:itemId")
+    fun observeAllPricesWithPaymentsByItem(itemId: Long): Flow<List<PriceWithPayments>>
+
     @Query("SELECT * FROM prices")
     suspend fun getAllPricesList(): List<Price>
 
-    @Query("SELECT COALESCE(SUM(p.total_price), 0.0) FROM prices p INNER JOIN items i ON p.item_id = i.id WHERE i.status = 'OWNED'")
+    @Query("SELECT COALESCE(SUM(ROUND(pay.amount*100))/100.0, 0.0) FROM payments pay INNER JOIN prices p ON pay.price_id=p.id INNER JOIN order_bindings ob ON ob.price_id=p.id INNER JOIN items i ON p.item_id = i.id WHERE pay.is_paid=1")
     fun getTotalSpending(): Flow<Double>
 
+    @Query("""SELECT COALESCE(AVG(p.total_price),0) FROM prices p JOIN order_bindings b ON b.price_id=p.id
+        JOIN items i ON i.id=b.item_id WHERE i.status='OWNED'""")
+    fun getAverageOwnedPrice(): Flow<Double>
+
     @Transaction
-    @Query("SELECT * FROM prices WHERE item_id = :itemId")
+    @Query("SELECT * FROM prices WHERE item_id = :itemId AND id IN (SELECT price_id FROM order_bindings)")
     fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<PriceWithPayments>>
 
     @Query("""
         SELECT COALESCE(SUM(p.total_price), 0.0)
         FROM prices p INNER JOIN items i ON p.item_id = i.id
-        WHERE i.coordinate_id = :coordinateId
+        WHERE i.coordinate_id = :coordinateId AND p.id IN (SELECT price_id FROM order_bindings)
     """)
     fun getTotalPriceByCoordinate(coordinateId: Long): Flow<Double>
 
     @Transaction
     @Query("""
         SELECT p.* FROM prices p INNER JOIN items i ON p.item_id = i.id
-        WHERE i.coordinate_id = :coordinateId
+        WHERE i.coordinate_id = :coordinateId AND p.id IN (SELECT price_id FROM order_bindings)
     """)
     fun getPricesWithPaymentsByCoordinate(coordinateId: Long): Flow<List<PriceWithPayments>>
 
-    @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices WHERE item_id IN (:itemIds)")
+    @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices WHERE item_id IN (:itemIds) AND id IN (SELECT price_id FROM order_bindings)")
     fun getTotalPriceByItemIds(itemIds: List<Long>): Flow<Double>
 
-    @Query("SELECT item_id, COALESCE(SUM(total_price), 0.0) as totalPrice FROM prices GROUP BY item_id")
+    @Query("SELECT item_id, COALESCE(SUM(total_price), 0.0) as totalPrice FROM prices WHERE id IN (SELECT price_id FROM order_bindings) GROUP BY item_id")
     fun getItemPriceSums(): Flow<List<ItemPriceSum>>
 
     @Query("""
-        SELECT b.name AS name, COALESCE(SUM(p.total_price), 0.0) AS totalSpending
+        SELECT b.name AS name, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
         INNER JOIN brands b ON i.brand_id = b.id
-        WHERE i.status = 'OWNED'
+        WHERE p.id IN (SELECT price_id FROM order_bindings)
         GROUP BY b.name
         ORDER BY totalSpending DESC
     """)
     fun getSpendingByBrand(): Flow<List<BrandSpending>>
 
     @Query("""
-        SELECT c.name AS name, COALESCE(SUM(p.total_price), 0.0) AS totalSpending
+        SELECT c.name AS name, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
         INNER JOIN categories c ON i.category_id = c.id
-        WHERE i.status = 'OWNED'
+        WHERE p.id IN (SELECT price_id FROM order_bindings)
         GROUP BY c.name
         ORDER BY totalSpending DESC
     """)
     fun getSpendingByCategory(): Flow<List<CategorySpending>>
 
     @Query("""
-        SELECT i.style AS style, COALESCE(SUM(p.total_price), 0.0) AS totalSpending
+        SELECT i.style AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'OWNED' AND i.style IS NOT NULL AND i.style != ''
+        WHERE p.id IN (SELECT price_id FROM order_bindings) AND i.style IS NOT NULL AND i.style != ''
         GROUP BY i.style
         ORDER BY totalSpending DESC
     """)
     fun getSpendingByStyle(): Flow<List<StyleSpending>>
 
     @Query("""
-        SELECT strftime('%Y-%m', pay.due_date / 1000, 'unixepoch') AS yearMonth,
-               COALESCE(SUM(pay.amount), 0.0) AS totalSpending
+        SELECT strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch', 'localtime') AS yearMonth,
+               COALESCE(SUM(ROUND(pay.amount*100))/100.0, 0.0) AS totalSpending
         FROM payments pay
         INNER JOIN prices pr ON pay.price_id = pr.id
         INNER JOIN items i ON pr.item_id = i.id
-        WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
+        WHERE pr.id IN (SELECT price_id FROM order_bindings)
           AND pay.is_paid = 1
+          AND pay.paid_date IS NOT NULL
         GROUP BY yearMonth
         ORDER BY yearMonth ASC
     """)
@@ -122,10 +131,10 @@ interface PriceDao {
 
     @Query("""
         SELECT i.id AS itemId, i.name AS itemName, i.image_urls AS imageUrls,
-               COALESCE(SUM(p.total_price), 0.0) AS totalSpending
+               COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'OWNED'
+        WHERE p.id IN (SELECT price_id FROM order_bindings)
         GROUP BY i.id
         ORDER BY totalSpending DESC
         LIMIT 1
@@ -133,10 +142,10 @@ interface PriceDao {
     fun getMostExpensiveItem(): Flow<ItemWithSpending?>
 
     @Query("""
-        SELECT i.season AS style, COALESCE(SUM(p.total_price), 0.0) AS totalSpending
+        SELECT i.season AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'OWNED' AND i.season IS NOT NULL AND i.season != ''
+        WHERE p.id IN (SELECT price_id FROM order_bindings) AND i.season IS NOT NULL AND i.season != ''
         GROUP BY i.season
     """)
     fun getSpendingBySeasonRaw(): Flow<List<StyleSpending>>
@@ -145,15 +154,17 @@ interface PriceDao {
         SELECT COALESCE(SUM(p.total_price), 0.0)
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'WISHED'
+        WHERE i.status = 'WISHED' AND i.included_in_parent_price=0
+          AND (SELECT COUNT(*) FROM prices candidate WHERE candidate.item_id=i.id)=1
     """)
     fun getWishlistTotalBudget(): Flow<Double>
 
     @Query("""
-        SELECT i.priority AS priority, COUNT(i.id) AS itemCount,
+        SELECT i.priority AS priority, COUNT(DISTINCT i.id) AS itemCount,
                COALESCE(SUM(p.total_price), 0.0) AS totalBudget
         FROM items i
-        LEFT JOIN prices p ON p.item_id = i.id
+        LEFT JOIN prices p ON p.item_id = i.id AND i.included_in_parent_price=0
+          AND (SELECT COUNT(*) FROM prices candidate WHERE candidate.item_id=i.id)=1
         WHERE i.status = 'WISHED'
         GROUP BY i.priority
     """)
@@ -163,9 +174,9 @@ interface PriceDao {
         SELECT DISTINCT i.* FROM items i
         INNER JOIN prices pr ON pr.item_id = i.id
         INNER JOIN payments pay ON pay.price_id = pr.id
-        WHERE i.status IN ('OWNED', 'PENDING_BALANCE')
+        WHERE pr.id IN (SELECT price_id FROM order_bindings)
           AND pay.is_paid = 1
-          AND strftime('%Y-%m', pay.due_date / 1000, 'unixepoch') = :yearMonth
+          AND strftime('%Y-%m', pay.paid_date / 1000, 'unixepoch', 'localtime') = :yearMonth
         ORDER BY i.updated_at DESC
     """)
     fun getItemsByPurchaseMonth(yearMonth: String): Flow<List<Item>>
@@ -173,36 +184,24 @@ interface PriceDao {
     @Query("DELETE FROM prices")
     suspend fun deleteAllPrices()
 
-    @Query("""
+    @Query(STAGE_BALANCES + """
         SELECT pr.id AS priceId, pr.total_price AS totalPrice,
                MIN(pay.paid_date) AS firstPaidDate,
                pr.type AS priceType, i.name AS itemName, i.id AS itemId,
-               (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0) AS unpaidCount,
-               (SELECT COUNT(*) FROM payments p WHERE p.price_id = pr.id AND p.is_paid = 0 AND p.due_date < :now) AS overdueCount
+               CASE WHEN ROUND(pr.total_price*100)>COALESCE((SELECT SUM(ROUND(p.amount*100)) FROM payments p WHERE p.price_id=pr.id AND p.is_paid=1),0) THEN 1 ELSE 0 END AS unpaidCount,
+               (SELECT COUNT(*) FROM balances b WHERE b.price_id=pr.id AND b.remaining>0 AND b.due_date<:now) AS overdueCount
         FROM prices pr
         INNER JOIN items i ON pr.item_id = i.id
         INNER JOIN payments pay ON pay.price_id = pr.id
         WHERE pay.is_paid = 1
           AND pay.paid_date BETWEEN :startDate AND :endDate
-          AND i.status IN ('OWNED', 'PENDING_BALANCE')
+          AND pr.id IN (SELECT price_id FROM order_bindings)
         GROUP BY pr.id
         ORDER BY firstPaidDate ASC
     """)
     fun getPricesWithStatusByDateRange(startDate: Long, endDate: Long, now: Long): Flow<List<PriceWithStatus>>
 
-    @Query("""
-        SELECT pay.id AS paymentId, pay.amount, pay.due_date AS dueDate,
-               pay.is_paid AS isPaid, pay.paid_date AS paidDate,
-               pr.id AS priceId, pr.type AS priceType,
-               i.name AS itemName, i.id AS itemId
-        FROM payments pay
-        INNER JOIN prices pr ON pay.price_id = pr.id
-        INNER JOIN items i ON pr.item_id = i.id
-        WHERE pay.due_date BETWEEN :startDate AND :endDate
-          AND i.status IN ('OWNED', 'PENDING_BALANCE')
-        ORDER BY pay.due_date ASC
-    """)
-    fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long): Flow<List<PaymentWithItemInfo>>
+
 }
 
 data class ItemPriceSum(

@@ -24,11 +24,13 @@
 
 ## 数据库
 
-- Room 数据库版本 20，23 个实体（含历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
-- Migration 定义在 `LolitaDatabase.kt` 内联，每次改结构必须升 version + 写 Migration。
-- 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate）。
+- Room 数据库版本 21，25 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
+- 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
 - 新功能状态若由历史数据推导，需考虑一次性历史刷新，优先批量 SQL 而非逐条循环，在 `LolitaApplication.onCreate()` 调用。
+
+- 服饰与价格改造：`docs/plans/2026-10-11-item-pricing-redesign.md`；实现与回归记录：`docs/item-pricing-implementation-2026-10-11.md`。
 
 ## 备份兼容
 
@@ -212,7 +214,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=75, versionName="2.37.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=76, versionName="2.38.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -235,9 +237,20 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式 version 2、schemaVersion 20；完整 JSON/ZIP 覆盖 22 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- 备份格式 version 3、schemaVersion 21；完整 JSON/ZIP 覆盖 24 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。
-- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest` 和 `DataIntegrityTest`。
+- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`。
 
 - 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。
+
+## 服饰、小物与付款业务
+
+- `OrderBinding` 对 itemId 和 priceId 唯一约束，仅绑定一个当前订单；旧 Price/Payment 原记录完整保留，多价格与异常金额等待核对。愿望单无实付证据的历史预算不自动绑定。
+- `Price.shipping` 已包含在 totalPrice 中；阶段金额与实际付款分离。新输入最多两位小数，计算使用 `OrderAccounting` 整数分，历史 Double 原值不改写。
+- `OrderLedger` 在 domain/usecase 中集中校验、事务记账、状态刷新及提交后的提醒恢复；`OrderRepository` 为薄封装。修改价格和阶段不得重建实付，删除阶段不得减少未付余额。
+- 付清=已拥有，未付清=待付款；定金尾款仍用待补尾款文案。有当前订单时服饰编辑不能手动覆盖状态；无价格不能默认零元付清。
+- Item.parentItemId 与 includedInParentPrice 支持一层小物关系，独立于 Coordinate；禁止自挂、循环、多层关系与删除有小物的主件。共用价格的小物继承主件状态，独立计价的小物单独记账。
+- 价格页只允许设置/编辑唯一当前订单；加号用于阶段和实付。主件编辑与详情支持搜索挂载、新建、解绑；列表默认主件，搜索/筛选保留小物。
+- `StageAccounting` 将未指定阶段的实付按计划顺序投影抵扣，不修改账本；阶段提醒/日历合计不得超过订单整体余额，历史计划超额保留原值供核对。日期未知的实付保持 null，不用应付或创建日期伪造月支出。到期日未知的阶段不设置提醒；提醒代理 ID 为负阶段 ID，缺失 ID 哨兵不可用 -1。
+- 淘宝订单数量拆分，实付和邮费按整数分分配且逐项确认，保留来源订单与原始金额；不凭名称自动合并服饰或小物。

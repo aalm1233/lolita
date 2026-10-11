@@ -25,19 +25,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
             try {
                 withTimeout(9000) {
                     AppModule.init(context.applicationContext)
-                    val db = AppModule.database()
-                    val scheduler = PaymentReminderScheduler(context)
-                    // Single query with JOIN to get both payment entity and item name
-                    val paymentsWithInfo = db.paymentDao().getPendingReminderPaymentsWithItemInfoList()
-                    val paymentEntities = db.paymentDao().getPendingReminderPaymentsList()
-                    val paymentMap = paymentEntities.associateBy { it.id }
-
-                    paymentsWithInfo.forEach { info ->
-                        val payment = paymentMap[info.paymentId] ?: return@forEach
-                        try {
-                            scheduler.scheduleReminder(payment, info.itemName)
-                        } catch (_: Exception) { }
-                    }
+                    AppModule.orderRepository().reconcileReminders()
 
                     // Reschedule daily outfit reminder if enabled
                     val appPreferences = AppModule.appPreferences()

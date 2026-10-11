@@ -11,11 +11,15 @@ import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
 import kotlinx.coroutines.flow.Flow
 import kotlin.math.abs
+import androidx.room.withTransaction
+import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.local.entity.OrderBinding
 
 class PriceRepository(
     private val priceDao: PriceDao,
     private val paymentDao: PaymentDao,
-    private val context: Context? = null
+    private val context: Context,
+    private val database: LolitaDatabase? = null
 ) {
     fun getPricesByItem(itemId: Long): Flow<List<Price>> =
         priceDao.getPricesByItem(itemId)
@@ -29,41 +33,30 @@ class PriceRepository(
         priceDao.getPriceWithPayments(id)
 
     suspend fun insertPrice(price: Price): Long {
-        return priceDao.insertPrice(normalizePrice(price))
+        val db = database ?: return priceDao.insertPrice(price)
+        return db.withTransaction {
+            require(db.itemDao().getItemById(price.itemId)?.includedInParentPrice != true) { "共用主件价格的小物没有独立价格" }
+            require(priceDao.getPricesByItemList(price.itemId).isEmpty()) { "已有价格，请编辑或核对历史价格" }
+            val id = priceDao.insertPrice(price)
+            db.orderDao().insertBinding(OrderBinding(price.itemId, id))
+            id
+        }
     }
 
     suspend fun updatePrice(price: Price) {
-        priceDao.updatePrice(normalizePrice(price))
-    }
-
-    private fun normalizePrice(price: Price): Price {
-        if (price.type == PriceType.DEPOSIT_BALANCE) {
-            val deposit = price.deposit ?: 0.0
-            val balance = price.balance ?: 0.0
-            val sum = deposit + balance
-            if (abs(sum - price.totalPrice) > 0.01) {
-                return price.copy(totalPrice = sum)
-            }
-        }
-        return price
+        error("请在价格与付款中编辑订单，保留实际付款记录")
     }
 
     suspend fun deletePrice(price: Price) {
-        priceDao.deletePrice(price)
-        val payments = paymentDao.getPaymentsByPriceList(price.id)
-        if (context != null) {
-            val scheduler = PaymentReminderScheduler(context)
-            payments.forEach { payment ->
-                payment.calendarEventId?.let { try { CalendarEventHelper.deleteEvent(context, it) } catch (_: Exception) {} }
-                try { scheduler.cancelReminder(payment.id) } catch (_: Exception) {}
-            }
-        }
+        error("请将当前订单保留为历史记录，不能删除付款历史")
     }
 
     fun getPricesWithPaymentsByItem(itemId: Long): Flow<List<DaoPriceWithPayments>> =
         priceDao.getPricesWithPaymentsByItem(itemId)
 
     fun getTotalSpending(): Flow<Double> = priceDao.getTotalSpending()
+
+    fun getAverageOwnedPrice(): Flow<Double> = priceDao.getAverageOwnedPrice()
 
     fun getTotalPriceByCoordinate(coordinateId: Long): Flow<Double> =
         priceDao.getTotalPriceByCoordinate(coordinateId)
@@ -92,5 +85,5 @@ class PriceRepository(
         priceDao.getPricesWithStatusByDateRange(startDate, endDate, now)
 
     fun getPaymentsWithItemInfoByDateRange(startDate: Long, endDate: Long) =
-        priceDao.getPaymentsWithItemInfoByDateRange(startDate, endDate)
+        paymentDao.getPaymentsWithItemInfoByDateRange(startDate, endDate)
 }

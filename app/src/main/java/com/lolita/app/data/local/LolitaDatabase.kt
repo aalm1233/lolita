@@ -26,6 +26,8 @@ import com.lolita.app.data.local.entity.*
         Source::class,
         LegacyCatalogArchive::class,
         RestoreJournal::class,
+        OrderBinding::class,
+        PaymentStage::class,
         SharedLibrarySyncState::class,
         RemoteBrand::class,
         RemoteCategory::class,
@@ -36,7 +38,7 @@ import com.lolita.app.data.local.entity.*
         RemoteSharedItem::class,
         RemoteSharedPricePlan::class
     ],
-    version = 20,
+    version = 21,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -46,6 +48,7 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun brandDao(): BrandDao
     abstract fun categoryDao(): CategoryDao
     abstract fun priceDao(): PriceDao
+    abstract fun orderDao(): OrderDao
     abstract fun paymentDao(): PaymentDao
     abstract fun outfitLogDao(): OutfitLogDao
     abstract fun styleDao(): StyleDao
@@ -414,13 +417,17 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                       AND p.purchase_date IS NOT NULL
                 """.trimIndent())
 
-                // Case B: purchaseDate is null — use createdAt as fallback
+                // Receipt implies settled under the current business rule, but an optional
+                // missing purchase date must never become a fabricated actual payment date.
+                // Unpurchased wishlist prices are budgets, not evidence of payment.
                 db.execSQL("""
                     INSERT INTO payments (price_id, amount, due_date, is_paid, paid_date, reminder_set, created_at)
-                    SELECT p.id, p.total_price, p.created_at, 1, p.created_at, 0, p.created_at
+                    SELECT p.id, p.total_price, p.created_at, 1, NULL, 0, p.created_at
                     FROM prices p
+                    JOIN items i ON i.id=p.item_id
                     WHERE p.id NOT IN (SELECT price_id FROM payments)
                       AND p.purchase_date IS NULL
+                      AND i.status='OWNED'
                 """.trimIndent())
 
                 // Rebuild Price table without purchaseDate column
@@ -779,6 +786,10 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
+        internal val MIGRATION_20_21 = object : Migration(20, 21) {
+            override fun migrate(db: SupportSQLiteDatabase) = OrderMigration.migrate(db)
+        }
+
         fun getDatabase(context: Context): LolitaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -787,7 +798,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
                     .build()
                 INSTANCE = instance
                 instance

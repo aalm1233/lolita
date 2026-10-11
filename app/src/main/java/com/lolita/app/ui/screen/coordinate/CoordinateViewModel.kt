@@ -208,9 +208,10 @@ class CoordinateDetailViewModel(
                 val paidAmount = pricesWithPayments.flatMap { it.payments }
                     .filter { it.isPaid }
                     .sumOf { it.amount }
-                val unpaidAmount = pricesWithPayments.flatMap { it.payments }
-                    .filter { !it.isPaid }
-                    .sumOf { it.amount }
+                val unpaidAmount = pricesWithPayments.sumOf { order ->
+                    com.lolita.app.domain.usecase.OrderAccounting.remaining(order.price.totalPrice,
+                        com.lolita.app.domain.usecase.OrderAccounting.sum(order.payments.filter { it.isPaid }.map { it.amount }))
+                }
 
                 Triple(result, totalPrice, paidAmount to unpaidAmount)
             }.collect { (result, totalPrice, paidAmounts) ->

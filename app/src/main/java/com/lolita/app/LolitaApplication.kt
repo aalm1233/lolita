@@ -13,8 +13,12 @@ class LolitaApplication : Application() {
         AppModule.init(applicationContext)
         NotificationChannelSetup.createNotificationChannel(applicationContext)
         CoroutineScope(Dispatchers.IO).launch {
-            AppModule.backupManager().recoverPendingReminders()
-            AppModule.database().itemDao().refreshPendingBalanceStatus()
+            try {
+                AppModule.backupManager().recoverPendingReminders()
+                AppModule.orderRepository().reconcileReminders()
+            } catch (e: Exception) {
+                android.util.Log.e("LolitaApplication", "Failed to refresh pending balance status", e)
+            }
         }
     }
 }

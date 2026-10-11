@@ -339,6 +339,7 @@ private fun WishlistItemCard(
                         ItemStatus.OWNED -> "已拥有"
                         ItemStatus.WISHED -> "愿望单"
                         ItemStatus.PENDING_BALANCE -> "待补尾款"
+                        ItemStatus.PENDING_PAYMENT -> "待付款"
                     },
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

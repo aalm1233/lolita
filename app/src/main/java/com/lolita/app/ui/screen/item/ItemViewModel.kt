@@ -92,6 +92,11 @@ data class ItemEditUiState(
     val brandId: Long = 0,
     val categoryId: Long = 0,
     val coordinateId: Long? = null,
+    val parentItemId: Long? = null,
+    val includedInParentPrice: Boolean = false,
+    val allItems: List<Item> = emptyList(),
+    val children: List<Item> = emptyList(),
+    val legacyPriceCount: Int = 0,
     val status: ItemStatus = ItemStatus.OWNED,
     val priority: ItemPriority = ItemPriority.MEDIUM,
     val imageUrls: List<String> = emptyList(),
@@ -273,7 +278,10 @@ class ItemListViewModel(
     private fun updateTotalPrice(filteredItems: List<Item>) {
         totalPriceJob?.cancel()
         totalPriceJob = viewModelScope.launch {
-            val itemIds = filteredItems.map { it.id }
+            val visibleRootIds = filteredItems.filter { it.parentItemId == null }.map { it.id }.toSet()
+            val itemIds = (filteredItems.map { it.id } + _uiState.value.items
+                .filter { it.parentItemId in visibleRootIds && !it.includedInParentPrice }
+                .map { it.id }).distinct()
             if (itemIds.isEmpty()) {
                 _uiState.update { it.copy(totalPrice = 0.0) }
                 return@launch
@@ -522,7 +530,8 @@ class ItemListViewModel(
         statuses: Set<ItemStatus>? = null,
         pendingBalanceOnly: Boolean = false
     ): List<Item> {
-        var result = items
+        // Parts remain searchable but do not crowd the default wardrobe overview.
+        var result = if (query.isBlank() && !pendingBalanceOnly) items.filter { it.parentItemId == null } else items
 
         if (pendingBalanceOnly) {
             result = result.filter { it.status == ItemStatus.PENDING_BALANCE }
@@ -662,15 +671,19 @@ class ItemEditViewModel(
 
     private val _pendingImageDeletions = MutableStateFlow(emptySet<String>())
     private var locationJob: Job? = null
+    private var hierarchyJob: Job? = null
+    private var priceJob: Job? = null
     private var supportingDataLoaded = AtomicBoolean(false)
     var hasUnsavedChanges: Boolean = false
         private set
 
-    fun loadItem(itemId: Long, defaultStatus: String = "") {
+    fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             loadReferenceData()
             ensureLocationCollection()
+            priceJob?.cancel()
+            hierarchyJob?.cancel()
             _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
 
@@ -686,6 +699,8 @@ class ItemEditViewModel(
                             brandId = item.brandId,
                             categoryId = item.categoryId,
                             coordinateId = item.coordinateId,
+                            parentItemId = item.parentItemId,
+                            includedInParentPrice = item.includedInParentPrice,
                             status = item.status,
                             priority = item.priority,
                             imageUrls = item.imageUrls,
@@ -704,6 +719,13 @@ class ItemEditViewModel(
                 } else {
                     _uiState.update { it.copy(isLoading = false) }
                 }
+                observeHierarchy(itemId)
+                priceJob = viewModelScope.launch {
+                    priceRepository.getPricesWithPaymentsByItem(itemId).collect { prices ->
+                        val historicalCount = priceRepository.getPricesByItemList(itemId).size - prices.size
+                        _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
+                    }
+                }
                 return@launch
             }
 
@@ -712,14 +734,19 @@ class ItemEditViewModel(
                 ?.let { runCatching { ItemStatus.valueOf(it) }.getOrNull() }
                 ?: ItemStatus.OWNED
 
+            val defaultParent = defaultParentItemId?.let { itemRepository.getItemById(it) }
             _uiState.update { current ->
                 current.copy(
                     item = null,
                     name = "",
                     description = "",
-                    brandId = 0L,
+                    brandId = defaultParent?.brandId ?: 0L,
                     categoryId = 0L,
-                    coordinateId = null,
+                    coordinateId = defaultParent?.coordinateId,
+                    parentItemId = defaultParentItemId,
+                    includedInParentPrice = defaultParentItemId != null,
+                    children = emptyList(),
+                    legacyPriceCount = 0,
                     status = defaultItemStatus,
                     priority = ItemPriority.MEDIUM,
                     imageUrls = emptyList(),
@@ -736,7 +763,36 @@ class ItemEditViewModel(
                     isSaving = false
                 )
             }
+            observeHierarchy(0L)
         }
+    }
+
+    private fun observeHierarchy(itemId: Long) {
+        hierarchyJob = viewModelScope.launch {
+            itemRepository.getAllItems().collect { items ->
+                _uiState.update { current ->
+                    val persisted = items.find { it.id == itemId }
+                    val parent = items.find { it.id == current.parentItemId }
+                    val ledgerStatus = if (current.includedInParentPrice) parent?.status
+                        else if (current.pricesWithPayments.isNotEmpty()) persisted?.status else null
+                    current.copy(
+                        allItems = items,
+                        children = items.filter { it.parentItemId == itemId && itemId > 0 },
+                        item = if (!hasUnsavedChanges && persisted != null) persisted else current.item,
+                        status = ledgerStatus ?: current.status
+                    )
+                }
+            }
+        }
+    }
+
+    suspend fun attachExistingChild(childId: Long, includedInPrice: Boolean): Result<Unit> = runCatching {
+        val parentId = _uiState.value.item?.id ?: error("请先保存主件")
+        itemRepository.attachChild(childId, parentId, includedInPrice)
+    }
+
+    suspend fun detachChild(childId: Long): Result<Unit> = runCatching {
+        itemRepository.detachChild(childId)
     }
 
     private suspend fun loadReferenceData() {
@@ -796,7 +852,29 @@ class ItemEditViewModel(
         _uiState.update { it.copy(coordinateId = coordinateId) }
     }
 
+    fun updateParent(parentItemId: Long?) {
+        hasUnsavedChanges = true
+        _uiState.update { current ->
+            val parent = current.allItems.find { it.id == parentItemId }
+            current.copy(
+                parentItemId = parentItemId,
+                includedInParentPrice = parentItemId != null && current.includedInParentPrice,
+                status = if (parentItemId != null && current.includedInParentPrice) parent?.status ?: current.status else current.status
+            )
+        }
+    }
+
+    fun updateIncludedInParentPrice(included: Boolean) {
+        hasUnsavedChanges = true
+        _uiState.update { current ->
+            val parent = current.allItems.find { it.id == current.parentItemId }
+            current.copy(includedInParentPrice = included && current.parentItemId != null,
+                status = if (included) parent?.status ?: current.status else current.status)
+        }
+    }
+
     fun updateStatus(status: ItemStatus) {
+        if (_uiState.value.includedInParentPrice || _uiState.value.pricesWithPayments.isNotEmpty()) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(status = status) }
     }
@@ -918,6 +996,8 @@ class ItemEditViewModel(
                     brandId = state.brandId,
                     categoryId = state.categoryId,
                     coordinateId = state.coordinateId,
+                    parentItemId = state.parentItemId,
+                    includedInParentPrice = state.includedInParentPrice,
                     status = state.status,
                     priority = state.priority,
                     imageUrls = state.imageUrls,
@@ -935,6 +1015,8 @@ class ItemEditViewModel(
                 Item(
                     id = 0,
                     coordinateId = state.coordinateId,
+                    parentItemId = state.parentItemId,
+                    includedInParentPrice = state.includedInParentPrice,
                     brandId = state.brandId,
                     categoryId = state.categoryId,
                     name = state.name,
@@ -969,9 +1051,11 @@ class ItemEditViewModel(
             }
             _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
+            val savedItem = itemRepository.getItemById(savedItemId) ?: item.copy(id = savedItemId)
             _uiState.update {
                 it.copy(
-                    item = item.copy(id = savedItemId),
+                    item = savedItem,
+                    status = savedItem.status,
                     imageUrls = state.imageUrls,
                     imageUrlsToDelete = emptyList(),
                     isSaving = false

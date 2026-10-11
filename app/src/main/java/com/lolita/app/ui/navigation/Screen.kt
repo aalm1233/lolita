@@ -13,14 +13,16 @@ sealed interface Screen {
     }
 
     data object ItemEdit : Screen {
-        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}"
+        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}&parentId={parentId}"
         fun createRoute(
             itemId: Long? = null,
-            defaultStatus: String? = null
+            defaultStatus: String? = null,
+            parentId: Long? = null
         ): String {
             val id = itemId ?: 0L
             val queryParams = buildList {
                 if (defaultStatus != null) add("defaultStatus=$defaultStatus")
+                if (parentId != null) add("parentId=$parentId")
             }.joinToString("&")
             return if (queryParams.isNotEmpty()) "item_edit/$id?$queryParams" else "item_edit/$id"
         }

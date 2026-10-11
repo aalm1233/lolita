@@ -9,11 +9,15 @@ import com.lolita.app.data.local.entity.PaymentWithItemInfo
 import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.data.notification.PaymentReminderScheduler
 import kotlinx.coroutines.flow.Flow
+import androidx.room.withTransaction
+import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.local.entity.PaymentStage
 
 class PaymentRepository(
     private val paymentDao: PaymentDao,
     private val context: Context,
-    private val itemDao: ItemDao? = null
+    private val itemDao: ItemDao? = null,
+    private val database: LolitaDatabase? = null
 ) {
     private val reminderScheduler = PaymentReminderScheduler(context)
 
@@ -33,67 +37,30 @@ class PaymentRepository(
         paymentDao.getPendingReminderPayments()
 
     suspend fun insertPayment(payment: Payment, itemName: String = ""): Long {
-        val id = paymentDao.insertPayment(payment)
-        if (payment.reminderSet && !payment.isPaid) {
-            try {
-                val insertedPayment = payment.copy(id = id)
-                reminderScheduler.scheduleReminder(insertedPayment, itemName)
-            } catch (_: SecurityException) {}
-            val calendarEventId = try {
-                CalendarEventHelper.insertEvent(
-                    context = context,
-                    title = "付款提醒: $itemName",
-                    description = "金额: ¥${payment.amount}",
-                    startTimeMillis = payment.dueDate
-                )
-            } catch (_: Exception) {
-                null
-            }
-            if (calendarEventId != null) {
-                paymentDao.updateCalendarEventId(id, calendarEventId)
-            }
+        val db = database ?: return paymentDao.insertPayment(payment)
+        return db.withTransaction {
+            val stageId = db.orderDao().insertStage(PaymentStage(priceId = payment.priceId,
+                name = "Imported payment", amount = payment.amount, dueDate = payment.dueDate,
+                reminderSet = payment.reminderSet, customReminderDays = payment.customReminderDays))
+            val id = paymentDao.insertPayment(payment.copy(stageId = stageId, calendarEventId = null))
+            db.orderDao().refreshStatuses()
+            id
         }
-        return id
     }
 
     suspend fun updatePayment(payment: Payment, itemName: String = "") {
-        val oldPayment = paymentDao.getPaymentById(payment.id)
-        val newEventId = if (!payment.isPaid && payment.reminderSet) {
-            try {
-                CalendarEventHelper.insertEvent(context, "付款提醒: $itemName", "金额: ¥${payment.amount}", payment.dueDate)
-            } catch (_: Exception) { null }
-        } else null
-        val eventId = if (!payment.isPaid && payment.reminderSet) newEventId ?: oldPayment?.calendarEventId else null
-        val updatedPayment = payment.copy(calendarEventId = eventId)
-        try {
-            paymentDao.updatePayment(updatedPayment)
-        } catch (e: Exception) {
-            newEventId?.let { runCatching { CalendarEventHelper.deleteEvent(context, it) } }
-            throw e
-        }
-        oldPayment?.calendarEventId?.takeIf { it != eventId }?.let {
-            runCatching { CalendarEventHelper.deleteEvent(context, it) }
-        }
-
-        checkAndUpdatePendingBalanceStatus(payment.id)
-
-        try {
-            if (payment.isPaid) {
-                reminderScheduler.cancelReminder(payment.id)
-            } else if (payment.reminderSet) {
-                reminderScheduler.scheduleReminder(payment, itemName)
-            } else {
-                reminderScheduler.cancelReminder(payment.id)
-            }
-        } catch (_: SecurityException) {}
+        val db = database ?: error("Database required")
+        val old = paymentDao.getPaymentById(payment.id) ?: error("Payment missing")
+        if (!old.isPaid && payment.isPaid) {
+            // Compatibility for payment calendar actions: record actual without destroying legacy plans.
+            OrderRepository(db, context).recordPayment(payment.priceId, payment.amount,
+                payment.paidDate ?: System.currentTimeMillis(), old.stageId)
+        } else OrderRepository(db, context).editPayment(payment)
     }
 
     suspend fun deletePayment(payment: Payment) {
+        // Only used during explicit item deletion; external cleanup happens after commit.
         paymentDao.deletePayment(payment)
-        try { reminderScheduler.cancelReminder(payment.id) } catch (_: Exception) {}
-        payment.calendarEventId?.let {
-            try { CalendarEventHelper.deleteEvent(context, it) } catch (_: Exception) {}
-        }
     }
 
     /**
@@ -136,16 +103,4 @@ class PaymentRepository(
     fun getTotalUnpaidCount(): Flow<Int> =
         paymentDao.getTotalUnpaidCount()
 
-    private suspend fun checkAndUpdatePendingBalanceStatus(paymentId: Long) {
-        val dao = itemDao ?: return
-        val itemId = paymentDao.getItemIdByPaymentId(paymentId) ?: return
-        val item = dao.getItemById(itemId) ?: return
-        if (item.status == ItemStatus.OWNED || item.status == ItemStatus.PENDING_BALANCE) {
-            val unpaidCount = paymentDao.countUnpaidBalancePaymentsForItem(itemId)
-            val newStatus = if (unpaidCount > 0) ItemStatus.PENDING_BALANCE else ItemStatus.OWNED
-            if (item.status != newStatus) {
-                dao.updateItemStatus(itemId, newStatus.name)
-            }
-        }
-    }
 }

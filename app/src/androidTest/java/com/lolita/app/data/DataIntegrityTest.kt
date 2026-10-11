@@ -37,10 +37,10 @@ class DataIntegrityTest {
         LolitaDatabase.MIGRATION_9_10, LolitaDatabase.MIGRATION_10_11, LolitaDatabase.MIGRATION_11_12,
         LolitaDatabase.MIGRATION_12_13, LolitaDatabase.MIGRATION_13_14, LolitaDatabase.MIGRATION_14_15,
         LolitaDatabase.MIGRATION_15_16, LolitaDatabase.MIGRATION_16_17, LolitaDatabase.MIGRATION_17_18,
-        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20
+        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20, LolitaDatabase.MIGRATION_20_21
     )
 
-    private fun seed(db: SupportSQLiteDatabase, table: String) {
+    private fun seed(db: SupportSQLiteDatabase, table: String, recordId: Long = 1L) {
         val columns = mutableListOf<String>(); val values = mutableListOf<Any?>()
         db.query("PRAGMA table_info(`$table`)").use { cursor ->
             while (cursor.moveToNext()) {
@@ -48,7 +48,8 @@ class DataIntegrityTest {
                 columns.add(name)
                 val value: Any? = when {
                     name == "color" || name == "image_url" -> "引号\"与换行\n和反斜线\\"
-                    name in setOf("brand_id", "category_id", "coordinate_id", "linked_item_id", "item_id", "price_id", "outfit_log_id", "id") -> 1L
+                    name == "id" -> recordId
+                    name in setOf("brand_id", "category_id", "coordinate_id", "linked_item_id", "item_id", "price_id", "outfit_log_id") -> 1L
                     cursor.getInt(3) == 0 -> null
                     type == "INTEGER" || type == "REAL" -> 100L
                     else -> mapOf("status" to "OWNED", "priority" to "MEDIUM", "type" to "FULL", "category_group" to "CLOTHING", "image_urls" to "[]", "colors" to "[]")[name] ?: "样本$table"
@@ -60,7 +61,7 @@ class DataIntegrityTest {
     }
 
     @Test fun migrationChainsPreserveChildrenLinksAndArchivedCatalog() {
-        for (version in 2..19) {
+        for (version in 2..20) {
             val name = "integrity_migration_$version"
             context.deleteDatabase(name)
             helper.createDatabase(name, version).apply {
@@ -70,7 +71,7 @@ class DataIntegrityTest {
                 if (version in 17..18) seed(this, "remote_catalog_entries")
                 close()
             }
-            val db = helper.runMigrationsAndValidate(name, 20, true, *migrations)
+            val db = helper.runMigrationsAndValidate(name, 21, true, *migrations)
             try {
                 listOf("items", "prices", "payments", "outfit_logs", "outfit_item_cross_ref").forEach { table ->
                     db.query("SELECT COUNT(*) FROM `$table`").use { assertTrue(it.moveToFirst()); assertEquals("v$version $table", 1, it.getInt(0)) }
@@ -99,14 +100,71 @@ class DataIntegrityTest {
         }
     }
 
+    @Test fun migrationPreservesAmbiguousPricesWithoutChoosingOrSumming() {
+        val name = "order_conflict_migration"
+        context.deleteDatabase(name)
+        helper.createDatabase(name, 20).apply {
+            execSQL("PRAGMA foreign_keys=ON")
+            listOf("brands", "categories", "coordinates", "items", "prices", "payments").forEach { seed(this, it) }
+            execSQL("UPDATE payments SET amount=30,is_paid=1,paid_date=123,due_date=100")
+            execSQL("INSERT INTO prices(id,item_id,type,total_price,created_at) VALUES(2,1,'FULL',250,12)")
+            execSQL("INSERT INTO payments(id,price_id,amount,is_paid,due_date,created_at,reminder_set) VALUES(2,2,250,0,200,13,0)")
+            close()
+        }
+        val db = helper.runMigrationsAndValidate(name, 21, true, LolitaDatabase.MIGRATION_20_21)
+        try {
+            db.query("SELECT COUNT(*) FROM order_bindings").use { assertTrue(it.moveToFirst()); assertEquals(0, it.getInt(0)) }
+            db.query("SELECT COUNT(*) FROM prices").use { assertTrue(it.moveToFirst()); assertEquals(2, it.getInt(0)) }
+            db.query("SELECT COUNT(*) FROM payments").use { assertTrue(it.moveToFirst()); assertEquals(2, it.getInt(0)) }
+            db.query("SELECT amount,paid_date,is_paid,stage_id FROM payments WHERE id=1").use {
+                assertTrue(it.moveToFirst()); assertEquals(30.0,it.getDouble(0),0.0); assertEquals(123L,it.getLong(1)); assertEquals(1,it.getInt(2)); assertEquals(1L,it.getLong(3))
+            }
+            db.query("SELECT COUNT(*) FROM payment_stages").use { assertTrue(it.moveToFirst()); assertEquals(2,it.getInt(0)) }
+            db.query("PRAGMA foreign_key_check").use { assertFalse(it.moveToFirst()) }
+        } finally { db.close(); context.deleteDatabase(name) }
+    }
+
+    @Test fun migrationKeepsUncertainHistoricalPricesAndUnknownActualDates() {
+        val name = "unknown_purchase_date_migration"
+        context.deleteDatabase(name)
+        helper.createDatabase(name, 13).apply {
+            execSQL("PRAGMA foreign_keys=ON")
+            listOf("brands", "categories", "coordinates", "items", "prices").forEach { seed(this, it) }
+            seed(this, "items", 2)
+            seed(this, "prices", 2)
+            seed(this, "items", 3)
+            seed(this, "prices", 3)
+            execSQL("UPDATE items SET status='WISHED' WHERE id=2")
+            execSQL("UPDATE prices SET item_id=2 WHERE id=2")
+            execSQL("UPDATE prices SET item_id=3,total_price=1.005 WHERE id=3")
+            close()
+        }
+        val db = helper.runMigrationsAndValidate(name, 21, true, *migrations)
+        try {
+            db.query("SELECT price_id,is_paid,paid_date FROM payments").use {
+                assertTrue(it.moveToFirst()); assertEquals(1L,it.getLong(0)); assertEquals(1,it.getInt(1)); assertTrue(it.isNull(2))
+                assertTrue(it.moveToNext()); assertEquals(3L,it.getLong(0)); assertTrue(it.isNull(2)); assertFalse(it.moveToNext())
+            }
+            db.query("SELECT item_id FROM order_bindings").use {
+                assertTrue(it.moveToFirst()); assertEquals(1L,it.getLong(0)); assertFalse(it.moveToNext())
+            }
+            db.query("SELECT status FROM items WHERE id=2").use { assertTrue(it.moveToFirst()); assertEquals("WISHED",it.getString(0)) }
+            db.query("SELECT COUNT(*) FROM prices").use { assertTrue(it.moveToFirst()); assertEquals(3,it.getInt(0)) }
+            db.query("SELECT amount FROM payments WHERE price_id=3").use { assertTrue(it.moveToFirst()); assertEquals(1.005,it.getDouble(0),0.0) }
+            db.query("PRAGMA foreign_key_check").use { assertFalse(it.moveToFirst()) }
+        } finally { db.close(); context.deleteDatabase(name) }
+    }
+
     private fun fixture(image: String): BackupData = BackupData(
         brands = listOf(Brand(id = 101, name = "品牌", createdAt = 100)),
         categories = listOf(Category(id = 307, name = "分类", createdAt = 101)),
         coordinates = emptyList(),
         items = listOf(Item(id = 9001, name = "服饰", description = "中文,\"备注\"\n换行", brandId = 101, categoryId = 307,
-            status = ItemStatus.OWNED, imageUrls = listOf(image, image), sizeChartImageUrl = image, source = "来源", coordinateOrder = 7, createdAt = 102, updatedAt = 103)),
+            status = ItemStatus.PENDING_PAYMENT, imageUrls = listOf(image, image), sizeChartImageUrl = image, source = "来源", coordinateOrder = 7, createdAt = 102, updatedAt = 103)),
+        orderBindings = listOf(OrderBinding(itemId = 9001, priceId = 8)),
+        paymentStages = listOf(PaymentStage(id = 9, priceId = 8, name = "Legacy", amount = 1234.56, dueDate = 105)),
         prices = listOf(Price(id = 8, itemId = 9001, type = PriceType.FULL, totalPrice = 1234.56, createdAt = 104)),
-        payments = listOf(Payment(id = 9, priceId = 8, amount = 1234.56, dueDate = 105, createdAt = 106)),
+        payments = listOf(Payment(id = 9, priceId = 8, stageId = 9, amount = 1234.56, dueDate = 105, createdAt = 106)),
         outfitLogs = listOf(OutfitLog(id = 10, date = 107, note = "日志", imageUrls = listOf(image), createdAt = 108, updatedAt = 109)),
         outfitItemCrossRefs = listOf(OutfitItemCrossRef(outfitLogId = 10, itemId = 9001)),
         remoteBrands = listOf(RemoteBrand("remote", "远程", image, 110)),

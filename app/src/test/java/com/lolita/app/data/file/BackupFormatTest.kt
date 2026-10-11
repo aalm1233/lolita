@@ -2,6 +2,7 @@ package com.lolita.app.data.file
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.google.gson.JsonNull
 import com.lolita.app.data.local.entity.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -13,17 +14,26 @@ class BackupFormatTest {
         coordinates = emptyList(),
         items = listOf(Item(id = 9001, brandId = 101, categoryId = 307, name = "服饰", description = "备注", status = ItemStatus.OWNED, createdAt = 102, updatedAt = 103)),
         prices = listOf(Price(id = 8, itemId = 9001, type = PriceType.FULL, totalPrice = 1234.56, createdAt = 104)),
-        payments = listOf(Payment(id = 9, priceId = 8, amount = 1234.56, dueDate = 105, createdAt = 106)),
+        payments = listOf(Payment(id = 9, priceId = 8, stageId = 9, amount = 1234.56, dueDate = 105, createdAt = 106)),
+        orderBindings = listOf(OrderBinding(itemId = 9001, priceId = 8)),
+        paymentStages = listOf(PaymentStage(id = 9, priceId = 8, name = "历史付款 9", amount = 1234.56, dueDate = 105)),
         outfitLogs = emptyList(), outfitItemCrossRefs = emptyList(), backupDate = 107
     )
     private fun json() = Gson().toJsonTree(data()).asJsonObject
+    private fun historicalJson(version: Int = 1) = json().apply {
+        addProperty("formatVersion", version); addProperty("schemaVersion", 20)
+        remove("orderBindings"); remove("paymentStages")
+        get("items").asJsonArray.forEach { it.asJsonObject.remove("includedInParentPrice") }
+        get("prices").asJsonArray.forEach { it.asJsonObject.remove("shipping") }
+        get("payments").asJsonArray.forEach { it.asJsonObject.remove("stageId") }
+    }
 
     @Test fun preservesEveryFieldOnRoundTrip() {
         assertEquals(data(), BackupFormat.parse(Gson().toJson(data())))
     }
 
     @Test fun migratesHistoricalDefaultsWithoutLosingTimestamps() {
-        val json = json()
+        val json = historicalJson()
         json.remove("formatVersion"); json.remove("schemaVersion")
         val item = json["items"].asJsonArray[0].asJsonObject
         item.remove("priority"); item.remove("imageUrls"); item.remove("coordinateOrder"); item.remove("updatedAt")
@@ -58,7 +68,7 @@ class BackupFormatTest {
     }
 
     @Test fun rejectsCorruptColorsAndUnknownEnums() {
-        val json = json(); json.remove("formatVersion")
+        val json = historicalJson(); json.remove("formatVersion")
         val item = json["items"].asJsonArray[0].asJsonObject
         item.addProperty("colors", "[broken")
         assertThrows(RuntimeException::class.java) { BackupFormat.parse(json.toString()) }
@@ -76,7 +86,7 @@ class BackupFormatTest {
     }
 
     @Test fun migratesLegacyPurchaseDateToPaymentWithoutDuplicatingExistingPayments() {
-        val json = json(); json.remove("formatVersion")
+        val json = historicalJson(); json.remove("formatVersion")
         json["prices"].asJsonArray[0].asJsonObject.addProperty("purchaseDate", 456L)
         val existing = BackupFormat.parse(json.toString())
         assertEquals(data().payments, existing.payments)
@@ -86,4 +96,174 @@ class BackupFormatTest {
         assertEquals(1234.56, restored.payments.single().amount, 0.0)
         assertTrue(restored.payments.single().isPaid)
     }
+
+    @Test fun preservesSharedAccessoriesShippingAndPartialInstallments() {
+        val original = data().copy(
+            items = data().items + data().items.single().copy(id = 9002, name = "配套头饰", parentItemId = 9001, includedInParentPrice = true),
+            prices = listOf(data().prices.single().copy(type = PriceType.MULTI_STAGE, shipping = 20.0)),
+            paymentStages = listOf(
+                PaymentStage(id = 9, priceId = 8, name = "定金", amount = 300.0, dueDate = 105, reminderSet = true, customReminderDays = 3, calendarEventId = 555),
+                PaymentStage(id = 10, priceId = 8, name = "尾款与邮费", amount = 934.56, dueDate = null)
+            ),
+            payments = listOf(data().payments.single().copy(amount = 150.0, isPaid = true, paidDate = 108))
+        )
+        assertEquals(original, BackupFormat.parse(Gson().toJson(original)))
+    }
+
+    @Test fun migratesV2PlansWithoutDiscardingUnpaidRowsOrReminderPointers() {
+        val json = historicalJson(2)
+        json["payments"].asJsonArray[0].asJsonObject.apply {
+            addProperty("calendarEventId", 444); addProperty("reminderSet", true)
+        }
+        val restored = BackupFormat.parse(json.toString())
+        assertEquals(listOf(OrderBinding(itemId = 9001, priceId = 8)), restored.orderBindings)
+        assertFalse(restored.payments.single().isPaid)
+        assertEquals(9L, restored.payments.single().stageId)
+        assertEquals(444L, restored.payments.single().calendarEventId)
+        assertTrue(restored.paymentStages.single().reminderSet)
+        assertNull(restored.paymentStages.single().calendarEventId)
+        assertEquals(0.0, restored.prices.single().shipping, 0.0)
+        assertFalse(restored.items.single().includedInParentPrice)
+    }
+
+    @Test fun preservesAmbiguousHistoricalPricesWithoutPickingOrAddingThem() {
+        val json = historicalJson(2)
+        val extra = json["prices"].asJsonArray[0].deepCopy().asJsonObject.apply {
+            addProperty("id", 88); addProperty("totalPrice", 456.78)
+        }
+        json["prices"].asJsonArray.add(extra)
+        val restored = BackupFormat.parse(json.toString())
+        assertEquals(2, restored.prices.size)
+        assertEquals(456.78, restored.prices.last().totalPrice, 0.0)
+        assertTrue(restored.orderBindings.isEmpty())
+        assertEquals(1, restored.paymentStages.size)
+        assertEquals(1, restored.payments.size)
+    }
+
+    @Test fun rejectsSharedAccessoryDoublePricingAndInvalidParentGraphs() {
+        val base = data()
+        val child = base.items.single().copy(id = 9002, parentItemId = 9001, includedInParentPrice = true)
+        BackupFormat.validate(base.copy(items = base.items + child))
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(base.copy(items = base.items + child,
+                prices = base.prices + base.prices.single().copy(id = 88, itemId = 9002),
+                orderBindings = base.orderBindings + OrderBinding(itemId = 9002, priceId = 88)))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(base.copy(items = listOf(base.items.single().copy(parentItemId = 9002), child)))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(base.copy(items = base.items + child + child.copy(id = 9003, parentItemId = 9002)))
+        }
+    }
+
+    @Test fun rejectsDuplicateBindingsCrossOrderStagesAndMissingModernFields() {
+        val base = data()
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(base.copy(orderBindings = base.orderBindings + base.orderBindings))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(base.copy(prices = base.prices + base.prices.single().copy(id = 88),
+                paymentStages = listOf(base.paymentStages.single().copy(priceId = 88))))
+        }
+        val json = json(); json["items"].asJsonArray[0].asJsonObject.remove("includedInParentPrice")
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(json.toString()) }
+        val shipping = json(); shipping["prices"].asJsonArray[0].asJsonObject.remove("shipping")
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(shipping.toString()) }
+        val stages = json(); stages.remove("paymentStages")
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(stages.toString()) }
+    }
+
+
+    @Test fun preservesSignedArchivedAmountsAndRefusesToActivateThem() {
+        val archived = data().copy(
+            orderBindings = emptyList(),
+            prices = listOf(data().prices.single().copy(totalPrice = -500.0, deposit = -100.0, balance = -400.0, shipping = -20.0)),
+            payments = listOf(data().payments.single().copy(amount = -50.0, isPaid = true, paidDate = 108)),
+            paymentStages = listOf(data().paymentStages.single().copy(amount = -50.0))
+        )
+        assertEquals(archived, BackupFormat.parse(Gson().toJson(archived)))
+        assertThrows(IllegalArgumentException::class.java) {
+            BackupFormat.validate(archived.copy(orderBindings = data().orderBindings))
+        }
+        val old = historicalJson(2)
+        old["prices"].asJsonArray[0].asJsonObject.addProperty("totalPrice", -500.0)
+        old["payments"].asJsonArray[0].asJsonObject.addProperty("amount", -50.0)
+        val migrated = BackupFormat.parse(old.toString())
+        assertTrue(migrated.orderBindings.isEmpty())
+        assertEquals(-500.0, migrated.prices.single().totalPrice, 0.0)
+        assertEquals(-50.0, migrated.payments.single().amount, 0.0)
+        assertEquals(-50.0, migrated.paymentStages.single().amount, 0.0)
+        val modern = migrated.copy(formatVersion = BackupFormat.VERSION, schemaVersion = BackupFormat.SCHEMA_VERSION)
+        assertEquals(modern, BackupFormat.parse(Gson().toJson(modern)))
+    }
+
+    @Test fun historicalFractionalCentsRemainExactAndUnbound() {
+        val old = historicalJson(2)
+        old["prices"].asJsonArray[0].asJsonObject.addProperty("totalPrice",1.005)
+        old["payments"].asJsonArray[0].asJsonObject.addProperty("amount",1.005)
+        val restored = BackupFormat.parse(old.toString())
+        assertTrue(restored.orderBindings.isEmpty())
+        assertEquals(1.005,restored.prices.single().totalPrice,0.0)
+        assertEquals(1.005,restored.payments.single().amount,0.0)
+        val modern = restored.copy(formatVersion=BackupFormat.VERSION,schemaVersion=BackupFormat.SCHEMA_VERSION)
+        assertEquals(modern,BackupFormat.parse(Gson().toJson(modern)))
+    }
+
+    @Test fun zeroTotalHistoricalOrderIsPreservedWithoutAssumingPaymentOrReceipt() {
+        val old = historicalJson(2)
+        old["prices"].asJsonArray[0].asJsonObject.addProperty("totalPrice", 0.0)
+        old["items"].asJsonArray[0].asJsonObject.addProperty("status", "WISHED")
+        val restored = BackupFormat.parse(old.toString())
+        assertTrue(restored.orderBindings.isEmpty())
+        assertEquals(0.0, restored.prices.single().totalPrice, 0.0)
+        assertEquals(ItemStatus.WISHED, restored.items.single().status)
+        assertFalse(restored.payments.single().isPaid)
+        assertEquals(1, restored.paymentStages.size)
+    }
+
+
+    @Test fun ownedLegacyItemWithUnknownPurchaseDateRetainsAnUnknownActualPaymentDate() {
+        for (explicitNull in listOf(true, false)) {
+            val old = historicalJson()
+            val price = old["prices"].asJsonArray[0].asJsonObject
+            if (explicitNull) price.add("purchaseDate", JsonNull.INSTANCE) else price.remove("purchaseDate")
+            old["payments"].asJsonArray.remove(0)
+            val restored = BackupFormat.parse(old.toString())
+            assertTrue(restored.payments.single().isPaid)
+            assertNull(restored.payments.single().paidDate)
+            assertEquals(104L, restored.payments.single().dueDate)
+            assertEquals(1234.56, restored.payments.single().amount, 0.0)
+            assertFalse(restored.payments.single().reminderSet)
+            assertEquals(8L, restored.orderBindings.single().priceId)
+        }
+        // An existing unpaid record has priority over the old item label or optional date.
+        val withPayment = historicalJson()
+        withPayment["prices"].asJsonArray[0].asJsonObject.add("purchaseDate", JsonNull.INSTANCE)
+        assertEquals(data().payments, BackupFormat.parse(withPayment.toString()).payments)
+    }
+
+    @Test fun wishedLegacyQuoteWithUnknownPurchaseDateDoesNotInventPaymentOrAnOrder() {
+        for (explicitNull in listOf(true, false)) {
+            val old = historicalJson()
+            old["items"].asJsonArray[0].asJsonObject.addProperty("status", "WISHED")
+            val price = old["prices"].asJsonArray[0].asJsonObject
+            if (explicitNull) price.add("purchaseDate", JsonNull.INSTANCE) else price.remove("purchaseDate")
+            old["payments"].asJsonArray.remove(0)
+            val restored = BackupFormat.parse(old.toString())
+            assertTrue(restored.payments.isEmpty())
+            assertTrue(restored.paymentStages.isEmpty())
+            assertTrue(restored.orderBindings.isEmpty())
+            assertEquals(ItemStatus.WISHED, restored.items.single().status)
+            assertEquals(1234.56, restored.prices.single().totalPrice, 0.0)
+        }
+        // v2 wishlist quotes can have old unpaid plans; those also remain unbound evidence.
+        val v2 = historicalJson(2)
+        v2["items"].asJsonArray[0].asJsonObject.addProperty("status", "WISHED")
+        val restored = BackupFormat.parse(v2.toString())
+        assertEquals(1, restored.payments.size)
+        assertFalse(restored.payments.single().isPaid)
+        assertTrue(restored.orderBindings.isEmpty())
+    }
+
 }

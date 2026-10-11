@@ -27,12 +27,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
+import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.ColorSelector
 import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
 import kotlinx.coroutines.launch
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -46,6 +48,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun ItemEditScreen(
     itemId: Long?,
     defaultStatus: String = "",
+    defaultParentItemId: Long? = null,
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
     viewModel: ItemEditViewModel = viewModel()
@@ -63,10 +66,11 @@ fun ItemEditScreen(
     )
 
     // Load item data if editing
-    LaunchedEffect(itemId, defaultStatus) {
+    LaunchedEffect(itemId, defaultStatus, defaultParentItemId) {
         viewModel.loadItem(
             itemId = itemId ?: 0L,
-            defaultStatus = defaultStatus
+            defaultStatus = defaultStatus,
+            defaultParentItemId = defaultParentItemId
         )
     }
 
@@ -244,6 +248,17 @@ fun ItemEditScreen(
                     onCoordinateSelected = { viewModel.updateCoordinate(it) }
                 )
 
+                ParentItemSelector(
+                    selectedParentId = uiState.parentItemId,
+                    currentItemId = uiState.item?.id,
+                    items = uiState.allItems,
+                    includedInParentPrice = uiState.includedInParentPrice,
+                    canSharePrice = uiState.pricesWithPayments.isEmpty(),
+                    hasChildren = uiState.children.isNotEmpty(),
+                    onParentSelected = viewModel::updateParent,
+                    onIncludedChanged = viewModel::updateIncludedInParentPrice
+                )
+
                 // Location selector (optional)
                 LocationSelector(
                     selectedLocationId = uiState.locationId,
@@ -252,10 +267,25 @@ fun ItemEditScreen(
                 )
 
                 // Status selector
-                StatusSelector(
-                    selectedStatus = uiState.status,
-                    onStatusSelected = { viewModel.updateStatus(it) }
-                )
+                if (uiState.includedInParentPrice || uiState.pricesWithPayments.isNotEmpty() || uiState.legacyPriceCount > 0) {
+                    LolitaSection(title = "收货状态") {
+                        row {
+                            Text(itemStatusLabel(uiState.status), style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                if (uiState.includedInParentPrice) "包含在主件价格中，随主件付清后变为已拥有"
+                                else if (uiState.legacyPriceCount > 0 && uiState.pricesWithPayments.isEmpty()) "历史价格待核对，请在价格与付款中确定唯一订单"
+                                else "按实际付款自动更新，付清后即为已拥有",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                } else {
+                    StatusSelector(
+                        selectedStatus = uiState.status,
+                        onStatusSelected = { viewModel.updateStatus(it) }
+                    )
+                }
 
                 // Priority selector (only show when status is WISHED)
                 if (uiState.status == ItemStatus.WISHED) {
@@ -559,7 +589,7 @@ private fun StatusSelector(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ItemStatus.entries.forEach { status ->
+            listOf(ItemStatus.OWNED, ItemStatus.WISHED).forEach { status ->
                 FilterChip(
                     selected = selectedStatus == status,
                     onClick = { onStatusSelected(status) },
@@ -569,6 +599,7 @@ private fun StatusSelector(
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
+                                ItemStatus.PENDING_PAYMENT -> "待付款"
                             }
                         )
                     },
@@ -859,4 +890,109 @@ private fun LocationSelector(
             }
         }
     }
+}
+
+
+@Composable
+private fun ParentItemSelector(
+    selectedParentId: Long?,
+    currentItemId: Long?,
+    items: List<Item>,
+    includedInParentPrice: Boolean,
+    canSharePrice: Boolean,
+    hasChildren: Boolean,
+    onParentSelected: (Long?) -> Unit,
+    onIncludedChanged: (Boolean) -> Unit
+) {
+    var showPicker by remember { mutableStateOf(false) }
+    val parent = items.find { it.id == selectedParentId }
+    LolitaSection(title = "所属主件与价格") {
+        row {
+            OutlinedButton(onClick = { showPicker = true }, enabled = !hasChildren, modifier = Modifier.fillMaxWidth()) {
+                SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(parent?.name ?: "独立服饰（选择主件可挂为小物）")
+            }
+            if (hasChildren) {
+                Text("已有所属小物，解除挂载后才能挂到其他主件下面", style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        if (selectedParentId != null) {
+            row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = includedInParentPrice, onCheckedChange = onIncludedChanged,
+                        enabled = canSharePrice || includedInParentPrice)
+                    Column(Modifier.weight(1f)) {
+                        Text("包含在主件价格中")
+                        Text(if (includedInParentPrice) "不单独计价，收货状态随主件"
+                            else "独立价格与付款，收货状态按自己的付款计算",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                if (!canSharePrice && !includedInParentPrice) {
+                    Text("已有价格记录，请先在价格与付款中核对后再改为共用价格",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                TextButton(onClick = { onParentSelected(null) }) { Text("解除主件挂载") }
+            }
+        }
+    }
+    if (showPicker) {
+        ItemSearchPickerDialog(
+            title = "选择所属主件",
+            items = items.filter { it.parentItemId == null && it.id != currentItemId },
+            onSelect = { onParentSelected(it.id); showPicker = false },
+            onDismiss = { showPicker = false }
+        )
+    }
+}
+
+@Composable
+internal fun ItemSearchPickerDialog(
+    title: String,
+    items: List<Item>,
+    onSelect: (Item) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(items, query) {
+        items.filter { it.name.contains(query, ignoreCase = true) }.sortedBy { it.name }
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            Column {
+                OutlinedTextField(value = query, onValueChange = { query = it }, singleLine = true,
+                    label = { Text("搜索服饰") }, leadingIcon = { SkinIcon(IconKey.Search) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                if (filtered.isEmpty()) Text("没有可选择的服饰", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                LazyColumn(Modifier.heightIn(max = 350.dp)) {
+                    items(filtered, key = { it.id }) { item ->
+                        Row(modifier = Modifier.fillMaxWidth().skinClickable { onSelect(item) }
+                            .padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                            LolitaShimmerImage(model = item.imageUrls.firstOrNull(), contentDescription = item.name,
+                                modifier = Modifier.size(40.dp).clip(MaterialTheme.shapes.small), contentScale = ContentScale.Crop,
+                                placeholderInitial = item.name.firstOrNull()?.toString())
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text(item.name, style = MaterialTheme.typography.bodyMedium)
+                                Text(itemStatusLabel(item.status), style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("取消") } }
+    )
+}
+
+internal fun itemStatusLabel(status: ItemStatus): String = when (status) {
+    ItemStatus.OWNED -> "已拥有"
+    ItemStatus.WISHED -> "愿望单"
+    ItemStatus.PENDING_BALANCE -> "待补尾款"
+    ItemStatus.PENDING_PAYMENT -> "待付款"
 }

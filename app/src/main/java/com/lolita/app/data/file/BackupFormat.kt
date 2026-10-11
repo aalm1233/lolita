@@ -9,9 +9,10 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 2
-    const val SCHEMA_VERSION = 20
+    const val VERSION = 3
+    const val SCHEMA_VERSION = 21
     private val gson = Gson()
+    private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
         "brands" to Brand::class.java, "categories" to Category::class.java,
         "coordinates" to Coordinate::class.java, "items" to Item::class.java,
@@ -24,7 +25,8 @@ internal object BackupFormat {
         "remoteBrands" to RemoteBrand::class.java, "remoteCategories" to RemoteCategory::class.java,
         "remoteStyles" to RemoteStyle::class.java, "remoteSeasons" to RemoteSeason::class.java,
         "remoteSources" to RemoteSource::class.java, "remoteCoordinates" to RemoteSharedCoordinate::class.java,
-        "remoteItems" to RemoteSharedItem::class.java, "remotePricePlans" to RemoteSharedPricePlan::class.java
+        "remoteItems" to RemoteSharedItem::class.java, "remotePricePlans" to RemoteSharedPricePlan::class.java,
+        "orderBindings" to OrderBinding::class.java, "paymentStages" to PaymentStage::class.java
     )
     private val requiredArrays = entities.keys.take(8)
 
@@ -36,11 +38,12 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version == VERSION) require(entities.keys.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { version >= 3 || it !in setOf("orderBindings", "paymentStages") }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
         if (version == 1) migratePurchaseDates(root)
+        if (version < 3) migrateOrders(root)
         entities.forEach { (name, type) ->
             if (!root.has(name) || root[name].isJsonNull) root.add(name, JsonArray())
             require(root[name].isJsonArray) { "$name 必须是数组" }
@@ -104,9 +107,11 @@ internal object BackupFormat {
                 }
                 val required = when (name) {
                     "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
+                    "orderBindings" -> setOf("itemId", "priceId")
+                    "paymentStages" -> setOf("id", "priceId", "name", "amount", "reminderSet")
                     "legacyCatalogArchives" -> setOf("sourceTable", "recordKey", "payload")
                     "syncStates" -> setOf("cacheKey", "backendBaseUrl", "assetBaseUrl", "nextCursor", "schemaVersion")
-                    else -> fields.filter { field -> field in setOf("id", "name", "createdAt", "updatedAt", "publicId", "brandId", "categoryId", "itemId", "priceId", "status", "priority", "type", "group", "amount", "totalPrice", "dueDate", "date", "description", "note", "imageUrls", "colors", "priceType", "sharedItemPublicId", "coordinateOrder", "sortOrder", "isPaid", "reminderSet", "isPreset") }.toSet()
+                    else -> fields.filter { field -> field in setOf("id", "name", "createdAt", "updatedAt", "publicId", "brandId", "categoryId", "itemId", "priceId", "status", "priority", "type", "group", "amount", "totalPrice", "dueDate", "date", "description", "note", "imageUrls", "colors", "priceType", "sharedItemPublicId", "coordinateOrder", "sortOrder", "isPaid", "reminderSet", "isPreset", "shipping", "includedInParentPrice") }.toSet()
                 }
                 required.forEach { require(row.has(it) && !row[it].isJsonNull) { "$name[$index] 缺少 $it" } }
             }
@@ -120,6 +125,57 @@ internal object BackupFormat {
         val data = gson.fromJson(root, BackupData::class.java)
         validate(data)
         return data
+    }
+
+    /** v1/v2 had payment plans and actual payments in one table. Preserve every row. */
+    private fun migrateOrders(root: JsonObject) {
+        root["items"].asJsonArray.forEach { element ->
+            default(element.asJsonObject, "includedInParentPrice", false)
+        }
+        root["prices"].asJsonArray.forEach { element ->
+            default(element.asJsonObject, "shipping", 0.0)
+        }
+        // Historical backups cannot contain the redesigned structures: rejecting them avoids
+        // silently replacing any supplied relationships or installment data.
+        require(!root.has("orderBindings") || root["orderBindings"].asJsonArray.size() == 0) { "历史备份包含新版订单关系" }
+        require(!root.has("paymentStages") || root["paymentStages"].asJsonArray.size() == 0) { "历史备份包含新版付款阶段" }
+        val paymentRowsByPrice = root["payments"].asJsonArray.map { it.asJsonObject }.groupBy { it["priceId"].asLong }
+        val itemRowsById = root["items"].asJsonArray.map { it.asJsonObject }.associateBy { it["id"].asLong }
+        root.add("orderBindings", JsonArray().apply {
+            root["prices"].asJsonArray.map { it.asJsonObject }.groupBy { it["itemId"].asLong }.forEach { (itemId, prices) ->
+                val price = prices.singleOrNull()
+                if (price != null && isValidHistoricalOrder(price, paymentRowsByPrice[price["id"].asLong].orEmpty(),
+                        itemRowsById[itemId]?.get("status")?.asString)) add(JsonObject().apply {
+                    addProperty("itemId", itemId); add("priceId", price["id"].deepCopy())
+                })
+            }
+        })
+        root.add("paymentStages", JsonArray().apply {
+            root["payments"].asJsonArray.forEach { element ->
+                val payment = element.asJsonObject
+                require(!payment.has("stageId") || payment["stageId"].isJsonNull) { "历史付款包含新版阶段关联" }
+                payment.add("stageId", payment["id"].deepCopy())
+                add(JsonObject().apply {
+                    add("id", payment["id"].deepCopy()); add("priceId", payment["priceId"].deepCopy())
+                    addProperty("name", "历史付款 ${payment["id"].asLong}")
+                    add("amount", payment["amount"].deepCopy()); add("dueDate", payment["dueDate"].deepCopy())
+                    add("reminderSet", payment["reminderSet"]?.deepCopy() ?: gson.toJsonTree(false))
+                    payment["customReminderDays"]?.let { add("customReminderDays", it.deepCopy()) }
+                    // The old external pointer stays in the Payment row for cleanup after restore.
+                })
+            }
+        })
+    }
+
+    /** Match the migration's safe binding predicate without changing any historical values. */
+    private fun isValidHistoricalOrder(price: JsonObject, payments: List<JsonObject>, itemStatus: String?): Boolean {
+        val total = price["totalPrice"]?.takeUnless { it.isJsonNull }?.asDouble ?: return false
+        if (!com.lolita.app.domain.usecase.OrderAccounting.hasCentPrecision(total) || total <= 0 || total >= MAX_ACTIVE_AMOUNT) return false
+        // A wishlist quote is not an order. Preserve it for review until actual payment exists.
+        if (itemStatus == "WISHED" && payments.none { it["isPaid"]?.takeUnless { value -> value.isJsonNull }?.asBoolean == true }) return false
+        return payments.none { payment ->
+            payment["amount"].asDouble.let { !com.lolita.app.domain.usecase.OrderAccounting.hasCentPrecision(it) || it <= 0 || it >= MAX_ACTIVE_AMOUNT }
+        }
     }
 
     private fun normalizeColors(row: JsonObject) {
@@ -142,22 +198,28 @@ internal object BackupFormat {
 
     private fun migratePurchaseDates(root: JsonObject) {
         val payments = root["payments"].asJsonArray
+        val statuses = root["items"].asJsonArray.map { it.asJsonObject }.associate {
+            it["id"].asLong to it["status"]?.takeUnless { value -> value.isJsonNull }?.asString
+        }
         var nextId = payments.maxOfOrNull { it.asJsonObject["id"].asLong } ?: 0L
         root["prices"].asJsonArray.forEach { element ->
             val price = element.asJsonObject
-            if (price.has("purchaseDate")) {
-                val date = price.remove("purchaseDate")
-                val priceId = price["id"].asLong
-                if (payments.none { it.asJsonObject["priceId"].asLong == priceId }) {
-                    val paidAt = if (date.isJsonNull) price["createdAt"].asLong else date.asBigDecimal.longValueExact()
-                    payments.add(JsonObject().apply {
-                        addProperty("id", Math.addExact(nextId, 1).also { nextId = it })
-                        addProperty("priceId", priceId); add("amount", price["totalPrice"])
-                        addProperty("dueDate", paidAt); addProperty("paidDate", paidAt)
-                        add("createdAt", price["createdAt"])
-                        addProperty("isPaid", true); addProperty("reminderSet", false)
-                    })
-                }
+            // Historical Gson omitted nullable fields. Missing and explicit null both mean unknown.
+            val date = price.remove("purchaseDate")?.takeUnless { it.isJsonNull }
+            val priceId = price["id"].asLong
+            if (payments.none { it.asJsonObject["priceId"].asLong == priceId } &&
+                (date != null || statuses[price["itemId"].asLong] == "OWNED")) {
+                val knownPaidAt = date?.asBigDecimal?.longValueExact()
+                val dueAt = knownPaidAt ?: price["createdAt"].asBigDecimal.longValueExact()
+                payments.add(JsonObject().apply {
+                    addProperty("id", Math.addExact(nextId, 1).also { nextId = it })
+                    addProperty("priceId", priceId); add("amount", price["totalPrice"])
+                    // Payment.dueDate is required; createdAt is only a structural placeholder.
+                    addProperty("dueDate", dueAt)
+                    knownPaidAt?.let { addProperty("paidDate", it) }
+                    add("createdAt", price["createdAt"])
+                    addProperty("isPaid", true); addProperty("reminderSet", false)
+                })
             }
         }
     }
@@ -181,8 +243,40 @@ internal object BackupFormat {
         val logs = ids(data.outfitLogs.map { it.id }, "穿搭")
         ids(data.styles.map { it.id }, "风格"); ids(data.seasons.map { it.id }, "季节"); ids(data.sources.map { it.id }, "来源")
         require(data.items.all { it.brandId in brands && it.categoryId in categories && (it.coordinateId == null || it.coordinateId in coordinates) && (it.locationId == null || it.locationId in locations) }) { "服饰关联无效" }
-        require(data.prices.all { it.itemId in items && it.totalPrice.isFinite() && it.totalPrice >= 0 && (it.deposit == null || it.deposit.isFinite() && it.deposit >= 0) && (it.balance == null || it.balance.isFinite() && it.balance >= 0) }) { "价格或关联无效" }
-        require(data.payments.all { it.priceId in prices && it.amount.isFinite() && it.amount >= 0 }) { "付款或关联无效" }
+        // Archived rows are original evidence, including old signed amounts. Validate their
+        // shape and references; apply current positive-money rules only to active orders.
+        require(data.prices.all { it.itemId in items && it.totalPrice.isFinite() &&
+            (it.deposit == null || it.deposit.isFinite()) && (it.balance == null || it.balance.isFinite()) &&
+            it.shipping.isFinite() }) { "价格或关联无效" }
+        require(data.payments.all { it.priceId in prices && it.amount.isFinite() }) { "付款或关联无效" }
+        val itemById = data.items.associateBy { it.id }
+        require(data.items.all { item ->
+            val parent = item.parentItemId?.let { itemById[it] }
+            (item.parentItemId == null || parent != null && parent.id != item.id && parent.parentItemId == null) &&
+                (!item.includedInParentPrice || parent != null)
+        }) { "主件与小物关系无效，不能循环或多层挂载" }
+        ids(data.orderBindings.map { it.itemId }, "订单服饰关系")
+        ids(data.orderBindings.map { it.priceId }, "订单价格关系")
+        val priceById = data.prices.associateBy { it.id }
+        require(data.orderBindings.all { binding ->
+            binding.itemId in items && priceById[binding.priceId]?.itemId == binding.itemId &&
+                itemById[binding.itemId]?.includedInParentPrice == false
+        }) { "订单价格关联无效或共用价格的小物重复计价" }
+        val activePrices = data.orderBindings.map { it.priceId }.toSet()
+        fun validActiveAmount(amount: Double) = com.lolita.app.domain.usecase.OrderAccounting.hasCentPrecision(amount) && amount > 0 && amount < MAX_ACTIVE_AMOUNT
+        require(data.prices.filter { it.id in activePrices }.all {
+            validActiveAmount(it.totalPrice) && com.lolita.app.domain.usecase.OrderAccounting.hasCentPrecision(it.shipping) && it.shipping >= 0 && it.shipping <= it.totalPrice
+        }) { "当前订单金额无效，请将原始异常记录保留为历史订单" }
+        require(data.payments.filter { it.priceId in activePrices }.all { validActiveAmount(it.amount) }) {
+            "当前订单付款金额无效，请先核对历史记录"
+        }
+        val stages = ids(data.paymentStages.map { it.id }, "付款阶段")
+        require(data.paymentStages.all { it.priceId in prices && it.name.isNotBlank() && it.amount.isFinite() }) { "付款阶段或关联无效" }
+        require(data.paymentStages.filter { it.priceId in activePrices }.all { validActiveAmount(it.amount) }) {
+            "当前订单付款阶段金额无效，请先核对历史记录"
+        }
+        val stageById = data.paymentStages.associateBy { it.id }
+        require(data.payments.all { it.stageId == null || it.stageId in stages && stageById[it.stageId]?.priceId == it.priceId }) { "付款阶段与价格不匹配" }
         require(data.outfitItemCrossRefs.all { it.itemId in items && it.outfitLogId in logs } && data.outfitItemCrossRefs.distinct().size == data.outfitItemCrossRefs.size) { "穿搭关联无效或重复" }
         data.legacyCatalogArchives.forEach { archive ->
             require(archive.sourceTable in setOf("catalog_entries", "remote_catalog_entries")) { "未知历史图鉴表" }

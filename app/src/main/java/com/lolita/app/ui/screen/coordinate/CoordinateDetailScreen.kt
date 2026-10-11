@@ -600,7 +600,7 @@ private fun StatusBadge(status: ItemStatus) {
         color = when (status) {
             ItemStatus.OWNED -> MaterialTheme.colorScheme.primaryContainer
             ItemStatus.WISHED -> MaterialTheme.colorScheme.secondaryContainer
-            ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.tertiaryContainer
+            ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.tertiaryContainer
         },
         shape = MaterialTheme.shapes.small
     ) {
@@ -609,13 +609,14 @@ private fun StatusBadge(status: ItemStatus) {
                 ItemStatus.OWNED -> "已拥有"
                 ItemStatus.WISHED -> "愿望单"
                 ItemStatus.PENDING_BALANCE -> "待补尾款"
+                        ItemStatus.PENDING_PAYMENT -> "待付款"
             },
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             color = when (status) {
                 ItemStatus.OWNED -> MaterialTheme.colorScheme.onPrimaryContainer
                 ItemStatus.WISHED -> MaterialTheme.colorScheme.onSecondaryContainer
-                ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.onTertiaryContainer
+                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.onTertiaryContainer
             }
         )
     }

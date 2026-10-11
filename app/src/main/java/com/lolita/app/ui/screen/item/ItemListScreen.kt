@@ -131,7 +131,7 @@ fun ItemListScreen(
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {
             0 -> { /* Location tab - no status filter needed */ }
-            1 -> viewModel.filterByStatuses(setOf(ItemStatus.OWNED, ItemStatus.PENDING_BALANCE))
+            1 -> viewModel.filterByStatuses(setOf(ItemStatus.OWNED, ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT))
         }
     }
     if (itemToDelete != null) {
@@ -260,7 +260,7 @@ fun ItemListScreen(
                                     }
                                 },
                                 activeFilterCount = if (pagerState.currentPage == 1) activeFilterCount else 0,
-                                showViewControls = pagerState.currentPage == 1,
+                                showViewControls = pagerState.currentPage == 1 || pagerState.currentPage == 2,
                                 currentSort = when (pagerState.currentPage) {
                                     2 -> coordinateUiState.sortOption
                                     else -> uiState.sortOption
@@ -915,6 +915,10 @@ private fun ItemCard(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    if (item.parentItemId != null) {
+                        Text(if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
+                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     brandName?.let {
                         Surface(
                             color = MaterialTheme.colorScheme.secondaryContainer,
@@ -986,7 +990,7 @@ private fun ItemCard(
                     color = when (item.status) {
                         ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
                         ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                        ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+                        ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                     },
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1001,6 +1005,7 @@ private fun ItemCard(
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
+                                ItemStatus.PENDING_PAYMENT -> "待付款"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium
@@ -1189,6 +1194,10 @@ private fun ItemGridCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    if (item.parentItemId != null) {
+                        Text(if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
+                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     brandName?.let {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -1216,7 +1225,7 @@ private fun ItemGridCard(
                                     when (item.status) {
                                         ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
                                         ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
-                                        ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary
+                                        ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary
                                     }
                                 )
                         )
@@ -1225,6 +1234,7 @@ private fun ItemGridCard(
                                 ItemStatus.OWNED -> "已拥有"
                                 ItemStatus.WISHED -> "愿望单"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
+                                ItemStatus.PENDING_PAYMENT -> "待付款"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant

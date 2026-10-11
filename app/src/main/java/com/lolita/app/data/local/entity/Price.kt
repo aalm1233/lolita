@@ -38,6 +38,9 @@ data class Price(
     @ColumnInfo(name = "total_price")
     val totalPrice: Double,
 
+    @ColumnInfo(name = "shipping", defaultValue = "0")
+    val shipping: Double = 0.0,
+
     @ColumnInfo(name = "deposit")
     val deposit: Double? = null,
 

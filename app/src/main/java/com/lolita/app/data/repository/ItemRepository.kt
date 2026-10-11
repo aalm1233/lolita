@@ -1,5 +1,14 @@
 package com.lolita.app.data.repository
 
+import android.content.Context
+import android.util.Log
+import com.google.gson.Gson
+import com.lolita.app.data.file.BackupManager
+import com.lolita.app.data.local.entity.Payment
+import com.lolita.app.data.local.entity.RestoreJournal
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
+
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.dao.ItemWithFullDetails
 import com.lolita.app.data.local.dao.PaymentDao
@@ -16,7 +25,8 @@ class ItemRepository(
     private val paymentRepository: PaymentRepository? = null,
     private val priceRepository: PriceRepository? = null,
     private val database: LolitaDatabase? = null,
-    private val paymentDao: PaymentDao? = null
+    private val paymentDao: PaymentDao? = null,
+    private val context: Context? = null
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
 
@@ -34,10 +44,59 @@ class ItemRepository(
     fun getItemWithFullDetails(id: Long): Flow<ItemWithFullDetails?> =
         itemDao.getItemWithFullDetails(id)
 
-    suspend fun insertItem(item: Item): Long = itemDao.insertItem(item)
+    fun observeItem(id: Long): Flow<Item?> = itemDao.observeItem(id)
 
-    suspend fun updateItem(item: Item) =
-        itemDao.updateItem(item.copy(updatedAt = System.currentTimeMillis()))
+    fun getChildren(parentId: Long): Flow<List<Item>> = itemDao.getChildren(parentId)
+
+    suspend fun getChildrenList(parentId: Long): List<Item> = itemDao.getChildrenList(parentId)
+
+    suspend fun insertItem(item: Item): Long = inTransaction {
+        itemDao.insertItem(validateHierarchy(item))
+    }
+
+    suspend fun updateItem(item: Item) = inTransaction {
+        require(itemDao.getItemById(item.id) != null) { "服饰已删除，无法保存修改" }
+        val normalized = validateHierarchy(item).copy(updatedAt = System.currentTimeMillis())
+        itemDao.updateItem(normalized)
+        itemDao.updateSharedChildrenStatus(normalized.id, normalized.status.name)
+    }
+
+    suspend fun attachChild(childId: Long, parentId: Long, includedInPrice: Boolean) = inTransaction {
+        val child = itemDao.getItemById(childId) ?: error("小物不存在")
+        updateItem(child.copy(parentItemId = parentId, includedInParentPrice = includedInPrice))
+    }
+
+    suspend fun detachChild(childId: Long) = inTransaction {
+        val child = itemDao.getItemById(childId) ?: error("小物不存在")
+        updateItem(child.copy(parentItemId = null, includedInParentPrice = false))
+    }
+
+    private suspend fun validateHierarchy(item: Item): Item {
+        require(!item.includedInParentPrice || item.parentItemId != null) { "共用价格的小物必须选择主件" }
+        val parent = item.parentItemId?.let { parentId ->
+            require(parentId != item.id) { "不能把服饰挂在自己下面" }
+            val parent = itemDao.getItemById(parentId) ?: error("主件不存在，请重新选择")
+            require(parent.parentItemId == null) { "小物不能作为主件，请选择独立服饰" }
+            require(item.id == 0L || itemDao.getChildrenList(item.id).isEmpty()) {
+                "此服饰已有所属小物，请先解除挂载后再选择主件"
+            }
+            parent
+        }
+        if (item.includedInParentPrice) {
+            require(database?.orderDao()?.getBinding(item.id) == null) {
+                "此小物已有独立价格，请先在价格与付款中核对并解除独立订单"
+            }
+            return item.copy(status = parent!!.status)
+        }
+        // A priced item's state belongs to the payment ledger, never to the edit form.
+        if (database?.orderDao()?.getBinding(item.id) != null) {
+            itemDao.getItemById(item.id)?.let { return item.copy(status = it.status) }
+        }
+        return item
+    }
+
+    private suspend fun <T> inTransaction(block: suspend () -> T): T =
+        database?.withTransaction { block() } ?: block()
 
     fun getTopBrandsByCount() = itemDao.getTopBrandsByCount()
     fun getOwnedCount() = itemDao.getOwnedCount()
@@ -53,6 +112,19 @@ class ItemRepository(
 
     suspend fun deleteItem(item: Item) {
         val doDelete: suspend () -> Unit = {
+            require(itemDao.getChildrenList(item.id).isEmpty()) {
+                "此服饰还有所属小物，请先解除挂载或更换主件后再删除"
+            }
+            if (database != null) {
+                val gson = Gson()
+                val previous = database.paymentDao().getAllPaymentsList() + database.orderDao().getAllStages().map { stage ->
+                    Payment(id = -stage.id, priceId = stage.priceId, amount = stage.amount,
+                        dueDate = stage.dueDate ?: 0L, calendarEventId = stage.calendarEventId)
+                }
+                val pending = database.restoreJournalDao().get()?.previousPaymentsJson
+                val retry = pending?.let { gson.fromJson(it, Array<Payment>::class.java).toList() } ?: emptyList()
+                database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(previous + retry)))
+            }
             if (paymentRepository != null && priceRepository != null) {
                 val prices = priceRepository.getPricesByItemList(item.id)
                 for (price in prices) {
@@ -62,12 +134,20 @@ class ItemRepository(
                     }
                 }
             }
+            // Clear the RESTRICT price binding before Item -> Price cascades run.
+            database?.orderDao()?.deleteBinding(item.id)
             itemDao.deleteItem(item)
         }
         if (database != null) {
             database.withTransaction { doDelete() }
         } else {
             doDelete()
+        }
+        if (database != null && context != null) {
+            withContext(NonCancellable) {
+                runCatching { BackupManager(context, database).recoverPendingReminders() }
+                    .onFailure { Log.w("ItemRepository", "Deleted item reminder cleanup will retry", it) }
+            }
         }
         item.imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
         item.sizeChartImageUrl?.let { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
@@ -78,14 +158,8 @@ class ItemRepository(
     }
 
     suspend fun checkAndUpdatePendingBalanceStatus(itemId: Long) {
-        val dao = paymentDao ?: return
-        val item = itemDao.getItemById(itemId) ?: return
-        if (item.status == ItemStatus.OWNED || item.status == ItemStatus.PENDING_BALANCE) {
-            val unpaidCount = dao.countUnpaidBalancePaymentsForItem(itemId)
-            val newStatus = if (unpaidCount > 0) ItemStatus.PENDING_BALANCE else ItemStatus.OWNED
-            if (item.status != newStatus) {
-                itemDao.updateItemStatus(itemId, newStatus.name)
-            }
-        }
+        val db = database ?: return
+        if (itemDao.getItemById(itemId) == null) return
+        db.withTransaction { db.orderDao().refreshStatuses() }
     }
 }

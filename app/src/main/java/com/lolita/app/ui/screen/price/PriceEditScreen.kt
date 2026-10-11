@@ -2,307 +2,85 @@ package com.lolita.app.ui.screen.price
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.clickable
-import com.lolita.app.ui.theme.skin.component.skinClickable
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.PriceType
-
 import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.screen.common.LolitaCard
+import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PriceEditScreen(
-    itemId: Long,
-    priceId: Long?,
-    onBack: () -> Unit,
-    onSaveSuccess: () -> Unit,
-    viewModel: PriceEditViewModel = viewModel()
-) {
-    val coroutineScope = rememberCoroutineScope()
-    val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(priceId) {
-        viewModel.loadPrice(priceId)
-    }
-
-    uiState.error?.let { errorMsg ->
-        AlertDialog(
-            onDismissRequest = { viewModel.clearError() },
-            title = { Text("保存失败") },
-            text = { Text(errorMsg) },
-            confirmButton = {
-                TextButton(onClick = { viewModel.clearError() }) {
-                    Text("确定")
-                }
-            }
-        )
-    }
-
-    UnsavedChangesHandler(
-        hasUnsavedChanges = viewModel.hasUnsavedChanges,
-        onBack = onBack
-    )
-
-    Scaffold(
-        topBar = {
-            GradientTopAppBar(
-                title = { Text(if (priceId == null) "添加价格" else "编辑价格") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        SkinIcon(IconKey.ArrowBack)
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                val result = if (priceId == null) {
-                                    viewModel.save(itemId)
-                                } else {
-                                    viewModel.update(priceId)
-                                }
-                                result.onSuccess {
-                                    onSaveSuccess()
-                                }
-                            }
-                        },
-                        enabled = when (uiState.priceType) {
-                            PriceType.FULL -> {
-                                val total = uiState.totalPrice.toDoubleOrNull()
-                                total != null && total > 0
-                            }
-                            PriceType.DEPOSIT_BALANCE -> {
-                                val total = uiState.totalPrice.toDoubleOrNull()
-                                val deposit = uiState.deposit.toDoubleOrNull()
-                                val balance = uiState.balance.toDoubleOrNull()
-                                total != null && total > 0 && deposit != null && balance != null &&
-                                    kotlin.math.abs((deposit + balance) - total) < 0.01
-                            }
-                        } && !uiState.isSaving
-                    ) {
-                        if (uiState.isSaving) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            SkinIcon(IconKey.Save)
-                        }
-                    }
-                }
-            )
+fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSuccess: () -> Unit, viewModel: PriceEditViewModel = viewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
+    val skin = LolitaSkin.current
+    var confirmTemplate by remember { mutableStateOf(false) }
+    LaunchedEffect(priceId) { viewModel.loadPrice(priceId) }
+    UnsavedChangesHandler(hasUnsavedChanges = viewModel.hasUnsavedChanges, onBack = onBack)
+    val saveWithReminderPermissions = rememberStageReminderSave {
+        scope.launch {
+            if (priceId == null) viewModel.save(itemId).onSuccess { onSaveSuccess() }
+            else viewModel.update(priceId).onSuccess { onSaveSuccess() }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // 价格类型选择
-            Text(
-                "价格类型",
-                style = MaterialTheme.typography.titleMedium
-            )
+    }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                PriceTypeOption(
-                    text = "全价",
-                    selected = uiState.priceType == PriceType.FULL,
-                    onClick = { viewModel.updatePriceType(PriceType.FULL) },
-                    modifier = Modifier.weight(1f)
-                )
-                PriceTypeOption(
-                    text = "定金+尾款",
-                    selected = uiState.priceType == PriceType.DEPOSIT_BALANCE,
-                    onClick = { viewModel.updatePriceType(PriceType.DEPOSIT_BALANCE) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            // 根据类型显示不同输入框
-            when (uiState.priceType) {
-                PriceType.FULL -> {
-                    OutlinedTextField(
-                        value = uiState.totalPrice,
-                        onValueChange = { viewModel.updateTotalPrice(it) },
-                        label = { Text("总价") },
-                        placeholder = { Text("0.00") },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Decimal
-                        ),
-                        singleLine = true,
-                        prefix = { Text("¥") },
-                        enabled = !uiState.isSaving
-                    )
+    Scaffold(topBar = {
+        GradientTopAppBar(title = { Text(if (priceId == null) "设置价格" else "编辑价格与计划") },
+            navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
+                IconButton(enabled = viewModel.isValid() && !state.isSaving, onClick = {
+                    saveWithReminderPermissions(state.stages.any { it.reminderSet && it.dueDate != null })
+                }) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
+            })
+    }) { padding ->
+        Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
+            verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
+            if (state.isLoading) PricingSkeleton() else {
+                LolitaSection("订单价格") {
+                    row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                        PriceMoneyField(state.totalPrice, viewModel::updateTotalPrice, "商品金额", !state.isSaving)
+                        PriceMoneyField(state.shipping, viewModel::updateShipping, "邮费", !state.isSaving)
+                        PricingValueRow("应付总额（含邮费）", state.payableTotal?.let(::formatPriceAmount) ?: "请填写金额")
+                        if (priceId != null) PricingValueRow("历史实际已付", formatPriceAmount(state.paidAmount))
+                        Text("修改金额或应付日期会更新余额，已付款记录保留。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } }
                 }
-                PriceType.DEPOSIT_BALANCE -> {
-                    OutlinedTextField(
-                        value = uiState.totalPrice,
-                        onValueChange = { viewModel.updateTotalPrice(it) },
-                        label = { Text("总价") },
-                        placeholder = { Text("0.00") },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Decimal
-                        ),
-                        singleLine = true,
-                        prefix = { Text("¥") },
-                        enabled = !uiState.isSaving
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = uiState.deposit,
-                            onValueChange = { viewModel.updateDeposit(it) },
-                            label = { Text("定金") },
-                            placeholder = { Text("0.00") },
-                            modifier = Modifier.weight(1f),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Decimal
-                            ),
-                            singleLine = true,
-                            prefix = { Text("¥") },
-                            enabled = !uiState.isSaving
-                        )
-
-                        OutlinedTextField(
-                            value = uiState.balance,
-                            onValueChange = { viewModel.updateBalance(it) },
-                            label = { Text("尾款") },
-                            placeholder = { Text("0.00") },
-                            modifier = Modifier.weight(1f),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Decimal
-                            ),
-                            singleLine = true,
-                            prefix = { Text("¥") },
-                            enabled = !uiState.isSaving
-                        )
-                    }
-
-                    // 计算提示
-                    val total = uiState.totalPrice.toDoubleOrNull() ?: 0.0
-                    val deposit = uiState.deposit.toDoubleOrNull() ?: 0.0
-                    val balance = uiState.balance.toDoubleOrNull() ?: 0.0
-                    val sum = deposit + balance
-
-                    if (total > 0 && sum != total) {
-                        LolitaCard(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                "定金 + 尾款 (¥${String.format("%.2f", sum)}) 应等于总价 (¥${String.format("%.2f", total)})",
-                                modifier = Modifier.padding(16.dp),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onErrorContainer
-                            )
-                        }
-                    }
-                }
-            }
-
-            // 付款日期选择 — 所有状态都显示
-            var showDatePicker by remember { mutableStateOf(false) }
-            val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault()) }
-
-            Box(modifier = Modifier.fillMaxWidth().skinClickable(enabled = !uiState.isSaving) { showDatePicker = true }) {
-                OutlinedTextField(
-                    value = uiState.paymentDate?.let { dateFormat.format(Date(it)) } ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("付款日期 (可选)") },
-                    placeholder = { Text("点击选择日期") },
-                    modifier = Modifier.fillMaxWidth(),
-                    trailingIcon = {
-                        IconButton(onClick = { showDatePicker = true }) {
-                            SkinIcon(IconKey.CalendarMonth)
-                        }
-                    },
-                    enabled = false,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-            }
-
-            if (showDatePicker) {
-                val datePickerState = rememberDatePickerState(
-                    initialSelectedDateMillis = uiState.paymentDate ?: System.currentTimeMillis()
-                )
-                DatePickerDialog(
-                    onDismissRequest = { showDatePicker = false },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            datePickerState.selectedDateMillis?.let {
-                                viewModel.updatePaymentDate(it)
+                LolitaSection("付款计划") {
+                    row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            listOf(PriceType.FULL to "全款", PriceType.DEPOSIT_BALANCE to "定金尾款", PriceType.MULTI_STAGE to "多段").forEach { (type, label) ->
+                                FilterChip(selected = state.priceType == type, onClick = { viewModel.updatePriceType(type) }, label = { Text(label) }, enabled = !state.isSaving)
                             }
-                            showDatePicker = false
-                        }) {
-                            Text("确定")
                         }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            viewModel.updatePaymentDate(null)
-                            showDatePicker = false
-                        }) {
-                            Text("清除")
-                        }
-                    }
-                ) {
-                    DatePicker(state = datePickerState)
+                        OutlinedButton(onClick = { confirmTemplate = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { Text("使用所选模板") }
+                        Text("阶段只是应付总额的拆分。实付请在付款页单独记录。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } }
                 }
+                state.stages.forEachIndexed { index, stage ->
+                    LolitaSection("付款阶段 ${index + 1}", action = {
+                        IconButton(onClick = { viewModel.removeStage(index) }, enabled = !state.isSaving) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }
+                    }) { row { StageDraftFields(stage, { viewModel.updateStage(index, it) }, !state.isSaving) } }
+                }
+                OutlinedButton(onClick = viewModel::addStage, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { SkinIcon(IconKey.Add); Spacer(Modifier.width(skin.spacingSmall)); Text("增加付款阶段") }
+                val sum = state.stages.sumOf { parseMoney(it.amount, true) ?: 0.0 }
+                Text(if (state.stages.isEmpty()) "尚未安排付款阶段，未付余额仍按应付总额计算。" else "阶段合计 ${formatPriceAmount(sum)}，应与含邮费总额一致。",
+                    style = MaterialTheme.typography.bodySmall, color = if (viewModel.isValid()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error)
+                Spacer(Modifier.height(skin.spacingLarge))
             }
         }
     }
-}
-
-@Composable
-private fun PriceTypeOption(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    FilterChip(
-        selected = selected,
-        onClick = onClick,
-        label = { Text(text) },
-        modifier = modifier
-    )
+    if (confirmTemplate) AlertDialog(onDismissRequest = { confirmTemplate = false }, title = { Text("重设付款计划") },
+        text = { Text("将替换当前付款阶段，保留实际已付款记录。新阶段的应付日期默认为待定。") },
+        confirmButton = { TextButton(onClick = { viewModel.applyTemplate(); confirmTemplate = false }) { Text("使用模板") } },
+        dismissButton = { TextButton(onClick = { confirmTemplate = false }) { Text("取消") } })
+    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("保存失败") }, text = { Text(error) },
+        confirmButton = { TextButton(onClick = viewModel::clearError) { Text("确定") } }) }
 }

@@ -290,6 +290,7 @@ fun BackupRestoreScreen(
                     Text("套装: ${p.coordinateCount} 条")
                     Text("服饰: ${p.itemCount} 条")
                     Text("价格: ${p.priceCount} 条")
+                    Text("当前订单: ${p.orderBindingCount} 条 / 付款阶段: ${p.paymentStageCount} 条")
                     Text("付款: ${p.paymentCount} 条")
                     Text("穿搭日记: ${p.outfitLogCount} 条")
                     Text("历史图鉴归档: ${p.archiveCount} 条")

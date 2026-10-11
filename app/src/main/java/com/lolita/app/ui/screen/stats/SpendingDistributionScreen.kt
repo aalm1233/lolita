@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 enum class SpendingDimension(val label: String) {
@@ -76,6 +77,9 @@ class SpendingDistributionViewModel(
             selectedDimension.flatMapLatest { dimension ->
                 combine(spendingByDimension(dimension), showTotalPrice, selectedSliceIndex) { items, showPrice, index ->
                     buildState(dimension, items, showPrice, index)
+                }.onStart {
+                    // Loading and final data must be published by the same collector.
+                    emit(SpendingDistributionUiState(dimension = dimension, showTotalPrice = _uiState.value.showTotalPrice))
                 }
             }.collect { state ->
                 if (state.dimension == selectedDimension.value) _uiState.value = state
@@ -128,7 +132,6 @@ class SpendingDistributionViewModel(
     fun switchDimension(dimension: SpendingDimension) {
         if (selectedDimension.value == dimension) return
         selectedDimension.value = dimension
-        _uiState.value = SpendingDistributionUiState(dimension = dimension, showTotalPrice = _uiState.value.showTotalPrice)
         selectedSliceIndex.value = -1
     }
 

@@ -265,7 +265,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `StageAccounting` 将未指定阶段的实付按计划顺序投影抵扣，不修改账本；阶段提醒/日历合计不得超过订单整体余额，历史计划超额保留原值供核对。日期未知的实付保持 null，不用应付或创建日期伪造月支出。到期日未知的阶段不设置提醒；提醒代理 ID 为负阶段 ID，缺失 ID 哨兵不可用 -1。
 - 淘宝订单数量拆分，实付和邮费按整数分分配且逐项确认，保留来源订单与原始金额；不凭名称自动合并服饰或小物。
 
-- 消费分布只保留当前维度的数据订阅（`flatMapLatest`），消费趋势用年度 StateFlow 与固定 DAO 订阅组合，切换不得累积旧 collector。统计基于当前绑定订单的实付；空风格/季节纳入未设置分组，多季节通过 `SpendingBreakdown` 按整数分均分并保全合计。日期未知的实付由 `getUndatedSpending` 单列提示，不归入任何年份。回归位于 `SpendingBreakdownTest` 与 `SpendingStatisticsViewModelTest`（独立内存 Room，覆盖付款修改、维度/年份切换及实付日期）。
+- 消费分布只保留当前维度的数据订阅（`flatMapLatest`），加载态与最终态须由同一 collector 顺序发布，切换方法仅更新选择，避免空数据快速切换卡在加载状态。消费趋势用年度 StateFlow 与固定 DAO 订阅组合，切换不得累积旧 collector。统计基于当前绑定订单的实付；空风格/季节纳入未设置分组，多季节通过 `SpendingBreakdown` 按整数分均分并保全合计。日期未知的实付由 `getUndatedSpending` 单列提示，不归入任何年份。回归位于 `SpendingBreakdownTest` 与 `SpendingStatisticsViewModelTest`（独立内存 Room，覆盖付款修改、维度/年份切换及实付日期）。
 
 - 历史付款资料：`OrderBinding.purchaseRecordStatus` 区分 `TRACKED`、`HISTORICAL_OWNED`、`NEEDS_REVIEW`。缺少付款记录不等于已付 0 元；历史已购保留 `OWNED`，待核对使用 `PENDING_REVIEW`，均不投影为欠款/逾期或发送尾款提醒。账目不完整的实付/余额显示未知，消费统计只计原始实付证据，不推断金额或日期。
 - 21→22 将明确 `OWNED` 且实付资料不足的旧绑定保留为历史已购；无付款、无阶段且已购证据丢失的绑定标为待核对；价格与付款页提供“确认历史已购”和“确认仍待付款”，确认只更新证据标记与状态、不生成付款。新版备份必须保存并验证该标记，旧备份显式迁移。

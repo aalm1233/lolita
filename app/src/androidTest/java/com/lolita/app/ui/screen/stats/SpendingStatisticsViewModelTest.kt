@@ -164,6 +164,67 @@ class SpendingStatisticsViewModelTest {
     }
 
     @Test
+    fun emptyDistributionFinishesAfterRapidDimensionAndVisibilityChanges() = runBlocking {
+        val viewModel = distribution()
+        val observed = observe(viewModel.uiState)
+        val dimensions = SpendingDimension.entries
+
+        // Prime the real Room flows, including their unchanged empty query results.
+        for (dimension in dimensions) {
+            onMain { viewModel.switchDimension(dimension) }
+            val state = distributionState(viewModel, dimension, 0)
+            assertTrue(state.chartData.isEmpty())
+            assertTrue(state.rankingList.isEmpty())
+        }
+        repeat(8) {
+            onMain {
+                dimensions.forEach(viewModel::switchDimension)
+                viewModel.switchDimension(SpendingDimension.BRAND)
+            }
+            val empty = distributionState(viewModel, SpendingDimension.BRAND, 0)
+            assertTrue(empty.chartData.isEmpty())
+            assertEquals(-1, empty.selectedIndex)
+
+            // Also finish a rapid batch on a different dimension so an old settled
+            // BRAND state cannot satisfy the wait without consuming the new selection.
+            onMain { dimensions.forEach(viewModel::switchDimension) }
+            distributionState(viewModel, SpendingDimension.SEASON, 0)
+            instrumentation.waitForIdleSync()
+            assertEquals(SpendingDimension.SEASON, viewModel.uiState.value.dimension)
+            assertFalse(viewModel.uiState.value.isLoading)
+
+            onMain {
+                showPrice.value = false
+                dimensions.forEach(viewModel::switchDimension)
+                viewModel.switchDimension(SpendingDimension.BRAND)
+            }
+            distributionState(viewModel, SpendingDimension.BRAND, 0, showTotalPrice = false)
+            onMain { showPrice.value = true }
+            distributionState(viewModel, SpendingDimension.BRAND, 0)
+
+            // Reselecting the settled dimension must not restart an empty loading state.
+            val settled = viewModel.uiState.value
+            onMain { viewModel.switchDimension(SpendingDimension.BRAND) }
+            assertEquals(settled, viewModel.uiState.value)
+            assertFalse(viewModel.uiState.value.isLoading)
+        }
+        var checkpoint = 0
+        onMain {
+            checkpoint = observed.size
+            viewModel.switchDimension(SpendingDimension.SEASON)
+        }
+        distributionState(viewModel, SpendingDimension.SEASON, 0)
+        onMain { showPrice.value = false }
+        distributionState(viewModel, SpendingDimension.SEASON, 0, showTotalPrice = false)
+        onMain { showPrice.value = true }
+        distributionState(viewModel, SpendingDimension.SEASON, 0)
+        instrumentation.waitForIdleSync()
+        assertNoDimensionDrift(observed, checkpoint, SpendingDimension.SEASON)
+        assertTrue(database.priceDao().getAllPricesList().isEmpty())
+        assertTrue(database.paymentDao().getAllPaymentsList().isEmpty())
+    }
+
+    @Test
     fun paymentAndPriceVisibilityChangesNeverRestoreAnOldDistributionDimension() = runBlocking {
         val priceId = order(item("响应式统计服饰"))
         orders.recordPayment(priceId, 10.0, date(currentYear, 1))

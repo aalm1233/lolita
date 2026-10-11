@@ -54,4 +54,20 @@ internal object OrderMigration {
             SELECT id,price_id,'历史付款 '||id,amount,due_date,reminder_set,custom_reminder_days FROM payments""")
         db.execSQL("UPDATE payments SET stage_id=id")
     }
+
+    fun migratePurchaseRecordStatus(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE order_bindings ADD COLUMN purchase_record_status TEXT NOT NULL DEFAULT 'TRACKED'")
+        // An explicit historical OWNED status survives even if old plans or incomplete
+        // actual payment records remain. Never invent the missing payment to balance it.
+        db.execSQL("""UPDATE order_bindings SET purchase_record_status='HISTORICAL_OWNED'
+            WHERE (SELECT status FROM items WHERE id=order_bindings.item_id)='OWNED'
+            AND COALESCE((SELECT SUM(ROUND(p.amount*100)) FROM payments p
+                WHERE p.price_id=order_bindings.price_id AND p.is_paid=1),0)
+                < (SELECT ROUND(total_price*100) FROM prices WHERE id=order_bindings.price_id)""")
+        // Already-refreshed 21 records with no ledger cannot prove ownership or a debt.
+        db.execSQL("""UPDATE order_bindings SET purchase_record_status='NEEDS_REVIEW'
+            WHERE (SELECT status FROM items WHERE id=order_bindings.item_id)<>'OWNED'
+            AND NOT EXISTS(SELECT 1 FROM payments p WHERE p.price_id=order_bindings.price_id)
+            AND NOT EXISTS(SELECT 1 FROM payment_stages st WHERE st.price_id=order_bindings.price_id)""")
+    }
 }

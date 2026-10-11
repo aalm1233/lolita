@@ -27,6 +27,10 @@ class BackupFormatTest {
         get("prices").asJsonArray.forEach { it.asJsonObject.remove("shipping") }
         get("payments").asJsonArray.forEach { it.asJsonObject.remove("stageId") }
     }
+    private fun v3Json() = json().apply {
+        addProperty("formatVersion", 3); addProperty("schemaVersion", 21)
+        get("orderBindings").asJsonArray.forEach { it.asJsonObject.remove("purchaseRecordStatus") }
+    }
 
     @Test fun preservesEveryFieldOnRoundTrip() {
         assertEquals(data(), BackupFormat.parse(Gson().toJson(data())))
@@ -93,8 +97,10 @@ class BackupFormatTest {
         json["payments"].asJsonArray.remove(0)
         val restored = BackupFormat.parse(json.toString())
         assertEquals(456L, restored.payments.single().paidDate)
+        assertEquals(456L, restored.payments.single().dueDate)
         assertEquals(1234.56, restored.payments.single().amount, 0.0)
         assertTrue(restored.payments.single().isPaid)
+        assertEquals(PurchaseRecordStatus.TRACKED, restored.orderBindings.single().purchaseRecordStatus)
     }
 
     @Test fun preservesSharedAccessoriesShippingAndPartialInstallments() {
@@ -116,7 +122,8 @@ class BackupFormatTest {
             addProperty("calendarEventId", 444); addProperty("reminderSet", true)
         }
         val restored = BackupFormat.parse(json.toString())
-        assertEquals(listOf(OrderBinding(itemId = 9001, priceId = 8)), restored.orderBindings)
+        assertEquals(listOf(OrderBinding(itemId = 9001, priceId = 8,
+            purchaseRecordStatus = PurchaseRecordStatus.HISTORICAL_OWNED)), restored.orderBindings)
         assertFalse(restored.payments.single().isPaid)
         assertEquals(9L, restored.payments.single().stageId)
         assertEquals(444L, restored.payments.single().calendarEventId)
@@ -223,24 +230,146 @@ class BackupFormatTest {
     }
 
 
-    @Test fun ownedLegacyItemWithUnknownPurchaseDateRetainsAnUnknownActualPaymentDate() {
-        for (explicitNull in listOf(true, false)) {
-            val old = historicalJson()
-            val price = old["prices"].asJsonArray[0].asJsonObject
-            if (explicitNull) price.add("purchaseDate", JsonNull.INSTANCE) else price.remove("purchaseDate")
-            old["payments"].asJsonArray.remove(0)
-            val restored = BackupFormat.parse(old.toString())
-            assertTrue(restored.payments.single().isPaid)
-            assertNull(restored.payments.single().paidDate)
-            assertEquals(104L, restored.payments.single().dueDate)
-            assertEquals(1234.56, restored.payments.single().amount, 0.0)
-            assertFalse(restored.payments.single().reminderSet)
-            assertEquals(8L, restored.orderBindings.single().priceId)
+    @Test fun ownedV1AndV2ItemsWithoutALedgerRemainHistoricalPurchasesWithoutInventedPayments() {
+        for (version in listOf(1, 2)) {
+            for (explicitNull in if (version == 1) listOf(true, false) else listOf(false)) {
+                val old = historicalJson(version)
+                val price = old["prices"].asJsonArray[0].asJsonObject
+                if (explicitNull) price.add("purchaseDate", JsonNull.INSTANCE) else price.remove("purchaseDate")
+                old["payments"].asJsonArray.remove(0)
+                val restored = BackupFormat.parse(old.toString())
+                assertTrue(restored.payments.isEmpty())
+                assertTrue(restored.paymentStages.isEmpty())
+                assertEquals(ItemStatus.OWNED, restored.items.single().status)
+                assertEquals(1234.56, restored.prices.single().totalPrice, 0.0)
+                assertEquals(104L, restored.prices.single().createdAt)
+                assertEquals(OrderBinding(itemId = 9001, priceId = 8,
+                    purchaseRecordStatus = PurchaseRecordStatus.HISTORICAL_OWNED), restored.orderBindings.single())
+            }
         }
-        // An existing unpaid record has priority over the old item label or optional date.
+        // Preserve the existing plan without letting it replace explicit historical ownership.
         val withPayment = historicalJson()
         withPayment["prices"].asJsonArray[0].asJsonObject.add("purchaseDate", JsonNull.INSTANCE)
-        assertEquals(data().payments, BackupFormat.parse(withPayment.toString()).payments)
+        val restoredWithPayment = BackupFormat.parse(withPayment.toString())
+        assertEquals(data().payments, restoredWithPayment.payments)
+        assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED, restoredWithPayment.orderBindings.single().purchaseRecordStatus)
+    }
+
+    @Test fun legacyPendingStatusWithoutALedgerNeedsReviewInsteadOfInventingDebtEvidence() {
+        for (version in listOf(1, 2)) {
+            val old = historicalJson(version)
+            old["items"].asJsonArray[0].asJsonObject.addProperty("status", "PENDING_BALANCE")
+            old["payments"].asJsonArray.remove(0)
+            val restored = BackupFormat.parse(old.toString())
+            assertTrue(restored.payments.isEmpty())
+            assertTrue(restored.paymentStages.isEmpty())
+            assertEquals(PurchaseRecordStatus.NEEDS_REVIEW, restored.orderBindings.single().purchaseRecordStatus)
+            assertEquals(data().prices.single().totalPrice, restored.prices.single().totalPrice, 0.0)
+        }
+    }
+
+    @Test fun v3StatusAlreadyReplacedWithPendingCannotBeGuessedAsHistoricalOwnership() {
+        for (status in listOf(ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_BALANCE)) {
+            val old = v3Json()
+            old["items"].asJsonArray[0].asJsonObject.addProperty("status", status.name)
+            old["payments"].asJsonArray.remove(0)
+            old["paymentStages"].asJsonArray.remove(0)
+            val restored = BackupFormat.parse(old.toString())
+            assertEquals(PurchaseRecordStatus.NEEDS_REVIEW, restored.orderBindings.single().purchaseRecordStatus)
+            assertTrue(restored.payments.isEmpty())
+            assertTrue(restored.paymentStages.isEmpty())
+            assertEquals(status, restored.items.single().status)
+        }
+    }
+
+    @Test fun v3OwnedWithoutALedgerIsHistoricalButExistingPlansRemainTracked() {
+        val old = v3Json()
+        old["payments"].asJsonArray.remove(0)
+        old["paymentStages"].asJsonArray.remove(0)
+        assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED,
+            BackupFormat.parse(old.toString()).orderBindings.single().purchaseRecordStatus)
+        val planned = v3Json()
+        planned["items"].asJsonArray[0].asJsonObject.addProperty("status", ItemStatus.PENDING_BALANCE.name)
+        planned["payments"].asJsonArray.remove(0)
+        val restored = BackupFormat.parse(planned.toString())
+        assertEquals(PurchaseRecordStatus.TRACKED, restored.orderBindings.single().purchaseRecordStatus)
+        assertEquals(data().paymentStages, restored.paymentStages)
+        assertTrue(restored.payments.isEmpty())
+    }
+
+    @Test fun legacyOwnedEvidenceIsPreservedDespiteUnpaidPlansOrIncompleteActualPayments() {
+        for (version in listOf(1, 2, 3)) {
+            for (actualAmount in listOf<Double?>(null, 100.0)) {
+                val old = if (version == 3) v3Json() else historicalJson(version)
+                val payment = old["payments"].asJsonArray[0].asJsonObject
+                payment.addProperty("isPaid", actualAmount != null)
+                if (actualAmount != null) {
+                    payment.addProperty("amount", actualAmount)
+                    payment.addProperty("paidDate", 456L)
+                }
+                val originalPayment = payment.deepCopy()
+                val originalItem = old["items"].asJsonArray[0].asJsonObject.deepCopy()
+                val restored = BackupFormat.parse(old.toString())
+                assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED,
+                    restored.orderBindings.single().purchaseRecordStatus)
+                assertEquals(ItemStatus.OWNED, restored.items.single().status)
+                assertEquals(1, restored.payments.size)
+                assertEquals(originalPayment["amount"].asDouble, restored.payments.single().amount, 0.0)
+                assertEquals(originalPayment["isPaid"].asBoolean, restored.payments.single().isPaid)
+                assertEquals(actualAmount?.let { 456L }, restored.payments.single().paidDate)
+                assertEquals(originalItem["createdAt"].asLong, restored.items.single().createdAt)
+                assertEquals(originalItem["updatedAt"].asLong, restored.items.single().updatedAt)
+                assertEquals(1, restored.paymentStages.size)
+                val expectedStageAmount = if (version == 3) data().paymentStages.single().amount else restored.payments.single().amount
+                assertEquals(expectedStageAmount, restored.paymentStages.single().amount, 0.0)
+            }
+        }
+    }
+
+    @Test fun legacyOwnedWithSufficientActualPaymentIsTrackedWithoutChangingItsLedger() {
+        for (version in listOf(1, 2, 3)) {
+            val old = if (version == 3) v3Json() else historicalJson(version)
+            old["payments"].asJsonArray[0].asJsonObject.apply {
+                addProperty("isPaid", true); addProperty("paidDate", 456L)
+            }
+            val restored = BackupFormat.parse(old.toString())
+            assertEquals(PurchaseRecordStatus.TRACKED, restored.orderBindings.single().purchaseRecordStatus)
+            assertEquals(1, restored.payments.size)
+            assertEquals(1234.56, restored.payments.single().amount, 0.0)
+            assertEquals(456L, restored.payments.single().paidDate)
+        }
+    }
+
+    @Test fun v4RequiresAnExplicitKnownPurchaseRecordStatus() {
+        val missing = json()
+        missing["orderBindings"].asJsonArray[0].asJsonObject.remove("purchaseRecordStatus")
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(missing.toString()) }
+        val nullStatus = json()
+        nullStatus["orderBindings"].asJsonArray[0].asJsonObject.add("purchaseRecordStatus", JsonNull.INSTANCE)
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(nullStatus.toString()) }
+        val unknown = json()
+        unknown["orderBindings"].asJsonArray[0].asJsonObject.addProperty("purchaseRecordStatus", "FUTURE")
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(unknown.toString()) }
+    }
+
+    @Test fun modernPurchaseRecordStatusesRoundTripAndCannotBypassMoneyValidation() {
+        for (status in PurchaseRecordStatus.entries) {
+            val original = data().copy(orderBindings = listOf(data().orderBindings.single().copy(purchaseRecordStatus = status)))
+            assertEquals(original, BackupFormat.parse(Gson().toJson(original)))
+            assertThrows(IllegalArgumentException::class.java) {
+                BackupFormat.validate(original.copy(prices = listOf(original.prices.single().copy(totalPrice = -1.0))))
+            }
+        }
+    }
+
+    @Test fun newlyTrackedUnpaidOrderKeepsItsExplicitStatusWithoutInventingPaymentRecords() {
+        val original = data().copy(items = listOf(data().items.single().copy(status = ItemStatus.PENDING_PAYMENT)),
+            payments = emptyList(), paymentStages = emptyList())
+        val restored = BackupFormat.parse(Gson().toJson(original))
+        assertEquals(original, restored)
+        assertEquals(PurchaseRecordStatus.TRACKED, restored.orderBindings.single().purchaseRecordStatus)
+        assertTrue(restored.payments.isEmpty())
+        assertTrue(restored.paymentStages.isEmpty())
     }
 
     @Test fun wishedLegacyQuoteWithUnknownPurchaseDateDoesNotInventPaymentOrAnOrder() {

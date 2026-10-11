@@ -1,14 +1,14 @@
 # 升级与备份数据完整性测试用例
 
-目标是证明旧版本覆盖升级、旧备份导入、新版本往返备份以及失败恢复时，用户数据和图片完整。本方案是完整验收范围；已执行的自动回归及仍需验证的项目见 [修复记录](data-integrity-fix-2026-10-11.md)，不能将部分自动回归当作全套测试通过。
+目标是证明旧版本覆盖升级、旧备份导入、新版本往返备份以及失败恢复时，用户数据和图片完整。历史已购、购买证据与未知日期付款的最新规则及已执行用例见 [历史购买修复](historical-purchase-fix-2026-10-11.md)。本方案是完整验收范围；已执行的自动回归及仍需验证的项目见 [修复记录](data-integrity-fix-2026-10-11.md)，不能将部分自动回归当作全套测试通过。
 
 ## 测试环境与备份边界
 
-记录旧/新 APK 的 versionCode、versionName、SHA256、数据库 user_version、Schema identityHash、Android 版本与设备。当前新代码数据库版本为 20；旧版本使用实际发布 APK，不用改 versionCode 冒充旧包。覆盖 API 26、当前常用设备系统；导出使用 MediaStore.Downloads，还应单独验证 API 26/28 是否具备有效输出路径。Release 测试包用 `clean assembleRelease` 构建，升级包必须同 applicationId 与签名。
+记录旧/新 APK 的 versionCode、versionName、SHA256、数据库 user_version、Schema identityHash、Android 版本与设备。当前新代码数据库版本为 22，完整备份格式为 4；旧版本使用实际发布 APK，不用改 versionCode 冒充旧包。覆盖 API 26、当前常用设备系统；导出使用 MediaStore.Downloads，还应单独验证 API 26/28 是否具备有效输出路径。Release 测试包用 `clean assembleRelease` 构建，升级包必须同 applicationId 与签名。
 
 只在专用测试设备或模拟器操作。测试库、图片和日历必须与真实个人数据隔离。备份固定在测试设备外，禁止只把唯一副本放在将被替换的 filesDir 内。升级使用 `adb install -r`，保留应用数据；恢复到空库使用另一台干净测试设备，避免卸载和清数据影响升级证明。
 
-建立表覆盖清单：当前本地业务包含 legacy_catalog_archive 与 brands/categories/coordinates/items/prices/payments/outfit_logs/outfit_item_cross_ref/styles/seasons/locations/sources。历史版本另有 catalog_entries；同步状态和 Remote 表逐表声明是否为可重建缓存。任何要废弃的用户实体都需要可校验的归档和恢复目的地，不能作为允许删除的例外。JSON 不包含图片字节，CSV 当前无恢复功能；只有完整 ZIP 可承担独立全量备份验收，其他格式按其明确边界单独验收。
+建立表覆盖清单：当前本地业务包含 legacy_catalog_archive、order_bindings、payment_stages 与 brands/categories/coordinates/items/prices/payments/outfit_logs/outfit_item_cross_ref/styles/seasons/locations/sources；完整 JSON/ZIP 还覆盖 SharedLibrarySyncState 和 Remote 缓存，RestoreJournal 仅为本机操作日志。历史版本另有 catalog_entries；同步状态和 Remote 表逐表声明是否为可重建缓存。任何要废弃的用户实体都需要可校验的归档和恢复目的地，不能作为允许删除的例外。JSON 不包含图片字节，CSV 当前无恢复功能；只有完整 ZIP 可承担独立全量备份验收，其他格式按其明确边界单独验收。
 
 ## 固定数据集和比较规则
 
@@ -35,10 +35,10 @@
 | 编号 | 优先级 | 前置条件与操作 | 预期和断言 |
 | --- | --- | --- | --- |
 | U01 | P0 | 旧 APK 写入固定数据并关闭；记录基准；同签名 `adb install -r` 新 APK，首次启动并等初始化完成，再重启。 | 逐字段、全表、引用图、图片和资金不丢；派生状态仅按明确规则变化；第二次启动无追加改动。 |
-| U02 | P0 | 以 Schema 13 建立价格和已付/未付付款，另建无付款价格；在 Room MigrationTestHelper 执行 13→14 及 13→20。 | 原 payments ID、金额、日期全部保持；无付款价格仅按迁移规则生成一次付款；随后重建价格不能删除付款。 |
-| U03 | P0 | Schema 17 含 Item→Price→Payment、Outfit 关联和 linked_item_id 图鉴；执行 17→18 及 17→20。 | 价格、付款、穿搭关联条数和内容不变；图鉴链接保留或进入明确迁移目标，图片可读。 |
-| U04 | P0 | Schema 18 含独立和关联图鉴、远程图鉴；执行 18→20，经过修正的 18→19 归档步骤。 | 图鉴全部字段/图片/关联在保留或归档目标中可查且可恢复；不能以表消失为通过。核对 legacy_catalog_archive 的原始字段和图片引用。 |
-| U05 | P0 | 参数化执行所有支持起点→20；重点 6→7、7→8、11→12、12→13、14→15 的重建父表。起点 1 无仓库 Schema 时使用真实发布 APK/库补夹具。 | Room 结构验证通过；所有已有子记录保留。测试真实事务、外键配置；不能用关闭外键的主机测试替代设备测试。 |
+| U02 | P0 | 以 Schema 13 建立价格和已付/未付付款，另建无付款价格；在 Room MigrationTestHelper 执行 13→14 及 13→22。 | 原 payments ID、金额、日期全部保持；无付款价格不得仅凭已拥有状态生成实付；仅旧格式明确购买日期的记录可按已定义迁移规则转换一次；随后重建价格不能删除付款。 |
+| U03 | P0 | Schema 17 含 Item→Price→Payment、Outfit 关联和 linked_item_id 图鉴；执行 17→18 及 17→22。 | 价格、付款、穿搭关联条数和内容不变；图鉴链接保留或进入明确迁移目标，图片可读。 |
+| U04 | P0 | Schema 18 含独立和关联图鉴、远程图鉴；执行 18→22，经过修正的 18→19 归档步骤。 | 图鉴全部字段/图片/关联在保留或归档目标中可查且可恢复；不能以表消失为通过。核对 legacy_catalog_archive 的原始字段和图片引用。 |
+| U05 | P0 | 参数化执行所有支持起点→22；重点 6→7、7→8、11→12、12→13、14→15 的重建父表。起点 1 无仓库 Schema 时使用真实发布 APK/库补夹具。 | Room 结构验证通过；所有已有子记录保留。测试真实事务、外键配置；不能用关闭外键的主机测试替代设备测试。 |
 | U06 | P1 | 在旧 APK 导出 ZIP/JSON，保存到设备外；升级后导入，另在干净新设备导入同一 ZIP。 | 旧备份所有受支持业务字段和关联恢复；ZIP 图片哈希相同，路径重写正确；JSON 的本地图片限制明确可见。 |
 | U07 | P1 | 历史 JSON 分别缺 styles/seasons/locations/sources、priority、group、imageUrls、updatedAt；含 color 标量、colors 字符串数组、imageUrl 单图、空/null 值。 | 已知历史缺失字段按版本规则补全；不能出现 NPE、时间戳静默为 0 或已存在值被覆盖；非法字段拒绝且现库不变。每种输入独立执行。 |
 | U08 | P1 | 增加未来 formatVersion、未知实体、未知状态/枚举、未知业务字段后导入。 | 在任何数据库、图片、日历修改前拒绝不支持的备份；旧数据完整，不能报成功后丢未知数据。 |
@@ -74,7 +74,7 @@
 ## 测试执行与发布门槛
 
 1. 先运行 `python3 scripts/audit_data_integrity.py` 获取当前缺陷证据。脚本以数据保留断言检查迁移与保护辅助流程，发现丢失时返回 1；它仅覆盖两段重建迁移、删图鉴和 WAL 主文件复制，不能代替上表。
-2. 为 U02～U05 接入 `androidx.room:room-testing`、AndroidJUnitRunner 与历史 Schema 资源，建立可执行仪器化测试。当前已接入 BackupFormatTest 和 DataIntegrityTest，迁移覆盖 2～19→20，数据库版本 1 仍需真实发布夹具补充。
+2. 为 U02～U05 接入 `androidx.room:room-testing`、AndroidJUnitRunner 与历史 Schema 资源，建立可执行仪器化测试。当前已接入 BackupFormatTest 和 DataIntegrityTest，迁移覆盖 2～21→22（20/21→22 的购买证据回归位于 HistoricalPurchaseTest），数据库版本 1 仍需真实发布夹具补充。
 3. 每个旧 APK 先生成夹具和独立基准，在设备外保存原始 ZIP、数据库一致快照和图片哈希。数据库快照通过 SQLite backup 或明确停机且正确处理 WAL 获取，不直接复制在线主文件。
 4. 执行所有 P0/P1 用例，并保存独立核对结果；UI 套件 `bash run_device_test.sh` 只作为额外冒烟验证，G13 不能代替导入后校验。
 5. 新包编译通过；迁移与备份所有关键用例零丢失、零错链、零错误图片；所有故障用例恢复完整 A/B；未来版本拒绝有效。缺图、表消失、静默默认值或未执行关键用例都不得签署无损结论。

@@ -44,6 +44,7 @@ data class CoordinateDetailUiState(
     val totalPrice: Double = 0.0,
     val paidAmount: Double = 0.0,
     val unpaidAmount: Double = 0.0,
+    val incompleteOrderCount: Int = 0,
     val isLoading: Boolean = true,
     // Item picker state
     val allItems: List<Item> = emptyList(),
@@ -208,12 +209,16 @@ class CoordinateDetailViewModel(
                 val paidAmount = pricesWithPayments.flatMap { it.payments }
                     .filter { it.isPaid }
                     .sumOf { it.amount }
-                val unpaidAmount = pricesWithPayments.sumOf { order ->
+                val unpaidAmount = pricesWithPayments.filter { order ->
+                    order.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.TRACKED
+                }.sumOf { order ->
                     com.lolita.app.domain.usecase.OrderAccounting.remaining(order.price.totalPrice,
                         com.lolita.app.domain.usecase.OrderAccounting.sum(order.payments.filter { it.isPaid }.map { it.amount }))
                 }
 
-                Triple(result, totalPrice, paidAmount to unpaidAmount)
+                Triple(result, totalPrice, Triple(paidAmount, unpaidAmount, pricesWithPayments.count {
+                    it.binding?.purchaseRecordStatus != com.lolita.app.data.local.entity.PurchaseRecordStatus.TRACKED
+                }))
             }.collect { (result, totalPrice, paidAmounts) ->
                 _uiState.update {
                     it.copy(
@@ -222,6 +227,7 @@ class CoordinateDetailViewModel(
                         totalPrice = totalPrice,
                         paidAmount = paidAmounts.first,
                         unpaidAmount = paidAmounts.second,
+                        incompleteOrderCount = paidAmounts.third,
                         isLoading = false
                     )
                 }

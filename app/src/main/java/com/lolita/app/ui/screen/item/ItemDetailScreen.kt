@@ -669,7 +669,16 @@ fun ItemDetailScreen(
                                                     }
                                                 }
 
-                                                run {
+                                                if (priceWithPayments.binding?.purchaseRecordStatus != com.lolita.app.data.local.entity.PurchaseRecordStatus.TRACKED) {
+                                                    Text(
+                                                        if (priceWithPayments.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.HISTORICAL_OWNED)
+                                                            "历史已购，付款记录未补全" else "历史付款资料待核对",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                    if (paidAmount > 0) Text("已录实付 ¥${String.format("%.2f", paidAmount)}",
+                                                        style = MaterialTheme.typography.bodySmall)
+                                                } else run {
                                                     val unpaidAmount = OrderAccounting.remaining(price.totalPrice, paidAmount)
                                                     Row(
                                                         modifier = Modifier.fillMaxWidth(),
@@ -831,7 +840,16 @@ private fun ItemOrderSummary(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary)
-                    FlowRow(
+                    if (currentOrder.binding?.purchaseRecordStatus != com.lolita.app.data.local.entity.PurchaseRecordStatus.TRACKED) {
+                        Text(
+                            if (currentOrder.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.HISTORICAL_OWNED)
+                                "历史已购，付款记录未补全" else "历史付款资料待核对",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        if (paidAmount > 0) Text("已录实付 ¥${String.format("%.2f", paidAmount)}",
+                            style = MaterialTheme.typography.bodySmall)
+                    } else FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(skin.spacingLarge),
                         verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
                     ) {
@@ -865,6 +883,7 @@ private fun StatusBadge(status: ItemStatus) {
             ItemStatus.WISHED -> MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
             ItemStatus.PENDING_BALANCE -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
             ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+            ItemStatus.PENDING_REVIEW -> MaterialTheme.colorScheme.surfaceVariant
         },
         shape = MaterialTheme.shapes.small
     ) {
@@ -874,6 +893,7 @@ private fun StatusBadge(status: ItemStatus) {
                 ItemStatus.WISHED -> "愿望单"
                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                 ItemStatus.PENDING_PAYMENT -> "待付款"
+                ItemStatus.PENDING_REVIEW -> "待核对"
             },
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             style = MaterialTheme.typography.labelMedium,

@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import com.lolita.app.di.AppModule
+import com.lolita.app.data.local.entity.PurchaseRecordStatus
 import kotlinx.coroutines.*
 
 /**
@@ -40,7 +41,9 @@ class PaymentReminderReceiver : BroadcastReceiver() {
                 val db = AppModule.database()
                 val stage = db.orderDao().getStage(-paymentId) ?: return@launch
                 val price = db.priceDao().getPriceById(stage.priceId) ?: return@launch
-                if (db.orderDao().getBinding(price.itemId)?.priceId != price.id || !stage.reminderSet || stage.dueDate == null) return@launch
+                val binding = db.orderDao().getBinding(price.itemId) ?: return@launch
+                if (binding.priceId != price.id || binding.purchaseRecordStatus != PurchaseRecordStatus.TRACKED ||
+                    !stage.reminderSet || stage.dueDate == null) return@launch
                 val actual = db.paymentDao().getPaymentsByPriceList(price.id).filter { it.isPaid }
                 val stageRemaining = com.lolita.app.domain.usecase.StageAccounting.remainingByStage(
                     db.orderDao().getStages(price.id),actual,price.totalPrice)[stage.id] ?: 0.0

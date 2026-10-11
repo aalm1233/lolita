@@ -9,5 +9,7 @@ import androidx.room.*
 ], indices = [Index(value = ["price_id"], unique = true)])
 data class OrderBinding(
     @PrimaryKey @ColumnInfo(name = "item_id") val itemId: Long,
-    @ColumnInfo(name = "price_id") val priceId: Long
+    @ColumnInfo(name = "price_id") val priceId: Long,
+    @ColumnInfo(name = "purchase_record_status", defaultValue = "'TRACKED'")
+    val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED
 )

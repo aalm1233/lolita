@@ -45,6 +45,18 @@ class Converters {
         PriceType.FULL
     }
 
+    // Historical purchase evidence must survive status refresh and backup restore.
+    @TypeConverter
+    fun fromPurchaseRecordStatus(value: PurchaseRecordStatus): String = value.name
+
+    @TypeConverter
+    fun toPurchaseRecordStatus(value: String): PurchaseRecordStatus = try {
+        PurchaseRecordStatus.valueOf(value)
+    } catch (e: IllegalArgumentException) {
+        Log.e("Converters", "Unknown PurchaseRecordStatus: $value, preserving for review")
+        PurchaseRecordStatus.NEEDS_REVIEW
+    }
+
     // CategoryGroup
     @TypeConverter
     fun fromCategoryGroup(value: CategoryGroup): String = value.name

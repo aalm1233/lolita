@@ -4,7 +4,8 @@ enum class ItemStatus {
     OWNED,
     WISHED,
     PENDING_BALANCE,
-    PENDING_PAYMENT
+    PENDING_PAYMENT,
+    PENDING_REVIEW
 }
 
 enum class ItemPriority {

@@ -16,6 +16,7 @@ internal const val STAGE_BALANCES = """WITH raw AS (
  COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.stage_id IS NULL AND a.is_paid=1),0) AS unassigned,
  MAX(ROUND(pr.total_price*100)-COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.is_paid=1),0),0) AS order_remaining
  FROM payment_stages st JOIN prices pr ON pr.id=st.price_id JOIN order_bindings ob ON ob.price_id=pr.id JOIN items i ON i.id=ob.item_id
+ WHERE ob.purchase_record_status='TRACKED'
 ), balances AS (
  SELECT r.*,MIN(
  MAX(r.order_remaining-MAX(COALESCE((SELECT SUM(p.stage_remaining) FROM raw p WHERE p.price_id=r.price_id AND p.id<r.id),0)-r.unassigned,0),0),
@@ -84,13 +85,13 @@ interface PaymentDao {
     @Query(STAGE_BALANCES + "SELECT COALESCE(SUM(remaining),0) FROM balances WHERE due_date BETWEEN :monthStart AND :monthEnd")
     fun getMonthUnpaidTotal(monthStart: Long, monthEnd: Long): Flow<Double>
 
-    @Query("""SELECT COALESCE(SUM(MAX(ROUND(pr.total_price*100)-COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.is_paid=1),0),0)),0)/100.0 FROM prices pr JOIN order_bindings ob ON ob.price_id=pr.id""")
+    @Query("""SELECT COALESCE(SUM(MAX(ROUND(pr.total_price*100)-COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.is_paid=1),0),0)),0)/100.0 FROM prices pr JOIN order_bindings ob ON ob.price_id=pr.id WHERE ob.purchase_record_status='TRACKED'""")
     fun getTotalUnpaidAmount(): Flow<Double>
 
     @Query(STAGE_BALANCES + "SELECT COALESCE(SUM(remaining),0) FROM balances WHERE due_date<:now")
     fun getOverdueAmount(now: Long): Flow<Double>
 
-    @Query("""SELECT COUNT(*) FROM prices pr JOIN order_bindings ob ON ob.price_id=pr.id WHERE ROUND(pr.total_price*100)>COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.is_paid=1),0)""")
+    @Query("""SELECT COUNT(*) FROM prices pr JOIN order_bindings ob ON ob.price_id=pr.id WHERE ob.purchase_record_status='TRACKED' AND ROUND(pr.total_price*100)>COALESCE((SELECT SUM(ROUND(a.amount*100)) FROM payments a WHERE a.price_id=pr.id AND a.is_paid=1),0)""")
     fun getTotalUnpaidCount(): Flow<Int>
 
     @Query("""

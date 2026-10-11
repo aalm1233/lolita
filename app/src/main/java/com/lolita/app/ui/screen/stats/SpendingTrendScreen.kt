@@ -20,17 +20,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.MonthlySpending
-import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
+import com.lolita.app.domain.usecase.OrderAccounting
 import com.lolita.app.ui.component.chart.LineChart
 import com.lolita.app.ui.component.chart.LineChartData
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -44,6 +46,7 @@ data class SpendingTrendUiState(
     val selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR),
     val monthlyData: List<LineChartData> = emptyList(),
     val yearTotal: Double = 0.0,
+    val undatedSpending: Double = 0.0,
     val selectedMonthIndex: Int = -1,
     val monthlyDetails: List<MonthDetail> = emptyList(),
     val showTotalPrice: Boolean = false,
@@ -52,89 +55,68 @@ data class SpendingTrendUiState(
 
 class SpendingTrendViewModel(
     private val priceRepository: PriceRepository = AppModule.priceRepository(),
-    private val appPreferences: AppPreferences = AppModule.appPreferences()
+    private val showTotalPrice: Flow<Boolean> = AppModule.appPreferences().showTotalPrice
 ) : ViewModel() {
-
+    private data class Selection(val year: Int, val monthIndex: Int = -1)
+    private val selection = MutableStateFlow(Selection(Calendar.getInstance().get(Calendar.YEAR)))
     private val _uiState = MutableStateFlow(SpendingTrendUiState())
     val uiState: StateFlow<SpendingTrendUiState> = _uiState.asStateFlow()
 
     init {
-        loadData()
-    }
-
-    private fun loadData() {
         viewModelScope.launch {
-            priceRepository.getMonthlySpending()
-                .combine(appPreferences.showTotalPrice) { monthlyList, showPrice ->
-                    buildState(monthlyList, showPrice)
-                }
-                .collect { _uiState.value = it }
+            combine(
+                priceRepository.getMonthlySpending(),
+                priceRepository.getUndatedSpending(),
+                showTotalPrice,
+                selection
+            ) { monthlyList, undated, showPrice, selected ->
+                buildState(monthlyList, undated, showPrice, selected.year, selected.monthIndex)
+            }.collect { state ->
+                if (state.selectedYear == selection.value.year) _uiState.value = state
+            }
         }
     }
 
     private fun buildState(
         monthlyList: List<MonthlySpending>,
-        showPrice: Boolean
+        undatedSpending: Double,
+        showPrice: Boolean,
+        year: Int,
+        monthIndex: Int
     ): SpendingTrendUiState {
-        val year = _uiState.value.selectedYear
         val yearPrefix = "$year-"
         val filtered = monthlyList.filter { it.yearMonth.startsWith(yearPrefix) }
             .associate { it.yearMonth to it.totalSpending }
-
         val now = Calendar.getInstance()
         val currentYear = now.get(Calendar.YEAR)
         val currentMonth = now.get(Calendar.MONTH) + 1
-
-        val chartData = (1..12).map { m ->
-            val key = "$year-${String.format("%02d", m)}"
-            LineChartData(
-                label = "${m}月",
-                value = filtered[key] ?: 0.0
-            )
+        val amounts = (1..12).map { month ->
+            filtered["$year-${month.toString().padStart(2, '0')}"] ?: 0.0
         }
-
-        val yearTotal = chartData.sumOf { it.value }
-
-        val details = (1..12).map { m ->
-            val key = "$year-${String.format("%02d", m)}"
-            MonthDetail(
-                month = "${m}月",
-                amount = filtered[key] ?: 0.0,
-                isCurrentMonth = year == currentYear && m == currentMonth
-            )
-        }
-
         return SpendingTrendUiState(
             selectedYear = year,
-            monthlyData = chartData,
-            yearTotal = yearTotal,
-            selectedMonthIndex = _uiState.value.selectedMonthIndex,
-            monthlyDetails = details,
+            monthlyData = amounts.mapIndexed { index, amount -> LineChartData("${index + 1}月", amount) },
+            yearTotal = OrderAccounting.sum(amounts),
+            undatedSpending = undatedSpending,
+            selectedMonthIndex = monthIndex,
+            monthlyDetails = amounts.mapIndexed { index, amount ->
+                MonthDetail("${index + 1}月", amount, year == currentYear && index + 1 == currentMonth)
+            },
             showTotalPrice = showPrice,
             isLoading = false
         )
     }
 
     fun previousYear() {
-        _uiState.value = _uiState.value.copy(
-            selectedYear = _uiState.value.selectedYear - 1,
-            selectedMonthIndex = -1
-        )
-        loadData()
+        selection.update { it.copy(year = it.year - 1, monthIndex = -1) }
     }
 
     fun nextYear() {
-        _uiState.value = _uiState.value.copy(
-            selectedYear = _uiState.value.selectedYear + 1,
-            selectedMonthIndex = -1
-        )
-        loadData()
+        selection.update { it.copy(year = it.year + 1, monthIndex = -1) }
     }
 
     fun selectMonth(index: Int) {
-        _uiState.value = _uiState.value.copy(
-            selectedMonthIndex = if (_uiState.value.selectedMonthIndex == index) -1 else index
-        )
+        selection.update { it.copy(monthIndex = if (it.monthIndex == index) -1 else index) }
     }
 }
 
@@ -198,6 +180,14 @@ fun SpendingTrendContent(
             )
         }
 
+        if (uiState.undatedSpending > 0) {
+            Text(
+                text = "另有 ¥${String.format("%.2f", uiState.undatedSpending)} 实付日期待补，未计入月度趋势",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
         // Line chart
         LineChart(
             data = uiState.monthlyData,
@@ -212,7 +202,7 @@ fun SpendingTrendContent(
 
         // Monthly details list
         uiState.monthlyDetails.forEachIndexed { index, detail ->
-            val yearMonth = "${uiState.selectedYear}-${String.format("%02d", index + 1)}"
+            val yearMonth = "${uiState.selectedYear}-${(index + 1).toString().padStart(2, '0')}"
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

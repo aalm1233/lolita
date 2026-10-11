@@ -37,7 +37,7 @@ class DataIntegrityTest {
         LolitaDatabase.MIGRATION_9_10, LolitaDatabase.MIGRATION_10_11, LolitaDatabase.MIGRATION_11_12,
         LolitaDatabase.MIGRATION_12_13, LolitaDatabase.MIGRATION_13_14, LolitaDatabase.MIGRATION_14_15,
         LolitaDatabase.MIGRATION_15_16, LolitaDatabase.MIGRATION_16_17, LolitaDatabase.MIGRATION_17_18,
-        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20, LolitaDatabase.MIGRATION_20_21
+        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20, LolitaDatabase.MIGRATION_20_21, LolitaDatabase.MIGRATION_21_22
     )
 
     private fun seed(db: SupportSQLiteDatabase, table: String, recordId: Long = 1L) {
@@ -71,7 +71,7 @@ class DataIntegrityTest {
                 if (version in 17..18) seed(this, "remote_catalog_entries")
                 close()
             }
-            val db = helper.runMigrationsAndValidate(name, 21, true, *migrations)
+            val db = helper.runMigrationsAndValidate(name, 22, true, *migrations)
             try {
                 listOf("items", "prices", "payments", "outfit_logs", "outfit_item_cross_ref").forEach { table ->
                     db.query("SELECT COUNT(*) FROM `$table`").use { assertTrue(it.moveToFirst()); assertEquals("v$version $table", 1, it.getInt(0)) }
@@ -139,18 +139,18 @@ class DataIntegrityTest {
             execSQL("UPDATE prices SET item_id=3,total_price=1.005 WHERE id=3")
             close()
         }
-        val db = helper.runMigrationsAndValidate(name, 21, true, *migrations)
+        val db = helper.runMigrationsAndValidate(name, 22, true, *migrations)
         try {
-            db.query("SELECT price_id,is_paid,paid_date FROM payments").use {
-                assertTrue(it.moveToFirst()); assertEquals(1L,it.getLong(0)); assertEquals(1,it.getInt(1)); assertTrue(it.isNull(2))
-                assertTrue(it.moveToNext()); assertEquals(3L,it.getLong(0)); assertTrue(it.isNull(2)); assertFalse(it.moveToNext())
-            }
+            db.query("SELECT COUNT(*) FROM payments").use { assertTrue(it.moveToFirst()); assertEquals(0,it.getInt(0)) }
             db.query("SELECT item_id FROM order_bindings").use {
                 assertTrue(it.moveToFirst()); assertEquals(1L,it.getLong(0)); assertFalse(it.moveToNext())
             }
             db.query("SELECT status FROM items WHERE id=2").use { assertTrue(it.moveToFirst()); assertEquals("WISHED",it.getString(0)) }
             db.query("SELECT COUNT(*) FROM prices").use { assertTrue(it.moveToFirst()); assertEquals(3,it.getInt(0)) }
-            db.query("SELECT amount FROM payments WHERE price_id=3").use { assertTrue(it.moveToFirst()); assertEquals(1.005,it.getDouble(0),0.0) }
+            db.query("SELECT purchase_record_status FROM order_bindings WHERE item_id=1").use {
+                assertTrue(it.moveToFirst()); assertEquals("HISTORICAL_OWNED",it.getString(0))
+            }
+            db.query("SELECT total_price FROM prices WHERE id=3").use { assertTrue(it.moveToFirst()); assertEquals(1.005,it.getDouble(0),0.0) }
             db.query("PRAGMA foreign_key_check").use { assertFalse(it.moveToFirst()) }
         } finally { db.close(); context.deleteDatabase(name) }
     }

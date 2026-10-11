@@ -218,7 +218,8 @@ fun CoordinateDetailScreen(
                         itemCount = uiState.items.size,
                         totalPrice = uiState.totalPrice,
                         paidAmount = uiState.paidAmount,
-                        unpaidAmount = uiState.unpaidAmount
+                        unpaidAmount = uiState.unpaidAmount,
+                        incompleteOrderCount = uiState.incompleteOrderCount
                     )
                 }
 
@@ -327,7 +328,8 @@ private fun CoordinateInfoCard(
     itemCount: Int,
     totalPrice: Double,
     paidAmount: Double,
-    unpaidAmount: Double
+    unpaidAmount: Double,
+    incompleteOrderCount: Int
 ) {
     LolitaCard(
         modifier = Modifier.fillMaxWidth()
@@ -418,13 +420,18 @@ private fun CoordinateInfoCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+                if (incompleteOrderCount > 0) {
+                    Text("${incompleteOrderCount} 笔订单的付款资料未补全，待付合计仅包含已核对订单",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
                 if (paidAmount > 0 || unpaidAmount > 0) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            "已付",
+                            if (incompleteOrderCount > 0) "已录实付" else "已付",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -600,7 +607,7 @@ private fun StatusBadge(status: ItemStatus) {
         color = when (status) {
             ItemStatus.OWNED -> MaterialTheme.colorScheme.primaryContainer
             ItemStatus.WISHED -> MaterialTheme.colorScheme.secondaryContainer
-            ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.tertiaryContainer
+            ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_REVIEW -> MaterialTheme.colorScheme.tertiaryContainer
         },
         shape = MaterialTheme.shapes.small
     ) {
@@ -610,13 +617,14 @@ private fun StatusBadge(status: ItemStatus) {
                 ItemStatus.WISHED -> "愿望单"
                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                         ItemStatus.PENDING_PAYMENT -> "待付款"
+                        ItemStatus.PENDING_REVIEW -> "待核对"
             },
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             color = when (status) {
                 ItemStatus.OWNED -> MaterialTheme.colorScheme.onPrimaryContainer
                 ItemStatus.WISHED -> MaterialTheme.colorScheme.onSecondaryContainer
-                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.onTertiaryContainer
+                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_REVIEW -> MaterialTheme.colorScheme.onTertiaryContainer
             }
         )
     }

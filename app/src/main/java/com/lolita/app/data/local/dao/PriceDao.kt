@@ -106,10 +106,10 @@ interface PriceDao {
     fun getSpendingByCategory(): Flow<List<CategorySpending>>
 
     @Query("""
-        SELECT i.style AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
+        SELECT COALESCE(i.style, '') AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE p.id IN (SELECT price_id FROM order_bindings) AND i.style IS NOT NULL AND i.style != ''
+        WHERE p.id IN (SELECT price_id FROM order_bindings)
         GROUP BY i.style
         ORDER BY totalSpending DESC
     """)
@@ -130,6 +130,16 @@ interface PriceDao {
     fun getMonthlySpending(): Flow<List<MonthlySpending>>
 
     @Query("""
+        SELECT COALESCE(SUM(ROUND(pay.amount * 100)) / 100.0, 0.0)
+        FROM payments pay
+        INNER JOIN prices pr ON pay.price_id = pr.id
+        INNER JOIN items i ON pr.item_id = i.id
+        WHERE pr.id IN (SELECT price_id FROM order_bindings)
+          AND pay.is_paid = 1 AND pay.paid_date IS NULL
+    """)
+    fun getUndatedSpending(): Flow<Double>
+
+    @Query("""
         SELECT i.id AS itemId, i.name AS itemName, i.image_urls AS imageUrls,
                COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
@@ -142,10 +152,10 @@ interface PriceDao {
     fun getMostExpensiveItem(): Flow<ItemWithSpending?>
 
     @Query("""
-        SELECT i.season AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
+        SELECT COALESCE(i.season, '') AS style, COALESCE(SUM((SELECT COALESCE(SUM(ROUND(a.amount*100))/100.0,0) FROM payments a WHERE a.price_id=p.id AND a.is_paid=1)), 0.0) AS totalSpending
         FROM prices p
         INNER JOIN items i ON p.item_id = i.id
-        WHERE p.id IN (SELECT price_id FROM order_bindings) AND i.season IS NOT NULL AND i.season != ''
+        WHERE p.id IN (SELECT price_id FROM order_bindings)
         GROUP BY i.season
     """)
     fun getSpendingBySeasonRaw(): Flow<List<StyleSpending>>
@@ -188,7 +198,7 @@ interface PriceDao {
         SELECT pr.id AS priceId, pr.total_price AS totalPrice,
                MIN(pay.paid_date) AS firstPaidDate,
                pr.type AS priceType, i.name AS itemName, i.id AS itemId,
-               CASE WHEN ROUND(pr.total_price*100)>COALESCE((SELECT SUM(ROUND(p.amount*100)) FROM payments p WHERE p.price_id=pr.id AND p.is_paid=1),0) THEN 1 ELSE 0 END AS unpaidCount,
+               CASE WHEN (SELECT purchase_record_status FROM order_bindings WHERE price_id=pr.id)='TRACKED' AND ROUND(pr.total_price*100)>COALESCE((SELECT SUM(ROUND(p.amount*100)) FROM payments p WHERE p.price_id=pr.id AND p.is_paid=1),0) THEN 1 ELSE 0 END AS unpaidCount,
                (SELECT COUNT(*) FROM balances b WHERE b.price_id=pr.id AND b.remaining>0 AND b.due_date<:now) AS overdueCount
         FROM prices pr
         INNER JOIN items i ON pr.item_id = i.id
@@ -226,6 +236,8 @@ data class PriceWithPayments(
         parentColumn = "id",
         entityColumn = "price_id"
     )
-    val payments: List<Payment>
+    val payments: List<Payment>,
+    @Relation(parentColumn = "id", entityColumn = "price_id")
+    val binding: com.lolita.app.data.local.entity.OrderBinding? = null
 )
 

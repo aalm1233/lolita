@@ -291,6 +291,8 @@ fun BackupRestoreScreen(
                     Text("服饰: ${p.itemCount} 条")
                     Text("价格: ${p.priceCount} 条")
                     Text("当前订单: ${p.orderBindingCount} 条 / 付款阶段: ${p.paymentStageCount} 条")
+                    if (p.historicalOwnedCount > 0) Text("历史已购（付款资料缺失）: ${p.historicalOwnedCount} 条")
+                    if (p.needsReviewCount > 0) Text("付款资料待核对: ${p.needsReviewCount} 条")
                     Text("付款: ${p.paymentCount} 条")
                     Text("穿搭日记: ${p.outfitLogCount} 条")
                     Text("历史图鉴归档: ${p.archiveCount} 条")

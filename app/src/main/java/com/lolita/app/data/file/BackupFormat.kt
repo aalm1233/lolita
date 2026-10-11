@@ -9,8 +9,8 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 3
-    const val SCHEMA_VERSION = 21
+    const val VERSION = 4
+    const val SCHEMA_VERSION = 22
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -44,6 +44,7 @@ internal object BackupFormat {
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
         if (version == 1) migratePurchaseDates(root)
         if (version < 3) migrateOrders(root)
+        if (version < 4) migratePurchaseRecordStatuses(root)
         entities.forEach { (name, type) ->
             if (!root.has(name) || root[name].isJsonNull) root.add(name, JsonArray())
             require(root[name].isJsonArray) { "$name 必须是数组" }
@@ -90,7 +91,7 @@ internal object BackupFormat {
                 type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.forEach { field ->
                     val value = row[field.name] ?: return@forEach
                     if (value.isJsonNull) {
-                        require(!field.type.isPrimitive && field.name !in setOf("name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
+                        require(!field.type.isPrimitive && field.name !in setOf("name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
                     } else when {
                         field.type.isEnum -> require(value.isJsonPrimitive && value.asString in requireNotNull(field.type.enumConstants).map { (it as Enum<*>).name }) { "未知枚举：$name[$index].${field.name}" }
                         List::class.java.isAssignableFrom(field.type) -> require(value.isJsonArray && value.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$name[$index].${field.name} 必须是字符串数组" }
@@ -107,7 +108,7 @@ internal object BackupFormat {
                 }
                 val required = when (name) {
                     "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
-                    "orderBindings" -> setOf("itemId", "priceId")
+                    "orderBindings" -> setOf("itemId", "priceId", "purchaseRecordStatus")
                     "paymentStages" -> setOf("id", "priceId", "name", "amount", "reminderSet")
                     "legacyCatalogArchives" -> setOf("sourceTable", "recordKey", "payload")
                     "syncStates" -> setOf("cacheKey", "backendBaseUrl", "assetBaseUrl", "nextCursor", "schemaVersion")
@@ -125,6 +126,34 @@ internal object BackupFormat {
         val data = gson.fromJson(root, BackupData::class.java)
         validate(data)
         return data
+    }
+
+    /** A missing ledger is not evidence of an outstanding payment or a full payment. */
+    private fun migratePurchaseRecordStatuses(root: JsonObject) {
+        val items = root["items"].asJsonArray.map { it.asJsonObject }.associateBy { it["id"].asLong }
+        val prices = root["prices"].asJsonArray.map { it.asJsonObject }.associateBy { it["id"].asLong }
+        val paymentsByPrice = root["payments"].asJsonArray.map { it.asJsonObject }.groupBy { it["priceId"].asLong }
+        val pricesWithEvidence = (root["payments"].asJsonArray + root["paymentStages"].asJsonArray)
+            .map { it.asJsonObject["priceId"].asLong }.toSet()
+        root["orderBindings"].asJsonArray.forEach { element ->
+            val binding = element.asJsonObject
+            require(!binding.has("purchaseRecordStatus")) { "历史备份包含新版购买记录状态" }
+            val priceId = binding["priceId"].asLong
+            val itemWasOwned = items[binding["itemId"].asLong]?.get("status")?.asString == "OWNED"
+            val actualPaidCents = paymentsByPrice[priceId].orEmpty()
+                .filter { it["isPaid"]?.takeUnless { value -> value.isJsonNull }?.asBoolean == true }
+                .fold(0L) { total, payment ->
+                    Math.addExact(total, com.lolita.app.domain.usecase.OrderAccounting.cents(payment["amount"].asDouble))
+                }
+            val totalCents = prices[priceId]?.get("totalPrice")?.takeUnless { it.isJsonNull }?.asDouble
+                ?.let(com.lolita.app.domain.usecase.OrderAccounting::cents)
+            val status = when {
+                itemWasOwned && (totalCents == null || actualPaidCents < totalCents) -> PurchaseRecordStatus.HISTORICAL_OWNED
+                priceId !in pricesWithEvidence -> PurchaseRecordStatus.NEEDS_REVIEW
+                else -> PurchaseRecordStatus.TRACKED
+            }
+            binding.addProperty("purchaseRecordStatus", status.name)
+        }
     }
 
     /** v1/v2 had payment plans and actual payments in one table. Preserve every row. */
@@ -198,25 +227,19 @@ internal object BackupFormat {
 
     private fun migratePurchaseDates(root: JsonObject) {
         val payments = root["payments"].asJsonArray
-        val statuses = root["items"].asJsonArray.map { it.asJsonObject }.associate {
-            it["id"].asLong to it["status"]?.takeUnless { value -> value.isJsonNull }?.asString
-        }
         var nextId = payments.maxOfOrNull { it.asJsonObject["id"].asLong } ?: 0L
         root["prices"].asJsonArray.forEach { element ->
             val price = element.asJsonObject
             // Historical Gson omitted nullable fields. Missing and explicit null both mean unknown.
             val date = price.remove("purchaseDate")?.takeUnless { it.isJsonNull }
             val priceId = price["id"].asLong
-            if (payments.none { it.asJsonObject["priceId"].asLong == priceId } &&
-                (date != null || statuses[price["itemId"].asLong] == "OWNED")) {
-                val knownPaidAt = date?.asBigDecimal?.longValueExact()
-                val dueAt = knownPaidAt ?: price["createdAt"].asBigDecimal.longValueExact()
+            if (date != null && payments.none { it.asJsonObject["priceId"].asLong == priceId }) {
+                val knownPaidAt = date.asBigDecimal.longValueExact()
                 payments.add(JsonObject().apply {
                     addProperty("id", Math.addExact(nextId, 1).also { nextId = it })
                     addProperty("priceId", priceId); add("amount", price["totalPrice"])
-                    // Payment.dueDate is required; createdAt is only a structural placeholder.
-                    addProperty("dueDate", dueAt)
-                    knownPaidAt?.let { addProperty("paidDate", it) }
+                    addProperty("dueDate", knownPaidAt)
+                    addProperty("paidDate", knownPaidAt)
                     add("createdAt", price["createdAt"])
                     addProperty("isPaid", true); addProperty("reminderSet", false)
                 })

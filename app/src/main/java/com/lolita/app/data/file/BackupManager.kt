@@ -111,6 +111,7 @@ class BackupManager(
         val enums = listOf(
             Triple("items", "status", ItemStatus.entries.map { it.name }),
             Triple("items", "priority", ItemPriority.entries.map { it.name }),
+            Triple("order_bindings", "purchase_record_status", PurchaseRecordStatus.entries.map { it.name }),
             Triple("prices", "type", PriceType.entries.map { it.name }),
             Triple("categories", "category_group", CategoryGroup.entries.map { it.name }),
             Triple("remote_categories", "category_group", CategoryGroup.entries.map { it.name }),
@@ -230,8 +231,8 @@ class BackupManager(
             }
 
             sb.appendLine("\n=== ORDER_BINDINGS ===")
-            sb.appendLine("item_id,price_id")
-            backupData.orderBindings.forEach { sb.appendLine("${it.itemId},${it.priceId}") }
+            sb.appendLine("item_id,price_id,purchase_record_status")
+            backupData.orderBindings.forEach { sb.appendLine("${it.itemId},${it.priceId},${it.purchaseRecordStatus}") }
             sb.appendLine("\n=== PAYMENT_STAGES ===")
             sb.appendLine("id,price_id,name,amount,due_date,reminder_set,custom_reminder_days,calendar_event_id")
             backupData.paymentStages.forEach {
@@ -451,7 +452,8 @@ class BackupManager(
                 }
             }
         }
-        val activePrices = database.orderDao().getAllBindings().map { it.priceId }.toSet()
+        val activePrices = database.orderDao().getAllBindings()
+            .filter { it.purchaseRecordStatus == PurchaseRecordStatus.TRACKED }.map { it.priceId }.toSet()
         val payments = database.paymentDao().getAllPaymentsList().filter { it.isPaid && it.priceId in activePrices }
         val prices = database.priceDao().getAllPricesList().associateBy { it.id }
         val items = database.itemDao().getAllItemsList().associateBy { it.id }
@@ -505,6 +507,8 @@ class BackupManager(
                 priceCount = backupData.prices.size,
                 paymentCount = backupData.payments.size,
                 orderBindingCount = backupData.orderBindings.size,
+                historicalOwnedCount = backupData.orderBindings.count { it.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED },
+                needsReviewCount = backupData.orderBindings.count { it.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW },
                 paymentStageCount = backupData.paymentStages.size,
                 outfitLogCount = backupData.outfitLogs.size,
                 styleCount = backupData.styles.size,
@@ -826,6 +830,8 @@ data class BackupPreview(
     val archiveCount: Int = 0,
     val additionalRecordCount: Int = 0,
     val orderBindingCount: Int = 0,
+    val historicalOwnedCount: Int = 0,
+    val needsReviewCount: Int = 0,
     val paymentStageCount: Int = 0,
     val missingImageCount: Int = 0,
     val imageCount: Int = 0,

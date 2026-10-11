@@ -75,6 +75,7 @@ class PriceRepository(
     fun getSpendingByStyle() = priceDao.getSpendingByStyle()
     fun getSpendingBySeasonRaw() = priceDao.getSpendingBySeasonRaw()
     fun getMonthlySpending() = priceDao.getMonthlySpending()
+    fun getUndatedSpending() = priceDao.getUndatedSpending()
     fun getMostExpensiveItem() = priceDao.getMostExpensiveItem()
     fun getWishlistTotalBudget() = priceDao.getWishlistTotalBudget()
     fun getWishlistByPriorityStats() = priceDao.getWishlistByPriorityStats()

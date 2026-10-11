@@ -21,17 +21,22 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
+import com.lolita.app.domain.usecase.OrderAccounting
+import com.lolita.app.domain.usecase.SpendingBreakdown
+import com.lolita.app.domain.usecase.SpendingBucket
 import com.lolita.app.ui.component.chart.ChartPalette
 import com.lolita.app.ui.component.chart.chartPalette
 import com.lolita.app.ui.component.chart.DonutChart
 import com.lolita.app.ui.component.chart.PieChartData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -42,7 +47,8 @@ enum class SpendingDimension(val label: String) {
 data class SpendingRankItem(
     val name: String,
     val amount: Double,
-    val percentage: Double
+    val percentage: Double,
+    val filterValue: String? = name
 )
 
 data class SpendingDistributionUiState(
@@ -55,94 +61,79 @@ data class SpendingDistributionUiState(
     val isLoading: Boolean = true
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SpendingDistributionViewModel(
     private val priceRepository: PriceRepository = AppModule.priceRepository(),
-    private val appPreferences: AppPreferences = AppModule.appPreferences()
+    private val showTotalPrice: Flow<Boolean> = AppModule.appPreferences().showTotalPrice
 ) : ViewModel() {
-
+    private val selectedDimension = MutableStateFlow(SpendingDimension.BRAND)
+    private val selectedSliceIndex = MutableStateFlow(-1)
     private val _uiState = MutableStateFlow(SpendingDistributionUiState())
     val uiState: StateFlow<SpendingDistributionUiState> = _uiState.asStateFlow()
 
     init {
-        loadData()
+        viewModelScope.launch {
+            selectedDimension.flatMapLatest { dimension ->
+                combine(spendingByDimension(dimension), showTotalPrice, selectedSliceIndex) { items, showPrice, index ->
+                    buildState(dimension, items, showPrice, index)
+                }
+            }.collect { state ->
+                if (state.dimension == selectedDimension.value) _uiState.value = state
+            }
+        }
     }
 
-    private fun loadData() {
-        viewModelScope.launch {
-            val dimension = _uiState.value.dimension
-            val spendingFlow = when (dimension) {
-                SpendingDimension.BRAND -> priceRepository.getSpendingByBrand()
-                    .map { list -> list.map { it.name to it.totalSpending } }
-                SpendingDimension.CATEGORY -> priceRepository.getSpendingByCategory()
-                    .map { list -> list.map { it.name to it.totalSpending } }
-                SpendingDimension.STYLE -> priceRepository.getSpendingByStyle()
-                    .map { list -> list.map { it.style to it.totalSpending } }
-                SpendingDimension.SEASON -> priceRepository.getSpendingBySeasonRaw()
-                    .map { list ->
-                        val seasonMap = mutableMapOf<String, Double>()
-                        list.forEach { item ->
-                            item.style.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-                                .forEach { season ->
-                                    seasonMap[season] = (seasonMap[season] ?: 0.0) + item.totalSpending
-                                }
-                        }
-                        seasonMap.entries.sortedByDescending { it.value }.map { it.key to it.value }
-                    }
-            }
-
-            spendingFlow.combine(appPreferences.showTotalPrice) { items, showPrice ->
-                buildState(dimension, items, showPrice)
-            }.collect { _uiState.value = it }
+    private fun spendingByDimension(dimension: SpendingDimension): Flow<List<SpendingBucket>> = when (dimension) {
+        SpendingDimension.BRAND -> priceRepository.getSpendingByBrand().map { rows ->
+            SpendingBreakdown.singleLabel(rows.map { it.name to it.totalSpending }, "未设置品牌")
+        }
+        SpendingDimension.CATEGORY -> priceRepository.getSpendingByCategory().map { rows ->
+            SpendingBreakdown.singleLabel(rows.map { it.name to it.totalSpending }, "未设置分类")
+        }
+        SpendingDimension.STYLE -> priceRepository.getSpendingByStyle().map { rows ->
+            SpendingBreakdown.singleLabel(rows.map { it.style to it.totalSpending }, "未设置风格")
+        }
+        SpendingDimension.SEASON -> priceRepository.getSpendingBySeasonRaw().map { rows ->
+            SpendingBreakdown.seasons(rows.map { it.style to it.totalSpending })
         }
     }
 
     private fun buildState(
         dimension: SpendingDimension,
-        items: List<Pair<String, Double>>,
-        showPrice: Boolean
+        items: List<SpendingBucket>,
+        showPrice: Boolean,
+        selectedIndex: Int
     ): SpendingDistributionUiState {
-        val total = items.sumOf { it.second }
+        val total = OrderAccounting.sum(items.map { it.amount })
         val top10 = items.take(10)
         val rest = items.drop(10)
         val grouped = if (rest.isNotEmpty()) {
-            top10 + ("其他" to rest.sumOf { it.second })
-        } else {
-            top10
-        }
-        val chartData = grouped.mapIndexed { index, (label, value) ->
-            PieChartData(
-                label = label,
-                value = value,
-                color = ChartPalette[index % ChartPalette.size]
-            )
-        }
-        val rankingList = grouped.map { (name, amount) ->
-            SpendingRankItem(
-                name = name,
-                amount = amount,
-                percentage = if (total > 0) amount / total * 100.0 else 0.0
-            )
-        }
+            top10 + SpendingBucket("其他", OrderAccounting.sum(rest.map { it.amount }), null)
+        } else top10
         return SpendingDistributionUiState(
             dimension = dimension,
-            chartData = chartData,
-            rankingList = rankingList,
+            chartData = grouped.mapIndexed { index, item ->
+                PieChartData(item.name, item.amount, ChartPalette[index % ChartPalette.size])
+            },
+            rankingList = grouped.map { item ->
+                SpendingRankItem(item.name, item.amount, if (total > 0) item.amount / total * 100.0 else 0.0, item.filterValue)
+            },
             totalSpending = total,
-            selectedIndex = -1,
+            selectedIndex = selectedIndex.takeIf { it in grouped.indices } ?: -1,
             showTotalPrice = showPrice,
             isLoading = false
         )
     }
 
     fun switchDimension(dimension: SpendingDimension) {
-        _uiState.value = _uiState.value.copy(dimension = dimension, isLoading = true)
-        loadData()
+        if (selectedDimension.value == dimension) return
+        selectedDimension.value = dimension
+        _uiState.value = SpendingDistributionUiState(dimension = dimension, showTotalPrice = _uiState.value.showTotalPrice)
+        selectedSliceIndex.value = -1
     }
 
     fun selectSlice(index: Int) {
-        _uiState.value = _uiState.value.copy(
-            selectedIndex = if (_uiState.value.selectedIndex == index) -1 else index
-        )
+        selectedSliceIndex.value = if (selectedSliceIndex.value == index) -1 else index
     }
 }
 
@@ -184,13 +175,20 @@ fun SpendingDistributionContent(
             )
         } else if (uiState.chartData.isEmpty() && !uiState.isLoading) {
             Text(
-                text = "暂无数据",
+                text = "暂无实际付款",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
             )
         } else if (uiState.showTotalPrice && uiState.chartData.isNotEmpty()) {
+            if (uiState.dimension == SpendingDimension.SEASON) {
+                Text(
+                    text = "多季节服饰的消费按季节均分，合计不重复",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -198,7 +196,7 @@ fun SpendingDistributionContent(
                 DonutChart(
                     data = uiState.chartData,
                     modifier = Modifier.size(200.dp),
-                    centerText = "¥${String.format("%.0f", uiState.totalSpending)}",
+                    centerText = "¥${String.format("%.2f", uiState.totalSpending)}",
                     selectedIndex = uiState.selectedIndex,
                     onSliceClick = { viewModel.selectSlice(it) }
                 )
@@ -221,8 +219,8 @@ fun SpendingDistributionContent(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(4.dp))
                         .skinClickable {
-                            if (item.name != "其他") {
-                                onNavigateToFilteredList(filterType, item.name, "$dimensionLabel: ${item.name}")
+                            if (item.filterValue != null) {
+                                onNavigateToFilteredList(filterType, item.filterValue, "$dimensionLabel: ${item.name}")
                             }
                         }
                         .padding(vertical = 6.dp),
@@ -244,7 +242,7 @@ fun SpendingDistributionContent(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "¥${String.format("%.0f", item.amount)}",
+                        text = "¥${String.format("%.2f", item.amount)}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )

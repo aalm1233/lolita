@@ -600,6 +600,7 @@ private fun StatusSelector(
                                 ItemStatus.WISHED -> "愿望单"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                                 ItemStatus.PENDING_PAYMENT -> "待付款"
+                                ItemStatus.PENDING_REVIEW -> "待核对"
                             }
                         )
                     },
@@ -995,4 +996,5 @@ internal fun itemStatusLabel(status: ItemStatus): String = when (status) {
     ItemStatus.WISHED -> "愿望单"
     ItemStatus.PENDING_BALANCE -> "待补尾款"
     ItemStatus.PENDING_PAYMENT -> "待付款"
+    ItemStatus.PENDING_REVIEW -> "待核对"
 }

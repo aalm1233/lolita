@@ -133,7 +133,7 @@ fun ItemListScreen(
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {
             0 -> { /* Location tab - no status filter needed */ }
-            1 -> viewModel.filterByStatuses(setOf(ItemStatus.OWNED, ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT))
+            1 -> viewModel.filterByStatuses(setOf(ItemStatus.OWNED, ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_REVIEW))
         }
     }
     if (itemToDelete != null) {
@@ -990,7 +990,7 @@ private fun ItemCard(
                             when (item.status) {
                                 ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
                                 ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
-                                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary
+                                ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_REVIEW -> MaterialTheme.colorScheme.secondary
                             }
                         )
                     )
@@ -1000,6 +1000,7 @@ private fun ItemCard(
                             ItemStatus.WISHED -> "愿望单"
                             ItemStatus.PENDING_BALANCE -> "待补尾款"
                             ItemStatus.PENDING_PAYMENT -> "待付款"
+                            ItemStatus.PENDING_REVIEW -> "待核对"
                         },
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1220,7 +1221,7 @@ private fun ItemGridCard(
                                     when (item.status) {
                                         ItemStatus.OWNED -> MaterialTheme.colorScheme.tertiary
                                         ItemStatus.WISHED -> MaterialTheme.colorScheme.primary
-                                        ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT -> MaterialTheme.colorScheme.secondary
+                                        ItemStatus.PENDING_BALANCE, ItemStatus.PENDING_PAYMENT, ItemStatus.PENDING_REVIEW -> MaterialTheme.colorScheme.secondary
                                     }
                                 )
                         )
@@ -1230,6 +1231,7 @@ private fun ItemGridCard(
                                 ItemStatus.WISHED -> "愿望单"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                                 ItemStatus.PENDING_PAYMENT -> "待付款"
+                                ItemStatus.PENDING_REVIEW -> "待核对"
                             },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant

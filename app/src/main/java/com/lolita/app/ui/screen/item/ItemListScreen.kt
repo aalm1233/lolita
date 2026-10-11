@@ -41,6 +41,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -329,39 +331,12 @@ fun ItemListScreen(
                 )
             }
 
-            // 今日穿搭快捷卡片
-            LolitaCard(
+            TodayOutfitShortcut(
+                hasTodayOutfit = uiState.hasTodayOutfit,
+                imageUrl = uiState.todayOutfitItemImages.firstOrNull { !it.isNullOrBlank() },
                 onClick = onNavigateToQuickOutfit,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
-                variant = CardVariant.COMPACT
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp), // intentional override of cardInnerPadding
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (uiState.hasTodayOutfit) {
-                        uiState.todayOutfitItemImages.forEach { imageUrl ->
-                            if (imageUrl != null) {
-                                LolitaShimmerImage(
-                                    model = java.io.File(imageUrl),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(36.dp).clip(RoundedCornerShape(6.dp)),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                        }
-                        Spacer(Modifier.weight(1f))
-                        Text("查看今日穿搭", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                    } else {
-                        SkinIcon(IconKey.Add, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
-                        Text("记录今日穿搭", style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium)
-                        Spacer(Modifier.weight(1f))
-                        SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
-            }
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = skin.spacingSmall)
+            )
 
             // Category group filter + total price (only on item tabs)
             if (pagerState.currentPage == 1) {
@@ -598,6 +573,89 @@ fun ItemListScreen(
                     )
                 }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TodayOutfitShortcut(
+    hasTodayOutfit: Boolean,
+    imageUrl: String?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val skin = LolitaSkin.current
+    val accent = if (isSystemInDarkTheme()) skin.accentColorDark else skin.accentColor
+    val status = if (hasTodayOutfit) "已记录" else "尚未记录"
+
+    LolitaCard(
+        modifier = modifier.semantics(mergeDescendants = true) { stateDescription = status },
+        onClick = onClick,
+        variant = CardVariant.COMPACT,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(skin.cornerRadiusMedium)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = skin.spacingSmall)
+                .heightIn(min = 48.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(skin.cornerRadiusSmall))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                if (hasTodayOutfit && imageUrl != null) {
+                    LolitaShimmerImage(
+                        model = java.io.File(imageUrl),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        circularRevealEnabled = false
+                    )
+                } else {
+                    SkinIcon(IconKey.Outfit, modifier = Modifier.size(24.dp), tint = accent)
+                }
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = "今日穿搭",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = if (hasTodayOutfit) "今天的搭配已记录" else "记录今天的搭配",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)
+            ) {
+                Text(
+                    text = if (hasTodayOutfit) "查看" else "记录",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                SkinIcon(
+                    IconKey.KeyboardArrowRight,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

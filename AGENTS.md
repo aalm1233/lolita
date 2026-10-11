@@ -53,6 +53,7 @@
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
 - 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
+- 首页今日穿搭入口使用 `TodayOutfitShortcut`：紧凑卡片、穿搭图标/单张缩略图、标题与状态副文案、记录/查看操作；两种状态共享布局，颜色/圆角/内边距消费皮肤令牌，并合并无障碍语义。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
 ## 皮肤系统
@@ -60,6 +61,10 @@
 - **7 套皮肤**：`DEFAULT` / `GOTHIC` / `CHINESE` / `CLASSIC` / `NAVY` / `COUNTRY` / `VICTORIAN`。
 - 新页面/交互复用皮肤感知组件，不做脱节的普通 Material 页面。
 - 新增图标需同时补：`BaseSkinIconProvider` + **7 个**皮肤专属 provider（`SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`, `CountryIconProvider`, `VictorianIconProvider`）+ `IconKey` 枚举。图标是 Canvas 手绘，不是 Material icon。
+- 七套图标通过 `PolishedSkinIconProvider` 共用完整的 51 个 `IconKey`；绘制入口 `PolishedSkinIcon` 按导航、内容、操作/箭头/状态分派到 `PolishedNavigationIcons`、`PolishedContentIcons`、`PolishedControlIcons`。旧的田园/维多利亚装饰图标实现已移除。
+- 图标使用 `SkinIconCanvas` 的 24×24 逻辑坐标，主线宽 1.7，主体保留约 2 单位安全边距；调用方尺寸优先，非正方形区域居中等比缩放。七套底栏图标统一 26dp，选中使用皮肤 accent，未选中使用 `onSurfaceVariant`。
+- 功能图标保留明确语义（加号、垃圾桶、刷新箭头、图表、齿轮）；风格主要通过导航轮廓和内容框形体现，避免在 24dp 中叠加盾牌/吊牌/缎带缩小功能符号。全部颜色来自 tint，派生透明度必须乘原 tint.alpha，不使用固定奶油色/象牙色；实心/空心星标共用同一轮廓。
+- 图标回归：`SkinIconVisualTest` 在 Android 上通过真实七套 provider 渲染全部 51 个图标，检查留白、18/24/26/32dp 与矩形尺寸、tint 和完全透明输入；输出亮/暗完整矩阵和中文概览至 app 私有目录 `files/skin-icon-contact-sheets/`；本轮概览归档在 `docs/visuals/2026-10-11-skin-icons-light.png` 和 `docs/visuals/2026-10-11-skin-icons-dark.png`。定向运行：`./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.lolita.app.ui.theme.skin.icon.SkinIconVisualTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true`。设备旧包与新包必须先核对签名；UTP 在安装失败后也可能自动卸载旧包，测试前保全模拟器数据或使用独立 AVD，禁止用卸载绕过签名冲突。
 - 新增列表/切换/过渡效果优先复用现有 skin 动画体系（`SkinClickable`, `SkinItemAppear`, `SkinNavigationOverlay` 等）。
 
 ### 视觉精致化令牌
@@ -140,10 +145,10 @@
 ## 构建与验证
 
 ```bash
-./gradlew.bat assembleDebug        # 改代码后至少跑一次
-./gradlew.bat assembleRelease      # 出包时跑
-./gradlew.bat clean assembleDebug  # 清理后构建
-./gradlew.bat clean assembleRelease # 出 release 包前务必 clean
+./gradlew assembleDebug        # 改代码后至少跑一次
+./gradlew assembleRelease      # 出包时跑
+./gradlew clean assembleDebug  # 清理后构建
+./gradlew clean assembleRelease # 出 release 包前务必 clean
 ```
 
 - Release 签名需 `local.properties` 中配置 `STORE_PASSWORD`、`KEY_ALIAS`、`KEY_PASSWORD`，密钥文件为项目根 `lolita-release.jks`。
@@ -214,7 +219,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=76, versionName="2.38.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=78, versionName="2.38.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交

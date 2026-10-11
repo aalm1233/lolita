@@ -19,6 +19,33 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SharedLibrarySyncDao {
+    @Query("SELECT * FROM shared_library_sync_state")
+    suspend fun getAllSyncStatesList(): List<SharedLibrarySyncState>
+
+    @Query("SELECT * FROM remote_brands")
+    suspend fun getAllBrandsList(): List<RemoteBrand>
+
+    @Query("SELECT * FROM remote_categories")
+    suspend fun getAllCategoriesList(): List<RemoteCategory>
+
+    @Query("SELECT * FROM remote_styles")
+    suspend fun getAllStylesList(): List<RemoteStyle>
+
+    @Query("SELECT * FROM remote_seasons")
+    suspend fun getAllSeasonsList(): List<RemoteSeason>
+
+    @Query("SELECT * FROM remote_sources")
+    suspend fun getAllSourcesList(): List<RemoteSource>
+
+    @Query("SELECT * FROM remote_shared_coordinates")
+    suspend fun getAllCoordinatesList(): List<RemoteSharedCoordinate>
+
+    @Query("SELECT * FROM remote_shared_items")
+    suspend fun getAllItemsList(): List<RemoteSharedItem>
+
+    @Query("SELECT * FROM remote_shared_price_plans")
+    suspend fun getAllPricePlansList(): List<RemoteSharedPricePlan>
+
     @Query("SELECT * FROM shared_library_sync_state WHERE cache_key = :cacheKey LIMIT 1")
     fun observeSyncState(cacheKey: String = SHARED_LIBRARY_SYNC_CACHE_KEY): Flow<SharedLibrarySyncState?>
 

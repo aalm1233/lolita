@@ -44,11 +44,13 @@ class BackupRestoreViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(BackupRestoreUiState())
     val uiState: StateFlow<BackupRestoreUiState> = _uiState.asStateFlow()
 
+    private fun exportDirectory() = if (android.os.Build.VERSION.SDK_INT >= 29) "下载目录" else "应用专用下载目录"
+
     fun exportJson() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isExporting = true, message = null)
             backupManager.exportToJson().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "JSON备份成功！文件已保存到下载目录") },
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "JSON备份成功（不含图片）！文件已保存到${exportDirectory()}") },
                 onFailure = { _uiState.value = _uiState.value.copy(message = "备份失败: ${it.message}") }
             )
             _uiState.value = _uiState.value.copy(isExporting = false)
@@ -58,7 +60,7 @@ class BackupRestoreViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isExporting = true, message = null)
             backupManager.exportToCsv().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "CSV导出成功！文件已保存到下载目录") },
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "CSV导出成功！文件已保存到${exportDirectory()}") },
                 onFailure = { _uiState.value = _uiState.value.copy(message = "导出失败: ${it.message}") }
             )
             _uiState.value = _uiState.value.copy(isExporting = false)
@@ -69,7 +71,7 @@ class BackupRestoreViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isExporting = true, message = null)
             backupManager.exportToZip().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "ZIP备份成功！文件已保存到下载目录（含图片）") },
+                onSuccess = { _uiState.value = _uiState.value.copy(message = "ZIP备份成功！文件已保存到${exportDirectory()}（含图片）") },
                 onFailure = { _uiState.value = _uiState.value.copy(message = "备份失败: ${it.message}") }
             )
             _uiState.value = _uiState.value.copy(isExporting = false)
@@ -290,6 +292,9 @@ fun BackupRestoreScreen(
                     Text("价格: ${p.priceCount} 条")
                     Text("付款: ${p.paymentCount} 条")
                     Text("穿搭日记: ${p.outfitLogCount} 条")
+                    Text("历史图鉴归档: ${p.archiveCount} 条")
+                    if (p.additionalRecordCount > 0) Text("关联与共享库: ${p.additionalRecordCount} 条")
+                    if (p.missingImageCount > 0) Text("此 JSON 缺少 ${p.missingImageCount} 张本地图片，请使用含图片的 ZIP 备份", color = MaterialTheme.colorScheme.error)
                     if (p.imageCount > 0) {
                         Text("图片: ${p.imageCount} 张")
                     }

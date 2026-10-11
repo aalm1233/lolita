@@ -24,6 +24,8 @@ import com.lolita.app.data.local.entity.*
         Season::class,
         Location::class,
         Source::class,
+        LegacyCatalogArchive::class,
+        RestoreJournal::class,
         SharedLibrarySyncState::class,
         RemoteBrand::class,
         RemoteCategory::class,
@@ -34,7 +36,7 @@ import com.lolita.app.data.local.entity.*
         RemoteSharedItem::class,
         RemoteSharedPricePlan::class
     ],
-    version = 19,
+    version = 20,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
@@ -50,13 +52,15 @@ abstract class LolitaDatabase : RoomDatabase() {
     abstract fun seasonDao(): SeasonDao
     abstract fun locationDao(): LocationDao
     abstract fun sourceDao(): SourceDao
+    abstract fun legacyCatalogArchiveDao(): LegacyCatalogArchiveDao
+    abstract fun restoreJournalDao(): RestoreJournalDao
 abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
 
     companion object {
         @Volatile
         private var INSTANCE: LolitaDatabase? = null
 
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
+        internal val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE items ADD COLUMN color TEXT DEFAULT NULL")
                 db.execSQL("ALTER TABLE items ADD COLUMN season TEXT DEFAULT NULL")
@@ -65,7 +69,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_2_3 = object : Migration(2, 3) {
+        internal val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Create styles table
                 db.execSQL("""
@@ -107,7 +111,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_3_4 = object : Migration(3, 4) {
+        internal val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Add category_group column to categories
                 db.execSQL("ALTER TABLE categories ADD COLUMN category_group TEXT NOT NULL DEFAULT 'CLOTHING'")
@@ -121,19 +125,20 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_4_5 = object : Migration(4, 5) {
+        internal val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE payments ADD COLUMN calendar_event_id INTEGER DEFAULT NULL")
             }
         }
 
-        private val MIGRATION_5_6 = object : Migration(5, 6) {
+        internal val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE coordinates ADD COLUMN image_url TEXT DEFAULT NULL")
             }
         }
-        private val MIGRATION_6_7 = object : Migration(6, 7) {
+        internal val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
                 // 1. Create locations table
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `locations` (
@@ -188,12 +193,14 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_status` ON `items` (`status`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_priority` ON `items` (`priority`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_items_location_id` ON `items` (`location_id`)")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
         // Fix for users who already ran the broken v6→v7 migration (ALTER TABLE without FK)
-        private val MIGRATION_7_8 = object : Migration(7, 8) {
+        internal val MIGRATION_7_8 = object : Migration(7, 8) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
                 // Recreate items table to ensure location_id FK exists
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `items_new` (
@@ -246,10 +253,11 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     )
                 """.trimIndent())
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_locations_name` ON `locations` (`name`)")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
-        private val MIGRATION_8_9 = object : Migration(8, 9) {
+        internal val MIGRATION_8_9 = object : Migration(8, 9) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Create sources table
                 db.execSQL("""
@@ -274,26 +282,27 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_9_10 = object : Migration(9, 10) {
+        internal val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE brands ADD COLUMN logo_url TEXT DEFAULT NULL")
             }
         }
 
-        private val MIGRATION_10_11 = object : Migration(10, 11) {
+        internal val MIGRATION_10_11 = object : Migration(10, 11) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Add new colors column
                 db.execSQL("ALTER TABLE items ADD COLUMN colors TEXT DEFAULT NULL")
                 // Migrate existing color data: single value -> JSON array
                 // e.g. "粉色" -> ["粉色"]
-                db.execSQL("""UPDATE items SET colors = '["' || REPLACE(REPLACE(color, '\', '\\'), '"', '\"') || '"]' WHERE color IS NOT NULL AND color != ''""")
+                MigrationJsonLists.copySingleColumn(db, "items", "items", "color", "colors")
             }
         }
 
-        private val MIGRATION_11_12 = object : Migration(11, 12) {
+        internal val MIGRATION_11_12 = object : Migration(11, 12) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
                 // Fix corrupted JSON from migration 10->11 that had literal backslashes
-                db.execSQL("""UPDATE items SET colors = REPLACE(colors, '\"', '"') WHERE colors IS NOT NULL AND colors GLOB '*\\*'""")
+                MigrationJsonLists.repairColors(db)
 
                 // Rebuild items table to remove the old 'color' column
                 // Room schema validation requires exact column match — extra columns cause crash
@@ -332,13 +341,15 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
         // For users who already ran the old MIGRATION_11_12 (data-only fix),
         // their DB is at version 12 but still has the extra 'color' column.
         // This migration rebuilds the table to remove it.
-        private val MIGRATION_12_13 = object : Migration(12, 13) {
+
+        internal val MIGRATION_12_13 = object : Migration(12, 13) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Check if old 'color' column still exists
                 val cursor = db.query("PRAGMA table_info(items)")
@@ -349,6 +360,8 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                 }
                 cursor.close()
                 if (!hasOldColorColumn) return
+                MigrationJsonLists.repairColors(db)
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
 
                 // Rebuild items table to remove the old 'color' column
                 db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
@@ -386,10 +399,11 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
-        private val MIGRATION_13_14 = object : Migration(13, 14) {
+        internal val MIGRATION_13_14 = object : Migration(13, 14) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Case A: purchaseDate is not null — use it as paidDate
                 db.execSQL("""
@@ -426,15 +440,18 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     INSERT INTO prices_new (id, item_id, type, total_price, deposit, balance, created_at)
                     SELECT id, item_id, type, total_price, deposit, balance, created_at FROM prices
                 """.trimIndent())
+                MigrationDataGuard.snapshot(db, "payments")
                 db.execSQL("DROP TABLE prices")
                 db.execSQL("ALTER TABLE prices_new RENAME TO prices")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_prices_item_id ON prices(item_id)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_prices_type ON prices(type)")
+                MigrationDataGuard.restore(db, "payments")
             }
         }
 
-        private val MIGRATION_14_15 = object : Migration(14, 15) {
+        internal val MIGRATION_14_15 = object : Migration(14, 15) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
                 // Rebuild items table: image_url -> image_urls, add coordinate_order
                 db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
                     brand_id INTEGER NOT NULL,
@@ -465,6 +482,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     SELECT brand_id, category_id, created_at, description, id,
                     CASE WHEN image_url IS NOT NULL AND image_url != '' THEN '["' || REPLACE(REPLACE(image_url, '\', '\\'), '"', '\"') || '"]' ELSE '[]' END,
                     0, name, priority, status, coordinate_id, colors, season, style, size, size_chart_image_url, location_id, source, updated_at FROM items""")
+                MigrationJsonLists.copySingleColumn(db, "items", "items_new", "image_url", "image_urls")
                 db.execSQL("DROP TABLE items")
                 db.execSQL("ALTER TABLE items_new RENAME TO items")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_name ON items (name)")
@@ -488,14 +506,19 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     SELECT created_at, description,
                     CASE WHEN image_url IS NOT NULL AND image_url != '' THEN '["' || REPLACE(REPLACE(image_url, '\', '\\'), '"', '\"') || '"]' ELSE '[]' END,
                     id, name, updated_at FROM coordinates""")
+                MigrationJsonLists.copySingleColumn(db, "coordinates", "coordinates_new", "image_url", "image_urls")
+                MigrationDataGuard.snapshot(db, "items")
+                db.execSQL("DELETE FROM items")
                 db.execSQL("DROP TABLE coordinates")
                 db.execSQL("ALTER TABLE coordinates_new RENAME TO coordinates")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_coordinates_name ON coordinates (name)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_coordinates_created_at ON coordinates (created_at)")
+                MigrationDataGuard.restore(db, "items")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
-        private val MIGRATION_15_16 = object : Migration(15, 16) {
+        internal val MIGRATION_15_16 = object : Migration(15, 16) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
                     """CREATE TABLE IF NOT EXISTS catalog_entries (
@@ -528,7 +551,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_16_17 = object : Migration(16, 17) {
+        internal val MIGRATION_16_17 = object : Migration(16, 17) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
                     """
@@ -694,8 +717,9 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
-        private val MIGRATION_17_18 = object : Migration(17, 18) {
+        internal val MIGRATION_17_18 = object : Migration(17, 18) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                val savedChildren = MigrationDataGuard.snapshotChildren(db)
                 db.execSQL("""CREATE TABLE IF NOT EXISTS items_new (
                     brand_id INTEGER NOT NULL,
                     category_id INTEGER NOT NULL,
@@ -734,13 +758,24 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_status ON items (status)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_priority ON items (priority)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_items_location_id ON items (location_id)")
+                MigrationDataGuard.restoreChildren(db, savedChildren)
             }
         }
 
-        private val MIGRATION_18_19 = object : Migration(18, 19) {
+        internal val MIGRATION_18_19 = object : Migration(18, 19) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                LegacyCatalogMigration.createArchive(db)
+                LegacyCatalogMigration.archive(db, "catalog_entries", "id")
+                LegacyCatalogMigration.archive(db, "remote_catalog_entries", "public_id")
                 db.execSQL("DROP TABLE IF EXISTS catalog_entries")
                 db.execSQL("DROP TABLE IF EXISTS remote_catalog_entries")
+            }
+        }
+
+        internal val MIGRATION_19_20 = object : Migration(19, 20) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                LegacyCatalogMigration.createArchive(db)
+                db.execSQL("CREATE TABLE IF NOT EXISTS restore_journal (id INTEGER NOT NULL PRIMARY KEY, previousPaymentsJson TEXT NOT NULL)")
             }
         }
 
@@ -752,7 +787,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20)
                     .build()
                 INSTANCE = instance
                 instance

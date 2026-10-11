@@ -1,6 +1,12 @@
 package com.lolita.app.data.file
 
 import android.content.Context
+import android.os.Build
+import com.lolita.app.BuildConfig
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import android.net.Uri
 import android.util.Log
 import androidx.room.withTransaction
@@ -11,8 +17,8 @@ import com.lolita.app.data.notification.PaymentReminderScheduler
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -39,7 +45,19 @@ data class BackupData(
     val locations: List<Location> = emptyList(),
     val sources: List<Source> = emptyList(),
     val backupDate: Long = System.currentTimeMillis(),
-    val appVersion: String = "1.0"
+    val appVersion: String = BuildConfig.VERSION_NAME,
+    val formatVersion: Int = BackupFormat.VERSION,
+    val schemaVersion: Int = BackupFormat.SCHEMA_VERSION,
+    val legacyCatalogArchives: List<LegacyCatalogArchive> = emptyList(),
+    val syncStates: List<SharedLibrarySyncState> = emptyList(),
+    val remoteBrands: List<RemoteBrand> = emptyList(),
+    val remoteCategories: List<RemoteCategory> = emptyList(),
+    val remoteStyles: List<RemoteStyle> = emptyList(),
+    val remoteSeasons: List<RemoteSeason> = emptyList(),
+    val remoteSources: List<RemoteSource> = emptyList(),
+    val remoteCoordinates: List<RemoteSharedCoordinate> = emptyList(),
+    val remoteItems: List<RemoteSharedItem> = emptyList(),
+    val remotePricePlans: List<RemoteSharedPricePlan> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -47,8 +65,7 @@ private data class PreparedBackup(
     val imageCount: Int,
     val isZip: Boolean,
     val stagingDir: File? = null,
-    val missingImageCount: Int = 0,
-    val migrationErrorCount: Int = 0
+    val missingImageCount: Int = 0
 )
 
 class BackupManager(
@@ -56,354 +73,369 @@ class BackupManager(
     private val database: LolitaDatabase
 ) {
     private val gson = Gson()
+    private val operationMutex = Mutex()
+    private var cachedBackupDigest: String? = null
+    private suspend fun <T> serialized(block: suspend () -> T): T =
+        withContext(Dispatchers.IO) { operationMutex.withLock { block() } }
+
+    private suspend fun snapshot(): BackupData = database.withTransaction {
+        validateStoredValues()
+        val sync = database.sharedLibrarySyncDao()
+        BackupData(
+            brands = database.brandDao().getAllBrandsList(),
+            categories = database.categoryDao().getAllCategoriesList(),
+            coordinates = database.coordinateDao().getAllCoordinatesList(),
+            items = database.itemDao().getAllItemsList(),
+            prices = database.priceDao().getAllPricesList(),
+            payments = database.paymentDao().getAllPaymentsList(),
+            outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
+            outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
+            styles = database.styleDao().getAllStylesList(), seasons = database.seasonDao().getAllSeasonsList(),
+            locations = database.locationDao().getAllLocationsList(), sources = database.sourceDao().getAllSourcesList(),
+            legacyCatalogArchives = database.legacyCatalogArchiveDao().getAll(),
+            syncStates = sync.getAllSyncStatesList(), remoteBrands = sync.getAllBrandsList(),
+            remoteCategories = sync.getAllCategoriesList(), remoteStyles = sync.getAllStylesList(),
+            remoteSeasons = sync.getAllSeasonsList(), remoteSources = sync.getAllSourcesList(),
+            remoteCoordinates = sync.getAllCoordinatesList(), remoteItems = sync.getAllItemsList(),
+            remotePricePlans = sync.getAllPricePlansList()
+        )
+    }
+
+    private fun validateStoredValues() {
+        // DAO converters have display fallbacks. Backups must never persist those fallbacks as data.
+        val db = database.openHelper.readableDatabase
+        val enums = listOf(
+            Triple("items", "status", ItemStatus.entries.map { it.name }),
+            Triple("items", "priority", ItemPriority.entries.map { it.name }),
+            Triple("prices", "type", PriceType.entries.map { it.name }),
+            Triple("categories", "category_group", CategoryGroup.entries.map { it.name }),
+            Triple("remote_categories", "category_group", CategoryGroup.entries.map { it.name }),
+            Triple("remote_shared_price_plans", "price_type", PriceType.entries.map { it.name })
+        )
+        enums.forEach { (table, column, allowed) ->
+            db.query("SELECT `$column` FROM `$table`").use { cursor ->
+                while (cursor.moveToNext()) require(!cursor.isNull(0) && cursor.getString(0) in allowed) { "$table.$column 包含未知值，无法无损备份" }
+            }
+        }
+        val arrays = listOf("items" to "image_urls", "items" to "colors", "coordinates" to "image_urls",
+            "outfit_logs" to "image_urls", "remote_shared_coordinates" to "image_urls",
+            "remote_shared_items" to "image_urls", "remote_shared_items" to "colors")
+        arrays.forEach { (table, column) ->
+            db.query("SELECT `$column` FROM `$table`").use { cursor ->
+                while (cursor.moveToNext()) {
+                    require(!cursor.isNull(0)) { "$table.$column 为空" }
+                    val array = JsonParser.parseString(cursor.getString(0))
+                    require(array.isJsonArray && array.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$table.$column 格式损坏，无法无损备份" }
+                }
+            }
+        }
+    }
     private val cacheLock = Any()
     @Volatile
     private var cachedPreparedBackup: PreparedBackup? = null
     @Volatile
     private var cachedBackupUri: Uri? = null
 
-    suspend fun exportToJson(): Result<Uri> = withContext(Dispatchers.IO) {
+    suspend fun exportToJson(): Result<Uri> = serialized {
         try {
-            val backupData = database.withTransaction {
-                BackupData(
-                    brands = database.brandDao().getAllBrandsList(),
-                    categories = database.categoryDao().getAllCategoriesList(),
-                    coordinates = database.coordinateDao().getAllCoordinatesList(),
-                    items = database.itemDao().getAllItemsList(),
-                    prices = database.priceDao().getAllPricesList(),
-                    payments = database.paymentDao().getAllPaymentsList(),
-                    outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
-                    outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
-                    styles = database.styleDao().getAllStylesList(),
-                    seasons = database.seasonDao().getAllSeasonsList(),
-                    locations = database.locationDao().getAllLocationsList(),
-                    sources = database.sourceDao().getAllSourcesList()
-                )
-            }
+            val backupData = snapshot()
             val jsonString = gson.toJson(backupData)
             val fileName = "lolita_backup_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}.json"
             val uri = createFileInDownloads(fileName, "application/json", jsonString.toByteArray())
             Result.success(uri)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Result.failure(e)
         }
     }
 
-    suspend fun exportToCsv(): Result<Uri> = withContext(Dispatchers.IO) {
+    suspend fun exportToCsv(): Result<Uri> = serialized {
         try {
+            val backupData = snapshot()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val sb = StringBuilder()
 
             // Brands
             sb.appendLine("=== BRANDS ===")
             sb.appendLine("id,name,is_preset,logo_url,created_at")
-            database.brandDao().getAllBrandsList().forEach { b ->
+            backupData.brands.forEach { b ->
                 sb.appendLine("${b.id},${escapeCsv(b.name)},${b.isPreset},${escapeCsv(b.logoUrl)},${b.createdAt}")
             }
 
             // Categories
             sb.appendLine("\n=== CATEGORIES ===")
-            sb.appendLine("id,name,is_preset,created_at")
-            database.categoryDao().getAllCategoriesList().forEach { c ->
-                sb.appendLine("${c.id},${escapeCsv(c.name)},${c.isPreset},${c.createdAt}")
+            sb.appendLine("id,name,is_preset,created_at,category_group")
+            backupData.categories.forEach { c ->
+                sb.appendLine("${c.id},${escapeCsv(c.name)},${c.isPreset},${c.createdAt},${c.group}")
             }
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at")
-            database.itemDao().getAllItemsList().forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt}")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order")
+            backupData.items.forEach { i ->
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder}")
             }
 
             // Coordinates
             sb.appendLine("\n=== COORDINATES ===")
             sb.appendLine("id,name,description,image_urls,created_at,updated_at")
-            database.coordinateDao().getAllCoordinatesList().forEach { c ->
+            backupData.coordinates.forEach { c ->
                 sb.appendLine("${c.id},${escapeCsv(c.name)},${escapeCsv(c.description)},${escapeCsv(c.imageUrls.joinToString(";"))},${c.createdAt},${c.updatedAt}")
             }
 
             // Styles
             sb.appendLine("\n=== STYLES ===")
             sb.appendLine("id,name,is_preset,created_at")
-            database.styleDao().getAllStylesList().forEach { s ->
+            backupData.styles.forEach { s ->
                 sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
             }
 
             // Seasons
             sb.appendLine("\n=== SEASONS ===")
             sb.appendLine("id,name,is_preset,created_at")
-            database.seasonDao().getAllSeasonsList().forEach { s ->
+            backupData.seasons.forEach { s ->
                 sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
             }
 
             // Locations
             sb.appendLine("\n=== LOCATIONS ===")
             sb.appendLine("id,name,description,image_url,sort_order,created_at,updated_at")
-            database.locationDao().getAllLocationsList().forEach { l ->
+            backupData.locations.forEach { l ->
                 sb.appendLine("${l.id},${escapeCsv(l.name)},${escapeCsv(l.description)},${escapeCsv(l.imageUrl)},${l.sortOrder},${l.createdAt},${l.updatedAt}")
             }
 
             // Sources
             sb.appendLine("\n=== SOURCES ===")
             sb.appendLine("id,name,is_preset,created_at")
-            database.sourceDao().getAllSourcesList().forEach { s ->
+            backupData.sources.forEach { s ->
                 sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
             }
 
             // Prices
             sb.appendLine("\n=== PRICES ===")
-            sb.appendLine("id,item_id,type,total_price,deposit,balance")
-            database.priceDao().getAllPricesList().forEach { p ->
-                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance}")
+            sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at")
+            backupData.prices.forEach { p ->
+                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.createdAt}")
             }
 
             // Payments
             sb.appendLine("\n=== PAYMENTS ===")
-            sb.appendLine("id,price_id,amount,due_date,is_paid,paid_date,reminder_set,custom_reminder_days,calendar_event_id")
-            database.paymentDao().getAllPaymentsList().forEach { p ->
-                sb.appendLine("${p.id},${p.priceId},${p.amount},${p.dueDate},${p.isPaid},${p.paidDate},${p.reminderSet},${p.customReminderDays},${p.calendarEventId}")
+            sb.appendLine("id,price_id,amount,due_date,is_paid,paid_date,reminder_set,custom_reminder_days,calendar_event_id,created_at")
+            backupData.payments.forEach { p ->
+                sb.appendLine("${p.id},${p.priceId},${p.amount},${p.dueDate},${p.isPaid},${p.paidDate},${p.reminderSet},${p.customReminderDays},${p.calendarEventId},${p.createdAt}")
             }
 
             // OutfitLogs
             sb.appendLine("\n=== OUTFIT_LOGS ===")
-            sb.appendLine("id,date,note,image_urls,created_at")
-            database.outfitLogDao().getAllOutfitLogsList().forEach { o ->
-                sb.appendLine("${o.id},${o.date},${escapeCsv(o.note)},${escapeCsv(o.imageUrls.joinToString(";"))},${o.createdAt}")
+            sb.appendLine("id,date,note,image_urls,created_at,updated_at")
+            backupData.outfitLogs.forEach { o ->
+                sb.appendLine("${o.id},${o.date},${escapeCsv(o.note)},${escapeCsv(o.imageUrls.joinToString(";"))},${o.createdAt},${o.updatedAt}")
             }
 
             // OutfitItemCrossRefs
             sb.appendLine("\n=== OUTFIT_ITEM_CROSS_REFS ===")
             sb.appendLine("outfit_log_id,item_id")
-            database.outfitLogDao().getAllOutfitItemCrossRefsList().forEach { r ->
+            backupData.outfitItemCrossRefs.forEach { r ->
                 sb.appendLine("${r.outfitLogId},${r.itemId}")
+            }
+
+            sb.appendLine("\n=== LEGACY_CATALOG_ARCHIVES ===")
+            sb.appendLine("source_table,record_key,payload")
+            backupData.legacyCatalogArchives.forEach { sb.appendLine("${escapeCsv(it.sourceTable)},${escapeCsv(it.recordKey)},${escapeCsv(it.payload)}") }
+            sb.appendLine("\n=== SHARED_LIBRARY_CACHE ===")
+            sb.appendLine("entity,payload")
+            listOf("syncStates" to backupData.syncStates, "remoteBrands" to backupData.remoteBrands,
+                "remoteCategories" to backupData.remoteCategories, "remoteStyles" to backupData.remoteStyles,
+                "remoteSeasons" to backupData.remoteSeasons, "remoteSources" to backupData.remoteSources,
+                "remoteCoordinates" to backupData.remoteCoordinates, "remoteItems" to backupData.remoteItems,
+                "remotePricePlans" to backupData.remotePricePlans).forEach { (name, rows) ->
+                rows.forEach { sb.appendLine("${escapeCsv(name)},${escapeCsv(gson.toJson(it))}") }
             }
 
             val uri = createFileInDownloads("lolita_export_$timestamp.csv", "text/csv", sb.toString().toByteArray())
             Result.success(uri)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Result.failure(e)
         }
     }
-    suspend fun exportToZip(): Result<Uri> = withContext(Dispatchers.IO) {
+    suspend fun exportToZip(): Result<Uri> = serialized {
         try {
-            val backupData = database.withTransaction {
-                BackupData(
-                    brands = database.brandDao().getAllBrandsList(),
-                    categories = database.categoryDao().getAllCategoriesList(),
-                    coordinates = database.coordinateDao().getAllCoordinatesList(),
-                    items = database.itemDao().getAllItemsList(),
-                    prices = database.priceDao().getAllPricesList(),
-                    payments = database.paymentDao().getAllPaymentsList(),
-                    outfitLogs = database.outfitLogDao().getAllOutfitLogsList(),
-                    outfitItemCrossRefs = database.outfitLogDao().getAllOutfitItemCrossRefsList(),
-                    styles = database.styleDao().getAllStylesList(),
-                    seasons = database.seasonDao().getAllSeasonsList(),
-                    locations = database.locationDao().getAllLocationsList(),
-                    sources = database.sourceDao().getAllSourcesList()
-                )
-            }
+            val backupData = snapshot()
 
             val (imageArchiveNamesByPath, missingImageCount) = buildImageArchiveNames(collectImagePaths(backupData))
+            require(missingImageCount == 0) { "有 $missingImageCount 张本地图片缺失，无法创建完整备份" }
             val zipBackupData = rewriteImagePathsForZip(backupData, imageArchiveNamesByPath)
             val jsonBytes = gson.toJson(zipBackupData).toByteArray()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "lolita_backup_${timestamp}.zip"
 
-            val (uri, outputStream) = createStreamInDownloads(fileName, "application/zip")
-            outputStream.use { os ->
+            val outputFile = File.createTempFile("backup_export_", ".zip", context.cacheDir)
+            try {
+            outputFile.outputStream().use { os ->
                 ZipOutputStream(os).use { zos ->
                     zos.putNextEntry(ZipEntry("data.json"))
                     zos.write(jsonBytes)
                     zos.closeEntry()
 
+                    val manifest = JsonObject()
                     imageArchiveNamesByPath.forEach { (path, archiveName) ->
                         val file = File(path)
-                        if (file.exists()) {
+                        require(file.isFile) { "备份期间图片丢失：$path" }
+                        run {
                             val entryName = "images/$archiveName"
                             zos.putNextEntry(ZipEntry(entryName))
-                            file.inputStream().use { it.copyTo(zos) }
+                            val digest = MessageDigest.getInstance("SHA-256")
+                            java.security.DigestInputStream(file.inputStream(), digest).use { it.copyTo(zos) }
+                            manifest.addProperty(archiveName, digest.digest().joinToString("") { "%02x".format(it) })
                             zos.closeEntry()
                         }
                     }
+                    zos.putNextEntry(ZipEntry("image_manifest.json"))
+                    zos.write(manifest.toString().toByteArray())
+                    zos.closeEntry()
                 }
             }
-
-            Result.success(uri)
+            Result.success(publishFile(fileName, "application/zip", outputFile))
+            } finally { outputFile.delete() }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Result.failure(e)
         }
     }
 
-    suspend fun importBackup(uri: Uri): Result<ImportSummary> = withContext(Dispatchers.IO) {
-        var activatedImages: ActivatedImages? = null
-        var dbBackupFile: File? = null
-        var imagesBackupDir: File? = null
+    suspend fun importBackup(uri: Uri): Result<ImportSummary> = serialized {
+        var images: ActivatedImages? = null
+        var committed = false
         try {
-            val preparedBackup = prepareBackup(uri, cacheResult = true)
-            val backupData = if (preparedBackup.isZip) {
-                remapZipImageRefsToDirectory(
-                    preparedBackup.backupData,
-                    File(context.filesDir, IMAGE_DIR)
-                )
-            } else {
-                preparedBackup.backupData
-            }
-
-            var imported = 0
-
-            if (preparedBackup.isZip) {
-                activatedImages = activateStagedImages(preparedBackup)
-            }
-
-            // C-02: Delete existing calendar events before clearing DB
-            try {
-                val existingPayments = database.paymentDao().getAllPaymentsList()
-                existingPayments.forEach { payment ->
-                    payment.calendarEventId?.let { eventId ->
-                        try { CalendarEventHelper.deleteEvent(context, eventId) } catch (_: Exception) {}
-                    }
+            check(recoverPendingRemindersLocked() == 0) { "上次恢复的提醒尚未完成，请授予权限后重试" }
+            val prepared = prepareBackup(uri, cacheResult = true)
+            BackupFormat.validate(prepared.backupData)
+            var previousPayments = emptyList<Payment>()
+            var importedData = prepared.backupData
+            // Finish this bounded commit even if the screen disappears; keep old files intact.
+            withContext(NonCancellable) {
+                if (prepared.isZip) {
+                    images = activateStagedImages(prepared)
+                    importedData = images!!.data
                 }
-            } catch (_: Exception) {}
-
-            // C-01: Backup database file before clearing
-            val dbFile = context.getDatabasePath("lolita_database")
-            if (dbFile.exists()) {
-                val backupFile = File(dbFile.parent, "lolita_database.pre_import_bak")
-                dbFile.copyTo(backupFile, overwrite = true)
-                dbBackupFile = backupFile
-            }
-            val liveImagesDir = File(context.filesDir, IMAGE_DIR)
-            if (liveImagesDir.exists() && activatedImages == null) {
-                val backupDir = File(context.filesDir, "${IMAGE_DIR}_pre_import_backup")
-                if (!backupDir.exists()) {
-                    copyDirectory(liveImagesDir, backupDir)
-                    imagesBackupDir = backupDir
+                database.withTransaction {
+                    previousPayments = database.paymentDao().getAllPaymentsList()
+                    clearAllTables()
+                    importedData.brands.forEach { database.brandDao().insertBrand(it) }
+                    importedData.categories.forEach { database.categoryDao().insertCategory(it) }
+                    importedData.styles.forEach { database.styleDao().insertStyle(it) }
+                    importedData.seasons.forEach { database.seasonDao().insertSeason(it) }
+                    importedData.locations.forEach { database.locationDao().insertLocation(it) }
+                    importedData.sources.forEach { database.sourceDao().insertSource(it) }
+                    importedData.coordinates.forEach { database.coordinateDao().insertCoordinate(it) }
+                    importedData.items.forEach { database.itemDao().insertItem(it) }
+                    importedData.prices.forEach { database.priceDao().insertPrice(it) }
+                    importedData.payments.forEach { database.paymentDao().insertPayment(it.copy(calendarEventId = null)) }
+                    importedData.outfitLogs.forEach { database.outfitLogDao().insertOutfitLog(it) }
+                    importedData.outfitItemCrossRefs.forEach { database.outfitLogDao().insertOutfitItemCrossRef(it) }
+                    database.legacyCatalogArchiveDao().insertAll(importedData.legacyCatalogArchives)
+                    val sync = database.sharedLibrarySyncDao()
+                    importedData.syncStates.forEach { sync.upsertSyncState(it) }
+                    sync.upsertBrands(importedData.remoteBrands); sync.upsertCategories(importedData.remoteCategories)
+                    sync.upsertStyles(importedData.remoteStyles); sync.upsertSeasons(importedData.remoteSeasons)
+                    sync.upsertSources(importedData.remoteSources); sync.upsertCoordinates(importedData.remoteCoordinates)
+                    sync.upsertSharedItems(importedData.remoteItems); sync.upsertPricePlans(importedData.remotePricePlans)
+                    verifyRestoredData(importedData)
+                    database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(previousPayments)))
                 }
+                committed = true
             }
-
-            database.withTransaction {
-                clearAllTables()
-
-                backupData.brands.forEach { database.brandDao().insertBrand(it); imported++ }
-                backupData.categories.forEach { database.categoryDao().insertCategory(it); imported++ }
-                backupData.styles.forEach { database.styleDao().insertStyle(it); imported++ }
-                backupData.seasons.forEach { database.seasonDao().insertSeason(it); imported++ }
-                backupData.locations.forEach { database.locationDao().insertLocation(it); imported++ }
-                backupData.sources.forEach { database.sourceDao().insertSource(it); imported++ }
-                backupData.coordinates.forEach { database.coordinateDao().insertCoordinate(it); imported++ }
-                backupData.items.forEach { database.itemDao().insertItem(it); imported++ }
-                backupData.prices.forEach { database.priceDao().insertPrice(it); imported++ }
-                backupData.payments.forEach { database.paymentDao().insertPayment(it.copy(calendarEventId = null)); imported++ }
-                backupData.outfitLogs.forEach { database.outfitLogDao().insertOutfitLog(it); imported++ }
-                backupData.outfitItemCrossRefs.forEach { database.outfitLogDao().insertOutfitItemCrossRef(it); imported++ }
-            }
-
-            val actualCount = database.itemDao().getItemCount()
-            if (actualCount != backupData.items.size) {
-                throw Exception("数据验证失败：期望 ${backupData.items.size} 条服饰，实际 $actualCount 条")
-            }
-
-            activatedImages?.let {
-                commitActivatedImages(it)
-                activatedImages = null
-            }
+            val calendarFailures = withContext(NonCancellable) { recoverPendingRemindersLocked() }
             clearPreparedBackupCache()
-
-            // Clean up pre-import backups on success
-            dbBackupFile?.delete()
-            dbBackupFile = null
-            if (imagesBackupDir != null) {
-                deleteRecursivelyQuietly(imagesBackupDir)
-                imagesBackupDir = null
-            }
-
-            var calendarFailCount = 0
-            try {
-                val unpaidPayments = database.paymentDao().getAllPaymentsList()
-                    .filter { !it.isPaid && it.dueDate > System.currentTimeMillis() }
-                unpaidPayments.forEach { payment ->
-                    try {
-                        val eventId = CalendarEventHelper.insertEvent(
-                            context = context,
-                            title = "付款提醒",
-                            description = "付款金额: ¥${String.format("%.2f", payment.amount)}",
-                            startTimeMillis = payment.dueDate
-                        )
-                        if (eventId != null) {
-                            database.paymentDao().updateCalendarEventId(payment.id, eventId)
-                        } else {
-                            calendarFailCount++
-                        }
-                    } catch (e: Exception) {
-                        calendarFailCount++
-                        Log.e("BackupManager", "Failed to create calendar event for payment ${payment.id}", e)
-                    }
-                }
-            } catch (e: Exception) {
-                calendarFailCount += database.paymentDao().getAllPaymentsList()
-                    .count { !it.isPaid && it.dueDate > System.currentTimeMillis() }
-                Log.e("BackupManager", "Failed to recreate calendar events during import", e)
-            }
-
-            try {
-                val scheduler = PaymentReminderScheduler(context)
-                val allPayments = database.paymentDao().getAllPaymentsList()
-                allPayments.forEach { payment ->
-                    try { scheduler.cancelReminder(payment.id) } catch (_: Exception) {}
-                }
-                val pendingPayments = database.paymentDao().getPendingReminderPaymentsWithItemInfoList()
-                val paymentEntities = database.paymentDao().getPendingReminderPaymentsList()
-                val paymentMap = paymentEntities.associateBy { it.id }
-                pendingPayments.forEach { info ->
-                    val payment = paymentMap[info.paymentId] ?: return@forEach
-                    try { scheduler.scheduleReminder(payment, info.itemName) } catch (_: Exception) {}
-                }
-            } catch (_: Exception) {}
-
             Result.success(ImportSummary(
-                totalImported = imported,
-                totalSkipped = 0,
-                totalErrors = calendarFailCount + preparedBackup.migrationErrorCount,
-                imageCount = preparedBackup.imageCount,
-                missingImageCount = preparedBackup.missingImageCount,
-                calendarEventsFailed = if (calendarFailCount > 0) calendarFailCount else 0,
-                backupDate = backupData.backupDate,
-                backupVersion = backupData.appVersion
+                totalImported = recordCount(importedData), totalSkipped = 0,
+                totalErrors = calendarFailures, imageCount = prepared.imageCount,
+                missingImageCount = prepared.missingImageCount, calendarEventsFailed = calendarFailures,
+                backupDate = importedData.backupDate, backupVersion = importedData.appVersion
             ))
         } catch (e: Exception) {
-            activatedImages?.let {
-                rollbackActivatedImages(it)
-                activatedImages = null
-            }
-            // C-01: Try to restore from pre-import backup on failure
-            dbBackupFile?.let { backupFile ->
-                try {
-                    val dbFile = context.getDatabasePath("lolita_database")
-                    database.close()
-                    if (backupFile.exists()) {
-                        backupFile.copyTo(dbFile, overwrite = true)
-                        backupFile.delete()
-                    }
-                } catch (restoreErr: Exception) {
-                    Log.e("BackupManager", "Failed to restore database from backup", restoreErr)
-                }
-            }
-            imagesBackupDir?.let { backupDir ->
-                try {
-                    val liveImagesDir = File(context.filesDir, IMAGE_DIR)
-                    if (backupDir.exists() && !liveImagesDir.exists()) {
-                        moveDirectory(backupDir, liveImagesDir)
-                    } else {
-                        deleteRecursivelyQuietly(backupDir)
-                    }
-                } catch (_: Exception) {}
-            }
+            if (!committed) images?.files?.forEach { it.delete() }
             clearPreparedBackupCache()
+            if (e is CancellationException) throw e
             Result.failure(e)
         }
     }
 
-    suspend fun previewBackup(uri: Uri): Result<BackupPreview> = withContext(Dispatchers.IO) {
+    private fun recordCount(data: BackupData): Int = listOf(
+        data.brands, data.categories, data.coordinates, data.items, data.prices, data.payments,
+        data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
+        data.legacyCatalogArchives, data.syncStates, data.remoteBrands, data.remoteCategories,
+        data.remoteStyles, data.remoteSeasons, data.remoteSources, data.remoteCoordinates,
+        data.remoteItems, data.remotePricePlans
+    ).sumOf { it.size }
+
+    private suspend fun verifyRestoredData(expected: BackupData) {
+        val actual = snapshot()
+        // Sort by stable keys; compare every business field, including image order and timestamps.
+        fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
+        check(equal(actual.brands, expected.brands) { it.id.toString() } &&
+            equal(actual.categories, expected.categories) { it.id.toString() } &&
+            equal(actual.coordinates, expected.coordinates) { it.id.toString() } &&
+            equal(actual.items, expected.items) { it.id.toString() } &&
+            equal(actual.prices, expected.prices) { it.id.toString() } &&
+            equal(actual.payments, expected.payments.map { it.copy(calendarEventId = null) }) { it.id.toString() } &&
+            equal(actual.outfitLogs, expected.outfitLogs) { it.id.toString() } &&
+            equal(actual.outfitItemCrossRefs, expected.outfitItemCrossRefs) { "${it.outfitLogId}:${it.itemId}" } &&
+            equal(actual.styles, expected.styles) { it.id.toString() } &&
+            equal(actual.seasons, expected.seasons) { it.id.toString() } &&
+            equal(actual.locations, expected.locations) { it.id.toString() } &&
+            equal(actual.sources, expected.sources) { it.id.toString() } &&
+            equal(actual.legacyCatalogArchives, expected.legacyCatalogArchives) { "${it.sourceTable}:${it.recordKey}" } &&
+            equal(actual.syncStates, expected.syncStates) { it.cacheKey } &&
+            equal(actual.remoteBrands, expected.remoteBrands) { it.publicId } &&
+            equal(actual.remoteCategories, expected.remoteCategories) { it.publicId } &&
+            equal(actual.remoteStyles, expected.remoteStyles) { it.publicId } &&
+            equal(actual.remoteSeasons, expected.remoteSeasons) { it.publicId } &&
+            equal(actual.remoteSources, expected.remoteSources) { it.publicId } &&
+            equal(actual.remoteCoordinates, expected.remoteCoordinates) { it.publicId } &&
+            equal(actual.remoteItems, expected.remoteItems) { it.publicId } &&
+            equal(actual.remotePricePlans, expected.remotePricePlans) { it.publicId }) { "恢复数据与备份内容不一致，已回滚" }
+        database.openHelper.writableDatabase.query("PRAGMA foreign_key_check").use {
+            check(!it.moveToFirst()) { "恢复数据包含无效关联，已回滚" }
+        }
+    }
+
+    suspend fun recoverPendingReminders(): Int = serialized { recoverPendingRemindersLocked() }
+
+    private suspend fun recoverPendingRemindersLocked(): Int {
+        val journal = database.restoreJournalDao().get() ?: return 0
+        val previous: List<Payment> = gson.fromJson(journal.previousPaymentsJson, object : TypeToken<List<Payment>>() {}.type)
+        val failures = reconcileReminders(previous)
+        if (failures == 0) database.restoreJournalDao().clear()
+        return failures
+    }
+
+    private suspend fun reconcileReminders(previous: List<Payment>): Int {
+        val scheduler = PaymentReminderScheduler(context)
+        var failures = 0
+        previous.forEach { payment ->
+            if (runCatching { scheduler.cancelReminder(payment.id) }.isFailure) failures++
+            payment.calendarEventId?.let { if (!CalendarEventHelper.deleteEventChecked(context, it)) failures++ }
+        }
+        val payments = database.paymentDao().getAllPaymentsList()
+        payments.filter { !it.isPaid && it.reminderSet }.forEach { payment ->
+            try {
+                scheduler.scheduleReminder(payment, "付款提醒")
+                if (payment.dueDate > System.currentTimeMillis() && payment.calendarEventId == null) {
+                    val event = CalendarEventHelper.insertEvent(context, "付款提醒",
+                        "付款金额: ¥${payment.amount}", payment.dueDate)
+                    if (event == null) failures++ else database.paymentDao().updateCalendarEventId(payment.id, event)
+                }
+            } catch (e: Exception) {
+                failures++
+                Log.e("BackupManager", "Failed to restore reminder ${payment.id}", e)
+            }
+        }
+        return failures
+    }
+
+    suspend fun previewBackup(uri: Uri): Result<BackupPreview> = serialized {
         try {
             val preparedBackup = prepareBackup(uri, cacheResult = true)
             val backupData = preparedBackup.backupData
@@ -421,10 +453,14 @@ class BackupManager(
                 locationCount = backupData.locations.size,
                 sourceCount = backupData.sources.size,
                 imageCount = preparedBackup.imageCount,
+                missingImageCount = preparedBackup.missingImageCount,
+                archiveCount = backupData.legacyCatalogArchives.size,
+                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size),
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Result.failure(e)
         }
     }
@@ -439,6 +475,7 @@ class BackupManager(
         database.sharedLibrarySyncDao().clearCategories()
         database.sharedLibrarySyncDao().clearBrands()
         database.sharedLibrarySyncDao().deleteSyncState()
+        database.legacyCatalogArchiveDao().deleteAll()
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
         database.paymentDao().deleteAllPayments()
@@ -453,30 +490,16 @@ class BackupManager(
         database.sourceDao().deleteAllSources()
     }
 
-    private fun collectImagePaths(backupData: BackupData): Set<String> {
-        val paths = mutableSetOf<String>()
-        backupData.brands.forEach { brand ->
-            brand.logoUrl?.let { paths.add(it) }
-        }
-        backupData.items.forEach { item ->
-            item.imageUrls.forEach { paths.add(it) }
-            item.sizeChartImageUrl?.let { paths.add(it) }
-        }
-        backupData.coordinates.forEach { coord ->
-            coord.imageUrls.forEach { paths.add(it) }
-        }
-        backupData.outfitLogs.forEach { log ->
-            log.imageUrls.forEach { paths.add(it) }
-        }
-        backupData.locations.forEach { location ->
-            location.imageUrl?.let { paths.add(it) }
-        }
-        return paths
+    private fun collectImagePaths(data: BackupData): Set<String> = buildSet {
+        mapImagePaths(data) { path -> if (path.isNotBlank()) add(path); path }
     }
 
+    private fun isRemoteImage(path: String) = path.startsWith("https://") || path.startsWith("http://")
+
     private fun buildImageArchiveNames(imagePaths: Set<String>): Pair<Map<String, String>, Int> {
-        val existing = imagePaths.filter { path -> File(path).isFile }
-        val missingCount = imagePaths.size - existing.size
+        val local = imagePaths.filterNot(::isRemoteImage)
+        val existing = local.filter { path -> File(path).isFile }
+        val missingCount = local.size - existing.size
         return existing.associateWith { path -> buildArchiveImageName(path) } to missingCount
     }
 
@@ -490,30 +513,30 @@ class BackupManager(
         return if (extension.isNotBlank()) "$digest.$extension" else digest
     }
 
-    private fun rewriteImagePathsForZip(
-        backupData: BackupData,
-        imageArchiveNamesByPath: Map<String, String>
-    ): BackupData {
-        fun toZipRef(path: String?): String? {
-            if (path == null) return null
-            return imageArchiveNamesByPath[path]?.let { "$ZIP_IMAGE_PREFIX$it" } ?: path
-        }
+    private fun rewriteImagePathsForZip(data: BackupData, names: Map<String, String>): BackupData =
+        mapImagePaths(data) { path -> names[path]?.let { "$ZIP_IMAGE_PREFIX$it" } ?: path }
 
-        return backupData.copy(
-            brands = backupData.brands.map { it.copy(logoUrl = toZipRef(it.logoUrl)) },
-            items = backupData.items.map {
-                it.copy(
-                    imageUrls = it.imageUrls.mapNotNull(::toZipRef),
-                    sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
-                )
-            },
-            coordinates = backupData.coordinates.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
-            },
-            outfitLogs = backupData.outfitLogs.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
-            },
-            locations = backupData.locations.map { it.copy(imageUrl = toZipRef(it.imageUrl)) }
+    private fun mapImagePaths(data: BackupData, map: (String) -> String): BackupData {
+        fun nullable(path: String?) = path?.let(map)
+        return data.copy(
+            brands = data.brands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
+            items = data.items.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl)) },
+            coordinates = data.coordinates.map { it.copy(imageUrls = it.imageUrls.map(map)) },
+            outfitLogs = data.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map(map)) },
+            locations = data.locations.map { it.copy(imageUrl = nullable(it.imageUrl)) },
+            remoteBrands = data.remoteBrands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
+            remoteCoordinates = data.remoteCoordinates.map { it.copy(imageUrls = it.imageUrls.map(map)) },
+            remoteItems = data.remoteItems.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl)) },
+            legacyCatalogArchives = data.legacyCatalogArchives.map { archive ->
+                val row = JsonParser.parseString(archive.payload).asJsonObject
+                row.get("image_urls")?.takeUnless { it.isJsonNull }?.let { value ->
+                    val images = if (value.isJsonArray) value.asJsonArray else JsonParser.parseString(value.asString).asJsonArray
+                    val mapped = JsonArray().apply { images.forEach { add(map(it.asString)) } }
+                    // SQL column is encoded as TEXT in the lossless archive.
+                    if (value.isJsonArray) row.add("image_urls", mapped) else row.addProperty("image_urls", mapped.toString())
+                }
+                archive.copy(payload = row.toString())
+            }
         )
     }
 
@@ -523,231 +546,127 @@ class BackupManager(
         return bytes[0] == 0x50.toByte() && bytes[1] == 0x4B.toByte()
     }
 
+    private fun sha256(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val bytes = ByteArray(8192)
+            var count = input.read(bytes)
+            while (count >= 0) {
+                if (count > 0) digest.update(bytes, 0, count)
+                count = input.read(bytes)
+            }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
     private fun prepareBackup(uri: Uri, cacheResult: Boolean): PreparedBackup {
-        synchronized(cacheLock) {
+        val source = File.createTempFile("backup_source_", ".tmp", context.cacheDir)
+        try {
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                source.outputStream().use { input.copyTo(it) }
+            } ?: error("无法读取文件")
+            val digest = sha256(source)
             if (cachedBackupUri == uri && cachedPreparedBackup != null) {
+                require(cachedBackupDigest == digest) { "备份文件在预览后发生变化，请重新选择" }
                 return cachedPreparedBackup!!
             }
-        }
-
-        clearPreparedBackupCache()
-
-        val prepared = if (isZipFile(uri)) {
-            parseZipBackup(uri)
-        } else {
-            val jsonString = context.contentResolver.openInputStream(uri)?.use { it.bufferedReader().readText() }
-                ?: throw Exception("无法读取文件")
-            val (migratedJson, migrationErrorCount) = migrateJsonString(jsonString)
-            PreparedBackup(
-                backupData = migrateBackupData(
-                    gson.fromJson(migratedJson, BackupData::class.java)
-                ),
-                imageCount = 0,
-                isZip = false,
-                migrationErrorCount = migrationErrorCount
-            )
-        }
-
-        if (cacheResult) {
-            synchronized(cacheLock) {
+            clearPreparedBackupCache()
+            val sourceUri = Uri.fromFile(source)
+            val prepared = if (isZipFile(sourceUri)) parseZipBackup(sourceUri)
+            else {
+                val data = BackupFormat.parse(source.readText())
+                val missing = collectImagePaths(data).count { !isRemoteImage(it) && !File(it).isFile }
+                PreparedBackup(data, 0, false, missingImageCount = missing)
+            }
+            if (cacheResult) {
                 cachedPreparedBackup = prepared
                 cachedBackupUri = uri
+                cachedBackupDigest = digest
             }
+            return prepared
+        } finally {
+            source.delete()
         }
-        return prepared
     }
 
     private fun parseZipBackup(uri: Uri): PreparedBackup {
         val stagingDir = createStagingDir()
-        val stagedImagesDir = File(stagingDir, IMAGE_DIR).apply { mkdirs() }
-        var imageCount = 0
-        var jsonString: String? = null
-        val availableImageNames = mutableSetOf<String>()
-
+        val imagesDir = File(stagingDir, IMAGE_DIR).apply { check(mkdirs()) }
+        var json: String? = null
+        var manifest: JsonObject? = null
+        val names = mutableSetOf<String>()
+        val entries = mutableSetOf<String>()
         try {
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                ZipInputStream(inputStream).use { zis ->
-                    var entry = zis.nextEntry
+            context.contentResolver.openInputStream(uri)?.use { stream ->
+                ZipInputStream(stream).use { zip ->
+                    var entry = zip.nextEntry
                     while (entry != null) {
+                        require(entries.add(entry.name)) { "ZIP 包含重复条目：${entry.name}" }
                         when {
-                            entry.name == "data.json" -> {
-                                jsonString = zis.bufferedReader().readText()
-                            }
+                            entry.name == "data.json" -> json = zip.bufferedReader().readText()
+                            entry.name == "image_manifest.json" -> manifest = JsonParser.parseString(zip.bufferedReader().readText()).asJsonObject
                             entry.name.startsWith("images/") && !entry.isDirectory -> {
-                                val fileName = entry.name.substringAfterLast("/")
-                                if (fileName.isNotBlank()) {
-                                    File(stagedImagesDir, fileName).outputStream().use { out ->
-                                        zis.copyTo(out)
-                                    }
-                                    availableImageNames.add(fileName)
-                                    imageCount++
-                                }
+                                val name = entry.name.removePrefix("images/")
+                                require(name.isNotBlank() && name != "." && name != ".." && name == File(name).name && !name.contains('\\')) { "ZIP 图片路径无效" }
+                                require(names.add(name)) { "ZIP 包含重复图片" }
+                                File(imagesDir, name).outputStream().use { zip.copyTo(it) }
                             }
                         }
-                        zis.closeEntry()
-                        entry = zis.nextEntry
+                        zip.closeEntry()
+                        entry = zip.nextEntry
                     }
                 }
-            } ?: throw Exception("无法读取文件")
-
-            val (migratedJson, migrationErrorCount) = migrateJsonString(jsonString ?: throw Exception("ZIP中未找到data.json"))
-            val data = gson.fromJson(migratedJson, BackupData::class.java)
-            return PreparedBackup(
-                backupData = migrateBackupData(
-                    rewriteImagePathsFromZipEntries(data, availableImageNames)
-                ),
-                imageCount = imageCount,
-                isZip = true,
-                stagingDir = stagingDir,
-                migrationErrorCount = migrationErrorCount
-            )
+            } ?: error("无法读取文件")
+            val data = BackupFormat.parse(json ?: error("ZIP 中未找到 data.json"))
+            if (data.formatVersion >= BackupFormat.VERSION) require(manifest != null) { "ZIP 缺少图片校验清单" }
+            manifest?.let { hashes ->
+                require(hashes.keySet() == names) { "图片清单与 ZIP 内容不一致" }
+                names.forEach { require(hashes[it].asString == sha256(File(imagesDir, it))) { "图片校验失败：$it" } }
+            }
+            return PreparedBackup(rewriteImagePathsFromZipEntries(data, names), names.size, true, stagingDir)
         } catch (e: Exception) {
             deleteRecursivelyQuietly(stagingDir)
             throw e
         }
     }
 
-    private fun rewriteImagePathsFromZipEntries(
-        backupData: BackupData,
-        availableImageNames: Set<String>
-    ): BackupData {
-        fun toZipRef(path: String?): String? {
-            if (path == null) return null
-            if (path.startsWith(ZIP_IMAGE_PREFIX)) return path
-            val fileName = File(path).name
-            return if (fileName.isNotBlank() && fileName in availableImageNames) {
-                "$ZIP_IMAGE_PREFIX$fileName"
-            } else {
-                path
+    private fun rewriteImagePathsFromZipEntries(data: BackupData, names: Set<String>): BackupData =
+        mapImagePaths(data) { path ->
+            if (isRemoteImage(path) || path.isBlank()) path
+            else {
+                val name = if (path.startsWith(ZIP_IMAGE_PREFIX)) path.removePrefix(ZIP_IMAGE_PREFIX) else File(path).name
+                require(name in names && name == File(name).name) { "ZIP 缺少引用的图片：$path" }
+                "$ZIP_IMAGE_PREFIX$name"
             }
         }
 
-        return backupData.copy(
-            brands = backupData.brands.map { it.copy(logoUrl = toZipRef(it.logoUrl)) },
-            items = backupData.items.map {
-                it.copy(
-                    imageUrls = it.imageUrls.mapNotNull(::toZipRef),
-                    sizeChartImageUrl = toZipRef(it.sizeChartImageUrl)
-                )
-            },
-            coordinates = backupData.coordinates.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
-            },
-            outfitLogs = backupData.outfitLogs.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::toZipRef))
-            },
-            locations = backupData.locations.map { it.copy(imageUrl = toZipRef(it.imageUrl)) }
-        )
-    }
+    private data class ActivatedImages(val files: List<File>, val data: BackupData)
 
-    private fun remapZipImageRefsToDirectory(backupData: BackupData, imageDir: File): BackupData {
-        fun remap(path: String?): String? {
-            if (path == null || !path.startsWith(ZIP_IMAGE_PREFIX)) return path
-            val fileName = path.removePrefix(ZIP_IMAGE_PREFIX).substringAfterLast("/")
-            return File(imageDir, fileName).absolutePath
-        }
-
-        return backupData.copy(
-            brands = backupData.brands.map { it.copy(logoUrl = remap(it.logoUrl)) },
-            items = backupData.items.map {
-                it.copy(
-                    imageUrls = it.imageUrls.mapNotNull(::remap),
-                    sizeChartImageUrl = remap(it.sizeChartImageUrl)
-                )
-            },
-            coordinates = backupData.coordinates.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
-            },
-            outfitLogs = backupData.outfitLogs.map {
-                it.copy(imageUrls = it.imageUrls.mapNotNull(::remap))
-            },
-            locations = backupData.locations.map { it.copy(imageUrl = remap(it.imageUrl)) }
-        )
-    }
-
-    private data class ActivatedImages(
-        val liveImagesDir: File,
-        val backupImagesDir: File?,
-        val stagingDir: File
-    )
-
-    private fun activateStagedImages(preparedBackup: PreparedBackup): ActivatedImages {
-        val stagingDir = preparedBackup.stagingDir
-            ?: throw IllegalStateException("备份图片暂存目录不存在")
-        val stagedImagesDir = File(stagingDir, IMAGE_DIR).apply { mkdirs() }
-        val liveImagesDir = File(context.filesDir, IMAGE_DIR)
-        val backupImagesDir = if (liveImagesDir.exists()) {
-            File(context.filesDir, "${IMAGE_DIR}_backup_${UUID.randomUUID()}")
-        } else {
-            null
-        }
-
-        if (backupImagesDir != null) {
-            moveDirectory(liveImagesDir, backupImagesDir)
-        }
-
+    /** Never replace/delete the live directory. A failed or killed import cannot damage old images. */
+    private fun activateStagedImages(prepared: PreparedBackup): ActivatedImages {
+        val staging = requireNotNull(prepared.stagingDir)
+        val imageDir = File(context.filesDir, IMAGE_DIR).apply { check(exists() || mkdirs()) }
+        val files = mutableListOf<File>()
+        val paths = mutableMapOf<String, String>()
         try {
-            moveDirectory(stagedImagesDir, liveImagesDir)
-        } catch (e: Exception) {
-            if (backupImagesDir != null && !liveImagesDir.exists()) {
-                moveDirectory(backupImagesDir, liveImagesDir)
-            }
-            throw e
-        }
-
-        return ActivatedImages(
-            liveImagesDir = liveImagesDir,
-            backupImagesDir = backupImagesDir,
-            stagingDir = stagingDir
-        )
-    }
-
-    private fun commitActivatedImages(activatedImages: ActivatedImages) {
-        deleteRecursivelyQuietly(activatedImages.backupImagesDir)
-        deleteRecursivelyQuietly(activatedImages.stagingDir)
-    }
-
-    private fun rollbackActivatedImages(activatedImages: ActivatedImages) {
-        activatedImages.backupImagesDir?.let { backupDir ->
-            val liveImagesDir = activatedImages.liveImagesDir
-            if (liveImagesDir.exists()) {
-                deleteRecursivelyQuietly(liveImagesDir)
-            }
-            moveDirectory(backupDir, liveImagesDir)
-        }
-        deleteRecursivelyQuietly(activatedImages.stagingDir)
-    }
-
-    private fun moveDirectory(sourceDir: File, targetDir: File) {
-        targetDir.parentFile?.mkdirs()
-        if (!sourceDir.exists()) {
-            if (!targetDir.exists()) targetDir.mkdirs()
-            return
-        }
-        if (targetDir.exists()) {
-            deleteRecursivelyQuietly(targetDir)
-        }
-        if (sourceDir.renameTo(targetDir)) return
-
-        copyDirectory(sourceDir, targetDir)
-        if (!sourceDir.deleteRecursively()) {
-            throw Exception("无法清理临时目录")
-        }
-    }
-
-    private fun copyDirectory(source: File, target: File) {
-        if (source.isDirectory) {
-            if (!target.exists()) target.mkdirs()
-            source.listFiles()?.forEach { child ->
-                copyDirectory(child, File(target, child.name))
-            }
-        } else {
-            target.parentFile?.mkdirs()
-            source.inputStream().use { input ->
-                target.outputStream().use { output ->
-                    input.copyTo(output)
+            val data = mapImagePaths(prepared.backupData) { path ->
+                if (!path.startsWith(ZIP_IMAGE_PREFIX)) path
+                else paths.getOrPut(path) {
+                    val name = path.removePrefix(ZIP_IMAGE_PREFIX)
+                    val source = File(File(staging, IMAGE_DIR), name)
+                    val target = File(imageDir, "${UUID.randomUUID()}.${source.extension.ifBlank { "img" }}")
+                    files.add(target)
+                    target.outputStream().use { output ->
+                        source.inputStream().use { it.copyTo(output) }
+                        output.fd.sync()
+                    }
+                    target.absolutePath
                 }
             }
+            return ActivatedImages(files, data)
+        } catch (e: Exception) {
+            files.forEach { it.delete() }
+            throw e
         }
     }
 
@@ -762,6 +681,7 @@ class BackupManager(
             cached = cachedPreparedBackup
             cachedPreparedBackup = null
             cachedBackupUri = null
+            cachedBackupDigest = null
         }
         cached?.stagingDir?.let { deleteRecursivelyQuietly(it) }
     }
@@ -772,145 +692,43 @@ class BackupManager(
         }
     }
 
-    private fun createStreamInDownloads(fileName: String, mimeType: String): Pair<Uri, java.io.OutputStream> {
-        val contentValues = android.content.ContentValues().apply {
+    private fun publishFile(fileName: String, mimeType: String, file: File): Uri {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val directory = requireNotNull(context.getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS))
+            val target = File(directory, "${UUID.randomUUID()}_$fileName")
+            try { file.copyTo(target) } catch (e: Exception) { target.delete(); throw e }
+            return androidx.core.content.FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", target)
+        }
+        val values = android.content.ContentValues().apply {
             put(android.provider.MediaStore.Downloads.DISPLAY_NAME, fileName)
             put(android.provider.MediaStore.Downloads.MIME_TYPE, mimeType)
+            put(android.provider.MediaStore.Downloads.IS_PENDING, 1)
         }
         val resolver = context.contentResolver
-        val uri = resolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-            ?: throw Exception("无法创建文件")
-        val outputStream = resolver.openOutputStream(uri) ?: throw Exception("无法写入文件")
-        return Pair(uri, outputStream)
+        val uri = resolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values) ?: error("无法创建文件")
+        try {
+            (resolver.openOutputStream(uri) ?: error("无法写入文件")).use { out -> file.inputStream().use { it.copyTo(out) } }
+            values.clear()
+            values.put(android.provider.MediaStore.Downloads.IS_PENDING, 0)
+            check(resolver.update(uri, values, null, null) > 0) { "无法完成备份文件" }
+            return uri
+        } catch (e: Exception) {
+            resolver.delete(uri, null, null)
+            throw e
+        }
     }
 
-    private fun createFileInDownloads(fileName: String, mimeType: String, content: ByteArray): Uri {
-        val contentValues = android.content.ContentValues().apply {
-            put(android.provider.MediaStore.Downloads.DISPLAY_NAME, fileName)
-            put(android.provider.MediaStore.Downloads.MIME_TYPE, mimeType)
-        }
-        val resolver = context.contentResolver
-        val uri = resolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-            ?: throw Exception("无法创建文件")
-        (resolver.openOutputStream(uri) ?: throw Exception("无法写入文件")).use { it.write(content) }
-        return uri
+    private fun createFileInDownloads(name: String, mimeType: String, content: ByteArray): Uri {
+        val file = File.createTempFile("backup_export_", ".tmp", context.cacheDir)
+        return try {
+            file.writeBytes(content)
+            publishFile(name, mimeType, file)
+        } finally { file.delete() }
     }
 
     private fun escapeCsv(value: String?): String {
         if (value == null) return ""
         return "\"${value.replace("\"", "\"\"")}\""
-    }
-
-    /**
-     * Pre-process backup JSON string for backward compatibility.
-     * Renames old "color" field to "colors" so Gson can deserialize it.
-     * Converts old single "imageUrl" field to "imageUrls" list format.
-     */
-    private fun migrateJsonString(json: String): Pair<String, Int> {
-        return try {
-            val root = JsonParser.parseString(json).asJsonObject
-            ensureArrayField(root, "styles")
-            ensureArrayField(root, "seasons")
-            ensureArrayField(root, "locations")
-            ensureArrayField(root, "sources")
-            migrateArray(root, "items", migrateColor = true, migrateImageUrl = true)
-            migrateArray(root, "coordinates", migrateColor = false, migrateImageUrl = true)
-            migrateArray(root, "outfitLogs", migrateColor = false, migrateImageUrl = true)
-            ensureColorArray(root, "items")
-            root.toString() to 0
-        } catch (e: Exception) {
-            Log.w("BackupManager", "JSON migration failed", e)
-            throw Exception("备份格式迁移失败：${e.message}", e)
-        }
-    }
-
-    private fun ensureColorArray(root: JsonObject, fieldName: String = "items") {
-        val array = root.getAsJsonArray(fieldName) ?: return
-        array.forEach { element ->
-            val obj = element as? JsonObject ?: return@forEach
-            when {
-                !obj.has("colors") || obj.get("colors").isJsonNull -> obj.add("colors", JsonArray())
-                obj.get("colors").isJsonArray -> { }
-                obj.get("colors").isJsonPrimitive -> {
-                    val str = obj.get("colors").asString
-                    if (str.startsWith("[")) {
-                        try {
-                            obj.add("colors", JsonParser.parseString(str).asJsonArray)
-                        } catch (_: Exception) {
-                            obj.add("colors", JsonArray())
-                        }
-                    } else if (str.isNotBlank()) {
-                        val arr = JsonArray()
-                        arr.add(str)
-                        obj.add("colors", arr)
-                    } else {
-                        obj.add("colors", JsonArray())
-                    }
-                }
-                else -> obj.add("colors", JsonArray())
-            }
-        }
-    }
-
-    private fun ensureArrayField(root: JsonObject, fieldName: String) {
-        if (!root.has(fieldName) || root.get(fieldName).isJsonNull) {
-            root.add(fieldName, JsonArray())
-        }
-    }
-
-    private fun migrateArray(
-        root: JsonObject,
-        fieldName: String,
-        migrateColor: Boolean,
-        migrateImageUrl: Boolean
-    ) {
-        val array = root.getAsJsonArray(fieldName) ?: return
-        array.forEach { element ->
-            val obj = element as? JsonObject ?: return@forEach
-
-            if (migrateColor && obj.has("color") && !obj.has("colors")) {
-                obj.add("colors", obj.remove("color"))
-            }
-
-            if (migrateImageUrl && obj.has("imageUrl") && !obj.has("imageUrls")) {
-                val imageUrl = obj.remove("imageUrl")
-                val imageUrls = JsonArray()
-                if (imageUrl != null && !imageUrl.isJsonNull) {
-                    val value = imageUrl.asString
-                    if (value.isNotBlank()) {
-                        imageUrls.add(value)
-                    }
-                }
-                obj.add("imageUrls", imageUrls)
-            }
-        }
-    }
-
-    /**
-     * Post-process imported backup data for backward compatibility.
-     * Converts old single-string color values to JSON array format.
-     * Old backups: "color": "粉色" → new format: "colors": "[\"粉色\"]"
-     */
-    private fun migrateBackupData(backupData: BackupData): BackupData {
-        val fixedItems = backupData.items.map { item ->
-            val needsFix = item.colors.size == 1 && item.colors.first().let {
-                it.startsWith("[") && it.endsWith("]")
-            }
-            if (needsFix) {
-                try {
-                    val parsed = gson.fromJson<List<String>>(
-                        item.colors.first(),
-                        object : TypeToken<List<String>>() {}.type
-                    )
-                    item.copy(colors = parsed)
-                } catch (_: Exception) {
-                    item
-                }
-            } else {
-                item
-            }
-        }
-        return if (fixedItems != backupData.items) backupData.copy(items = fixedItems) else backupData
     }
 
     companion object {
@@ -943,10 +761,13 @@ data class BackupPreview(
     val seasonCount: Int = 0,
     val locationCount: Int = 0,
     val sourceCount: Int = 0,
+    val archiveCount: Int = 0,
+    val additionalRecordCount: Int = 0,
+    val missingImageCount: Int = 0,
     val imageCount: Int = 0,
     val backupDate: Long,
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount
 }

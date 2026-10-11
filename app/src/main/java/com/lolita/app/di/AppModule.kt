@@ -2,6 +2,7 @@ package com.lolita.app.di
 
 import android.content.Context
 import com.lolita.app.data.file.BackupManager
+import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.*
@@ -16,9 +17,18 @@ object AppModule {
         if (::appContext.isInitialized) return
         appContext = context
         database = LolitaDatabase.getDatabase(context)
+        ImageFileHelper.configure(appContext, database)
     }
 
     fun database() = database
+
+    private val _restoreJournalRepository by lazy { RestoreJournalRepository(database.restoreJournalDao()) }
+    fun restoreJournalRepository() = _restoreJournalRepository
+
+    private val _legacyCatalogArchiveRepository by lazy {
+        LegacyCatalogArchiveRepository(database.legacyCatalogArchiveDao())
+    }
+    fun legacyCatalogArchiveRepository() = _legacyCatalogArchiveRepository
 
     private val _coordinateRepository by lazy {
         CoordinateRepository(database.coordinateDao(), database.itemDao(), database)

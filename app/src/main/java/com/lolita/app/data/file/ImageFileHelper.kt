@@ -8,6 +8,9 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
+import androidx.room.withTransaction
+import com.lolita.app.data.local.LolitaDatabase
+import com.google.gson.JsonParser
 
 /**
  * Copies a picked image URI to app-internal storage so the path persists across reboots.
@@ -16,6 +19,13 @@ import java.util.UUID
 object ImageFileHelper {
 
     private const val IMAGE_DIR = "images"
+    @Volatile private var ownedImagesDir: File? = null
+    @Volatile private var imageDatabase: LolitaDatabase? = null
+
+    fun configure(context: Context, database: LolitaDatabase) {
+        ownedImagesDir = File(context.filesDir, IMAGE_DIR).canonicalFile
+        imageDatabase = database
+    }
 
     suspend fun copyToInternalStorage(context: Context, sourceUri: Uri): String =
         withContext(Dispatchers.IO) {
@@ -40,13 +50,29 @@ object ImageFileHelper {
         }
 
     suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
-        val file = File(path)
-        val canonicalPath = file.canonicalPath
-        val imagesDir = file.canonicalFile.parentFile
-        // Only delete files within our images directory to prevent path traversal
-        if (file.exists() && imagesDir != null && imagesDir.name == IMAGE_DIR &&
-            canonicalPath.startsWith(imagesDir.canonicalPath + File.separator)) {
-            file.delete()
+        val root = ownedImagesDir ?: return@withContext
+        val db = imageDatabase ?: return@withContext
+        val file = File(path).canonicalFile
+        if (file.parentFile != root || !file.isFile) return@withContext
+        // Imported historical backups may share one file between multiple records.
+        db.withTransaction {
+            val localReference = db.brandDao().getAllBrandsList().any { it.logoUrl == path } ||
+                db.itemDao().getAllItemsList().any { path in it.imageUrls || it.sizeChartImageUrl == path } ||
+                db.coordinateDao().getAllCoordinatesList().any { path in it.imageUrls } ||
+                db.outfitLogDao().getAllOutfitLogsList().any { path in it.imageUrls } ||
+                db.locationDao().getAllLocationsList().any { it.imageUrl == path }
+            val sync = db.sharedLibrarySyncDao()
+            val remoteReference = sync.getAllBrandsList().any { it.logoUrl == path } ||
+                sync.getAllCoordinatesList().any { path in it.imageUrls } ||
+                sync.getAllItemsList().any { path in it.imageUrls || it.sizeChartImageUrl == path }
+            val archiveReference = db.legacyCatalogArchiveDao().getAll().any { archive ->
+                val row = JsonParser.parseString(archive.payload).asJsonObject
+                row["image_urls"]?.takeUnless { it.isJsonNull }?.let { value ->
+                    val images = if (value.isJsonArray) value.asJsonArray else JsonParser.parseString(value.asString).asJsonArray
+                    images.any { it.asString == path }
+                } ?: false
+            }
+            if (!localReference && !remoteReference && !archiveReference) file.delete()
         }
     }
 

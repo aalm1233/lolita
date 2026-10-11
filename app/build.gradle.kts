@@ -22,8 +22,9 @@ android {
         applicationId = "com.lolita.app"
         minSdk = 26
         targetSdk = 35
-versionCode = 74
-versionName = "2.37.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+versionCode = 75
+versionName = "2.37.1"
     }
 
     signingConfigs {
@@ -49,6 +50,8 @@ versionName = "2.37.0"
             )
         }
     }
+
+    sourceSets.getByName("androidTest").assets.srcDir("$projectDir/schemas")
 
     buildFeatures {
         compose = true
@@ -82,6 +85,10 @@ versionName = "2.37.0"
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.room:room-testing:2.7.0")
     // Core Android
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")

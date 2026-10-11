@@ -58,27 +58,22 @@ class PaymentRepository(
 
     suspend fun updatePayment(payment: Payment, itemName: String = "") {
         val oldPayment = paymentDao.getPaymentById(payment.id)
-        var updatedPayment = payment
-
-        // H-12: Create new calendar event first, then delete old one
+        val newEventId = if (!payment.isPaid && payment.reminderSet) {
+            try {
+                CalendarEventHelper.insertEvent(context, "付款提醒: $itemName", "金额: ¥${payment.amount}", payment.dueDate)
+            } catch (_: Exception) { null }
+        } else null
+        val eventId = if (!payment.isPaid && payment.reminderSet) newEventId ?: oldPayment?.calendarEventId else null
+        val updatedPayment = payment.copy(calendarEventId = eventId)
         try {
-            if (!payment.isPaid && payment.reminderSet) {
-                val newEventId = CalendarEventHelper.insertEvent(
-                    context = context,
-                    title = "付款提醒: $itemName",
-                    description = "金额: ¥${payment.amount}",
-                    startTimeMillis = payment.dueDate
-                )
-                updatedPayment = payment.copy(calendarEventId = newEventId)
-                // Delete old event only after new one is created
-                oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
-            } else {
-                oldPayment?.calendarEventId?.let { CalendarEventHelper.deleteEvent(context, it) }
-                updatedPayment = payment.copy(calendarEventId = null)
-            }
-        } catch (_: Exception) {}
-
-        paymentDao.updatePayment(updatedPayment)
+            paymentDao.updatePayment(updatedPayment)
+        } catch (e: Exception) {
+            newEventId?.let { runCatching { CalendarEventHelper.deleteEvent(context, it) } }
+            throw e
+        }
+        oldPayment?.calendarEventId?.takeIf { it != eventId }?.let {
+            runCatching { CalendarEventHelper.deleteEvent(context, it) }
+        }
 
         checkAndUpdatePendingBalanceStatus(payment.id)
 

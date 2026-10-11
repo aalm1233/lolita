@@ -72,6 +72,15 @@ object CalendarEventHelper {
         }
     }
 
+    /** Restore journal must retain failed cleanup so it can retry after permission is granted. */
+    fun deleteEventChecked(context: Context, eventId: Long): Boolean {
+        if (!hasCalendarPermission(context)) return false
+        return try {
+            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId)
+            context.contentResolver.delete(uri, null, null) >= 0
+        } catch (_: Exception) { false }
+    }
+
     private fun getPrimaryCalendarId(context: Context): Long? {
         val projection = arrayOf(
             CalendarContract.Calendars._ID,

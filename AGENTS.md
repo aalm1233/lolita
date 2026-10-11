@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 18，23 个实体（含 `CatalogEntry`、`SharedLibrarySyncState`、6 个 `Remote*` 远程同步实体）。
+- Room 数据库版本 20，23 个实体（含历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 定义在 `LolitaDatabase.kt` 内联，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -212,7 +212,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=49, versionName="2.31.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=75, versionName="2.37.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -226,3 +226,18 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 每次功能更新、架构变更或新增约定后，**必须刷新 `AGENTS.md`**，确保文档与代码同步。
 - 新增组件、令牌、接口、页面、测试等均需在对应章节补充说明。
 - 若不确定是否需要更新，默认更新。
+
+## 数据完整性验证
+
+
+- 审计报告：`docs/data-integrity-audit-2026-10-11.md`；升级与备份用例：`docs/data-integrity-test-plan.md`。
+- 运行 `python3 scripts/audit_data_integrity.py` 可用临时 SQLite 复现迁移与 WAL 快照问题；退出码 1 表示数据保留断言失败，2 表示工具错误。不能代替 Android Room 和图片恢复测试。
+- 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
+
+- 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
+- 备份格式 version 2、schemaVersion 20；完整 JSON/ZIP 覆盖 22 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
+- 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。
+- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest` 和 `DataIntegrityTest`。
+
+- 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。

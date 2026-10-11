@@ -1,0 +1,198 @@
+package com.lolita.app.data.file
+
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.lolita.app.data.local.entity.*
+import java.lang.reflect.Modifier
+
+/** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
+internal object BackupFormat {
+    const val VERSION = 2
+    const val SCHEMA_VERSION = 20
+    private val gson = Gson()
+    private val entities = linkedMapOf(
+        "brands" to Brand::class.java, "categories" to Category::class.java,
+        "coordinates" to Coordinate::class.java, "items" to Item::class.java,
+        "prices" to Price::class.java, "payments" to Payment::class.java,
+        "outfitLogs" to OutfitLog::class.java, "outfitItemCrossRefs" to OutfitItemCrossRef::class.java,
+        "styles" to Style::class.java, "seasons" to Season::class.java,
+        "locations" to Location::class.java, "sources" to Source::class.java,
+        "legacyCatalogArchives" to LegacyCatalogArchive::class.java,
+        "syncStates" to SharedLibrarySyncState::class.java,
+        "remoteBrands" to RemoteBrand::class.java, "remoteCategories" to RemoteCategory::class.java,
+        "remoteStyles" to RemoteStyle::class.java, "remoteSeasons" to RemoteSeason::class.java,
+        "remoteSources" to RemoteSource::class.java, "remoteCoordinates" to RemoteSharedCoordinate::class.java,
+        "remoteItems" to RemoteSharedItem::class.java, "remotePricePlans" to RemoteSharedPricePlan::class.java
+    )
+    private val requiredArrays = entities.keys.take(8)
+
+    fun parse(json: String): BackupData {
+        val root = JsonParser.parseString(json).asJsonObject
+        val version = root.get("formatVersion")?.asBigDecimal?.intValueExact() ?: 1
+        require(version in 1..VERSION) { "不支持的备份格式版本：$version" }
+        val schema = root.get("schemaVersion")?.asBigDecimal?.intValueExact() ?: 0
+        require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
+        val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion")
+        require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
+        if (version == VERSION) require(entities.keys.all { root.has(it) && root[it].isJsonArray }) {
+            "完整备份缺少数据表"
+        }
+        requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
+        if (version == 1) migratePurchaseDates(root)
+        entities.forEach { (name, type) ->
+            if (!root.has(name) || root[name].isJsonNull) root.add(name, JsonArray())
+            require(root[name].isJsonArray) { "$name 必须是数组" }
+            val fields = type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.map { it.name }.toSet()
+            root[name].asJsonArray.forEachIndexed { index, element ->
+                require(element.isJsonObject) { "$name[$index] 不是有效记录" }
+                val row = element.asJsonObject
+                fun default(row: JsonObject, field: String, value: Any) {
+                    if (version == 1) BackupFormat.default(row, field, value)
+                }
+                if (name in setOf("items", "coordinates", "outfitLogs")) {
+                    if (row.has("imageUrl") && !row.has("imageUrls")) {
+                        val image = row.remove("imageUrl")
+                        row.add("imageUrls", JsonArray().apply {
+                            if (!image.isJsonNull && image.asString.isNotBlank()) add(image.asString)
+                        })
+                    }
+                    row.remove("imageUrl")
+                    default(row, "imageUrls", JsonArray())
+                    if (name != "outfitLogs") default(row, "description", "")
+                    else default(row, "note", "")
+                    default(row, "updatedAt", row.get("createdAt") ?: error("缺少 createdAt"))
+                }
+                if (name == "items") {
+                    if (row.has("color") && !row.has("colors")) row.add("colors", row.remove("color"))
+                    row.remove("color")
+                    normalizeColors(row)
+                    default(row, "priority", "MEDIUM")
+                    default(row, "coordinateOrder", 0)
+                }
+                if (name in setOf("brands", "categories", "styles", "seasons", "sources")) default(row, "isPreset", false)
+                if (name == "categories") default(row, "group", "CLOTHING")
+                if (name == "locations") {
+                    default(row, "sortOrder", 0)
+                    default(row, "description", "")
+                    default(row, "updatedAt", row.get("createdAt") ?: error("缺少 createdAt"))
+                }
+                if (name == "payments") {
+                    default(row, "isPaid", false)
+                    default(row, "reminderSet", false)
+                }
+                require(row.keySet().all { it in fields }) { "$name[$index] 包含未支持字段" }
+                // Nullable fields can be omitted; every non-null field is checked by JSON type.
+                type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.forEach { field ->
+                    val value = row[field.name] ?: return@forEach
+                    if (value.isJsonNull) {
+                        require(!field.type.isPrimitive && field.name !in setOf("name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
+                    } else when {
+                        field.type.isEnum -> require(value.isJsonPrimitive && value.asString in requireNotNull(field.type.enumConstants).map { (it as Enum<*>).name }) { "未知枚举：$name[$index].${field.name}" }
+                        List::class.java.isAssignableFrom(field.type) -> require(value.isJsonArray && value.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$name[$index].${field.name} 必须是字符串数组" }
+                        field.type == String::class.java -> require(value.isJsonPrimitive && value.asJsonPrimitive.isString) { "$name[$index].${field.name} 必须是文本" }
+                        field.type == Boolean::class.javaPrimitiveType -> require(value.isJsonPrimitive && value.asJsonPrimitive.isBoolean) { "$name[$index].${field.name} 必须是布尔值" }
+                        else -> {
+                            require(value.isJsonPrimitive && value.asJsonPrimitive.isNumber && value.asDouble.isFinite()) { "$name[$index].${field.name} 必须是有限数值" }
+                            if (field.type in setOf(Long::class.javaPrimitiveType, Int::class.javaPrimitiveType, java.lang.Long::class.java, java.lang.Integer::class.java)) {
+                                val integer = value.asBigDecimal.longValueExact()
+                                if (field.type in setOf(Int::class.javaPrimitiveType, java.lang.Integer::class.java)) require(integer in Int.MIN_VALUE..Int.MAX_VALUE) { "整数越界" }
+                            }
+                        }
+                    }
+                }
+                val required = when (name) {
+                    "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
+                    "legacyCatalogArchives" -> setOf("sourceTable", "recordKey", "payload")
+                    "syncStates" -> setOf("cacheKey", "backendBaseUrl", "assetBaseUrl", "nextCursor", "schemaVersion")
+                    else -> fields.filter { field -> field in setOf("id", "name", "createdAt", "updatedAt", "publicId", "brandId", "categoryId", "itemId", "priceId", "status", "priority", "type", "group", "amount", "totalPrice", "dueDate", "date", "description", "note", "imageUrls", "colors", "priceType", "sharedItemPublicId", "coordinateOrder", "sortOrder", "isPaid", "reminderSet", "isPreset") }.toSet()
+                }
+                required.forEach { require(row.has(it) && !row[it].isJsonNull) { "$name[$index] 缺少 $it" } }
+            }
+        }
+        default(root, "backupDate", 0L)
+        default(root, "appVersion", "历史备份")
+        require(root["appVersion"].isJsonPrimitive && root["appVersion"].asJsonPrimitive.isString) { "备份版本必须是文本" }
+        root["backupDate"].asBigDecimal.longValueExact()
+        root.addProperty("formatVersion", version)
+        root.addProperty("schemaVersion", schema)
+        val data = gson.fromJson(root, BackupData::class.java)
+        validate(data)
+        return data
+    }
+
+    private fun normalizeColors(row: JsonObject) {
+        val colors = row["colors"]
+        val array = when {
+            colors == null || colors.isJsonNull -> JsonArray()
+            colors.isJsonArray -> colors.asJsonArray
+            colors.isJsonPrimitive && colors.asJsonPrimitive.isString -> {
+                val value = colors.asString
+                if (value.trim().startsWith("[")) JsonParser.parseString(value).asJsonArray
+                else JsonArray().apply { if (value.isNotBlank()) add(value) }
+            }
+            else -> error("颜色格式错误")
+        }
+        row.add("colors", array)
+        if (array.size() == 1 && array[0].isJsonPrimitive && array[0].asJsonPrimitive.isString && array[0].asString.trim().startsWith("[")) {
+            row.add("colors", JsonParser.parseString(array[0].asString).asJsonArray)
+        }
+    }
+
+    private fun migratePurchaseDates(root: JsonObject) {
+        val payments = root["payments"].asJsonArray
+        var nextId = payments.maxOfOrNull { it.asJsonObject["id"].asLong } ?: 0L
+        root["prices"].asJsonArray.forEach { element ->
+            val price = element.asJsonObject
+            if (price.has("purchaseDate")) {
+                val date = price.remove("purchaseDate")
+                val priceId = price["id"].asLong
+                if (payments.none { it.asJsonObject["priceId"].asLong == priceId }) {
+                    val paidAt = if (date.isJsonNull) price["createdAt"].asLong else date.asBigDecimal.longValueExact()
+                    payments.add(JsonObject().apply {
+                        addProperty("id", Math.addExact(nextId, 1).also { nextId = it })
+                        addProperty("priceId", priceId); add("amount", price["totalPrice"])
+                        addProperty("dueDate", paidAt); addProperty("paidDate", paidAt)
+                        add("createdAt", price["createdAt"])
+                        addProperty("isPaid", true); addProperty("reminderSet", false)
+                    })
+                }
+            }
+        }
+    }
+
+    private fun default(row: JsonObject, name: String, value: Any) {
+        if (!row.has(name) || row[name].isJsonNull) row.add(name, gson.toJsonTree(value))
+    }
+
+    fun validate(data: BackupData) {
+        fun ids(values: List<Long>, table: String): Set<Long> {
+            require(values.all { it > 0 } && values.toSet().size == values.size) { "$table 主键无效或重复" }
+            return values.toSet()
+        }
+        val brands = ids(data.brands.map { it.id }, "品牌")
+        val categories = ids(data.categories.map { it.id }, "分类")
+        val coordinates = ids(data.coordinates.map { it.id }, "套装")
+        val locations = ids(data.locations.map { it.id }, "位置")
+        val items = ids(data.items.map { it.id }, "服饰")
+        val prices = ids(data.prices.map { it.id }, "价格")
+        ids(data.payments.map { it.id }, "付款")
+        val logs = ids(data.outfitLogs.map { it.id }, "穿搭")
+        ids(data.styles.map { it.id }, "风格"); ids(data.seasons.map { it.id }, "季节"); ids(data.sources.map { it.id }, "来源")
+        require(data.items.all { it.brandId in brands && it.categoryId in categories && (it.coordinateId == null || it.coordinateId in coordinates) && (it.locationId == null || it.locationId in locations) }) { "服饰关联无效" }
+        require(data.prices.all { it.itemId in items && it.totalPrice.isFinite() && it.totalPrice >= 0 && (it.deposit == null || it.deposit.isFinite() && it.deposit >= 0) && (it.balance == null || it.balance.isFinite() && it.balance >= 0) }) { "价格或关联无效" }
+        require(data.payments.all { it.priceId in prices && it.amount.isFinite() && it.amount >= 0 }) { "付款或关联无效" }
+        require(data.outfitItemCrossRefs.all { it.itemId in items && it.outfitLogId in logs } && data.outfitItemCrossRefs.distinct().size == data.outfitItemCrossRefs.size) { "穿搭关联无效或重复" }
+        data.legacyCatalogArchives.forEach { archive ->
+            require(archive.sourceTable in setOf("catalog_entries", "remote_catalog_entries")) { "未知历史图鉴表" }
+            val row = JsonParser.parseString(archive.payload).asJsonObject
+            val key = if (archive.sourceTable == "catalog_entries") "id" else "public_id"
+            require(row[key]?.asString == archive.recordKey) { "历史图鉴主键不匹配" }
+            row["image_urls"]?.takeUnless { it.isJsonNull }?.let { value ->
+                val images = if (value.isJsonArray) value.asJsonArray else JsonParser.parseString(value.asString).asJsonArray
+                require(images.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "历史图鉴图片格式错误" }
+            }
+        }
+    }
+}

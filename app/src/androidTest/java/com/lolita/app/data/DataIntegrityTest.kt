@@ -37,7 +37,7 @@ class DataIntegrityTest {
         LolitaDatabase.MIGRATION_9_10, LolitaDatabase.MIGRATION_10_11, LolitaDatabase.MIGRATION_11_12,
         LolitaDatabase.MIGRATION_12_13, LolitaDatabase.MIGRATION_13_14, LolitaDatabase.MIGRATION_14_15,
         LolitaDatabase.MIGRATION_15_16, LolitaDatabase.MIGRATION_16_17, LolitaDatabase.MIGRATION_17_18,
-        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20, LolitaDatabase.MIGRATION_20_21, LolitaDatabase.MIGRATION_21_22
+        LolitaDatabase.MIGRATION_18_19, LolitaDatabase.MIGRATION_19_20, LolitaDatabase.MIGRATION_20_21, LolitaDatabase.MIGRATION_21_22, LolitaDatabase.MIGRATION_22_23
     )
 
     private fun seed(db: SupportSQLiteDatabase, table: String, recordId: Long = 1L) {
@@ -71,7 +71,7 @@ class DataIntegrityTest {
                 if (version in 17..18) seed(this, "remote_catalog_entries")
                 close()
             }
-            val db = helper.runMigrationsAndValidate(name, 22, true, *migrations)
+            val db = helper.runMigrationsAndValidate(name, 23, true, *migrations)
             try {
                 listOf("items", "prices", "payments", "outfit_logs", "outfit_item_cross_ref").forEach { table ->
                     db.query("SELECT COUNT(*) FROM `$table`").use { assertTrue(it.moveToFirst()); assertEquals("v$version $table", 1, it.getInt(0)) }
@@ -139,7 +139,7 @@ class DataIntegrityTest {
             execSQL("UPDATE prices SET item_id=3,total_price=1.005 WHERE id=3")
             close()
         }
-        val db = helper.runMigrationsAndValidate(name, 22, true, *migrations)
+        val db = helper.runMigrationsAndValidate(name, 23, true, *migrations)
         try {
             db.query("SELECT COUNT(*) FROM payments").use { assertTrue(it.moveToFirst()); assertEquals(0,it.getInt(0)) }
             db.query("SELECT item_id FROM order_bindings").use {

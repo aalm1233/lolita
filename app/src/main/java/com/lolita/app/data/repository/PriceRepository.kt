@@ -38,7 +38,7 @@ class PriceRepository(
             require(db.itemDao().getItemById(price.itemId)?.includedInParentPrice != true) { "共用主件价格的小物没有独立价格" }
             require(priceDao.getPricesByItemList(price.itemId).isEmpty()) { "已有价格，请编辑或核对历史价格" }
             val id = priceDao.insertPrice(price)
-            db.orderDao().insertBinding(OrderBinding(price.itemId, id))
+            db.orderDao().insertBinding(OrderBinding(price.itemId, id, price.purchaseRecordStatus))
             id
         }
     }
@@ -55,6 +55,10 @@ class PriceRepository(
         priceDao.getPricesWithPaymentsByItem(itemId)
 
     fun getTotalSpending(): Flow<Double> = priceDao.getTotalSpending()
+
+    fun getAllRecordedSpending(): Flow<Double> = priceDao.getAllRecordedSpending()
+
+    fun getIncompleteCurrentOrderCount(): Flow<Int> = priceDao.getIncompleteCurrentOrderCount()
 
     fun getAverageOwnedPrice(): Flow<Double> = priceDao.getAverageOwnedPrice()
 

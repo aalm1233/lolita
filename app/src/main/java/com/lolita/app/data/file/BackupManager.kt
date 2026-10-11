@@ -113,6 +113,7 @@ class BackupManager(
             Triple("items", "priority", ItemPriority.entries.map { it.name }),
             Triple("order_bindings", "purchase_record_status", PurchaseRecordStatus.entries.map { it.name }),
             Triple("prices", "type", PriceType.entries.map { it.name }),
+            Triple("prices", "purchase_record_status", PurchaseRecordStatus.entries.map { it.name }),
             Triple("categories", "category_group", CategoryGroup.entries.map { it.name }),
             Triple("remote_categories", "category_group", CategoryGroup.entries.map { it.name }),
             Triple("remote_shared_price_plans", "price_type", PriceType.entries.map { it.name })
@@ -218,9 +219,9 @@ class BackupManager(
 
             // Prices
             sb.appendLine("\n=== PRICES ===")
-            sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at,shipping")
+            sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at,shipping,purchase_record_status")
             backupData.prices.forEach { p ->
-                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.createdAt},${p.shipping}")
+                sb.appendLine("${p.id},${p.itemId},${p.type},${p.totalPrice},${p.deposit},${p.balance},${p.createdAt},${p.shipping},${p.purchaseRecordStatus}")
             }
 
             // Payments
@@ -364,7 +365,7 @@ class BackupManager(
                     verifyRestoredData(importedData)
                     // Ownership is derived from the active order; ambiguous legacy orders stay untouched.
                     database.orderDao().refreshStatuses()
-                    database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(previousPayments)))
+                    database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(com.lolita.app.domain.usecase.ReminderCleanup.deduplicate(previousPayments))))
                 }
                 committed = true
             }
@@ -430,14 +431,15 @@ class BackupManager(
     private suspend fun recoverPendingRemindersLocked(): Int {
         val journal = database.restoreJournalDao().get() ?: return 0
         val previous: List<Payment> = gson.fromJson(journal.previousPaymentsJson, object : TypeToken<List<Payment>>() {}.type)
-        val failures = reconcileReminders(previous)
+        val scope = journal.affectedPriceIdsJson?.let { gson.fromJson(it, Array<Long>::class.java).toSet() }
+        val failures = reconcileReminders(com.lolita.app.domain.usecase.ReminderCleanup.deduplicate(previous), scope)
         if (failures == 0) database.withTransaction {
             if (database.restoreJournalDao().get() == journal) database.restoreJournalDao().clear()
         }
         return failures
     }
 
-    private suspend fun reconcileReminders(previous: List<Payment>): Int {
+    private suspend fun reconcileReminders(previous: List<Payment>, affectedPriceIds: Set<Long>?): Int {
         val scheduler = PaymentReminderScheduler(context)
         var failures = 0
         val stagePointers = database.orderDao().getAllStages().associateBy { it.id }
@@ -453,7 +455,8 @@ class BackupManager(
             }
         }
         val activePrices = database.orderDao().getAllBindings()
-            .filter { it.purchaseRecordStatus == PurchaseRecordStatus.TRACKED }.map { it.priceId }.toSet()
+            .filter { it.purchaseRecordStatus == PurchaseRecordStatus.TRACKED &&
+                (affectedPriceIds == null || it.priceId in affectedPriceIds) }.map { it.priceId }.toSet()
         val payments = database.paymentDao().getAllPaymentsList().filter { it.isPaid && it.priceId in activePrices }
         val prices = database.priceDao().getAllPricesList().associateBy { it.id }
         val items = database.itemDao().getAllItemsList().associateBy { it.id }
@@ -475,7 +478,8 @@ class BackupManager(
                 if (payment.dueDate > System.currentTimeMillis() && stage.calendarEventId == null &&
                     CalendarEventHelper.hasCalendarPermission(context)) {
                     val event = CalendarEventHelper.insertEvent(context, "付款提醒 · $reminderName",
-                        "付款金额: ¥${payment.amount}", payment.dueDate)
+                        "付款金额: ¥${payment.amount}", payment.dueDate,
+                        reminderMinutes = com.lolita.app.domain.usecase.PaymentReminderPolicy.calendarReminderMinutes(stage.customReminderDays))
                     if (event == null) Log.w("BackupManager", "Calendar unavailable; installment alarm remains active for ${stage.id}")
                     else database.orderDao().updateStageCalendarEventId(stage.id, event)
                 }
@@ -498,6 +502,8 @@ class BackupManager(
         try {
             val preparedBackup = prepareBackup(uri, cacheResult = true)
             val backupData = preparedBackup.backupData
+            val boundPriceIds = backupData.orderBindings.map { it.priceId }.toSet()
+            val archivedOrders = backupData.prices.filter { it.id !in boundPriceIds }
 
             Result.success(BackupPreview(
                 brandCount = backupData.brands.size,
@@ -509,6 +515,9 @@ class BackupManager(
                 orderBindingCount = backupData.orderBindings.size,
                 historicalOwnedCount = backupData.orderBindings.count { it.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED },
                 needsReviewCount = backupData.orderBindings.count { it.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW },
+                archivedOrderCount = archivedOrders.size,
+                archivedHistoricalOwnedCount = archivedOrders.count { it.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED },
+                archivedNeedsReviewCount = archivedOrders.count { it.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW },
                 paymentStageCount = backupData.paymentStages.size,
                 outfitLogCount = backupData.outfitLogs.size,
                 styleCount = backupData.styles.size,
@@ -832,6 +841,9 @@ data class BackupPreview(
     val orderBindingCount: Int = 0,
     val historicalOwnedCount: Int = 0,
     val needsReviewCount: Int = 0,
+    val archivedOrderCount: Int = 0,
+    val archivedHistoricalOwnedCount: Int = 0,
+    val archivedNeedsReviewCount: Int = 0,
     val paymentStageCount: Int = 0,
     val missingImageCount: Int = 0,
     val imageCount: Int = 0,

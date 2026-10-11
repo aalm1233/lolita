@@ -3,9 +3,12 @@ package com.lolita.app.ui.screen.price
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
@@ -82,9 +85,9 @@ fun PriceManageScreen(
                             }
                             if (order.paidAmount > order.price.totalPrice + 0.005) Text("历史实付超过订单总额，请核对原始付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                             Button(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text(if (state.includedInParentPrice) "查看主件付款" else "付款阶段与实付记录") }
-                            if (!state.includedInParentPrice && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.payments.isEmpty()) {
+                            if (!state.includedInParentPrice && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.remainingAmount > 0.005) {
                                 TextButton(enabled = !state.isUpdating, onClick = { purchaseConfirmation = PurchaseRecordStatus.HISTORICAL_OWNED }, modifier = Modifier.fillMaxWidth()) {
-                                    Text("历史已购，付款资料缺失")
+                                    Text("历史已购，付款资料未补齐")
                                 }
                             }
                             if (!state.includedInParentPrice) TextButton(enabled = !state.isUpdating, onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("保留历史并解除当前订单") }
@@ -122,7 +125,7 @@ fun PriceManageScreen(
         }
     }
     if (confirmArchive) AlertDialog(onDismissRequest = { confirmArchive = false }, title = { Text("归档当前订单") },
-        text = { Text("完整保留价格、阶段和实付记录，解除当前订单绑定。此后可将小物切换为共用主件价格，或重新选定历史订单。归档的订单不再计入当前消费统计。") },
+        text = { Text("完整保留价格、阶段和实付记录，解除当前订单绑定。此后可将小物切换为共用主件价格，或重新选定历史订单。归档后从当前订单实付中移除，仍计入全部已录实付。") },
         confirmButton = { TextButton(enabled = !state.isUpdating, onClick = { viewModel.archiveCurrentOrder(); confirmArchive = false }) { Text("保留并归档") } },
         dismissButton = { TextButton(onClick = { confirmArchive = false }) { Text("取消") } })
     orderToBind?.let { price -> AlertDialog(onDismissRequest = { orderToBind = null }, title = { Text("确认当前订单") },
@@ -131,16 +134,40 @@ fun PriceManageScreen(
         dismissButton = { TextButton(onClick = { orderToBind = null }) { Text("取消") } }) }
     purchaseConfirmation?.let { status ->
         val historical = status == PurchaseRecordStatus.HISTORICAL_OWNED
+        val order = state.order
+        var paymentRecordsVerified by remember(status, order) { mutableStateOf(false) }
         AlertDialog(
             onDismissRequest = { purchaseConfirmation = null },
-            title = { Text(if (historical) "确认历史已购" else "确认仍待付款") },
-            text = { Text(if (historical)
-                "确认这件服饰已购入，但历史付款资料没有补全。订单价格、所有原始阶段和付款记录保留；不会生成实付金额或付款日期，未付余额仍为未知。"
-                else "确认这笔订单确实仍需付款后，系统会按订单总价减去已录实付显示未付余额，并恢复状态和提醒计算。原价格和付款记录保留，不会生成实付金额或日期。若已购完成而只是缺付款资料，请取消。") },
-            confirmButton = { TextButton(enabled = !state.isUpdating, onClick = {
-                if (historical) viewModel.confirmHistoricalPurchase() else viewModel.confirmTrackedOrder()
+            title = { Text(if (historical) "确认历史已购" else "核对账本并启用跟踪") },
+            text = {
+                if (historical) Text("确认这件服饰已购入，但历史付款资料没有补全。订单价格、所有原始阶段和付款记录保留；不会生成实付金额或付款日期，未付余额仍为未知。")
+                else Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                    Text("请先核对真实付款记录是否已全部录入。启用后将按以下余额计算付款状态和提醒，不会自动补录缺失付款。")
+                    if (order != null) {
+                        PricingValueRow("订单总价", formatPriceAmount(order.price.totalPrice))
+                        PricingValueRow("已录实付", formatPriceAmount(order.paidAmount))
+                        PricingValueRow("核对后待付余额", formatPriceAmount(order.remainingAmount.coerceAtLeast(0.0)))
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().toggleable(
+                            value = paymentRecordsVerified,
+                            enabled = !state.isUpdating && order != null,
+                            role = Role.Checkbox,
+                            onValueChange = { paymentRecordsVerified = it }
+                        ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(checked = paymentRecordsVerified, onCheckedChange = null, enabled = !state.isUpdating && order != null)
+                        Spacer(Modifier.width(skin.spacingSmall))
+                        Text("真实付款记录已全部录入，余额与实际待付一致", style = MaterialTheme.typography.bodyMedium)
+                    }
+                    Text("资料未补齐时请取消，余额继续保持未知。已购服饰可先确认历史已购，再补录能够确认的真实付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            },
+            confirmButton = { TextButton(enabled = !state.isUpdating && order != null && (historical || paymentRecordsVerified), onClick = {
+                if (historical) viewModel.confirmHistoricalPurchase() else viewModel.confirmTrackedOrder(paymentRecordsVerified)
                 purchaseConfirmation = null
-            }) { Text(if (historical) "确认历史已购" else "确认仍待付款") } },
+            }) { Text(if (historical) "确认历史已购" else "确认并启用跟踪") } },
             dismissButton = { TextButton(onClick = { purchaseConfirmation = null }) { Text("取消") } }
         )
     }
@@ -164,15 +191,15 @@ internal fun PurchaseRecordNotice(
                 Text(if (historical) "付款记录未补全。订单价格和原始记录保留，未付余额为未知。"
                     else "原价格和记录保留。核对前暂不修改付款阶段或实付记录，也不根据缺失资料认定欠款。",
                     style = MaterialTheme.typography.bodyMedium)
-                Text(if (historical) "历史付款阶段只读，可补录或更正能够确认的真实实付。需要跟踪后续付款时，请先确认仍待付款。"
-                    else "确认历史已购不会补造付款金额或日期；确认仍待付款后，才按正常订单跟踪余额和提醒。",
+                Text(if (historical) "历史付款阶段只读，可补录或更正能够确认的真实实付。付款资料补齐后，可核对账本并启用后续付款跟踪。"
+                    else "确认历史已购不会补造付款金额或日期；真实付款记录完整且余额核对一致后，才启用付款跟踪。",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (!historical && onConfirmHistorical != null) Button(
                     onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
                 ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
                 if (onConfirmTracked != null) OutlinedButton(
                     onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
-                ) { Text("确认仍待付款") }
+                ) { Text("核对账本并启用跟踪") }
                 if (onReturnToReview != null) TextButton(
                     onClick = onReturnToReview, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
                 ) { Text("返回核对购买状态") }

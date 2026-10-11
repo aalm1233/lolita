@@ -73,8 +73,12 @@ interface OutfitLogDao {
     suspend fun getCoOccurringItemIds(itemId: Long): List<Long>
 
     @Transaction
-    @Query("SELECT * FROM outfit_logs WHERE date BETWEEN :dayStart AND :dayEnd LIMIT 1")
-    suspend fun getOutfitLogByDay(dayStart: Long, dayEnd: Long): OutfitLogWithItems?
+    @Query("SELECT * FROM outfit_logs WHERE date >= :dayStart AND date < :dayEndExclusive ORDER BY date DESC, id DESC LIMIT 1")
+    suspend fun getOutfitLogByDay(dayStart: Long, dayEndExclusive: Long): OutfitLogWithItems?
+
+    @Transaction
+    @Query("SELECT * FROM outfit_logs WHERE date >= :dayStart AND date < :dayEndExclusive ORDER BY date DESC, id DESC LIMIT 1")
+    fun observeOutfitLogByDay(dayStart: Long, dayEndExclusive: Long): Flow<OutfitLogWithItems?>
 }
 
 data class OutfitLogWithItems(

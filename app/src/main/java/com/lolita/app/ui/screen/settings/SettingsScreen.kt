@@ -315,7 +315,7 @@ private fun ProfileSection(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "总花费 ¥$formattedSpent",
+                        text = "当前订单实付 ¥$formattedSpent",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

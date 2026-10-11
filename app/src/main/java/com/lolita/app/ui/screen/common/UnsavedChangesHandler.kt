@@ -8,16 +8,16 @@ import androidx.compose.runtime.*
 fun UnsavedChangesHandler(
     hasUnsavedChanges: Boolean,
     onBack: () -> Unit
-) {
+): () -> Unit {
     var showDialog by remember { mutableStateOf(false) }
-
-    BackHandler(enabled = true) {
+    val requestBack: () -> Unit = {
         if (hasUnsavedChanges) {
             showDialog = true
         } else {
             onBack()
         }
     }
+    BackHandler(enabled = true, onBack = requestBack)
 
     if (showDialog) {
         AlertDialog(
@@ -35,4 +35,5 @@ fun UnsavedChangesHandler(
             }
         )
     }
+    return requestBack
 }

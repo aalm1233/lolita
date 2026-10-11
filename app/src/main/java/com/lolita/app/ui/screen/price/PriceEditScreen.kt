@@ -28,7 +28,7 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
     val canEdit = tracked && !state.isSaving && !state.isLoading && !state.loadFailed
     var confirmTemplate by remember { mutableStateOf(false) }
     LaunchedEffect(priceId) { viewModel.loadPrice(priceId) }
-    UnsavedChangesHandler(hasUnsavedChanges = viewModel.hasUnsavedChanges, onBack = onBack)
+    val requestBack = UnsavedChangesHandler(hasUnsavedChanges = viewModel.hasUnsavedChanges, onBack = onBack)
     val saveWithReminderPermissions = rememberStageReminderSave {
         scope.launch {
             if (priceId == null) viewModel.save(itemId).onSuccess { onSaveSuccess() }
@@ -38,7 +38,7 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
 
     Scaffold(topBar = {
         GradientTopAppBar(title = { Text(if (priceId == null) "设置价格" else "编辑价格与计划") },
-            navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
+            navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
                 IconButton(enabled = viewModel.isValid() && !state.isSaving, onClick = {
                     saveWithReminderPermissions(state.stages.any { it.reminderSet && it.dueDate != null })
                 }) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
@@ -49,14 +49,14 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
             if (state.isLoading) PricingSkeleton() else if (state.loadFailed) {
                 LolitaSection("价格暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
             } else {
-                if (!tracked) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = onBack)
+                if (!tracked) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = requestBack)
                 LolitaSection("订单价格") {
                     row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                         PriceMoneyField(state.totalPrice, viewModel::updateTotalPrice, "商品金额", canEdit)
                         PriceMoneyField(state.shipping, viewModel::updateShipping, "邮费", canEdit)
                         PricingValueRow(if (tracked) "应付总额（含邮费）" else "订单总价（含邮费）", state.payableTotal?.let(::formatPriceAmount) ?: "请填写金额")
                         if (priceId != null) PricingValueRow(if (tracked) "历史实际已付" else "已录实付", if (!tracked && !state.hasRecordedPayments) "付款记录未补全" else formatPriceAmount(state.paidAmount))
-                        Text(if (tracked) "修改金额或应付日期会更新余额，已付款记录保留。" else "历史价格和付款阶段只读。若确实仍需付款，请回价格页确认仍待付款后再修改计划。",
+                        Text(if (tracked) "修改金额或应付日期会更新余额，已付款记录保留。" else "历史价格和付款阶段只读。请回价格页核对完整账本并启用付款跟踪后，再修改计划。",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     } }
                 }

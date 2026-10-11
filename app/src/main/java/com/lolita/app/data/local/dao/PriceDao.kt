@@ -55,6 +55,16 @@ interface PriceDao {
     @Query("SELECT COALESCE(SUM(ROUND(pay.amount*100))/100.0, 0.0) FROM payments pay INNER JOIN prices p ON pay.price_id=p.id INNER JOIN order_bindings ob ON ob.price_id=p.id INNER JOIN items i ON p.item_id = i.id WHERE pay.is_paid=1")
     fun getTotalSpending(): Flow<Double>
 
+    @Query("""
+        SELECT COALESCE(SUM(CAST(ROUND(pay.amount * 100) AS INTEGER)) / 100.0, 0.0)
+        FROM payments pay INNER JOIN prices p ON pay.price_id = p.id
+        WHERE pay.is_paid = 1
+    """)
+    fun getAllRecordedSpending(): Flow<Double>
+
+    @Query("SELECT COUNT(*) FROM order_bindings WHERE purchase_record_status <> 'TRACKED'")
+    fun getIncompleteCurrentOrderCount(): Flow<Int>
+
     @Query("""SELECT COALESCE(AVG(p.total_price),0) FROM prices p JOIN order_bindings b ON b.price_id=p.id
         JOIN items i ON i.id=b.item_id WHERE i.status='OWNED'""")
     fun getAverageOwnedPrice(): Flow<Double>

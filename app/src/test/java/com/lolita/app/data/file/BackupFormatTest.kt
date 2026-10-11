@@ -24,12 +24,17 @@ class BackupFormatTest {
         addProperty("formatVersion", version); addProperty("schemaVersion", 20)
         remove("orderBindings"); remove("paymentStages")
         get("items").asJsonArray.forEach { it.asJsonObject.remove("includedInParentPrice") }
-        get("prices").asJsonArray.forEach { it.asJsonObject.remove("shipping") }
+        get("prices").asJsonArray.forEach { it.asJsonObject.remove("shipping"); it.asJsonObject.remove("purchaseRecordStatus") }
         get("payments").asJsonArray.forEach { it.asJsonObject.remove("stageId") }
     }
     private fun v3Json() = json().apply {
         addProperty("formatVersion", 3); addProperty("schemaVersion", 21)
         get("orderBindings").asJsonArray.forEach { it.asJsonObject.remove("purchaseRecordStatus") }
+        get("prices").asJsonArray.forEach { it.asJsonObject.remove("purchaseRecordStatus") }
+    }
+    private fun v4Json() = json().apply {
+        addProperty("formatVersion", 4); addProperty("schemaVersion", 22)
+        get("prices").asJsonArray.forEach { it.asJsonObject.remove("purchaseRecordStatus") }
     }
 
     @Test fun preservesEveryFieldOnRoundTrip() {
@@ -354,7 +359,8 @@ class BackupFormatTest {
 
     @Test fun modernPurchaseRecordStatusesRoundTripAndCannotBypassMoneyValidation() {
         for (status in PurchaseRecordStatus.entries) {
-            val original = data().copy(orderBindings = listOf(data().orderBindings.single().copy(purchaseRecordStatus = status)))
+            val original = data().copy(orderBindings = listOf(data().orderBindings.single().copy(purchaseRecordStatus = status)),
+                prices = listOf(data().prices.single().copy(purchaseRecordStatus = status)))
             assertEquals(original, BackupFormat.parse(Gson().toJson(original)))
             assertThrows(IllegalArgumentException::class.java) {
                 BackupFormat.validate(original.copy(prices = listOf(original.prices.single().copy(totalPrice = -1.0))))
@@ -393,6 +399,37 @@ class BackupFormatTest {
         assertEquals(1, restored.payments.size)
         assertFalse(restored.payments.single().isPaid)
         assertTrue(restored.orderBindings.isEmpty())
+    }
+
+    @Test fun v4MigrationPersistsBoundEvidenceAndDoesNotGuessArchivedEvidence() {
+        for (status in PurchaseRecordStatus.entries) {
+            val old = v4Json()
+            old["orderBindings"].asJsonArray[0].asJsonObject.addProperty("purchaseRecordStatus", status.name)
+            old["prices"].asJsonArray.add(old["prices"].asJsonArray[0].deepCopy().asJsonObject.apply { addProperty("id", 18) })
+            val restored = BackupFormat.parse(old.toString())
+            assertEquals(status, restored.prices.first { it.id == 8L }.purchaseRecordStatus)
+            assertEquals(PurchaseRecordStatus.NEEDS_REVIEW, restored.prices.first { it.id == 18L }.purchaseRecordStatus)
+            assertEquals(status, restored.orderBindings.single().purchaseRecordStatus)
+            assertEquals(data().payments, restored.payments)
+        }
+    }
+
+    @Test fun archivedEvidenceRoundTripsWithoutACurrentBinding() {
+        val original = data().copy(orderBindings = emptyList(),
+            prices = listOf(data().prices.single().copy(purchaseRecordStatus = PurchaseRecordStatus.HISTORICAL_OWNED)))
+        assertEquals(original, BackupFormat.parse(Gson().toJson(original)))
+    }
+
+    @Test fun modernOrderEvidenceCannotBeMissingUnknownOrDisagreeWithBinding() {
+        for (invalid in listOf<String?>(null, "FUTURE", "HISTORICAL_OWNED")) {
+            val broken = json()
+            val price = broken["prices"].asJsonArray[0].asJsonObject
+            if (invalid == null) price.remove("purchaseRecordStatus") else price.addProperty("purchaseRecordStatus", invalid)
+            assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(broken.toString()) }
+        }
+        val nullStatus = json()
+        nullStatus["prices"].asJsonArray[0].asJsonObject.add("purchaseRecordStatus", JsonNull.INSTANCE)
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(nullStatus.toString()) }
     }
 
 }

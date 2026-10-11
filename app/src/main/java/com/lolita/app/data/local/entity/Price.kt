@@ -45,5 +45,9 @@ data class Price(
     val deposit: Double? = null,
 
     @ColumnInfo(name = "balance")
-    val balance: Double? = null
+    val balance: Double? = null,
+
+    // Purchase evidence belongs to the order and survives removal of its current binding.
+    @ColumnInfo(name = "purchase_record_status", defaultValue = "'NEEDS_REVIEW'")
+    val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED
 )

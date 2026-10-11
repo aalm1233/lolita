@@ -36,9 +36,9 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
         }
     }
     LaunchedEffect(priceId, paymentId) { viewModel.loadPayment(priceId, paymentId) }
-    UnsavedChangesHandler(viewModel.hasUnsavedChanges, onBack)
+    val requestBack = UnsavedChangesHandler(viewModel.hasUnsavedChanges, onBack)
     Scaffold(topBar = { GradientTopAppBar(title = { Text(if (paymentId != null) "编辑实际付款" else if (historical) "补录真实付款" else "记录实际付款") },
-        navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
+        navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
             IconButton(enabled = canSave, onClick = savePayment) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
         }) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
@@ -46,7 +46,7 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
             if (state.isLoading) PricingSkeleton() else if (state.loadFailed) {
                 LolitaSection("付款资料暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
             } else {
-                if (state.purchaseRecordStatus != PurchaseRecordStatus.TRACKED) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = onBack)
+                if (state.purchaseRecordStatus != PurchaseRecordStatus.TRACKED) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = requestBack)
                 LolitaSection("购买信息参考") {
                     row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                         Text("服饰", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

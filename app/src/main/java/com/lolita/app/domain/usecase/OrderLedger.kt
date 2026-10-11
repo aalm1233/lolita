@@ -16,16 +16,40 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
     private val prices = database.priceDao()
     private val payments = database.paymentDao()
     private val mutex = ledgerMutex
-    private suspend fun <T> mutate(block: suspend () -> T): T = mutex.withLock {
+    private suspend fun <T> mutate(
+        itemId: Long? = null,
+        priceId: Long? = null,
+        stageId: Long? = null,
+        paymentId: Long? = null,
+        block: suspend () -> T
+    ): T = mutex.withLock {
         val result = database.withTransaction {
-            val previous = payments.getAllPaymentsList() + dao.getAllStages().map { stage ->
-                Payment(id = -stage.id, priceId = stage.priceId, amount = stage.amount,
-                    dueDate = stage.dueDate ?: 0, calendarEventId = stage.calendarEventId)
+            val affected = mutableSetOf<Long>()
+            priceId?.let(affected::add)
+            itemId?.let { dao.getBinding(it)?.priceId?.let(affected::add) }
+            stageId?.let { dao.getStage(it)?.priceId?.let(affected::add) }
+            paymentId?.let { payments.getPaymentById(it)?.priceId?.let(affected::add) }
+            val previous = affected.flatMap { id ->
+                payments.getPaymentsByPriceList(id) + dao.getStages(id).map { stage ->
+                    Payment(id = -stage.id, priceId = stage.priceId, amount = stage.amount,
+                        dueDate = stage.dueDate ?: 0, calendarEventId = stage.calendarEventId)
+                }
             }
-            val pending = database.restoreJournalDao().get()?.previousPaymentsJson
-            val allPrevious = previous + (pending?.let { Gson().fromJson(it, Array<Payment>::class.java).toList() } ?: emptyList())
-            database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = Gson().toJson(allPrevious)))
-            block().also { dao.refreshStatuses() }
+            val gson = Gson()
+            val pending = database.restoreJournalDao().get()
+            val retry = pending?.let { gson.fromJson(it.previousPaymentsJson, Array<Payment>::class.java).toList() }.orEmpty()
+            val value = block()
+            itemId?.let { dao.getBinding(it)?.priceId?.let(affected::add) }
+            dao.refreshStatuses()
+            val scope = if (pending != null && pending.affectedPriceIdsJson == null) null else {
+                val previousScope = pending?.affectedPriceIdsJson?.let { gson.fromJson(it, Array<Long>::class.java).toSet() }.orEmpty()
+                gson.toJson((affected + previousScope).sorted())
+            }
+            database.restoreJournalDao().save(RestoreJournal(
+                previousPaymentsJson = gson.toJson(ReminderCleanup.deduplicate(previous + retry)),
+                affectedPriceIdsJson = scope
+            ))
+            value
         }
         runCatching { BackupManager(context, database).recoverPendingReminders() }
             .onFailure { Log.w("OrderRepository", "Reminder reconciliation will retry", it) }
@@ -51,20 +75,20 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         val binding = dao.getBinding(price.itemId) ?: error("请先核对并选择当前订单")
         require(binding.priceId == priceId) { "请先核对并选择当前订单" }
         require(binding.purchaseRecordStatus != PurchaseRecordStatus.NEEDS_REVIEW) {
-            "历史付款资料不完整，请先确认已购或仍待付款"
+            "历史付款资料不完整，请先确认历史已购或核对账本并启用跟踪"
         }
         require(!trackedOnly || binding.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
-            "历史已购订单的付款计划只供查看，请先确认仍待付款后管理订单和阶段"
+            "历史已购订单的付款计划只供查看，请先核对账本并启用跟踪后管理订单和阶段"
         }
         return price
     }
 
-    suspend fun createOrder(price: Price, stages: List<PaymentStage>, initialPaidDate: Long? = null): Long = mutate {
+    suspend fun createOrder(price: Price, stages: List<PaymentStage>, initialPaidDate: Long? = null): Long = mutate(itemId = price.itemId) {
         validatePrice(price); validateStages(price, stages)
         val item = database.itemDao().getItemById(price.itemId) ?: error("服饰不存在")
         require(!item.includedInParentPrice) { "小物已包含在主件价格中" }
         require(dao.getBinding(item.id) == null && prices.getPricesByItemList(item.id).isEmpty()) { "已有价格，请编辑或核对历史价格" }
-        val id = prices.insertPrice(price.copy(id = 0))
+        val id = prices.insertPrice(price.copy(id = 0, purchaseRecordStatus = PurchaseRecordStatus.TRACKED))
         dao.insertBinding(OrderBinding(item.id, id))
         val ids = stages.map { dao.insertStage(it.copy(id = 0, priceId = id, calendarEventId = null)) }
         if (initialPaidDate != null) payments.insertPayment(Payment(priceId = id, stageId = ids.first(), amount = stages.first().amount,
@@ -72,7 +96,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         id
     }
 
-    suspend fun updateOrder(price: Price, stages: List<PaymentStage>) = mutate {
+    suspend fun updateOrder(price: Price, stages: List<PaymentStage>) = mutate(priceId = price.id) {
         val oldPrice = requireActive(price.id, trackedOnly = true)
         require(oldPrice.itemId == price.itemId) { "不能更换订单所属服饰" }
         validatePrice(price); validateStages(price, stages)
@@ -95,10 +119,10 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
             allPayments.filter { it.stageId == old.id }.forEach { payments.updatePayment(it.copy(stageId = null)) }
             dao.deleteStage(old.id)
         }
-        prices.updatePrice(price)
+        prices.updatePrice(price.copy(purchaseRecordStatus = oldPrice.purchaseRecordStatus))
     }
 
-    suspend fun bindHistoricalOrder(itemId: Long, priceId: Long) = mutate {
+    suspend fun bindHistoricalOrder(itemId: Long, priceId: Long) = mutate(itemId = itemId, priceId = priceId) {
         val item = database.itemDao().getItemById(itemId) ?: error("服饰不存在")
         require(!item.includedInParentPrice) { "小物已共用主件价格" }
         val price = prices.getPriceById(priceId) ?: error("价格不存在")
@@ -108,26 +132,20 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         val historicalStages = dao.getStages(priceId)
         historicalPayments.forEach { OrderAccounting.validateAmount(it.amount, true) }
         require(historicalStages.all { OrderAccounting.hasCentPrecision(it.amount) && it.amount > 0 && it.amount < OrderAccounting.MAX_AMOUNT }) { "历史阶段金额无效，请先核对原始记录" }
-        val current = dao.getBinding(itemId)
-        val actualPaid = OrderAccounting.sum(historicalPayments.filter { it.isPaid }.map { it.amount })
-        val hasFullPayment = OrderAccounting.settled(price.totalPrice, actualPaid)
-        val recordStatus = when {
-            current?.priceId == priceId -> current.purchaseRecordStatus
-            item.status == ItemStatus.OWNED && !hasFullPayment -> PurchaseRecordStatus.HISTORICAL_OWNED
-            hasFullPayment -> PurchaseRecordStatus.TRACKED
-            historicalPayments.none { it.isPaid } && historicalStages.isEmpty() -> PurchaseRecordStatus.NEEDS_REVIEW
-            else -> PurchaseRecordStatus.TRACKED
-        }
-        dao.deleteBinding(itemId); dao.insertBinding(OrderBinding(itemId, priceId, recordStatus))
+        // Never infer this order's purchase evidence from an item/parent/different order.
+        dao.deleteBinding(itemId)
+        dao.insertBinding(OrderBinding(itemId, priceId, price.purchaseRecordStatus))
     }
 
     suspend fun confirmHistoricalPurchase(itemId: Long) =
         confirmPurchaseRecordStatus(itemId, PurchaseRecordStatus.HISTORICAL_OWNED)
 
-    suspend fun confirmTrackedOrder(itemId: Long) =
+    suspend fun confirmTrackedOrder(itemId: Long, paymentRecordsVerified: Boolean = false) {
+        require(paymentRecordsVerified) { "请核对真实付款已全部录入，计算余额与实际待付一致" }
         confirmPurchaseRecordStatus(itemId, PurchaseRecordStatus.TRACKED)
+    }
 
-    private suspend fun confirmPurchaseRecordStatus(itemId: Long, status: PurchaseRecordStatus) = mutate {
+    private suspend fun confirmPurchaseRecordStatus(itemId: Long, status: PurchaseRecordStatus) = mutate(itemId = itemId) {
         val item = database.itemDao().getItemById(itemId) ?: error("服饰不存在")
         require(!item.includedInParentPrice) { "小物共用主件价格，请核对主件订单" }
         require(dao.getBinding(itemId) != null) { "请先核对并选择当前订单" }
@@ -135,9 +153,9 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         dao.updatePurchaseRecordStatus(itemId, status)
     }
 
-    suspend fun archiveCurrentOrder(itemId: Long) = mutate { dao.deleteBinding(itemId) }
+    suspend fun archiveCurrentOrder(itemId: Long) = mutate(itemId = itemId) { dao.deleteBinding(itemId) }
 
-    suspend fun saveStage(stage: PaymentStage): Long = mutate {
+    suspend fun saveStage(stage: PaymentStage): Long = mutate(priceId = stage.priceId) {
         val price = requireActive(stage.priceId, trackedOnly = true)
         val current = dao.getStages(price.id)
         val paid = payments.getPaymentsByPriceList(price.id).filter { it.isPaid && it.stageId == stage.id }
@@ -153,13 +171,13 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         }
         id
     }
-    suspend fun deleteStage(id: Long) = mutate {
+    suspend fun deleteStage(id: Long) = mutate(stageId = id) {
         val stage = dao.getStage(id) ?: error("阶段不存在")
         requireActive(stage.priceId, trackedOnly = true)
         payments.getPaymentsByPriceList(stage.priceId).filter { it.stageId == id }.forEach { payments.updatePayment(it.copy(stageId = null)) }
         dao.deleteStage(id)
     }
-    suspend fun recordPayment(priceId: Long, amount: Double, paidDate: Long, stageId: Long? = null): Long = mutate {
+    suspend fun recordPayment(priceId: Long, amount: Double, paidDate: Long, stageId: Long? = null): Long = mutate(priceId = priceId) {
         val price = requireActive(priceId); OrderAccounting.validateAmount(amount, true)
         val paid = payments.getPaymentsByPriceList(priceId).filter { it.isPaid }
         validateActual(price, paid, amount, stageId)
@@ -167,7 +185,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
     }
 
     /** An explicit historical supplement may have a confirmed amount and an unknown date. */
-    suspend fun recordHistoricalPayment(priceId: Long, amount: Double, paidDate: Long?, stageId: Long? = null): Long = mutate {
+    suspend fun recordHistoricalPayment(priceId: Long, amount: Double, paidDate: Long?, stageId: Long? = null): Long = mutate(priceId = priceId) {
         val price = requireActive(priceId)
         require(dao.getBinding(price.itemId)?.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED) {
             "仅历史已购订单可补录历史付款资料"
@@ -189,7 +207,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
             require(OrderAccounting.cents(OrderAccounting.sum(others.filter { p -> p.stageId == it }.map { p -> p.amount } + amount)) <= OrderAccounting.cents(stage.amount)) { "付款超过阶段未付金额" }
         }
     }
-    suspend fun editPayment(payment: Payment) = mutate {
+    suspend fun editPayment(payment: Payment) = mutate(priceId = payment.priceId) {
         val old = payments.getPaymentById(payment.id) ?: error("付款不存在")
         require(old.priceId == payment.priceId && old.isPaid) { "仅能编辑实际付款" }
         val price = requireActive(payment.priceId); OrderAccounting.validateAmount(payment.amount, true)
@@ -199,7 +217,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         val dueDate = if (payment.paidDate == null && old.paidDate != null) 0L else payment.dueDate
         payments.updatePayment(payment.copy(dueDate = dueDate, reminderSet = false, calendarEventId = null))
     }
-    suspend fun deletePayment(id: Long) = mutate {
+    suspend fun deletePayment(id: Long) = mutate(paymentId = id) {
         val old = payments.getPaymentById(id) ?: error("付款不存在")
         requireActive(old.priceId); require(old.isPaid) { "历史计划请在付款阶段中管理" }
         payments.deletePayment(old)
@@ -207,13 +225,18 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
     suspend fun reconcileReminders() {
         database.withTransaction {
             dao.refreshStatuses()
-            if (database.restoreJournalDao().get() == null) {
-                val previous = payments.getAllPaymentsList() + dao.getAllStages().map { stage ->
-                    Payment(id=-stage.id,priceId=stage.priceId,amount=stage.amount,
-                        dueDate=stage.dueDate ?: 0,calendarEventId=stage.calendarEventId)
-                }
-                database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson=Gson().toJson(previous)))
+            val gson = Gson()
+            val pending = database.restoreJournalDao().get()
+            val retry = pending?.let { gson.fromJson(it.previousPaymentsJson, Array<Payment>::class.java).toList() }.orEmpty()
+            val previous = payments.getAllPaymentsList() + dao.getAllStages().map { stage ->
+                Payment(id=-stage.id,priceId=stage.priceId,amount=stage.amount,
+                    dueDate=stage.dueDate ?: 0,calendarEventId=stage.calendarEventId)
             }
+            // Startup/reboot must restore every order, even when a scoped cleanup is pending.
+            database.restoreJournalDao().save(RestoreJournal(
+                previousPaymentsJson = gson.toJson(ReminderCleanup.deduplicate(previous + retry)),
+                affectedPriceIdsJson = null
+            ))
         }
         BackupManager(context, database).recoverPendingReminders()
     }

@@ -24,17 +24,22 @@ import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.TimeZone
 
 @Immutable
 data class ItemCardData(
@@ -129,7 +134,10 @@ class ItemListViewModel(
     private val categoryRepository: CategoryRepository = com.lolita.app.di.AppModule.categoryRepository(),
     private val priceRepository: PriceRepository = com.lolita.app.di.AppModule.priceRepository(),
     private val appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
-    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
+    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository(),
+    private val outfitLogRepository: com.lolita.app.data.repository.OutfitLogRepository = com.lolita.app.di.AppModule.outfitLogRepository(),
+    private val currentTimeMillis: () -> Long = System::currentTimeMillis,
+    private val currentTimeZone: () -> TimeZone = TimeZone::getDefault
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
@@ -137,6 +145,9 @@ class ItemListViewModel(
 
     private var totalPriceJob: Job? = null
     private var searchJob: Job? = null
+    private val todayOutfitDay = MutableStateFlow(
+        outfitLogRepository.dayRangeAt(currentTimeMillis(), currentTimeZone())
+    )
 
     private val _locations = MutableStateFlow<List<com.lolita.app.data.local.entity.Location>>(emptyList())
     val locations: StateFlow<List<com.lolita.app.data.local.entity.Location>> = _locations.asStateFlow()
@@ -157,17 +168,38 @@ class ItemListViewModel(
         loadLocations()
     }
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private fun loadTodayOutfit() {
         viewModelScope.launch {
-            val todayLog = com.lolita.app.di.AppModule.outfitLogRepository().getTodayOutfitLog()
-            _uiState.update {
-                it.copy(
-                    hasTodayOutfit = todayLog != null,
-                    todayOutfitLogId = todayLog?.outfitLog?.id,
-                    todayOutfitItemImages = todayLog?.items?.take(3)?.map { item -> item.imageUrls.firstOrNull() } ?: emptyList()
-                )
+            todayOutfitDay.flatMapLatest { range -> outfitLogRepository.observeOutfitLogByDay(range) }
+                .retryWhen { error, _ ->
+                    if (error is CancellationException) throw error
+                    android.util.Log.w("ItemListVM", "Failed to observe today's outfit log", error)
+                    delay(1_000)
+                    true
+                }.collect { todayLog ->
+                    _uiState.update {
+                        it.copy(
+                            hasTodayOutfit = todayLog != null,
+                            todayOutfitLogId = todayLog?.outfitLog?.id,
+                            todayOutfitItemImages = todayLog?.items?.take(3)
+                                ?.map { item -> item.imageUrls.firstOrNull() } ?: emptyList()
+                        )
+                    }
+                }
+        }
+        viewModelScope.launch {
+            while (isActive) {
+                refreshTodayOutfitDay()
+                // Check at midnight, with a bounded wait in case the clock changes
+                // while the screen's broadcast listener is not active.
+                delay((todayOutfitDay.value.endExclusive - currentTimeMillis()).coerceIn(1L, 60_000L))
             }
         }
+    }
+
+    fun refreshTodayOutfitDay() {
+        todayOutfitDay.value = outfitLogRepository.dayRangeAt(currentTimeMillis(), currentTimeZone())
     }
 
     private fun loadLocations() {

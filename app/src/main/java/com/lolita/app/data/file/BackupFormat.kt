@@ -9,8 +9,8 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 4
-    const val SCHEMA_VERSION = 22
+    const val VERSION = 5
+    const val SCHEMA_VERSION = 23
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -45,6 +45,7 @@ internal object BackupFormat {
         if (version == 1) migratePurchaseDates(root)
         if (version < 3) migrateOrders(root)
         if (version < 4) migratePurchaseRecordStatuses(root)
+        if (version < 5) persistOrderPurchaseEvidence(root)
         entities.forEach { (name, type) ->
             if (!root.has(name) || root[name].isJsonNull) root.add(name, JsonArray())
             require(root[name].isJsonArray) { "$name 必须是数组" }
@@ -112,7 +113,7 @@ internal object BackupFormat {
                     "paymentStages" -> setOf("id", "priceId", "name", "amount", "reminderSet")
                     "legacyCatalogArchives" -> setOf("sourceTable", "recordKey", "payload")
                     "syncStates" -> setOf("cacheKey", "backendBaseUrl", "assetBaseUrl", "nextCursor", "schemaVersion")
-                    else -> fields.filter { field -> field in setOf("id", "name", "createdAt", "updatedAt", "publicId", "brandId", "categoryId", "itemId", "priceId", "status", "priority", "type", "group", "amount", "totalPrice", "dueDate", "date", "description", "note", "imageUrls", "colors", "priceType", "sharedItemPublicId", "coordinateOrder", "sortOrder", "isPaid", "reminderSet", "isPreset", "shipping", "includedInParentPrice") }.toSet()
+                    else -> fields.filter { field -> field in setOf("id", "name", "createdAt", "updatedAt", "publicId", "brandId", "categoryId", "itemId", "priceId", "status", "priority", "type", "group", "amount", "totalPrice", "dueDate", "date", "description", "note", "imageUrls", "colors", "priceType", "sharedItemPublicId", "coordinateOrder", "sortOrder", "isPaid", "reminderSet", "isPreset", "shipping", "includedInParentPrice", "purchaseRecordStatus") }.toSet()
                 }
                 required.forEach { require(row.has(it) && !row[it].isJsonNull) { "$name[$index] 缺少 $it" } }
             }
@@ -126,6 +127,18 @@ internal object BackupFormat {
         val data = gson.fromJson(root, BackupData::class.java)
         validate(data)
         return data
+    }
+
+    private fun persistOrderPurchaseEvidence(root: JsonObject) {
+        val bindingByPrice = root["orderBindings"].asJsonArray.map { it.asJsonObject }
+            .associateBy { it["priceId"].asLong }
+        root["prices"].asJsonArray.forEach { element ->
+            val price = element.asJsonObject
+            require(!price.has("purchaseRecordStatus")) { "历史备份包含新版订单购买证据" }
+            price.add("purchaseRecordStatus", bindingByPrice[price["id"].asLong]
+                ?.get("purchaseRecordStatus")?.deepCopy()
+                ?: gson.toJsonTree(PurchaseRecordStatus.NEEDS_REVIEW.name))
+        }
     }
 
     /** A missing ledger is not evidence of an outstanding payment or a full payment. */
@@ -283,8 +296,9 @@ internal object BackupFormat {
         val priceById = data.prices.associateBy { it.id }
         require(data.orderBindings.all { binding ->
             binding.itemId in items && priceById[binding.priceId]?.itemId == binding.itemId &&
-                itemById[binding.itemId]?.includedInParentPrice == false
-        }) { "订单价格关联无效或共用价格的小物重复计价" }
+                itemById[binding.itemId]?.includedInParentPrice == false &&
+                priceById[binding.priceId]?.purchaseRecordStatus == binding.purchaseRecordStatus
+        }) { "订单价格关联无效、购买证据不一致或共用价格的小物重复计价" }
         val activePrices = data.orderBindings.map { it.priceId }.toSet()
         fun validActiveAmount(amount: Double) = com.lolita.app.domain.usecase.OrderAccounting.hasCentPrecision(amount) && amount > 0 && amount < MAX_ACTIVE_AMOUNT
         require(data.prices.filter { it.id in activePrices }.all {

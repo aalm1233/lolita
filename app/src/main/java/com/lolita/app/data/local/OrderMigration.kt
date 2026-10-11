@@ -55,6 +55,16 @@ internal object OrderMigration {
         db.execSQL("UPDATE payments SET stage_id=id")
     }
 
+    fun persistOrderPurchaseEvidence(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE prices ADD COLUMN purchase_record_status TEXT NOT NULL DEFAULT 'NEEDS_REVIEW'")
+        db.execSQL("ALTER TABLE restore_journal ADD COLUMN affectedPriceIdsJson TEXT")
+        // Keep current confirmed evidence. Unbound old prices require explicit review; the
+        // item's current status may now belong to a different order or its parent.
+        db.execSQL("""UPDATE prices SET purchase_record_status=(
+            SELECT b.purchase_record_status FROM order_bindings b WHERE b.price_id=prices.id)
+            WHERE id IN (SELECT price_id FROM order_bindings)""")
+    }
+
     fun migratePurchaseRecordStatus(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE order_bindings ADD COLUMN purchase_record_status TEXT NOT NULL DEFAULT 'TRACKED'")
         // An explicit historical OWNED status survives even if old plans or incomplete

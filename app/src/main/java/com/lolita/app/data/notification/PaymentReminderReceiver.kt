@@ -17,6 +17,8 @@ import java.util.Date
 import java.util.Locale
 import com.lolita.app.di.AppModule
 import com.lolita.app.data.local.entity.PurchaseRecordStatus
+import com.lolita.app.domain.usecase.PaymentReminderIdentity
+import com.lolita.app.domain.usecase.PaymentReminderPolicy
 import kotlinx.coroutines.*
 
 /**
@@ -26,9 +28,9 @@ class PaymentReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val paymentId = intent.getLongExtra(PAYMENT_ID, Long.MIN_VALUE)
-        val amount = intent.getDoubleExtra(AMOUNT, 0.0)
         val itemName = intent.getStringExtra(ITEM_NAME) ?: "服饰"
-        val dueDate = intent.getLongExtra(DUE_DATE, System.currentTimeMillis())
+        val scheduledDueDate = intent.takeIf { it.hasExtra(DUE_DATE) }?.getLongExtra(DUE_DATE, 0L)
+        val scheduledIdentity = intent.getStringExtra(REMINDER_IDENTITY)
 
         if (!intent.hasExtra(PAYMENT_ID) || paymentId == Long.MIN_VALUE) return
 
@@ -44,12 +46,19 @@ class PaymentReminderReceiver : BroadcastReceiver() {
                 val binding = db.orderDao().getBinding(price.itemId) ?: return@launch
                 if (binding.priceId != price.id || binding.purchaseRecordStatus != PurchaseRecordStatus.TRACKED ||
                     !stage.reminderSet || stage.dueDate == null) return@launch
+                val identity = PaymentReminderIdentity(paymentId, price.id, stage.dueDate,
+                    stage.customReminderDays ?: 1)
+                val deliveries = PaymentReminderDeliveryStore(context)
+                if (!PaymentReminderPolicy.canDeliver(identity, scheduledIdentity, scheduledDueDate,
+                        System.currentTimeMillis(), deliveries.wasDelivered(identity))) return@launch
                 val actual = db.paymentDao().getPaymentsByPriceList(price.id).filter { it.isPaid }
                 val stageRemaining = com.lolita.app.domain.usecase.StageAccounting.remainingByStage(
                     db.orderDao().getStages(price.id),actual,price.totalPrice)[stage.id] ?: 0.0
                 if (stageRemaining <= 0) return@launch
                 val name = db.itemDao().getItemById(price.itemId)?.name ?: itemName
-                showNotification(context, paymentId, stageRemaining, name + " · " + stage.name, stage.dueDate)
+                deliveries.deliverOnce(identity) {
+                    showNotification(context, paymentId, stageRemaining, name + " · " + stage.name, stage.dueDate)
+                }
             } catch (e: Exception) {
                 android.util.Log.w("PaymentReminder", "Ignoring invalid or changed installment", e)
             } finally { result.finish() }
@@ -63,16 +72,20 @@ class PaymentReminderReceiver : BroadcastReceiver() {
         amount: Double,
         itemName: String,
         dueDate: Long
-    ) {
+    ): Boolean {
         NotificationChannelSetup.createNotificationChannel(context)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = NotificationChannelSetup.getNotificationChannelId()
+        if (!notificationManager.areNotificationsEnabled() ||
+            notificationManager.getNotificationChannel(channelId)?.importance == NotificationManager.IMPORTANCE_NONE) {
+            return false
+        }
 
         // Check POST_NOTIFICATIONS permission on Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
-                return
+                return false
             }
         }
 
@@ -91,19 +104,23 @@ class PaymentReminderReceiver : BroadcastReceiver() {
         // Format the due date
         val dateFormat = SimpleDateFormat("MM月dd日", Locale.CHINA)
         val dueDateStr = dateFormat.format(Date(dueDate))
+        val overdue = dueDate < System.currentTimeMillis()
+        val dueDescription = if (overdue) "已于 $dueDateStr 到期" else "将于 $dueDateStr 到期"
 
         val notification = NotificationChannelSetup.getPaymentNotificationBuilder(context)
             .setContentTitle("付款提醒")
-            .setContentText("$itemName ¥${String.format("%.2f", amount)} 将于 $dueDateStr 到期")
+            .setContentText("$itemName ¥${String.format("%.2f", amount)} $dueDescription")
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("$itemName 的付款 ¥${String.format("%.2f", amount)} 将于 $dueDateStr 到期，请记得按时付款。")
+                    .bigText("$itemName 的付款 ¥${String.format("%.2f", amount)} $dueDescription，" +
+                        if (overdue) "请确认是否仍待付款。" else "请记得按时付款。")
             )
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
 
         notificationManager.notify((paymentId % Int.MAX_VALUE).toInt(), notification)
+        return true
     }
 
     companion object {
@@ -111,5 +128,6 @@ class PaymentReminderReceiver : BroadcastReceiver() {
         const val AMOUNT = "amount"
         const val ITEM_NAME = "item_name"
         const val DUE_DATE = "due_date"
+        const val REMINDER_IDENTITY = "reminder_identity"
     }
 }

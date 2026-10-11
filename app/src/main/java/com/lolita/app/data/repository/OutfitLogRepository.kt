@@ -10,6 +10,10 @@ import com.lolita.app.data.file.ImageFileHelper
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
+import java.util.TimeZone
+
+data class OutfitDayRange(val start: Long, val endExclusive: Long)
 
 class OutfitLogRepository(
     private val outfitLogDao: OutfitLogDao,
@@ -65,16 +69,32 @@ class OutfitLogRepository(
     fun getItemCountsByOutfitLog(): Flow<List<OutfitLogItemCount>> =
         outfitLogDao.getItemCountsByOutfitLog()
 
-    suspend fun getTodayOutfitLog(): OutfitLogWithItems? {
-        val calendar = java.util.Calendar.getInstance().apply {
-            set(java.util.Calendar.HOUR_OF_DAY, 0)
-            set(java.util.Calendar.MINUTE, 0)
-            set(java.util.Calendar.SECOND, 0)
-            set(java.util.Calendar.MILLISECOND, 0)
+    fun dayRangeAt(
+        timeMillis: Long,
+        timeZone: TimeZone = TimeZone.getDefault()
+    ): OutfitDayRange {
+        val calendar = Calendar.getInstance(timeZone).apply {
+            timeInMillis = timeMillis
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
-        val dayStart = calendar.timeInMillis
-        val dayEnd = dayStart + 24 * 60 * 60 * 1000L - 1
-        return outfitLogDao.getOutfitLogByDay(dayStart, dayEnd)
+        val start = calendar.timeInMillis
+        // A local day can be 23 or 25 hours when daylight saving changes.
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
+        return OutfitDayRange(start, calendar.timeInMillis)
+    }
+
+    fun observeOutfitLogByDay(range: OutfitDayRange): Flow<OutfitLogWithItems?> =
+        outfitLogDao.observeOutfitLogByDay(range.start, range.endExclusive)
+
+    suspend fun getTodayOutfitLog(
+        timeMillis: Long = System.currentTimeMillis(),
+        timeZone: TimeZone = TimeZone.getDefault()
+    ): OutfitLogWithItems? {
+        val range = dayRangeAt(timeMillis, timeZone)
+        return outfitLogDao.getOutfitLogByDay(range.start, range.endExclusive)
     }
 
     suspend fun insertOutfitLogWithItems(log: OutfitLog, itemIds: List<Long>) {

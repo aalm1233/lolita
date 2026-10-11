@@ -43,7 +43,7 @@ class OrderRepository(private val database: LolitaDatabase, private val context:
     ) { order, stages, binding ->
         order?.let {
             OrderDetails(it.price, stages, it.payments.filter { p -> p.isPaid }, it.payments.filter { p -> !p.isPaid },
-                binding?.purchaseRecordStatus ?: PurchaseRecordStatus.NEEDS_REVIEW)
+                binding?.purchaseRecordStatus ?: it.price.purchaseRecordStatus)
         }
     }
 
@@ -63,7 +63,7 @@ class OrderRepository(private val database: LolitaDatabase, private val context:
     suspend fun updateOrder(price: Price, stages: List<PaymentStage>) = ledger.updateOrder(price, stages)
     suspend fun bindHistoricalOrder(itemId: Long, priceId: Long) = ledger.bindHistoricalOrder(itemId, priceId)
     suspend fun confirmHistoricalPurchase(itemId: Long) = ledger.confirmHistoricalPurchase(itemId)
-    suspend fun confirmTrackedOrder(itemId: Long) = ledger.confirmTrackedOrder(itemId)
+    suspend fun confirmTrackedOrder(itemId: Long, paymentRecordsVerified: Boolean = false) = ledger.confirmTrackedOrder(itemId, paymentRecordsVerified)
     suspend fun archiveCurrentOrder(itemId: Long) = ledger.archiveCurrentOrder(itemId)
     suspend fun saveStage(stage: PaymentStage): Long = ledger.saveStage(stage)
     suspend fun deleteStage(id: Long) = ledger.deleteStage(id)

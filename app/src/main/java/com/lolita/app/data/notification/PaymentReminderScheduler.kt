@@ -6,7 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.lolita.app.data.local.entity.Payment
-import java.util.Calendar
+import com.lolita.app.domain.usecase.PaymentReminderIdentity
+import com.lolita.app.domain.usecase.PaymentReminderPolicy
 
 /**
  * Result of scheduling a reminder
@@ -14,7 +15,7 @@ import java.util.Calendar
 enum class ReminderScheduleResult {
     EXACT,      // Exact alarm scheduled successfully
     INEXACT,    // Fell back to inexact alarm (permission not granted)
-    SKIPPED,    // Not scheduled (paid, no reminder, or in the past)
+    SKIPPED,    // The same reminder was already delivered
     CANCELLED   // Existing reminder was cancelled
 }
 
@@ -24,6 +25,7 @@ enum class ReminderScheduleResult {
 class PaymentReminderScheduler(private val context: Context) {
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val deliveries = PaymentReminderDeliveryStore(context)
 
     /**
      * Schedule a reminder for a payment
@@ -35,17 +37,18 @@ class PaymentReminderScheduler(private val context: Context) {
             return ReminderScheduleResult.CANCELLED
         }
 
-        // Calculate reminder time: due date minus custom reminder days (default 1 day)
-        val reminderDays = payment.customReminderDays ?: 1
-        val reminderTimeMillis = payment.dueDate - (reminderDays * DAY_IN_MILLIS)
-
-        // Don't schedule if reminder time is in the past
-        if (reminderTimeMillis < System.currentTimeMillis()) {
+        val identity = PaymentReminderIdentity(payment.id, payment.priceId, payment.dueDate,
+            payment.customReminderDays ?: 1)
+        // Missed reminders still catch up after one minute, once for each due-date/configuration.
+        val reminderTimeMillis = PaymentReminderPolicy.triggerTime(identity, System.currentTimeMillis(),
+            deliveries.wasDelivered(identity)) ?: run {
+            cancelReminder(payment.id)
             return ReminderScheduleResult.SKIPPED
         }
 
         val intent = createReminderIntent(payment, itemName).apply {
             putExtra(PaymentReminderReceiver.DUE_DATE, payment.dueDate)
+            putExtra(PaymentReminderReceiver.REMINDER_IDENTITY, identity.storageKey)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -128,9 +131,5 @@ class PaymentReminderScheduler(private val context: Context) {
             putExtra(PaymentReminderReceiver.AMOUNT, payment.amount)
             putExtra(PaymentReminderReceiver.ITEM_NAME, itemName)
         }
-    }
-
-    companion object {
-        private const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000L
     }
 }

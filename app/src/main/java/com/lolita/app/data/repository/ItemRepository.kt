@@ -117,13 +117,23 @@ class ItemRepository(
             }
             if (database != null) {
                 val gson = Gson()
-                val previous = database.paymentDao().getAllPaymentsList() + database.orderDao().getAllStages().map { stage ->
-                    Payment(id = -stage.id, priceId = stage.priceId, amount = stage.amount,
-                        dueDate = stage.dueDate ?: 0L, calendarEventId = stage.calendarEventId)
+                val affected = database.priceDao().getPricesByItemList(item.id).map { it.id }.toSet()
+                val previous = affected.flatMap { priceId ->
+                    database.paymentDao().getPaymentsByPriceList(priceId) + database.orderDao().getStages(priceId).map { stage ->
+                        Payment(id = -stage.id, priceId = stage.priceId, amount = stage.amount,
+                            dueDate = stage.dueDate ?: 0L, calendarEventId = stage.calendarEventId)
+                    }
                 }
-                val pending = database.restoreJournalDao().get()?.previousPaymentsJson
-                val retry = pending?.let { gson.fromJson(it, Array<Payment>::class.java).toList() } ?: emptyList()
-                database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(previous + retry)))
+                val pending = database.restoreJournalDao().get()
+                val retry = pending?.let { gson.fromJson(it.previousPaymentsJson, Array<Payment>::class.java).toList() }.orEmpty()
+                val scope = if (pending != null && pending.affectedPriceIdsJson == null) null else {
+                    val previousScope = pending?.affectedPriceIdsJson?.let { gson.fromJson(it, Array<Long>::class.java).toSet() }.orEmpty()
+                    gson.toJson((affected + previousScope).sorted())
+                }
+                database.restoreJournalDao().save(RestoreJournal(
+                    previousPaymentsJson = gson.toJson(com.lolita.app.domain.usecase.ReminderCleanup.deduplicate(previous + retry)),
+                    affectedPriceIdsJson = scope
+                ))
             }
             if (paymentRepository != null && priceRepository != null) {
                 val prices = priceRepository.getPricesByItemList(item.id)

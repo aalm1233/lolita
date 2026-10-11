@@ -14,9 +14,20 @@ interface OrderDao {
     @Query("SELECT * FROM payment_stages WHERE price_id=:priceId ORDER BY id") suspend fun getStages(priceId: Long): List<PaymentStage>
     @Query("SELECT * FROM payment_stages WHERE price_id=:priceId ORDER BY id") fun observeStages(priceId: Long): Flow<List<PaymentStage>>
     @Query("SELECT * FROM payment_stages WHERE id=:id") suspend fun getStage(id: Long): PaymentStage?
-    @Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insertBinding(binding: OrderBinding)
+    @Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insertBindingRow(binding: OrderBinding)
+    @Query("UPDATE prices SET purchase_record_status=:status WHERE id=:priceId")
+    suspend fun updatePricePurchaseRecordStatus(priceId: Long, status: PurchaseRecordStatus)
+    @Transaction suspend fun insertBinding(binding: OrderBinding) {
+        insertBindingRow(binding)
+        updatePricePurchaseRecordStatus(binding.priceId, binding.purchaseRecordStatus)
+    }
     @Query("UPDATE order_bindings SET purchase_record_status=:status WHERE item_id=:itemId")
-    suspend fun updatePurchaseRecordStatus(itemId: Long, status: PurchaseRecordStatus)
+    suspend fun updateBindingPurchaseRecordStatus(itemId: Long, status: PurchaseRecordStatus)
+    @Transaction suspend fun updatePurchaseRecordStatus(itemId: Long, status: PurchaseRecordStatus) {
+        val binding = getBinding(itemId) ?: return
+        updatePricePurchaseRecordStatus(binding.priceId, status)
+        updateBindingPurchaseRecordStatus(itemId, status)
+    }
     @Query("DELETE FROM order_bindings WHERE item_id=:itemId") suspend fun deleteBinding(itemId: Long)
     @Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insertStage(stage: PaymentStage): Long
     @Update suspend fun updateStage(stage: PaymentStage)

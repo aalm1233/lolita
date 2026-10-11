@@ -24,8 +24,8 @@
 
 ## 数据库
 
-- Room 数据库版本 22，25 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
-- Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
+- Room 数据库版本 23，25 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
 - 新功能状态若由历史数据推导，需考虑一次性历史刷新，优先批量 SQL 而非逐条循环，在 `LolitaApplication.onCreate()` 调用。
@@ -224,7 +224,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=80, versionName="2.39.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=81, versionName="2.39.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -247,9 +247,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式 version 4、schemaVersion 22；完整 JSON/ZIP 覆盖 24 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- 备份格式 version 5、schemaVersion 23；完整 JSON/ZIP 覆盖 24 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
-- 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。
+- 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
 - 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
 
 - 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。
@@ -267,10 +267,15 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 消费分布只保留当前维度的数据订阅（`flatMapLatest`），加载态与最终态须由同一 collector 顺序发布，切换方法仅更新选择，避免空数据快速切换卡在加载状态。消费趋势用年度 StateFlow 与固定 DAO 订阅组合，切换不得累积旧 collector。统计基于当前绑定订单的实付；空风格/季节纳入未设置分组，多季节通过 `SpendingBreakdown` 按整数分均分并保全合计。日期未知的实付由 `getUndatedSpending` 单列提示，不归入任何年份。回归位于 `SpendingBreakdownTest` 与 `SpendingStatisticsViewModelTest`（独立内存 Room，覆盖付款修改、维度/年份切换及实付日期）。
 
-- 历史付款资料：`OrderBinding.purchaseRecordStatus` 区分 `TRACKED`、`HISTORICAL_OWNED`、`NEEDS_REVIEW`。缺少付款记录不等于已付 0 元；历史已购保留 `OWNED`，待核对使用 `PENDING_REVIEW`，均不投影为欠款/逾期或发送尾款提醒。账目不完整的实付/余额显示未知，消费统计只计原始实付证据，不推断金额或日期。
-- 21→22 将明确 `OWNED` 且实付资料不足的旧绑定保留为历史已购；无付款、无阶段且已购证据丢失的绑定标为待核对；价格与付款页提供“确认历史已购”和“确认仍待付款”，确认只更新证据标记与状态、不生成付款。新版备份必须保存并验证该标记，旧备份显式迁移。
-- 历史购买回归位于 `HistoricalPurchaseTest`：覆盖 20/21→22、仅旧计划/部分实付的已购证据、待核对确认、正常新欠款、归档再绑定、备份恢复、日期未知补录/编辑、参考信息不自动记账与原始金额保全。`HISTORICAL_OWNED` 的阶段与价格只读，可补录/更正真实付款，确认仍待付款后再管理计划与提醒。
+- 历史付款资料：`Price.purchaseRecordStatus` 永久保存购买证据，`OrderBinding.purchaseRecordStatus` 为当前查询投影，插入绑定与修改标记必须在 DAO 事务内同步两者；区分 `TRACKED`、`HISTORICAL_OWNED`、`NEEDS_REVIEW`。缺少付款记录不等于已付 0 元；历史已购保留 `OWNED`，待核对使用 `PENDING_REVIEW`，均不投影为欠款/逾期或发送尾款提醒。账目不完整的实付/余额显示未知，消费统计只计原始实付证据，不推断金额或日期。
+- 21→22 将明确 `OWNED` 且实付资料不足的旧绑定保留为历史已购；无付款、无阶段且已购证据丢失的绑定标为待核对。22→23 与格式 1～4 备份迁移仅将已有绑定证据复制到对应 Price，无绑定旧价格为 `NEEDS_REVIEW`；归档、共用主件价格、解绑和重绑不得从服饰状态或其他订单推断证据。格式 5 必须保存 Price 标记并验证与绑定一致，CSV 和预览同步覆盖归档订单证据。
+- 历史购买回归位于 `HistoricalPurchaseTest`：覆盖 20/21→22、仅旧计划/部分实付的已购证据、待核对确认、正常新欠款、归档再绑定、备份恢复、日期未知补录/编辑、参考信息不自动记账与原始金额保全。`HISTORICAL_OWNED` 的阶段与价格只读，可补录/更正真实付款，核对账本并启用跟踪后再管理计划与提醒。
 - 付款提醒恢复与 `PaymentReminderReceiver` 均需检查当前绑定为 `TRACKED`，避免历史已购/待核对订单的旧闹钟再次发出欠款提醒；历史补录的日期初始为空，用户选择真实付款日期或明确勾选“付款日期记不清”；未知日期保持 paidDate=null，旧必填 dueDate 使用 0 占位，计入消费总额/分布但不归入年/月。正常新付款仍要求实际日期；编辑原日期未知的真实付款可保留 null。
 - 历史购买修复与源备份验收说明：`docs/historical-purchase-fix-2026-10-11.md`。旧程序已生成的付款无原始来源证据时不得自动删除；测试库纠正通过原始 ZIP 官方恢复并独立逐字段/图片 SHA256 核对。
 
 - 付款补录页展示服饰、来源、订单总价、已录实付与保留的淘宝订单说明；“填入参考金额”仅提供可编辑参考，不自动保存或据总价生成实付。`OrderRepository.recordHistoricalPayment` 明确限定当前历史已购绑定，整数分校验不变，完整保留历史已购证据。
+
+- 历史核对入口覆盖仍有余额的正常账本，包括部分实付；“确认历史已购”不生成付款。“核对账本并启用跟踪”展示总价、已录实付与计算待付，要求用户确认真实付款已全部录入且计算余额等于实际待付；`confirmTrackedOrder` 在领域层也拒绝未确认请求。回归位于 `PersistentOrderEvidenceTest`，覆盖归档小物共用价格后重绑、订单切换、22→23 原值保全、归档证据备份恢复及确认失败事务不变。
+- 付款通知使用 `PaymentReminderIdentity`（阶段代理 ID、价格 ID、到期日、提前天数）与本机 `PaymentReminderDeliveryStore` 持久送达记录。同一配置成功送达后，重启或修改其他订单不得重复补发；权限关闭或发送失败不记送达。应用和日历使用一致的提前天数，日历最少提前一分钟。策略与清理回归位于 `PaymentReminderPolicyTest`、`ReminderCleanupTest`、`ReminderJournalTest` 和 `PaymentReminderDeliveryStoreTest`（独立 SharedPreferences，覆盖送达持久化）。
+- 今日穿搭用 Room Flow 订阅本地当天半开区间 `[start, nextDayStart)`，同日多条按日期、ID 倒序选择最新记录；保存、编辑、删除自动刷新。跨日、回到前台与系统日期/时间/时区变更须切换查询范围，次日边界用 Calendar 计算以兼容夏令时。回归位于 `TodayOutfitViewModelTest`。
+- 统计概览分别展示“当前订单实付”和包含归档订单的“全部已录实付”；后者仅汇总真实已付记录，归档、共用主件价格不得删减原实付。显示当前缺付款资料订单数；“订单参考均价”明确来自当前已拥有订单总价。分布、趋势继续使用当前绑定订单口径，回归位于 `SpendingOverviewTest`。

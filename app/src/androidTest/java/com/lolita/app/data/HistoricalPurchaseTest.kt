@@ -275,7 +275,7 @@ class HistoricalPurchaseTest {
 
     @Test fun confirmedOutstandingAndNewOrdersStillCountActualDebt() = runBlocking {
         val (item,price) = historical(PurchaseRecordStatus.NEEDS_REVIEW)
-        orders.confirmTrackedOrder(item)
+        orders.confirmTrackedOrder(item, paymentRecordsVerified = true)
         assertEquals(ItemStatus.PENDING_BALANCE,database.itemDao().getItemById(item)!!.status)
         assertEquals(1000.0,database.paymentDao().getTotalUnpaidAmount().first(),0.0)
         orders.recordPayment(price,300.0,1000)
@@ -331,7 +331,7 @@ class HistoricalPurchaseTest {
                 }
                 close()
             }
-            val migrated=helper.runMigrationsAndValidate(name,22,true,LolitaDatabase.MIGRATION_20_21,LolitaDatabase.MIGRATION_21_22)
+            val migrated=helper.runMigrationsAndValidate(name,23,true,LolitaDatabase.MIGRATION_20_21,LolitaDatabase.MIGRATION_21_22,LolitaDatabase.MIGRATION_22_23)
             migrated.close()
             val target=Room.databaseBuilder(context,LolitaDatabase::class.java,name).build()
             try {

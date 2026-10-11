@@ -50,6 +50,8 @@ data class StatsUiState(
     val coordinateCount: Int = 0,
     val outfitLogCount: Int = 0,
     val totalSpending: Double = 0.0,
+    val allRecordedSpending: Double = 0.0,
+    val incompleteCurrentOrderCount: Int = 0,
     val showTotalPrice: Boolean = false,
     val isLoading: Boolean = true,
     val averagePrice: Double = 0.0,
@@ -90,6 +92,10 @@ class StatsViewModel(
                     averagePrice = 0.0,
                     isLoading = false
                 )
+            }.combine(priceRepository.getAllRecordedSpending()) { state, allRecorded ->
+                state.copy(allRecordedSpending = allRecorded)
+            }.combine(priceRepository.getIncompleteCurrentOrderCount()) { state, incompleteCount ->
+                state.copy(incompleteCurrentOrderCount = incompleteCount)
             }.combine(priceRepository.getAverageOwnedPrice()) { state, average ->
                 state.copy(averagePrice = average)
             }.combine(appPreferences.showTotalPrice) { state, showPrice ->
@@ -175,21 +181,47 @@ fun StatsContent(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 SpendingCard(
-                    title = "总消费",
+                    title = "当前订单实付",
                     targetValue = uiState.totalSpending,
                     iconKey = IconKey.AttachMoney,
                     iconTint = iconTint,
                     modifier = Modifier.weight(1f)
                 )
-                if (uiState.ownedCount > 0) {
-                    SpendingCard(
-                        title = "单品均价",
-                        targetValue = uiState.averagePrice,
-                        iconKey = IconKey.AttachMoney,
-                        iconTint = iconTint,
-                        modifier = Modifier.weight(1f)
-                    )
+                SpendingCard(
+                    title = "全部已录实付",
+                    targetValue = uiState.allRecordedSpending,
+                    iconKey = IconKey.AttachMoney,
+                    iconTint = iconTint,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Text(
+                "当前订单实付对应当前绑定订单；全部已录实付包含归档订单，只累计已保存的实付记录，不补造缺失金额。",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (uiState.incompleteCurrentOrderCount > 0) {
+                LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text("付款资料待补：${uiState.incompleteCurrentOrderCount} 笔当前订单",
+                            style = MaterialTheme.typography.labelLarge)
+                        Text("历史资料缺失的金额为未知，不据此认定实付为零或仍然欠款。",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
+            }
+            if (uiState.ownedCount > 0) {
+                SpendingCard(
+                    title = "订单参考均价",
+                    targetValue = uiState.averagePrice,
+                    iconKey = IconKey.AttachMoney,
+                    iconTint = iconTint,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("按已拥有服饰的当前订单总价计算，不代表实际付款均价。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
@@ -219,7 +251,7 @@ fun StatsContent(
                     }
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "最贵单品",
+                            text = "当前订单实付最高",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -232,7 +264,7 @@ fun StatsContent(
                         )
                     }
                     Text(
-                        text = "¥%,.0f".format(item.totalSpending),
+                        text = "¥%,.2f".format(item.totalSpending),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -372,7 +404,7 @@ private fun SpendingCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "¥%,.0f".format(animatedValue),
+                text = "¥%,.2f".format(if (animatedValue == targetValue.toFloat()) targetValue else animatedValue.toDouble()),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.sp

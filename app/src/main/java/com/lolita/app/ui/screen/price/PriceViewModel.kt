@@ -136,7 +136,9 @@ class PriceManageViewModel(
     fun archiveCurrentOrder() = changeOrder { orderRepository.archiveCurrentOrder(itemId) }
     fun bindHistoricalOrder(priceId: Long) = changeOrder { orderRepository.bindHistoricalOrder(itemId, priceId) }
     fun confirmHistoricalPurchase() = changeOrder { orderRepository.confirmHistoricalPurchase(itemId) }
-    fun confirmTrackedOrder() = changeOrder { orderRepository.confirmTrackedOrder(itemId) }
+    fun confirmTrackedOrder(paymentRecordsVerified: Boolean = false) = changeOrder {
+        orderRepository.confirmTrackedOrder(itemId, paymentRecordsVerified)
+    }
 
     private fun changeOrder(action: suspend () -> Unit) {
         val state = _uiState.value
@@ -281,7 +283,7 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
         orderRepository.deletePayment(payment.id)
     } } }
     private fun requireStageEditing() {
-        require(_uiState.value.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) { "历史付款阶段只读，请先在价格页确认仍待付款" }
+        require(_uiState.value.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) { "历史付款阶段只读，请先在价格页核对账本并启用跟踪" }
     }
     private suspend fun <T> runAction(block: suspend () -> T): Result<T> {
         val state = _uiState.value

@@ -232,7 +232,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=84, versionName="2.39.5"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=85, versionName="2.40.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -301,3 +301,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 本轮残余改动业务审计与验证记录：`docs/remaining-changes-business-audit-2026-10-11.md`。外部日历测试使用独立内存 Provider，每日设置测试使用独立 DataStore，禁止读写用户数据库和系统真实日历。
 
 - 付款管理同一个 LazyColumn 混合显示付款阶段与真实实付，key 必须分别使用 `stage-${id}` / `payment-${id}`，不能直接共用两张表各自的 Long 主键。`PaymentManageScreenTest` 用独立内存 Room 与真实 Compose 渲染相同 ID 的两组记录，覆盖同屏及往返滚动，并核对原 ID/金额不变。
+
+## GitHub 版本检查
+
+- 个人页“检查更新”手动请求公开仓库 `aalm1233/lolita` 最新稳定 Release，`ReleaseVersion` 按三段整数比较 tag 与 versionName，支持 `v` 前缀；未知格式报错，本机较新不提供降级下载。
+- `GitHubReleaseApi -> AppUpdateRepository -> AppUpdateViewModel (StateFlow)`，仓库由 AppModule 提供；重复点击共用正在执行的检查，关闭对话框后迟到结果不重新弹出。
+- 新版对话框提供 GitHub 发布页和 APK 链接，由外部浏览器下载、系统覆盖安装。APK 优先匹配 `lolita-<version>.apk`，否则只接受唯一已上传 APK；链接限定 HTTPS、github.com 和本仓库本标签，不猜下载地址。
+- 不申请安装权限、不在应用内下载/安装、不新增更新元数据或修改业务备份。发布继续保持同一签名、递增 versionCode，并使用 `v<major>.<minor>.<patch>` 稳定标签。
+- 版本、解析与状态回归：`ReleaseVersionTest`、`GitHubReleaseApiTest`、`AppUpdateViewModelTest`；简化设计：`docs/superpowers/specs/2026-10-11-github-release-update-design.md`。

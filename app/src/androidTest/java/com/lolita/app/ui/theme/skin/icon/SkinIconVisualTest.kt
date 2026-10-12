@@ -59,6 +59,7 @@ class SkinIconVisualTest {
             saveFamilySheets(light, "24dp-light", 0xFFF8F5FA.toInt(), 0xFF44364C.toInt())
             saveRaw(light, "light")
             verifyBoundsAndTint(light, 24, 24, 0x44364C)
+            verifyNonNavigationFamiliesAreDistinct(light)
 
             val dark = render(scenario, 24, 24, Color(0xFFF3EAF7))
             saveContactSheet(dark, "dark", 0xFF211D28.toInt(), 0xFFF3EAF7.toInt())
@@ -71,11 +72,11 @@ class SkinIconVisualTest {
             for (side in listOf(18, 26, 32)) {
                 val sized = render(scenario, side, side, Color(0xFF44364C))
                 saveRaw(sized, "${side}dp")
+                saveFamilySheets(sized, "${side}dp-light", 0xFFF8F5FA.toInt(), 0xFF44364C.toInt())
                 saveContactSheet(sized, "overview-${side}dp-light", 0xFFF8F5FA.toInt(), 0xFF44364C.toInt(), overviewKeys)
                 verifyBoundsAndTint(sized, side, side, 0x44364C)
                 verifyCallerSize(light, sized, side)
                 if (side == 26) {
-                    saveFamilySheets(sized, "26dp-light", 0xFFF8F5FA.toInt(), 0xFF44364C.toInt())
                     val darkSized = render(scenario, side, side, Color(0xFFF3EAF7))
                     saveContactSheet(darkSized, "overview-26dp-dark", 0xFF211D28.toInt(), 0xFFF3EAF7.toInt(), overviewKeys)
                     saveFamilySheets(darkSized, "26dp-dark", 0xFF211D28.toInt(), 0xFFF3EAF7.toInt())
@@ -235,6 +236,31 @@ class SkinIconVisualTest {
         }
     }
 
+    private fun verifyNonNavigationFamiliesAreDistinct(bitmap: Bitmap) {
+        val pixels = pixels(bitmap)
+        // Function remains shared, but no non-navigation key may fall back to one
+        // identical drawing across two skins. Artistic quality is reviewed separately.
+        for (key in keys.filter { it.ordinal > IconKey.Settings.ordinal }) {
+            val row = keys.indexOf(key)
+            for (first in skins.indices) {
+                for (second in first + 1 until skins.size) {
+                    var differs = false
+                    for (y in 0 until cellHeight) {
+                        for (x in 0 until cellWidth) {
+                            val start = (row * cellHeight + y) * bitmap.width + x
+                            if (pixels[start + first * cellWidth] != pixels[start + second * cellWidth]) {
+                                differs = true
+                                break
+                            }
+                        }
+                        if (differs) break
+                    }
+                    assertTrue("$key uses identical drawings for ${skins[first]} and ${skins[second]}", differs)
+                }
+            }
+        }
+    }
+
     private fun verifyCallerSize(reference: Bitmap, sized: Bitmap, sideDp: Int) {
         val referencePixels = pixels(reference)
         val sizedPixels = pixels(sized)
@@ -286,11 +312,12 @@ class SkinIconVisualTest {
         }
     }
 
+    // This review emphasizes the 46 non-navigation glyphs requested in this iteration.
     private val overviewKeys = listOf(
-        IconKey.Home, IconKey.Wishlist, IconKey.Outfit, IconKey.Stats, IconKey.Settings,
-        IconKey.Add, IconKey.Delete, IconKey.Edit, IconKey.Search, IconKey.Refresh, IconKey.Gallery,
-        IconKey.Camera, IconKey.CalendarMonth, IconKey.AttachMoney, IconKey.Category,
-        IconKey.Location, IconKey.Image, IconKey.Notifications
+        IconKey.Add, IconKey.Delete, IconKey.Edit, IconKey.Search, IconKey.Save, IconKey.Share,
+        IconKey.Apps, IconKey.Image, IconKey.Camera, IconKey.Palette, IconKey.AttachMoney,
+        IconKey.CalendarMonth, IconKey.ArrowBack, IconKey.ExpandMore, IconKey.ArrowDropDown,
+        IconKey.CheckCircle, IconKey.Warning, IconKey.Visibility, IconKey.VisibilityOff
     )
 
     private val keyLabels = mapOf(

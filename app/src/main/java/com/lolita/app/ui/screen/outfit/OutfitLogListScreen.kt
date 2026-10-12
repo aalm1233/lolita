@@ -4,9 +4,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -108,9 +111,12 @@ fun OutfitLogListScreen(
                 )
             }
             val flingBehavior = rememberSkinFlingBehavior()
+            val listState = rememberLazyListState()
+            ObserveSkinScroll(listState)
             if (uiState.isLoading) {
                 val shimmer = rememberShimmer(ShimmerBounds.Window)
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp),
@@ -124,6 +130,7 @@ fun OutfitLogListScreen(
                 }
             } else {
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp),
@@ -148,8 +155,7 @@ fun OutfitLogListScreen(
                             )
                         }
                     } else {
-                        items(uiState.logs, key = { it.id }) { log ->
-                            val index = uiState.logs.indexOf(log)
+                        itemsIndexed(uiState.logs, key = { _, log -> log.id }) { index, log ->
                             SwipeToDeleteContainer(
                                 onDelete = { logToDelete = log }
                             ) {

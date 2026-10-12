@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -142,10 +143,12 @@ fun SpendingTrendContent(
         return
     }
 
+    val scrollState = rememberScrollState()
+    ObserveSkinScroll(scrollState)
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

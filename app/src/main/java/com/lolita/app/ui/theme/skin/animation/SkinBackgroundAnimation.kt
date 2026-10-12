@@ -6,8 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.SkinType
@@ -27,7 +32,6 @@ import com.lolita.app.ui.theme.skin.animation.particles.SweetStarParticle
 import com.lolita.app.ui.theme.skin.animation.particles.NavyAnchorParticle
 import com.lolita.app.ui.theme.skin.animation.particles.NavyBubbleParticle
 import com.lolita.app.ui.theme.skin.animation.particles.NavyRopeKnotParticle
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
 abstract class AmbientParticle {
@@ -50,33 +54,42 @@ fun SkinBackgroundAnimation(
 
     val isScrolling by LocalIsListScrolling.current
 
-    val particles = remember(skin.skinType) {
+    val particles = remember(skin.skinType, spec.backgroundParticleCount) {
         createParticles(skin.skinType, spec.backgroundParticleCount)
     }
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+    val frameVersion = remember { mutableLongStateOf(0L) }
 
-    val frameTime = remember { mutableLongStateOf(0L) }
+    LaunchedEffect(particles, canvasSize) {
+        if (canvasSize.width > 0 && canvasSize.height > 0) {
+            particles.forEach { it.reset(canvasSize.width.toFloat(), canvasSize.height.toFloat()) }
+            frameVersion.longValue++
+        }
+    }
 
-    LaunchedEffect(skin.skinType, isScrolling) {
-        // Initialize particles with a dummy size, they'll reset on first draw
-        particles.forEach { it.reset(1080f, 1920f) }
-        if (!isScrolling) {
-            while (isActive) {
-                delay(16L) // ~60fps
-                frameTime.longValue = System.nanoTime() / 1_000_000L
+    LaunchedEffect(particles, canvasSize, isScrolling) {
+        if (isScrolling || canvasSize.width <= 0 || canvasSize.height <= 0) return@LaunchedEffect
+        var previousFrameNanos = 0L
+        while (isActive) {
+            withFrameNanos { frameNanos ->
+                if (previousFrameNanos == 0L) {
+                    previousFrameNanos = frameNanos
+                } else if (frameNanos - previousFrameNanos >= 16_000_000L) {
+                    // Keep the existing ~60 Hz particle cadence on high-refresh displays.
+                    val deltaMs = ((frameNanos - previousFrameNanos) / 1_000_000L).coerceIn(0L, 100L)
+                    previousFrameNanos = frameNanos
+                    particles.forEach { it.update(deltaMs, canvasSize.width.toFloat(), canvasSize.height.toFloat()) }
+                    frameVersion.longValue++
+                }
             }
         }
     }
 
-    Canvas(modifier.fillMaxSize()) {
-        // Read frameTime to trigger recomposition
+    Canvas(modifier.fillMaxSize().onSizeChanged { canvasSize = it }) {
+        // Observe frames in drawing; frozen particles remain visible while scrolling.
         @Suppress("UNUSED_VARIABLE")
-        val currentFrame = frameTime.longValue
-        if (!isScrolling) {
-            particles.forEach { particle ->
-                particle.update(16L, size.width, size.height)
-                with(particle) { draw() }
-            }
-        }
+        val currentFrame = frameVersion.longValue
+        particles.forEach { particle -> with(particle) { draw() } }
     }
 }
 

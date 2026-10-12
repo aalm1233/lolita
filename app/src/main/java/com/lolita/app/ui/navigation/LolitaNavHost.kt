@@ -23,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.size
@@ -31,6 +30,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.graphics.Color
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.SkinType
+import com.lolita.app.ui.theme.skin.animation.LocalSkinScrollActivity
+import com.lolita.app.ui.theme.skin.animation.SkinScrollActivity
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimation
 import com.lolita.app.ui.theme.skin.animation.SkinNavigationOverlay
@@ -219,8 +220,11 @@ fun LolitaNavHost(
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val isNavigating = currentBackStackEntry != null && navController.previousBackStackEntry != null
 
-        val isListScrolling = remember { mutableStateOf(false) }
-        CompositionLocalProvider(LocalIsListScrolling provides isListScrolling) {
+        val scrollActivity = remember { SkinScrollActivity() }
+        CompositionLocalProvider(
+            LocalSkinScrollActivity provides scrollActivity,
+            LocalIsListScrolling provides scrollActivity.isScrolling
+        ) {
         Box(modifier = Modifier.hazeSource(state = hazeState)) {
             // Bottom layer: ambient background animation
             SkinBackgroundAnimation(

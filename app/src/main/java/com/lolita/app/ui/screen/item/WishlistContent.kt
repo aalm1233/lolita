@@ -2,9 +2,11 @@ package com.lolita.app.ui.screen.item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -181,9 +183,12 @@ fun WishlistContent(
                 )
             )
         }
+        val listState = rememberLazyListState()
+        ObserveSkinScroll(listState)
         if (uiState.isLoading) {
             val shimmer = rememberShimmer(ShimmerBounds.Window)
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
@@ -211,6 +216,7 @@ fun WishlistContent(
         } else {
             val flingBehavior = rememberSkinFlingBehavior()
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
@@ -218,8 +224,7 @@ fun WishlistContent(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 flingBehavior = flingBehavior
             ) {
-                items(uiState.filteredItems, key = { it.id }) { item ->
-                    val index = uiState.filteredItems.indexOf(item)
+                itemsIndexed(uiState.filteredItems, key = { _, item -> item.id }) { index, item ->
                     SwipeToDeleteContainer(
                         onDelete = { itemToDelete = item }
                     ) {

@@ -71,6 +71,9 @@
 - 功能图标保留明确语义（加号、垃圾桶、刷新箭头、图表、齿轮）；风格主要通过导航轮廓和内容框形体现，避免在 24dp 中叠加盾牌/吊牌/缎带缩小功能符号。全部颜色来自 tint，派生透明度必须乘原 tint.alpha，不使用固定奶油色/象牙色；实心/空心星标共用同一轮廓。
 - 图标回归：`SkinIconVisualTest` 在 Android 上通过真实七套 provider 渲染全部 51 个图标，检查留白、18/24/26/32dp 与矩形尺寸、tint 和完全透明输入；输出亮/暗完整矩阵和中文概览至 app 私有目录 `files/skin-icon-contact-sheets/`；本轮概览归档在 `docs/visuals/2026-10-11-skin-icons-light.png` 和 `docs/visuals/2026-10-11-skin-icons-dark.png`。定向运行：`./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.lolita.app.ui.theme.skin.icon.SkinIconVisualTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true`。设备旧包与新包必须先核对签名；UTP 在安装失败后也可能自动卸载旧包，测试前保全模拟器数据或使用独立 AVD，禁止用卸载绕过签名冲突。
 - 新增列表/切换/过渡效果优先复用现有 skin 动画体系（`SkinClickable`, `SkinItemAppear`, `SkinNavigationOverlay` 等）。
+- 滚动容器通过 `ObserveSkinScroll(ScrollableState)` 向 NavHost 的 `SkinScrollActivity` 注册；按来源合并拖动/惯性状态，离开 composition 只移除自身，禁止多个列表直接写同一个全局 Boolean。位置、套装列表/网格、服饰列表/网格/画廊、穿搭、首页心愿、统计总览、付款年历、消费分布/趋势、愿望分析及首页/统计 pager 均已接入。背景粒子按实际 Canvas 尺寸初始化，使用帧时钟与实际时间更新（最高约 60Hz），滚动期间冻结并保留画面，恢复时不得重置/跳跃。
+- `SkinItemAppear` 的进度仅在 `graphicsLayer` 中读取，避免逐帧重组卡片。`SkinFlingBehavior` 用独立上帧位置计算位移，原始释放速度只经摩擦衰减，遇到未消费位移立即停止并保留余速。懒列表的索引使用 `itemsIndexed`，不要在逐卡片 composition 中扫描 `indexOf`。
+- 滚动回归位于 `SkinFlingBehaviorTest`（七套皮肤双向惯性、边界）、`SkinItemAppearTest`（图层更新不重组）、`SkinScrollActivityTest`（多来源/取消/离开）、`SkinBackgroundAnimationTest`（暂停/恢复真实绘制）与 `ScrollPageTest`（带图片真实页面的拖动、惯性、清理、导航，独立内存 Room/UUID 设置）。验证记录见 `docs/scroll-performance-fix-2026-10-12.md`。
 
 ### 视觉精致化令牌
 
@@ -233,7 +236,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=86, versionName="2.40.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=87, versionName="2.40.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交

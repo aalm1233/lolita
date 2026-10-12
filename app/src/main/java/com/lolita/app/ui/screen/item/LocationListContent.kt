@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.item
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -20,6 +21,7 @@ import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.component.SkinClickableBox
 
@@ -31,7 +33,10 @@ fun LocationListContent(
     unassignedItemCount: Int,
     onLocationClick: (Long) -> Unit
 ) {
+    val listState = rememberLazyListState()
+    ObserveSkinScroll(listState)
     LazyColumn(
+        state = listState,
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(vertical = 12.dp),

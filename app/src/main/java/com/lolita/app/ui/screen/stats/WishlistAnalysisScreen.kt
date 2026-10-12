@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.layout.*
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -187,11 +188,13 @@ fun WishlistAnalysisContent(
         return
     }
 
+    val scrollState = rememberScrollState()
+    ObserveSkinScroll(scrollState)
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         val budgetAccent = MaterialTheme.colorScheme.primary

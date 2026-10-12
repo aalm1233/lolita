@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.lolita.app.ui.screen.calendar.PaymentCalendarContent
 import com.lolita.app.ui.navigation.LocalHazeState
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -29,6 +30,7 @@ fun StatsPageScreen(
 ) {
     val tabs = listOf("总览", "付款年历", "消费分布", "消费趋势", "愿望单")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
+    ObserveSkinScroll(pagerState)
     val coroutineScope = rememberCoroutineScope()
     val skin = LolitaSkin.current
     val hazeState = LocalHazeState.current

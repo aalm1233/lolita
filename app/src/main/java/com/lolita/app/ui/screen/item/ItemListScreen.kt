@@ -36,6 +36,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
 import androidx.compose.foundation.pager.HorizontalPager
@@ -76,11 +77,11 @@ import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.screen.common.findColorHex
-import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.screen.common.ViewMode
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed as staggeredItemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import com.lolita.app.ui.screen.common.GalleryCard
 import com.lolita.app.ui.component.GalleryPreviewDialog
@@ -152,6 +153,7 @@ fun ItemListScreen(
         Brush.horizontalGradient(skin.gradientColors)
     }
     val pagerState = rememberPagerState(pageCount = { 4 })
+    ObserveSkinScroll(pagerState)
     val coroutineScope = rememberCoroutineScope()
     val activeFilterCount = listOfNotNull(
         uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
@@ -503,22 +505,19 @@ fun ItemListScreen(
                             var previewStartIndex by remember { mutableIntStateOf(0) }
                             val flingBehavior = rememberSkinFlingBehavior()
                             val staggeredState = rememberLazyStaggeredGridState()
-                            val scrollingState = LocalIsListScrolling.current
-                            LaunchedEffect(staggeredState.isScrollInProgress, scrollingState) {
-                                scrollingState.value = staggeredState.isScrollInProgress
-                            }
+                            ObserveSkinScroll(staggeredState)
                             LazyVerticalStaggeredGrid(
                                 state = staggeredState,
+                                flingBehavior = flingBehavior,
                                 columns = StaggeredGridCells.Fixed(2),
                                 verticalItemSpacing = 8.dp,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 contentPadding = PaddingValues(horizontal = 12.dp)
                             ) {
-                                items(
+                                staggeredItemsIndexed(
                                     items = uiState.galleryCardDataList,
-                                    key = { it.item.id }
-                                ) { data ->
-                                    val index = uiState.galleryCardDataList.indexOf(data)
+                                    key = { _, data -> data.item.id }
+                                ) { index, data ->
                                     GalleryCard(
                                         data = data,
                                         onClick = {
@@ -541,10 +540,7 @@ fun ItemListScreen(
                         } else if (uiState.columnsPerRow == 1) {
                             val flingBehavior = rememberSkinFlingBehavior()
                             val listState = rememberLazyListState()
-                            val scrollingState = LocalIsListScrolling.current
-                            LaunchedEffect(listState.isScrollInProgress, scrollingState) {
-                                scrollingState.value = listState.isScrollInProgress
-                            }
+                            ObserveSkinScroll(listState)
                             LazyColumn(
                                 state = listState,
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -572,12 +568,10 @@ fun ItemListScreen(
                             }
                         } else {
                             val gridState = rememberLazyGridState()
-                            val scrollingState = LocalIsListScrolling.current
-                            LaunchedEffect(gridState.isScrollInProgress, scrollingState) {
-                                scrollingState.value = gridState.isScrollInProgress
-                            }
+                            ObserveSkinScroll(gridState)
                             LazyVerticalGrid(
                                 state = gridState,
+                                flingBehavior = rememberSkinFlingBehavior(),
                                 columns = GridCells.Fixed(uiState.columnsPerRow),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),

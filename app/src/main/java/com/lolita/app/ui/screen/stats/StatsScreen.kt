@@ -33,6 +33,7 @@ import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.screen.item.PurchaseReviewShortcut
 import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -125,9 +126,11 @@ fun StatsContent(
         return
     }
 
+    val scrollState = rememberScrollState()
+    ObserveSkinScroll(scrollState)
     Column(
         modifier = modifier.fillMaxSize()
-            .verticalScroll(rememberScrollState(), flingBehavior = rememberSkinFlingBehavior())
+            .verticalScroll(scrollState, flingBehavior = rememberSkinFlingBehavior())
             .padding(skin.spacingLarge),
         verticalArrangement = Arrangement.spacedBy(skin.cardGap)
     ) {

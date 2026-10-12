@@ -25,24 +25,20 @@ fun Modifier.skinItemAppear(index: Int): Modifier {
         animProgress.animateTo(1f, animationSpec = spec.animationSpec)
     }
 
-    val progress = animProgress.value
-
-    val offsetX = when (spec.appearDirection) {
-        AppearDirection.FROM_LEFT -> spec.appearOffsetPx * (1f - progress)
-        else -> 0f
-    }
-    val offsetY = when (spec.appearDirection) {
-        AppearDirection.FROM_BOTTOM -> spec.appearOffsetPx * (1f - progress)
-        else -> 0f
-    }
-    val scale = when (spec.appearDirection) {
-        AppearDirection.FADE_SCALE -> 0.9f + 0.1f * progress
-        else -> 1f
-    }
-
     return this.graphicsLayer {
-        translationX = offsetX
-        translationY = offsetY
+        val progress = animProgress.value
+        translationX = when (spec.appearDirection) {
+            AppearDirection.FROM_LEFT -> spec.appearOffsetPx * (1f - progress)
+            else -> 0f
+        }
+        translationY = when (spec.appearDirection) {
+            AppearDirection.FROM_BOTTOM -> spec.appearOffsetPx * (1f - progress)
+            else -> 0f
+        }
+        val scale = when (spec.appearDirection) {
+            AppearDirection.FADE_SCALE -> 0.9f + 0.1f * progress
+            else -> 1f
+        }
         scaleX = scale
         scaleY = scale
         alpha = progress

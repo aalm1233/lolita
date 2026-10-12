@@ -32,20 +32,22 @@ private class SkinFlingBehavior(
     override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
         if (abs(initialVelocity) < 0.5f) return initialVelocity
 
-        val adjustedVelocity = initialVelocity / frictionMultiplier
-        var remainingVelocity = adjustedVelocity
+        var lastValue = 0f
+        var remainingVelocity = initialVelocity
         val animationState = AnimationState(
             initialValue = 0f,
-            initialVelocity = adjustedVelocity
+            initialVelocity = initialVelocity
         )
 
         animationState.animateDecay(exponentialDecay(frictionMultiplier = frictionMultiplier)) {
-            val delta = value - animationState.value
+            // AnimationState already contains this frame's value before this callback.
+            val delta = value - lastValue
+            lastValue = value
             val consumed = scrollBy(delta)
-            if (abs(consumed) < abs(delta) * 0.5f) {
+            remainingVelocity = velocity
+            if (abs(delta - consumed) > 0.5f) {
                 cancelAnimation()
             }
-            remainingVelocity = velocity
         }
 
         return remainingVelocity

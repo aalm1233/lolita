@@ -5,13 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import androidx.compose.foundation.shape.CircleShape
@@ -203,7 +206,10 @@ fun CoordinateListContent(
             )
         }
     } else if (uiState.columnsPerRow == 1) {
+        val listState = rememberLazyListState()
+        ObserveSkinScroll(listState)
         LazyColumn(
+            state = listState,
             modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 8.dp),
@@ -228,7 +234,10 @@ fun CoordinateListContent(
             }
         }
     } else {
+        val gridState = rememberLazyGridState()
+        ObserveSkinScroll(gridState)
         LazyVerticalGrid(
+            state = gridState,
             columns = GridCells.Fixed(uiState.columnsPerRow),
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),

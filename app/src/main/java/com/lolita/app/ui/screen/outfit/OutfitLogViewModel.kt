@@ -51,6 +51,7 @@ data class OutfitLogEditUiState(
     val imageUrls: List<String> = emptyList(),
     val selectedItemIds: Set<Long> = emptySet(),
     val availableItems: List<Item> = emptyList(),
+    val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val isDeleted: Boolean = false,
     val error: String? = null
@@ -188,6 +189,7 @@ class OutfitLogEditViewModel(
     val uiState: StateFlow<OutfitLogEditUiState> = _uiState.asStateFlow()
 
     private var editingLogId: Long? = null
+    private var originalLog: OutfitLog? = null
     private var originalItemIds: Set<Long> = emptySet()
     var hasUnsavedChanges: Boolean = false
         private set
@@ -206,16 +208,19 @@ class OutfitLogEditViewModel(
 
     fun loadOutfitLog(logId: Long?) {
         editingLogId = logId
+        originalLog = null
         if (logId == null) {
-            _uiState.update { it.copy(date = System.currentTimeMillis()) }
+            _uiState.update { it.copy(date = System.currentTimeMillis(), isLoading = false) }
             return
         }
 
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             val result = outfitLogRepository.getOutfitLogWithItems(logId).first()
             if (result == null) {
-                _uiState.update { it.copy(isDeleted = true) }
+                _uiState.update { it.copy(isDeleted = true, isLoading = false) }
             } else {
+                originalLog = result.outfitLog
                 val itemIds = result.items.map { it.id }.toSet()
                 originalItemIds = itemIds
                 _uiState.update {
@@ -223,7 +228,8 @@ class OutfitLogEditViewModel(
                         date = result.outfitLog.date,
                         note = result.outfitLog.note,
                         imageUrls = result.outfitLog.imageUrls,
-                        selectedItemIds = itemIds
+                        selectedItemIds = itemIds,
+                        isLoading = false
                     )
                 }
             }
@@ -266,11 +272,18 @@ class OutfitLogEditViewModel(
         if (_uiState.value.isDeleted) {
             return Result.failure(Exception("原记录已被删除，无法保存"))
         }
+        val original = originalLog
+        if (editingLogId != null && (_uiState.value.isLoading || original == null)) {
+            return Result.failure(Exception("原记录尚未读取完成，暂时无法保存"))
+        }
         _uiState.update { it.copy(isSaving = true) }
         return try {
             val date = _uiState.value.date ?: System.currentTimeMillis()
-            val outfitLog = OutfitLog(
-                id = editingLogId ?: 0,
+            val outfitLog = original?.copy(
+                date = date,
+                note = _uiState.value.note,
+                imageUrls = _uiState.value.imageUrls
+            ) ?: OutfitLog(
                 date = date,
                 note = _uiState.value.note,
                 imageUrls = _uiState.value.imageUrls

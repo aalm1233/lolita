@@ -4,11 +4,12 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,16 +27,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.CardVariant
+import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
+import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
+import com.lolita.app.ui.theme.skin.component.skinClickable
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,7 +62,11 @@ fun OutfitLogEditScreen(
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val skin = LolitaSkin.current
+    val gridState = rememberLazyGridState()
     var showDiscardDialog by remember { mutableStateOf(false) }
+
+    ObserveSkinScroll(gridState)
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -124,56 +137,44 @@ fun OutfitLogEditScreen(
                     }) {
                         SkinIcon(IconKey.ArrowBack)
                     }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                viewModel.save().onSuccess { onSaveSuccess() }
-                            }
-                        },
-                        enabled = uiState.date != null && !uiState.isSaving
-                    ) {
-                        if (uiState.isSaving) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            SkinIcon(IconKey.Save)
-                        }
-                    }
                 }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentPadding = PaddingValues(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(padding)
+                .consumeWindowInsets(padding)
+                .imePadding()
         ) {
-            // Date picker card
-            item {
-                DatePickerCard(
-                    date = uiState.date,
-                    onDateSelected = { viewModel.updateDate(it) }
-                )
-            }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = gridState,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(skin.spacingLarge),
+                horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium),
+                verticalArrangement = Arrangement.spacedBy(skin.spacingLarge)
+            ) {
+                item(key = "date", span = { GridItemSpan(maxLineSpan) }) {
+                    DatePickerCard(
+                        date = uiState.date,
+                        onDateSelected = { viewModel.updateDate(it) }
+                    )
+                }
 
-            // Note input card
-            item {
-                NoteInputCard(
-                    note = uiState.note,
-                    onNoteChange = { viewModel.updateNote(it) }
-                )
-            }
+                item(key = "note", span = { GridItemSpan(maxLineSpan) }) {
+                    NoteInputCard(
+                        note = uiState.note,
+                        onNoteChange = { viewModel.updateNote(it) }
+                    )
+                }
 
-            // Photos section
-            if (uiState.imageUrls.isNotEmpty()) {
+                item(key = "photos-heading", span = { GridItemSpan(maxLineSpan) }) {
+                    SectionHeader(title = "穿搭照片（${uiState.imageUrls.size}）")
+                }
+
                 uiState.imageUrls.forEach { imageUrl ->
                     item {
                         PhotoCardWithDelete(
@@ -182,24 +183,52 @@ fun OutfitLogEditScreen(
                         )
                     }
                 }
-            }
 
-            // Add photo placeholder
-            item {
-                AddPhotoCard {
-                    photoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                item(key = "add-photo") {
+                    AddPhotoCard {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                }
+
+                item(key = "items", span = { GridItemSpan(maxLineSpan) }) {
+                    ItemSelectionCard(
+                        availableItems = uiState.availableItems,
+                        selectedIds = uiState.selectedItemIds,
+                        onToggleItem = { viewModel.toggleItemSelection(it) }
                     )
                 }
             }
 
-            // Item selection section
-            item {
-                ItemSelectionCard(
-                    availableItems = uiState.availableItems,
-                    selectedIds = uiState.selectedItemIds,
-                    onToggleItem = { viewModel.toggleItemSelection(it) }
-                )
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        val currentState = viewModel.uiState.value
+                        if (currentState.date != null && !currentState.isLoading && !currentState.isSaving) {
+                            viewModel.save().onSuccess { onSaveSuccess() }
+                        }
+                    }
+                },
+                enabled = uiState.date != null && !uiState.isLoading && !uiState.isSaving,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = skin.spacingLarge)
+                    .padding(bottom = skin.spacingMedium)
+                    .heightIn(min = 52.dp),
+                shape = RoundedCornerShape(skin.cornerRadiusMedium)
+            ) {
+                if (uiState.isSaving) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    SkinIcon(IconKey.Save, modifier = Modifier.size(20.dp))
+                }
+                Spacer(Modifier.width(skin.spacingMedium))
+                Text(if (uiState.isSaving) "保存中…" else "保存穿搭")
             }
         }
     }
@@ -207,26 +236,38 @@ fun OutfitLogEditScreen(
 
 @Composable
 private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
-    val dateFormat = SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)
+    val skin = LolitaSkin.current
+    val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA) }
+    val dateLabel = date?.let { dateFormat.format(Date(it)) } ?: "选择日期"
     var showDatePicker by remember { mutableStateOf(false) }
 
-    LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+    LolitaCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) { contentDescription = "日期：$dateLabel，点击修改" },
+        variant = CardVariant.COMPACT,
+        onClick = { showDatePicker = true }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)
+        ) {
+            SkinIcon(IconKey.CalendarMonth, modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.primary)
             Text(
                 text = "日期",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = { showDatePicker = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    date?.let { dateFormat.format(Date(it)) } ?: "选择日期",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            Text(
+                text = dateLabel,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f)
+            )
+            SkinIcon(IconKey.ArrowDropDown, modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 
@@ -257,19 +298,17 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
 
 @Composable
 private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
+    val skin = LolitaSkin.current
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "备注",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+        Column {
+            SectionHeader(title = "备注")
+            Spacer(modifier = Modifier.height(skin.spacingMedium))
             OutlinedTextField(
                 value = note,
                 onValueChange = onNoteChange,
                 placeholder = { Text("记录穿搭心得...") },
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(skin.cornerRadiusMedium),
                 minLines = 3,
                 maxLines = 6
             )
@@ -279,8 +318,13 @@ private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
 
 @Composable
 private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
+    val skin = LolitaSkin.current
+    val shape = RoundedCornerShape(skin.cornerRadiusMedium)
     LolitaCard(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        variant = CardVariant.GALLERY,
+        contentPadding = PaddingValues(0.dp),
+        shape = shape
     ) {
         Box {
             LolitaShimmerImage(
@@ -289,13 +333,16 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .clip(RoundedCornerShape(12.dp)),
+                    .clip(shape),
                 contentScale = ContentScale.Crop,
                 circularRevealEnabled = false
             )
             IconButton(
                 onClick = onDelete,
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(skin.spacingSmall)
+                    .semantics { contentDescription = "删除穿搭照片" },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
                 )
@@ -308,23 +355,26 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
 
 @Composable
 private fun AddPhotoCard(onAddPhoto: () -> Unit) {
+    val skin = LolitaSkin.current
     LolitaCard(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onAddPhoto)
+            .fillMaxWidth(),
+        contentPadding = PaddingValues(0.dp),
+        shape = RoundedCornerShape(skin.cornerRadiusMedium),
+        onClick = onAddPhoto
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .padding(16.dp),
+                .padding(skin.spacingMedium),
             contentAlignment = Alignment.Center
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SkinIcon(IconKey.Add, modifier = Modifier.size(32.dp), tint = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(skin.spacingMedium))
                 Text(
                     text = "添加照片",
                     style = MaterialTheme.typography.bodySmall,
@@ -341,22 +391,22 @@ private fun ItemSelectionCard(
     selectedIds: Set<Long>,
     onToggleItem: (Long) -> Unit
 ) {
+    val skin = LolitaSkin.current
     var expanded by remember { mutableStateOf(false) }
 
     LolitaCard(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "关联服饰 (${selectedIds.size})",
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
+        Column {
+            SectionHeader(title = "关联服饰（${selectedIds.size}）")
+            Spacer(modifier = Modifier.height(skin.spacingMedium))
+            OutlinedButton(
                 onClick = { expanded = true },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(skin.cornerRadiusMedium)
             ) {
+                SkinIcon(IconKey.Outfit, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(skin.spacingMedium))
                 Text("选择服饰")
             }
         }
@@ -377,36 +427,27 @@ private fun ItemSelectionCard(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .then(
-                                    if (isEnabled) {
-                                        Modifier.clickable { onToggleItem(item.id) }
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .padding(12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .clip(RoundedCornerShape(skin.cornerRadiusSmall))
+                                .skinClickable(enabled = isEnabled) { onToggleItem(item.id) }
+                                .padding(vertical = skin.spacingSmall),
+                            horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Checkbox(
-                                    checked = isSelected,
-                                    onCheckedChange = null,
-                                    enabled = isEnabled
-                                )
-                                Text(
-                                    text = item.name,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = if (isEnabled) {
-                                        MaterialTheme.colorScheme.onSurface
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                    }
-                                )
-                            }
+                            Checkbox(
+                                checked = isSelected,
+                                onCheckedChange = null,
+                                enabled = isEnabled
+                            )
+                            Text(
+                                text = item.name,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = if (isEnabled) {
+                                    MaterialTheme.colorScheme.onSurface
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                }
+                            )
                         }
                     }
                 }

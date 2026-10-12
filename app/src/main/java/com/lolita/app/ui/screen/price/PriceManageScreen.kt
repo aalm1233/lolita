@@ -6,10 +6,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.PriceType
@@ -52,7 +55,7 @@ fun PriceManageScreen(
                     LolitaSection("共用主件价格") { row {
                         Text("已包含在${state.parentName ?: "主件"}价格中，小物不重复记账。", style = MaterialTheme.typography.bodyMedium)
                         Text("付款状态随主件同步。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        if (state.needsPurchaseReview) Button(
+                        if (state.needsPurchaseReview) OutlinedButton(
                             enabled = !state.isUpdating && state.parentItemId != null,
                             onClick = { state.parentItemId?.let(onNavigateToParentPriceManage) },
                             modifier = Modifier.fillMaxWidth().testTag("reviewParentPriceEntry")
@@ -60,6 +63,56 @@ fun PriceManageScreen(
                     } }
                 }
                 val order = state.order
+                if (order != null) item {
+                    var detailsExpanded by rememberSaveable(order.price.id, order.purchaseRecordStatus) { mutableStateOf(false) }
+                    LolitaSection(if (state.includedInParentPrice) "主件订单" else "当前订单", action = if (state.includedInParentPrice) null else {
+                        { IconButton(enabled = !state.isUpdating && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED,
+                            onClick = { onNavigateToPriceEdit(order.price.id) }) { SkinIcon(IconKey.Edit) } }
+                    }) {
+                        row {
+                            OrderStatusText(order.purchaseRecordStatus, order.remainingAmount,
+                                if (order.price.type == PriceType.DEPOSIT_BALANCE) "待补尾款" else "待付款")
+                            OrderSummaryAmount(if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) "应付总额" else "订单总价", formatPriceAmount(order.price.totalPrice))
+                            if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
+                                PricingValueRow("实际已付", formatPriceAmount(order.paidAmount), MaterialTheme.colorScheme.primary)
+                                PricingValueRow("未付余额", formatPriceAmount(order.remainingAmount.coerceAtLeast(0.0)), if (order.remainingAmount > 0.005) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
+                            } else {
+                                PricingValueRow("已录实付", if (order.payments.isEmpty()) "付款记录未补全" else formatPriceAmount(order.paidAmount))
+                                PricingValueRow("未付余额", "未知")
+                                Text("价格与付款阶段只读，购买资料仍待核对。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            if (order.paidAmount > order.price.totalPrice + 0.005) Text("历史实付超过订单总额，请核对原始付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                            if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.payments.any { it.isPaid && it.paidDate == null }) Text(
+                                "实付日期待补：账本金额已核对，仍有真实付款日期未知。补齐前仍留在待核对购买资料清单。",
+                                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            if (state.includedInParentPrice || order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
+                                Button(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) {
+                                    Text(if (state.includedInParentPrice) "查看主件付款" else "付款阶段与实付记录")
+                                }
+                            } else {
+                                TextButton(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text("查看付款阶段与实付记录") }
+                            }
+                            TextButton(onClick = { detailsExpanded = !detailsExpanded }, modifier = Modifier.fillMaxWidth()) {
+                                Text(if (detailsExpanded) "收起价格明细" else "展开价格明细")
+                                Spacer(Modifier.width(skin.spacingSmall))
+                                SkinIcon(if (detailsExpanded) IconKey.ExpandLess else IconKey.ExpandMore)
+                            }
+                            if (detailsExpanded) {
+                                PricingValueRow("付款形式", order.price.type.priceLabel())
+                                PricingValueRow("商品金额", formatPriceAmount(order.price.totalPrice - order.price.shipping))
+                                PricingValueRow("邮费", formatPriceAmount(order.price.shipping))
+                            }
+                        }
+                        if (!state.includedInParentPrice) row {
+                            if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.remainingAmount > 0.005) {
+                                TextButton(enabled = !state.isUpdating, onClick = { purchaseConfirmation = PurchaseRecordStatus.HISTORICAL_OWNED }, modifier = Modifier.fillMaxWidth()) {
+                                    Text("历史已购，付款资料未补齐")
+                                }
+                            }
+                            TextButton(enabled = !state.isUpdating, onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("保留历史并解除当前订单") }
+                        }
+                    }
+                }
                 if (order != null && order.purchaseRecordStatus != PurchaseRecordStatus.TRACKED) item {
                     PurchaseRecordNotice(
                         status = order.purchaseRecordStatus,
@@ -74,43 +127,7 @@ fun PriceManageScreen(
                             { onNavigateToPaymentManage(order.price.id) }
                         }
                     )
-                }
-                if (order != null && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.payments.any { it.isPaid && it.paidDate == null }) item {
-                    LolitaSection("实付日期待补") { row {
-                        Text("账本金额已核对，但仍有真实付款日期未知。请在付款记录中补全日期；补齐前仍留在待核对购买资料清单。",
-                            style = MaterialTheme.typography.bodyMedium)
-                    } }
-                }
-                if (order != null) item {
-                    LolitaSection(if (state.includedInParentPrice) "主件订单" else "当前订单", action = if (state.includedInParentPrice) null else {
-                        { IconButton(enabled = !state.isUpdating && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED,
-                            onClick = { onNavigateToPriceEdit(order.price.id) }) { SkinIcon(IconKey.Edit) } }
-                    }) {
-                        row {
-                            PricingValueRow("付款形式", order.price.type.priceLabel())
-                            PricingValueRow("商品金额", formatPriceAmount(order.price.totalPrice - order.price.shipping))
-                            PricingValueRow("邮费", formatPriceAmount(order.price.shipping))
-                            PricingValueRow(if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) "应付总额" else "订单总价", formatPriceAmount(order.price.totalPrice))
-                        }
-                        row {
-                            if (order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
-                                PricingValueRow("实际已付", formatPriceAmount(order.paidAmount), MaterialTheme.colorScheme.primary)
-                                PricingValueRow("未付余额", formatPriceAmount(order.remainingAmount.coerceAtLeast(0.0)), if (order.remainingAmount > 0.005) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
-                            } else {
-                                PricingValueRow("已录实付", if (order.payments.isEmpty()) "付款记录未补全" else formatPriceAmount(order.paidAmount))
-                                PricingValueRow("未付余额", "未知")
-                            }
-                            if (order.paidAmount > order.price.totalPrice + 0.005) Text("历史实付超过订单总额，请核对原始付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-                            Button(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text(if (state.includedInParentPrice) "查看主件付款" else "付款阶段与实付记录") }
-                            if (!state.includedInParentPrice && order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED && order.remainingAmount > 0.005) {
-                                TextButton(enabled = !state.isUpdating, onClick = { purchaseConfirmation = PurchaseRecordStatus.HISTORICAL_OWNED }, modifier = Modifier.fillMaxWidth()) {
-                                    Text("历史已购，付款资料未补齐")
-                                }
-                            }
-                            if (!state.includedInParentPrice) TextButton(enabled = !state.isUpdating, onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("保留历史并解除当前订单") }
-                        }
-                    }
-                } else if (!state.includedInParentPrice && state.historicalOrders.isEmpty()) item {
+                } else if (order == null && !state.includedInParentPrice && state.historicalOrders.isEmpty()) item {
                     LolitaSection("尚未设置价格") { row {
                         SkinEmptyState(iconKey = IconKey.AttachMoney, title = "暂无订单价格", subtitle = "每件独立计价的服饰只有一笔当前订单")
                         Button(onClick = { onNavigateToPriceEdit(null) }, modifier = Modifier.fillMaxWidth()) { Text("设置价格") }
@@ -124,7 +141,7 @@ fun PriceManageScreen(
                             ) { Text("核对服饰状态") }
                         }
                     } }
-                } else if (state.includedInParentPrice) item {
+                } else if (order == null && state.includedInParentPrice) item {
                     LolitaSection("主件价格待录入") { row { Text("请先在主件详情设置价格。无价格不会被当作零元付清。") } }
                 }
                 if (state.historicalOrders.isNotEmpty()) {
@@ -216,30 +233,60 @@ internal fun PurchaseRecordNotice(
 ) {
     if (status == PurchaseRecordStatus.TRACKED) return
     val historical = status == PurchaseRecordStatus.HISTORICAL_OWNED
+    val skin = LolitaSkin.current
+    var explanationExpanded by rememberSaveable(status) { mutableStateOf(false) }
     LolitaSection(if (historical) "历史已购" else "历史付款资料待核对") {
         row {
-            Column(verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.spacingMedium)) {
-                Text(if (historical) "已确认拥有，付款资料仍待核对。订单价格和原始记录保留，未付余额为未知；资料补齐前仍留在核对清单。"
-                    else "原价格和记录保留。核对前暂不修改付款阶段或实付记录，也不根据缺失资料认定欠款。",
+            Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                Text(if (historical) "已确认拥有，未付余额未知。原付款阶段只读；可补录或更正真实实付，资料补齐前仍留在核对清单。"
+                    else "未付余额未知。价格、阶段和实付暂只读，原记录保留；缺少资料不代表仍欠款。",
                     style = MaterialTheme.typography.bodyMedium)
-                Text(if (historical) "历史付款阶段只读，可补录或更正能够确认的真实实付。付款资料补齐后，可核对账本并启用后续付款跟踪。"
-                    else "确认历史已购不会补造付款金额或日期；真实付款记录完整且余额核对一致后，才启用付款跟踪。",
-                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (!historical && onConfirmHistorical != null) Button(
-                    onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewHistoricalEntry")
-                ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
                 if (historical && onSupplementPayment != null) Button(
                     onClick = onSupplementPayment, enabled = !isWorking,
                     modifier = Modifier.fillMaxWidth().testTag("reviewSupplementPaymentEntry")
                 ) { Text("补录真实付款") }
-                if (onConfirmTracked != null) OutlinedButton(
+                if (!historical && onConfirmHistorical != null) OutlinedButton(
+                    onClick = onConfirmHistorical, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewHistoricalEntry")
+                ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
+                if (onConfirmTracked != null) TextButton(
                     onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewTrackedEntry")
                 ) { Text("核对账本并启用跟踪") }
                 if (onReturnToReview != null) TextButton(
                     onClick = onReturnToReview, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
                 ) { Text("返回核对购买资料") }
+                TextButton(onClick = { explanationExpanded = !explanationExpanded }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (explanationExpanded) "收起核对说明" else "查看核对说明")
+                    Spacer(Modifier.width(skin.spacingSmall))
+                    SkinIcon(if (explanationExpanded) IconKey.ExpandLess else IconKey.ExpandMore)
+                }
+                if (explanationExpanded) Text(if (historical) "订单价格和原始记录完整保留。付款资料补齐后，可核对账本并启用后续付款跟踪。补录不改变历史已购证据，也不会自动启用跟踪。"
+                    else "确认历史已购不会补造付款金额或日期；真实付款记录完整且余额核对一致后，才启用付款跟踪。",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
+    }
+}
+
+@Composable
+internal fun OrderStatusText(status: PurchaseRecordStatus, remainingAmount: Double, awaitingPaymentLabel: String = "付款跟踪中") {
+    Text(
+        text = when (status) {
+            PurchaseRecordStatus.TRACKED -> if (remainingAmount > 0.005) awaitingPaymentLabel else "已付清"
+            PurchaseRecordStatus.HISTORICAL_OWNED -> "历史已购，付款资料待核对"
+            PurchaseRecordStatus.NEEDS_REVIEW -> "购买资料待核对"
+        },
+        modifier = Modifier.padding(top = LolitaSkin.current.spacingMedium),
+        style = MaterialTheme.typography.labelLarge,
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+internal fun OrderSummaryAmount(label: String, value: String, color: Color = MaterialTheme.colorScheme.onSurface) {
+    Column(Modifier.fillMaxWidth().padding(vertical = LolitaSkin.current.spacingMedium)) {
+        Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold, color = color)
     }
 }
 

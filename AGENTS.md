@@ -49,6 +49,7 @@
 - `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
 - 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。支持 `variant` 参数：`CardVariant.DEFAULT`（默认）、`CardVariant.GALLERY`（无边框/无内边距/零阴影，图片主导）、`CardVariant.FEATURED`（高阴影/大内边距，突出展示）、`CardVariant.COMPACT`（低阴影/紧内边距/细边框，替代 raw Card）。
 - `LolitaCard.contentPadding` 可覆盖变体默认内边距，避免内容层重复 padding；图文列表卡的图片贴边时传 `PaddingValues(0.dp)`，仅文字区保留一次内边距，图片顶部圆角使用皮肤 `cornerRadiusMedium`，网格骨架同步实际 0.8 宽高比。半透明卡片 tint 在公共组件内一次合成到当前 `surface`，完全透明卡片仍保持透明。
+- 统计总览将四项数量收进单个衣橱概况区块；消费概览突出当前订单实付，全部已录实付与参考均价采用明细行，金额直接显示原始 Double 的两位小数，不通过 Float 动画改变显示值。金额、长品牌及最高实付信息需在小屏/大字体下完整排布；关闭金额设置时整块消费与最高实付隐藏。卡片只保留一层内边距，间距与圆角消费皮肤令牌，加载态使用匹配布局的骨架屏。真实 Compose 回归位于 `StatsOverviewScreenTest`（独立内存 Room、UUID 设置；含导航、实时隐私和浅暗七套皮肤截图）。 本轮预览归档在 `docs/visuals/2026-10-12-stats-overview-light.png` 和 `docs/visuals/2026-10-12-stats-overview-victorian-dark.png`。
 - 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
 - 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
@@ -232,7 +233,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=85, versionName="2.40.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=86, versionName="2.40.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交
@@ -282,9 +283,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 付款补录页展示服饰、来源、订单总价、已录实付与保留的淘宝订单说明；“填入参考金额”仅提供可编辑参考，不自动保存或据总价生成实付。`OrderRepository.recordHistoricalPayment` 明确限定当前历史已购绑定，整数分校验不变，完整保留历史已购证据。
 
-- `ItemDao.getPurchaseReviews()` 通过单条 Room SQL 投影 `ItemPurchaseReview`：无当前订单的非愿望服饰、当前订单非 `TRACKED`、当前真实付款日期未知均纳入资料核对。共价小物按主件订单判断，独立小物按自己判断；归档原账本不改写，有完整当前订单时不因归档资料重复纳入。首页、`status_review` 清单、详情与统计统一订阅 `ItemRepository.getPurchaseReviews()`，展示相同件数与核对原因，不受搜索/分类过滤影响。首页及统计的 `PurchaseReviewShortcut` 常驻，零件也能进入空清单。
+- `ItemDao.getPurchaseReviews()` 通过单条 Room SQL 投影 `ItemPurchaseReview`：无当前订单的非愿望服饰、当前订单非 `TRACKED`、当前真实付款日期未知均纳入资料核对。共价小物按主件订单判断，独立小物按自己判断；归档原账本不改写，有完整当前订单时不因归档资料重复纳入。首页、`status_review` 清单、详情与统计统一订阅 `ItemRepository.getPurchaseReviews()`，展示相同件数与核对原因，不受搜索/分类过滤影响。首页及统计的 `PurchaseReviewShortcut` 仅在待核对件数大于 0 时展示；核对完成清空后实时隐藏，新待办出现时恢复。价格页的共价主件核对及无价服饰状态核对也按同源单项投影控制，愿望服饰和完整账本不显示无关核对按钮。
 - 服饰详情顶部 `ItemOrderSummary` 明确提供“核对购买资料”，共用价格的小物直接进入主件价格核对；价格页也提供“前往主件核对”。无绑定旧价格必须先选定当前订单，确认继续复用 `OrderLedger`；完全无价格时提供“核对服饰状态”进入既有编辑页，确认拥有后仍保留价格资料待办，不生成价格或实付。有当前绑定或共价的小物不得手动覆盖订单状态。
-- 入口与购买资料核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest`、`PurchaseReviewConsistencyTest` 和 `PriceManageScreenReviewTest`，覆盖常驻入口、主件跳转、首页/清单/详情/统计一致联动、历史确认及部分/全部补录后待办保留、明确核对账本后移除、未知日期更正与价格/阶段/实付原值保全，使用独立内存 Room及独立设置。
+- 入口与购买资料核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest`、`PurchaseReviewConsistencyTest` 和 `PriceManageScreenReviewTest`，覆盖零待办隐藏、正数与零动态切换、主件跳转、首页/清单/详情/统计一致联动、历史确认及部分/全部补录后待办保留、明确核对账本后移除、未知日期更正与价格/阶段/实付原值保全，使用独立内存 Room及独立设置。
 
 - 拥有状态与资料完整性必须分开：确认历史已购只更新购买证据并保留 `OWNED`，不能将资料待办移除；部分或全部补录都不自动切换 `TRACKED`。用户明确核对付款完整及余额一致后才解除账本待办，日期未知的实付仍单列待补；未知日期不得自动补造，也不影响已明确核对余额的正常付款跟踪。统计按当前订单去重计笔，快捷核对按服饰计件并明确单位。
 - 历史核对入口覆盖仍有余额的正常账本，包括部分实付；“确认历史已购”不生成付款。“核对账本并启用跟踪”展示总价、已录实付与计算待付，要求用户确认真实付款已全部录入且计算余额等于实际待付；`confirmTrackedOrder` 在领域层也拒绝未确认请求。回归位于 `PersistentOrderEvidenceTest`，覆盖归档小物共用价格后重绑、订单切换、22→23 原值保全、归档证据备份恢复及确认失败事务不变。

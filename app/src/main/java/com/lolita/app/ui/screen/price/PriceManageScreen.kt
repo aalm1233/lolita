@@ -52,7 +52,7 @@ fun PriceManageScreen(
                     LolitaSection("共用主件价格") { row {
                         Text("已包含在${state.parentName ?: "主件"}价格中，小物不重复记账。", style = MaterialTheme.typography.bodyMedium)
                         Text("付款状态随主件同步。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Button(
+                        if (state.needsPurchaseReview) Button(
                             enabled = !state.isUpdating && state.parentItemId != null,
                             onClick = { state.parentItemId?.let(onNavigateToParentPriceManage) },
                             modifier = Modifier.fillMaxWidth().testTag("reviewParentPriceEntry")
@@ -114,21 +114,23 @@ fun PriceManageScreen(
                     LolitaSection("尚未设置价格") { row {
                         SkinEmptyState(iconKey = IconKey.AttachMoney, title = "暂无订单价格", subtitle = "每件独立计价的服饰只有一笔当前订单")
                         Button(onClick = { onNavigateToPriceEdit(null) }, modifier = Modifier.fillMaxWidth()) { Text("设置价格") }
-                        Text("没有价格时可先核对服饰状态，价格和真实付款可稍后补全。",
-                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        OutlinedButton(
-                            enabled = !state.isUpdating,
-                            onClick = { onNavigateToItemEdit(itemId) },
-                            modifier = Modifier.fillMaxWidth().testTag("reviewUnpricedItemEntry")
-                        ) { Text("核对服饰状态") }
+                        if (state.needsPurchaseReview) {
+                            Text("没有价格时可先核对服饰状态，价格和真实付款可稍后补全。",
+                                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            OutlinedButton(
+                                enabled = !state.isUpdating,
+                                onClick = { onNavigateToItemEdit(itemId) },
+                                modifier = Modifier.fillMaxWidth().testTag("reviewUnpricedItemEntry")
+                            ) { Text("核对服饰状态") }
+                        }
                     } }
                 } else if (state.includedInParentPrice) item {
                     LolitaSection("主件价格待录入") { row { Text("请先在主件详情设置价格。无价格不会被当作零元付清。") } }
                 }
                 if (state.historicalOrders.isNotEmpty()) {
-                    item { LolitaSection(if (state.includedInParentPrice) "小物原有价格归档" else "历史价格待核对") { row {
-                        Text(if (state.includedInParentPrice) "共用主件价格前的独立账目完整保留，可查看原始记录。" else if (order == null) "存在旧价格，请选择一笔作为当前订单。" else "以下旧价格完整保留，不计入当前订单。")
-                        Text("选择不会相加、合并或删除原有付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    item { LolitaSection(if (state.includedInParentPrice) "小物原有价格归档" else "历史订单") { row {
+                        Text(if (state.includedInParentPrice) "共用主件价格前的独立账目完整保留，可查看原始记录。" else if (order == null && state.needsPurchaseReview) "存在旧价格，请选择一笔作为当前订单后核对购买资料。" else "以下旧价格完整保留，不计入当前订单。")
+                        if (!state.includedInParentPrice && order == null && state.needsPurchaseReview) Text("选择不会相加、合并或删除原有付款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     } } }
                     itemsIndexed(state.historicalOrders, key = { _, value -> value.price.id }) { index, historical ->
                         val paid = historical.payments.filter { it.isPaid }.sumOf { it.amount }

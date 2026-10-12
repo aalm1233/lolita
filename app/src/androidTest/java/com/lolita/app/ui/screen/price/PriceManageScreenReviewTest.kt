@@ -6,8 +6,11 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.lifecycle.ViewModelStore
@@ -177,7 +180,96 @@ class PriceManageScreenReviewTest {
         }
     }
 
+    @Test fun completeParentLedgerHidesSharedAccessoryReviewButKeepsOrdinaryPaymentAccess() {
+        val original = runBlocking { seedReviewOrder() }
+        val childId = 1_830_100_004L
+        runBlocking {
+            val unknown = original.payments.single { it.paidDate == null }
+            database.paymentDao().updatePayment(unknown.copy(paidDate = 1_700_000_100_000L))
+            database.orderDao().updatePurchaseRecordStatus(original.item.id, PurchaseRecordStatus.TRACKED)
+            database.orderDao().refreshStatuses()
+            items.insertItem(Item(id = childId, brandId = 901, categoryId = 902,
+                name = "主件付款资料完整的共价小物", description = "共价关联保留", status = ItemStatus.PENDING_BALANCE,
+                parentItemId = original.item.id, includedInParentPrice = true, createdAt = 301, updatedAt = 302))
+            assertTrue(items.getPurchaseReviews().first().isEmpty())
+        }
+        val before = runBlocking { databaseSnapshot() }
+        val paymentDestinations = mutableListOf<Long>()
+        val reviewDestinations = mutableListOf<Long>()
+        showPriceScreen(childId, expectedEvidence = PurchaseRecordStatus.TRACKED,
+            onNavigateToPayment = { paymentDestinations += it }, onNavigateToParent = { reviewDestinations += it })
+
+        compose.onNodeWithTag("reviewParentPriceEntry").assertDoesNotExist()
+        compose.onNodeWithTag("priceManageList").performScrollToNode(hasText("查看主件付款"))
+        compose.onNodeWithText("查看主件付款").assertIsDisplayed().assertIsEnabled().performClick()
+        compose.runOnIdle {
+            assertEquals(listOf(original.price.id), paymentDestinations)
+            assertTrue(reviewDestinations.isEmpty())
+        }
+        runBlocking { assertEquals(before, databaseSnapshot()) }
+    }
+
+    @Test fun unpricedWishlistHidesPurchaseStateReviewButKeepsSettingItsPrice() {
+        val itemId = 1_830_100_005L
+        runBlocking {
+            items.insertItem(Item(id = itemId, brandId = 901, categoryId = 902,
+                name = "没有价格的愿望裙", description = "愿望预算尚未设置", status = ItemStatus.WISHED,
+                createdAt = 401, updatedAt = 402))
+            assertTrue(items.getPurchaseReviews().first().isEmpty())
+        }
+        val before = runBlocking { databaseSnapshot() }
+        val priceDestinations = mutableListOf<Long?>()
+        val editDestinations = mutableListOf<Long>()
+        showPriceScreen(itemId, expectOrder = false,
+            onNavigateToPriceEdit = { priceDestinations += it }, onNavigateToItemEdit = { editDestinations += it })
+
+        compose.onNodeWithTag("priceManageList").performScrollToNode(hasText("设置价格"))
+        compose.onNodeWithTag("reviewUnpricedItemEntry").assertDoesNotExist()
+        compose.onNodeWithText("没有价格时可先核对服饰状态，价格和真实付款可稍后补全。").assertDoesNotExist()
+        compose.onNodeWithText("设置价格").assertIsDisplayed().assertIsEnabled().performClick()
+        compose.runOnIdle {
+            assertEquals(listOf<Long?>(null), priceDestinations)
+            assertTrue(editDestinations.isEmpty())
+        }
+        runBlocking { assertEquals(before, databaseSnapshot()) }
+    }
+
+    @Test fun correctingTheLastUnknownParentDateRemovesTheSharedAccessoryReviewEntry() {
+        val original = runBlocking { seedReviewOrder() }
+        val childId = 1_830_100_006L
+        runBlocking {
+            database.orderDao().updatePurchaseRecordStatus(original.item.id, PurchaseRecordStatus.TRACKED)
+            database.orderDao().refreshStatuses()
+            items.insertItem(Item(id = childId, brandId = 901, categoryId = 902,
+                name = "主件日期待补的共价小物", description = "日期补齐后自动更新入口", status = ItemStatus.PENDING_BALANCE,
+                parentItemId = original.item.id, includedInParentPrice = true, createdAt = 501, updatedAt = 502))
+        }
+        showPriceScreen(childId, expectedEvidence = PurchaseRecordStatus.TRACKED)
+        scrollTo("reviewParentPriceEntry")
+        compose.onNodeWithTag("reviewParentPriceEntry").assertIsDisplayed()
+        val before = runBlocking { databaseSnapshot() }
+        val unknown = before.payments.single { it.paidDate == null }
+        val corrected = unknown.copy(paidDate = 1_700_000_100_000L)
+
+        runBlocking { orders.editPayment(corrected) }
+        compose.waitUntil(10_000) {
+            viewModel.uiState.value.order?.payments?.all { it.paidDate != null } == true &&
+                compose.onAllNodesWithTag("reviewParentPriceEntry").fetchSemanticsNodes().isEmpty()
+        }
+        compose.waitForIdle()
+        compose.onNodeWithTag("reviewParentPriceEntry").assertDoesNotExist()
+        compose.onNodeWithTag("priceManageList").performScrollToNode(hasText("查看主件付款"))
+        compose.onNodeWithText("查看主件付款").assertIsDisplayed()
+        runBlocking {
+            assertTrue(items.getPurchaseReviews().first().isEmpty())
+            assertEquals(before.copy(payments = before.payments.map { if (it.id == unknown.id) corrected else it }),
+                databaseSnapshot())
+        }
+    }
+
     private fun showPriceScreen(itemId: Long, expectOrder: Boolean = true,
+        expectedEvidence: PurchaseRecordStatus = PurchaseRecordStatus.NEEDS_REVIEW,
+        onNavigateToPriceEdit: (Long?) -> Unit = {},
         onNavigateToItemEdit: (Long) -> Unit = {}, onNavigateToPayment: (Long) -> Unit = {},
         onNavigateToParent: (Long) -> Unit = {}) {
         compose.runOnIdle {
@@ -186,7 +278,7 @@ class PriceManageScreenReviewTest {
         }
         compose.setContent {
             LolitaTheme {
-                PriceManageScreen(itemId = itemId, onBack = {}, onNavigateToPriceEdit = {},
+                PriceManageScreen(itemId = itemId, onBack = {}, onNavigateToPriceEdit = onNavigateToPriceEdit,
                     onNavigateToPaymentManage = onNavigateToPayment, onNavigateToParentPriceManage = onNavigateToParent,
                     onNavigateToItemEdit = onNavigateToItemEdit,
                     viewModel = viewModel)
@@ -195,7 +287,7 @@ class PriceManageScreenReviewTest {
         compose.waitUntil(10_000) { !viewModel.uiState.value.isLoading }
         compose.runOnIdle {
             assertFalse(viewModel.uiState.value.loadFailed)
-            if (expectOrder) assertEquals(PurchaseRecordStatus.NEEDS_REVIEW, viewModel.uiState.value.order!!.purchaseRecordStatus)
+            if (expectOrder) assertEquals(expectedEvidence, viewModel.uiState.value.order!!.purchaseRecordStatus)
             else assertEquals(null, viewModel.uiState.value.order)
         }
     }

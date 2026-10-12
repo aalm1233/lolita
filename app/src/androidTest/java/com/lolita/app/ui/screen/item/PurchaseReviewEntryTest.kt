@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.runtime.mutableIntStateOf
 import com.lolita.app.data.local.dao.PriceWithPayments
 import com.lolita.app.data.local.entity.*
 import com.lolita.app.ui.theme.LolitaTheme
@@ -32,12 +33,23 @@ class PurchaseReviewEntryTest {
         compose.runOnIdle { assertEquals(1, opened) }
     }
 
-    @Test fun homeShortcutRemainsAvailableWithAnEmptyQueue() {
+    @Test fun homeShortcutIsHiddenWithAnEmptyQueue() {
         var opened = 0
         compose.setContent { LolitaTheme { PurchaseReviewShortcut(0, onClick = { opened++ }) } }
-        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed().assertHasClickAction()
-            .assertTextContains("0 件服饰与小物 · 查看清单").performClick()
-        compose.runOnIdle { assertEquals(1, opened) }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        compose.runOnIdle { assertEquals(0, opened) }
+    }
+
+    @Test fun homeShortcutDisappearsWhenReviewsAreCompletedAndReturnsForNewReviews() {
+        val count = mutableIntStateOf(2)
+        compose.setContent { LolitaTheme { PurchaseReviewShortcut(count.intValue, onClick = {}) } }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("2 件服饰与小物 · 查看清单")
+        compose.runOnIdle { count.intValue = 0 }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        compose.runOnIdle { count.intValue = 1 }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("1 件服饰与小物 · 查看清单")
     }
 
     @Test fun currentReviewOrderHasAnExplicitButtonToItsPurchaseConfirmation() {

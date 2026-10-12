@@ -252,11 +252,24 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=92, versionName="2.42.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
-## 提交
+## 提交、推送与发布
 
-- 构建通过后再提交。
-- commit message 用英文短句 + `feat:` / `fix:` / `chore:` 前缀。
-- 不提交 `.gradle-user-home/`、`.kotlin/`。
+- 开发任务完成且必要验证通过后，默认完成本次改动的提交和推送；用户明确要求暂不提交或推送时遵从。已经授权的步骤连续执行，不在完成代码后遗漏提交、推送，也不重复请求同一授权。
+- 提交前检查 `git status --short` 和暂存区差异，只暂存本次任务文件或改动；保留用户已有未提交内容及换行格式，不使用 `git add .` 混入无关改动，不以 reset/clean 清理用户工作区。
+- commit message 使用英文短句与 `feat:` / `fix:` / `chore:` 前缀。不提交 `.gradle-user-home/`、`.kotlin/`、本机签名配置、密钥或发布令牌。
+- 应用源码仓库为 `https://github.com/aalm1233/lolita`，当前默认发布分支为 `master`。隔离开发分支使用 `codex/` 前缀，验证完成后将本次提交集成到目标分支，再推送；用户指定其他分支时以其要求为准。
+- 推送前核对远端状态，使用普通推送，遇到非快进先处理远端新增提交，不强制覆盖。推送后核对远端目标分支包含本次提交，最终反馈提交号和推送结果，不能把本地提交当成已推送。
+- 纯文档更新无需增加应用版本号、重新构建 APK 或创建 Release；核对文档差异后提交、推送即可。代码改动仍须先通过相应构建和验证。
+
+### 用户要求发布时
+
+1. 更新 `versionCode` / `versionName` 和 `AGENTS.md`，按改动运行构建及必要回归，先提交正式源码。
+2. 从该源码执行 `clean assembleRelease`，核对包名、版本、非调试属性及原正式签名；正式 APK 必须支持同签名覆盖安装。签名参数沿用本机配置，不进入仓库。
+3. 将正式包命名为 `lolita-<version>.apk`，生成 `SHA256SUMS`。创建指向该源码提交的 GitHub 标签 `v<major>.<minor>.<patch>`，推送源码目标分支及标签；不改写已发布标签。
+4. 在 GitHub 和 Gitee 同步发布同一个已签名 APK 与 `SHA256SUMS`。GitHub 保留旧版应用的检查入口；Gitee 为新版应用的国内检查与下载渠道。只推送 Git 代码或标签不等于发布完成。
+5. Gitee 仓库 `https://gitee.com/aalm1233/lolita` 仅维护分发说明和附件，标签指向其分发说明，Release 正文注明 GitHub 源码提交，不能宣称 Gitee 标签对应完整应用源码。
+6. Gitee Release 先标为预发布，上传附件后匿名完整下载并核对 SHA256，再改为正式。确认公开版本 API、稳定 APK 地址及 HEAD 跳转链可用；不保存 CDN 临时链接。详细规则见下文“Gitee 版本检查与 APK 分发”。
+7. 验证两个平台的正式 Release、附件版本与摘要一致，再反馈发布页和 APK 链接。令牌仅通过本机环境或仓库外临时文件使用，不打印、不写入源码或 APK；任务结束清理临时凭据。
 
 ## AGENTS.md 维护
 

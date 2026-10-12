@@ -73,6 +73,8 @@ import com.lolita.app.ui.screen.settings.CategoryManageScreen
 import com.lolita.app.ui.screen.settings.StyleManageScreen
 import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
+import com.lolita.app.ui.screen.settings.AppUpdateViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
@@ -125,7 +127,8 @@ val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope
 @Composable
 fun LolitaNavHost(
     openQuickOutfit: Boolean = false,
-    onQuickOutfitOpened: () -> Unit = {}
+    onQuickOutfitOpened: () -> Unit = {},
+    appUpdateViewModel: AppUpdateViewModel = viewModel()
 ) {
     val navController = rememberNavController()
     LaunchedEffect(openQuickOutfit) {
@@ -505,7 +508,8 @@ fun LolitaNavHost(
                     onNavigateToAttributeManage = { navController.navigate(Screen.AttributeManage.route) },
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
-                    onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) }
+                    onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) },
+                    appUpdateViewModel = appUpdateViewModel
                 )
             }
 

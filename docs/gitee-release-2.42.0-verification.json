@@ -1,0 +1,353 @@
+{
+  "version": "2.42.0",
+  "anonymous_status": 200,
+  "final_host": "foruda.gitee.com",
+  "content_type": "application/zip",
+  "bytes": 47927665,
+  "sha256": "f31c947503a51723bbdb02ae9224a75926c2cd5c3e68055f9bf00e7f113034ac",
+  "verified_at_utc": "2026-10-12T16:02:33.625912+00:00",
+  "versionCode": 92,
+  "signature_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "clean_assembleRelease": "passed",
+  "jvm_tests": 112,
+  "compose_device_tests": 8,
+  "device": "emulator-5558 / Lolita_Release_2392_Test",
+  "upgrade_from": "2.40.2 / 87",
+  "upgrade_data_comparison": {
+    "before_archive_sha256": "85c6ce2d1f5aba9e4bfaaa1f569864427701e6a9e53b11099a814065304d7d29",
+    "after_archive_sha256": "43166138f3bbec9b8d30feaae3f44696c20bae1cecf37a4a29abdc4473bb5de4",
+    "tables": [
+      {
+        "table": "android_metadata",
+        "before": 1,
+        "after": 1,
+        "original_rows_verified": 1
+      },
+      {
+        "table": "brands",
+        "before": 201,
+        "after": 201,
+        "original_rows_verified": 201,
+        "added": 0
+      },
+      {
+        "table": "categories",
+        "before": 12,
+        "after": 12,
+        "original_rows_verified": 12,
+        "added": 0
+      },
+      {
+        "table": "coordinates",
+        "before": 48,
+        "after": 48,
+        "original_rows_verified": 48,
+        "added": 0
+      },
+      {
+        "table": "items",
+        "before": 193,
+        "after": 193,
+        "original_rows_verified": 193,
+        "added": 0
+      },
+      {
+        "table": "legacy_catalog_archive",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "locations",
+        "before": 48,
+        "after": 54,
+        "original_rows_verified": 48,
+        "added": 6
+      },
+      {
+        "table": "order_bindings",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "outfit_item_cross_ref",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "outfit_logs",
+        "before": 48,
+        "after": 48,
+        "original_rows_verified": 48,
+        "added": 0
+      },
+      {
+        "table": "payment_stages",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "payments",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "prices",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_brands",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_categories",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_seasons",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_shared_coordinates",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_shared_items",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_shared_price_plans",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_sources",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "remote_styles",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "restore_journal",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "room_master_table",
+        "before": 1,
+        "after": 1,
+        "original_rows_verified": 1,
+        "added": 0
+      },
+      {
+        "table": "seasons",
+        "before": 5,
+        "after": 5,
+        "original_rows_verified": 5,
+        "added": 0
+      },
+      {
+        "table": "shared_library_sync_state",
+        "before": 0,
+        "after": 0,
+        "original_rows_verified": 0,
+        "added": 0
+      },
+      {
+        "table": "sources",
+        "before": 3,
+        "after": 3,
+        "original_rows_verified": 3,
+        "added": 0
+      },
+      {
+        "table": "styles",
+        "before": 6,
+        "after": 6,
+        "original_rows_verified": 6,
+        "added": 0
+      }
+    ],
+    "expected_builtin_changes": [
+      {
+        "table": "brands",
+        "primary_key": [
+          1
+        ],
+        "field": "logo_url",
+        "asset": "builtin/brands/classical_puppets.jpg",
+        "sha256": "d7a801b37991759f2657985ac62c47c17d366d0cae492f9a380a9cfd345c340d"
+      },
+      {
+        "table": "brands",
+        "primary_key": [
+          9
+        ],
+        "field": "logo_url",
+        "asset": "builtin/brands/flower_pearl.jpg",
+        "sha256": "76f3eef6ea0d51247a0bc4c3060c8468d2dd0d4caf03d0d33a5257526f3e6245"
+      },
+      {
+        "table": "brands",
+        "primary_key": [
+          11
+        ],
+        "field": "logo_url",
+        "asset": "builtin/brands/neo_ludwig.jpg",
+        "sha256": "2b43201a01be0366273abcaf61ba37ef1cb7bced1411f1079726c625f3dcf69b"
+      },
+      {
+        "table": "brands",
+        "primary_key": [
+          20
+        ],
+        "field": "logo_url",
+        "asset": "builtin/brands/cherry_bomb.jpg",
+        "sha256": "4d91e711c9608612d519b965b92ddc45bdd5ef9c244d7ff59065772990e22db6"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1048
+        ],
+        "added_room": "卧室",
+        "asset": "builtin/rooms/bedroom.png",
+        "sha256": "6e173c091157003b8f49e3c25ead5a1cfc3a892a75290469ca2062af5665074e"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1049
+        ],
+        "added_room": "客厅",
+        "asset": "builtin/rooms/living_room.png",
+        "sha256": "5a5590b7e1ed8c22e4f7679fb02c88526875c560ecec03ff8fe04f4f9ef6fa3c"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1050
+        ],
+        "added_room": "衣帽间",
+        "asset": "builtin/rooms/dressing_room.png",
+        "sha256": "5dd21e597a67866c5573aa507daab09545ff246e69435c0bb9c58c1d32735f31"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1051
+        ],
+        "added_room": "书房",
+        "asset": "builtin/rooms/study.png",
+        "sha256": "7a022abe05f9493e5f9cff000963e4fbc709bfbff29763dda26893af0334fd43"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1052
+        ],
+        "added_room": "玄关",
+        "asset": "builtin/rooms/entryway.png",
+        "sha256": "82510c5e0db17d8280a24570f8d85695cf4961a37d4323e6cd228b5b2bd57250"
+      },
+      {
+        "table": "locations",
+        "primary_key": [
+          1053
+        ],
+        "added_room": "储物间",
+        "asset": "builtin/rooms/storage_room.png",
+        "sha256": "a075821f47708d8ae62aa7f9a7a2d3af8321208d5e7575726873e464f0d5db43"
+      }
+    ],
+    "original_images": [
+      {
+        "path": "scroll-fixture-0.png",
+        "sha256": "b6fe0aa6f10f0ca65aa68bced256a1f98b5c410b0d47937f3d55a9adc912dac5",
+        "unchanged": true
+      },
+      {
+        "path": "scroll-fixture-1.png",
+        "sha256": "8a7c2d6ab43e1fd305fade42a607ac54533defc57244ca1c11b82e50e3e359a7",
+        "unchanged": true
+      },
+      {
+        "path": "scroll-fixture-2.png",
+        "sha256": "47eafc8d8f4f741bb2a26222fbfcb333dde3fbcdbb2de97075932e94bfda2299",
+        "unchanged": true
+      },
+      {
+        "path": "scroll-fixture-3.png",
+        "sha256": "feff3e1f6c38365a1a828b32b9fd8fe61ee2d17697b54017d2b0adee37bd70e2",
+        "unchanged": true
+      }
+    ],
+    "excluded": [
+      "WorkManager no_backup/androidx.work.workdb and its WAL/SHM; generated cache files; profileinstaller markers"
+    ],
+    "coverage_limitations": [
+      "Prices, payment_stages, payments, order_bindings, outfit_item_cross_ref and legacy_catalog_archive were empty in the before snapshot; preservation of nonempty rows in these tables is not demonstrated."
+    ],
+    "before_integrity_check": "ok",
+    "before_foreign_key_check": [],
+    "before_schema_version": 23,
+    "after_integrity_check": "ok",
+    "after_foreign_key_check": [],
+    "after_schema_version": 23,
+    "original_image_references": 336,
+    "missing_image_references_after": [],
+    "settings_bytes_unchanged": true,
+    "problems": [],
+    "passed": true,
+    "business_original_rows_verified": 564,
+    "business_original_field_values_verified": 6086,
+    "original_associations": {
+      "brand_id": 193,
+      "category_id": 193,
+      "coordinate_id": 192,
+      "location_id": 192,
+      "parent_item_id": 0
+    },
+    "explicit_business_table_exclusions": [],
+    "after_image_file_count": 14
+  },
+  "mainland_network_speed_tested": false
+}

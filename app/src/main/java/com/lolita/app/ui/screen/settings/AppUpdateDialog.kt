@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.lolita.app.data.remote.GitHubReleaseApi
+import com.lolita.app.data.remote.GiteeReleaseApi
 import com.lolita.app.ui.theme.LolitaSkin
 
 @Composable
@@ -24,7 +24,7 @@ internal fun AppUpdateDialog(
     val update = state.update
     val hasUpdate = update?.hasUpdate == true
     val downloadUrl = update?.release?.apkDownloadUrl?.takeIf { hasUpdate }
-    val releaseUrl = update?.release?.releaseUrl ?: GitHubReleaseApi.RELEASES_URL
+    val releaseUrl = update?.release?.releaseUrl ?: GiteeReleaseApi.RELEASES_URL
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -42,7 +42,7 @@ internal fun AppUpdateDialog(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("当前版本：v$currentVersion")
                 when {
-                    state.isChecking -> Text("正在连接 GitHub…")
+                    state.isChecking -> Text("正在连接 Gitee…")
                     state.error != null -> Text(state.error, color = MaterialTheme.colorScheme.error)
                     update != null -> {
                         Text("最新发布：v${update.release.versionName}")

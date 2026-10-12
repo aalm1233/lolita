@@ -1,8 +1,6 @@
 package com.lolita.app.ui.screen.settings
 
 import android.Manifest
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -295,22 +293,6 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
-    AppUpdateDialog(
-        state = updateState,
-        currentVersion = BuildConfig.VERSION_NAME,
-        onDismiss = appUpdateViewModel::dismissDialog,
-        onRetry = appUpdateViewModel::checkForUpdate,
-        onOpenUrl = { url ->
-            try {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            } catch (_: ActivityNotFoundException) {
-                Toast.makeText(context, "无法打开链接，请安装或启用浏览器", Toast.LENGTH_SHORT).show()
-            } catch (_: SecurityException) {
-                Toast.makeText(context, "系统阻止打开链接，请在浏览器中访问 GitHub", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
 
     if (showTimePicker && reminderConfig != null) {
         val config = reminderConfig!!

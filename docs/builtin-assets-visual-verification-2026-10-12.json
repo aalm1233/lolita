@@ -1,0 +1,172 @@
+{
+  "seen": [
+    "Elpress L 原创Lolita洋装",
+    "FelinaeCookieLolita「猫科小甜饼」",
+    "JND Lolita",
+    "OZZONJAPAN",
+    "With PUJI 原创自制轻洋装",
+    "ZJstory原创设计",
+    "十tonight十",
+    "古典玩偶Puppets and Doll官方店",
+    "古雾行原创手作Lolita设计",
+    "怪味诊所",
+    "新路德维希Neo Ludwig洋装",
+    "时之砂Lolita洋装工作室",
+    "樱桃爆弹",
+    "羊羊羊兰兰兰",
+    "花与珍珠匣",
+    "荆棘玫瑰",
+    "莉莉子lolita店"
+  ],
+  "missing": [],
+  "captures": [
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-01.png",
+      "newBrands": [
+        "Elpress L 原创Lolita洋装"
+      ],
+      "visibleVerifiedBrands": [
+        "Elpress L 原创Lolita洋装"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-02.png",
+      "newBrands": [
+        "FelinaeCookieLolita「猫科小甜饼」"
+      ],
+      "visibleVerifiedBrands": [
+        "Elpress L 原创Lolita洋装",
+        "FelinaeCookieLolita「猫科小甜饼」"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-03.png",
+      "newBrands": [
+        "OZZONJAPAN"
+      ],
+      "visibleVerifiedBrands": [
+        "OZZONJAPAN"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-04.png",
+      "newBrands": [
+        "With PUJI 原创自制轻洋装"
+      ],
+      "visibleVerifiedBrands": [
+        "With PUJI 原创自制轻洋装"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-05.png",
+      "newBrands": [
+        "ZJstory原创设计"
+      ],
+      "visibleVerifiedBrands": [
+        "With PUJI 原创自制轻洋装",
+        "ZJstory原创设计"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-06.png",
+      "newBrands": [
+        "十tonight十"
+      ],
+      "visibleVerifiedBrands": [
+        "ZJstory原创设计",
+        "十tonight十"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-07.png",
+      "newBrands": [
+        "古典玩偶Puppets and Doll官方店"
+      ],
+      "visibleVerifiedBrands": [
+        "十tonight十",
+        "古典玩偶Puppets and Doll官方店"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-08.png",
+      "newBrands": [
+        "古雾行原创手作Lolita设计"
+      ],
+      "visibleVerifiedBrands": [
+        "十tonight十",
+        "古典玩偶Puppets and Doll官方店",
+        "古雾行原创手作Lolita设计"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-09.png",
+      "newBrands": [
+        "怪味诊所"
+      ],
+      "visibleVerifiedBrands": [
+        "怪味诊所"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-10.png",
+      "newBrands": [
+        "新路德维希Neo Ludwig洋装",
+        "时之砂Lolita洋装工作室"
+      ],
+      "visibleVerifiedBrands": [
+        "怪味诊所",
+        "新路德维希Neo Ludwig洋装",
+        "时之砂Lolita洋装工作室"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-11.png",
+      "newBrands": [
+        "樱桃爆弹"
+      ],
+      "visibleVerifiedBrands": [
+        "樱桃爆弹"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-12.png",
+      "newBrands": [
+        "羊羊羊兰兰兰"
+      ],
+      "visibleVerifiedBrands": [
+        "羊羊羊兰兰兰"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-13.png",
+      "newBrands": [
+        "花与珍珠匣",
+        "荆棘玫瑰"
+      ],
+      "visibleVerifiedBrands": [
+        "羊羊羊兰兰兰",
+        "花与珍珠匣",
+        "荆棘玫瑰"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-brands-14.png",
+      "newBrands": [
+        "莉莉子lolita店"
+      ],
+      "visibleVerifiedBrands": [
+        "羊羊羊兰兰兰",
+        "花与珍珠匣",
+        "荆棘玫瑰",
+        "莉莉子lolita店"
+      ]
+    },
+    {
+      "image": "docs/visuals/2026-10-12-builtin-jnd-fallback.png",
+      "newBrands": [
+        "JND Lolita"
+      ],
+      "visibleVerifiedBrands": []
+    }
+  ]
+}

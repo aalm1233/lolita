@@ -1,0 +1,328 @@
+{
+  "collectedAt": "2026-10-12",
+  "logos": [
+    {
+      "key": "zjstory",
+      "testDataName": "ZJstory原创设计",
+      "officialName": "ZJstory原创设计",
+      "officialPage": "https://weibo.com/u/5650275998",
+      "sourcePage": "https://www.sina.cn/media/5650275998",
+      "imageUrl": "https://tvax2.sinaimg.cn/large/006anYTQly8h10dn49mnuj30sg0sggn5.jpg",
+      "identityEvidence": "账号简介将淘宝、抖音、小红书店铺统一指向 ZJstory原创设计。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/zjstory.jpg",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "imageMode": "RGB",
+      "sha256": "11f5af8707200098929f52fae625ed804aecb47d3249140c003eb5eadb428361",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "sheep",
+      "testDataName": "羊羊羊兰兰兰",
+      "officialName": "羊羊羊兰兰兰",
+      "officialPage": "https://weibo.com/u/5625280379",
+      "sourcePage": "https://www.sina.cn/media/5625280379",
+      "imageUrl": "https://tva2.sinaimg.cn/large/0068H6oHjw8euz2jdfn2uj30k00k0t9o.jpg",
+      "identityEvidence": "账号作者为羊羊羊兰兰兰，官方发售公告注明成都羊羊兰兰服装有限公司认证。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/sheep.jpg",
+      "dimensions": [
+        720,
+        720
+      ],
+      "imageMode": "RGB",
+      "sha256": "c12e61121a8463329c815942956bef1c18893683d8dbcb4a73a89f6c19a51dd4",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "flower_pearl",
+      "testDataName": "花与珍珠匣",
+      "officialName": "花与珍珠匣",
+      "officialPage": "https://weibo.com/u/6574740774",
+      "sourcePage": "https://www.sina.cn/media/6574740774",
+      "imageUrl": "https://tvax3.sinaimg.cn/large/007aWWq2ly8h8ygwjh2kuj30e80e83yx.jpg",
+      "identityEvidence": "账号名称完全相同，简介为原创少女服饰品牌，直接发布自有联名与新品。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/flower_pearl.jpg",
+      "dimensions": [
+        512,
+        512
+      ],
+      "imageMode": "RGB",
+      "sha256": "76f3eef6ea0d51247a0bc4c3060c8468d2dd0d4caf03d0d33a5257526f3e6245",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "felinae_cookie",
+      "testDataName": "FelinaeCookieLolita「猫科小甜饼」",
+      "officialName": "FelinaeCookie猫科小甜饼",
+      "officialPage": "https://weibo.com/u/6058825266",
+      "sourcePage": "https://www.sina.cn/media/6058825266",
+      "imageUrl": "https://tvax3.sinaimg.cn/large/006C2dealy8h8pjcgn94wj30u00u0ta8.jpg",
+      "identityEvidence": "账号简介明确提供与测试数据完全相同的淘宝店铺搜索名称。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/felinae_cookie.jpg",
+      "dimensions": [
+        1080,
+        1080
+      ],
+      "imageMode": "RGB",
+      "sha256": "95e56518764144c451fa02ecd62d34cc886e83d506aa6c8a25c9f23cfc6291dc",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "neo_ludwig",
+      "testDataName": "新路德维希Neo Ludwig洋装",
+      "officialName": "Neoludwig新路德维希",
+      "officialPage": "https://weibo.com/u/3104885167",
+      "sourcePage": "https://www.sina.cn/media/3104885167",
+      "imageUrl": "https://tva3.sinaimg.cn/large/b910c9afgw1ekr567zgjoj20500503yl.jpg",
+      "identityEvidence": "官方作者 Neoludwig新路德维希直接发布音乐朝圣者再贩；备份也有音乐朝圣者与埃及女神芭丝特系列。新浪公告结构化 author 链接指向 UID 3104885167。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/neo_ludwig.jpg",
+      "dimensions": [
+        180,
+        180
+      ],
+      "imageMode": "RGB",
+      "sha256": "2b43201a01be0366273abcaf61ba37ef1cb7bced1411f1079726c625f3dcf69b",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "bramble_rose",
+      "testDataName": "荆棘玫瑰",
+      "officialName": "Bramble_Rose荆棘玫瑰原创设计",
+      "officialPage": "https://weibo.com/u/3823128577",
+      "sourcePage": "https://www.sina.cn/media/3823128577",
+      "imageUrl": "https://tva1.sinaimg.cn/large/e3e05001jw8fb93pom0dvj20e80e8dgc.jpg",
+      "identityEvidence": "官方新浪账号简介直接写淘宝店名 Bramble Rose荆棘玫瑰原创设计，标注荆棘玫瑰洋装贩售店官方微博；备份的古董蛋糕、水相魔女服饰系列对应此品牌。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/bramble_rose.jpg",
+      "dimensions": [
+        512,
+        512
+      ],
+      "imageMode": "RGB",
+      "sha256": "cc6742f35e00a276d7db6849ec38da9ad00d18a7a8231d15508e6f472704d820",
+      "collectedAt": "2026-10-12",
+      "notes": "同一新浪官方 CDN 图像 ID，从 50px 头像裁剪端点取已验证 large 原图；未生成或改变图形。"
+    },
+    {
+      "key": "ozzon_japan",
+      "testDataName": "OZZONJAPAN",
+      "officialName": "OZZON JAPAN",
+      "officialPage": "https://ozzon-japan.jp/",
+      "sourcePage": "https://ozzon-japan.jp/",
+      "imageUrl": "https://ozzon-japan.jp/wp-content/themes/ozzon-japan_1.8/images/headlogo.png",
+      "identityEvidence": "品牌官网标题为 OZZON JAPAN OfficialSite，页头直接使用 headlogo.png。",
+      "kind": "official_logo",
+      "assetPath": "builtin/brands/ozzon_japan.png",
+      "dimensions": [
+        320,
+        160
+      ],
+      "imageMode": "RGBA",
+      "sha256": "5c409e12652f60b781c3c42fd919c78938fe8a71f3ff6c35a812a3234db31448",
+      "collectedAt": "2026-10-12",
+      "notes": ""
+    },
+    {
+      "key": "tonight",
+      "testDataName": "十tonight十",
+      "officialName": "十Tonight十",
+      "officialPage": "https://weibo.com/u/6750101743",
+      "sourcePage": "https://www.sina.cn/media/6750101743",
+      "imageUrl": "https://tvax1.sinaimg.cn/large/007mOJOLly8i02l28j41fj30ay0ay749.jpg",
+      "identityEvidence": "名称对应店铺；账号持续发布失梦乐园、写给你的第二封信和红龙黑龙的上新及尾款通知。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/tonight.jpg",
+      "dimensions": [
+        394,
+        394
+      ],
+      "sha256": "ab19cf6cf089dd0e3e77ec78a9f1d34c649163c2ad9eb3cb1c7179ad6f88210d",
+      "collectedAt": "2026-10-12",
+      "notes": "官方微博公开头像，月牙字标；保留原图。"
+    },
+    {
+      "key": "lilizi",
+      "testDataName": "莉莉子lolita店",
+      "officialName": "莉莉子lolita店",
+      "officialPage": "https://weibo.com/u/1956142282",
+      "sourcePage": "https://www.sina.cn/media/1956142282",
+      "imageUrl": "https://tvax3.sinaimg.cn/large/74985ccaly8h0sxho1oe9j20e80e8aah.jpg",
+      "identityEvidence": "店铺名与公开微博账号一致；头像明确写Lilizi / 莉莉子。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/lilizi.jpg",
+      "dimensions": [
+        512,
+        512
+      ],
+      "sha256": "d0227dcf64300dddc3b055b5f36d5eac8d8ef2d90527bab750c9d129e15d63c7",
+      "collectedAt": "2026-10-12",
+      "notes": "紫色棺形品牌头像，512×512。"
+    },
+    {
+      "key": "with_puji",
+      "testDataName": "With PUJI 原创自制轻洋装",
+      "officialName": "-Withpuji-",
+      "officialPage": "https://weibo.com/u/6750679404",
+      "sourcePage": "https://www.sina.cn/media/6750679404",
+      "imageUrl": "https://tvax2.sinaimg.cn/large/007mRa5Sly8h3xbtap3fhj30qo0qodhd.jpg",
+      "identityEvidence": "公开简介为Withpuji原创自制轻洋装；官方微博页面含该店产品入口；头像有With PUJI字样。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/with_puji.jpg",
+      "dimensions": [
+        960,
+        960
+      ],
+      "sha256": "30c82bb128b207240660c34c09060d152e185d1d4cc0153cb061ab5af4a8af6c",
+      "collectedAt": "2026-10-12",
+      "notes": "黑底猫咪与行星，960×960。"
+    },
+    {
+      "key": "elpress_l",
+      "testDataName": "Elpress L 原创Lolita洋装",
+      "officialName": "Elpress",
+      "officialPage": "https://weibo.com/u/1234587767",
+      "sourcePage": "https://www.sina.cn/media/1234587767",
+      "imageUrl": "https://tvax1.sinaimg.cn/large/49965077ly8fq5j1su9vrj20yi0yiq71.jpg",
+      "identityEvidence": "公开账号简介为中山市洛汐文化传播有限公司旗下服饰品牌Elpress L；头像有Elpress L花体字。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/elpress_l.jpg",
+      "dimensions": [
+        1242,
+        1242
+      ],
+      "sha256": "d4658de3a216b7bdfb17a451078f9b2da6450572547a83c611af323608f297c4",
+      "collectedAt": "2026-10-12",
+      "notes": "白底黑色花鸟圆环品牌图，1242×1242。"
+    },
+    {
+      "key": "cherry_bomb",
+      "testDataName": "樱桃爆弹",
+      "officialName": "CherriBomb樱桃爆弹Lolita原创店",
+      "officialPage": "https://weibo.com/u/1680101651",
+      "sourcePage": "https://www.sina.cn/media/1680101651",
+      "imageUrl": "https://tvax3.sinaimg.cn/large/64245113ly8gdixitdvnvj20u00u0gnn.jpg",
+      "identityEvidence": "官方公开资料直接标明樱桃爆弹Lolita原创店；头像有CHERRY BOMB和樱桃图形。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/cherry_bomb.jpg",
+      "dimensions": [
+        1080,
+        1080
+      ],
+      "sha256": "4d91e711c9608612d519b965b92ddc45bdd5ef9c244d7ff59065772990e22db6",
+      "collectedAt": "2026-10-12",
+      "notes": "源头像本身偏模糊，1080×1080文件不代表线条清晰度。"
+    },
+    {
+      "key": "time_sand",
+      "testDataName": "时之砂Lolita洋装工作室",
+      "officialName": "时之砂Lolita洋装工作室",
+      "officialPage": "https://weibo.com/u/1624163643",
+      "sourcePage": "https://www.sina.cn/media/1624163643",
+      "imageUrl": "https://tva4.sinaimg.cn/large/60cec53bgw1f6in6fvj6bj20lj0kx772.jpg",
+      "identityEvidence": "公开资料标明官方群、淘宝店铺号342972及本店；头像明确写时之砂 / SAKYA LOLITA。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/time_sand.jpg",
+      "dimensions": [
+        775,
+        753
+      ],
+      "sha256": "8a8be46186039f8a45c20881ea23c4aa98a236adb0b945f88a645ef58af92360",
+      "collectedAt": "2026-10-12",
+      "notes": "原图775×753，官方头像裁切预览为正方形；保留未裁原图。"
+    },
+    {
+      "key": "classical_puppets",
+      "testDataName": "古典玩偶Puppets and Doll官方店",
+      "officialName": "古典玩偶ClassicalPuppets",
+      "officialPage": "https://weibo.com/u/5360834362",
+      "sourcePage": "https://www.sina.cn/media/5360834362",
+      "imageUrl": "https://tvax4.sinaimg.cn/large/005QNvUmly8ihkwd7ffrij30m80m8ad0.jpg",
+      "identityEvidence": "微博企业认证瑰煌文化传播（上海）有限公司；官方婚纱店微博明确公布古典玩偶puppets and doll官方店的上架与活动。",
+      "kind": "official_account_avatar",
+      "assetPath": "builtin/brands/classical_puppets.jpg",
+      "dimensions": [
+        800,
+        800
+      ],
+      "sha256": "d7a801b37991759f2657985ac62c47c17d366d0cae492f9a380a9cfd345c340d",
+      "collectedAt": "2026-10-12",
+      "notes": "当前官方18+3周年头像，800×800；属于周年店铺头像，不是无年份基础商标。"
+    }
+  ],
+  "unverified": [
+    {
+      "testDataName": "JND Lolita",
+      "reason": "多处发售报道提及 JND_纪念岛且服饰系列相符，但未能核验直接官方账号/店铺页面及其头像；保留缺省，不采用代售或第三方档案 logo。"
+    },
+    {
+      "testDataName": "古雾行原创手作Lolita设计",
+      "reason": "按完整店名、古雾行、古霧行及淘宝/微博限定检索，未找到可核验官方店铺或社媒头像。未将相近名称“雾lolita原创设计”替代。"
+    },
+    {
+      "testDataName": "怪味诊所",
+      "reason": "公开检索未得到可核验官方账号；测试文件给出的两条淘宝商品链接目前均返回登录跳转，未登录或绕过。没有采用转卖网站标识或消费者照片。"
+    }
+  ],
+  "rooms": [
+    {
+      "key": "bedroom",
+      "name": "卧室",
+      "assetPath": "builtin/rooms/bedroom.png",
+      "sha256": "6e173c091157003b8f49e3c25ead5a1cfc3a892a75290469ca2062af5665074e",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: a cozy bedroom with a neatly made bed with a soft blue cover, a bedside table, a rounded bedside lamp, and a compact wooden wardrobe. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    },
+    {
+      "key": "living_room",
+      "name": "客厅",
+      "assetPath": "builtin/rooms/living_room.png",
+      "sha256": "5a5590b7e1ed8c22e4f7679fb02c88526875c560ecec03ff8fe04f4f9ef6fa3c",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: an inviting living room with a muted terracotta sofa, a round wooden coffee table, a low cabinet and a soft woven rug. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    },
+    {
+      "key": "dressing_room",
+      "name": "衣帽间",
+      "assetPath": "builtin/rooms/dressing_room.png",
+      "sha256": "5dd21e597a67866c5573aa507daab09545ff246e69435c0bb9c58c1d32735f31",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: an elegant dressing room for a Lolita clothing collection, with clearly visible hanging frilled dresses in sage and dusty pink, a wooden closet rail, organized shoe shelves and a standing oval mirror. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    },
+    {
+      "key": "study",
+      "name": "书房",
+      "assetPath": "builtin/rooms/study.png",
+      "sha256": "7a022abe05f9493e5f9cff000963e4fbc709bfbff29763dda26893af0334fd43",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: a calm study with a wooden writing desk, a simple chair, a bookcase with neatly arranged books and a small green-shaded desk lamp. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    },
+    {
+      "key": "entryway",
+      "name": "玄关",
+      "assetPath": "builtin/rooms/entryway.png",
+      "sha256": "82510c5e0db17d8280a24570f8d85695cf4961a37d4323e6cd228b5b2bd57250",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: a tidy entryway with a low shoe cabinet, a bench, a coat rail with a jacket and a small wall mirror, immediately recognizable as a home entryway. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    },
+    {
+      "key": "storage_room",
+      "name": "储物间",
+      "assetPath": "builtin/rooms/storage_room.png",
+      "sha256": "a075821f47708d8ae62aa7f9a7a2d3af8321208d5e7575726873e464f0d5db43",
+      "mode": "built-in imagegen tool, new generation",
+      "prompt": "Use case: stylized-concept. Asset type: square built-in room illustration for a Chinese Lolita wardrobe organizer Android app, displayed both at 56dp thumbnail size and in a room detail page. Primary request: an organized storage room with two wooden shelving units, neatly arranged fabric storage boxes, baskets and folded linens. Style: a refined handcrafted isometric miniature dollhouse illustration, soft sculpted forms, natural wood and linen material details, quiet contemporary home interiors with a few gentle vintage touches. Composition: a complete cutaway room with two low walls and a square floor platform seen from the same elevated three-quarter isometric viewpoint; room occupies 82 percent of a square 1024x1024 canvas, centered with generous safe margins. Broad distinctive furniture shapes and few well-chosen details, so the type of room is recognizable as a small thumbnail. Light pale neutral background, soft diffuse daylight, subtle shadows, restrained real material colors. A single finished illustration, no contact sheet, no surrounding UI, no people, no text, no labels, no watermark, no brand marks. The room should feel inhabited, tasteful and welcoming."
+    }
+  ]
+}

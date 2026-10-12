@@ -2,6 +2,7 @@ package com.lolita.app.di
 
 import android.content.Context
 import com.lolita.app.data.file.BackupManager
+import com.lolita.app.data.file.BuiltInLibrary
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.preferences.AppPreferences
@@ -45,8 +46,11 @@ object AppModule {
     }
     fun sharedLibrarySyncRepository() = _sharedLibrarySyncRepository
 
+    private val _builtInLibrary by lazy { BuiltInLibrary(appContext, database) }
+    fun builtInLibrary() = _builtInLibrary
+
     private val _brandRepository by lazy {
-        BrandRepository(database.brandDao(), database.itemDao(), database)
+        BrandRepository(database.brandDao(), database.itemDao(), database, _builtInLibrary)
     }
     fun brandRepository() = _brandRepository
 
@@ -89,7 +93,7 @@ object AppModule {
     }
     fun sourceRepository() = _sourceRepository
 
-    private val _backupManager by lazy { BackupManager(appContext, database) }
+    private val _backupManager by lazy { BackupManager(appContext, database) { _builtInLibrary.initialize() } }
     fun backupManager() = _backupManager
 
     private val _appPreferences by lazy { AppPreferences(appContext) }

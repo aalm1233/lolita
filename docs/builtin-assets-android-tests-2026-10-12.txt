@@ -1,0 +1,6 @@
+
+com.lolita.app.data.BuiltInLibraryTest:.........
+
+Time: 0.395
+
+OK (9 tests)

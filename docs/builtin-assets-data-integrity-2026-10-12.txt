@@ -1,0 +1,6 @@
+
+com.lolita.app.data.DataIntegrityTest:........
+
+Time: 1.267
+
+OK (8 tests)

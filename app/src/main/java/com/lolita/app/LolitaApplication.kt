@@ -17,6 +17,13 @@ class LolitaApplication : Application() {
         NotificationChannelSetup.createOutfitNotificationChannel(applicationContext)
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                AppModule.builtInLibrary().initialize()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.e("LolitaApplication", "Failed to initialize built-in library", e)
+            }
+            try {
                 DailyOutfitReminderScheduler(applicationContext).reschedule()
             } catch (e: CancellationException) {
                 throw e

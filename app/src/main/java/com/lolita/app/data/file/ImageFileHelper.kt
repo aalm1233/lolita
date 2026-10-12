@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.currentCoroutineContext
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
@@ -48,6 +50,39 @@ object ImageFileHelper {
 
             destFile.absolutePath
         }
+
+    /** Copies packaged assets to the same persistent image store used by user photographs. */
+    suspend fun copyAssetToInternalStorage(context: Context, assetPath: String): String {
+        require(assetPath.isNotBlank() && !assetPath.startsWith("/") &&
+            assetPath.split('/').none { it == ".." || it == "." || it.isBlank() }) { "非法内置图片路径" }
+        val extension = assetPath.substringAfterLast('.', "png").lowercase(java.util.Locale.ROOT)
+            .filter { it.isLetterOrDigit() }.take(8).ifBlank { "png" }
+        val directory = File(context.filesDir, IMAGE_DIR)
+        val destination = File(directory, "${UUID.randomUUID()}.$extension")
+        // Keep ownership outside withContext: prompt cancellation while returning also cleans up.
+        return try {
+            withContext(Dispatchers.IO) {
+                currentCoroutineContext().ensureActive()
+                check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
+                context.assets.open(assetPath).use { input ->
+                    destination.outputStream().use { output ->
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        while (true) {
+                            currentCoroutineContext().ensureActive()
+                            val count = input.read(buffer)
+                            if (count < 0) break
+                            output.write(buffer, 0, count)
+                        }
+                    }
+                }
+                currentCoroutineContext().ensureActive()
+                destination.absolutePath
+            }
+        } catch (failure: Throwable) {
+            destination.delete()
+            throw failure
+        }
+    }
 
     suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
         val root = ownedImagesDir ?: return@withContext

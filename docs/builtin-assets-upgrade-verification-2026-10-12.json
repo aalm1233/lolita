@@ -1,0 +1,28 @@
+{
+  "verified": true,
+  "originalLocations": 4,
+  "newLocations": 6,
+  "verifiedTestStoreLogos": 14,
+  "preservedLocationPhotos": 3,
+  "originalItems": 140,
+  "originalBrands": 215,
+  "changedTables": {
+    "brands": [
+      215,
+      215
+    ],
+    "locations": [
+      4,
+      10
+    ]
+  },
+  "unchangedBusinessTableCount": 24,
+  "sourceRowsVerified": "all columns; brand logo_url is the only change; all original locations are exact",
+  "newImageChecks": "All 21 newly persisted image copies match their precise manifest asset SHA256 (20 distinct assets)",
+  "originalLocationImageChecks": "3 unchanged SHA256",
+  "filledBrandImages": 15,
+  "newLocalImageCopies": 21,
+  "distinctPackagedAssets": 20,
+  "originalReferencedImageFilesCheckedAgainstSourceZip": 190,
+  "originalImageChecks": "Every original referenced local image matches an unmodified image SHA256 from the independent source ZIP; original entity paths are also unchanged"
+}

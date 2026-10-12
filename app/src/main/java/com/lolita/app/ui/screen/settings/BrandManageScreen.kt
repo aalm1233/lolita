@@ -4,11 +4,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,14 +19,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.ui.screen.common.LolitaShimmerImage
+import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.ui.screen.common.GradientTopAppBar
@@ -154,33 +149,7 @@ private fun BrandCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Brand logo or placeholder
-            if (brand.logoUrl != null) {
-                LolitaShimmerImage(
-                    model = brand.logoUrl,
-                    contentDescription = brand.name,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop,
-                    placeholderInitial = brand.name.firstOrNull()?.toString()
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = brand.name.firstOrNull()?.toString() ?: "",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+            BrandLogo(brand = brand, size = 32.dp)
 
             Spacer(Modifier.width(12.dp))
 
@@ -242,15 +211,12 @@ private fun AddBrandDialog(
                 )
                 // Logo picker
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (logoUrl != null) {
+                    if (!logoUrl.isNullOrBlank()) {
                         Box {
-                            LolitaShimmerImage(
-                                model = logoUrl,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop,
+                            BrandLogo(
+                                logoUrl = logoUrl,
+                                brandName = brandName,
+                                size = 48.dp,
                                 circularRevealEnabled = false
                             )
                             IconButton(
@@ -273,7 +239,7 @@ private fun AddBrandDialog(
                     ) {
                         SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text(if (logoUrl != null) "更换商标" else "选择商标")
+                        Text(if (!logoUrl.isNullOrBlank()) "更换商标" else "选择商标")
                     }
                 }
             }
@@ -366,15 +332,12 @@ private fun EditBrandDialog(
                 )
                 // Logo picker
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (logoUrl != null) {
+                    if (!logoUrl.isNullOrBlank()) {
                         Box {
-                            LolitaShimmerImage(
-                                model = logoUrl,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop,
+                            BrandLogo(
+                                logoUrl = logoUrl,
+                                brandName = name,
+                                size = 48.dp,
                                 circularRevealEnabled = false
                             )
                             IconButton(
@@ -397,7 +360,7 @@ private fun EditBrandDialog(
                     ) {
                         SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text(if (logoUrl != null) "更换商标" else "选择商标")
+                        Text(if (!logoUrl.isNullOrBlank()) "更换商标" else "选择商标")
                     }
                 }
             }

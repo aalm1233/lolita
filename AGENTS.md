@@ -63,6 +63,17 @@
 - 首页顶栏保留搜索、四个 Tab 和筛选/排序/视图控制的一行布局。本轮列表、详情和穿搭实拍归档：`docs/visuals/2026-10-11-layout-refinement.png`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
+## 内置店铺图标与默认房间
+
+- 离线清单位于 `app/src/main/assets/builtin/catalog.json`，包含从测试资料核验的 14 家店铺真实商标/官方头像与卧室、客厅、衣帽间、书房、玄关、储物间六张生成插图；来源、SHA256 和完整生成提示词见 `docs/builtin-assets-sources-2026-10-12.json`。未经核验的店铺保持首字回退，禁止生成仿制商标或按相似名称套图。
+- `BuiltInLibrary` 在启动时一次性事务追加缺失默认房间、补充精确名称/核验别名匹配的空品牌图片。保留用户原图片及已有实体所有其他字段，不合并位置或品牌；本机 `builtin_library/initialized_v1` 在事务提交后保存，用户删除、改名或移除图片后重启不补回。
+- `ImageFileHelper.copyAssetToInternalStorage` 将原素材复制为 `filesDir/images/` UUID 文件，实体只存正常本地路径，继续纳入现有 ZIP 图片清单与恢复校验。数据库版本和备份格式不变。
+- `BrandRepository` 新增品牌可通过可选 `BuiltInLibrary` 自动提供精确匹配的默认图，插入失败清理新文件；编辑、去图不触发重新补图。`AppModule` 接线；`BackupManager` 可选初始化屏障位于现有串行操作锁之前，恢复后不得再追加默认数据。
+- 真实商标使用 `BrandLogo` 共用完整 Fit 预览与中性浅色底，兼容横向字标及暗色皮肤中的透明黑色商标；管理列表和新增/编辑预览复用该组件。
+- 实拍及真实旧包升级核对见 `docs/builtin-assets-2026-10-12.md`（含浅/暗房间与横向透明商标）；原测试资料 140 件服饰、215 个品牌及四个位置保全，图片逐项 SHA256 验证。
+- `BuiltInLibraryTest` 使用独立内存 Room、UUID 设置和测试图片目录，覆盖历史资料保全、并发/重复初始化、删除/改名/去图、失败/取消清理、新品牌插入和 ZIP/恢复屏障。设备验证必须定向到独立 AVD，不能清理用户设备数据。
+- 2.41.0 / 91 用 clean 正式构建完成14店铺与6房间素材发布验证；已发布2.40.5原包同签名覆盖升级，原24张表、140件服饰、215个品牌、4个位置及190张原图片保全，新图片SHA256和重启幂等核对通过。记录见 `docs/builtin-assets-release-2.41.0-verification.json`。
+
 ## 皮肤系统
 
 - **7 套皮肤**：`DEFAULT` / `GOTHIC` / `CHINESE` / `CLASSIC` / `NAVY` / `COUNTRY` / `VICTORIAN`。
@@ -238,7 +249,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=90, versionName="2.40.5"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=91, versionName="2.41.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交

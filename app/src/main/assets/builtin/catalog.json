@@ -1,0 +1,149 @@
+{
+  "formatVersion": 1,
+  "rooms": [
+    {
+      "name": "卧室",
+      "description": "休息与日常整理的空间",
+      "assetPath": "builtin/rooms/bedroom.png"
+    },
+    {
+      "name": "客厅",
+      "description": "会客与休闲的空间",
+      "assetPath": "builtin/rooms/living_room.png"
+    },
+    {
+      "name": "衣帽间",
+      "description": "收纳服饰、鞋履与配饰的空间",
+      "assetPath": "builtin/rooms/dressing_room.png"
+    },
+    {
+      "name": "书房",
+      "description": "阅读与工作的小天地",
+      "assetPath": "builtin/rooms/study.png"
+    },
+    {
+      "name": "玄关",
+      "description": "放置外套、鞋履与随身物品的空间",
+      "assetPath": "builtin/rooms/entryway.png"
+    },
+    {
+      "name": "储物间",
+      "description": "存放换季物品与收纳箱的空间",
+      "assetPath": "builtin/rooms/storage_room.png"
+    }
+  ],
+  "brands": [
+    {
+      "key": "zjstory",
+      "names": [
+        "ZJstory原创设计"
+      ],
+      "assetPath": "builtin/brands/zjstory.jpg"
+    },
+    {
+      "key": "sheep",
+      "names": [
+        "羊羊羊兰兰兰"
+      ],
+      "assetPath": "builtin/brands/sheep.jpg"
+    },
+    {
+      "key": "flower_pearl",
+      "names": [
+        "花与珍珠匣"
+      ],
+      "assetPath": "builtin/brands/flower_pearl.jpg"
+    },
+    {
+      "key": "felinae_cookie",
+      "names": [
+        "FelinaeCookieLolita「猫科小甜饼」",
+        "FelinaeCookie猫科小甜饼"
+      ],
+      "assetPath": "builtin/brands/felinae_cookie.jpg"
+    },
+    {
+      "key": "neo_ludwig",
+      "names": [
+        "新路德维希Neo Ludwig洋装",
+        "Neoludwig新路德维希",
+        "新路德维希（Neo Ludwig）",
+        "Neo Ludwig"
+      ],
+      "assetPath": "builtin/brands/neo_ludwig.jpg"
+    },
+    {
+      "key": "bramble_rose",
+      "names": [
+        "荆棘玫瑰",
+        "Bramble_Rose荆棘玫瑰原创设计"
+      ],
+      "assetPath": "builtin/brands/bramble_rose.jpg"
+    },
+    {
+      "key": "ozzon_japan",
+      "names": [
+        "OZZONJAPAN",
+        "OZZON JAPAN"
+      ],
+      "assetPath": "builtin/brands/ozzon_japan.png"
+    },
+    {
+      "key": "tonight",
+      "names": [
+        "十tonight十",
+        "十Tonight十"
+      ],
+      "assetPath": "builtin/brands/tonight.jpg"
+    },
+    {
+      "key": "lilizi",
+      "names": [
+        "莉莉子lolita店"
+      ],
+      "assetPath": "builtin/brands/lilizi.jpg"
+    },
+    {
+      "key": "with_puji",
+      "names": [
+        "With PUJI 原创自制轻洋装",
+        "-Withpuji-"
+      ],
+      "assetPath": "builtin/brands/with_puji.jpg"
+    },
+    {
+      "key": "elpress_l",
+      "names": [
+        "Elpress L 原创Lolita洋装",
+        "Elpress",
+        "Elpress L"
+      ],
+      "assetPath": "builtin/brands/elpress_l.jpg"
+    },
+    {
+      "key": "cherry_bomb",
+      "names": [
+        "樱桃爆弹",
+        "CherriBomb樱桃爆弹Lolita原创店"
+      ],
+      "assetPath": "builtin/brands/cherry_bomb.jpg"
+    },
+    {
+      "key": "time_sand",
+      "names": [
+        "时之砂Lolita洋装工作室"
+      ],
+      "assetPath": "builtin/brands/time_sand.jpg"
+    },
+    {
+      "key": "classical_puppets",
+      "names": [
+        "古典玩偶Puppets and Doll官方店",
+        "古典玩偶ClassicalPuppets",
+        "古典玩偶（Classical Puppets）",
+        "Classical Puppets"
+      ],
+      "assetPath": "builtin/brands/classical_puppets.jpg"
+    }
+  ]
+}

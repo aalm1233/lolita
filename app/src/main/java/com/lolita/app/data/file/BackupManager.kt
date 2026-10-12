@@ -72,13 +72,26 @@ private data class PreparedBackup(
 
 class BackupManager(
     private val context: Context,
-    private val database: LolitaDatabase
+    private val database: LolitaDatabase,
+    private val awaitInitialization: suspend () -> Unit = {}
 ) {
     private val gson = Gson()
     private val operationMutex = sharedOperationMutex
     private var cachedBackupDigest: String? = null
     private suspend fun <T> serialized(block: suspend () -> T): T =
-        withContext(Dispatchers.IO) { operationMutex.withLock { block() } }
+        withContext(Dispatchers.IO) {
+            // Await before taking the backup lock; initialization never calls back into backups.
+            awaitInitialization()
+            operationMutex.withLock { block() }
+        }
+
+    private suspend fun <T> serializedResult(block: suspend () -> Result<T>): Result<T> =
+        try {
+            serialized(block)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            Result.failure(e)
+        }
 
     private suspend fun snapshot(): BackupData = database.withTransaction {
         validateStoredValues()
@@ -142,7 +155,7 @@ class BackupManager(
     @Volatile
     private var cachedBackupUri: Uri? = null
 
-    suspend fun exportToJson(): Result<Uri> = serialized {
+    suspend fun exportToJson(): Result<Uri> = serializedResult {
         try {
             val backupData = snapshot()
             val jsonString = gson.toJson(backupData)
@@ -155,7 +168,7 @@ class BackupManager(
         }
     }
 
-    suspend fun exportToCsv(): Result<Uri> = serialized {
+    suspend fun exportToCsv(): Result<Uri> = serializedResult {
         try {
             val backupData = snapshot()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
@@ -274,7 +287,7 @@ class BackupManager(
             Result.failure(e)
         }
     }
-    suspend fun exportToZip(): Result<Uri> = serialized {
+    suspend fun exportToZip(): Result<Uri> = serializedResult {
         try {
             val backupData = snapshot()
 
@@ -319,7 +332,7 @@ class BackupManager(
         }
     }
 
-    suspend fun importBackup(uri: Uri): Result<ImportSummary> = serialized {
+    suspend fun importBackup(uri: Uri): Result<ImportSummary> = serializedResult {
         var images: ActivatedImages? = null
         var committed = false
         try {
@@ -504,7 +517,7 @@ class BackupManager(
         customReminderDays = stage.customReminderDays, calendarEventId = stage.calendarEventId
     )
 
-    suspend fun previewBackup(uri: Uri): Result<BackupPreview> = serialized {
+    suspend fun previewBackup(uri: Uri): Result<BackupPreview> = serializedResult {
         try {
             val preparedBackup = prepareBackup(uri, cacheResult = true)
             val backupData = preparedBackup.backupData

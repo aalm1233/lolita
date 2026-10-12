@@ -4,17 +4,20 @@ import com.lolita.app.data.local.dao.BrandDao
 import com.lolita.app.data.local.dao.ItemDao
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.file.BuiltInLibrary
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 
 class BrandRepository(
     private val brandDao: BrandDao,
     private val itemDao: ItemDao,
-    private val database: LolitaDatabase
+    private val database: LolitaDatabase,
+    private val builtInLibrary: BuiltInLibrary? = null
 ) {
     fun getAllBrands(): Flow<List<Brand>> = brandDao.getAllBrands()
 
-    suspend fun insertBrand(brand: Brand): Long = brandDao.insertBrand(brand)
+    suspend fun insertBrand(brand: Brand): Long =
+        builtInLibrary?.insertBrand(brand) ?: brandDao.insertBrand(brand)
 
     suspend fun updateBrand(brand: Brand) = brandDao.updateBrand(brand)
 

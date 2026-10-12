@@ -1,0 +1,47 @@
+{
+  "package": {
+    "buildCommand": "JAVA_HOME=/opt/homebrew/opt/openjdk@17 ./gradlew clean assembleRelease assembleDebug testDebugUnitTest",
+    "buildSuccessful": true,
+    "versionCode": 91,
+    "versionName": "2.41.0",
+    "assetManifestAndImagesByteExact": 21,
+    "brands": 14,
+    "rooms": 6,
+    "unitTests": {
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "apkSha256": "b48e412d2e348490a4373fae3d04948229e1bd0c071ad81e173eda229dc7ce6b",
+    "apkBytes": 47911281
+  },
+  "runtime": {
+    "baseline": "published v2.40.5, source APK SHA256 matched GitHub asset digest",
+    "sameCertificateSha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "avd": "Lolita_Builtin_Release_Test",
+    "serial": "emulator-5560",
+    "upgradeInstall": "install -r success",
+    "versionCode": 91,
+    "versionName": "2.41.0",
+    "fixtureMethod": "isolated AVD seeded with database and 190 exact image bytes from verified pre-feature real-backup fixture; baseline fields and images rechecked before upgrade",
+    "unchangedTables": 24,
+    "originalItems": 140,
+    "originalBrands": 215,
+    "originalLocations": 4,
+    "unchangedOriginalImageSha256": 190,
+    "brandLogoFieldsFilled": 15,
+    "roomsAdded": 6,
+    "newLocalImageCopiesVerified": 21,
+    "restartRowsUnchanged": true,
+    "snapshotRetry": "large streamed restart archive was truncated; affected source photo rechecked by adb pull and unchanged; restart database verified using complete remote tar file + adb pull",
+    "crashBufferEmpty": true,
+    "visualReview": "正式包原位置与照片、客厅/衣帽间/书房/玄关/储物间图片实拍核对通过；全部六种素材 UUID 副本 SHA256 已核对",
+    "ownedAvdRemoved": true,
+    "originalAvdsPreserved": [
+      "emulator-5554",
+      "emulator-5556",
+      "emulator-5558"
+    ]
+  }
+}

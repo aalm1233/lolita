@@ -59,7 +59,8 @@ data class BackupData(
     val remoteItems: List<RemoteSharedItem> = emptyList(),
     val remotePricePlans: List<RemoteSharedPricePlan> = emptyList(),
     val orderBindings: List<OrderBinding> = emptyList(),
-    val paymentStages: List<PaymentStage> = emptyList()
+    val paymentStages: List<PaymentStage> = emptyList(),
+    val monthlyBudgets: List<MonthlyBudget> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -97,6 +98,7 @@ class BackupManager(
         validateStoredValues()
         val sync = database.sharedLibrarySyncDao()
         BackupData(
+            monthlyBudgets = database.budgetDao().getAll(),
             brands = database.brandDao().getAllBrandsList(),
             categories = database.categoryDao().getAllCategoriesList(),
             coordinates = database.coordinateDao().getAllCoordinatesList(),
@@ -173,6 +175,10 @@ class BackupManager(
             val backupData = snapshot()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val sb = StringBuilder()
+
+            sb.appendLine("=== MONTHLY BUDGETS ===")
+            sb.appendLine("month,amount_cents")
+            backupData.monthlyBudgets.forEach { sb.appendLine("${escapeCsv(it.month)},${it.amountCents}") }
 
             // Brands
             sb.appendLine("=== BRANDS ===")
@@ -354,6 +360,7 @@ class BackupManager(
                             gson.fromJson(it, Array<Payment>::class.java).toList()
                         } ?: emptyList())
                     clearAllTables()
+                    importedData.monthlyBudgets.forEach { database.budgetDao().save(it) }
                     importedData.brands.forEach { database.brandDao().insertBrand(it) }
                     importedData.categories.forEach { database.categoryDao().insertCategory(it) }
                     importedData.styles.forEach { database.styleDao().insertStyle(it) }
@@ -403,14 +410,15 @@ class BackupManager(
         data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
         data.legacyCatalogArchives, data.syncStates, data.remoteBrands, data.remoteCategories,
         data.remoteStyles, data.remoteSeasons, data.remoteSources, data.remoteCoordinates,
-        data.remoteItems, data.remotePricePlans, data.orderBindings, data.paymentStages
+        data.remoteItems, data.remotePricePlans, data.orderBindings, data.paymentStages, data.monthlyBudgets
     ).sumOf { it.size }
 
     private suspend fun verifyRestoredData(expected: BackupData) {
         val actual = snapshot()
         // Sort by stable keys; compare every business field, including image order and timestamps.
         fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
-        check(equal(actual.brands, expected.brands) { it.id.toString() } &&
+        check(equal(actual.monthlyBudgets, expected.monthlyBudgets) { it.month } &&
+            equal(actual.brands, expected.brands) { it.id.toString() } &&
             equal(actual.categories, expected.categories) { it.id.toString() } &&
             equal(actual.coordinates, expected.coordinates) { it.id.toString() } &&
             equal(actual.items, expected.items) { it.id.toString() } &&
@@ -546,7 +554,8 @@ class BackupManager(
                 imageCount = preparedBackup.imageCount,
                 missingImageCount = preparedBackup.missingImageCount,
                 archiveCount = backupData.legacyCatalogArchives.size,
-                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size),
+                monthlyBudgetCount = backupData.monthlyBudgets.size,
+                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size),
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -566,6 +575,7 @@ class BackupManager(
         database.sharedLibrarySyncDao().clearCategories()
         database.sharedLibrarySyncDao().clearBrands()
         database.sharedLibrarySyncDao().deleteSyncState()
+        database.budgetDao().deleteAll()
         database.legacyCatalogArchiveDao().deleteAll()
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
@@ -856,6 +866,7 @@ data class BackupPreview(
     val locationCount: Int = 0,
     val sourceCount: Int = 0,
     val archiveCount: Int = 0,
+    val monthlyBudgetCount: Int = 0,
     val additionalRecordCount: Int = 0,
     val orderBindingCount: Int = 0,
     val historicalOwnedCount: Int = 0,
@@ -870,5 +881,5 @@ data class BackupPreview(
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount + monthlyBudgetCount
 }

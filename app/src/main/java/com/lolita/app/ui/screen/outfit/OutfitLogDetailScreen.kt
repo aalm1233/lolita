@@ -14,6 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -52,6 +54,7 @@ fun OutfitLogDetailScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showShare by remember { mutableStateOf(false) }
     var removeConfirmItem by remember { mutableStateOf<Item?>(null) }
 
     if (removeConfirmItem != null) {
@@ -76,6 +79,10 @@ fun OutfitLogDetailScreen(
         )
     }
 
+    if (showShare && !uiState.isLoading && uiState.log != null) {
+        com.lolita.app.ui.screen.share.ShareCardDialog("穿搭 · " + SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(uiState.log!!.date)), uiState.log!!.imageUrls, uiState.items) { showShare = false }
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -87,6 +94,9 @@ fun OutfitLogDetailScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showShare = true }, enabled = !uiState.isLoading && uiState.log != null) {
+                        SkinIcon(IconKey.Share, modifier = Modifier.semantics { contentDescription = "分享" })
+                    }
                     IconButton(onClick = { onNavigateToEdit(logId) }) {
                         SkinIcon(IconKey.Edit)
                     }

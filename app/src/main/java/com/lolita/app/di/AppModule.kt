@@ -107,5 +107,11 @@ object AppModule {
     }
     fun recommendationRepository() = _recommendationRepository
 
+    private val _lookRepository by lazy { LookRepository(database) }
+    fun lookRepository() = _lookRepository
+
+    private val _budgetRepository by lazy { BudgetRepository(database.budgetDao()) }
+    fun budgetRepository() = _budgetRepository
+
     fun context() = appContext
 }

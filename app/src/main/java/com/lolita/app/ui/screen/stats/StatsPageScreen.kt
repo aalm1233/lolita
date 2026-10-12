@@ -28,7 +28,7 @@ fun StatsPageScreen(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
     onNavigateToItemDetail: (Long) -> Unit = {}
 ) {
-    val tabs = listOf("总览", "付款年历", "消费分布", "消费趋势", "愿望单")
+    val tabs = listOf("总览", "付款年历", "消费分布", "消费趋势", "愿望单", "预算")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     ObserveSkinScroll(pagerState)
     val coroutineScope = rememberCoroutineScope()
@@ -118,6 +118,7 @@ fun StatsPageScreen(
                 3 -> SpendingTrendContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
+                5 -> com.lolita.app.ui.screen.budget.BudgetContent()
                 4 -> WishlistAnalysisContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )

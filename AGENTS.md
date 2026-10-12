@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 23，25 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 24，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -249,7 +249,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=92, versionName="2.42.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=93, versionName="2.43.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -344,3 +344,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - Gitee 发版先暂标预发布，上传同签名 APK 和 SHA256SUMS，匿名完整下载核验后改正式；普通仓库单附件 100M、总附件 1G。Gitee 标签对应分发说明，源代码以 GitHub 为准。
 - 不申请安装权限、不在应用内下载/安装、不新增更新元数据或修改业务备份。发布继续保持同一签名、递增 versionCode，并使用 `v<major>.<minor>.<patch>` 稳定标签。
 - 回归：`ReleaseVersionTest`、`GiteeReleaseApiTest`、`ReleaseDownloadProbeTest`、`AppUpdateViewModelTest`、真实 Compose 的 `AppUpdateHostTest`；发布与行为记录见 `docs/release-download-and-auto-check-2026-10-12.md`。
+
+## 搭配、分享与月度预算（2.43.0）
+
+- 详情推荐入口进入整套搭配：本地按角色补齐、支持自定义属性、锁定/跳过/替换，保存前明确确认服饰移入新套装，事务拒绝过期归属快照。
+- 套装与穿搭详情支持分享预览，缓存 PNG 经 FileProvider 调起系统分享；仅包含标题、图片、服饰名称和可选品牌，不读取金额、备注、渠道与位置。每六件分页，消费当前皮肤的浅暗配色。
+- 统计第六页签为预算：每月独立额度，本月实付按 paidDate 归月，剩余阶段复用 STAGE_BALANCES；此前待付计入预计余额，未定日期的待付和实付单列。金额隐私设置实时生效。
+- 新实体 MonthlyBudget、BudgetDao、BudgetRepository 接到数据库及 AppModule；23→24 只新增预算表，备份格式 6 支持预算 JSON/ZIP/CSV/预览/恢复，格式 1–5 缺失预算兼容为空。

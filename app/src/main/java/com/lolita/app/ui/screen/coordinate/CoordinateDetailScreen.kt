@@ -19,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -62,6 +64,7 @@ fun CoordinateDetailScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
+    var showShare by remember { mutableStateOf(false) }
     var itemToRemove by remember { mutableStateOf<Item?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showItemPicker by remember { mutableStateOf(false) }
@@ -122,6 +125,10 @@ fun CoordinateDetailScreen(
         viewModel.loadCoordinate(coordinateId)
     }
 
+    if (showShare && !uiState.isLoading && uiState.coordinate != null) {
+        com.lolita.app.ui.screen.share.ShareCardDialog(uiState.coordinate!!.name, uiState.coordinate!!.imageUrls, uiState.items) { showShare = false }
+    }
+
     Scaffold(
         topBar = {
             GradientTopAppBar(
@@ -132,6 +139,9 @@ fun CoordinateDetailScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showShare = true }, enabled = !uiState.isLoading && uiState.coordinate != null) {
+                        SkinIcon(IconKey.Share, modifier = Modifier.semantics { contentDescription = "分享" })
+                    }
                     IconButton(onClick = { onEdit(coordinateId) }) {
                         SkinIcon(IconKey.Edit)
                     }

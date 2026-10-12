@@ -615,10 +615,14 @@ fun LolitaNavHost(
                 exitTransition = { fadeOut() + slideOutHorizontally { it } }
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                RecommendationScreen(
+                com.lolita.app.ui.screen.look.LookBuilderScreen(
                     itemId = itemId,
-                    onNavigateBack = { navController.popBackStack() },
-                    onNavigateToItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }
+                    onBack = { navController.popBackStack() },
+                    onItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) },
+                    onSaved = { id ->
+                        navController.popBackStack()
+                        navController.navigate(Screen.CoordinateDetail.createRoute(id))
+                    }
                 )
             }
 

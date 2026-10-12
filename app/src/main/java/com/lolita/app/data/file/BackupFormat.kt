@@ -9,8 +9,8 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 5
-    const val SCHEMA_VERSION = 23
+    const val VERSION = 6
+    const val SCHEMA_VERSION = 24
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -26,6 +26,7 @@ internal object BackupFormat {
         "remoteStyles" to RemoteStyle::class.java, "remoteSeasons" to RemoteSeason::class.java,
         "remoteSources" to RemoteSource::class.java, "remoteCoordinates" to RemoteSharedCoordinate::class.java,
         "remoteItems" to RemoteSharedItem::class.java, "remotePricePlans" to RemoteSharedPricePlan::class.java,
+        "monthlyBudgets" to MonthlyBudget::class.java,
         "orderBindings" to OrderBinding::class.java, "paymentStages" to PaymentStage::class.java
     )
     private val requiredArrays = entities.keys.take(8)
@@ -38,7 +39,7 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { version >= 3 || it !in setOf("orderBindings", "paymentStages") }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
@@ -92,7 +93,7 @@ internal object BackupFormat {
                 type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.forEach { field ->
                     val value = row[field.name] ?: return@forEach
                     if (value.isJsonNull) {
-                        require(!field.type.isPrimitive && field.name !in setOf("name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
+                        require(!field.type.isPrimitive && field.name !in setOf("month", "name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
                     } else when {
                         field.type.isEnum -> require(value.isJsonPrimitive && value.asString in requireNotNull(field.type.enumConstants).map { (it as Enum<*>).name }) { "未知枚举：$name[$index].${field.name}" }
                         List::class.java.isAssignableFrom(field.type) -> require(value.isJsonArray && value.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$name[$index].${field.name} 必须是字符串数组" }
@@ -108,6 +109,7 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "monthlyBudgets" -> setOf("month", "amountCents")
                     "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
                     "orderBindings" -> setOf("itemId", "priceId", "purchaseRecordStatus")
                     "paymentStages" -> setOf("id", "priceId", "name", "amount", "reminderSet")
@@ -265,6 +267,8 @@ internal object BackupFormat {
     }
 
     fun validate(data: BackupData) {
+        require(data.monthlyBudgets.map { it.month }.distinct().size == data.monthlyBudgets.size) { "预算月份重复" }
+        data.monthlyBudgets.forEach { com.lolita.app.domain.usecase.BudgetAccounting.validate(it.month, it.amountCents) }
         fun ids(values: List<Long>, table: String): Set<Long> {
             require(values.all { it > 0 } && values.toSet().size == values.size) { "$table 主键无效或重复" }
             return values.toSet()

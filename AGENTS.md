@@ -271,6 +271,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 6. Gitee Release 先标为预发布，上传附件后匿名完整下载并核对 SHA256，再改为正式。确认公开版本 API、稳定 APK 地址及 HEAD 跳转链可用；不保存 CDN 临时链接。详细规则见下文“Gitee 版本检查与 APK 分发”。
 7. 验证两个平台的正式 Release、附件版本与摘要一致，再反馈发布页和 APK 链接。令牌仅通过本机环境或仓库外临时文件使用，不打印、不写入源码或 APK；任务结束清理临时凭据。
 
+- 经用户授权，Gitee 发布令牌持久存放于仓库外 `/Users/dengtong/.config/lolita/gitee-release-token`（目录 700、文件 600）。发布脚本从该文件读取，不打印内容，不复制到仓库、APK 或附件；只清理临时凭据副本，保留此本机配置。
+
 ## AGENTS.md 维护
 
 - 每次功能更新、架构变更或新增约定后，**必须刷新 `AGENTS.md`**，确保文档与代码同步。

@@ -1,0 +1,46 @@
+{
+  "version": "2.44.0",
+  "versionCode": 94,
+  "source_commit": "cc1437e6c2655680d9004c19799b1f91774e0511",
+  "sha256": "bd130b0329b74e4f1185d308827066fbd0d91a7c3aa7bb62699f20ec518a3370",
+  "bytes": 48042353,
+  "signature_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "clean_assembleRelease": "passed",
+  "debug_build_and_parser_tests": "passed in implementation phase (3 parser tests)",
+  "device": "emulator-5558 / Lolita_Release_2392_Test",
+  "final_apk_same_signature_cover_install": "passed",
+  "product_import": {
+    "product_id": "1091514588626",
+    "title_brand_size_source": "verified",
+    "downloaded_images": 5,
+    "default_status": "WISHED",
+    "saved_and_reopened_after_process_restart": "passed",
+    "after_final_apk_cover_install": "record retained; OzzonJapan / 斗篷 / 淘宝 / 愿望单; 尚未录入价格",
+    "category_and_color": "manual confirmation"
+  },
+  "github": {
+    "release": "https://github.com/aalm1233/lolita/releases/tag/v2.44.0",
+    "draft": false,
+    "prerelease": false,
+    "anonymous_full_download_sha256": "bd130b0329b74e4f1185d308827066fbd0d91a7c3aa7bb62699f20ec518a3370",
+    "checksum_file_identical": true
+  },
+  "gitee": {
+    "release": "https://gitee.com/aalm1233/lolita/releases/tag/v2.44.0",
+    "prerelease": false,
+    "anonymous_full_download_sha256": "bd130b0329b74e4f1185d308827066fbd0d91a7c3aa7bb62699f20ec518a3370",
+    "checksum_file_identical": true,
+    "head_chain": [
+      302,
+      302,
+      200
+    ],
+    "final_content_type": "application/zip",
+    "tag_scope": "distribution description, complete source hosted on GitHub"
+  },
+  "limitations": [
+    "This product page was verified; other product layouts remain trial scope.",
+    "No mainland network speed test or installation on user phone."
+  ],
+  "verified_at_utc": "2026-10-13T09:50:31.738368+00:00"
+}

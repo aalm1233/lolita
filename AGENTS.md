@@ -249,7 +249,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=93, versionName="2.43.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=94, versionName="2.44.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

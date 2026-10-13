@@ -48,6 +48,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun ItemEditScreen(
     itemId: Long?,
     defaultStatus: String = "",
+    importedDraftJson: String? = null,
     defaultParentItemId: Long? = null,
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
@@ -70,6 +71,7 @@ fun ItemEditScreen(
         viewModel.loadItem(
             itemId = itemId ?: 0L,
             defaultStatus = defaultStatus,
+            importedDraftJson = importedDraftJson,
             defaultParentItemId = defaultParentItemId
         )
     }

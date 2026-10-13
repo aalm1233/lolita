@@ -105,6 +105,10 @@ sealed interface Screen {
         override val route = "taobao_import"
     }
 
+    data object TaobaoProductImport : Screen {
+        override val route = "taobao_product_import"
+    }
+
     data object TaobaoImportGuide : Screen {
         override val route = "taobao_import_guide"
     }

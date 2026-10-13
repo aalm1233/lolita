@@ -716,7 +716,19 @@ class ItemEditViewModel(
     var hasUnsavedChanges: Boolean = false
         private set
 
-    fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null) {
+    private val importedImages = mutableListOf<String>()
+    private var appliedImport: String? = null
+
+    fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null) {
+        if (importedDraftJson != null && appliedImport == importedDraftJson) return
+        val importDraft = importedDraftJson?.let { json ->
+            runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
+        }
+        if (importDraft != null) {
+            appliedImport = importedDraftJson
+            importedImages.clear()
+            importedImages.addAll(importDraft.imagePaths)
+        }
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             loadReferenceData()
@@ -801,6 +813,13 @@ class ItemEditViewModel(
                     isLoading = false,
                     isSaving = false
                 )
+            }
+            importDraft?.let { draft ->
+                    _uiState.update { it.copy(name = draft.name, description = draft.description,
+                        brandId = it.brands.firstOrNull { brand -> brand.name == draft.brand }?.id ?: 0L,
+                        size = draft.size.ifBlank { null }, source = "淘宝", imageUrls = draft.imagePaths,
+                        status = ItemStatus.WISHED) }
+                    hasUnsavedChanges = true
             }
             observeHierarchy(0L)
         }
@@ -1085,6 +1104,7 @@ class ItemEditViewModel(
             } else {
                 itemRepository.insertItem(item)
             }
+            importedImages.clear()
             // Delete pending images after successful save
             state.imageUrlsToDelete.forEach { path ->
                 try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
@@ -1109,6 +1129,11 @@ class ItemEditViewModel(
             _uiState.update { it.copy(isSaving = false) }
             Result.failure(e)
         }
+    }
+
+    override fun onCleared() {
+        importedImages.forEach { java.io.File(it).delete() }
+        super.onCleared()
     }
 
     suspend fun deleteItem(): Result<Unit> {

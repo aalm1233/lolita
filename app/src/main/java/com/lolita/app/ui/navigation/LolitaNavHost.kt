@@ -322,6 +322,7 @@ fun LolitaNavHost(
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
                     defaultStatus = defaultStatus,
+                    importedDraftJson = backStackEntry.savedStateHandle.get<String>("taobao_product_draft"),
                     defaultParentItemId = backStackEntry.arguments?.getLong("parentId")?.takeIf { it != 0L },
                     onBack = { navController.popBackStack() },
                     onSaveSuccess = { navController.popBackStack() }
@@ -569,6 +570,16 @@ fun LolitaNavHost(
             }
 
 
+            composable(Screen.TaobaoProductImport.route) {
+                com.lolita.app.ui.screen.`import`.TaobaoProductScreen(
+                    onBack = { navController.popBackStack() },
+                    onEdit = { json ->
+                        navController.navigate(Screen.ItemEdit.createRoute(defaultStatus = "WISHED"))
+                        navController.currentBackStackEntry?.savedStateHandle?.set("taobao_product_draft", json)
+                    }
+                )
+            }
+
             // Taobao Import
             composable(Screen.TaobaoImport.route) {
                 TaobaoImportScreen(
@@ -576,6 +587,7 @@ fun LolitaNavHost(
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },
+                    onNavigateToProduct = { navController.navigate(Screen.TaobaoProductImport.route) },
                     onNavigateToGuide = { navController.navigate(Screen.TaobaoImportGuide.route) }
                 )
             }

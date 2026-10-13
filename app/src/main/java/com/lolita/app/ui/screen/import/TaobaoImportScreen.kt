@@ -25,6 +25,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun TaobaoImportScreen(
     onBack: () -> Unit,
     onNavigateToDetail: (itemId: Long) -> Unit,
+    onNavigateToProduct: () -> Unit = {},
     onNavigateToGuide: () -> Unit = {},
     viewModel: TaobaoImportViewModel = viewModel()
 ) {
@@ -41,6 +42,7 @@ fun TaobaoImportScreen(
             uiState = uiState,
             viewModel = viewModel,
             onBack = onBack,
+            onNavigateToProduct = onNavigateToProduct,
             onNavigateToGuide = onNavigateToGuide
         )
         ImportStep.PREPARE -> ImportPrepareContent(
@@ -75,6 +77,7 @@ private fun OrderSelectContent(
     uiState: TaobaoImportUiState,
     viewModel: TaobaoImportViewModel,
     onBack: () -> Unit,
+    onNavigateToProduct: () -> Unit = {},
     onNavigateToGuide: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -143,6 +146,8 @@ private fun OrderSelectContent(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(24.dp))
+                OutlinedButton(onClick = onNavigateToProduct) { Text("商品链接导入（试用）") }
+                Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = {
                         filePickerLauncher.launch(arrayOf(

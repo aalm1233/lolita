@@ -1,0 +1,89 @@
+{
+  "expected_version": "2.44.1",
+  "expected_apk_sha256": "bbdb38fa10785e89ddcb3dbe84e5c6b699db9eb5c9cb95d20026d96215d2d807",
+  "github": {
+    "api_http_status": 200,
+    "latest_tag": "v2.44.1",
+    "draft": false,
+    "prerelease": false,
+    "assets": [
+      {
+        "name": "lolita-2.44.1.apk",
+        "state": "uploaded",
+        "size": 48042353,
+        "browser_download_url": "https://github.com/aalm1233/lolita/releases/download/v2.44.1/lolita-2.44.1.apk"
+      },
+      {
+        "name": "SHA256SUMS",
+        "state": "uploaded",
+        "size": 84,
+        "browser_download_url": "https://github.com/aalm1233/lolita/releases/download/v2.44.1/SHA256SUMS"
+      }
+    ],
+    "anonymous_download_http_status": 200,
+    "download_bytes": 48042353,
+    "download_sha256": "bbdb38fa10785e89ddcb3dbe84e5c6b699db9eb5c9cb95d20026d96215d2d807",
+    "checksum_file_matches": true,
+    "download_matches_expected": true
+  },
+  "gitee": {
+    "api_http_status": 200,
+    "release_count": 5,
+    "latest_formal_tag": "v2.44.1",
+    "target_release": {
+      "tag": "v2.44.1",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "lolita-2.44.1.apk",
+          "browser_download_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.44.1/lolita-2.44.1.apk"
+        },
+        {
+          "name": "SHA256SUMS",
+          "browser_download_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.44.1/SHA256SUMS"
+        },
+        {
+          "name": "v2.44.1.zip",
+          "browser_download_url": "https://gitee.com/aalm1233/lolita/archive/refs/tags/v2.44.1.zip"
+        },
+        {
+          "name": "v2.44.1.tar.gz",
+          "browser_download_url": "https://gitee.com/aalm1233/lolita/archive/refs/tags/v2.44.1.tar.gz"
+        }
+      ]
+    },
+    "apk_stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.44.1/lolita-2.44.1.apk",
+    "head_chain": [
+      {
+        "status": 302,
+        "host": "gitee.com",
+        "content_type": "text/html; charset=utf-8",
+        "content_length": null
+      },
+      {
+        "status": 302,
+        "host": "gitee.com",
+        "content_type": "text/html; charset=utf-8",
+        "content_length": null
+      },
+      {
+        "status": 200,
+        "host": "foruda.gitee.com",
+        "content_type": "application/zip",
+        "content_length": "48042353"
+      }
+    ],
+    "head_accepted": true,
+    "anonymous_download_http_status": 200,
+    "download_bytes": 48042353,
+    "download_sha256": "bbdb38fa10785e89ddcb3dbe84e5c6b699db9eb5c9cb95d20026d96215d2d807",
+    "checksum_file_matches": true,
+    "download_matches_expected": true
+  },
+  "contract_passed": true,
+  "sourceCommit": "cf50a05dfe67e85d0032d858e738d7d4e4a83a70",
+  "versionCode": 95,
+  "versionName": "2.44.1",
+  "cleanReleaseBuild": true,
+  "releaseCertSha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c"
+}

@@ -432,4 +432,18 @@ class BackupFormatTest {
         assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(nullStatus.toString()) }
     }
 
+    @Test fun oldSingleSizeChartDefaultsAdditionalImagesAndNewListRoundTrips() {
+        val old = json()
+        val item = old["items"].asJsonArray[0].asJsonObject
+        item.remove("sizeChartImageUrls")
+        item.addProperty("sizeChartImageUrl", "/old/chart.jpg")
+        val parsed = BackupFormat.parse(old.toString()).items.single()
+        assertEquals("/old/chart.jpg", parsed.sizeChartImageUrl)
+        assertEquals(emptyList<String>(), parsed.sizeChartImageUrls)
+        item.add("sizeChartImageUrls", JsonParser.parseString("[\"/new/1.jpg\",\"/new/2.jpg\"]"))
+        val multi = BackupFormat.parse(old.toString()).items.single()
+        assertEquals(listOf("/new/1.jpg", "/new/2.jpg"), multi.sizeChartImageUrls)
+        item.add("sizeChartImageUrls", JsonNull.INSTANCE)
+        assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(old.toString()) }
+    }
 }

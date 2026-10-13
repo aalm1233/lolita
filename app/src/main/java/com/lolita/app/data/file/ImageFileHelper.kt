@@ -92,7 +92,7 @@ object ImageFileHelper {
         // Imported historical backups may share one file between multiple records.
         db.withTransaction {
             val localReference = db.brandDao().getAllBrandsList().any { it.logoUrl == path } ||
-                db.itemDao().getAllItemsList().any { path in it.imageUrls || it.sizeChartImageUrl == path } ||
+                db.itemDao().getAllItemsList().any { path in it.imageUrls || it.sizeChartImageUrl == path || path in it.sizeChartImageUrls } ||
                 db.coordinateDao().getAllCoordinatesList().any { path in it.imageUrls } ||
                 db.outfitLogDao().getAllOutfitLogsList().any { path in it.imageUrls } ||
                 db.locationDao().getAllLocationsList().any { it.imageUrl == path }
@@ -135,7 +135,7 @@ object ImageFileHelper {
             destFile.absolutePath
         }
 
-    suspend fun downloadFromUrl(context: Context, imageUrl: String): String =
+    suspend fun downloadFromUrl(context: Context, imageUrl: String, maxBytes: Long = Long.MAX_VALUE): String =
         withContext(Dispatchers.IO) {
             val dir = File(context.filesDir, IMAGE_DIR)
             if (!dir.exists()) dir.mkdirs()
@@ -159,9 +159,18 @@ object ImageFileHelper {
                     throw Exception("HTTP $responseCode")
                 }
 
+                require(connection.contentLengthLong <= maxBytes) { "图片文件过大" }
                 connection.inputStream.use { input ->
                     destFile.outputStream().use { output ->
-                        input.copyTo(output)
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        var total = 0L
+                        while (true) {
+                            val count = input.read(buffer)
+                            if (count < 0) break
+                            total += count
+                            require(total <= maxBytes) { "图片文件过大" }
+                            output.write(buffer, 0, count)
+                        }
                     }
                 }
             } catch (e: Exception) {

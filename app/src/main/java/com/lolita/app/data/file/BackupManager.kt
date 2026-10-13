@@ -196,9 +196,9 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order,parent_item_id,included_in_parent_price")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order,parent_item_id,included_in_parent_price,size_chart_image_urls")
             backupData.items.forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder},${i.parentItemId ?: ""},${i.includedInParentPrice}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder},${i.parentItemId ?: ""},${i.includedInParentPrice},${escapeCsv(i.sizeChartImageUrls.joinToString(";"))}")
             }
 
             // Coordinates
@@ -623,7 +623,7 @@ class BackupManager(
         fun nullable(path: String?) = path?.let(map)
         return data.copy(
             brands = data.brands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
-            items = data.items.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl)) },
+            items = data.items.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl), sizeChartImageUrls = it.sizeChartImageUrls.map(map)) },
             coordinates = data.coordinates.map { it.copy(imageUrls = it.imageUrls.map(map)) },
             outfitLogs = data.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map(map)) },
             locations = data.locations.map { it.copy(imageUrl = nullable(it.imageUrl)) },

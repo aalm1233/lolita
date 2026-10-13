@@ -550,7 +550,7 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null) {
+                        if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null || item.sizeChartImageUrls.isNotEmpty()) {
                             LolitaCard(modifier = Modifier.fillMaxWidth()) {
                                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                     SectionHeader(title = "尺码信息")
@@ -558,17 +558,9 @@ fun ItemDetailScreen(
                                         Spacer(Modifier.height(8.dp))
                                         DetailRow(label = "尺码", value = item.size!!)
                                     }
-                                    if (item.sizeChartImageUrl != null) {
-                                        Spacer(Modifier.height(8.dp))
-                                        LolitaShimmerImage(
-                                            model = item.sizeChartImageUrl,
-                                            contentDescription = "尺码表",
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .clip(MaterialTheme.shapes.medium),
-                                            contentScale = ContentScale.FillWidth,
-                                            placeholderInitial = "尺"
-                                        )
+                                    val charts = (listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls).distinct()
+                                    if (charts.isNotEmpty()) {
+                                        SizeChartGallery(charts)
                                     }
                                 }
                             }
@@ -1065,4 +1057,14 @@ private fun formatDate(timestamp: Long): String {
     val javaDate = java.util.Date(timestamp)
     val format = java.text.SimpleDateFormat("yyyy年MM月dd日 HH:mm", java.util.Locale.getDefault())
     return format.format(javaDate)
+}
+
+@Composable
+private fun SizeChartGallery(images: List<String>) {
+    var preview by remember { mutableStateOf<Int?>(null) }
+    Text("共 ${images.size} 张，点击图片可放大查看。", style = MaterialTheme.typography.bodySmall)
+    ImageGalleryPager(imageUrls = images, onImageClick = { preview = it },
+        modifier = Modifier.fillMaxWidth().height(240.dp), contentDescription = "尺码表",
+        contentScale = ContentScale.Fit)
+    preview?.let { page -> FullScreenImageViewer(images, page) { preview = null } }
 }

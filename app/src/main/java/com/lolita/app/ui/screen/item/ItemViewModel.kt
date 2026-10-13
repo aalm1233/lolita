@@ -113,6 +113,7 @@ data class ItemEditUiState(
     val style: String? = null,
     val size: String? = null,
     val sizeChartImageUrl: String? = null,
+    val sizeChartImageUrls: List<String> = emptyList(),
     val source: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
@@ -728,6 +729,8 @@ class ItemEditViewModel(
             appliedImport = importedDraftJson
             importedImages.clear()
             importedImages.addAll(importDraft.imagePaths)
+            importedImages.addAll(importDraft.sizeChartImagePaths.orEmpty())
+            importDraft.sizeChartImagePath?.let { importedImages.add(it) }
         }
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -761,6 +764,7 @@ class ItemEditViewModel(
                             style = item.style,
                             size = item.size,
                             sizeChartImageUrl = item.sizeChartImageUrl,
+                            sizeChartImageUrls = item.sizeChartImageUrls,
                             source = item.source,
                             locationId = item.locationId,
                             pricesWithPayments = prices,
@@ -807,6 +811,7 @@ class ItemEditViewModel(
                     style = null,
                     size = null,
                     sizeChartImageUrl = null,
+                    sizeChartImageUrls = emptyList(),
                     source = null,
                     pricesWithPayments = emptyList(),
                     locationId = null,
@@ -816,7 +821,10 @@ class ItemEditViewModel(
             }
             importDraft?.let { draft ->
                     _uiState.update { it.copy(name = draft.name, description = draft.description,
-                        brandId = it.brands.firstOrNull { brand -> brand.name == draft.brand }?.id ?: 0L,
+                        brandId = com.lolita.app.data.file.TaobaoProductParser.matchBrand(it.brands.map { b -> b.name }, draft.brandAliases.orEmpty().ifEmpty { listOf(draft.brand) })?.let { name -> it.brands.first { b -> b.name == name }.id } ?: 0L,
+                        categoryId = it.categories.firstOrNull { c -> c.name.equals(draft.category.orEmpty(), ignoreCase = true) }?.id ?: 0L,
+                        sizeChartImageUrl = draft.sizeChartImagePaths.orEmpty().firstOrNull() ?: draft.sizeChartImagePath,
+                        sizeChartImageUrls = draft.sizeChartImagePaths.orEmpty().drop(1),
                         size = draft.size.ifBlank { null }, source = "淘宝", imageUrls = draft.imagePaths,
                         status = ItemStatus.WISHED) }
                     hasUnsavedChanges = true
@@ -1010,6 +1018,25 @@ class ItemEditViewModel(
         _uiState.update { it.copy(size = size) }
     }
 
+    fun addSizeChartImage(url: String) {
+        importedImages.add(url)
+        hasUnsavedChanges = true
+        _uiState.update { current ->
+            if (current.sizeChartImageUrl == null) current.copy(sizeChartImageUrl = url)
+            else current.copy(sizeChartImageUrls = current.sizeChartImageUrls + url)
+        }
+    }
+
+    fun removeSizeChartImage(index: Int) {
+        val current = _uiState.value
+        val images = (listOfNotNull(current.sizeChartImageUrl) + current.sizeChartImageUrls).toMutableList()
+        if (index !in images.indices) return
+        val removed = images.removeAt(index)
+        hasUnsavedChanges = true
+        _pendingImageDeletions.update { it + removed }
+        _uiState.update { it.copy(sizeChartImageUrl = images.firstOrNull(), sizeChartImageUrls = images.drop(1)) }
+    }
+
     fun updateSizeChartImageUrl(url: String?) {
         hasUnsavedChanges = true
         val oldUrl = _uiState.value.sizeChartImageUrl
@@ -1068,6 +1095,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
                     locationId = state.locationId,
                     updatedAt = now
@@ -1091,6 +1119,7 @@ class ItemEditViewModel(
                     style = state.style,
                     size = state.size,
                     sizeChartImageUrl = state.sizeChartImageUrl,
+                    sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
                     locationId = state.locationId,
                     createdAt = now,

@@ -163,7 +163,9 @@ class ItemRepository(
             }
         }
         item.imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
-        item.sizeChartImageUrl?.let { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
+        (listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls).distinct().forEach {
+            try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {}
+        }
     }
 
     suspend fun updateCoordinateOrder(itemId: Long, order: Int) {

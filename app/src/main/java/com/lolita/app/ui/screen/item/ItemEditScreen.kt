@@ -352,8 +352,9 @@ fun ItemEditScreen(
 
                 // Size chart image
                 SizeChartImageSection(
-                    sizeChartImageUrl = uiState.sizeChartImageUrl,
-                    onImageChanged = { viewModel.updateSizeChartImageUrl(it) }
+                    imageUrls = listOfNotNull(uiState.sizeChartImageUrl) + uiState.sizeChartImageUrls,
+                    onAddImage = viewModel::addSizeChartImage,
+                    onRemoveImage = viewModel::removeSizeChartImage
                 )
 
                 // Delete button (only when editing)
@@ -765,87 +766,21 @@ private fun SourceSelector(
  */
 @Composable
 private fun SizeChartImageSection(
-    sizeChartImageUrl: String?,
-    onImageChanged: (String?) -> Unit
+    imageUrls: List<String>,
+    onAddImage: (String) -> Unit,
+    onRemoveImage: (Int) -> Unit
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        uri?.let {
-            coroutineScope.launch {
-                val internalPath = ImageFileHelper.copyToInternalStorage(context, it)
-                onImageChanged(internalPath)
-            }
+    var preview by remember { mutableStateOf<Int?>(null) }
+    LolitaSection("尺码表图片（可选）") {
+        row { Text("共 ${imageUrls.size} 张，点击图片可放大查看。") }
+        row {
+            MultiImageEditor(imageUrls = imageUrls, maxImages = 50, onAddImage = onAddImage,
+                onRemoveImage = onRemoveImage, contentScale = ContentScale.Fit,
+                onImageClick = { preview = it })
         }
     }
-
-    Column {
-        Text(
-            text = "尺码表图片 (可选)",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        LolitaCard(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                photoPickerLauncher.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (sizeChartImageUrl != null) {
-                    val imageModel = if (sizeChartImageUrl.startsWith("/") || sizeChartImageUrl.startsWith("data/")) {
-                        Uri.fromFile(File(sizeChartImageUrl))
-                    } else {
-                        sizeChartImageUrl
-                    }
-                    Box {
-                        LolitaShimmerImage(
-                            model = imageModel,
-                            contentDescription = "尺码表",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop,
-                            circularRevealEnabled = false
-                        )
-                        IconButton(
-                            onClick = {
-                                onImageChanged(null)
-                            },
-                            modifier = Modifier.align(Alignment.TopEnd),
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.9f)
-                            )
-                        ) {
-                            SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.onError)
-                        }
-                    }
-                } else {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "点击添加尺码表图片",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = "(从相册选择)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
+    preview?.let { page ->
+        com.lolita.app.ui.component.FullScreenImageViewer(imageUrls, page) { preview = null }
     }
 }
 

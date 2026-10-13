@@ -62,7 +62,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit, vm: Taobao
                 Button(onClick = {
                     val source = state.url ?: return@Button
                     val request = vm.extracting()
-                    web?.evaluateJavascript("JSON.stringify({url:location.href,text:document.body.innerText,entry:window.__ICE_SUSPENSE_LOADER__&&window.__ICE_SUSPENSE_LOADER__.entry})") { value ->
+                    web?.evaluateJavascript("JSON.stringify({url:location.href,text:document.body.innerText,detailImages:Array.from(document.querySelectorAll('#v6_pc_content img')).map(i=>({url:i.getAttribute('data-src')||i.currentSrc||i.src})),entry:window.__ICE_SUSPENSE_LOADER__&&window.__ICE_SUSPENSE_LOADER__.entry})") { value ->
                         val raw = runCatching { JsonParser.parseString(value).asString }.getOrDefault("{}")
                         vm.extract(raw, source, request)
                     }
@@ -73,8 +73,9 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit, vm: Taobao
                     LolitaSection("核对商品资料") {
                         row { Text(draft.name, style = MaterialTheme.typography.titleMedium) }
                         row { Text("品牌：${draft.brand.ifBlank { "待填写" }}") }
+                        row { Text("类别：${draft.category.ifBlank { "待填写" }}${if (draft.categoryCandidates.size > 1) "（商品含多种款式，请核对）" else ""}") }
                         row { Text(draft.properties) }
-                        row { Text("可导入 ${draft.remoteImages.size} 张图片；颜色需在编辑页自行选择。") }
+                        row { Text("可导入 ${draft.remoteImages.size} 张主图，${draft.remoteDetailImages.size} 张详情图将按原图放入尺码表；颜色需自行选择。") }
                     }
                     LolitaSection("报价与来源说明") { row { Text(draft.description) } }
                     Text("进入编辑后核对品牌、分类和图片。默认保存为心愿，不自动创建价格或付款记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -1,0 +1,169 @@
+{
+  "brand": "新路德维希（Neo Ludwig）",
+  "category": "OP",
+  "main_images": 5,
+  "detail_images": 28,
+  "detail_dimensions": [
+    [
+      750,
+      2188
+    ],
+    [
+      750,
+      2677
+    ],
+    [
+      750,
+      2015
+    ],
+    [
+      750,
+      2094
+    ],
+    [
+      750,
+      2527
+    ],
+    [
+      750,
+      2435
+    ],
+    [
+      750,
+      2511
+    ],
+    [
+      750,
+      2442
+    ],
+    [
+      750,
+      2431
+    ],
+    [
+      750,
+      2437
+    ],
+    [
+      750,
+      2394
+    ],
+    [
+      750,
+      2386
+    ],
+    [
+      750,
+      2415
+    ],
+    [
+      750,
+      2455
+    ],
+    [
+      750,
+      2384
+    ],
+    [
+      750,
+      2412
+    ],
+    [
+      750,
+      2390
+    ],
+    [
+      750,
+      2458
+    ],
+    [
+      750,
+      3804
+    ],
+    [
+      750,
+      2681
+    ],
+    [
+      750,
+      2683
+    ],
+    [
+      750,
+      1736
+    ],
+    [
+      750,
+      3467
+    ],
+    [
+      750,
+      3337
+    ],
+    [
+      750,
+      2310
+    ],
+    [
+      750,
+      3338
+    ],
+    [
+      750,
+      2724
+    ],
+    [
+      750,
+      2956
+    ]
+  ],
+  "status": "WISHED",
+  "prices": 0,
+  "payments": 0,
+  "persisted_after_restart": true,
+  "versionName": "2.44.1",
+  "versionCode": 95,
+  "cleanRelease": true,
+  "debugBuild": true,
+  "unitTests": 128,
+  "unitFailures": 0,
+  "backupDeviceTests": 8,
+  "backupDeviceFailures": 0,
+  "migration": {
+    "schema": 25,
+    "preserved_rows": {
+      "android_metadata": 1,
+      "coordinates": 48,
+      "items": 194,
+      "brands": 202,
+      "categories": 12,
+      "prices": 0,
+      "payments": 0,
+      "outfit_logs": 48,
+      "outfit_item_cross_ref": 0,
+      "styles": 6,
+      "seasons": 5,
+      "locations": 54,
+      "sources": 3,
+      "legacy_catalog_archive": 0,
+      "restore_journal": 0,
+      "order_bindings": 0,
+      "payment_stages": 0,
+      "shared_library_sync_state": 0,
+      "remote_brands": 0,
+      "remote_categories": 0,
+      "remote_styles": 0,
+      "remote_seasons": 0,
+      "remote_sources": 0,
+      "remote_shared_coordinates": 0,
+      "remote_shared_items": 0,
+      "remote_shared_price_plans": 0,
+      "monthly_budgets": 0
+    },
+    "preserved_images": 20,
+    "integrity": "ok"
+  },
+  "discardRestoredOriginalImageSet": true,
+  "testDevice": "emulator-5558 / Lolita_Release_2392_Test",
+  "releaseCertSha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c"
+}

@@ -104,6 +104,9 @@ data class Item(
     @ColumnInfo(name = "size_chart_image_url")
     val sizeChartImageUrl: String? = null,
 
+    @ColumnInfo(name = "size_chart_image_urls", defaultValue = "'[]'")
+    val sizeChartImageUrls: List<String> = emptyList(),
+
     @ColumnInfo(name = "location_id")
     val locationId: Long? = null,
 

@@ -160,7 +160,7 @@ class DataIntegrityTest {
         categories = listOf(Category(id = 307, name = "分类", createdAt = 101)),
         coordinates = emptyList(),
         items = listOf(Item(id = 9001, name = "服饰", description = "中文,\"备注\"\n换行", brandId = 101, categoryId = 307,
-            status = ItemStatus.PENDING_PAYMENT, imageUrls = listOf(image, image), sizeChartImageUrl = image, source = "来源", coordinateOrder = 7, createdAt = 102, updatedAt = 103)),
+            status = ItemStatus.PENDING_PAYMENT, imageUrls = listOf(image, image), sizeChartImageUrl = image, sizeChartImageUrls = listOf(image, image), source = "来源", coordinateOrder = 7, createdAt = 102, updatedAt = 103)),
         orderBindings = listOf(OrderBinding(itemId = 9001, priceId = 8)),
         paymentStages = listOf(PaymentStage(id = 9, priceId = 8, name = "Legacy", amount = 1234.56, dueDate = 105)),
         prices = listOf(Price(id = 8, itemId = 9001, type = PriceType.FULL, totalPrice = 1234.56, createdAt = 104)),
@@ -190,9 +190,10 @@ class DataIntegrityTest {
             b.importBackup(output).getOrThrow()
             val actual = target.itemDao().getItemById(9001)!!
             restoredImages.addAll(actual.imageUrls)
-            assertEquals(fixture(image.absolutePath).items.single().copy(imageUrls = actual.imageUrls, sizeChartImageUrl = actual.sizeChartImageUrl), actual)
+            assertEquals(fixture(image.absolutePath).items.single().copy(imageUrls = actual.imageUrls, sizeChartImageUrl = actual.sizeChartImageUrl, sizeChartImageUrls = actual.sizeChartImageUrls), actual)
             assertEquals(actual.imageUrls[0], actual.imageUrls[1])
             assertEquals(actual.imageUrls[0], actual.sizeChartImageUrl)
+            assertEquals(listOf(actual.sizeChartImageUrl, actual.sizeChartImageUrl), actual.sizeChartImageUrls)
             assertEquals(digest(image), digest(File(actual.imageUrls[0])))
             assertEquals(fixture(image.absolutePath).prices, target.priceDao().getAllPricesList())
             assertEquals(fixture(image.absolutePath).payments, target.paymentDao().getAllPaymentsList())

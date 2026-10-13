@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
     const val VERSION = 6
-    const val SCHEMA_VERSION = 24
+    const val SCHEMA_VERSION = 25
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -71,6 +71,7 @@ internal object BackupFormat {
                     default(row, "updatedAt", row.get("createdAt") ?: error("缺少 createdAt"))
                 }
                 if (name == "items") {
+                    if (!row.has("sizeChartImageUrls")) row.add("sizeChartImageUrls", JsonArray())
                     if (row.has("color") && !row.has("colors")) row.add("colors", row.remove("color"))
                     row.remove("color")
                     normalizeColors(row)
@@ -93,7 +94,7 @@ internal object BackupFormat {
                 type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.forEach { field ->
                     val value = row[field.name] ?: return@forEach
                     if (value.isJsonNull) {
-                        require(!field.type.isPrimitive && field.name !in setOf("month", "name", "description", "note", "imageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
+                        require(!field.type.isPrimitive && field.name !in setOf("month", "name", "description", "note", "imageUrls", "sizeChartImageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
                     } else when {
                         field.type.isEnum -> require(value.isJsonPrimitive && value.asString in requireNotNull(field.type.enumConstants).map { (it as Enum<*>).name }) { "未知枚举：$name[$index].${field.name}" }
                         List::class.java.isAssignableFrom(field.type) -> require(value.isJsonArray && value.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$name[$index].${field.name} 必须是字符串数组" }

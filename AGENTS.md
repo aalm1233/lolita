@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 24，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 25，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -62,6 +62,8 @@
 - 服饰详情主图完整 Fit 预览，高度随屏幕受限，标题后优先展示当前订单价格/实付/待付摘要；无小物时显示紧凑新增/挂入操作，已有小物管理完整保留。`ImageGalleryPager` 支持可选 `contentScale`、`imageShape` 与 `imageBackgroundColor`，默认展示保持兼容。
 - 首页顶栏保留搜索、四个 Tab 和筛选/排序/视图控制的一行布局。本轮列表、详情和穿搭实拍归档：`docs/visuals/2026-10-11-layout-refinement.png`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
+
+- 淘宝商品导入使用已核验内置别名解析品牌，匹配现有记录时忽略大小写/空格/标点并拒绝歧义；通用品牌参数不作为真实品牌。类别根据明确参数或标题识别，混合套装在预览提示核对。详情图来自 `#v6_pc_content`，读取懒加载源、去重过滤页面占位图，最多50张、每张20MiB、累计80MiB，保留原图进入多张尺码表。旧 `sizeChartImageUrl` 保留，新增列表 `sizeChartImageUrls` 存后续图片，24→25只追加默认空列表；备份缺失字段补空数组、ZIP/预览/CSV与删除清理均包含新列表。编辑与详情可逐张放大，失败或放弃编辑清理本次新增图片。
 
 ## 内置店铺图标与默认房间
 
@@ -249,7 +251,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=94, versionName="2.44.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=95, versionName="2.44.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -38,7 +38,9 @@ fun MultiImageEditor(
     maxImages: Int = 5,
     onAddImage: (String) -> Unit,
     onRemoveImage: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Crop,
+    onImageClick: ((Int) -> Unit)? = null
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -63,12 +65,13 @@ fun MultiImageEditor(
             Box(
                 modifier = Modifier
                     .size(100.dp, 120.dp)
+                    .clickable(enabled = onImageClick != null) { onImageClick?.invoke(index) }
                     .clip(shape)
             ) {
                 LolitaShimmerImage(
                     model = url,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    contentDescription = if (onImageClick != null) "查看第${index + 1}张图片" else null,
+                    contentScale = contentScale,
                     modifier = Modifier.matchParentSize().clip(shape),
                     circularRevealEnabled = false
                 )

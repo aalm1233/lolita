@@ -23,4 +23,8 @@
 | 预算 | ![](visuals/2026-10-13-budget-default-light.png) | ![](visuals/2026-10-13-budget-victorian-dark.png) |
 | 分享 | ![](visuals/2026-10-13-share-default-light.png) | ![](visuals/2026-10-13-share-victorian-dark.png) |
 
-本轮交付 Debug APK，未创建正式 Release。
+2026-10-13 已正式发布 2.43.0 / 93。已提交源码 clean Release 构建和 122 项 JVM 测试通过；独立 AVD 从 2.42.0 同签名覆盖升级，原表记录、14 张图片及设置保全，Room 23→24 迁移和完整性检查通过。
+
+GitHub 与 Gitee 两边匿名完整下载 APK 和 SHA256SUMS 一致；正式包检查更新识别最新发布 2.43.0。详见 [发布验证](release-2.43.0-verification.json) 与 [更新实拍](visuals/2026-10-13-release-2.43.0-update.png)。
+
+[Gitee 国内下载](https://gitee.com/aalm1233/lolita/releases/download/v2.43.0/lolita-2.43.0.apk) · [GitHub Release](https://github.com/aalm1233/lolita/releases/tag/v2.43.0)

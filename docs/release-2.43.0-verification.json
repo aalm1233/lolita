@@ -1,0 +1,192 @@
+{
+  "version": "2.43.0",
+  "versionCode": 93,
+  "source_commit": "5ddf7a59f1bcf028a6d9ab5d14f3929548a9921b",
+  "sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27",
+  "bytes": 48009585,
+  "signature_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "clean_assembleRelease": "passed",
+  "jvm_tests": {
+    "tests": 122,
+    "failures": 0,
+    "errors": 0
+  },
+  "feature_stage_instrumentation_tests": 32,
+  "device": "emulator-5558 / Lolita_Release_2392_Test",
+  "upgrade_from": "2.42.0 / 92",
+  "upgrade": {
+    "tables": [
+      {
+        "table": "android_metadata",
+        "rows_verified": 1,
+        "fields": 1
+      },
+      {
+        "table": "coordinates",
+        "rows_verified": 48,
+        "fields": 6
+      },
+      {
+        "table": "items",
+        "rows_verified": 193,
+        "fields": 21
+      },
+      {
+        "table": "brands",
+        "rows_verified": 201,
+        "fields": 5
+      },
+      {
+        "table": "categories",
+        "rows_verified": 12,
+        "fields": 5
+      },
+      {
+        "table": "prices",
+        "rows_verified": 0,
+        "fields": 9
+      },
+      {
+        "table": "payments",
+        "rows_verified": 0,
+        "fields": 11
+      },
+      {
+        "table": "outfit_logs",
+        "rows_verified": 48,
+        "fields": 6
+      },
+      {
+        "table": "outfit_item_cross_ref",
+        "rows_verified": 0,
+        "fields": 2
+      },
+      {
+        "table": "styles",
+        "rows_verified": 6,
+        "fields": 4
+      },
+      {
+        "table": "seasons",
+        "rows_verified": 5,
+        "fields": 4
+      },
+      {
+        "table": "locations",
+        "rows_verified": 54,
+        "fields": 7
+      },
+      {
+        "table": "sources",
+        "rows_verified": 3,
+        "fields": 4
+      },
+      {
+        "table": "legacy_catalog_archive",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "restore_journal",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "order_bindings",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "payment_stages",
+        "rows_verified": 0,
+        "fields": 8
+      },
+      {
+        "table": "shared_library_sync_state",
+        "rows_verified": 0,
+        "fields": 7
+      },
+      {
+        "table": "remote_brands",
+        "rows_verified": 0,
+        "fields": 4
+      },
+      {
+        "table": "remote_categories",
+        "rows_verified": 0,
+        "fields": 4
+      },
+      {
+        "table": "remote_styles",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "remote_seasons",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "remote_sources",
+        "rows_verified": 0,
+        "fields": 3
+      },
+      {
+        "table": "remote_shared_coordinates",
+        "rows_verified": 0,
+        "fields": 5
+      },
+      {
+        "table": "remote_shared_items",
+        "rows_verified": 0,
+        "fields": 16
+      },
+      {
+        "table": "remote_shared_price_plans",
+        "rows_verified": 0,
+        "fields": 9
+      }
+    ],
+    "problems": [],
+    "before_schema": 23,
+    "after_schema": 24,
+    "integrity": [
+      [
+        "ok"
+      ]
+    ],
+    "foreign_keys": [],
+    "images_verified": 14,
+    "settings_unchanged": true
+  },
+  "github": {
+    "release": "https://github.com/aalm1233/lolita/releases/tag/v2.43.0",
+    "draft": false,
+    "prerelease": false,
+    "anonymous_full_download_sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27",
+    "checksum_file_identical": true
+  },
+  "gitee": {
+    "release": "https://gitee.com/aalm1233/lolita/releases/tag/v2.43.0",
+    "prerelease": false,
+    "anonymous_full_download_sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27",
+    "checksum_file_identical": true,
+    "head_chain": [
+      302,
+      302,
+      200
+    ],
+    "final_content_type": "application/zip",
+    "content_length": 48009585
+  },
+  "real_app_check": [
+    "已是最新版本",
+    "当前版本：v2.43.0",
+    "最新发布：v2.43.0"
+  ],
+  "coverage_limitations": [
+    "旧包测试资料中的订单、付款与穿搭关联表为空；非空关系由功能阶段独立内存 Room 回归覆盖。",
+    "未测试大陆三网下载速度；未在用户手机上安装。"
+  ],
+  "verified_at_utc": "2026-10-13T00:19:47.142306+00:00"
+}

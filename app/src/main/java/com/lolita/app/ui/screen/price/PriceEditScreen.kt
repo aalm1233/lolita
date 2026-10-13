@@ -27,7 +27,7 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
     val tracked = state.purchaseRecordStatus == PurchaseRecordStatus.TRACKED
     val canEdit = tracked && !state.isSaving && !state.isLoading && !state.loadFailed
     var confirmTemplate by remember { mutableStateOf(false) }
-    LaunchedEffect(priceId) { viewModel.loadPrice(priceId) }
+    LaunchedEffect(priceId, itemId) { viewModel.loadPrice(priceId); if (priceId == null) viewModel.loadReferenceQuote(itemId) }
     val requestBack = UnsavedChangesHandler(hasUnsavedChanges = viewModel.hasUnsavedChanges, onBack = onBack)
     val saveWithReminderPermissions = rememberStageReminderSave {
         scope.launch {
@@ -50,6 +50,18 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                 LolitaSection("价格暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
             } else {
                 if (!tracked) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = requestBack)
+                if (priceId == null && state.referenceQuote != null) {
+                    val quote = state.referenceQuote!!
+                    LolitaSection("淘宝参考报价") { row {
+                        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            Text("¥${quote.amount} · ${quote.specification}")
+                            Text("请核对款式、定金/尾款与优惠。点击采用仅填入商品金额，确认保存后建立订单；实付另行记录。",
+                                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            OutlinedButton(onClick = viewModel::useReferenceQuote,
+                                enabled = canEdit && state.totalPrice.isBlank()) { Text("使用参考报价 ¥${quote.amount}") }
+                        }
+                    } }
+                }
                 LolitaSection("订单价格") {
                     row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                         PriceMoneyField(state.totalPrice, viewModel::updateTotalPrice, "商品金额", canEdit)

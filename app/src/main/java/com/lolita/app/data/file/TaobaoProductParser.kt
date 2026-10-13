@@ -4,7 +4,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.net.URI
 
-data class TaobaoProductVariant(val id: String, val name: String, val category: String = "")
+data class TaobaoProductVariant(val id: String, val name: String, val category: String = "", val referenceQuote: TaobaoProductQuote? = null)
 
 data class TaobaoProductDraft(
     val name: String,
@@ -26,7 +26,8 @@ data class TaobaoProductDraft(
     val importToken: String? = null,
     val editorToken: String? = null,
     val batchIndex: Int = 0,
-    val batchTotal: Int = 0
+    val batchTotal: Int = 0,
+    val referenceQuote: TaobaoProductQuote? = null
 )
 
 object TaobaoProductParser {
@@ -91,6 +92,58 @@ object TaobaoProductParser {
         return candidates.takeIf { it.size > 1 }.orEmpty()
     }
 
+    private fun selectedQuote(root: JsonObject, data: JsonObject): Pair<TaobaoProductQuote, List<String>>? = runCatching {
+        val sku = data.getAsJsonObject("skuData")?.text("skuV3Data")?.takeIf(String::isNotBlank)
+            ?.let { JsonParser.parseString(it).asJsonObject }
+        val context = sku?.getAsJsonObject("global")?.getAsJsonObject("skuGlobal")?.getAsJsonObject("context")
+        val base = context?.getAsJsonObject("skuBase")
+        val props = base?.getAsJsonArray("props")?.map { it.asJsonObject }.orEmpty()
+        val live = root.getAsJsonObject("liveSku")?.takeIf { it.get("present")?.asBoolean == true }
+        val names: List<String>
+        val price: JsonObject
+        if (live != null) {
+            names = live.getAsJsonArray("selectedNames")?.map { it.asString }.orEmpty()
+            // A price shown before all dimensions are selected is a range or a stale combination.
+            if (props.isEmpty() || names.size != props.size || props.any { prop ->
+                prop.getAsJsonArray("values").count { it.asJsonObject.text("name") in names } != 1
+            }) return@runCatching null
+            if (live.has("selectedText")) {
+                val selectedText = live.text("selectedText")
+                if (!selectedText.startsWith("已选“") || !selectedText.endsWith("”") ||
+                    selectedText.removePrefix("已选“").removeSuffix("”").split('；', ';') != names)
+                    return@runCatching null
+            }
+            price = live
+        } else if (base != null && props.isNotEmpty()) {
+            if (base.text("selectedPathStatus") != "2") return@runCatching null
+            val selected = base.text("selectedPath").split(';').toSet()
+            names = props.map { prop ->
+                prop.getAsJsonArray("values").singleOrNull { "${prop.text("pid")}:${it.asJsonObject.text("vid")}" in selected }
+                    ?.asJsonObject?.text("name") ?: return@runCatching null
+            }
+            val head = context.getAsJsonObject("simpleSkuHead") ?: return@runCatching null
+            price = head.getAsJsonObject("subPrice")?.takeIf { it.text("priceText").isNotBlank() }
+                ?: head.getAsJsonObject("price") ?: return@runCatching null
+        } else {
+            // A plain price may describe a single item, but never assign it to split variants.
+            names = emptyList()
+            price = data.getAsJsonObject("priceVO")?.getAsJsonObject("price") ?: return@runCatching null
+        }
+        val label = price.text("priceTitle")
+        if (price.text("priceTail").isNotBlank() || listOf(label, price.text("priceSummary"), names.joinToString(" ")).any {
+            listOf("定金", "订金", "尾款", "补款", "补尾", "预约").any { word -> word in it }
+        }) return@runCatching null
+        if (Regex("\\d\\s*[-~～至]\\s*\\d").containsMatchIn(price.text("priceSummary"))) return@runCatching null
+        val amount = TaobaoProductQuotes.amount(price.text("priceText")) ?: return@runCatching null
+        val style = listOf("套装", "款式", "类型").firstNotNullOfOrNull { propertyName ->
+            props.firstOrNull { it.text("name") == propertyName }
+        }
+        val styleNames = if (style == null) emptyList() else if (live == null)
+            listOf(names[props.indexOf(style)]) else listOf(style.getAsJsonArray("values")
+                .map { it.asJsonObject.text("name") }.single { it in names })
+        TaobaoProductQuote(amount, names.joinToString("；"), label) to styleNames
+    }.getOrNull()
+
     private fun uri(url: String) = runCatching { URI(url) }.getOrNull()
     fun allowedPage(url: String): Boolean {
         val u = uri(url) ?: return false
@@ -131,6 +184,11 @@ object TaobaoProductParser {
             val price = data.getAsJsonObject("priceVO")?.getAsJsonObject("price")
             val priceText = price?.get("priceText")?.asString.orEmpty()
             val priceLabel = price?.get("priceTitle")?.asString.orEmpty()
+            val priceTail = price?.get("priceTail")?.asString.orEmpty()
+            val selected = selectedQuote(root, data)
+            val parts = variants(data, values).map { variant -> variant.copy(
+                referenceQuote = selected?.takeIf { variant.name in it.second }?.first) }
+            val referenceQuote = selected?.takeIf { parts.isEmpty() || it.second.isNotEmpty() }?.first
             val images = data.getAsJsonObject("headPicVO")?.getAsJsonArray("images")?.mapNotNull {
                 it.asJsonObject["url"]?.asString?.let { value -> if (value.startsWith("//")) "https:$value" else value }
                     ?.takeIf(::allowedImage)
@@ -149,8 +207,8 @@ object TaobaoProductParser {
             val text = pageText.substringAfter("宝贝详情", pageText).substringBeforeLast("打开淘宝").trim().take(6000)
             val productUrl = "https://item.taobao.com/item.htm?id=$id"
             return TaobaoProductDraft(title, brand, values["尺码"].orEmpty(), properties,
-                listOf("淘宝商品：$productUrl", "网页报价（仅供核对，不代表实付）：$priceLabel $priceText", properties, text).filter { it.isNotBlank() }.joinToString("\n"), productUrl, images, shopName = shopName, brandAliases = listOf(brand).filter { it.isNotBlank() },
-                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = variants(data, values))
+                TaobaoProductQuotes.withQuote(listOf("淘宝商品：$productUrl", "${if (priceTail.contains("起")) "页面起价" else "页面报价"}（仅供核对，不代表各款式实付）：$priceLabel $priceText$priceTail", properties, text).filter { it.isNotBlank() }.joinToString("\n"), referenceQuote), productUrl, images, shopName = shopName, brandAliases = listOf(brand).filter { it.isNotBlank() },
+                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = parts, referenceQuote = referenceQuote)
         } catch (e: Exception) {
             throw IllegalArgumentException("尚未读取到完整商品资料，请完成登录、等待商品加载后重试", e)
         }

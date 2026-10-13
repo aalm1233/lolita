@@ -832,7 +832,7 @@ internal fun ItemOrderSummary(
         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
             SectionHeader(title = "价格与付款", action = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (sharedParentId != null) "查看主件" else "查看",
+                    Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "录入价格" else "查看",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(skin.spacingSmall))

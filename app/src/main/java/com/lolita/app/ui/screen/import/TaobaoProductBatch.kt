@@ -1,6 +1,7 @@
 package com.lolita.app.ui.screen.`import`
 
 import com.lolita.app.data.file.TaobaoProductDraft
+import com.lolita.app.data.file.TaobaoProductQuotes
 import java.util.UUID
 
 /** Import metadata and result progression, independent of Android and image I/O. */
@@ -34,6 +35,8 @@ internal fun taobaoProductBatchItems(draft: TaobaoProductDraft, selectedIds: Set
     if (variants.size < 2) return listOf(original.copy(importToken = UUID.randomUUID().toString()))
     return variants.distinctBy { it.id }.filter { it.id in selectedIds }.map { variant ->
         original.copy(name = "${draft.name} · ${variant.name}", category = variant.category,
+            referenceQuote = variant.referenceQuote,
+            description = TaobaoProductQuotes.withQuote(original.description, variant.referenceQuote),
             importToken = UUID.randomUUID().toString(),
             categoryCandidates = listOf(variant.category).filter { it.isNotBlank() })
     }
@@ -57,7 +60,7 @@ internal fun taobaoProductCompactBatch(batch: TaobaoProductBatchProgress): Taoba
     batch.copy(items = batch.items.map { item ->
         TaobaoProductDraft(name = item.name, brand = "", size = "", properties = "", description = "",
             productUrl = "", remoteImages = emptyList(), category = item.category,
-            categoryCandidates = item.categoryCandidates, importToken = item.importToken)
+            categoryCandidates = item.categoryCandidates, importToken = item.importToken, referenceQuote = item.referenceQuote)
     })
 
 internal fun taobaoProductRestoreBatch(batch: TaobaoProductBatchProgress,
@@ -67,5 +70,7 @@ internal fun taobaoProductRestoreBatch(batch: TaobaoProductBatchProgress,
         batchIndex = 0, batchTotal = 0)
     return batch.copy(items = batch.items.map { item -> shared.copy(name = item.name,
         category = item.category, categoryCandidates = item.categoryCandidates,
+        referenceQuote = item.referenceQuote,
+        description = TaobaoProductQuotes.withQuote(shared.description, item.referenceQuote),
         importToken = item.importToken?.takeIf { it.isNotBlank() } ?: UUID.randomUUID().toString()) })
 }

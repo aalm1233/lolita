@@ -69,7 +69,8 @@ data class PriceEditUiState(
     val error: String? = null,
     val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
     val hasRecordedPayments: Boolean = false,
-    val loadFailed: Boolean = false
+    val loadFailed: Boolean = false,
+    val referenceQuote: com.lolita.app.data.file.TaobaoProductQuote? = null
 ) {
     val payableTotal: Double? get() = parseMoney(totalPrice, true)?.let { amount -> parseMoney(shipping, true)?.let { moneySum(amount, it) } }
 }
@@ -165,7 +166,8 @@ class PriceManageViewModel(
     fun clearError() { _uiState.update { it.copy(error = null) } }
 }
 
-class PriceEditViewModel(private val orderRepository: OrderRepository = AppModule.orderRepository()) : ViewModel() {
+class PriceEditViewModel(private val orderRepository: OrderRepository = AppModule.orderRepository(),
+    private val itemRepository: com.lolita.app.data.repository.ItemRepository = AppModule.itemRepository()) : ViewModel() {
     private val _uiState = MutableStateFlow(PriceEditUiState())
     val uiState: StateFlow<PriceEditUiState> = _uiState.asStateFlow()
     var hasUnsavedChanges: Boolean = false
@@ -193,6 +195,35 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
                 _uiState.update { it.copy(isLoading = false, loadFailed = true, error = e.message ?: "加载失败") }
             }
         }
+    }
+
+    fun loadReferenceQuote(itemId: Long) {
+        if (originalPrice != null) return
+        viewModelScope.launch {
+            try {
+                val item = itemRepository.getItemById(itemId)
+                if (item != null) offerReferenceQuote(item.description)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                // Reference data is optional; a failed lookup must leave manual price entry available.
+            }
+        }
+    }
+
+    fun offerReferenceQuote(description: String) {
+        if (originalPrice != null || _uiState.value.isLoading || _uiState.value.isSaving) return
+        _uiState.update { it.copy(referenceQuote = com.lolita.app.data.file.TaobaoProductQuotes.fromDescription(description)) }
+    }
+
+    fun useReferenceQuote() {
+        val state = _uiState.value
+        val quote = state.referenceQuote ?: return
+        if (originalPrice != null || state.totalPrice.isNotBlank()) return
+        val amount = com.lolita.app.data.file.TaobaoProductQuotes.amount(quote.amount) ?: return
+        change { it.copy(totalPrice = amount, stages =
+            if (it.priceType == PriceType.FULL && it.stages.size == 1 && it.stages.single().amount.isBlank())
+                listOf(it.stages.single().copy(amount = moneyText(moneySum(amount.toDouble(), parseMoney(it.shipping, true) ?: 0.0))))
+            else it.stages) }
     }
 
     private fun change(transform: (PriceEditUiState) -> PriceEditUiState) {

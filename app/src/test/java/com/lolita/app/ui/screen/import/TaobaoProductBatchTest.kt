@@ -15,6 +15,21 @@ class TaobaoProductBatchTest {
         remoteDetailImages = listOf("https://img.alicdn.com/detail.jpg"), variants = variants
     )
 
+    @Test fun splitAndRestoredQuotesStayWithTheirOwnPiece() {
+        val raw = javaClass.getResource("/taobao-shouwang-price.json")!!.readText()
+        val draft = com.lolita.app.data.file.TaobaoProductParser.parse(raw)
+        val items = taobaoProductBatchItems(draft, draft.variants.map { it.id }.toSet())
+        val male = items.single { it.name.endsWith("男款SET") }
+        val op = items.single { it.name.endsWith("OP（长款）") }
+        assertEquals("658", male.referenceQuote?.amount)
+        assertNull(op.referenceQuote)
+        assertNull(com.lolita.app.data.file.TaobaoProductQuotes.fromDescription(op.description))
+        val restored = taobaoProductRestoreBatch(taobaoProductCompactBatch(TaobaoProductBatchProgress(items)), draft)
+        assertEquals(male.referenceQuote, restored.items.single { it.name == male.name }.referenceQuote)
+        assertEquals(male.description, restored.items.single { it.name == male.name }.description)
+        assertEquals(op.description, restored.items.single { it.name == op.name }.description)
+    }
+
     @Test fun selectedPartsKeepOrderAndUseOnlyTheirOwnCategory() {
         val draft = original(listOf(TaobaoProductVariant("op", "OP", "OP"),
             TaobaoProductVariant("kc", "KC", "KC"), TaobaoProductVariant("bonnet", "头巾", "其他头饰")))

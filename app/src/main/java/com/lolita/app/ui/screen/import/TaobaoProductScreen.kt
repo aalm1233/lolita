@@ -53,7 +53,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                     }
                 }
             } else if (state.draft == null) {
-                Text("登录并等待商品显示后，点击提取。", Modifier.padding(skin.spacingMedium))
+                Text("等待商品显示后提取。若需指定款式报价，请先打开规格并选好款式、颜色和尺码。", Modifier.padding(skin.spacingMedium))
                 key(state.url) {
                     AndroidView(factory = {
                         WebView(context).apply {
@@ -73,9 +73,16 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                 Button(onClick = {
                     val source = state.url ?: return@Button
                     val request = vm.extracting()
-                    web?.evaluateJavascript("JSON.stringify({url:location.href,text:document.body.innerText,detailImages:Array.from(document.querySelectorAll('#v6_pc_content img')).map(i=>({url:i.getAttribute('data-src')||i.currentSrc||i.src})),entry:window.__ICE_SUSPENSE_LOADER__&&window.__ICE_SUSPENSE_LOADER__.entry})") { value ->
-                        val raw = runCatching { JsonParser.parseString(value).asString }.getOrDefault("{}")
-                        vm.extract(raw, source, request)
+                    val currentWeb = web ?: return@Button
+                    currentWeb.evaluateJavascript(TaobaoProductWebReader.script) { value ->
+                        val first = runCatching { JsonParser.parseString(value).asString }.getOrDefault("{}")
+                        currentWeb.postDelayed({
+                            if (web === currentWeb) currentWeb.evaluateJavascript(TaobaoProductWebReader.script) { next ->
+                                val raw = runCatching { JsonParser.parseString(next).asString }.getOrDefault("{}")
+                                if (TaobaoProductWebReader.consistentSnapshots(first, raw)) vm.extract(raw, source, request)
+                                else vm.extractionFailed(source, request, "规格或报价正在变化，请等待加载完成后重试")
+                            }
+                        }, 1000)
                     }
                 }, enabled = !state.busy, modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) { Text("提取商品资料") }
             } else {
@@ -89,7 +96,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                     }
                     if (state.batchTotal == 0 && draft.variants.size > 1) {
                         LolitaSection("选择要拆分的物品") {
-                            row { Text("勾选后逐件核对保存。每件都保留完整详情图片，颜色和尺码请在编辑页核对。") }
+                            row { Text("每件保留完整详情图。报价只对应已确认规格，未读到的款式请补填或留空，不能沿用页面起价。") }
                             draft.variants.forEach { part ->
                                 row {
                                     val selected = part.id in state.selectedVariantIds
@@ -99,11 +106,15 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                                         Column(Modifier.weight(1f).padding(start = skin.spacingSmall)) {
                                             Text(part.name, style = MaterialTheme.typography.bodyLarge)
                                             Text("类别：${part.category.ifBlank { "待核对" }}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            if (selected) ReferencePriceField(part.referenceQuote, { vm.referencePrice(part.id, it) })
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                    if (state.batchTotal == 0 && draft.variants.size <= 1) {
+                        LolitaSection("参考报价") { row { ReferencePriceField(draft.referenceQuote, { vm.referencePrice(null, it) }) } }
                     }
                     if (state.batchTotal > 0) {
                         LolitaSection("逐件核对进度") {
@@ -113,7 +124,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                     }
                     LolitaSection("商品参数") { row { Text(draft.properties) } }
                     LolitaSection("报价与来源说明") { row { Text(draft.description) } }
-                    Text("进入编辑后核对品牌、分类和图片。默认保存为心愿，不自动创建价格或付款记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("进入编辑后核对品牌、分类和图片。参考报价存入来源说明。保存后到服饰详情的“录入价格”使用报价并确认订单；实付另行记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Button(onClick = { if (state.completed) onBack() else vm.edit(onEdit) },
                     enabled = !state.busy && (state.batchTotal > 0 || draft.variants.size <= 1 || state.selectedVariantIds.isNotEmpty()), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
@@ -130,4 +141,15 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
             state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(skin.spacingMedium)) }
         }
     }
+}
+
+@Composable
+private fun ReferencePriceField(quote: com.lolita.app.data.file.TaobaoProductQuote?, onChange: (String) -> Unit) {
+    val value = quote?.amount.orEmpty()
+    val invalid = value.isNotBlank() && com.lolita.app.data.file.TaobaoProductQuotes.amount(value) == null
+    OutlinedTextField(value = value, onValueChange = onChange,
+        label = { Text("参考金额（元）") }, placeholder = { Text("待核对，可留空") },
+        supportingText = { Text(if (invalid) "请输入正数，最多两位小数" else quote?.specification?.takeIf(String::isNotBlank) ?: "仅供核对，不代表实付") },
+        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal),
+        isError = invalid, singleLine = true, modifier = Modifier.fillMaxWidth())
 }

@@ -109,6 +109,14 @@ class TaobaoProductViewModel(
         }
     }
 
+    fun extractionFailed(sourceUrl: String, request: Int, message: String) {
+        if (state.value.url != sourceUrl || request != extractionRequest || batch != null) return
+        extractionTimeout?.cancel()
+        extractionRequest++
+        mutable.update { it.copy(busy = false, error = message) }
+        persist()
+    }
+
     fun extract(raw: String, sourceUrl: String, request: Int) {
         if (state.value.url != sourceUrl || request != extractionRequest || batch != null) return
         extractionTimeout?.cancel()
@@ -145,8 +153,30 @@ class TaobaoProductViewModel(
         persist()
     }
 
+    fun referencePrice(variantId: String?, value: String) {
+        if (state.value.busy || batch != null) return
+        mutable.update { current ->
+            val draft = current.draft ?: return@update current
+            fun quote(spec: String) = value.takeIf { it.isNotBlank() }?.let {
+                com.lolita.app.data.file.TaobaoProductQuote(it, spec, "手动核对")
+            }
+            current.copy(draft = if (variantId == null) draft.copy(referenceQuote = quote(draft.referenceQuote?.specification.orEmpty()))
+                else draft.copy(variants = draft.variants.map { part ->
+                    if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
+                }))
+        }
+        persist()
+    }
+
     fun edit(onReady: (String) -> Unit) {
-        val draft = state.value.draft ?: return
+        var draft = state.value.draft ?: return
+        val quotes = if (draft.variants.size > 1) draft.variants.filter { it.id in state.value.selectedVariantIds }.mapNotNull { it.referenceQuote }
+            else listOfNotNull(draft.referenceQuote)
+        if (quotes.any { com.lolita.app.data.file.TaobaoProductQuotes.amount(it.amount) == null }) {
+            mutable.update { it.copy(error = "参考金额请输入大于零、最多两位小数的数字，或留空待核对") }
+            return
+        }
+        draft = draft.copy(description = com.lolita.app.data.file.TaobaoProductQuotes.withQuote(draft.description, draft.referenceQuote))
         if (state.value.busy || job?.isActive == true || state.value.completed) return
         if (invalidRestore || cacheMissing) return
         if (batch?.activeToken != null) {

@@ -9,4 +9,4 @@
 
 验证详情见 taobao-product-fix-2.44.1-verification.json；截图在 docs/visuals/2026-10-13-taobao-detail-charts.png 和 docs/visuals/2026-10-13-taobao-chart-fullscreen.png。
 
-限制：类别默认采用明确的首个候选，混合商品需核对；详情图片需在淘宝页面加载完成后提取，最多 50 张、单图 20 MiB、总下载 80 MiB。试用包与原正式签名一致；本次没有创建新 Release。
+限制：类别默认采用明确的首个候选，混合商品需核对；详情图片需在淘宝页面加载完成后提取，最多 50 张、单图 20 MiB、总下载 80 MiB。正式包与原正式签名一致，按默认流程同步发布 GitHub 和 Gitee，供正常更新安装测试。

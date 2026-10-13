@@ -1,0 +1,55 @@
+{
+  "version": "2.45.0",
+  "version_code": 96,
+  "source_commit": "b9dafa67ddee68bd0f5a8cc65c9b6080410a2c3c",
+  "apk_bytes": 48058737,
+  "sha256": "b09adee79e7a549325059cd76d4c0b5d8ab9df0badc7ef0d57bffd1e4ba6578c",
+  "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "unit_tests": 154,
+  "device_tests": 23,
+  "github": {
+    "version": "v2.45.0",
+    "latest_formal": true,
+    "sha256": "b09adee79e7a549325059cd76d4c0b5d8ab9df0badc7ef0d57bffd1e4ba6578c",
+    "bytes": 48058737,
+    "anonymous_download": true,
+    "full_byte_range_download": true,
+    "checksum_verified": true,
+    "source_commit": "b9dafa67ddee68bd0f5a8cc65c9b6080410a2c3c"
+  },
+  "gitee": {
+    "sha256": "b09adee79e7a549325059cd76d4c0b5d8ab9df0badc7ef0d57bffd1e4ba6578c",
+    "anonymous_download": true,
+    "head_status": 200,
+    "head_type": "application/zip",
+    "head_length": 48058737,
+    "redirects": [
+      {
+        "code": 302,
+        "host": "gitee.com"
+      },
+      {
+        "code": 302,
+        "host": "foruda.gitee.com"
+      }
+    ],
+    "latest_formal": "v2.45.0"
+  },
+  "official_install": {
+    "version": "2.45.0",
+    "code": 96,
+    "schema": 26,
+    "source_commit": "b9dafa67ddee68bd0f5a8cc65c9b6080410a2c3c",
+    "clean_release": true,
+    "non_debuggable": true,
+    "same_formal_signature": true,
+    "cover_install": true,
+    "all_tables_unchanged": true,
+    "items_preserved": 196,
+    "image_files_preserved": 86,
+    "clean_release_actual_web_extraction_verified": true,
+    "identified_candidates": 6,
+    "main_images": 5,
+    "detail_images": 28
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "version": "2.45.1",
+  "version_code": 97,
+  "source_commit": "b9f4d0ff0c104e4c26be601ced53d05cdc667e31",
+  "signature_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "database_tables_preserved": 27,
+  "items_preserved": 196,
+  "image_hashes_preserved": 86,
+  "device_tests": 29,
+  "jvm_tests": 165,
+  "clean_release": true,
+  "same_signature_upgrade": true,
+  "apk_sha256": "f00cc339bb49479775d134fee85335440c64575c6443ad057091b4c69f653bda",
+  "apk_bytes": 48075121,
+  "github": {
+    "version": "v2.45.1",
+    "latest_formal": true,
+    "sha256": "f00cc339bb49479775d134fee85335440c64575c6443ad057091b4c69f653bda",
+    "bytes": 48075121,
+    "anonymous_download": true,
+    "full_byte_range_download": true,
+    "checksum_verified": true,
+    "source_commit": "b9f4d0ff0c104e4c26be601ced53d05cdc667e31"
+  },
+  "gitee_download": {
+    "sha256": "f00cc339bb49479775d134fee85335440c64575c6443ad057091b4c69f653bda",
+    "anonymous_download": true,
+    "head_status": 200,
+    "head_type": "application/zip",
+    "head_length": 48075121,
+    "redirects": [
+      {
+        "code": 302,
+        "host": "gitee.com"
+      },
+      {
+        "code": 302,
+        "host": "foruda.gitee.com"
+      }
+    ]
+  },
+  "gitee_formal_release": true,
+  "gitee_anonymous_update_api": {
+    "verified": false,
+    "http_status": 403,
+    "reason": "Rate Limit Exceeded",
+    "device_probe": "same rejection; public signed APK download verified"
+  },
+  "actual_product_preview": {
+    "male_set_reference_amount": "658",
+    "other_variants": "待核对",
+    "main_images": 5,
+    "detail_images": 28
+  }
+}

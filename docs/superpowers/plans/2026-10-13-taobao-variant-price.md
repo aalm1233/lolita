@@ -37,7 +37,7 @@ Files: TaobaoProductScreen.kt、TaobaoProductViewModel.kt、PriceEditScreen.kt�
 - [x] 详情无订单入口显示“录入价格”；设备回归验证未保存无订单、采用 658、保存阶段正确。
 
 ### Task 3: 正式发布
-- [ ] assembleDebug + 完整 JVM + 定向独立设备验证。
-- [ ] 提交推送，clean assembleRelease；检查签名与覆盖升级数据保全。
-- [ ] 发布 GitHub/Gitee 及附件、最新更新入口、匿名下载哈希验证。
-- [ ] 文档记录与工作区保全核对。
+- [x] assembleDebug + 完整 JVM + 定向独立设备验证。
+- [x] 提交推送，clean assembleRelease；检查签名与覆盖升级数据保全。
+- [x] 发布 GitHub/Gitee 及附件、匿名下载哈希验证；GitHub最新正式API通过，Gitee匿名更新API实测403限流，记录外部限制。
+- [x] 文档记录与工作区保全核对。

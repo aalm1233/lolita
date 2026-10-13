@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -319,13 +320,23 @@ fun LolitaNavHost(
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
                 val defaultStatus = backStackEntry.arguments?.getString("defaultStatus") ?: ""
+                val productDraft = backStackEntry.savedStateHandle.get<String>("taobao_product_draft")
+                val productToken = productDraft?.let { json -> runCatching {
+                    com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java).let { it.editorToken ?: it.importToken }
+                }.getOrNull() }
+                fun finishProductEditor(saved: Boolean) {
+                    if (productToken != null && navController.previousBackStackEntry?.destination?.route == Screen.TaobaoProductImport.route) {
+                        navController.previousBackStackEntry?.savedStateHandle?.set("taobao_product_editor_result", "$productToken:${if (saved) "saved" else "discarded"}")
+                    }
+                    navController.popBackStack()
+                }
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
                     defaultStatus = defaultStatus,
-                    importedDraftJson = backStackEntry.savedStateHandle.get<String>("taobao_product_draft"),
+                    importedDraftJson = productDraft,
                     defaultParentItemId = backStackEntry.arguments?.getLong("parentId")?.takeIf { it != 0L },
-                    onBack = { navController.popBackStack() },
-                    onSaveSuccess = { navController.popBackStack() }
+                    onBack = { finishProductEditor(false) },
+                    onSaveSuccess = { finishProductEditor(true) }
                 )
             }
 
@@ -570,9 +581,12 @@ fun LolitaNavHost(
             }
 
 
-            composable(Screen.TaobaoProductImport.route) {
+            composable(Screen.TaobaoProductImport.route) { backStackEntry ->
+                val editorResult by backStackEntry.savedStateHandle.getStateFlow<String?>("taobao_product_editor_result", null).collectAsState()
                 com.lolita.app.ui.screen.`import`.TaobaoProductScreen(
                     onBack = { navController.popBackStack() },
+                    editorResult = editorResult,
+                    onConsumeEditorResult = { backStackEntry.savedStateHandle["taobao_product_editor_result"] = null },
                     onEdit = { json ->
                         navController.navigate(Screen.ItemEdit.createRoute(defaultStatus = "WISHED"))
                         navController.currentBackStackEntry?.savedStateHandle?.set("taobao_product_draft", json)

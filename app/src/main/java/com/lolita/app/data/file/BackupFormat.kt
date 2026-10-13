@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
     const val VERSION = 6
-    const val SCHEMA_VERSION = 25
+    const val SCHEMA_VERSION = 26
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -279,6 +279,8 @@ internal object BackupFormat {
         val coordinates = ids(data.coordinates.map { it.id }, "套装")
         val locations = ids(data.locations.map { it.id }, "位置")
         val items = ids(data.items.map { it.id }, "服饰")
+        val importTokens = data.items.mapNotNull { it.importToken }
+        require(importTokens.distinct().size == importTokens.size) { "服饰导入标识重复" }
         val prices = ids(data.prices.map { it.id }, "价格")
         ids(data.payments.map { it.id }, "付款")
         val logs = ids(data.outfitLogs.map { it.id }, "穿搭")

@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 25，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 26，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -64,6 +64,7 @@
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 
 - 淘宝商品导入使用已核验内置别名解析品牌，匹配现有记录时忽略大小写/空格/标点并拒绝歧义；通用品牌参数不作为真实品牌。类别根据明确参数或标题识别，混合套装在预览提示核对。详情图来自 `#v6_pc_content`，读取懒加载源、去重过滤页面占位图，最多50张、每张20MiB、累计80MiB，保留原图进入多张尺码表。旧 `sizeChartImageUrl` 保留，新增列表 `sizeChartImageUrls` 存后续图片，24→25只追加默认空列表；备份缺失字段补空数组、ZIP/预览/CSV与删除清理均包含新列表。编辑与详情可逐张放大，失败或放弃编辑清理本次新增图片。
+- 一个商品包含明确“套装/款式/类型”时，淘宝导入可勾选拆分，逐件进入服饰编辑；不按颜色或尺码展开。每件独立推断类别、复制完整主图与详情到 UUID 文件，保存自动下一件，放弃暂停当前件。共享下载缓存仅由导入页拥有，退出不影响已保存记录。SavedStateHandle 保存紧凑队列与公共详情；每件稳定 `importToken` 与每次编辑 `editorToken` 分开，陈旧返回不会重放。Room25→26新增可空唯一 `items.import_token`，提交后未回传时恢复原记录，备份兼容缺失标识并拒绝重复标识；隐藏元数据不导出CSV。编辑器退出清理必须经 ImageFileHelper 的引用保护，保存中禁止返回。
 
 ## 内置店铺图标与默认房间
 
@@ -251,7 +252,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=95, versionName="2.44.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=96, versionName="2.45.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

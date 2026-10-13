@@ -50,7 +50,8 @@ import androidx.room.PrimaryKey
         Index(value = ["status"]),
         Index(value = ["priority"]),
         Index(value = ["location_id"]),
-        Index(value = ["parent_item_id"])
+        Index(value = ["parent_item_id"]),
+        Index(value = ["import_token"], unique = true)
     ]
 )
 @Immutable
@@ -120,5 +121,8 @@ data class Item(
     val includedInParentPrice: Boolean = false,
 
     @ColumnInfo(name = "updated_at")
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "import_token", defaultValue = "NULL")
+    val importToken: String? = null
 )

@@ -34,4 +34,89 @@ class TaobaoProductParserTest {
   assertNull(TaobaoProductParser.matchBrand(listOf("新路德维希其他店"),listOf("新路德维希")))
   assertNull(TaobaoProductParser.matchBrand(listOf("OzzonJapan","Ozzon Japan"),listOf("OzzonJapan")))
  }
+
+
+ @Test fun splitsExplicitSetIntoSixIndependentlyCategorizedItems() {
+  val variants = parsedVariants(listOf("套装" to "OP（长款）,OP（短款）,男款SET,头饰,头巾,假领"))
+  assertEquals(listOf("OP（长款）", "OP（短款）", "男款SET", "头饰", "头巾", "假领"), variants.map { it["name"].asString })
+  assertEquals(listOf("OP", "OP", "", "其他头饰", "其他头饰", "其他配饰"), variants.map { it["category"].asString })
+  assertEquals(6, variants.map { it["id"].asString }.toSet().size)
+  assertTrue(variants.all { it["id"].asString.isNotBlank() })
+ }
+
+ @Test fun readsModernSkuStylesBeforeParameterFallback() {
+  val sku = modernSku(listOf(
+   skuProperty("1627207", "颜色分类", listOf("1" to "黑色", "2" to "白色")),
+   skuProperty("20509", "尺码", listOf("10" to "Lady65", "11" to "Lady70")),
+   skuProperty("30000", "款式", listOf("20" to "OP（长款）", "21" to "头饰"))
+  ))
+  val variants = parsedVariants(listOf("套装" to "错误备用项目,另一项目"), sku)
+  assertEquals(listOf("OP（长款）", "头饰"), variants.map { it["name"].asString })
+  assertEquals(listOf("OP", "其他头饰"), variants.map { it["category"].asString })
+  assertEquals(variants, parsedVariants(listOf("套装" to "错误备用项目,另一项目"), sku))
+ }
+
+ @Test fun doesNotSplitColorOrSizeOptionsIntoItems() {
+  val sku = modernSku(listOf(
+   skuProperty("1627207", "颜色分类", listOf("1" to "OP黑色", "2" to "OP白色")),
+   skuProperty("20509", "尺码", listOf("10" to "Lady65", "11" to "Lady70"))
+  ))
+  assertTrue(parsedVariants(listOf("颜色分类" to "黑色,白色", "尺码" to "S,M,L"), sku).isEmpty())
+ }
+
+ @Test fun removesBlankAndDuplicateVariantNamesWithoutChangingTheirStableIds() {
+  val sku = modernSku(listOf(skuProperty("30000", "套装", listOf(
+   "20" to " OP（长款） ", "21" to "OP（长款）", "22" to "头饰", "23" to "头饰", "24" to " "
+  ))))
+  val variants = parsedVariants(emptyList(), sku)
+  assertEquals(listOf("OP（长款）", "头饰"), variants.map { it["name"].asString })
+  assertEquals(2, variants.map { it["id"].asString }.toSet().size)
+  val expandedSku = modernSku(listOf(skuProperty("30000", "套装", listOf(
+   "10" to "假领", "20" to "OP（长款）", "22" to "头饰"
+  ))))
+  val expanded = parsedVariants(emptyList(), expandedSku).associate { it["name"].asString to it["id"].asString }
+  variants.forEach { assertEquals(it["id"].asString, expanded[it["name"].asString]) }
+ }
+
+ @Test fun malformedOrIncompleteSkuKeepsExplicitSetFallback() {
+  val properties = listOf("套装" to "OP（长款）,头饰")
+  for (sku in listOf("{invalid", "{}", "{\"global\":{\"skuGlobal\":{\"context\":{\"skuBase\":{\"props\":\"broken\"}}}}}")) {
+   assertEquals(listOf("OP（长款）", "头饰"), parsedVariants(properties, sku).map { it["name"].asString })
+  }
+ }
+
+ @Test fun capsExplicitCandidatesAtThirty() {
+  val names = (1..35).map { "物品$it" }
+  val variants = parsedVariants(listOf("套装" to names.joinToString(",")))
+  assertEquals(names.take(30), variants.map { it["name"].asString })
+  assertEquals(30, variants.map { it["id"].asString }.toSet().size)
+ }
+
+ @Test fun doesNotOfferSplittingForOneExplicitStyle() {
+  assertTrue(parsedVariants(listOf("套装" to "OP（长款）")).isEmpty())
+ }
+
+ private fun parsedVariants(properties: List<Pair<String, String>>, sku: String? = null): List<com.google.gson.JsonObject> {
+  val data = linkedMapOf<String, Any>(
+   "titleVO" to mapOf("title" to "守望者1.0 OP"),
+   "paramsVO" to mapOf("groupProps" to listOf(mapOf("基本信息" to properties.map { mapOf(it.first to it.second) })))
+  )
+  if (sku != null) data["skuData"] = mapOf("skuV3Data" to sku)
+  val raw = com.google.gson.Gson().toJson(mapOf(
+   "url" to "https://item.taobao.com/item.htm?id=927238692735", "text" to "宝贝详情",
+   "entry" to mapOf("apiStack" to listOf(mapOf("data" to data)))
+  ))
+  val draft = TaobaoProductParser.parse(raw)
+  // Serializing the real result keeps the red phase compilable before the additive draft field exists.
+  return com.google.gson.Gson().toJsonTree(draft).asJsonObject.getAsJsonArray("variants")?.map { it.asJsonObject }.orEmpty()
+ }
+
+ private fun skuProperty(pid: String, name: String, values: List<Pair<String, String>>) = mapOf(
+  "pid" to pid, "name" to name, "values" to values.map { mapOf("vid" to it.first, "name" to it.second) }
+ )
+
+ private fun modernSku(properties: List<Map<String, Any>>) = com.google.gson.Gson().toJson(mapOf(
+  "global" to mapOf("skuGlobal" to mapOf("context" to mapOf("skuBase" to mapOf("props" to properties)))))
+ )
+
 }

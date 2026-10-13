@@ -44,6 +44,8 @@ class ItemRepository(
 
     suspend fun getItemById(id: Long): Item? = itemDao.getItemById(id)
 
+    suspend fun getItemByImportToken(token: String): Item? = itemDao.getItemByImportToken(token)
+
     fun getItemWithFullDetails(id: Long): Flow<ItemWithFullDetails?> =
         itemDao.getItemWithFullDetails(id)
 
@@ -54,6 +56,9 @@ class ItemRepository(
     suspend fun getChildrenList(parentId: Long): List<Item> = itemDao.getChildrenList(parentId)
 
     suspend fun insertItem(item: Item): Long = inTransaction {
+        item.importToken?.let { token ->
+            itemDao.getItemByImportToken(token)?.let { return@inTransaction it.id }
+        }
         itemDao.insertItem(validateHierarchy(item))
     }
 

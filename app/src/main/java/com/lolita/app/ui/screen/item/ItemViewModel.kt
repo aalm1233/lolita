@@ -117,6 +117,7 @@ data class ItemEditUiState(
     val source: String? = null,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
+    val recoveredImport: Boolean = false,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
@@ -719,12 +720,14 @@ class ItemEditViewModel(
 
     private val importedImages = mutableListOf<String>()
     private var appliedImport: String? = null
+    private var currentImportToken: String? = null
 
     fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null) {
         if (importedDraftJson != null && appliedImport == importedDraftJson) return
         val importDraft = importedDraftJson?.let { json ->
             runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
         }
+        currentImportToken = importDraft?.importToken
         if (importDraft != null) {
             appliedImport = importedDraftJson
             importedImages.clear()
@@ -741,10 +744,14 @@ class ItemEditViewModel(
             _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
 
-            if (itemId > 0) {
-                val item = itemRepository.getItemById(itemId)
+            val committedImport = if (itemId == 0L) currentImportToken?.let {
+                itemRepository.getItemByImportToken(it)
+            } else null
+            val effectiveItemId = committedImport?.id ?: itemId
+            if (effectiveItemId > 0) {
+                val item = committedImport ?: itemRepository.getItemById(effectiveItemId)
                 if (item != null) {
-                    val prices = priceRepository.getPricesWithPaymentsByItem(itemId).first()
+                    val prices = priceRepository.getPricesWithPaymentsByItem(effectiveItemId).first()
                     _uiState.update {
                         it.copy(
                             item = item,
@@ -768,16 +775,21 @@ class ItemEditViewModel(
                             source = item.source,
                             locationId = item.locationId,
                             pricesWithPayments = prices,
+                            recoveredImport = committedImport != null,
                             isLoading = false
                         )
                     }
                 } else {
                     _uiState.update { it.copy(isLoading = false) }
                 }
-                observeHierarchy(itemId)
+                if (committedImport != null) {
+                    ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
+                    importedImages.clear()
+                }
+                observeHierarchy(effectiveItemId)
                 priceJob = viewModelScope.launch {
-                    priceRepository.getPricesWithPaymentsByItem(itemId).collect { prices ->
-                        val historicalCount = priceRepository.getPricesByItemList(itemId).size - prices.size
+                    priceRepository.getPricesWithPaymentsByItem(effectiveItemId).collect { prices ->
+                        val historicalCount = priceRepository.getPricesByItemList(effectiveItemId).size - prices.size
                         _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
                     }
                 }
@@ -816,7 +828,8 @@ class ItemEditViewModel(
                     pricesWithPayments = emptyList(),
                     locationId = null,
                     isLoading = false,
-                    isSaving = false
+                    isSaving = false,
+                    recoveredImport = false
                 )
             }
             importDraft?.let { draft ->
@@ -1058,7 +1071,11 @@ class ItemEditViewModel(
 
     suspend fun saveItem(): Result<Long> {
         val state = _uiState.value
+        if (state.isLoading) return Result.failure(Exception("正在读取服饰"))
         if (state.isSaving) return Result.failure(Exception("正在保存中"))
+        if (state.recoveredImport && !hasUnsavedChanges && state.item != null) {
+            return Result.success(state.item.id)
+        }
 
         if (state.name.isBlank()) {
             return Result.failure(Exception("请输入服饰名称"))
@@ -1123,7 +1140,8 @@ class ItemEditViewModel(
                     source = state.source,
                     locationId = state.locationId,
                     createdAt = now,
-                    updatedAt = now
+                    updatedAt = now,
+                    importToken = currentImportToken
                 )
             }
 
@@ -1133,6 +1151,7 @@ class ItemEditViewModel(
             } else {
                 itemRepository.insertItem(item)
             }
+            ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
             importedImages.clear()
             // Delete pending images after successful save
             state.imageUrlsToDelete.forEach { path ->
@@ -1161,7 +1180,8 @@ class ItemEditViewModel(
     }
 
     override fun onCleared() {
-        importedImages.forEach { java.io.File(it).delete() }
+        ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
+        importedImages.clear()
         super.onCleared()
     }
 

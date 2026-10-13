@@ -2,6 +2,9 @@ package com.lolita.app.data.file
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.ensureActive
@@ -21,6 +24,7 @@ import com.google.gson.JsonParser
 object ImageFileHelper {
 
     private const val IMAGE_DIR = "images"
+    private val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Volatile private var ownedImagesDir: File? = null
     @Volatile private var imageDatabase: LolitaDatabase? = null
 
@@ -84,6 +88,13 @@ object ImageFileHelper {
         }
     }
 
+    // This scope survives editor disposal so a committed row can protect its images.
+    fun cleanupUnreferencedImages(paths: Collection<String>) = cleanupScope.launch {
+        paths.distinct().forEach { path ->
+            runCatching { deleteImage(path) }
+        }
+    }
+
     suspend fun deleteImage(path: String) = withContext(Dispatchers.IO) {
         val root = ownedImagesDir ?: return@withContext
         val db = imageDatabase ?: return@withContext
@@ -126,13 +137,15 @@ object ImageFileHelper {
             val fileName = "${UUID.randomUUID()}.$extension"
             val destFile = File(dir, fileName)
 
-            sourceFile.inputStream().use { input ->
-                destFile.outputStream().use { output ->
-                    input.copyTo(output)
+            try {
+                sourceFile.inputStream().use { input ->
+                    destFile.outputStream().use { output -> input.copyTo(output) }
                 }
+                destFile.absolutePath
+            } catch (failure: Throwable) {
+                destFile.delete()
+                throw failure
             }
-
-            destFile.absolutePath
         }
 
     suspend fun downloadFromUrl(context: Context, imageUrl: String, maxBytes: Long = Long.MAX_VALUE): String =

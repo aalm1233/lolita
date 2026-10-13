@@ -1,0 +1,11 @@
+{
+  "from_schema": 25,
+  "to_schema": 26,
+  "items_preserved": 195,
+  "old_tables_preserved": 27,
+  "original_images_preserved": 53,
+  "all_original_fields_equal": true,
+  "all_original_image_sha256_equal": true,
+  "foreign_key_check": "ok",
+  "integrity_check": "ok"
+}

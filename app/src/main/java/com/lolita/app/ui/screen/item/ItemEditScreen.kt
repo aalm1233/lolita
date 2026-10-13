@@ -62,18 +62,26 @@ fun ItemEditScreen(
     var showDiscardDialog by remember { mutableStateOf(false) }
 
     UnsavedChangesHandler(
-        hasUnsavedChanges = viewModel.hasUnsavedChanges,
-        onBack = onBack
+        hasUnsavedChanges = !uiState.isSaving && viewModel.hasUnsavedChanges,
+        onBack = { if (!viewModel.uiState.value.isSaving) onBack() }
     )
 
+    val importProgress = remember(importedDraftJson) { importedDraftJson?.let { json ->
+        runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
+    } }
+
     // Load item data if editing
-    LaunchedEffect(itemId, defaultStatus, defaultParentItemId) {
+    LaunchedEffect(itemId, defaultStatus, defaultParentItemId, importedDraftJson) {
         viewModel.loadItem(
             itemId = itemId ?: 0L,
             defaultStatus = defaultStatus,
             importedDraftJson = importedDraftJson,
             defaultParentItemId = defaultParentItemId
         )
+    }
+
+    LaunchedEffect(uiState.recoveredImport) {
+        if (uiState.recoveredImport) onSaveSuccess()
     }
 
     // Show error dialog
@@ -132,8 +140,8 @@ fun ItemEditScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
-                    onBack()
-                }) { Text("返回") }
+                    if (!viewModel.uiState.value.isSaving) onBack()
+                }, enabled = !uiState.isSaving) { Text("返回") }
             },
             dismissButton = {
                 TextButton(onClick = { showDiscardDialog = false }) {
@@ -148,7 +156,8 @@ fun ItemEditScreen(
             GradientTopAppBar(
                 title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },
                 navigationIcon = {
-                    IconButton(onClick = {
+                    IconButton(enabled = !uiState.isSaving, onClick = {
+                        if (viewModel.uiState.value.isSaving) return@IconButton
                         if (viewModel.hasUnsavedChanges) {
                             showDiscardDialog = true
                         } else {
@@ -169,7 +178,7 @@ fun ItemEditScreen(
                                     .onFailure { showError = it.message }
                             }
                         },
-                        enabled = !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
+                        enabled = !uiState.isLoading && !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(
@@ -202,6 +211,12 @@ fun ItemEditScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                if (importProgress != null && importProgress.batchTotal > 1) {
+                    LolitaSection("拆分导入") {
+                        row { Text("第 ${importProgress.batchIndex} / ${importProgress.batchTotal} 件 · 保存后继续下一件") }
+                        row { Text("请核对本件的品牌、类别和尺码。完整商品详情图已保留。", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    }
+                }
                 // Name field
                 OutlinedTextField(
                     value = uiState.name,

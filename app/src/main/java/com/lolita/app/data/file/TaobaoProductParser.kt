@@ -1,7 +1,10 @@
 package com.lolita.app.data.file
 
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.net.URI
+
+data class TaobaoProductVariant(val id: String, val name: String, val category: String = "")
 
 data class TaobaoProductDraft(
     val name: String,
@@ -18,7 +21,12 @@ data class TaobaoProductDraft(
     val categoryCandidates: List<String> = emptyList(),
     val remoteDetailImages: List<String> = emptyList(),
     val sizeChartImagePath: String? = null,
-    val sizeChartImagePaths: List<String> = emptyList()
+    val sizeChartImagePaths: List<String> = emptyList(),
+    val variants: List<TaobaoProductVariant> = emptyList(),
+    val importToken: String? = null,
+    val editorToken: String? = null,
+    val batchIndex: Int = 0,
+    val batchTotal: Int = 0
 )
 
 object TaobaoProductParser {
@@ -38,6 +46,51 @@ object TaobaoProductParser {
         if ("假领" in text || "男款SET" in text) result += "其他配饰"
         return result.distinct()
     }
+
+    private fun JsonObject.text(key: String): String = get(key)
+        ?.takeIf { it.isJsonPrimitive }?.asString.orEmpty().trim()
+
+    private fun variantCategory(name: String): String {
+        // A mixed listing's OP title must not classify its men's set or accessories.
+        if ("男款" in name && Regex("(?i)(?<![a-z])SET(?![a-z])").containsMatchIn(name)) return ""
+        return categories(name, emptyMap()).firstOrNull().orEmpty()
+    }
+
+    private fun variants(data: JsonObject, parameters: Map<String, String>): List<TaobaoProductVariant> {
+        val skuCandidates = runCatching {
+            val raw = data.getAsJsonObject("skuData")?.get("skuV3Data")
+                ?: return@runCatching emptyList<TaobaoProductVariant>()
+            val sku = JsonParser.parseString(raw.asString).asJsonObject
+            val props = sku.getAsJsonObject("global")?.getAsJsonObject("skuGlobal")
+                ?.getAsJsonObject("context")?.getAsJsonObject("skuBase")?.getAsJsonArray("props")
+                ?: return@runCatching emptyList<TaobaoProductVariant>()
+            // These dimensions name separate pieces. Color and size dimensions stay in one piece.
+            for (propertyName in listOf("套装", "款式", "类型")) {
+                val candidates = props.filter { it.isJsonObject && it.asJsonObject.text("name") == propertyName }
+                    .flatMap { property ->
+                        val prop = property.asJsonObject
+                        val pid = prop.text("pid").ifBlank { propertyName }
+                        prop.getAsJsonArray("values")?.mapNotNull { value ->
+                            if (!value.isJsonObject) return@mapNotNull null
+                            val row = value.asJsonObject
+                            val name = row.text("name").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                            val vid = row.text("vid")
+                            TaobaoProductVariant("sku:$pid:$vid:$name", name, variantCategory(name))
+                        }.orEmpty()
+                    }
+                if (candidates.isNotEmpty()) return@runCatching candidates
+            }
+            emptyList()
+        }.getOrDefault(emptyList())
+        val candidates = skuCandidates.ifEmpty {
+            parameters["套装"].orEmpty().split(Regex("[,，、;；\\n\\r]+"))
+                .map(String::trim).filter(String::isNotBlank).map { name ->
+                    TaobaoProductVariant("params:套装:$name", name, variantCategory(name))
+                }
+        }.distinctBy { it.name }.take(30)
+        return candidates.takeIf { it.size > 1 }.orEmpty()
+    }
+
     private fun uri(url: String) = runCatching { URI(url) }.getOrNull()
     fun allowedPage(url: String): Boolean {
         val u = uri(url) ?: return false
@@ -97,7 +150,7 @@ object TaobaoProductParser {
             val productUrl = "https://item.taobao.com/item.htm?id=$id"
             return TaobaoProductDraft(title, brand, values["尺码"].orEmpty(), properties,
                 listOf("淘宝商品：$productUrl", "网页报价（仅供核对，不代表实付）：$priceLabel $priceText", properties, text).filter { it.isNotBlank() }.joinToString("\n"), productUrl, images, shopName = shopName, brandAliases = listOf(brand).filter { it.isNotBlank() },
-                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages)
+                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = variants(data, values))
         } catch (e: Exception) {
             throw IllegalArgumentException("尚未读取到完整商品资料，请完成登录、等待商品加载后重试", e)
         }

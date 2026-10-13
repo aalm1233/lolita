@@ -29,6 +29,9 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE id = :id")
     suspend fun getItemById(id: Long): Item?
 
+    @Query("SELECT * FROM items WHERE import_token = :token LIMIT 1")
+    suspend fun getItemByImportToken(token: String): Item?
+
     @Query("SELECT * FROM items WHERE id = :id")
     fun observeItem(id: Long): Flow<Item?>
 

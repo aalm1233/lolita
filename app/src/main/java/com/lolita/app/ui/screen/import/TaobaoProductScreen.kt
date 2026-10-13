@@ -4,6 +4,9 @@ import android.webkit.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,8 +24,16 @@ import com.lolita.app.ui.theme.skin.icon.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit, vm: TaobaoProductViewModel = viewModel()) {
+fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
+    editorResult: String? = null, onConsumeEditorResult: () -> Unit = {},
+    vm: TaobaoProductViewModel = viewModel()) {
     val state by vm.state.collectAsState()
+    LaunchedEffect(editorResult) {
+        if (editorResult != null) {
+            vm.editorReturned(editorResult, onEdit)
+            onConsumeEditorResult()
+        }
+    }
     val context = LocalContext.current
     var web by remember { mutableStateOf<WebView?>(null) }
     val skin = LolitaSkin.current
@@ -74,15 +85,46 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit, vm: Taobao
                         row { Text(draft.name, style = MaterialTheme.typography.titleMedium) }
                         row { Text("品牌：${draft.brand.ifBlank { "待填写" }}") }
                         row { Text("类别：${draft.category.ifBlank { "待填写" }}${if (draft.categoryCandidates.size > 1) "（商品含多种款式，请核对）" else ""}") }
-                        row { Text(draft.properties) }
                         row { Text("可导入 ${draft.remoteImages.size} 张主图，${draft.remoteDetailImages.size} 张详情图将按原图放入尺码表；颜色需自行选择。") }
                     }
+                    if (state.batchTotal == 0 && draft.variants.size > 1) {
+                        LolitaSection("选择要拆分的物品") {
+                            row { Text("勾选后逐件核对保存。每件都保留完整详情图片，颜色和尺码请在编辑页核对。") }
+                            draft.variants.forEach { part ->
+                                row {
+                                    val selected = part.id in state.selectedVariantIds
+                                    Row(Modifier.fillMaxWidth().toggleable(selected, role = Role.Checkbox, onValueChange = { vm.toggleVariant(part.id) }),
+                                        verticalAlignment = Alignment.CenterVertically) {
+                                        Checkbox(checked = selected, onCheckedChange = null)
+                                        Column(Modifier.weight(1f).padding(start = skin.spacingSmall)) {
+                                            Text(part.name, style = MaterialTheme.typography.bodyLarge)
+                                            Text("类别：${part.category.ifBlank { "待核对" }}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (state.batchTotal > 0) {
+                        LolitaSection("逐件核对进度") {
+                            row { Text(if (state.completed) "已保存 ${state.savedCount} 件物品，每件均保留详情原图。" else "已保存 ${state.savedCount} / ${state.batchTotal} 件，正在核对第 ${state.batchIndex + 1} 件。") }
+                            if (state.paused) row { Text("当前物品尚未保存，可以继续核对。退出会结束剩余导入，已保存物品会保留。") }
+                        }
+                    }
+                    LolitaSection("商品参数") { row { Text(draft.properties) } }
                     LolitaSection("报价与来源说明") { row { Text(draft.description) } }
                     Text("进入编辑后核对品牌、分类和图片。默认保存为心愿，不自动创建价格或付款记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Button(onClick = { vm.edit(onEdit) }, enabled = !state.busy, modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
+                Button(onClick = { if (state.completed) onBack() else vm.edit(onEdit) },
+                    enabled = !state.busy && (state.batchTotal > 0 || draft.variants.size <= 1 || state.selectedVariantIds.isNotEmpty()), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
                     if (state.busy) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
-                    Text(if (state.busy) "读取图片中…" else "核对并进入服饰编辑")
+                    Text(when {
+                        state.busy -> "读取图片中…"
+                        state.completed -> "完成并返回"
+                        state.batchTotal > 0 -> "继续核对第 ${state.batchIndex + 1} / ${state.batchTotal} 件"
+                        draft.variants.size > 1 -> "核对并逐件编辑（${state.selectedVariantIds.size}件）"
+                        else -> "核对并进入服饰编辑"
+                    })
                 }
             }
             state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(skin.spacingMedium)) }

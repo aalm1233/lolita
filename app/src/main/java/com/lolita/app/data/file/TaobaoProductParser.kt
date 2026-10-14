@@ -30,6 +30,8 @@ data class TaobaoProductDraft(
     val referenceQuote: TaobaoProductQuote? = null
 )
 
+class TaobaoProductDetailsNotReadyException : IllegalArgumentException("详情尚未加载完整，请打开商品详情、等待加载后重新提取，避免漏掉详情图片")
+
 object TaobaoProductParser {
     fun normalizedBrand(name: String): String = name.lowercase(java.util.Locale.ROOT).filter { it.isLetterOrDigit() }
     fun matchBrand(existing: List<String>, aliases: List<String>): String? {
@@ -44,7 +46,10 @@ object TaobaoProductParser {
         }
         for (key in listOf("斗篷", "披肩", "发带", "袜子", "手套")) if (key in text) result += key
         if ("头饰" in text || "头巾" in text) result += "其他头饰"
-        if ("假领" in text || "男款SET" in text) result += "其他配饰"
+        if ("皇冠" in text) result += "其他头饰"
+        if ("衬衫" in text) result += "衬衫"
+        if ("背带裤" in text) result += "裤子"
+        if (listOf("假领", "男款SET", "颈饰", "手袖", "腿环").any { it in text }) result += "其他配饰"
         return result.distinct()
     }
 
@@ -81,7 +86,11 @@ object TaobaoProductParser {
                     }
                 if (candidates.isNotEmpty()) return@runCatching candidates
             }
-            emptyList()
+            val color = props.firstOrNull { it.isJsonObject && it.asJsonObject.text("name") == "颜色分类" }?.asJsonObject
+            val names = color?.getAsJsonArray("values")?.map { it.asJsonObject.text("name") }.orEmpty()
+            TaobaoProductPieces.colorComponents(names).map { name ->
+                TaobaoProductVariant("sku:${color?.text("pid")}:component:$name", name, variantCategory(name))
+            }
         }.getOrDefault(emptyList())
         val candidates = skuCandidates.ifEmpty {
             parameters["套装"].orEmpty().split(Regex("[,，、;；\\n\\r]+"))
@@ -137,7 +146,8 @@ object TaobaoProductParser {
         val amount = TaobaoProductQuotes.amount(price.text("priceText")) ?: return@runCatching null
         val style = listOf("套装", "款式", "类型").firstNotNullOfOrNull { propertyName ->
             props.firstOrNull { it.text("name") == propertyName }
-        }
+        } ?: props.firstOrNull { it.text("name") == "颜色分类" &&
+            TaobaoProductPieces.colorComponents(it.getAsJsonArray("values").map { value -> value.asJsonObject.text("name") }).isNotEmpty() }
         val styleNames = if (style == null) emptyList() else if (live == null)
             listOf(names[props.indexOf(style)]) else listOf(style.getAsJsonArray("values")
                 .map { it.asJsonObject.text("name") }.single { it in names })
@@ -169,6 +179,7 @@ object TaobaoProductParser {
         try {
             require(raw.length <= 4_000_000) { "商品资料过大" }
             val root = JsonParser.parseString(raw).asJsonObject
+            if (root.text("detailStatus") == "pending") throw TaobaoProductDetailsNotReadyException()
             val url = root["url"].asString
             require(allowedPage(url))
             val id = Regex("(?:^|&)id=(\\d+)(?:&|$)").find(uri(url)?.rawQuery.orEmpty())?.groupValues?.get(1)
@@ -210,6 +221,7 @@ object TaobaoProductParser {
                 TaobaoProductQuotes.withQuote(listOf("淘宝商品：$productUrl", "${if (priceTail.contains("起")) "页面起价" else "页面报价"}（仅供核对，不代表各款式实付）：$priceLabel $priceText$priceTail", properties, text).filter { it.isNotBlank() }.joinToString("\n"), referenceQuote), productUrl, images, shopName = shopName, brandAliases = listOf(brand).filter { it.isNotBlank() },
                 category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = parts, referenceQuote = referenceQuote)
         } catch (e: Exception) {
+            if (e is TaobaoProductDetailsNotReadyException) throw e
             throw IllegalArgumentException("尚未读取到完整商品资料，请完成登录、等待商品加载后重试", e)
         }
     }

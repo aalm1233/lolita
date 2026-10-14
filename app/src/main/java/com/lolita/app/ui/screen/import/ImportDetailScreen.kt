@@ -10,8 +10,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +47,25 @@ fun ImportDetailContent(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var showBackConfirmDialog by remember { mutableStateOf(false) }
+
+    var showImportConfirm by remember { mutableStateOf(false) }
+    var singleMode by rememberSaveable { mutableStateOf(true) }
+    var currentIndex by rememberSaveable { mutableIntStateOf(0) }
+    var paymentFilter by rememberSaveable { mutableIntStateOf(0) }
+    val listState = rememberLazyListState()
+    ObserveSkinScroll(listState)
+    val visibleIndices = uiState.importItems.indices.filter { index ->
+        val item = uiState.importItems[index]
+        when (paymentFilter) {
+            1 -> item.paymentRole == null
+            2 -> item.paymentRole == PaymentRole.DEPOSIT
+            3 -> item.paymentRole == PaymentRole.BALANCE
+            4 -> item.paymentRole != null && item.pairedWith == null
+            else -> true
+        }
+    }
+    val activeIndex = currentIndex.coerceIn(0, (uiState.importItems.size - 1).coerceAtLeast(0))
+    LaunchedEffect(singleMode, activeIndex, paymentFilter) { listState.scrollToItem(0) }
 
     BackHandler { showBackConfirmDialog = true }
 
@@ -69,36 +96,75 @@ fun ImportDetailContent(
         },
         bottomBar = {
             Surface(tonalElevation = 3.dp, shadowElevation = 8.dp) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.fillMaxWidth().navigationBarsPadding().imePadding().padding(16.dp)
                 ) {
+                    if (singleMode && uiState.importItems.isNotEmpty()) {
+                        BoxWithConstraints(Modifier.fillMaxWidth()) {
+                            if (maxWidth < 360.dp && LocalDensity.current.fontScale > 1.3f) {
+                                Column {
+                                    Text("${activeIndex + 1} / ${uiState.importItems.size}", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                                    Row(Modifier.fillMaxWidth()) {
+                                        TextButton(onClick = { currentIndex = activeIndex - 1 }, enabled = activeIndex > 0, modifier = Modifier.weight(1f)) { Text("上一件") }
+                                        TextButton(onClick = { currentIndex = activeIndex + 1 }, enabled = activeIndex < uiState.importItems.lastIndex, modifier = Modifier.weight(1f)) { Text("下一件") }
+                                    }
+                                }
+                            } else {
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically) {
+                                    TextButton(onClick = { currentIndex = activeIndex - 1 }, enabled = activeIndex > 0) { Text("上一件") }
+                                    Text("${activeIndex + 1} / ${uiState.importItems.size}")
+                                    TextButton(onClick = { currentIndex = activeIndex + 1 }, enabled = activeIndex < uiState.importItems.lastIndex) { Text("下一件") }
+                                }
+                            }
+                        }
+                    }
                     val validCount = uiState.importItems.indices.count { isImportItemReady(it, uiState.importItems) }
-                    Text("${validCount}/${uiState.importItems.size} 件已完善",
+                    Text("${validCount}/${uiState.importItems.size} 条资料已完善",
                         style = MaterialTheme.typography.bodyMedium)
                     Button(
-                        onClick = onExecuteImport,
+                        onClick = { showImportConfirm = true },
                         enabled = validCount > 0,
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                    ) { Text("导入") }
+                    ) { Text("核对并导入") }
                 }
             }
         }
     ) { padding ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            state = listState,
+            modifier = Modifier.fillMaxSize().testTag("importDetailList").padding(padding).consumeWindowInsets(padding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                LolitaSection("导入账目核对") { row {
-                    Text("数量大于 1 的商品已拆成多件服饰。邮费和源订单实付按原订单所有件给出分摊建议，未选商品的份额不会转移给已选商品。")
-                    Text("商品金额列可能是单价或整行金额，不能直接当作实付。请核对每件优惠后的商品金额、分摊邮费和实际已付，并确认实际付款日期。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text("先导入独立服饰；套装中的小物可在服饰详情挂入主件，并选择独立计价或共用价格。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                } }
+                Column {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilterChip(selected = singleMode, onClick = { singleMode = true }, label = { Text("逐件填写") })
+                        FilterChip(selected = !singleMode, onClick = { singleMode = false }, label = { Text("批量编辑") })
+                    }
+                    Text("先确认付款类型，再核对资料和金额。可先跳过，修改会保留；最后统一导入已完善的商品。",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (!singleMode) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf("全部", "全款", "定金", "尾款", "待配对").forEachIndexed { filter, label ->
+                            val count = uiState.importItems.count { candidate -> when (filter) {
+                                1 -> candidate.paymentRole == null
+                                2 -> candidate.paymentRole == PaymentRole.DEPOSIT
+                                3 -> candidate.paymentRole == PaymentRole.BALANCE
+                                4 -> candidate.paymentRole != null && candidate.pairedWith == null
+                                else -> true
+                            } }
+                            FilterChip(selected = paymentFilter == filter, onClick = { paymentFilter = filter }, label = { Text("$label $count") })
+                        }
+                    }
+                }
             }
-            uiState.importItems.groupBy { it.originalItem.orderId }.forEach { (orderId, rows) ->
+            val rowsByOrder = uiState.importItems.groupBy { it.originalItem.orderId }
+            val shownOrderIds = (if (singleMode) listOfNotNull(uiState.importItems.getOrNull(activeIndex)?.originalItem?.orderId)
+                else visibleIndices.map { uiState.importItems[it].originalItem.orderId }.distinct())
+            shownOrderIds.forEach { orderId ->
+                val rows = rowsByOrder[orderId].orEmpty()
                 val original = uiState.orders.firstOrNull { it.orderId == orderId }
                 if (original != null) item {
                     LolitaSection("源订单 $orderId") { row {
@@ -107,7 +173,8 @@ fun ImportDetailContent(
                     } }
                 }
             }
-            items(uiState.importItems.size) { index ->
+            if (!singleMode && visibleIndices.isEmpty()) item { Text("此分类暂无商品，可切换其他分类。") }
+            items(if (singleMode) listOfNotNull(activeIndex.takeIf { it in uiState.importItems.indices }) else visibleIndices, key = { it }) { index ->
                 ImportItemCard(
                     item = uiState.importItems[index],
                     index = index,
@@ -123,6 +190,17 @@ fun ImportDetailContent(
                 )
             }
         }
+    }
+
+    if (showImportConfirm) {
+        val ready = uiState.importItems.indices.count { isImportItemReady(it, uiState.importItems) }
+        AlertDialog(
+            onDismissRequest = { showImportConfirm = false },
+            title = { Text("确认导入") },
+            text = { Text("本次将处理 $ready 条已完善的商品资料，定金与尾款配对后合并为同一件服饰。${if (ready < uiState.importItems.size) "另有 ${uiState.importItems.size - ready} 条未完善，本次不会导入。" else ""}") },
+            confirmButton = { TextButton(onClick = { showImportConfirm = false; onExecuteImport() }) { Text("确认导入") } },
+            dismissButton = { TextButton(onClick = { showImportConfirm = false }) { Text("继续核对") } }
+        )
     }
 
     if (showBackConfirmDialog) {
@@ -159,11 +237,9 @@ private fun ImportItemCard(
     onSetPaymentRole: (PaymentRole?) -> Unit = {}
 ) {
     val isValid = isImportItemReady(index, allItems)
-    var priceText by remember(index) {
-        mutableStateOf(if (item.price.isFinite()) item.price.toString() else "")
-    }
-    var shippingText by remember(index) { mutableStateOf(item.shipping.toString()) }
-    var paidText by remember(index) { mutableStateOf(item.paidAmount.toString()) }
+    val priceText = item.priceInput ?: item.price.takeIf { it.isFinite() }?.toString().orEmpty()
+    val shippingText = item.shippingInput ?: item.shipping.takeIf { it.isFinite() }?.toString().orEmpty()
+    val paidText = item.paidInput ?: item.paidAmount.takeIf { it.isFinite() }?.toString().orEmpty()
     var showPairDialog by remember { mutableStateOf(false) }
 
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
@@ -220,14 +296,13 @@ private fun ImportItemCard(
             Text("源订单 ${item.originalItem.orderId} · 第 ${item.sourceUnitIndex + 1}/${item.originalItem.quantity} 件", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text("原商品金额列：¥${item.originalItem.price}；原数量：${item.originalItem.quantity}。下方金额均为本件分配，允许核对后修改。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-            // 角色选择：普通/定金/尾款
+            Text(item.originalItem.name, style = MaterialTheme.typography.titleSmall)
+            Text("付款类型 · 识别有误可直接修改", style = MaterialTheme.typography.labelMedium)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("角色:", style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.align(Alignment.CenterVertically))
                 FilterChip(
                     selected = item.paymentRole == null,
                     onClick = { onSetPaymentRole(null) },
-                    label = { Text("普通") }
+                    label = { Text("全款") }
                 )
                 FilterChip(
                     selected = item.paymentRole == PaymentRole.DEPOSIT,
@@ -239,6 +314,19 @@ private fun ImportItemCard(
                     onClick = { onSetPaymentRole(PaymentRole.BALANCE) },
                     label = { Text("尾款") }
                 )
+            }
+
+            item.pairedWith?.let { pairedIndex ->
+                allItems.getOrNull(pairedIndex)?.let { paired ->
+                    Text("已配对：#${pairedIndex + 1} ${paired.originalItem.name}", style = MaterialTheme.typography.bodySmall)
+                    Row {
+                        TextButton(onClick = { showPairDialog = true }) { Text("更换配对") }
+                        TextButton(onClick = onUnpair) { Text("解除配对") }
+                    }
+                }
+            }
+            if (item.pairedWith == null) {
+                if (item.paymentRole != null) TextButton(onClick = { showPairDialog = true }) { Text("选择${if (item.paymentRole == PaymentRole.DEPOSIT) "尾款" else "定金"}配对") }
             }
 
             // 型号款式原始值（只读）
@@ -260,8 +348,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = priceText,
                         onValueChange = { v ->
-                            priceText = v
-                            onUpdate { it.copy(price = v.toDoubleOrNull() ?: Double.NaN) }
+                            onUpdate { it.copy(priceInput = v, price = v.toDoubleOrNull() ?: Double.NaN) }
                         },
                         label = { Text("尾款商品金额（本件）") },
                         modifier = Modifier.weight(1f),
@@ -324,8 +411,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = priceText,
                         onValueChange = { v ->
-                            priceText = v
-                            onUpdate { it.copy(price = v.toDoubleOrNull() ?: Double.NaN) }
+                            onUpdate { it.copy(priceInput = v, price = v.toDoubleOrNull() ?: Double.NaN) }
                         },
                         label = { Text(if (item.paymentRole == PaymentRole.DEPOSIT) "定金商品金额（本件）" else "商品金额（本件优惠后）") },
                         modifier = Modifier.weight(1f),
@@ -372,11 +458,7 @@ private fun ImportItemCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    var balanceText by remember(index) {
-                        mutableStateOf(
-                            item.manualBalance?.let { String.format("%.2f", it) } ?: ""
-                        )
-                    }
+                    val balanceText = item.balanceInput ?: item.manualBalance?.let { String.format("%.2f", it) }.orEmpty()
                     var showBalanceDatePicker by remember { mutableStateOf(false) }
                     val balanceDatePickerState = rememberDatePickerState(
                         initialSelectedDateMillis = item.balanceDueDate
@@ -389,8 +471,7 @@ private fun ImportItemCard(
                         OutlinedTextField(
                             value = balanceText,
                             onValueChange = { v ->
-                                balanceText = v
-                                onUpdate { it.copy(manualBalance = v.toDoubleOrNull()) }
+                                onUpdate { it.copy(balanceInput = v, manualBalance = v.toDoubleOrNull()) }
                             },
                             label = { Text("尾款金额") },
                             modifier = Modifier.weight(1f),
@@ -472,10 +553,10 @@ private fun ImportItemCard(
             } // end else (非尾款关联)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(value = shippingText, onValueChange = { value ->
-                    shippingText = value; onUpdate { it.copy(shipping = value.toDoubleOrNull() ?: Double.NaN) }
+                    onUpdate { it.copy(shippingInput = value, shipping = value.toDoubleOrNull() ?: Double.NaN) }
                 }, label = { Text("本件分摊邮费") }, prefix = { Text("¥") }, singleLine = true, modifier = Modifier.weight(1f))
                 OutlinedTextField(value = paidText, onValueChange = { value ->
-                    paidText = value; onUpdate { it.copy(paidAmount = value.toDoubleOrNull() ?: Double.NaN) }
+                    onUpdate { it.copy(paidInput = value, paidAmount = value.toDoubleOrNull() ?: Double.NaN) }
                 }, label = { Text("本件实际已付") }, prefix = { Text("¥") }, singleLine = true, modifier = Modifier.weight(1f))
             }
             Text("邮费包含在应付总额中，实付可小于应付；尾款日期可以待定。默认日期来自订单提交时间，请改为实际付款日期。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -483,7 +564,7 @@ private fun ImportItemCard(
                 Checkbox(checked = item.financialConfirmed, onCheckedChange = { checked -> onUpdate { it.copy(financialConfirmed = checked) } })
                 Text("已核对本件金额、邮费、实付和日期", style = MaterialTheme.typography.bodyMedium)
             }
-            if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith == null) Text("未配对尾款缺少完整订单价格，请配对定金；确为全款商品时改为普通。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+            if (item.paymentRole == PaymentRole.BALANCE && item.pairedWith == null) Text("未配对尾款缺少完整订单价格，请配对定金；确为全款商品时改为全款。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         }
     }
 
@@ -491,7 +572,7 @@ private fun ImportItemCard(
     if (showPairDialog) {
         val targetRole = if (item.paymentRole == PaymentRole.DEPOSIT) PaymentRole.BALANCE else PaymentRole.DEPOSIT
         val candidates = allItems.mapIndexedNotNull { idx, candidate ->
-            if (idx != index && candidate.paymentRole == targetRole && candidate.pairedWith == null)
+            if (idx != index && candidate.paymentRole == targetRole && (candidate.pairedWith == null || candidate.pairedWith == index))
                 idx to candidate else null
         }
         AlertDialog(

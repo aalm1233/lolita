@@ -63,7 +63,12 @@ data class ImportItemState(
     val paidAmount: Double = 0.0,
     val financialConfirmed: Boolean = false,
     val sourceLineIndex: Int = 0,
-    val sourceUnitIndex: Int = 0
+    val sourceUnitIndex: Int = 0,
+    // Keep raw drafts alongside parsed values so navigation never discards incomplete input.
+    val priceInput: String? = null,
+    val shippingInput: String? = null,
+    val paidInput: String? = null,
+    val balanceInput: String? = null
 )
 
 data class ImportResult(
@@ -104,14 +109,15 @@ data class TaobaoImportUiState(
     val importResult: ImportResult? = null
 )
 
-class TaobaoImportViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val brandRepository: BrandRepository = AppModule.brandRepository()
-    private val categoryRepository: CategoryRepository = AppModule.categoryRepository()
-    private val itemRepository: ItemRepository = AppModule.itemRepository()
-    private val priceRepository: PriceRepository = AppModule.priceRepository()
-    private val orderRepository = AppModule.orderRepository()
+class TaobaoImportViewModel @JvmOverloads constructor(
+    application: Application,
+    private val brandRepository: BrandRepository = AppModule.brandRepository(),
+    private val categoryRepository: CategoryRepository = AppModule.categoryRepository(),
+    private val itemRepository: ItemRepository = AppModule.itemRepository(),
+    private val priceRepository: PriceRepository = AppModule.priceRepository(),
+    private val orderRepository: com.lolita.app.data.repository.OrderRepository = AppModule.orderRepository(),
     private val database: LolitaDatabase = AppModule.database()
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(TaobaoImportUiState())
     val uiState: StateFlow<TaobaoImportUiState> = _uiState.asStateFlow()
@@ -664,12 +670,14 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
     fun manualPair(indexA: Int, indexB: Int) {
         val items = _uiState.value.importItems.toMutableList()
         if (indexA !in items.indices || indexB !in items.indices) return
+        if (indexA == indexB || setOf(items[indexA].paymentRole, items[indexB].paymentRole) != setOf(PaymentRole.DEPOSIT, PaymentRole.BALANCE)) return
+        if (items[indexA].pairedWith == indexB && items[indexB].pairedWith == indexA) return
         // 先解除旧配对
         items[indexA].pairedWith?.let { old ->
-            if (old in items.indices) items[old] = items[old].copy(pairedWith = null)
+            if (old in items.indices) items[old] = items[old].copy(pairedWith = null, financialConfirmed = false)
         }
         items[indexB].pairedWith?.let { old ->
-            if (old in items.indices) items[old] = items[old].copy(pairedWith = null)
+            if (old in items.indices) items[old] = items[old].copy(pairedWith = null, financialConfirmed = false)
         }
         items[indexA] = items[indexA].copy(pairedWith = indexB, financialConfirmed = false)
         items[indexB] = items[indexB].copy(pairedWith = indexA, financialConfirmed = false)
@@ -683,13 +691,14 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
         val items = _uiState.value.importItems.toMutableList()
         if (index !in items.indices) return
         val oldRole = items[index].paymentRole
+        if (oldRole == role) return
         // 角色变更时先解除旧配对
         if (oldRole != role && items[index].pairedWith != null) {
             val pairedIdx = items[index].pairedWith!!
             if (pairedIdx in items.indices) {
-                items[pairedIdx] = items[pairedIdx].copy(pairedWith = null)
+                items[pairedIdx] = items[pairedIdx].copy(pairedWith = null, financialConfirmed = false)
             }
-            items[index] = items[index].copy(pairedWith = null)
+            items[index] = items[index].copy(pairedWith = null, financialConfirmed = false)
         }
         items[index] = items[index].copy(paymentRole = role, financialConfirmed = false)
         _uiState.value = _uiState.value.copy(importItems = items)
@@ -702,9 +711,9 @@ class TaobaoImportViewModel(application: Application) : AndroidViewModel(applica
         val items = _uiState.value.importItems.toMutableList()
         if (index !in items.indices) return
         val pairedIdx = items[index].pairedWith ?: return
-        items[index] = items[index].copy(pairedWith = null)
+        items[index] = items[index].copy(pairedWith = null, financialConfirmed = false)
         if (pairedIdx in items.indices) {
-            items[pairedIdx] = items[pairedIdx].copy(pairedWith = null)
+            items[pairedIdx] = items[pairedIdx].copy(pairedWith = null, financialConfirmed = false)
         }
         _uiState.value = _uiState.value.copy(importItems = items)
     }

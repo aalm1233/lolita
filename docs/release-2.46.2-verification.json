@@ -1,0 +1,191 @@
+{
+  "version": "2.46.2",
+  "versionCode": 101,
+  "sourceCommit": "95d44ab9807f751c6465e1a3ee549d191b34328a",
+  "release": {
+    "version": "2.46.2",
+    "version_code": 101,
+    "tag": "v2.46.2",
+    "apk": "lolita-2.46.2.apk",
+    "size": 54714009,
+    "sha256": "4ba572b2b829303116f77f9c0ab961f9801bf50dc57077b1c948e8215a3ed187",
+    "source_commit": "95d44ab9807f751c6465e1a3ee549d191b34328a",
+    "body_sha256": "d8b7c1e24cd845391a3024670e4f10dbd3833e37798de2cf1b86ba94045cfbaf"
+  },
+  "signatureSha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "debuggable": false,
+  "cleanBuildFromCommittedSource": true,
+  "jvmTests": {
+    "tests": 170,
+    "failures": 0,
+    "errors": 0
+  },
+  "androidTests": {
+    "tests": 13,
+    "failures": 0,
+    "target": "emulator-5560",
+    "avd": "Lolita_Order_Import_Test",
+    "realImeValidated": true,
+    "skinLightDarkCombinations": 14,
+    "darkCounterPixelRegression": true
+  },
+  "upgrade": {
+    "preservation_pass": true,
+    "errors": [],
+    "exact_all_tables": true,
+    "table_differences": {},
+    "original_image_count": 172,
+    "original_images_unchanged": 172,
+    "image_differences": [],
+    "added_images": [],
+    "unresolved_image_references": []
+  },
+  "upgradeSettings": {
+    "beforeVersion": "2.46.1",
+    "afterVersion": "2.46.2",
+    "versionCode": 101,
+    "sameSignature": true,
+    "settingsBytesPreserved": true,
+    "settingsSha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+    "serial": "emulator-5558",
+    "avd": "Lolita_Release_2392_Test",
+    "coldLaunchSucceeded": true
+  },
+  "upgradeTableCount": 29,
+  "upgradeItemCount": 198,
+  "releaseSmoke": {
+    "actualImportPageOpened": true,
+    "defaultViewModelCreated": true,
+    "screenshot": "docs/visuals/2026-10-15-floating-order-release-import.png"
+  },
+  "github": {
+    "tag": "v2.46.2",
+    "source_commit": "95d44ab9807f751c6465e1a3ee549d191b34328a",
+    "release_id": 412977582,
+    "prerelease": false,
+    "files": {
+      "lolita-2.46.2.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.46.2/lolita-2.46.2.apk",
+        "anonymous_full_download": true,
+        "bytes": 54714009,
+        "sha256": "4ba572b2b829303116f77f9c0ab961f9801bf50dc57077b1c948e8215a3ed187",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.46.2/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "115c45bfb4bb7d681b115d8b0725d3e46b120d493d8ec379c166fe95f38a241b",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 54714009,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "95d44ab9807f751c6465e1a3ee549d191b34328a"
+  },
+  "gitee": {
+    "tag": "v2.46.2",
+    "source_commit": "95d44ab9807f751c6465e1a3ee549d191b34328a",
+    "release_id": 1206133,
+    "prerelease": false,
+    "files": {
+      "lolita-2.46.2.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.2/lolita-2.46.2.apk",
+        "anonymous_full_download": true,
+        "bytes": 54714009,
+        "sha256": "4ba572b2b829303116f77f9c0ab961f9801bf50dc57077b1c948e8215a3ed187",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.2/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "115c45bfb4bb7d681b115d8b0725d3e46b120d493d8ec379c166fe95f38a241b",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 54714009,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "giteeUpdate": {
+    "latest_tag": "v2.46.2",
+    "pages": 1,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.2/lolita-2.46.2.apk",
+    "source_commit": "95d44ab9807f751c6465e1a3ee549d191b34328a"
+  }
+}

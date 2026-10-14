@@ -55,6 +55,7 @@ fun FilteredItemListScreen(
     val reviewsByItem = uiState.purchaseReviews.associateBy { it.item.id }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(title) },

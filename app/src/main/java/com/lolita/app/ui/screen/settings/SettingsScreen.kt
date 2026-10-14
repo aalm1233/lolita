@@ -137,6 +137,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("个人") },

@@ -50,6 +50,7 @@ fun BrandManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("品牌管理") },

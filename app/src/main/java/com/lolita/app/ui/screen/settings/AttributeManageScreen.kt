@@ -40,6 +40,7 @@ fun AttributeManageScreen(
     onNavigateToSource: () -> Unit
 ) {
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("属性管理") },

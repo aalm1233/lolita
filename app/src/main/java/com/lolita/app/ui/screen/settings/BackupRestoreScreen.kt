@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.settings
 
+import androidx.compose.ui.graphics.Color
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -157,6 +158,7 @@ fun BackupRestoreScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("数据备份与恢复") },

@@ -41,6 +41,7 @@ fun SeasonManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("季节管理") },

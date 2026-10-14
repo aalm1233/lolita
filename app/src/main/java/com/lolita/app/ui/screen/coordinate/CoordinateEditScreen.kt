@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.coordinate
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -85,6 +86,7 @@ fun CoordinateEditScreen(
     )
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (coordinateId == null) "新建套装" else "编辑套装") },

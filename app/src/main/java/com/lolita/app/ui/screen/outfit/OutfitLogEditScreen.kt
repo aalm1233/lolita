@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.outfit
 
+import androidx.compose.ui.graphics.Color
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -123,6 +124,7 @@ fun OutfitLogEditScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (logId == null) "添加穿搭" else "编辑穿搭") },

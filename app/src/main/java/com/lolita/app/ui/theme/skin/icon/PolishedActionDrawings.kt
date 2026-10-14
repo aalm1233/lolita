@@ -1,18 +1,20 @@
 package com.lolita.app.ui.theme.skin.icon
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.withTransform
 
 /** Action silhouettes: soft cloth, cut iron, brushwork, stationery, fittings, wood and silver. */
 internal fun DrawScope.drawPolishedActionIcon(key: IconKey, style: SkinIconStyle, tint: Color) {
     when (key) {
         IconKey.Add, IconKey.Close -> {
-            val a = actionRibbon(style, 4.5f, 12f, 19.5f, 12f)
-            val b = actionRibbon(style, 12f, 4.5f, 12f, 19.5f)
+            val a = actionRibbon(style, 4.5f, 12f, 19.5f, 12f, cross = true)
+            val b = actionRibbon(style, 12f, 4.5f, 12f, 19.5f, cross = true)
             withTransform({ if (key == IconKey.Close) rotate(45f, Offset(12f, 12f)) }) {
                 drawPath(Path.combine(PathOperation.Union, a, b), tint)
             }
@@ -38,7 +40,7 @@ private fun DrawScope.actionPath(style: SkinIconStyle, tint: Color, block: Path.
     drawPath(Path().apply(block), tint, style = style.stroke)
 
 /** A broad, filled pen mark. Shape varies along its entire length, not just at endpoints. */
-private fun actionRibbon(style: SkinIconStyle, x1: Float, y1: Float, x2: Float, y2: Float): Path {
+private fun actionRibbon(style: SkinIconStyle, x1: Float, y1: Float, x2: Float, y2: Float, cross: Boolean = false): Path {
     val dx = x2 - x1
     val dy = y2 - y1
     val length = kotlin.math.sqrt(dx * dx + dy * dy)
@@ -56,9 +58,11 @@ private fun actionRibbon(style: SkinIconStyle, x1: Float, y1: Float, x2: Float, 
     return Path().apply {
         when (style) {
             SkinIconStyle.SWEET -> {
-                point(1f, -1.15f, true); curve(length * .5f, -1.8f, length - 1f, -1.15f)
-                curve(length + 1f, 0f, length - 1f, 1.15f)
-                curve(length * .5f, 1.8f, 1f, 1.15f); curve(-1f, 0f, 1f, -1.15f)
+                val edge = if (cross) .85f else 1.15f
+                val swell = if (cross) 1.35f else 1.8f
+                point(1f, -edge, true); curve(length * .5f, -swell, length - 1f, -edge)
+                curve(length + 1f, 0f, length - 1f, edge)
+                curve(length * .5f, swell, 1f, edge); curve(-1f, 0f, 1f, -edge)
             }
             SkinIconStyle.GOTHIC -> {
                 point(0f, 0f, true); point(2f, -1.3f); point(length - 2f, -.8f)
@@ -84,10 +88,11 @@ private fun actionRibbon(style: SkinIconStyle, x1: Float, y1: Float, x2: Float, 
                 point(length - .3f, 1.4f); curve(length * .55f, .2f, .6f, 1.5f)
             }
             SkinIconStyle.VICTORIAN -> {
+                val waist = if (cross) .75f else .1f
                 point(0f, 0f, true); curve(1f, -2f, 3f, -1f)
-                curve(length * .5f, -.1f, length - 3f, -1f); curve(length - 1f, -2f, length, 0f)
+                curve(length * .5f, -waist, length - 3f, -1f); curve(length - 1f, -2f, length, 0f)
                 curve(length - 1f, 2f, length - 3f, 1f)
-                curve(length * .5f, .1f, 3f, 1f); curve(1f, 2f, 0f, 0f)
+                curve(length * .5f, waist, 3f, 1f); curve(1f, 2f, 0f, 0f)
             }
         }
         close()
@@ -195,7 +200,7 @@ private fun DrawScope.actionEdit(style: SkinIconStyle, tint: Color) {
 }
 
 private fun DrawScope.actionSearch(style: SkinIconStyle, tint: Color) {
-    actionPath(style, tint) {
+    val lens = Path().apply {
         when (style) {
             SkinIconStyle.SWEET -> { moveTo(16f, 10f); cubicTo(16f, 18f, 3.5f, 18f, 3.5f, 10f); cubicTo(3.5f, 2f, 16f, 2f, 16f, 10f); close() }
             SkinIconStyle.GOTHIC -> { moveTo(10f, 3f); lineTo(16f, 7f); lineTo(16f, 13f); lineTo(10f, 17f); lineTo(4f, 13f); lineTo(4f, 7f); close() }
@@ -206,7 +211,18 @@ private fun DrawScope.actionSearch(style: SkinIconStyle, tint: Color) {
             SkinIconStyle.VICTORIAN -> { moveTo(16f, 9f); cubicTo(16f, 19f, 4f, 19f, 4f, 9f); cubicTo(4f, 1.5f, 16f, 1.5f, 16f, 9f); close() }
         }
     }
-    drawPath(actionRibbon(style, 15.5f, 15.5f, 20.5f, 20.5f), tint)
+    val join = when (style) {
+        SkinIconStyle.SWEET, SkinIconStyle.CLASSIC -> Offset(14.1f, 14.1f)
+        SkinIconStyle.GOTHIC -> Offset(14.1f, 14.1f)
+        SkinIconStyle.CHINESE -> Offset(14.8f, 15.2f)
+        SkinIconStyle.NAVY -> Offset(15.4f, 14.9f)
+        SkinIconStyle.COUNTRY -> Offset(14.5f, 14f)
+        SkinIconStyle.VICTORIAN -> Offset(14.2f, 14.2f)
+    }
+    val handle = actionRibbon(style, join.x, join.y, 20.5f, 20.5f)
+    // The handle owns the join: a half-alpha caller gets one layer of ink there.
+    clipPath(handle, ClipOp.Difference) { drawPath(lens, tint, style = style.stroke) }
+    drawPath(handle, tint)
 }
 
 private fun DrawScope.actionBars(style: SkinIconStyle, tint: Color, centered: Boolean) {
@@ -249,18 +265,23 @@ private fun DrawScope.actionShare(style: SkinIconStyle, tint: Color) {
 }
 
 private fun DrawScope.actionCopy(style: SkinIconStyle, tint: Color) {
+    actionRearSheet(style, tint)
+    drawPath(actionSheet(style, 3.5f, 7f, 13f, 13f), tint, style = style.stroke)
+}
+
+/** Only the exposed top and right of the back sheet are inked, without hidden intersections. */
+private fun DrawScope.actionRearSheet(style: SkinIconStyle, tint: Color) {
     actionPath(style, tint) {
         when (style) {
-            SkinIconStyle.SWEET -> { moveTo(5f, 16f); quadraticTo(3.5f, 16f, 3.5f, 14f); lineTo(3.5f, 6f); quadraticTo(3.5f, 3.5f, 6f, 3.5f); lineTo(14f, 3.5f); quadraticTo(16f, 3.5f, 16f, 5f) }
-            SkinIconStyle.GOTHIC -> { moveTo(5f, 16f); lineTo(3.5f, 14f); lineTo(3.5f, 6f); lineTo(6f, 3.5f); lineTo(14f, 3.5f); lineTo(16f, 5f) }
-            SkinIconStyle.CHINESE -> { moveTo(4f, 16f); lineTo(4f, 4f); lineTo(15.5f, 4f); moveTo(3f, 4f); lineTo(6f, 4f) }
-            SkinIconStyle.CLASSIC -> { moveTo(5f, 16f); lineTo(3.5f, 16f); lineTo(3.5f, 3.5f); lineTo(16f, 3.5f); lineTo(16f, 5f) }
-            SkinIconStyle.NAVY -> { moveTo(5f, 16f); quadraticTo(3f, 16f, 3f, 13f); lineTo(3f, 6f); quadraticTo(3f, 3f, 6f, 3f); lineTo(13f, 3f); quadraticTo(16f, 3f, 16f, 5f) }
-            SkinIconStyle.COUNTRY -> { moveTo(5f, 16f); lineTo(3.5f, 5f); quadraticTo(10f, 2f, 16f, 4f) }
-            SkinIconStyle.VICTORIAN -> { moveTo(5f, 16f); lineTo(4f, 8f); cubicTo(3f, 2f, 14f, 1.5f, 16f, 5f) }
+            SkinIconStyle.SWEET -> { moveTo(8f, 3.5f); lineTo(17.5f, 3.5f); quadraticTo(20.5f, 3.5f, 20.5f, 6.5f); lineTo(20.5f, 15f) }
+            SkinIconStyle.GOTHIC -> { moveTo(8f, 3.5f); lineTo(17.5f, 3.5f); lineTo(20.5f, 6.5f); lineTo(20.5f, 15f) }
+            SkinIconStyle.CHINESE -> { moveTo(8f, 4f); lineTo(20.5f, 4f); lineTo(20.5f, 15f) }
+            SkinIconStyle.CLASSIC -> { moveTo(8f, 3.5f); lineTo(20.5f, 3.5f); lineTo(20.5f, 15f) }
+            SkinIconStyle.NAVY -> { moveTo(8f, 3.5f); lineTo(17.5f, 3.5f); quadraticTo(20.5f, 3.5f, 20.5f, 7.5f); lineTo(20.5f, 15f) }
+            SkinIconStyle.COUNTRY -> { moveTo(8f, 4f); quadraticTo(14f, 2.5f, 20.5f, 3.5f); lineTo(21f, 15f) }
+            SkinIconStyle.VICTORIAN -> { moveTo(8f, 5f); cubicTo(8f, 2.5f, 20.5f, 2.5f, 20.5f, 7f); lineTo(20.5f, 15f) }
         }
     }
-    drawPath(actionSheet(style, 8f, 8f, 12f, 12f), tint, style = style.stroke)
 }
 
 private fun DrawScope.actionRefresh(style: SkinIconStyle, tint: Color) {
@@ -302,17 +323,7 @@ private fun DrawScope.actionLayout(style: SkinIconStyle, tint: Color, key: IconK
 }
 
 private fun DrawScope.actionGallery(style: SkinIconStyle, tint: Color) {
-    actionPath(style, tint) {
-        when (style) {
-            SkinIconStyle.SWEET -> { moveTo(8f, 4f); lineTo(17f, 4f); quadraticTo(20f, 4f, 20f, 7f); lineTo(20f, 15f) }
-            SkinIconStyle.GOTHIC -> { moveTo(8f, 4f); lineTo(17f, 4f); lineTo(20f, 7f); lineTo(20f, 15f) }
-            SkinIconStyle.CHINESE -> { moveTo(8f, 4f); lineTo(20f, 4f); lineTo(20f, 15f); moveTo(18f, 4f); lineTo(21f, 4f) }
-            SkinIconStyle.CLASSIC -> { moveTo(8f, 4f); lineTo(20f, 4f); lineTo(20f, 15f) }
-            SkinIconStyle.NAVY -> { moveTo(8f, 4f); lineTo(17f, 4f); quadraticTo(20f, 4f, 20f, 8f); lineTo(20f, 15f) }
-            SkinIconStyle.COUNTRY -> { moveTo(8f, 4.5f); quadraticTo(14f, 2.5f, 20f, 4f); lineTo(20.5f, 15f) }
-            SkinIconStyle.VICTORIAN -> { moveTo(8f, 5f); cubicTo(8f, 1.5f, 20f, 1.5f, 20f, 7f); lineTo(20f, 15f) }
-        }
-    }
+    actionRearSheet(style, tint)
     drawPath(actionSheet(style, 3.5f, 7f, 13f, 13f), tint, style = style.stroke)
     drawCircle(tint, 1.1f, Offset(8f, 11f))
     actionPath(style, tint) {

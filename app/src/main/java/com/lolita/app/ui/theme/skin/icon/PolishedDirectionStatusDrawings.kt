@@ -105,8 +105,9 @@ private fun DrawScope.directionChevron(style: SkinIconStyle, tint: Color) {
             lineTo(13f, 12f); lineTo(16f, 9.5f); close()
         }
         SkinIconStyle.COUNTRY -> dsPath(style, tint) {
-            moveTo(15.5f, 5.5f); quadraticTo(8f, 6.5f, 8f, 12f); quadraticTo(14f, 13f, 15.5f, 18.5f)
-            moveTo(8f, 12f); quadraticTo(8f, 16.5f, 12f, 16f)
+            // A single bent-twig stroke keeps the short control readable at 18dp.
+            moveTo(15.5f, 5.5f); quadraticTo(10f, 7.2f, 8f, 12f)
+            quadraticTo(12f, 13.8f, 15.5f, 18.5f)
         }
         SkinIconStyle.VICTORIAN -> dsPath(style, tint) {
             moveTo(16f, 5f); cubicTo(18f, 10f, 9f, 8.5f, 7.5f, 12f)
@@ -147,9 +148,11 @@ private fun DrawScope.directionSwapArrow(style: SkinIconStyle, tint: Color) {
             moveTo(4f, 8f); lineTo(8f, 4f); lineTo(12f, 8f); moveTo(8f, 4f); lineTo(8f, 20f)
             moveTo(5.5f, 20f); lineTo(10.5f, 20f)
         }
-        SkinIconStyle.NAVY -> dsPath(style, tint) {
-            moveTo(8f, 3.5f); lineTo(12f, 9f); lineTo(9.5f, 9f); lineTo(9.5f, 20f)
-            lineTo(6.5f, 20f); lineTo(6.5f, 9f); lineTo(4f, 9f); close()
+        SkinIconStyle.NAVY -> dsFill(tint) {
+            // A solid signal head with a 1.7-unit stem, rather than two cramped outline walls.
+            moveTo(8f, 3.5f); lineTo(11.4f, 8.8f); lineTo(8.85f, 8.8f)
+            lineTo(8.85f, 20f); lineTo(7.15f, 20f); lineTo(7.15f, 8.8f)
+            lineTo(4.6f, 8.8f); close()
         }
         SkinIconStyle.COUNTRY -> dsPath(style, tint) {
             moveTo(4f, 9f); quadraticTo(4.5f, 5f, 8f, 4f); quadraticTo(9f, 7f, 12f, 8.5f)
@@ -157,8 +160,10 @@ private fun DrawScope.directionSwapArrow(style: SkinIconStyle, tint: Color) {
             moveTo(7.5f, 14f); quadraticTo(3f, 14f, 4f, 18f); quadraticTo(7f, 17f, 7.5f, 14f)
         }
         SkinIconStyle.VICTORIAN -> dsPath(style, tint) {
-            moveTo(4f, 9f); cubicTo(8f, 10f, 6f, 6f, 8f, 3.5f); cubicTo(10f, 6f, 8f, 10f, 12f, 9f)
-            moveTo(8f, 4f); lineTo(8f, 14f); cubicTo(8f, 16f, 5f, 16f, 5f, 18f); quadraticTo(5f, 21f, 8f, 20f)
+            moveTo(4f, 8.7f); cubicTo(6.5f, 8.7f, 5.8f, 5.8f, 7f, 3.8f)
+            cubicTo(8.2f, 5.8f, 7.5f, 8.7f, 10.5f, 8.7f)
+            // The narrow silver stem ends in one outward sweep, leaving the center open.
+            moveTo(7f, 4.5f); lineTo(7f, 17f); quadraticTo(7f, 20f, 5f, 20f)
         }
     }
 }
@@ -175,8 +180,45 @@ private fun DrawScope.directionOpen(style: SkinIconStyle, tint: Color) {
             SkinIconStyle.VICTORIAN -> { moveTo(10f, 4f); cubicTo(3f, 3f, 3f, 9f, 4f, 14f); quadraticTo(5f, 20f, 12f, 21f); quadraticTo(19f, 20f, 20f, 14f) }
         }
     }
-    // The same themed arrow is directed toward the upper-right corner.
-    withTransform({ translate(3f, -3f); rotate(135f, Offset(12f, 12f)); scale(.66f, .66f, Offset(12f, 12f)) }) { directionArrow(style, tint) }
+    // A dedicated diagonal uses the full logical stroke and stays clear of both open frame ends.
+    // Family identity remains in the shaft/head construction, without shrinking a long-arrow curl.
+    when (style) {
+        SkinIconStyle.SWEET -> dsPath(style, tint) {
+            moveTo(14.3f, 4.6f); cubicTo(16.2f, 3.8f, 18.5f, 4f, 20f, 4f)
+            quadraticTo(20.5f, 6.5f, 19.8f, 9.5f)
+            moveTo(10.5f, 13.5f); cubicTo(14f, 12f, 16f, 7f, 20f, 4f)
+        }
+        SkinIconStyle.GOTHIC -> dsPath(style, tint) {
+            moveTo(14.5f, 5.5f); lineTo(20.5f, 3.5f); lineTo(18.5f, 9.5f)
+            moveTo(10.5f, 13.5f); lineTo(20.5f, 3.5f)
+        }
+        SkinIconStyle.CHINESE -> dsFill(tint) {
+            moveTo(10.5f, 13.8f); quadraticTo(14.5f, 7.6f, 20.5f, 3.5f)
+            lineTo(19.7f, 9.5f); lineTo(18.4f, 8.7f); lineTo(18.8f, 6.5f)
+            quadraticTo(14.6f, 10.8f, 11.5f, 14.2f); close()
+            moveTo(14.2f, 4.5f); lineTo(20.5f, 3.5f); lineTo(18.8f, 6.5f)
+            lineTo(14.2f, 5.9f); close()
+        }
+        SkinIconStyle.CLASSIC -> dsPath(style, tint) {
+            moveTo(14f, 4f); lineTo(20f, 4f); lineTo(20f, 10f)
+            moveTo(10f, 14f); lineTo(20f, 4f)
+        }
+        SkinIconStyle.NAVY -> dsFill(tint) {
+            moveTo(10.1f, 12.9f); lineTo(17.9f, 5.1f); lineTo(14.1f, 5.1f)
+            lineTo(14.1f, 3.4f); lineTo(20.6f, 3.4f); lineTo(20.6f, 9.9f)
+            lineTo(18.9f, 9.9f); lineTo(18.9f, 6.1f); lineTo(11.3f, 14.1f); close()
+        }
+        SkinIconStyle.COUNTRY -> dsPath(style, tint) {
+            moveTo(14.5f, 5f); quadraticTo(17f, 3.6f, 20.5f, 3.9f)
+            quadraticTo(20.2f, 7f, 19.5f, 9.8f)
+            moveTo(10.3f, 13.8f); quadraticTo(13.2f, 8f, 20.5f, 3.9f)
+        }
+        SkinIconStyle.VICTORIAN -> dsPath(style, tint) {
+            moveTo(14.7f, 4.5f); cubicTo(17f, 5f, 17.5f, 2.8f, 20.5f, 3.5f)
+            cubicTo(21.2f, 6.4f, 18.7f, 7.1f, 19.5f, 9.8f)
+            moveTo(10.5f, 13.8f); cubicTo(10.8f, 9.8f, 18.2f, 7.8f, 20.5f, 3.5f)
+        }
+    }
 }
 
 private fun DrawScope.statusEye(style: SkinIconStyle, tint: Color) {

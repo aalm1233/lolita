@@ -46,6 +46,7 @@ fun LocationManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("位置管理") },

@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.coordinate
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.*
@@ -130,6 +131,7 @@ fun CoordinateDetailScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(uiState.coordinate?.name ?: "套装详情") },

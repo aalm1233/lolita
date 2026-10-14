@@ -211,14 +211,14 @@ private fun DrawScope.drawContentCamera(style: SkinIconStyle, tint: Color) {
                 moveTo(12f, 9f); lineTo(16f, 13f); lineTo(12f, 17f); lineTo(8f, 13f); close()
             }
             SkinIconStyle.CHINESE -> { // Folding box camera, squared lens board and slanted bellows.
-                moveTo(3.5f, 7f); lineTo(8f, 7f); lineTo(10f, 10f); lineTo(19f, 8f)
-                lineTo(20.5f, 19f); lineTo(10f, 19f); lineTo(8f, 16f); lineTo(3.5f, 16f); close()
-                moveTo(10f, 10f); lineTo(10f, 19f)
+                moveTo(3.5f, 7f); lineTo(7.5f, 7f); lineTo(9.5f, 10f); lineTo(19.5f, 8.3f)
+                lineTo(21f, 20f); lineTo(9.5f, 20f); lineTo(7.5f, 16f); lineTo(3.5f, 16f); close()
+                moveTo(9.5f, 10f); lineTo(9.5f, 20f)
                 moveTo(5f, 7f); lineTo(5f, 4f); lineTo(8f, 4f)
             }
             SkinIconStyle.CLASSIC -> { // Twin-lens reflex, vertically stacked working lenses.
-                moveTo(6f, 20.5f); lineTo(6f, 5.5f); lineTo(8f, 3.5f); lineTo(16f, 3.5f)
-                lineTo(18f, 5.5f); lineTo(18f, 20.5f); close()
+                moveTo(5.5f, 21f); lineTo(5.5f, 5.5f); lineTo(8f, 3.5f); lineTo(16f, 3.5f)
+                lineTo(18.5f, 5.5f); lineTo(18.5f, 21f); close()
             }
             SkinIconStyle.NAVY -> { // Waterproof camera with side grips and porthole lens.
                 moveTo(3f, 8f); lineTo(8f, 8f); lineTo(9f, 5f); lineTo(15f, 5f)
@@ -230,25 +230,25 @@ private fun DrawScope.drawContentCamera(style: SkinIconStyle, tint: Color) {
                 moveTo(12f, 16f); lineTo(7f, 21f); moveTo(12f, 16f); lineTo(17f, 21f)
             }
             SkinIconStyle.VICTORIAN -> { // Bellows camera: small rear standard, large front lens.
-                moveTo(3.5f, 7f); lineTo(6f, 7f); lineTo(6f, 17f); lineTo(3.5f, 17f); close()
-                moveTo(6f, 9f); lineTo(10f, 6f); lineTo(15f, 9f)
-                moveTo(6f, 15f); lineTo(10f, 18f); lineTo(15f, 15f)
-                moveTo(10f, 6f); lineTo(10f, 18f)
-                moveTo(12f, 19f); lineTo(9f, 21f); moveTo(12f, 19f); lineTo(15f, 21f)
+                moveTo(3.5f, 7f); lineTo(6.5f, 7f); lineTo(6.5f, 17f); lineTo(3.5f, 17f); close()
+                moveTo(6.5f, 9f); lineTo(10f, 7f); lineTo(14.3f, 9f)
+                moveTo(6.5f, 15f); lineTo(10f, 17f); lineTo(14.3f, 15f)
+                // One open bellows chamber; no middle seam competes with the lens.
+                moveTo(10f, 17f); lineTo(7.5f, 21f); moveTo(10f, 17f); lineTo(12.5f, 21f)
             }
         }
     }
     when (style) {
         SkinIconStyle.SWEET -> drawCircle(tint, 3.6f, Offset(12f, 10f), style = style.stroke)
         SkinIconStyle.GOTHIC -> Unit
-        SkinIconStyle.CHINESE -> drawCircle(tint, 2.3f, Offset(15f, 14f), style = style.stroke)
+        SkinIconStyle.CHINESE -> drawCircle(tint, 2.4f, Offset(15.25f, 14.4f), style = style.stroke)
         SkinIconStyle.CLASSIC -> {
-            drawCircle(tint, 2.2f, Offset(12f, 8f), style = style.stroke)
-            drawCircle(tint, 3.2f, Offset(12f, 15.5f), style = style.stroke)
+            drawCircle(tint, 2f, Offset(12f, 8f), style = style.stroke)
+            drawCircle(tint, 2.8f, Offset(12f, 15.2f), style = style.stroke)
         }
         SkinIconStyle.NAVY -> drawCircle(tint, 3.6f, Offset(12f, 13.5f), style = style.stroke)
         SkinIconStyle.COUNTRY -> drawCircle(tint, 3.2f, Offset(12f, 10.5f), style = style.stroke)
-        SkinIconStyle.VICTORIAN -> drawOval(tint, Offset(14f, 7f), Size(6.5f, 11f), style = style.stroke)
+        SkinIconStyle.VICTORIAN -> drawOval(tint, Offset(14.3f, 7f), Size(6.5f, 10f), style = style.stroke)
     }
 }
 
@@ -273,7 +273,11 @@ private fun DrawScope.drawContentChain(style: SkinIconStyle, tint: Color, off: B
         val sign = if (upper) -1f else 1f
         val near = if (off) 2.8f else 1.5f
         val far = 8.7f
-        val width = when (style) { SkinIconStyle.SWEET -> 3.2f; SkinIconStyle.NAVY -> 2.3f; SkinIconStyle.VICTORIAN -> 2.4f; else -> 2.8f }
+        val width = when (style) {
+            SkinIconStyle.SWEET, SkinIconStyle.VICTORIAN -> 3.2f
+            SkinIconStyle.CLASSIC, SkinIconStyle.NAVY -> 3.3f
+            else -> 2.8f
+        }
         m(-width, sign * near)
         when (style) {
             SkinIconStyle.GOTHIC -> { l(-width, sign * 6.6f); l(0f, sign * far); l(width, sign * 6.6f) }
@@ -536,12 +540,30 @@ private fun DrawScope.drawContentMoney(style: SkinIconStyle, tint: Color) {
             }
         }
     }
-    val y = if (style == SkinIconStyle.SWEET || style == SkinIconStyle.CHINESE || style == SkinIconStyle.COUNTRY) 10f else 8f
+    val top = when (style) {
+        SkinIconStyle.SWEET -> 9.5f
+        SkinIconStyle.CHINESE, SkinIconStyle.COUNTRY -> 10.2f
+        SkinIconStyle.CLASSIC -> 8.5f
+        else -> 8f
+    }
+    val firstBar = when (style) {
+        SkinIconStyle.SWEET -> 13f
+        SkinIconStyle.CHINESE, SkinIconStyle.COUNTRY -> 13.5f
+        SkinIconStyle.CLASSIC -> 12f
+        else -> 11.5f
+    }
+    val bottom = when (style) {
+        SkinIconStyle.CLASSIC, SkinIconStyle.NAVY -> 16.8f
+        SkinIconStyle.CHINESE -> 18f
+        SkinIconStyle.SWEET, SkinIconStyle.COUNTRY -> 17.8f
+        else -> 17.7f
+    }
     contentPath(style, tint) {
-        moveTo(9f, y); lineTo(12f, y + 3f); lineTo(15f, y)
-        moveTo(12f, y + 3f); lineTo(12f, 17.5f)
-        moveTo(9f, y + 4f); lineTo(15f, y + 4f)
-        moveTo(9f, y + 6f); lineTo(15f, y + 6f)
+        moveTo(9f, top); lineTo(12f, top + 2.7f); lineTo(15f, top)
+        moveTo(12f, top + 2.7f); lineTo(12f, bottom)
+        // Three units between centers leave 1.3 units clear at the unchanged 1.7 stroke.
+        moveTo(9f, firstBar); lineTo(15f, firstBar)
+        moveTo(9f, firstBar + 3f); lineTo(15f, firstBar + 3f)
     }
 }
 

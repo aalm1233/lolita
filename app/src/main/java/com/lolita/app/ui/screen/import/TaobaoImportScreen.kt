@@ -93,6 +93,7 @@ private fun OrderSelectContent(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("淘宝订单导入") },
@@ -301,6 +302,7 @@ private fun ImportPrepareContent(
     val checkedCount = uiState.missingItems.count { it.checked }
 
     Scaffold(
+        containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             GradientTopAppBar(
@@ -472,6 +474,7 @@ private fun ImportResultContent(
     onDone: () -> Unit
 ) {
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("导入完成") }

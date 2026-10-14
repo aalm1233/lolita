@@ -75,6 +75,7 @@ fun OutfitLogListScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(title = { Text("穿搭日记") }, compact = true)
         },

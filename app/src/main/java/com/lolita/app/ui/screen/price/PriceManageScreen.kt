@@ -40,7 +40,7 @@ fun PriceManageScreen(
     var orderToBind by remember { mutableStateOf<Price?>(null) }
     var confirmArchive by remember { mutableStateOf(false) }
     var purchaseConfirmation by remember { mutableStateOf<PurchaseRecordStatus?>(null) }
-    Scaffold(topBar = { GradientTopAppBar(title = { Text("价格与付款") },
+    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text("价格与付款") },
         navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge).testTag("priceManageList"),
             contentPadding = PaddingValues(vertical = skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap),

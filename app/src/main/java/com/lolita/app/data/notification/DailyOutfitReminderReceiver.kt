@@ -95,7 +95,7 @@ class DailyOutfitReminderReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, 0, tapIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(context, NotificationChannelSetup.getOutfitNotificationChannelId())
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("今天穿了什么？")
             .setContentText("记录一下今天的穿搭吧~")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

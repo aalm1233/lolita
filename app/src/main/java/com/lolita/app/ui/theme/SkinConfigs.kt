@@ -66,6 +66,10 @@ fun defaultSkinConfig(): LolitaSkinConfig {
     val fontFamily = FontFamily.Default
     return LolitaSkinConfig(
         skinType = SkinType.DEFAULT,
+        artBackgroundRes = R.drawable.bg_art_sweet,
+        artBackgroundAlpha = 0.28f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFE0BAC6),
         name = "甜美粉",
         lightColorScheme = lightColorScheme(
             primary = Pink400, onPrimary = White,
@@ -142,6 +146,10 @@ fun gothicSkinConfig(): LolitaSkinConfig {
     val darkSurface = Color(0xFF2D2D44)
     return LolitaSkinConfig(
         skinType = SkinType.GOTHIC,
+        artBackgroundRes = R.drawable.bg_art_gothic,
+        artBackgroundAlpha = 0.26f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFC8BDD9),
         name = "哥特暗黑",
         lightColorScheme = lightColorScheme(
             primary = purple, onPrimary = White,
@@ -221,6 +229,10 @@ fun chineseSkinConfig(): LolitaSkinConfig {
     val darkSurface = Color(0xFF2D2520)
     return LolitaSkinConfig(
         skinType = SkinType.CHINESE,
+        artBackgroundRes = R.drawable.bg_art_chinese,
+        artBackgroundAlpha = 0.28f,
+        artBackgroundAlphaDark = 0.20f,
+        artBackgroundTintDark = Color(0xFFE0BAAF),
         name = "中华风韵",
         lightColorScheme = lightColorScheme(
             primary = vermillion, onPrimary = White,
@@ -300,6 +312,10 @@ fun classicSkinConfig(): LolitaSkinConfig {
     val darkSurface = Color(0xFF2D2525)
     return LolitaSkinConfig(
         skinType = SkinType.CLASSIC,
+        artBackgroundRes = R.drawable.bg_art_classic,
+        artBackgroundAlpha = 0.28f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFD2C1A9),
         name = "经典优雅",
         lightColorScheme = lightColorScheme(
             primary = wine, onPrimary = White,
@@ -379,6 +395,10 @@ fun navySkinConfig(): LolitaSkinConfig {
     val darkSurface = Color(0xFF1B2D44)
     return LolitaSkinConfig(
         skinType = SkinType.NAVY,
+        artBackgroundRes = R.drawable.bg_art_navy,
+        artBackgroundAlpha = 0.28f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFB7CEDA),
         name = "清风水手",
         lightColorScheme = lightColorScheme(
             primary = skyBlue, onPrimary = White,
@@ -461,6 +481,10 @@ fun countrySkinConfig(): LolitaSkinConfig {
     val darkSurface = Color(0xFF2D3529)
     return LolitaSkinConfig(
         skinType = SkinType.COUNTRY,
+        artBackgroundRes = R.drawable.bg_art_country,
+        artBackgroundAlpha = 0.30f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFC6D0AE),
         name = "牧歌田园",
         lightColorScheme = lightColorScheme(
             primary = sage, onPrimary = White,
@@ -547,6 +571,10 @@ fun victorianSkinConfig(): LolitaSkinConfig {
     val brightRose = Color(0xFFE07088)
     return LolitaSkinConfig(
         skinType = SkinType.VICTORIAN,
+        artBackgroundRes = R.drawable.bg_art_victorian,
+        artBackgroundAlpha = 0.26f,
+        artBackgroundAlphaDark = 0.22f,
+        artBackgroundTintDark = Color(0xFFD7C19B),
         name = "维多利亚",
         lightColorScheme = lightColorScheme(
             primary = burgundy, onPrimary = White,

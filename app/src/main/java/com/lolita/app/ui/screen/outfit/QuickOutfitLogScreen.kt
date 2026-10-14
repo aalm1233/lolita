@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.outfit
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -65,6 +66,7 @@ fun QuickOutfitLogScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (uiState.existingLogId != null) "编辑今日穿搭" else "记录今日穿搭") },

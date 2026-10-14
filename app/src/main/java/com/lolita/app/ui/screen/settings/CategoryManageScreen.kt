@@ -42,6 +42,7 @@ fun CategoryManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("类型管理") },

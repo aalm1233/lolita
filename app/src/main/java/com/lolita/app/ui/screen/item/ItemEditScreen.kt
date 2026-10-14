@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.item
 
+import androidx.compose.ui.graphics.Color
 import android.net.Uri
 import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -152,6 +153,7 @@ fun ItemEditScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },

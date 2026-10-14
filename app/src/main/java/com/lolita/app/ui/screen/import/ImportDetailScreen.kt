@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.`import`
 
+import androidx.compose.ui.graphics.Color
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import com.lolita.app.ui.theme.skin.component.skinClickable
@@ -49,6 +50,7 @@ fun ImportDetailContent(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             GradientTopAppBar(

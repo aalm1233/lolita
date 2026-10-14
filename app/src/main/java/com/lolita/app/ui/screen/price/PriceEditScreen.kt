@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.price
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,7 +37,7 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
         }
     }
 
-    Scaffold(topBar = {
+    Scaffold(containerColor = Color.Transparent, topBar = {
         GradientTopAppBar(title = { Text(if (priceId == null) "设置价格" else "编辑价格与计划") },
             navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
                 IconButton(enabled = viewModel.isValid() && !state.isSaving, onClick = {

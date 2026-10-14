@@ -41,6 +41,7 @@ fun StyleManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("风格管理") },

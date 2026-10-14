@@ -95,6 +95,13 @@
 - `SkinItemAppear` 的进度仅在 `graphicsLayer` 中读取，避免逐帧重组卡片。`SkinFlingBehavior` 用独立上帧位置计算位移，原始释放速度只经摩擦衰减，遇到未消费位移立即停止并保留余速。懒列表的索引使用 `itemsIndexed`，不要在逐卡片 composition 中扫描 `indexOf`。
 - 滚动回归位于 `SkinFlingBehaviorTest`（七套皮肤双向惯性、边界）、`SkinItemAppearTest`（图层更新不重组）、`SkinScrollActivityTest`（多来源/取消/离开）、`SkinBackgroundAnimationTest`（暂停/恢复真实绘制）与 `ScrollPageTest`（带图片真实页面的拖动、惯性、清理、导航，独立内存 Room/UUID 设置）。验证记录见 `docs/scroll-performance-fix-2026-10-12.md`。
 
+### 背景插图与桌面标识（2.46.0）
+
+- 七套边角插图位于 `res/drawable-nodpi/bg_art_*.png`，保留原始 RGBA；来源、SHA256 和完整提示词见 `docs/skin-art-assets-sources-2026-10-14.json`。`SkinArtBackground` 在 NavHost 的 Haze source 中仅提供一个静态底层，居中 Crop 保持比例；页面 Scaffold 透明，卡片、编辑底部、WebView 和图片表面保留原背景。
+- `artBackgroundRes/Alpha/AlphaDark/TintDark` 四令牌由七工厂独立设置；暗色按原图亮度映射柔和皮肤墨色并保留 alpha。复用 `LolitaShimmerImage` 的可选 `colorFilter` 和 `showFailurePlaceholder=false`，无 shimmer、揭示或失败问号，无时间动画和滚动状态。
+- 桌面图标使用 108 原生 Vector 衣橱挂裙，主体位于 66 安全圆，v26 两层 adaptive、v33 普通/round 加透明负空间 monochrome；每日穿搭通知使用独立 `ic_notification`。七套功能图标精修金额、相机、关联、纸片、搜索及方向等 15 键，保留五导航轮廓和全部 51×7 身份。
+- `SkinArtBackgroundTest` 核对七资源透明留白、真实浅暗与横屏、静态绘制和失败回退；`LauncherArtVisualTest` 使用真实 Drawable/Canvas 核对 24/48dp 的圆形、圆角及浅暗主题裁切。设备验证仅在独立 AVD，使用原有 `SkinIconVisualTest` 完整矩阵与粒子/滚动回归。
+
 ### 视觉精致化令牌
 
 `LolitaSkinConfig` 包含以下视觉令牌，新组件/页面应消费它们而非硬编码：
@@ -256,7 +263,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=98, versionName="2.45.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=99, versionName="2.46.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

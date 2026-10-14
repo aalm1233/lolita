@@ -141,6 +141,7 @@ fun SourceManageScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("来源管理") },

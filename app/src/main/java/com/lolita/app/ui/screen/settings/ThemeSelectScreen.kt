@@ -57,6 +57,7 @@ fun ThemeSelectScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("\u9009\u62e9\u76ae\u80a4") },

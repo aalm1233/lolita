@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.look
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,6 +34,7 @@ fun LookBuilderScreen(itemId: Long, onBack: () -> Unit, onSaved: (Long) -> Unit,
     LaunchedEffect(itemId) { viewModel.load(itemId) }
     LaunchedEffect(state.savedId) { state.savedId?.let(onSaved) }
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = { GradientTopAppBar(title = { Text("整套搭配") }, navigationIcon = {
             IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) }
         }) },

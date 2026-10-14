@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.price
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -56,7 +57,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
         } }
     }
 
-    Scaffold(topBar = { GradientTopAppBar(title = { Text("付款阶段与实付") },
+    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text("付款阶段与实付") },
         navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } }) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding).padding(horizontal = skin.spacingLarge).testTag("paymentManageList"),
             contentPadding = PaddingValues(vertical = skin.spacingLarge),

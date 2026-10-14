@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.`import`
 
+import androidx.compose.ui.graphics.Color
 import android.webkit.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
@@ -40,7 +41,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
     BackHandler(enabled = web?.canGoBack() == true && state.draft == null) { web?.goBack() }
-    Scaffold(topBar = { GradientTopAppBar(title = { Text("淘宝商品导入（试用）") }, navigationIcon = {
+    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text("淘宝商品导入（试用）") }, navigationIcon = {
         IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) }
     }) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {

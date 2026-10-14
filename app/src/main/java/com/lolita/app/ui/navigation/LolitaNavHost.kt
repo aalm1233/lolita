@@ -35,6 +35,7 @@ import com.lolita.app.ui.theme.skin.animation.LocalSkinScrollActivity
 import com.lolita.app.ui.theme.skin.animation.SkinScrollActivity
 import com.lolita.app.ui.theme.skin.animation.LocalIsListScrolling
 import com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimation
+import com.lolita.app.ui.theme.skin.component.SkinArtBackground
 import com.lolita.app.ui.theme.skin.animation.SkinNavigationOverlay
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -230,6 +231,8 @@ fun LolitaNavHost(
             LocalIsListScrolling provides scrollActivity.isScrolling
         ) {
         Box(modifier = Modifier.hazeSource(state = hazeState)) {
+            // Window-fixed illustration below the existing, scroll-aware ambient particles.
+            SkinArtBackground(modifier = Modifier.fillMaxSize())
             // Bottom layer: ambient background animation
             SkinBackgroundAnimation(
                 modifier = Modifier

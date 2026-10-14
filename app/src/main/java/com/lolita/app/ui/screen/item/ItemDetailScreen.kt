@@ -191,6 +191,7 @@ fun ItemDetailScreen(
     val hasImage = uiState.item?.imageUrls?.isNotEmpty() == true
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             if (!hasImage) {
                 GradientTopAppBar(

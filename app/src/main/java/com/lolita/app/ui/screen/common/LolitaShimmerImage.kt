@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,8 @@ import com.skydoves.landscapist.placeholder.shimmer.Shimmer
  * @param placeholderInitial Letter to display on failure (uses first character)
  * @param shimmerEnabled Whether to show shimmer during loading
  * @param circularRevealEnabled Whether to animate image appearance with circular reveal
+ * @param colorFilter Optional image color adjustment, preserving the source alpha
+ * @param showFailurePlaceholder Whether to display the initial-letter failure surface
  */
 @Composable
 fun LolitaShimmerImage(
@@ -49,6 +52,8 @@ fun LolitaShimmerImage(
     placeholderInitial: String? = null,
     shimmerEnabled: Boolean = true,
     circularRevealEnabled: Boolean = true,
+    colorFilter: ColorFilter? = null,
+    showFailurePlaceholder: Boolean = true,
 ) {
     val skin = LolitaSkin.current
     val isDark = isSystemInDarkTheme()
@@ -83,29 +88,32 @@ fun LolitaShimmerImage(
             contentScale = contentScale,
             alignment = alignment,
             contentDescription = contentDescription,
+            colorFilter = colorFilter,
         ),
         component = component,
         failure = {
-            val initial = placeholderInitial ?: "?"
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.linearGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+            if (showFailurePlaceholder) {
+                val initial = placeholderInitial ?: "?"
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                )
                             )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = initial,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = initial,
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     )

@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-14",
+  "intent": "七套皮肤透明边角插图，保留原始生成PNG的RGBA和尺寸",
+  "reference": "docs/visuals/2026-10-14-background-art-directions.png",
+  "assets": [
+    {
+      "skin": "sweet",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-1bdb18ec-6fd0-4ecb-a066-00365631db19.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_sweet.png",
+      "sha256": "12cc1554b489a5e43f73349326e9517be0e8fa1ddbcdd5a8c685b9a9d26728f3",
+      "dimensions": [
+        862,
+        1824
+      ],
+      "bytes": 1283283,
+      "transparentFraction": 0.7073157080636626,
+      "centralHalfVisibleFraction": 0.001002360890625636,
+      "prompt": "Use case: stylized-concept.\nAsset type: a single production background ornament for a Chinese Lolita wardrobe Android app, SWEET skin. This is ONE asset, not a contact sheet or a phone mockup.\nCreate a tall portrait 9:19 canvas on a genuinely transparent background. ONLY paint refined decorative artwork near the outer margins and two opposite corners. The entire central 65% must be totally transparent, with no fill or paper rectangle. The artwork will be layered over an existing pastel pink app background and pale content cards.\nStyle reference is the LEFTMOST sweet panel of the attached seven-skin art board: retain its graceful satin ribbon, airy lily-of-the-valley and scalloped lace, but REMOVE ALL opaque background and paper texture.\nComposition: one substantial, graceful satin ribbon loop and bow near the upper LEFT outer corner, a slim ribbon tail tracing the far LEFT edge without entering the central content area; a few soft lily-of-the-valley stems and very sparse hand-drawn lace scallops at the lower RIGHT outer corner. Keep each motif broad enough to read at phone size and leave breathing room between shapes. The ornament does not create a closed frame. All artwork stays within the canvas, not cut off at the edges.\nMedium: exquisite lightly coloured fashion engraving with soft watercolour and satin folds. Dusty petal pink, lilac-grey and warm pearl highlights; light muted contrast. Transparent gaps through the lace and between stems. Few confident shapes, avoid dense filigree or every-edge decoration. No people, clothes, hearts, stars, writing, buttons, brand marks or watermarks. No opaque base colour, no background gradient, no off-white rectangle, no drop shadow around the whole asset. True RGBA transparency around every motif and throughout the centre. Render a polished final resource, not a concept sheet.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "gothic",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-86b8e694-79bb-4349-a5c8-5aabef9e9264.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_gothic.png",
+      "sha256": "96abdf66a1557780f2e710fa6377baad8c9635f60541fe14d59eb55b35004e07",
+      "dimensions": [
+        820,
+        1918
+      ],
+      "bytes": 950854,
+      "transparentFraction": 0.8122593402680638,
+      "centralHalfVisibleFraction": 0.0035529896487703147,
+      "prompt": "Use case: stylized-concept.\nAsset type: a single final transparent background ornament for the GOTHIC skin of a Lolita wardrobe Android app.\nCreate ONE tall 9:19 portrait RGBA illustration, with a genuinely transparent background. No board, no phone, no labels. Leave the entire central 65% totally transparent and concentrate a sparse graceful composition on the outer LEFT upper edge and lower RIGHT corner.\nUse the SECOND gothic panel of the reference art board ONLY as stylistic inspiration. Remove every opaque paper/background area. At the upper LEFT margin, an elegant long pointed Gothic window tracery or wrought-iron arch, just a few refined elongated structural ribs with plentiful transparent gaps. Its top is visible and not cropped; no full frame wrapping the canvas. A slender thorny branch descends a short way down the far left edge. At the lower RIGHT corner, one small group of deep dusty garnet roses and two or three gracefully curving thorn stems, with a muted silk ribbon tail. The roses have clear individual broad petals rather than a dense heap.\nExquisite copperplate fashion engraving softened with restrained watercolor, smoky plum-grey architecture, dusty wine roses, faint violet accents. Balanced pale/dark ink for layered Android light and dark palettes; retain transparent negative spaces within all architectural tracery. Gothic fashion elegance, not horror, no skulls, bats, Halloween props, crosses or text.\nEvery illustration element must stay close to edges; never put a large rose, window or dark shape in the middle. No opaque off-white base, no paper rectangle, no painted black background, no overall shadow, no watermark, no extra miniature repeated icons. The transparency is the canvas, not a decorative checkerboard. Return only this one polished production ornament on transparency.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "chinese",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-39b3ea79-91a4-4fd4-b0d8-cf13db689fec.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_chinese.png",
+      "sha256": "674f3e855ef2fb41c3de0cc9effc3f16d86b62d0d78ed20c570e45d9a3e29d5f",
+      "dimensions": [
+        863,
+        1823
+      ],
+      "bytes": 1064130,
+      "transparentFraction": 0.7739989029072957,
+      "centralHalfVisibleFraction": 0.005604288499025341,
+      "prompt": "Use case: stylized-concept. Asset type: ONE final background ornament for a Chinese Lolita wardrobe Android app. A single tall 9:19 portrait RGBA canvas with genuinely transparent background, not a phone mockup or a contact sheet. All artwork is confined to the top LEFT outer corner and lower RIGHT outer corner, with only a sparse connecting touch at the outermost edge. The central 65 percent is completely transparent. Keep every motif inside the canvas. Exquisite fashion copperplate engraving and soft controlled watercolour. Broad readable forms, fine but legible strokes, light muted contrast and generous breathing space. No people, lettering, logos, buttons, stars, opaque paper texture, background colour, gradient, white rectangle, black base or watermark. Do not draw across the central content region. The reference board is only a style guide; create only the specified skin's new standalone final artwork, remove its opaque background. True alpha transparency in all gaps and throughout the centre. CHINESE skin. Reference the THIRD panel. Refined cinnabar plum blossoms on a gracefully bending dark umber branch in the upper left; a few muted jade leaves, restrained fine cloud embroidery near the far left edge, and at the lower right a small loosely curling embroidered cloud with one plum sprig. Silk-garment elegance, sparse asymmetric brush movement and clean open spaces. Use dusty vermilion, warm gold-brown and muted jade. No tassel dangling through the middle, no square frame, no pagoda, no mountain landscape, no opaque silk rectangle. Clouds and branch should be distinct from a Western rose print.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "classic",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-0e90df9f-5c3b-499d-8b4f-b3db1bd29e99.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_classic.png",
+      "sha256": "f857f10ab35869d44bd3f3c1f4588f57267fb222a39308d7b14e618cd75cb3d2",
+      "dimensions": [
+        887,
+        1774
+      ],
+      "bytes": 869552,
+      "transparentFraction": 0.8275446795692255,
+      "centralHalfVisibleFraction": 0.0012568938724519334,
+      "prompt": "Use case: stylized-concept. Asset type: ONE final background ornament for a Chinese Lolita wardrobe Android app. A single tall 9:19 portrait RGBA canvas with genuinely transparent background, not a phone mockup or a contact sheet. All artwork is confined to the top LEFT outer corner and lower RIGHT outer corner, with only a sparse connecting touch at the outermost edge. The central 65 percent is completely transparent. Keep every motif inside the canvas. Exquisite fashion copperplate engraving and soft controlled watercolour. Broad readable forms, fine but legible strokes, light muted contrast and generous breathing space. No people, lettering, logos, buttons, stars, opaque paper texture, background colour, gradient, white rectangle, black base or watermark. Do not draw across the central content region. The reference board is only a style guide; create only the specified skin's new standalone final artwork, remove its opaque background. True alpha transparency in all gaps and throughout the centre. CLASSIC skin. Reference the FOURTH panel. A restrained copperplate botanical sprig with two elegant small lily flowers and subtle sepia leaves in the upper left corner; lower right holds a single graceful dried herbarium stem beside a small engraved tailoring diamond and just two fine woven parallel stripe accents at the outer edge. Orderly long lines and precise botanical contours, burgundy-grey and warm sepia ink. Classic antiquarian bookplate or tailored fabric lining, NOT ornate rococo roses. No wax seal, no envelope, no book, no dense checker pattern, no opaque paper base and no full frame.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "navy",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-eea573e2-e60f-44fa-a761-03b49832a849.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_navy.png",
+      "sha256": "65d89475ff49a617d22e4828a7478237922c3fcccdc8c7165692c3e8e3f0b9c0",
+      "dimensions": [
+        862,
+        1825
+      ],
+      "bytes": 1025929,
+      "transparentFraction": 0.7962260432889425,
+      "centralHalfVisibleFraction": 0.00042231448691333904,
+      "prompt": "Use case: stylized-concept. Asset type: ONE final background ornament for a Chinese Lolita wardrobe Android app. A single tall 9:19 portrait RGBA canvas with genuinely transparent background, not a phone mockup or a contact sheet. All artwork is confined to the top LEFT outer corner and lower RIGHT outer corner, with only a sparse connecting touch at the outermost edge. The central 65 percent is completely transparent. Keep every motif inside the canvas. Exquisite fashion copperplate engraving and soft controlled watercolour. Broad readable forms, fine but legible strokes, light muted contrast and generous breathing space. No people, lettering, logos, buttons, stars, opaque paper texture, background colour, gradient, white rectangle, black base or watermark. Do not draw across the central content region. The reference board is only a style guide; create only the specified skin's new standalone final artwork, remove its opaque background. True alpha transparency in all gaps and throughout the centre. NAVY skin. Reference the FIFTH panel. Airy nautical engraved rope curves and one light slate-blue ribbon knot near the upper left corner, with open transparent gaps between loops. At the lower right, a small graceful lighthouse on an engraved wave curl, navy/slate ink and a tiny muted brass accent. A few long flowing wave lines hug the outermost lower and right edges; keep the ocean out of the middle. Wind and sailing-cloth feeling, not a dark sea painting. No large anchor, no ship emblem, no compass dial, no dense clouds, no opaque blue sky or paper rectangle. Strong marine silhouette but delicate enough to accompany clothing photographs.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "country",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-205270c5-2373-46e9-84aa-749aa3b0d26d.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_country.png",
+      "sha256": "c0c8ea4ce05bf94d7ea801caa503d0b7c6f5a37b518402c827bbd3f81089ef5c",
+      "dimensions": [
+        862,
+        1825
+      ],
+      "bytes": 1079977,
+      "transparentFraction": 0.7816590916314401,
+      "centralHalfVisibleFraction": 0.0010278015223674035,
+      "prompt": "Use case: stylized-concept. Asset type: ONE final transparent ornamental wallpaper layer for a Chinese Lolita wardrobe Android app. Make a single tall portrait 9:19 RGBA canvas; genuinely transparent background, not a phone mockup or a board. Only compose sparse fine illustrations at the upper LEFT outer corner and lower RIGHT outer corner, with very limited slim touches at the far outside edges. The full central 65% and central content region are completely transparent, every motif stays in the canvas. High-end hand-coloured copperplate fashion engraving, soft watercolour, material tactility in the motifs themselves. Clear graceful broad shapes with room to breathe; no tiny repeating app symbols. No lettering, labels, people, buttons, logos, opaque base colour, paper rectangle, black background, white fill, overall drop shadow or watermark. The attached board is a style guide only; remove its opaque background and make just the requested new production asset. COUNTRY skin, reference the SIXTH panel. A loose asymmetrical sprig of wild daisies and meadow grasses near the upper left, with a small sage gingham ribbon tied into one soft knot, not a great dense bow. At the lower right, a slightly different airy meadow grouping with three to five white-petal daisies, soft sage leaves and a few dusty berry seedheads. One tiny suggestion of linen stitching only at the outside corner. Sage-green, flax-brown, pale cream petals and muted berry accents. Organic herbarium drawing and country cloth lining, natural irregular rhythm, small open gaps between all stems and blossoms. No large full rose blooms, no dense floral border, no gingham covering the centre, no cottage landscape.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    },
+    {
+      "skin": "victorian",
+      "source": "/Users/dengtong/.codex/generated_images/01a12892-9715-7fa3-95be-534c29069d7f/exec-ca037234-6543-44df-9b2e-1a151cd86165.png",
+      "resource": "app/src/main/res/drawable-nodpi/bg_art_victorian.png",
+      "sha256": "327b2e17df32697b379c54bcbffdcc6e176eb7032def333c958961bea68a5de2",
+      "dimensions": [
+        862,
+        1824
+      ],
+      "bytes": 1142797,
+      "transparentFraction": 0.7718674950136362,
+      "centralHalfVisibleFraction": 0.0004630194977001669,
+      "prompt": "Use case: stylized-concept. Asset type: ONE final transparent ornamental wallpaper layer for a Chinese Lolita wardrobe Android app. Make a single tall portrait 9:19 RGBA canvas; genuinely transparent background, not a phone mockup or a board. Only compose sparse fine illustrations at the upper LEFT outer corner and lower RIGHT outer corner, with very limited slim touches at the far outside edges. The full central 65% and central content region are completely transparent, every motif stays in the canvas. High-end hand-coloured copperplate fashion engraving, soft watercolour, material tactility in the motifs themselves. Clear graceful broad shapes with room to breathe; no tiny repeating app symbols. No lettering, labels, people, buttons, logos, opaque base colour, paper rectangle, black background, white fill, overall drop shadow or watermark. The attached board is a style guide only; remove its opaque background and make just the requested new production asset. VICTORIAN skin, reference the SEVENTH panel. A restrained ornate rose-and-acanthus copperplate scroll at the upper left, composed of one broad dusty rose, an elegant ogee stem and aged-gold leaf curls with transparent spaces; in the lower right, two gracefully layered roses with a few open acanthus curls and a short strand of fine pearls. Rose damask cloth and delicate gilt book tooling, more ornate and architectural than the Classic lily/herbarium. Dusty mauve-rose, aged muted gold and sepia shading, soft ivory highlights limited to petals. Keep the rose heads away from the middle and avoid a dense heap or a closed ornate frame. No crowns, coats of arms, medallions, writing or opaque ivory fabric rectangle.",
+      "mode": "built-in image_gen",
+      "transparent_background": true
+    }
+  ]
+}

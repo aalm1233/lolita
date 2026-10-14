@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Alpha-only silhouette: door openings and the waist bow are real cutouts. -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="3.3"
+        android:strokeLineCap="butt"
+        android:pathData="M38,37 C45,21 63,21 70,37" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M29,33 C36.8,34.2 40,40.4 40,46 L40,70 L29,75 Z
+            M32.3,37.5 L32.3,69.9 L36.7,67.8 L36.7,46 C36.7,42.3 35.2,39.1 32.3,37.5 Z
+            M79,33 C71.2,34.2 68,40.4 68,46 L68,70 L79,75 Z
+            M75.7,37.5 L75.7,69.9 L71.3,67.8 L71.3,46 C71.3,42.3 72.8,39.1 75.7,37.5 Z
+            M37,75 L71,75 L71,78 L37,78 Z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M48,43 L46.5,38.5 L48.8,37.7 L50.3,42.6 Z
+            M60,43 L61.5,38.5 L59.2,37.7 L57.7,42.6 Z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M46,43 Q54,40.7 62,43 Q62,45.2 59,52
+            C63.7,54.7 65.1,60.6 66,65.8 L66,67 C66,71.5 62.5,73 60,70
+            C58.6,74.3 49.4,74.3 48,70 C45.5,73 42,71.5 42,67 L42,65.8
+            C42.9,60.6 44.3,54.7 49,52 Q46,45.2 46,43 Z
+            M54,51.5 C51.5,49.5 48.2,49.3 49,53.7 Q51.5,54.1 54,52.7
+            Q56.5,54.1 59,53.7 C59.8,49.3 56.5,49.5 54,51.5 Z
+            M52.9,54 L54,54.6 L50.7,64.2 L48.5,63.1 Z
+            M55.1,54 L54,54.6 L57.3,64.2 L59.5,63.1 Z" />
+</vector>

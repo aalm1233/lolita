@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.`import`
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ fun TaobaoImportGuideScreen(
     val skin = LolitaSkin.current
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
                 title = { Text("导入指南") },

@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.price
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
@@ -37,7 +38,7 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
     }
     LaunchedEffect(priceId, paymentId) { viewModel.loadPayment(priceId, paymentId) }
     val requestBack = UnsavedChangesHandler(viewModel.hasUnsavedChanges, onBack)
-    Scaffold(topBar = { GradientTopAppBar(title = { Text(if (paymentId != null) "编辑实际付款" else if (historical) "补录真实付款" else "记录实际付款") },
+    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text(if (paymentId != null) "编辑实际付款" else if (historical) "补录真实付款" else "记录实际付款") },
         navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
             IconButton(enabled = canSave, onClick = savePayment) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
         }) }) { padding ->

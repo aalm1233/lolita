@@ -87,6 +87,12 @@ data class LolitaSkinConfig(
     val dialogBlurAlpha: Float = 0.6f,
     val heroTransitionEnabled: Boolean = true,
 
+    // Fixed window illustration, independent of the animated ambient particles.
+    val artBackgroundRes: Int? = null,
+    val artBackgroundAlpha: Float = 0f,
+    val artBackgroundAlphaDark: Float = 0f,
+    val artBackgroundTintDark: Color? = null,
+
     // Card variant tokens
     val galleryCardElevation: Dp = 0.dp,
     val galleryCardBorderStroke: BorderStroke? = null,

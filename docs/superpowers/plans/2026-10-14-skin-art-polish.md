@@ -23,9 +23,9 @@
 **Files:** res/drawable/ic_launcher_foreground.xml、新ic_launcher_monochrome.xml、mipmap-anydpi-v26及v33两份adaptive XML、values/colors.xml、DailyOutfitReminderReceiver.kt。
 **Interfaces:** foreground/background/monochrome使用固定resource；通知使用R.drawable.ic_notification。
 
-- [ ] 绘制莓紫底象牙衣橱挂裙，单色版保留同一主要轮廓和负空间；图形完全在108画布中央66区域。
-- [ ] 前景无位图/微小文字；独立Android13单色层，旧API保持前景背景兼容。
-- [ ] 核对通知smallIcon独立于桌面资源；Android真渲染24/48尺寸与裁切交由控制器验证。
+- [x] 绘制莓紫底象牙衣橱挂裙，单色版保留同一主要轮廓和负空间；图形完全在108画布中央66区域。
+- [x] 前景无位图/微小文字；独立Android13单色层，旧API保持前景背景兼容。
+- [x] 核对通知smallIcon独立于桌面资源；Android真渲染24/48尺寸与裁切交由控制器验证。
 
 ## Task 2: 公共背景与页面接入
 
@@ -33,29 +33,29 @@
 **Interfaces:** artBackgroundRes:Int? / artBackgroundAlpha:Float / artBackgroundAlphaDark:Float / artBackgroundTintDark:Color?；SkinArtBackground(modifier:Modifier=Modifier)；LolitaShimmerImage尾部colorFilter:ColorFilter?=null和showFailurePlaceholder:Boolean=true。
 **Consumes:** 控制器提供drawable-nodpi/bg_art_{sweet,gothic,chinese,classic,navy,country,victorian}.png。
 
-- [ ] 先给出真实绘制回归：七套浅/暗图层正确、透明中心保留底色、装饰不占无障碍，初始缺组件状态由控制器观察RED；避免实现镜像断言。
-- [ ] 添加令牌和组件、图片可选色彩过滤/静默失败；在公共NavHost单实例放在原粒子前，中央留白无需改变卡片色。
-- [ ] 逐一处理普通页面内层Scaffold的不透明遮挡；保留网页、对话框与全屏照片等内容表面，禁止删改Insets或滚动机制。
-- [ ] 根据真实页面验证确保首页、穿搭、统计、个人和详情可见；在失败/加载时无问号或shimmer，保留默认图片行为。
+- [x] 先给出七资源打包/透明留白回归，缺素材 bg_art_sweet 时由控制器观察 RED；随后补真实组件浅暗绘制、中央底色、无障碍、静态帧及失败回退检查，避免实现镜像断言。
+- [x] 添加令牌和组件、图片可选色彩过滤/静默失败；在公共NavHost单实例放在原粒子前，中央留白无需改变卡片色。
+- [x] 逐一处理普通页面内层Scaffold的不透明遮挡；保留网页、对话框与全屏照片等内容表面，禁止删改Insets或滚动机制。
+- [x] 根据真实页面验证确保首页、穿搭、统计、个人和详情可见；在失败/加载时无问号或shimmer，保留默认图片行为。
 
 ## Task 3: 功能图标光学精修
 
 **Files:** PolishedContentIcons.kt、PolishedActionDrawings.kt、PolishedDirectionStatusDrawings.kt；必要时PolishedNavigationIcons.kt仅光学微调；复用SkinIconVisualTest。
 **Interfaces:** 现有drawPolished*分派和SkinIconStyle不变。
 
-- [ ] 按设计修¥间距、Camera内部疏密、田园短箭头、SwapVert和OpenInNew独立斜箭头；保持七套实际构造。
-- [ ] 修Search连接、Add/Close视觉重量、重叠纸片/照片与Link空白，确保tint/alpha及所有镜像/星标轮廓关系保留。
-- [ ] 检查所有51键，保持24网格/1.7主线和语义，不用新纹理/徽章替代工具本体。现有完整真实provider矩阵由控制器统一构建执行。
+- [x] 按设计修¥间距、Camera内部疏密、田园短箭头、SwapVert和OpenInNew独立斜箭头；保持七套实际构造。
+- [x] 修Search连接、Add/Close视觉重量、重叠纸片/照片与Link空白，确保tint/alpha及所有镜像/星标轮廓关系保留。
+- [x] 检查所有51键，保持24网格/1.7主线和语义，不用新纹理/徽章替代工具本体。现有完整真实provider矩阵由控制器统一构建执行。
 
 ## Task 4: 素材、验收和交付
 
 **Files:** 七张独立生成PNG、来源提示词JSON、AGENTS.md、版本文件、docs/visuals真实页面/矩阵与发布报告。
 **Interfaces:** 固定7资源名称交给Task2；全部改动统一构建与提交由控制器负责。
 
-- [ ] 内置imagegen每张分别生成透明边角插画，目测并检查alpha、尺寸、磁盘/运行时开销；保存原始提示词与SHA256。
-- [ ] 基线和最终构建、单测、真实背景与图标回归；审查任务和最终全改动，无遗留阻塞项。
-- [ ] 独立AVD核对签名并从2.45.2覆盖升级，归档实际浅暗页面与桌面图标，保全原设置/记录。
-- [ ] 升2.46.0/99并更新约定；源码合入master、普通推送，clean正式包签名与版本校验，GitHub/Gitee完整双平台发布与匿名附件摘要核对。
+- [x] 内置imagegen每张分别生成透明边角插画，目测并检查alpha、尺寸、磁盘/运行时开销；保存原始提示词与SHA256。
+- [x] 基线和最终构建、单测、真实背景与图标回归；审查任务和最终全改动，无遗留阻塞项。
+- [x] 独立AVD核对签名并从2.45.2覆盖升级，归档实际浅暗页面与桌面图标，保全原设置/记录。
+- [x] 升2.46.0/99并更新约定；源码合入master、普通推送，clean正式包签名与版本校验，GitHub/Gitee完整双平台发布与匿名附件摘要核对。
 
 ## Execution
 

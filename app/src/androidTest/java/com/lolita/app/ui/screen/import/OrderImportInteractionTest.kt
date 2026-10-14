@@ -1,15 +1,28 @@
 package com.lolita.app.ui.screen.`import`
 
 import android.app.Application
+import android.os.ParcelFileDescriptor
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.runtime.SideEffect
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import java.io.File
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import com.lolita.app.ui.theme.skin.component.SkinArtBackground
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
@@ -24,20 +37,33 @@ import com.lolita.app.data.model.TaobaoOrderItem
 import com.lolita.app.data.model.TaobaoOrder
 import com.lolita.app.data.repository.*
 import com.lolita.app.ui.theme.LolitaTheme
+import com.lolita.app.ui.theme.SkinType
+import com.lolita.app.data.local.entity.Brand
+import com.lolita.app.data.local.entity.Category
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.*
 import org.junit.Assert.*
 
+@OptIn(ExperimentalLayoutApi::class)
 class OrderImportInteractionTest {
     @get:Rule val compose = createComposeRule()
     private lateinit var db: LolitaDatabase
     private lateinit var vm: TaobaoImportViewModel
     private val store = ViewModelStore()
     private val compact = mutableStateOf(false)
+    private val skinType = mutableStateOf(SkinType.DEFAULT)
+    private val dark = mutableStateOf(false)
+    private var keyboardController: SoftwareKeyboardController? = null
+    @Volatile private var keyboardOpen = false
 
     @Before fun setup() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
+        runBlocking {
+            db.brandDao().insertBrand(Brand(id = 1, name = "测试品牌"))
+            db.categoryDao().insertCategory(Category(id = 1, name = "JSK"))
+        }
         compose.runOnIdle {
             vm = TaobaoImportViewModel(context.applicationContext as Application,
                 BrandRepository(db.brandDao(), db.itemDao(), db),
@@ -48,7 +74,7 @@ class OrderImportInteractionTest {
             store.put("import", vm)
             val rows = listOf("测试定金裙", "测试尾款裙", "测试全款裙").mapIndexed { i, name ->
                 val original = TaobaoOrderItem(name, "", "蓝色;M;JSK", 1, 100.0, "JSK", "M", "蓝色", "order-$i", "2026-10-14", "测试店铺")
-                ImportItemState(originalItem = original, name = name,
+                ImportItemState(originalItem = original, name = name, brandId = 1, categoryId = 1,
                     paymentRole = when (i) { 0 -> PaymentRole.DEPOSIT; 1 -> PaymentRole.BALANCE; else -> null })
             }
             val field = TaobaoImportViewModel::class.java.getDeclaredField("_uiState").apply { isAccessible = true }
@@ -59,9 +85,22 @@ class OrderImportInteractionTest {
         compose.setContent {
             val state by vm.uiState.collectAsState()
             val density = LocalDensity.current
-            CompositionLocalProvider(LocalDensity provides Density(density.density, if (compact.value) 2f else density.fontScale)) {
+            val keyboard = LocalSoftwareKeyboardController.current
+            val open = WindowInsets.isImeVisible
+            SideEffect { keyboardController = keyboard; keyboardOpen = open }
+            val config = Configuration(LocalConfiguration.current).apply {
+                uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or
+                    if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+            }
+            CompositionLocalProvider(LocalConfiguration provides config,
+                LocalDensity provides Density(density.density, if (compact.value) 2f else density.fontScale)) {
                 Box(if (compact.value) Modifier.width(320.dp) else Modifier) {
-                    LolitaTheme { ImportDetailContent(state, vm, onBack = {}) }
+                    LolitaTheme(skinType = skinType.value, darkTheme = dark.value) {
+                        Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+                            SkinArtBackground(Modifier.matchParentSize())
+                            ImportDetailContent(state, vm, onBack = {})
+                        }
+                    }
                 }
             }
         }
@@ -69,6 +108,8 @@ class OrderImportInteractionTest {
     @After fun close() { compose.runOnIdle { store.clear() }; db.close() }
     private fun reveal(text: String) {
         compose.onNodeWithTag("importDetailList").performScrollToNode(hasText(text))
+        // Locate a long lazy item, then scroll its actual descendant into the viewport.
+        compose.onNodeWithText(text).performScrollTo()
     }
     @Suppress("UNCHECKED_CAST")
     private fun replaceState(update: (TaobaoImportUiState) -> TaobaoImportUiState) {
@@ -76,6 +117,101 @@ class OrderImportInteractionTest {
             val field = TaobaoImportViewModel::class.java.getDeclaredField("_uiState").apply { isAccessible = true }
             val state = field.get(vm) as MutableStateFlow<TaobaoImportUiState>
             state.value = update(state.value)
+        }
+    }
+    @Test fun keyboardKeepsInputAndFloatingActionsReachableAndHidesDeck() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        fun shell(command: String): String = ParcelFileDescriptor.AutoCloseInputStream(
+            instrumentation.uiAutomation.executeShellCommand(command)
+        ).bufferedReader().use { it.readText().trim() }
+        val original = shell("settings get secure show_ime_with_hard_keyboard")
+        require(original == "null" || original.matches(Regex("-?\\d+")))
+        try {
+            shell("settings put secure show_ime_with_hard_keyboard 1")
+            reveal("本件分摊邮费")
+            compose.onNodeWithText("本件分摊邮费").performClick()
+            compose.runOnIdle { keyboardController?.show() }
+            compose.waitUntil(10_000) { keyboardOpen }
+            compose.onNodeWithText("本件分摊邮费").assertIsDisplayed().performTextReplacement("12..")
+            compose.onNodeWithTag("importStackBack").assertDoesNotExist()
+            compose.onNodeWithText("下一件").assertIsDisplayed()
+            compose.onNodeWithText("核对并导入").assertIsDisplayed()
+            val output = File(instrumentation.targetContext.filesDir, "order-import-floating/keyboard.png")
+            output.parentFile!!.mkdirs()
+            output.outputStream().use { instrumentation.uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it) }
+            compose.onNodeWithText("下一件").performClick()
+            compose.waitUntil(10_000) { !keyboardOpen }
+            compose.onNodeWithText("2 / 3").assertExists()
+            compose.runOnIdle { assertEquals("12..", vm.uiState.value.importItems[0].shippingInput) }
+        } finally {
+            compose.runOnIdle { keyboardController?.hide() }
+            if (original == "null") shell("settings delete secure show_ime_with_hard_keyboard")
+            else shell("settings put secure show_ime_with_hard_keyboard $original")
+        }
+    }
+    @Test fun singleStackTracksRemainingRowsAndDisappearsInBatchAndAtLastRow() {
+        compose.onNodeWithTag("importFloatingDock").assertExists()
+        compose.onNodeWithTag("importStackBack").assertExists()
+        compose.onNodeWithText("下一件：#2 测试尾款裙 · 尾款").assertExists()
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNodeWithTag("importStackBack").assertExists()
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNodeWithTag("importStackBack").assertDoesNotExist()
+        compose.onNodeWithText("上一件").performClick()
+        reveal("批量编辑")
+        compose.onNodeWithText("批量编辑").performClick()
+        compose.onNodeWithTag("importFloatingDock").assertDoesNotExist()
+        compose.onNodeWithTag("importStackBack").assertDoesNotExist()
+    }
+    @Test fun missingIdentityExpandsItsFieldsAndKeepsDrafts() {
+        replaceState { state -> state.copy(importItems = state.importItems.map { it.copy(brandId = 0, categoryId = 0) }) }
+        reveal("商品名称")
+        compose.onNodeWithText("商品名称").performTextReplacement("待补充品牌的服饰")
+        compose.runOnIdle { assertEquals("待补充品牌的服饰", vm.uiState.value.importItems[0].name) }
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNodeWithText("上一件").performClick()
+        reveal("商品名称")
+        compose.onNodeWithText("商品名称").assertTextContains("待补充品牌的服饰")
+    }
+    @Test fun identitySectionCanFoldWithoutLosingChanges() {
+        replaceState { state -> state.copy(importItems = state.importItems.map { it.copy(brandId = 1, categoryId = 1) }) }
+        reveal("展开资料")
+        compose.onNodeWithText("商品名称").assertDoesNotExist()
+        compose.onNodeWithText("展开资料").assertIsDisplayed().performClick()
+        reveal("商品名称")
+        compose.onNodeWithText("商品名称").performTextReplacement("修正后的服饰")
+        reveal("收起资料")
+        compose.onNodeWithText("收起资料").performClick()
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNodeWithText("上一件").performClick()
+        reveal("展开资料")
+        compose.onNodeWithText("展开资料").assertIsDisplayed().performClick()
+        reveal("商品名称")
+        compose.onNodeWithText("商品名称").assertTextContains("修正后的服饰")
+    }
+    @Test fun allSkinsRenderSingleStackAndDockInLightAndDark() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val folder = File(context.filesDir, "order-import-floating").apply { mkdirs() }
+        replaceState { state -> state.copy(importItems = state.importItems.map { it.copy(brandId = 1, categoryId = 1) }) }
+        SkinType.entries.forEach { skin ->
+            listOf(false, true).forEach { isDark ->
+                compose.runOnIdle { skinType.value = skin; dark.value = isDark }
+                compose.onNodeWithTag("importStackBack").assertExists()
+                compose.onNodeWithTag("importFloatingDock").assertIsDisplayed()
+                compose.onNodeWithText("下一件").assertIsDisplayed()
+                if (isDark) {
+                    val counter = compose.onNodeWithText("第 1 / 3 条资料").captureToImage().asAndroidBitmap()
+                    val brightest = (0 until counter.height).maxOf { y ->
+                        (0 until counter.width).maxOf { x -> android.graphics.Color.luminance(counter.getPixel(x, y)) }
+                    }
+                    assertTrue("$skin 暗色进度文字应清晰可读", brightest > 0.4f)
+                }
+                compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap ->
+                    File(folder, "${skin.name}-${if (isDark) "dark" else "light"}.png").outputStream().use {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    }
+                }
+            }
         }
     }
     @Test fun incompleteMoneyTextSurvivesNextPreviousAndModeSwitch() {
@@ -96,6 +232,7 @@ class OrderImportInteractionTest {
             val rows = state.importItems.map { it.copy(originalItem = it.originalItem.copy(orderId = "same-order"), shipping = 1.0, paidAmount = 50.0) }
             state.copy(importItems = rows, orders = listOf(TaobaoOrder("same-order", "2026-10-14", "交易成功", "测试店铺", 150.0, 3.0, rows.map { it.originalItem })))
         }
+        reveal("本次选择 3/3 件，分摊邮费 ¥3.0，待核对实付 ¥150.0。")
         compose.onNodeWithText("本次选择 3/3 件，分摊邮费 ¥3.0，待核对实付 ¥150.0。").assertExists()
     }
     @Test fun unlinkAndChangingCounterpartRequireFreshFinancialConfirmation() {

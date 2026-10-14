@@ -20,3 +20,8 @@
 ## 21:37 后续复查
 
 详见 `docs/order-import-interaction-review-2026-10-14.md`。修复草稿丢失、逐件订单汇总、配对核对状态及小屏大字体底部挤压。8 项设备交互与170项JVM测试通过；重新 `clean assembleRelease -Pkotlin.incremental=false` 构建通过，并核对签名。修正版仍为尚未发布的2.46.1 / 100；此前本地APK已替换，当前SHA256：`f78229c175124d2b58c3c26d1361e0765af06cd23c4a92ccf2099574502fe36c`。
+
+
+## 正式发布
+
+2.46.1 / 100 已按发布流程上传 GitHub 和 Gitee，同签名覆盖升级及匿名完整下载验证通过。正式包由源码提交 `1c3690d98550572f267069379feb827d420d3533` clean 构建；正式 SHA256 `6d09531b6f6de90dc524a3e532cf77a3fea99b1232dc0c1fd58084231e2276eb`。此前本地包的摘要仅记录当时的预发布构建。完整发布记录为 `docs/release-2.46.1.md`、`docs/release-2.46.1-verification.json`。

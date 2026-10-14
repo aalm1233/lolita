@@ -56,16 +56,16 @@ internal fun ImportStackCard(
 }
 
 @Composable
-internal fun ImportSingleProgress(index: Int, total: Int, next: ImportItemState?) {
+internal fun ImportSingleProgress(position: Int, total: Int, next: ImportItemState?, nextSourceIndex: Int?) {
     val skin = LolitaSkin.current
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-        Text("第 ${index + 1} / $total 条资料", style = MaterialTheme.typography.titleSmall,
+        Text("第 ${position + 1} / $total 条资料", style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface)
-        LinearProgressIndicator(progress = { (index + 1).toFloat() / total },
+        LinearProgressIndicator(progress = { (position + 1).toFloat() / total },
             modifier = Modifier.fillMaxWidth().height(skin.spacingSmall).clearAndSetSemantics {})
-        if (next != null) {
+        if (next != null && nextSourceIndex != null) {
             val role = when (next.paymentRole) { PaymentRole.DEPOSIT -> "定金"; PaymentRole.BALANCE -> "尾款"; null -> "全款" }
-            Text("下一件：#${index + 2} ${next.name} · $role", style = MaterialTheme.typography.bodySmall,
+            Text("下一件：#${nextSourceIndex + 1} ${next.name} · $role", style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
         }
     }

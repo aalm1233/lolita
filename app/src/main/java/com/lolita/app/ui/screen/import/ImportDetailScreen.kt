@@ -64,11 +64,12 @@ fun ImportDetailContent(
 
     var showImportConfirm by remember { mutableStateOf(false) }
     var singleMode by rememberSaveable { mutableStateOf(true) }
-    var currentIndex by rememberSaveable { mutableIntStateOf(0) }
+    val displayIndices = remember(uiState.importItems) { importDisplayOrder(uiState.importItems) }
+    var currentSourceIndex by rememberSaveable { mutableIntStateOf(displayIndices.firstOrNull() ?: 0) }
     var paymentFilter by rememberSaveable { mutableIntStateOf(0) }
     val listState = rememberLazyListState()
     ObserveSkinScroll(listState)
-    val visibleIndices = uiState.importItems.indices.filter { index ->
+    val visibleIndices = displayIndices.filter { index ->
         val item = uiState.importItems[index]
         when (paymentFilter) {
             1 -> item.paymentRole == null
@@ -78,12 +79,19 @@ fun ImportDetailContent(
             else -> true
         }
     }
-    val activeIndex = currentIndex.coerceIn(0, (uiState.importItems.size - 1).coerceAtLeast(0))
+    val activeIndex = currentSourceIndex.takeIf { it in uiState.importItems.indices } ?: displayIndices.firstOrNull() ?: 0
+    val activePosition = displayIndices.indexOf(activeIndex).coerceAtLeast(0)
+    val nextSourceIndex = displayIndices.getOrNull(activePosition + 1)
+    fun navigate(direction: Int) {
+        val target = displayIndices.getOrNull(activePosition + direction) ?: return
+        focusManager.clearFocus()
+        navigationDirection = direction
+        currentSourceIndex = target
+    }
     var previousIndex by remember { mutableIntStateOf(activeIndex) }
     LaunchedEffect(singleMode, activeIndex, paymentFilter) { listState.scrollToItem(0) }
     LaunchedEffect(activeIndex) {
         if (previousIndex != activeIndex) {
-            navigationDirection = if (activeIndex > previousIndex) 1 else -1
             previousIndex = activeIndex
             cardProgress.snapTo(0f)
             cardProgress.animateTo(1f, skin.spatialSpring)
@@ -124,18 +132,18 @@ fun ImportDetailContent(
                         BoxWithConstraints(Modifier.fillMaxWidth()) {
                             if (maxWidth < 360.dp && LocalDensity.current.fontScale > 1.3f) {
                                 Column {
-                                    Text("${activeIndex + 1} / ${uiState.importItems.size}", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                                    Text("${activePosition + 1} / ${uiState.importItems.size}", Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                                     Row(Modifier.fillMaxWidth()) {
-                                        TextButton(onClick = { focusManager.clearFocus(); currentIndex = activeIndex - 1 }, enabled = activeIndex > 0, modifier = Modifier.weight(1f)) { Text("上一件") }
-                                        TextButton(onClick = { focusManager.clearFocus(); currentIndex = activeIndex + 1 }, enabled = activeIndex < uiState.importItems.lastIndex, modifier = Modifier.weight(1f)) { Text("下一件") }
+                                        TextButton(onClick = { navigate(-1) }, enabled = activePosition > 0, modifier = Modifier.weight(1f)) { Text("上一件") }
+                                        TextButton(onClick = { navigate(1) }, enabled = activePosition < displayIndices.lastIndex, modifier = Modifier.weight(1f)) { Text("下一件") }
                                     }
                                 }
                             } else {
                                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically) {
-                                    TextButton(onClick = { focusManager.clearFocus(); currentIndex = activeIndex - 1 }, enabled = activeIndex > 0) { Text("上一件") }
-                                    Text("${activeIndex + 1} / ${uiState.importItems.size}")
-                                    TextButton(onClick = { focusManager.clearFocus(); currentIndex = activeIndex + 1 }, enabled = activeIndex < uiState.importItems.lastIndex) { Text("下一件") }
+                                    TextButton(onClick = { navigate(-1) }, enabled = activePosition > 0) { Text("上一件") }
+                                    Text("${activePosition + 1} / ${uiState.importItems.size}")
+                                    TextButton(onClick = { navigate(1) }, enabled = activePosition < displayIndices.lastIndex) { Text("下一件") }
                                 }
                             }
                         }
@@ -184,11 +192,11 @@ fun ImportDetailContent(
                 else visibleIndices.map { uiState.importItems[it].originalItem.orderId }.distinct())
             if (!singleMode) importOrderSummaries(uiState, shownOrderIds)
             if (singleMode && uiState.importItems.isNotEmpty()) item(key = "single-progress") {
-                ImportSingleProgress(activeIndex, uiState.importItems.size, uiState.importItems.getOrNull(activeIndex + 1))
+                ImportSingleProgress(activePosition, uiState.importItems.size, nextSourceIndex?.let { uiState.importItems[it] }, nextSourceIndex)
             }
             if (!singleMode && visibleIndices.isEmpty()) item { Text("此分类暂无商品，可切换其他分类。") }
             if (singleMode && uiState.importItems.isNotEmpty()) item(key = "single-editor") {
-                ImportStackCard(uiState.importItems.lastIndex - activeIndex, showDecoration, { cardProgress.value }, navigationDirection) {
+                ImportStackCard(displayIndices.lastIndex - activePosition, showDecoration, { cardProgress.value }, navigationDirection) {
                     key(activeIndex) {
                         ImportCardEditor(activeIndex, uiState, viewModel, onPickLocalImage, floating = true)
                     }

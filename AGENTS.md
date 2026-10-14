@@ -263,7 +263,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=101, versionName="2.46.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=102, versionName="2.46.3"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -320,7 +320,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `StageAccounting` 将未指定阶段的实付按计划顺序投影抵扣，不修改账本；阶段提醒/日历合计不得超过订单整体余额，历史计划超额保留原值供核对。日期未知的实付保持 null，不用应付或创建日期伪造月支出。到期日未知的阶段不设置提醒；提醒代理 ID 为负阶段 ID，缺失 ID 哨兵不可用 -1。
 - 淘宝订单数量拆分，实付和邮费按整数分分配且逐项确认，保留来源订单与原始金额；不凭名称自动合并服饰或小物。
 - 订单导入默认逐件填写，可随时切换批量编辑并保留原始金额草稿、付款类型和配对。逐件页复用 `ImportStackCard` 的装饰卡缘、`ImportSingleProgress` 的下一件说明及 `ImportActionDock` 的悬浮操作区；主卡/操作区使用 `LolitaCard.FEATURED`，卡缘使用 COMPACT，间距、圆角及导航弹簧消费皮肤令牌。装饰没有输入或重复语义，最后一件、批量、键盘打开或字号大于 1.4 时隐藏；导航动画只在 `graphicsLayer` 读取进度。金额与付款优先展示，服饰资料可折叠，缺失名称/品牌/分类自动展开；配对尾款继续继承定金资料。底部消费导航栏/IME Insets，切换商品清除焦点并保留未完成输入。
-- `OrderImportInteractionTest` 使用独立内存 Room：13 项真实 Compose 回归覆盖逐件/批量、卡缘数量、资料折叠和缺失字段、金额草稿、配对及核对重置、来源订单合计、320dp/两倍字体及真实键盘；导出七皮肤浅暗实拍并检查暗色进度文字亮度。实现与实拍见 `docs/floating-order-cards-2026-10-15.md`；定向测试须使用独立 AVD，不操作用户设备数据。
+- 定金尾款相邻展示由 `importDisplayOrder` 生成原索引序列：仅将双向、异角色且合法范围的配对按“定金→尾款”放在两者最早原位置；未配对保留原相对顺序。逐件、批量及筛选共用序列，导航/进度/装饰剩余数量使用展示位置，编辑/图片/配对及卡片编号仍使用原索引。更换、解除或修改角色后重排但保留当前原记录。不得直接重排 `importItems` 或凭排序建立配对。`ImportDisplayOrderTest` 的7项排序回归及真实Compose的倒序配对导航、批量筛选纠错和动态重排回归覆盖此约定；记录见 `docs/order-pair-ordering-2026-10-15.md`。
+- `OrderImportInteractionTest` 使用独立内存 Room：16 项真实 Compose 回归覆盖逐件/批量、卡缘数量、资料折叠和缺失字段、金额草稿、配对及核对重置、来源订单合计、320dp/两倍字体及真实键盘；导出七皮肤浅暗实拍并检查暗色进度文字亮度。实现与实拍见 `docs/floating-order-cards-2026-10-15.md`；定向测试须使用独立 AVD，不操作用户设备数据。
 
 - 消费分布只保留当前维度的数据订阅（`flatMapLatest`），加载态与最终态须由同一 collector 顺序发布，切换方法仅更新选择，避免空数据快速切换卡在加载状态。消费趋势用年度 StateFlow 与固定 DAO 订阅组合，切换不得累积旧 collector。统计基于当前绑定订单的实付；空风格/季节纳入未设置分组，多季节通过 `SpendingBreakdown` 按整数分均分并保全合计。日期未知的实付由 `getUndatedSpending` 单列提示，不归入任何年份。回归位于 `SpendingBreakdownTest` 与 `SpendingStatisticsViewModelTest`（独立内存 Room，覆盖付款修改、维度/年份切换及实付日期）。
 

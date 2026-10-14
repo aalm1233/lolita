@@ -52,6 +52,7 @@ class OrderImportInteractionTest {
     private lateinit var vm: TaobaoImportViewModel
     private val store = ViewModelStore()
     private val compact = mutableStateOf(false)
+    private val detailVisible = mutableStateOf(true)
     private val skinType = mutableStateOf(SkinType.DEFAULT)
     private val dark = mutableStateOf(false)
     private var keyboardController: SoftwareKeyboardController? = null
@@ -98,7 +99,7 @@ class OrderImportInteractionTest {
                     LolitaTheme(skinType = skinType.value, darkTheme = dark.value) {
                         Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
                             SkinArtBackground(Modifier.matchParentSize())
-                            ImportDetailContent(state, vm, onBack = {})
+                            if (detailVisible.value) ImportDetailContent(state, vm, onBack = {})
                         }
                     }
                 }
@@ -118,6 +119,86 @@ class OrderImportInteractionTest {
             val state = field.get(vm) as MutableStateFlow<TaobaoImportUiState>
             state.value = update(state.value)
         }
+    }
+    private fun openSeparatedPairs() {
+        // Close the previous detail composition, then open the newly built import queue.
+        compose.runOnIdle { detailVisible.value = false }
+        replaceState { state ->
+            val names = listOf("A尾款", "全款服饰", "A定金", "B尾款", "未配对定金", "B定金")
+            state.copy(importItems = names.mapIndexed { index, name ->
+                state.importItems[2].copy(name = name,
+                    originalItem = state.importItems[2].originalItem.copy(name = name, orderId = "source-$index"),
+                    paymentRole = when (index) { 0, 3 -> PaymentRole.BALANCE; 2, 4, 5 -> PaymentRole.DEPOSIT; else -> null },
+                    pairedWith = when (index) { 0 -> 2; 2 -> 0; 3 -> 5; 5 -> 3; else -> null })
+            })
+        }
+        compose.runOnIdle { detailVisible.value = true }
+    }
+    @Test fun separatedPairsStartWithDepositAndNavigateWithoutChangingSourceDrafts() {
+        openSeparatedPairs()
+        compose.onNode(hasText("A定金") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("1 / 6").assertExists()
+        compose.onNodeWithText("下一件：#1 A尾款 · 尾款").assertExists()
+        reveal("本件分摊邮费")
+        compose.onNodeWithText("本件分摊邮费").performTextReplacement("12..")
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNode(hasText("A尾款") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("2 / 6").assertExists()
+        compose.onNodeWithText("数据将从定金项 #3 继承").assertExists()
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNode(hasText("全款服饰") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("上一件").performClick()
+        compose.onNodeWithText("上一件").performClick()
+        reveal("本件分摊邮费")
+        compose.onNodeWithText("本件分摊邮费").assertTextContains("12..")
+        compose.runOnIdle {
+            assertEquals("12..", vm.uiState.value.importItems[2].shippingInput)
+            assertNull(vm.uiState.value.importItems[0].shippingInput)
+            assertEquals(listOf("A尾款", "全款服饰", "A定金", "B尾款", "未配对定金", "B定金"), vm.uiState.value.importItems.map { it.name })
+        }
+        compose.onNodeWithTag("importDetailList").performScrollToIndex(0)
+        val output = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir, "order-import-pair-order/single.png")
+        output.parentFile!!.mkdirs()
+        compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap ->
+            output.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+    }
+    @Test fun batchUsesSamePairOrderAndFilteredCorrectionKeepsOriginalIndex() {
+        openSeparatedPairs()
+        compose.onNodeWithText("批量编辑").performClick()
+        compose.onNodeWithTag("importDetailList").performScrollToIndex(1)
+        compose.onNode(hasText("A定金") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithTag("importDetailList").performScrollToIndex(2)
+        compose.onNode(hasText("A尾款") and !hasSetTextAction()).assertIsDisplayed()
+        reveal("尾款 2")
+        compose.onNodeWithText("尾款 2").performClick()
+        compose.onNodeWithTag("importDetailList").performScrollToIndex(1)
+        compose.onNode(hasText("A尾款") and !hasSetTextAction()).assertIsDisplayed()
+        // Correct the first filtered card, even when the next card is prefetched.
+        compose.onAllNodesWithText("全款", useUnmergedTree = true).onFirst().performScrollTo().performClick()
+        compose.runOnIdle {
+            assertNull(vm.uiState.value.importItems[0].paymentRole)
+            assertEquals(PaymentRole.DEPOSIT, vm.uiState.value.importItems[2].paymentRole)
+            assertNull(vm.uiState.value.importItems[2].pairedWith)
+            assertEquals(5, vm.uiState.value.importItems[3].pairedWith)
+        }
+    }
+    @Test fun changingAndRemovingPairKeepsCurrentItemWhileUpdatingNavigationPosition() {
+        openSeparatedPairs()
+        repeat(4) { compose.onNodeWithText("下一件").performClick() }
+        compose.onNode(hasText("B尾款") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("5 / 6").assertExists()
+        compose.runOnIdle { vm.manualPair(2, 3) }
+        compose.onNode(hasText("B尾款") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("4 / 6").assertExists()
+        compose.onNodeWithText("上一件").performClick()
+        compose.onNode(hasText("A定金") and !hasSetTextAction()).assertIsDisplayed()
+        compose.runOnIdle { vm.unpair(2); vm.setPaymentRole(2, null) }
+        compose.onNode(hasText("A定金") and !hasSetTextAction()).assertIsDisplayed()
+        compose.onNodeWithText("3 / 6").assertExists()
+        compose.onNodeWithText("下一件").performClick()
+        compose.onNode(hasText("B尾款") and !hasSetTextAction()).assertIsDisplayed()
+        compose.runOnIdle { assertNull(vm.uiState.value.importItems[3].pairedWith) }
     }
     @Test fun keyboardKeepsInputAndFloatingActionsReachableAndHidesDeck() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()

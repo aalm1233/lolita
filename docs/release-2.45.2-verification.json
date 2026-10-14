@@ -1,0 +1,37 @@
+{
+  "same_signature_upgrade": true,
+  "version": "2.45.2",
+  "version_code": 98,
+  "items_preserved": 198,
+  "image_hashes_preserved": 172,
+  "device_tests": 36,
+  "jvm_tests": 170,
+  "clean_release": true,
+  "source_commit": "7aee8489ff44348d05a71ee470648a9166b18b41",
+  "apk_sha256": "d2277c80717de8d3802a85c20fa6731e33470f12dfe333973f7491a67267603e",
+  "apk_bytes": 48075121,
+  "github": {
+    "latest_formal": "v2.45.2",
+    "anonymous_full_range_download": true,
+    "sha256": "d2277c80717de8d3802a85c20fa6731e33470f12dfe333973f7491a67267603e",
+    "bytes": 48075121,
+    "source_commit": "7aee8489ff44348d05a71ee470648a9166b18b41"
+  },
+  "gitee": {
+    "anonymous_full_download": true,
+    "sha256": "d2277c80717de8d3802a85c20fa6731e33470f12dfe333973f7491a67267603e",
+    "head_status": 200,
+    "head_type": "application/zip",
+    "bytes": 48075121
+  },
+  "normal_update_api": {
+    "latest_formal": "v2.45.2",
+    "anonymous_app_api": true,
+    "pages": 1
+  },
+  "actual_android_update_probe_passed": true,
+  "actual_android_download_probe_passed": true,
+  "first_clean_packaging_attempt_failed": true,
+  "packaging_retry_succeeded": true,
+  "final_clean_release_build": "BUILD SUCCESSFUL in 1m 31s"
+}

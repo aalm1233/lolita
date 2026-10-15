@@ -14,6 +14,7 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.di.AppModule
 import kotlinx.coroutines.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -47,7 +48,14 @@ class MannequinPersistenceTest {
             }
             return ImageFileHelper.saveGeneratedImage(context,bytes)
         }
-        override fun close() { db.close(); root.deleteRecursively() }
+        override fun close() {
+            try {
+                ImageFileHelper.configure(target.applicationContext,AppModule.database())
+            } finally {
+                db.close()
+                root.deleteRecursively()
+            }
+        }
     }
 
     @Test fun queuedAppendReadsLatestItemAndOnlyAddsImageAfterExistingOrder()= runBlocking {
@@ -122,6 +130,26 @@ class MannequinPersistenceTest {
                 bytes.forEachIndexed { index, expected -> assertArrayEquals(expected,File(restored.imageUrls[index]).readBytes()) }
                 assertEquals(0,f.db.tryOnDao().getAll().size)
             } finally { f.context.contentResolver.delete(zip,null,null) }
+        }
+    }
+
+    @Test fun staleSnapshotDeletionCleansLatestGeneratedAndSizeChartFilesButProtectsSharedPhoto()=runBlocking {
+        Fixture().use { f ->
+            val stale=f.setup()
+            val preview=f.image(); val shared=f.image(); val chart=f.image(); val extraChart=f.image()
+            val latest=stale.copy(imageUrls=stale.imageUrls+shared,sizeChartImageUrl=chart,sizeChartImageUrls=listOf(extraChart))
+            f.db.itemDao().updateItem(latest)
+            val sibling=stale.copy(id=0,name="共享原图的另一条记录",imageUrls=listOf(shared))
+            val siblingId=f.db.itemDao().insertItem(sibling)
+            f.repository.appendGeneratedImage(stale.id,preview)
+            f.repository.deleteItem(stale)
+            assertNull(f.db.itemDao().getItemById(stale.id))
+            assertFalse("stale snapshot's original image must be cleaned",File(stale.imageUrls.single()).exists())
+            assertFalse("generated image appended after snapshot must be cleaned",File(preview).exists())
+            assertFalse("latest primary size chart must be cleaned",File(chart).exists())
+            assertFalse("latest additional size chart must be cleaned",File(extraChart).exists())
+            assertTrue("a second Item still references this image",File(shared).isFile)
+            assertEquals(listOf(shared),f.db.itemDao().getItemById(siblingId)!!.imageUrls)
         }
     }
 

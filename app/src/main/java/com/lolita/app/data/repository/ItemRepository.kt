@@ -142,9 +142,17 @@ class ItemRepository(
     fun getItemsWithNoLocation() = itemDao.getItemsWithNoLocation()
 
     suspend fun deleteItem(item: Item) {
+        val cleanupPaths = (item.imageUrls + listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls).toMutableSet()
+        var deletionFinished = false
         val doDelete: suspend () -> Unit = {
             require(itemDao.getChildrenList(item.id).isEmpty()) {
                 "此服饰还有所属小物，请先解除挂载或更换主件后再删除"
+            }
+            // A confirmation dialog may retain an Item older than an image append or edit.
+            // Capture the row we are actually deleting while holding the same transaction.
+            itemDao.getItemById(item.id)?.let { latest ->
+                cleanupPaths.addAll(latest.imageUrls)
+                cleanupPaths.addAll(listOfNotNull(latest.sizeChartImageUrl) + latest.sizeChartImageUrls)
             }
             if (database != null) {
                 val gson = Gson()
@@ -178,21 +186,26 @@ class ItemRepository(
             // Clear the RESTRICT price binding before Item -> Price cascades run.
             database?.orderDao()?.deleteBinding(item.id)
             itemDao.deleteItem(item)
+            deletionFinished = true
         }
-        if (database != null) {
-            database.withTransaction { doDelete() }
-        } else {
-            doDelete()
-        }
-        if (database != null && context != null) {
-            withContext(NonCancellable) {
-                runCatching { BackupManager(context, database).recoverPendingReminders() }
-                    .onFailure { Log.w("ItemRepository", "Deleted item reminder cleanup will retry", it) }
+        try {
+            if (database != null) {
+                database.withTransaction { doDelete() }
+            } else {
+                doDelete()
             }
-        }
-        item.imageUrls.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
-        (listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls).distinct().forEach {
-            try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {}
+        } finally {
+            // Covers cancellation while the committed transaction returns. If commit rolled
+            // back, reference protection still preserves every image belonging to that row.
+            if (deletionFinished) withContext(NonCancellable) {
+                if (database != null && context != null) {
+                    runCatching { BackupManager(context, database).recoverPendingReminders() }
+                        .onFailure { Log.w("ItemRepository", "Deleted item reminder cleanup will retry", it) }
+                }
+                cleanupPaths.forEach { path ->
+                    try { ImageFileHelper.deleteImage(path) } catch (_: Exception) {}
+                }
+            }
         }
     }
 

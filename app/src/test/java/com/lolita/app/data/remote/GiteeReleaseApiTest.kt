@@ -8,6 +8,32 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class GiteeReleaseApiTest {
+    @Test fun readsNotesFromHighestStableReleaseWithMultilineTextIntact() = runBlocking {
+        val notes = "## 本版更新\n- 后台生成与任务中心\n\n人台图确认后保存。<script>仅作为文字</script>"
+        val highest = com.google.gson.JsonParser.parseString(release("v2.51.0")).asJsonObject.apply {
+            addProperty("body", notes)
+        }
+        val result = api(page(release("v2.50.0"), highest.toString(), release("v9.0.0", prerelease = true))).fetchLatest()
+        assertEquals("2.51.0", result.versionName)
+        assertEquals(notes, result.releaseNotes)
+    }
+
+    @Test fun missingNullAndNonTextNotesKeepUpdateMetadataUsable() = runBlocking {
+        listOf<String?>(null, "null", "123", "\"\"").forEach { body ->
+            val row = com.google.gson.JsonParser.parseString(release("v2.51.0")).asJsonObject
+            if (body == null) row.remove("body") else row.add("body", com.google.gson.JsonParser.parseString(body))
+            val result = api(page(row.toString())).fetchLatest()
+            assertEquals("2.51.0", result.versionName)
+            assertEquals("", result.releaseNotes)
+        }
+    }
+
+    @Test fun doesNotTruncateLongNotesWithinExistingResponseLimit() = runBlocking {
+        val notes = "更新详情\n".repeat(4_000) + "最后一项"
+        val row = com.google.gson.JsonParser.parseString(release("v2.51.0")).asJsonObject.apply { addProperty("body", notes) }
+        assertEquals(notes, api(page(row.toString())).fetchLatest().releaseNotes)
+    }
+
     @Test fun parsesActualGiteeFieldsWithoutGithubOnlyFieldsOrAssetSize() = runBlocking {
         val result = api(page(release("v2.41.0", asset("lolita-2.41.0.apk")))).fetchLatest()
         assertEquals("2.41.0", result.versionName)

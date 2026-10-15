@@ -78,7 +78,7 @@ class GitHubReleaseApi {
                 preferred.isEmpty() && assets.size == 1 -> assets.single().second
                 else -> null
             }
-            return AppRelease(version, releaseUrl, downloadUrl)
+            return AppRelease(version, releaseUrl, downloadUrl, root.string("body").orEmpty())
         }
 
         private fun JsonObject.string(key: String): String? = get(key)

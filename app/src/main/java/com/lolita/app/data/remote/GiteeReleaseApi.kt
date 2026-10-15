@@ -91,7 +91,7 @@ class GiteeReleaseApi(
                 preferred.isEmpty() && assets.size == 1 -> assets.single().second
                 else -> null
             }
-            return AppRelease(version, "https://gitee.com$RELEASE_PATH/$tag", downloadUrl)
+            return AppRelease(version, "https://gitee.com$RELEASE_PATH/$tag", downloadUrl, root.string("body").orEmpty())
         }
 
         private fun JsonObject.string(key: String): String? = get(key)

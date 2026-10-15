@@ -4,6 +4,16 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class GitHubReleaseApiTest {
+    @Test fun readsMultilineNotesAndAllowsMissingLegacyBody() {
+        val notes = "## 更新\n- 后台任务\n- 人台图\n<script>作为文字保留</script>"
+        val row = com.google.gson.JsonParser.parseString(payload()).asJsonObject.apply { addProperty("body", notes) }
+        assertEquals(notes, GitHubReleaseApi.parseRelease(row.toString()).releaseNotes)
+        row.add("body", com.google.gson.JsonNull.INSTANCE)
+        assertEquals("", GitHubReleaseApi.parseRelease(row.toString()).releaseNotes)
+        row.remove("body")
+        assertEquals("", GitHubReleaseApi.parseRelease(row.toString()).releaseNotes)
+    }
+
     @Test fun parsesExistingReleaseWithoutAnUpdateManifest() {
         val release = GitHubReleaseApi.parseRelease(payload(asset("lolita-2.39.5.apk")))
         assertEquals("2.39.5", release.versionName)

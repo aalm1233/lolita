@@ -1,0 +1,207 @@
+{
+  "version": "2.46.4",
+  "versionCode": 103,
+  "sourceCommit": "63ebf65da15f7538d280a04fd469d5de1fda1940",
+  "release": {
+    "version": "2.46.4",
+    "version_code": 103,
+    "tag": "v2.46.4",
+    "apk": "lolita-2.46.4.apk",
+    "size": 54714009,
+    "sha256": "ea8b2e00db9f3eb5e680fd613e5f3497d23178fc0ce49b54120d104c1c39a90b",
+    "source_commit": "63ebf65da15f7538d280a04fd469d5de1fda1940",
+    "body_sha256": "f24a0a4dfcad5a5472110ab4153a5688f252a5dedf5ba00cf7186911ae0415f2"
+  },
+  "signatureSha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "debuggable": false,
+  "cleanBuildFromCommittedSource": true,
+  "jvmTests": {
+    "tests": 177,
+    "failures": 0,
+    "errors": 0
+  },
+  "androidTests": {
+    "tests": 18,
+    "failures": 0,
+    "errors": 0,
+    "classes": {
+      "com.lolita.app.ui.screen.item.PendingPaymentFilterTest": 4,
+      "com.lolita.app.data.OrderBusinessTest": 12,
+      "com.lolita.app.ui.screen.item.PurchaseReviewConsistencyTest": 2
+    },
+    "target": "emulator-5560",
+    "avd": "Lolita_Order_Import_Test"
+  },
+  "filterRegression": {
+    "newCases": 4,
+    "ordinaryAndBalancePendingIncluded": true,
+    "accessoriesIncluded": true,
+    "otherStatusesExcluded": true,
+    "attributesAndSearchCombined": true,
+    "allViewModesChecked": true,
+    "realLedgerPaymentUndoLiveRefresh": true,
+    "sharedAccessoriesRefreshed": true,
+    "actualComposeChipLabelAndSelection": true,
+    "storedRowsUnchangedByFiltering": true
+  },
+  "upgrade": {
+    "preservation_pass": true,
+    "errors": [],
+    "exact_all_tables": true,
+    "table_differences": {},
+    "original_image_count": 172,
+    "original_images_unchanged": 172,
+    "image_differences": [],
+    "added_images": [],
+    "unresolved_image_references": []
+  },
+  "upgradeSettings": {
+    "beforeVersion": "2.46.3",
+    "afterVersion": "2.46.4",
+    "versionCode": 103,
+    "sameSignature": true,
+    "settingsBytesPreserved": true,
+    "settingsSha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+    "serial": "emulator-5558",
+    "avd": "Lolita_Release_2392_Test",
+    "coldLaunchSucceeded": true
+  },
+  "upgradeTableCount": 29,
+  "upgradeItemCount": 198,
+  "releaseSmoke": {
+    "actualWardrobePendingPaymentFilterObserved": true,
+    "actualImportPageOpened": true,
+    "defaultViewModelsCreated": true,
+    "screenshot": "docs/visuals/2026-10-15-pending-payment-filter-release.png"
+  },
+  "github": {
+    "tag": "v2.46.4",
+    "source_commit": "63ebf65da15f7538d280a04fd469d5de1fda1940",
+    "release_id": 413296662,
+    "prerelease": false,
+    "files": {
+      "lolita-2.46.4.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.46.4/lolita-2.46.4.apk",
+        "anonymous_full_download": true,
+        "bytes": 54714009,
+        "sha256": "ea8b2e00db9f3eb5e680fd613e5f3497d23178fc0ce49b54120d104c1c39a90b",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.46.4/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "caeff9ce7f9fc3ff1667b51d667adc4e968a2437394a2b7ae192b12a80c76db9",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 54714009,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "63ebf65da15f7538d280a04fd469d5de1fda1940"
+  },
+  "gitee": {
+    "tag": "v2.46.4",
+    "source_commit": "63ebf65da15f7538d280a04fd469d5de1fda1940",
+    "release_id": 1206370,
+    "prerelease": false,
+    "files": {
+      "lolita-2.46.4.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.4/lolita-2.46.4.apk",
+        "anonymous_full_download": true,
+        "bytes": 54714009,
+        "sha256": "ea8b2e00db9f3eb5e680fd613e5f3497d23178fc0ce49b54120d104c1c39a90b",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.4/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "caeff9ce7f9fc3ff1667b51d667adc4e968a2437394a2b7ae192b12a80c76db9",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 54714009,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "giteeUpdate": {
+    "latest_tag": "v2.46.4",
+    "pages": 1,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.46.4/lolita-2.46.4.apk",
+    "source_commit": "63ebf65da15f7538d280a04fd469d5de1fda1940"
+  }
+}

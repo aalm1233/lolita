@@ -105,7 +105,7 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
     }
 
     companion object {
-        const val MODEL = "gpt-image-2"
+        const val MODEL = "gpt-image-2.5-sunburst"
         const val ENDPOINT = "https://api.openai.com/v1/images/edits"
         private const val MAX_RESPONSE_BYTES = 48 * 1024 * 1024
         private const val MAX_IMAGE_BYTES = 32 * 1024 * 1024

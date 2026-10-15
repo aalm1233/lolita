@@ -57,6 +57,15 @@ class TryOnImages(private val context: Context) {
                 val scaled = Bitmap.createScaledBitmap(bitmap,maxOf(1,(bitmap.width*ratio).toInt()),maxOf(1,(bitmap.height*ratio).toInt()),true)
                 if (scaled !== bitmap) { bitmap.recycle(); bitmap = scaled }
             }
+            if (bitmap.hasAlpha()) {
+                val opaque = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+                android.graphics.Canvas(opaque).apply {
+                    drawColor(android.graphics.Color.WHITE)
+                    drawBitmap(bitmap, 0f, 0f, null)
+                }
+                bitmap.recycle()
+                bitmap = opaque
+            }
             return ByteArrayOutputStream().use { out ->
                 require(bitmap.compress(Bitmap.CompressFormat.JPEG,90,out)) { "无法准备参考图片" }
                 out.toByteArray().also { require(it.size <= 10*1024*1024) { "参考图片过大" } }

@@ -118,6 +118,12 @@ sealed interface Screen {
         fun createRoute(itemId: Long) = "recommendation/$itemId"
     }
 
+    data object TryOn : Screen {
+        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}"
+        fun createRoute(itemId: Long? = null, coordinateId: Long? = null): String =
+            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}"
+    }
+
     data object QuickOutfitLog : Screen {
         override val route = "quick_outfit_log"
     }

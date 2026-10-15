@@ -1,17 +1,23 @@
 package com.lolita.app.data.remote
 
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.withTimeout
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class TryOnImageApiTest {
-    private class Transport(val code: Int = 200, val body: String = """{"created":1,"data":[{"b64_json":"aW1hZ2U="}]}""") : HttpURLConnection(URL("https://api.openai.com/v1/images/edits")) {
+    private open class Transport(val code: Int = 200, val body: String = """{"created":1,"data":[{"b64_json":"aW1hZ2U="}]}""") : HttpURLConnection(URL("https://api.openai.com/v1/images/edits")) {
         val uploaded = ByteArrayOutputStream()
-        var closed = false
+        @Volatile var closed = false
         override fun connect() = Unit
         override fun disconnect() { closed = true }
         override fun usingProxy() = false
@@ -30,8 +36,11 @@ class TryOnImageApiTest {
         assertTrue(body.indexOf("MODEL") < body.indexOf("DRESS"))
         assertTrue(body.indexOf("DRESS") < body.indexOf("CUFFS"))
         assertEquals(3, Regex("name=\"image\\[\\]\"").findAll(body).count())
-        assertTrue(body.contains("gpt-image-2"))
+        assertTrue(body.contains("name=\"model\"\r\n\r\ngpt-image-2.5-sunburst\r\n"))
         assertTrue(body.contains("name=\"n\"\r\n\r\n1\r\n"))
+        assertTrue(body.contains("name=\"quality\"\r\n\r\nmedium\r\n"))
+        assertTrue(body.contains("name=\"size\"\r\n\r\n1024x1536\r\n"))
+        assertTrue(body.contains("name=\"output_format\"\r\n\r\npng\r\n"))
         assertFalse(body.contains("private-test-key"))
         assertFalse(transport.instanceFollowRedirects)
         assertArrayEquals("image".toByteArray(), result)
@@ -54,11 +63,84 @@ class TryOnImageApiTest {
         }
     }
     @Test fun rejectsEmptyMalformedAndRemoteUrlOnlyResponses() = runBlocking {
-        for (body in listOf("", "not-json", "{}", "{\"data\":[]}", "{\"data\":[{\"b64_json\":\"\"}]}", "{\"data\":[{\"url\":\"https://bad.example/a.png\"}]}")) {
+        for (body in listOf("", "not-json", "{}", "{\"data\":[]}", "{\"data\":[{\"b64_json\":\"\"}]}", "{\"data\":[{\"b64_json\":\"%%%%\"}]}", "{\"data\":[{\"url\":\"https://bad.example/a.png\"}]}")) {
             try {
                 TryOnImageApi { Transport(body = body) }.generate("test-key",listOf(byteArrayOf(1),byteArrayOf(2)),"prompt")
                 fail("Invalid response must fail")
             } catch (expected: IllegalStateException) { assertTrue(expected.message.orEmpty().isNotEmpty()) }
         }
+    }
+
+    @Test fun invalidKeyNeverOpensTransport() = runBlocking {
+        var connections = 0
+        val api = TryOnImageApi { connections++; Transport() }
+        for (key in listOf("", " ", "sk key", "sk-key\nheader", "x".repeat(513))) {
+            try {
+                api.generate(key, listOf(byteArrayOf(1), byteArrayOf(2)), "prompt")
+                fail("invalid key accepted")
+            } catch (_: IllegalArgumentException) { }
+        }
+        assertEquals(0, connections)
+    }
+
+    @Test fun rejectsDeclaredOversizeResponseBeforeReadingIt() = runBlocking {
+        var read = false
+        val transport = object : Transport() {
+            override fun getContentLengthLong() = 49L * 1024 * 1024
+            override fun getInputStream(): ByteArrayInputStream {
+                read = true
+                return super.getInputStream()
+            }
+        }
+        try {
+            TryOnImageApi { transport }.generate("test-key", listOf(byteArrayOf(1), byteArrayOf(2)), "prompt")
+            fail("oversized result accepted")
+        } catch (_: IllegalStateException) { }
+        assertFalse(read)
+        assertTrue(transport.closed)
+    }
+
+    @Test fun cancellingWaitingRequestDisconnectsTransportAndDoesNotRetry() = runBlocking {
+        val waiting = CompletableDeferred<Unit>()
+        val disconnected = CountDownLatch(1)
+        var connections = 0
+        val transport = object : Transport() {
+            override fun getResponseCode(): Int {
+                waiting.complete(Unit)
+                check(disconnected.await(2, TimeUnit.SECONDS)) { "cancellation did not disconnect" }
+                return 200
+            }
+            override fun disconnect() { super.disconnect(); disconnected.countDown() }
+        }
+        val running = async { TryOnImageApi { connections++; transport }.generate("test-key", listOf(byteArrayOf(1), byteArrayOf(2)), "prompt") }
+        withTimeout(2_000) { waiting.await() }
+        running.cancelAndJoin()
+        assertTrue(transport.closed)
+        assertEquals(1, connections)
+        assertTrue(running.isCancelled)
+    }
+
+    @Test fun cancellationBeforeConnectionCreationFinishesNeverUploadsImages() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CountDownLatch(1)
+        val disconnected = CountDownLatch(1)
+        val transport = object : Transport() {
+            override fun disconnect() { super.disconnect(); disconnected.countDown() }
+        }
+        val api = TryOnImageApi {
+            entered.complete(Unit)
+            // A connection factory may finish even after its worker is interrupted.
+            while (true) {
+                try { check(release.await(2, TimeUnit.SECONDS)); break }
+                catch (_: InterruptedException) { }
+            }
+            transport
+        }
+        val running = async { api.generate("test-key", listOf(byteArrayOf(1), byteArrayOf(2)), "prompt") }
+        withTimeout(2_000) { entered.await() }
+        running.cancelAndJoin()
+        release.countDown()
+        assertTrue(disconnected.await(2, TimeUnit.SECONDS))
+        assertEquals(0, transport.uploaded.size())
     }
 }

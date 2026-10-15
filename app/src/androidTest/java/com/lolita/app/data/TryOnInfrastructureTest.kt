@@ -63,4 +63,49 @@ class TryOnInfrastructureTest {
             catch (_: IllegalArgumentException) { }
         } finally { context.filesDir.parentFile!!.deleteRecursively() }
     }
+
+    @Test fun pngHeaderWithoutCompletePixelsIsRejectedBeforeSaving() = runBlocking {
+        val context = fixture()
+        try {
+            val complete = java.io.ByteArrayOutputStream().use { output ->
+                val bitmap = Bitmap.createBitmap(32, 48, Bitmap.Config.ARGB_8888)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                bitmap.recycle()
+                output.toByteArray()
+            }
+            val idat = (8 until complete.size - 8).first { offset ->
+                complete.copyOfRange(offset, offset + 4).contentEquals("IDAT".toByteArray())
+            }
+            val truncated = complete.copyOf(idat + 8)
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeByteArray(truncated, 0, truncated.size, bounds)
+            assertEquals("必须覆盖有合法尺寸但像素流截断的情况", 32, bounds.outWidth)
+            try {
+                ImageFileHelper.saveGeneratedImage(context, truncated)
+                fail("不能将只有头部的PNG作为成功的生成结果")
+            } catch (_: IllegalArgumentException) { }
+            assertTrue(File(context.filesDir, "images").listFiles().orEmpty().isEmpty())
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
+
+    @Test fun transparentProductPhotosUseNeutralWhiteInsteadOfBlackWhenNormalized() = runBlocking {
+        val context = fixture()
+        try {
+            val source = File(context.filesDir, "transparent-product.png")
+            val bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
+            android.graphics.Canvas(bitmap).drawRect(20f, 20f, 44f, 44f,
+                android.graphics.Paint().apply { color = android.graphics.Color.RED })
+            source.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+            val normalized = TryOnImages(context).prepare(listOf(source.absolutePath))[1]
+            val photo = BitmapFactory.decodeByteArray(normalized, 0, normalized.size)
+            try {
+                val corner = photo.getPixel(0, 0)
+                assertTrue("透明背景转JPEG不能变黑", android.graphics.Color.red(corner) >= 245 &&
+                    android.graphics.Color.green(corner) >= 245 && android.graphics.Color.blue(corner) >= 245)
+                val garment = photo.getPixel(32, 32)
+                assertTrue(android.graphics.Color.red(garment) >= 235 && android.graphics.Color.green(garment) <= 20)
+            } finally { photo.recycle() }
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
 }

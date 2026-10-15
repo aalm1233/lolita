@@ -27,6 +27,20 @@ object AppModule {
     fun tryOnRepository() = _tryOnRepository
     private val _tryOnSettings by lazy { com.lolita.app.data.tryon.TryOnSettings(appContext) }
     fun tryOnSettings() = _tryOnSettings
+    private val _tryOnGenerator by lazy {
+        val images = com.lolita.app.data.tryon.TryOnImages(appContext)
+        val api = com.lolita.app.data.remote.TryOnImageApi()
+        com.lolita.app.data.tryon.TryOnGenerator(
+            findItem = { database.itemDao().getItemById(it) },
+            readKey = { _tryOnSettings.readKey() },
+            prepareImages = images::prepare,
+            generateImage = api::generate,
+            saveResult = { bytes, selected, model ->
+                _tryOnRepository.save("虚拟试衣", bytes, selected, model)
+            }
+        )
+    }
+    fun tryOnGenerator() = _tryOnGenerator
 
     private val _restoreJournalRepository by lazy { RestoreJournalRepository(database.restoreJournalDao()) }
     fun restoreJournalRepository() = _restoreJournalRepository

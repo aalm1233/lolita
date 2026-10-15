@@ -65,6 +65,7 @@ fun ItemDetailScreen(
     onNavigateToItem: (Long) -> Unit = {},
     onCreateChild: (Long) -> Unit = {},
     onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem,
+    onNavigateToTryOn: (Long) -> Unit = {},
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -731,6 +732,14 @@ fun ItemDetailScreen(
                                             Spacer(Modifier.width(6.dp))
                                             Text("推荐搭配")
                                         }
+                                    }
+                                    OutlinedButton(
+                                        onClick = { onNavigateToTryOn(item.id) },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
+                                        Spacer(Modifier.width(skin.spacingMedium))
+                                        Text("虚拟试衣")
                                     }
                                 }
                             }

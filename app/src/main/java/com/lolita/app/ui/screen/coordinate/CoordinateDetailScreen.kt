@@ -61,6 +61,7 @@ fun CoordinateDetailScreen(
     onEdit: (Long) -> Unit,
     onDelete: () -> Unit = {},
     onNavigateToItem: (Long) -> Unit = {},
+    onNavigateToTryOn: (Long) -> Unit = {},
     viewModel: CoordinateDetailViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -233,6 +234,18 @@ fun CoordinateDetailScreen(
                         unpaidAmount = uiState.unpaidAmount,
                         incompleteOrderCount = uiState.incompleteOrderCount
                     )
+                }
+
+                item {
+                    OutlinedButton(
+                        onClick = { onNavigateToTryOn(coordinateId) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = uiState.items.isNotEmpty()
+                    ) {
+                        SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(LolitaSkin.current.spacingMedium))
+                        Text("虚拟试衣")
+                    }
                 }
 
                 item {

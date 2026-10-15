@@ -77,6 +77,11 @@ import com.lolita.app.ui.screen.settings.SeasonManageScreen
 import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.AppUpdateViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.lolita.app.ui.screen.tryon.TryOnScreen
+import com.lolita.app.ui.screen.tryon.TryOnViewModel
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
 import com.lolita.app.ui.screen.`import`.TaobaoImportScreen
@@ -307,6 +312,9 @@ fun LolitaNavHost(
                     },
                     onNavigateToRecommendation = { id ->
                         navController.navigate(Screen.Recommendation.createRoute(id))
+                    },
+                    onNavigateToTryOn = { id ->
+                        navController.navigate(Screen.TryOn.createRoute(itemId = id))
                     }
                 )
                 } // LocalNavAnimatedVisibilityScope
@@ -435,6 +443,9 @@ fun LolitaNavHost(
                     onDelete = { navController.popBackStack() },
                     onNavigateToItem = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                    },
+                    onNavigateToTryOn = { id ->
+                        navController.navigate(Screen.TryOn.createRoute(coordinateId = id))
                     }
                 )
                 } // LocalNavAnimatedVisibilityScope
@@ -524,6 +535,7 @@ fun LolitaNavHost(
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) },
+                    onNavigateToTryOn = { navController.navigate(Screen.TryOn.createRoute()) },
                     appUpdateViewModel = appUpdateViewModel
                 )
             }
@@ -652,6 +664,23 @@ fun LolitaNavHost(
                         navController.popBackStack()
                         navController.navigate(Screen.CoordinateDetail.createRoute(id))
                     }
+                )
+            }
+
+            // Quick Outfit Log
+            composable(
+                route = Screen.TryOn.route,
+                arguments = listOf(
+                    navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("coordinateId") { type = NavType.LongType; defaultValue = 0L }
+                )
+            ) { entry ->
+                val factory = remember(entry) {
+                    viewModelFactory { initializer { TryOnViewModel(createSavedStateHandle()) } }
+                }
+                TryOnScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    viewModel = viewModel(viewModelStoreOwner = entry, factory = factory)
                 )
             }
 

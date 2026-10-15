@@ -80,6 +80,7 @@ fun SettingsScreen(
 
 
     onNavigateToThemeSelect: () -> Unit = {},
+    onNavigateToTryOn: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel(),
     appUpdateViewModel: AppUpdateViewModel = viewModel()
@@ -183,6 +184,14 @@ fun SettingsScreen(
                 iconKey = IconKey.Link,
                 iconTint = if (isDark) Color(0xFFFFAB91) else Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
+            )
+
+            SettingsMenuItem(
+                title = "虚拟试衣（实验）",
+                description = "配置 API Key，将服饰和小物穿到虚拟模特身上",
+                iconKey = IconKey.Outfit,
+                iconTint = MaterialTheme.colorScheme.primary,
+                onClick = onNavigateToTryOn
             )
 
 

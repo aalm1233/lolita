@@ -14,12 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import me.saket.telephoto.zoomable.rememberZoomableState
+import me.saket.telephoto.zoomable.zoomable
 
 @Composable
 fun FullScreenImageViewer(
@@ -47,11 +51,12 @@ fun FullScreenImageViewer(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
+                val zoomState = rememberZoomableState()
                 LolitaShimmerImage(
                     model = imageUrls[page],
-                    contentDescription = null,
+                    contentDescription = "图片预览 ${page + 1}",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().zoomable(zoomState),
                     circularRevealEnabled = false
                 )
             }
@@ -60,7 +65,8 @@ fun FullScreenImageViewer(
                 onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .semantics { contentDescription = "关闭图片预览" },
                 colors = IconButtonDefaults.iconButtonColors(
                     contentColor = Color.White
                 )

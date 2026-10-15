@@ -30,6 +30,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import com.lolita.app.data.preferences.AppPreferences
+import com.lolita.app.ui.screen.common.SizeOptionsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import java.util.UUID
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.lolita.app.data.local.LolitaDatabase
@@ -57,10 +70,16 @@ class OrderImportInteractionTest {
     private val dark = mutableStateOf(false)
     private var keyboardController: SoftwareKeyboardController? = null
     @Volatile private var keyboardOpen = false
+    private lateinit var preferencesScope: CoroutineScope
+    private lateinit var preferencesDirectory: File
 
     @Before fun setup() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
+        preferencesScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        preferencesDirectory = File(context.cacheDir, "order-size-${UUID.randomUUID()}").apply { mkdirs() }
+        val preferences = AppPreferences(context, PreferenceDataStoreFactory.create(scope = preferencesScope,
+            produceFile = { File(preferencesDirectory, "settings.preferences_pb") }))
         runBlocking {
             db.brandDao().insertBrand(Brand(id = 1, name = "测试品牌"))
             db.categoryDao().insertCategory(Category(id = 1, name = "JSK"))
@@ -73,6 +92,13 @@ class OrderImportInteractionTest {
                 PriceRepository(db.priceDao(), db.paymentDao(), context, db),
                 OrderRepository(db, context), db)
             store.put("import", vm)
+            ViewModelProvider(store, object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    require(modelClass == SizeOptionsViewModel::class.java)
+                    @Suppress("UNCHECKED_CAST")
+                    return SizeOptionsViewModel(preferences, ItemRepository(db.itemDao())) as T
+                }
+            })[SizeOptionsViewModel::class.java]
             val rows = listOf("测试定金裙", "测试尾款裙", "测试全款裙").mapIndexed { i, name ->
                 val original = TaobaoOrderItem(name, "", "蓝色;M;JSK", 1, 100.0, "JSK", "M", "蓝色", "order-$i", "2026-10-14", "测试店铺")
                 ImportItemState(originalItem = original, name = name, brandId = 1, categoryId = 1,
@@ -94,6 +120,7 @@ class OrderImportInteractionTest {
                     if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
             }
             CompositionLocalProvider(LocalConfiguration provides config,
+                LocalViewModelStoreOwner provides object : ViewModelStoreOwner { override val viewModelStore = store },
                 LocalDensity provides Density(density.density, if (compact.value) 2f else density.fontScale)) {
                 Box(if (compact.value) Modifier.width(320.dp) else Modifier) {
                     LolitaTheme(skinType = skinType.value, darkTheme = dark.value) {
@@ -106,7 +133,35 @@ class OrderImportInteractionTest {
             }
         }
     }
-    @After fun close() { compose.runOnIdle { store.clear() }; db.close() }
+    @After fun close() = runBlocking {
+        compose.runOnIdle { store.clear() }
+        preferencesScope.coroutineContext[Job]!!.cancelAndJoin()
+        db.close(); preferencesDirectory.deleteRecursively(); Unit
+    }
+
+    @Test fun sizeDropdownAndQuickAddPreserveEachImportedItemsChoice() {
+        reveal("展开资料")
+        compose.onNodeWithText("展开资料").performClick()
+        reveal("尺码 (可选)")
+        compose.onNodeWithText("尺码 (可选)").performClick()
+        compose.onNodeWithText("S", useUnmergedTree = true).performClick()
+        compose.runOnIdle { assertEquals("S", vm.uiState.value.importItems[0].size) }
+        compose.onNodeWithContentDescription("添加尺码").performClick()
+        compose.onNodeWithText("自定义尺码").performTextInput("定制裙长")
+        compose.onNodeWithText("添加并选用").performClick()
+        compose.waitUntil(5_000) { vm.uiState.value.importItems[0].size == "定制裙长" }
+        compose.onNodeWithText("下一件").performClick()
+        reveal("展开资料")
+        compose.onNodeWithText("展开资料").performClick()
+        reveal("尺码 (可选)")
+        compose.onNodeWithText("尺码 (可选)").performClick()
+        compose.onNodeWithText("定制裙长", useUnmergedTree = true).performScrollTo().assertIsDisplayed().performClick()
+        compose.runOnIdle {
+            assertEquals("定制裙长", vm.uiState.value.importItems[0].size)
+            assertEquals("定制裙长", vm.uiState.value.importItems[1].size)
+            assertEquals("", vm.uiState.value.importItems[2].size)
+        }
+    }
     private fun reveal(text: String) {
         compose.onNodeWithTag("importDetailList").performScrollToNode(hasText(text))
         // Locate a long lazy item, then scroll its actual descendant into the viewport.

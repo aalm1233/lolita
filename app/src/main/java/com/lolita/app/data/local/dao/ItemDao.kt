@@ -26,6 +26,9 @@ interface ItemDao {
     @Query("SELECT * FROM items ORDER BY updated_at DESC")
     fun getAllItems(): Flow<List<Item>>
 
+    @Query("SELECT DISTINCT size FROM items WHERE size IS NOT NULL AND TRIM(size) <> '' ORDER BY size")
+    fun getSizes(): Flow<List<String>>
+
     @Query("SELECT * FROM items WHERE id = :id")
     suspend fun getItemById(id: Long): Item?
 

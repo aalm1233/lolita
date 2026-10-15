@@ -62,6 +62,7 @@
 - 服饰详情主图完整 Fit 预览，高度随屏幕受限，标题后优先展示当前订单价格/实付/待付摘要；无小物时显示紧凑新增/挂入操作，已有小物管理完整保留。`ImageGalleryPager` 支持可选 `contentScale`、`imageShape` 与 `imageBackgroundColor`，默认展示保持兼容。
 - 首页顶栏保留搜索、四个 Tab 和筛选/排序/视图控制的一行布局。本轮列表、详情和穿搭实拍归档：`docs/visuals/2026-10-11-layout-refinement.png`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
+- 服饰编辑和淘宝订单导入的尺码使用共用 `SizeSelector`：内置 XS/S/M/L/XL/XXL/均码，支持“未设置”和旁侧皮肤加号快速添加并选用。`SizeOptionsViewModel` 合并内置、DataStore 自定义项和 `ItemDao.getSizes()` 的历史尺码，去首尾空格并忽略大小写去重，不改写历史 Item.size。自定义项为本机 `AppPreferences.customSizes` 设置，已使用尺码继续随原 Item.size 备份/恢复并自动成为选项；数据库和备份格式不变。导入颜色、尺码各占一行，避免小屏大字挤压加号。`ItemSizeSelectorTest` 与 `OrderImportInteractionTest` 使用独立 Room/DataStore，覆盖选择/清空、添加/取消/去重、持久化、旧资料保全、逐件导入及七皮肤浅暗大字体。
 
 - 淘宝商品导入使用已核验内置别名解析品牌，匹配现有记录时忽略大小写/空格/标点并拒绝歧义；通用品牌参数不作为真实品牌。类别根据明确参数或标题识别，混合套装在预览提示核对。详情图来自 `#v6_pc_content`，读取懒加载源、去重过滤页面占位图，最多50张、每张20MiB、累计80MiB，保留原图进入多张尺码表。旧 `sizeChartImageUrl` 保留，新增列表 `sizeChartImageUrls` 存后续图片，24→25只追加默认空列表；备份缺失字段补空数组、ZIP/预览/CSV与删除清理均包含新列表。编辑与详情可逐张放大，失败或放弃编辑清理本次新增图片。
 - 一个商品包含明确“套装/款式/类型”时，淘宝导入可勾选拆分，逐件进入服饰编辑；不按颜色或尺码展开。每件独立推断类别、复制完整主图与详情到 UUID 文件，保存自动下一件，放弃暂停当前件。共享下载缓存仅由导入页拥有，退出不影响已保存记录。SavedStateHandle 保存紧凑队列与公共详情；每件稳定 `importToken` 与每次编辑 `editorToken` 分开，陈旧返回不会重放。Room25→26新增可空唯一 `items.import_token`，提交后未回传时恢复原记录，备份兼容缺失标识并拒绝重复标识；隐藏元数据不导出CSV。编辑器退出清理必须经 ImageFileHelper 的引用保护，保存中禁止返回。
@@ -263,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=103, versionName="2.46.4"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=104, versionName="2.47.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

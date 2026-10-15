@@ -34,6 +34,7 @@ import com.lolita.app.ui.component.MultiImageEditor
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.BrandLogo
 import com.lolita.app.ui.screen.common.ColorSelector
+import com.lolita.app.ui.screen.common.SizeSelector
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
@@ -341,15 +342,8 @@ fun ItemEditScreen(
                     onSourceSelected = { viewModel.updateSource(it) }
                 )
 
-                // Size field
-                OutlinedTextField(
-                    value = uiState.size ?: "",
-                    onValueChange = { viewModel.updateSize(it.ifBlank { null }) },
-                    label = { Text("尺码 (可选)") },
-                    placeholder = { Text("例如：S、M、L、XL、均码") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                SizeSelector(selectedSize = uiState.size, onSizeSelected = viewModel::updateSize,
+                    modifier = Modifier.fillMaxWidth())
 
                 // Image upload - multi-image editor
                 Column {

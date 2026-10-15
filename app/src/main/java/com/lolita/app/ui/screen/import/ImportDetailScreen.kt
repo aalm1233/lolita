@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.SectionHeader
+import com.lolita.app.ui.screen.common.SizeSelector
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
@@ -646,23 +647,16 @@ private fun ImportIdentityFields(
             onCategorySelected = { id -> onUpdate { it.copy(categoryId = id) } },
             onAddCategory = onAddCategory
         )
-        // 颜色 + 尺码 (一行两个)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(
-                value = item.color,
-                onValueChange = { v -> onUpdate { it.copy(color = v) } },
-                label = { Text("颜色") },
-                modifier = Modifier.weight(1f),
-                singleLine = true
-            )
-            OutlinedTextField(
-                value = item.size,
-                onValueChange = { v -> onUpdate { it.copy(size = v) } },
-                label = { Text("尺码") },
-                modifier = Modifier.weight(1f),
-                singleLine = true
-            )
-        }
+        OutlinedTextField(
+            value = item.color,
+            onValueChange = { v -> onUpdate { it.copy(color = v) } },
+            label = { Text("颜色") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+        SizeSelector(selectedSize = item.size.ifBlank { null },
+            onSizeSelected = { size -> onUpdate { it.copy(size = size.orEmpty()) } },
+            modifier = Modifier.fillMaxWidth())
 
         if (showImage) ImportImageFields(item, onUpdate, onPickLocalImage)
     }

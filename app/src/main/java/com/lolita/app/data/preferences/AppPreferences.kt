@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.lolita.app.domain.model.SizeOptions
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.theme.SkinType
 import com.lolita.app.domain.usecase.DailyOutfitReminderConfig
@@ -18,6 +20,22 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_settings")
 
 class AppPreferences(context: Context, private val dataStore: DataStore<Preferences> = context.dataStore) {
+
+    val customSizes: Flow<List<String>> = dataStore.data
+        .map { it[CUSTOM_SIZES].orEmpty().sorted() }.distinctUntilChanged()
+
+    suspend fun addCustomSize(size: String): String {
+        val trimmed = size.trim()
+        require(trimmed.isNotEmpty()) { "请输入尺码" }
+        SizeOptions.defaults.firstOrNull { it.equals(trimmed, ignoreCase = true) }?.let { return it }
+        var selected = trimmed
+        dataStore.edit { prefs ->
+            val sizes = prefs[CUSTOM_SIZES].orEmpty()
+            selected = sizes.firstOrNull { it.equals(trimmed, ignoreCase = true) } ?: trimmed
+            prefs[CUSTOM_SIZES] = sizes + selected
+        }
+        return selected
+    }
 
     val showTotalPrice: Flow<Boolean> = dataStore.data
         .map { it[SHOW_TOTAL_PRICE] ?: false }
@@ -110,6 +128,7 @@ class AppPreferences(context: Context, private val dataStore: DataStore<Preferen
     }
 
     companion object {
+        private val CUSTOM_SIZES = stringSetPreferencesKey("custom_sizes")
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")
         private val OUTFIT_REMINDER_HOUR = intPreferencesKey("outfit_reminder_hour")

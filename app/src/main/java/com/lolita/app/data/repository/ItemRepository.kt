@@ -31,6 +31,8 @@ class ItemRepository(
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
 
+    fun getSizes(): Flow<List<String>> = itemDao.getSizes()
+
     fun getItemsByStatus(status: ItemStatus): Flow<List<Item>> =
         itemDao.getItemsByStatus(status)
 

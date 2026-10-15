@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-15",
+  "decision": "2026-10-15 17:35 CST 用户选择：保留正面，不继续三视图。",
+  "scope": "仅探索素材与文档；无应用源码改动。",
+  "tool": "image_gen.imagegen (built-in)",
+  "model_reported": false,
+  "paid_api_tested": false,
+  "image_postprocessing": "无；保留图片由内置输出逐字节复制。",
+  "archive_source": "lolita_backup_20260318_191642.zip",
+  "calls": [
+    {
+      "id": "template",
+      "purpose": "统一正面人台模板",
+      "retained": true,
+      "elapsed_seconds": 45.9,
+      "prompt": "Create a photorealistic catalog studio photograph of ONE completely blank female tailoring dress form, for a reusable garment normalization reference template. Portrait 2:3 frame. The mannequin has realistic adult female dress-form proportions, a short upright neck stub with a small flat silver cap, a shoulder-to-mid-thigh torso, no head, no arms, no hands, no legs, no breasts with anatomical details. Smooth matte warm-white fabric, no markings, no seams or measurement text. A thin vertical brushed silver support pole and a flat circular brushed silver floor base. Perfectly frontal, vertical, centered, symmetric, eye-level camera, 70mm product photography perspective, no camera tilt. The top of the neck cap is at 12 percent of canvas height, shoulders at 21 percent, natural waist at 40 percent, hips at 51 percent, bottom of mannequin torso at 60 percent, circular stand base at 89 percent. Neutral very pale gray seamless studio wall/floor, soft diffuse white lighting, subtle soft shadow under base, consistent white balance. No garments, no accessories, no text, no labels, no logos, no extra objects. The torso is fully visible and empty. This is the exact visual template that will be dressed with different photographed Lolita garments in subsequent edits.",
+      "references": [],
+      "original_output": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-4f4e000b-f82a-4419-a74f-c2c14e77a29a.png",
+      "repository_output": "docs/visuals/2026-10-15-mannequin-front-template.png",
+      "sha256": "7a2c57ff168e8232ec4c312fbda1818f63fefffb8bfadc97d0adc76d2ba49eea",
+      "bytes": 1601780,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "id": "navy_front",
+      "purpose": "花鸟龙月单件正面",
+      "retained": true,
+      "elapsed_seconds": 56.9,
+      "prompt": "Edit IMAGE 1, the blank canonical mannequin studio template. Dress this exact mannequin in ONLY the navy Lolita JSK from IMAGE 2, the product photograph. This is one strict front-view garment-normalization experiment, not a redesign. Preserve IMAGE 1's full portrait 2:3 canvas, exact camera, crop, lighting, upright mannequin shoulders and neck shape, neck cap location, natural waist height, support pole and circular base positions, pale gray studio background. Do not enlarge, shrink, lengthen, rotate or replace the mannequin; fit the dress to its adult female torso.\nGarment identity from IMAGE 2 is the highest priority: very dark navy blue jacquard fabric, subtle floral/bird brocade, slim double shoulder straps, navy high halter collar, small front keyhole with narrow crisscross lace, lace-trimmed sweetheart bodice, long central visible metal zipper with Chinese frog-knot loops, paired corset lacing panels at the sides of the front bodice, natural waist seam, short voluminous bell-shaped skirt with exactly three flounced tiers, dark edge trim with tiny silver-white floral/bird details. Keep the product's bodice-to-skirt proportions; do not lower the waist, lengthen the bodice, add a fourth tier or turn it into a long gown. The hem should fall below the mannequin torso but leave a long visible section of its pole. Symmetric front display, gravity-natural folds, light invisible support inside skirt only to preserve its pictured fullness.\nRemove the source's printed border, lettering, logos and original beige form. No human, no head, no arms, no skin, no sleeves, no extra accessories, no labels, no text. Preserve every visible fastening and lace placement as far as source resolution allows. One mannequin, one garment, one image, no contact sheet.",
+      "references": [
+        "template",
+        "/tmp/lolita-vton-exploration-20261015/items-33-0.jpg"
+      ],
+      "original_output": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-c0d5210f-230b-4fb1-b1b2-5a3f39eb63ec.png",
+      "repository_output": "docs/visuals/2026-10-15-mannequin-front-flower-moon.png",
+      "sha256": "b90d17abcb03fd2a99b2affad113d72f0cb4bad44aab5ab65e2f9e0a172b32f3",
+      "bytes": 2032127,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "id": "pink_front",
+      "purpose": "暴食魔女 JSK 单件正面；排除套装其他单品",
+      "retained": true,
+      "elapsed_seconds": 65.7,
+      "prompt": "Edit IMAGE 1, the blank canonical mannequin studio template. Dress this exact mannequin in ONLY the pink/black/ivory Lolita JSK dress shown in the TOP LEFT cell labeled \"JSK\" in IMAGE 2 (the six-product package board). IMAGE 3 is a supplemental adult wearer photo of the same outfit for fabric color, lace and volume; it shows other separate products that must NOT be included. This is one strict front-view garment normalization experiment, not a redesign.\nKeep IMAGE 1's exact full portrait 2:3 canvas, background, camera, lighting, mannequin neck cap, shoulders, adult torso proportions and natural waist height, pole and circular stand base. Do not crop, zoom, rotate, lengthen or replace the mannequin. Fit the dress naturally to this form and restore a relaxed, symmetric frontal hanging skirt rather than the human lifting-the-skirt pose.\nSOURCE DISAMBIGUATION: Only the top-left JSK product determines what belongs to the dress. Retain its narrow black crossover shoulder/neck straps, soft ivory/white lace neckline and bodice panels, main pastel pink chest bow as pictured on that JSK, black fitted waist, layered flared bell skirt, pink/ivory/black alternating ruffles, delicate white lace trim, black ribbon accents and the product's actual relative silhouette. Use IMAGE 3 to see materials and ruffle color, not to add its separate cross-jewelry chest brooch, tall black lace neck inner, hanging sleeves or any human anatomy. Do not add the standalone oversized bow from the top-middle board cell, cape from top-right, inner layer/sleeves from bottom-left, bonnet from bottom-middle, or jeweled cross bow from bottom-right. These are explicitly independent accessories. If a tiny decoration is too obscured, prefer simple continuation of the visible dress lace rather than inventing jewelry. Preserve natural waist and short voluminous skirt length, do not turn it into a gown.\nNo head, wig, human face, arms, skin, hands, stockings, shoes, cape, sleeves, parasol or hand-held object. Remove all source text, labels, boards, watermarks and background. One mannequin wearing one JSK, one image, no contact sheet. Photorealistic premium clothing catalog, honest detail fidelity rather than extra embellishment.",
+      "references": [
+        "template",
+        "/tmp/lolita-mannequin-round2-20261015/items-56-0.jpg",
+        "/tmp/lolita-mannequin-round2-20261015/items-56-1.png"
+      ],
+      "original_output": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-016c7b52-6f8e-4633-a9a7-18932fb9e1b6.png",
+      "repository_output": "docs/visuals/2026-10-15-mannequin-front-gluttony-witch.png",
+      "sha256": "c5480b6be265301bcb803bcb80b10ea0084910137f0d4617767ba34977af665a",
+      "bytes": 2020380,
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "id": "pink_three_views_rejected",
+      "purpose": "已停止路线的历史试验；不纳入保留样片",
+      "retained": false,
+      "elapsed_seconds": 99.2,
+      "prompt": "Create one landscape 3:2 catalog turntable contact sheet with three clean equal-width columns showing the same pink/black/ivory Lolita JSK on the same warm-white headless armless tailoring mannequin: exact front, strict 90-degree right side, exact back. IMAGE 1 is the already normalized front mannequin image and is the master reference for the garment's displayed appearance and mannequin studio style. IMAGE 2 is the original package board; only its top-left JSK is relevant. IMAGE 3 is the original adult wearer photograph for materials; ignore all separate headwear, parasol, sleeves, cape, stockings and jewelry.\nUse a single shared scale and level camera for all three columns. Align neck caps, natural waist axes, pole lengths and circular silver bases horizontally. Pale gray seamless studio, diffuse light, no human anatomy. The front column must preserve IMAGE 1's actual visible bodice, cross-neck straps, chest bow, lace placement, skirt ruffle topology and bow positions rather than re-designing it. The side and back should be consistent plausible rotations of that garment, not three different dresses. Do not put front-only chest decoration on the back or duplicate front center lace panels onto the back. Do not add arbitrary jewelry or giant new bows. Keep the same silhouette and hem height across views.\nCRITICAL EVIDENCE LIMIT: These references contain NO actual complete back photograph. Side and back are AI guesses, NOT authentic reconstruction, manufacturing evidence, or a true 3D asset. Make this explicit on the image in clean readable Chinese text. Across the top write exactly \"AI三视预览 · 侧背面为推测\". Under columns write exactly \"正面参考\" / \"侧面推测\" / \"背面推测\". Give labels adequate padding and a restrained charcoal-gray sans-serif style. The panel title must remain visible; do not crop any form or base. No other text, logos, frames or props. Photorealistic catalog clothes, not a technical sewing blueprint.",
+      "references": [
+        "pink_front",
+        "/tmp/lolita-mannequin-round2-20261015/items-56-0.jpg",
+        "/tmp/lolita-mannequin-round2-20261015/items-56-1.png"
+      ],
+      "original_output": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-b964b402-455a-462a-a618-813c140d1997.png",
+      "repository_output": null,
+      "reason": "侧背缺少真实证据且生成结构无法验证；用户明确只保留正面。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "navy_source",
+      "path": "/tmp/lolita-vton-exploration-20261015/items-33-0.jpg",
+      "table": "items",
+      "entity_id": 33,
+      "index": 0,
+      "role": "服装正面结构唯一依据",
+      "archive_entry": "images/4148591f-759c-4faa-b26f-69b201f86aa8.jpg",
+      "sha256": "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+      "bytes": 302659
+    },
+    {
+      "id": "pink_product_board",
+      "path": "/tmp/lolita-mannequin-round2-20261015/items-56-0.jpg",
+      "table": "items",
+      "entity_id": 56,
+      "index": 0,
+      "role": "套装说明图左上 JSK 为单件边界依据",
+      "archive_entry": "images/1583fa81-d37b-43ee-8c15-5cbd4acbd6ac.jpg",
+      "sha256": "b00f9cb440dcd431c0827df24df6a51a215c4d466cf722e666698d7392b77077",
+      "bytes": 164201
+    },
+    {
+      "id": "pink_wearer",
+      "path": "/tmp/lolita-mannequin-round2-20261015/items-56-1.png",
+      "table": "items",
+      "entity_id": 56,
+      "index": 1,
+      "role": "同款真人穿着，仅补充面料与配色，不带入内搭、帽子、伞和首饰",
+      "archive_entry": "images/43dfdbb9-8f7a-4a5b-aa60-97a209e5df42.png",
+      "sha256": "732b98a21a6124313286492c6079137ace3d545cec61fbb2bdc360e3eec00758",
+      "bytes": 1786456
+    }
+  ]
+}

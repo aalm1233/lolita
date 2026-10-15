@@ -391,4 +391,4 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。
 - Room26→27仅增加 `TryOnResult`/`TryOnDao`，结果由薄 `TryOnRepository` 独立持久化，原服饰删除后保留名称/ID快照，不改变账本/穿搭/归属。生成PNG需完整尾块、可解码及大小/尺寸校验，取消或失败清理未保存文件；删除复用图片引用保护。
 - 备份格式7/schema27完整支持试衣历史JSON/ZIP/CSV/预览/恢复；旧1–6格式缺失历史数组视为空。新增DAO同步接LolitaDatabase、Repository和AppModule。
-- 回归包含TryOn领域/API/Generator JVM测试及独立AVD上的Infrastructure/Persistence/ViewModel/Screen测试，真实Compose核对七皮肤浅暗、大字、Key遮罩与图片缩放。统一人台与三视图仍仅探索样片，侧背结构缺少真实来源时必须标明AI推测；说明见 `docs/virtual-mannequin-exploration-2026-10-15.md`。
+- 回归包含TryOn领域/API/Generator JVM测试及独立AVD上的Infrastructure/Persistence/ViewModel/Screen测试，真实Compose核对七皮肤浅暗、大字、Key遮罩与图片缩放。统一人台仍仅探索样片；2026-10-15用户选择只保留正面、停止三视图方向。第二轮共用空白模板独立生成花鸟龙月与暴食魔女JSK，仍有腰线与纹样重绘；不替代原图，不声称正式API已实测。说明见 `docs/virtual-mannequin-exploration-2026-10-15.md`，完整提示词与来源见 `docs/virtual-mannequin-front-round2-2026-10-15.json`。

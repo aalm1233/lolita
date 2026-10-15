@@ -19,6 +19,29 @@ import org.junit.Test
 import java.io.File
 
 class TryOnGeneratorTest {
+    @Test fun staleDisclosedProviderNeverPreparesImagesOrStartsPaidRequest() = runBlocking {
+        Fixture().use { f ->
+            expectFailure { f.generator().generate(f.selected, expectedProvider = com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM) }
+            assertEquals(0, f.prepareCalls); assertEquals(0, f.apiCalls); assertTrue(f.saved.isEmpty())
+        }
+    }
+    @Test fun changingServiceDuringPreparationKeepsOriginalKeyAndActualModelInHistory() = runBlocking {
+        Fixture().use { f ->
+            var active = com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM, "seed-key")
+            var reads = 0
+            var sent: com.lolita.app.domain.model.ImageGenerationCredentials? = null
+            var savedModel = ""
+            val generator = TryOnGenerator(findItem = { f.items[it] }, readCredentials = { reads++; active },
+                prepareImages = { active = com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, "gpt-key"); f.prepare(it) },
+                generateImage = { credentials, _, _ -> sent = credentials; byteArrayOf(7) },
+                saveResult = { _, _, model -> savedModel = model; 1L })
+            generator.generate(f.selected)
+            assertEquals(1, reads)
+            assertEquals("seed-key", sent!!.apiKey)
+            assertEquals(com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM, sent!!.provider)
+            assertEquals("doubao-seedream-5-0-pro-260628", savedModel)
+        }
+    }
     private class Fixture : AutoCloseable {
         val folder = kotlin.io.path.createTempDirectory("tryon-generator-").toFile()
         val dress = File(folder, "dress.jpg").apply { writeBytes(byteArrayOf(1)) }
@@ -49,8 +72,8 @@ class TryOnGeneratorTest {
         }
 
         fun generator() = TryOnGenerator(
-            findItem = { items[it] }, readKey = { key },
-            prepareImages = { prepare(it) }, generateImage = { key, images, prompt -> api(key, images, prompt) },
+            findItem = { items[it] }, readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key) },
+            prepareImages = { prepare(it) }, generateImage = { key, images, prompt -> api(key.apiKey, images, prompt) },
             saveResult = { bytes, rows, model -> save(bytes, rows, model) }
         )
 
@@ -168,9 +191,9 @@ class TryOnGeneratorTest {
         Fixture().use { fixture ->
             val running = async {
                 val job = currentCoroutineContext().job
-                fixture.generator().generate(fixture.selected) { phase ->
+                fixture.generator().generate(fixture.selected, onPhase = { phase ->
                     if (phase == TryOnGenerationPhase.SAVING) job.cancel()
-                }
+                })
             }
             try {
                 running.await()

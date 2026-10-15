@@ -1,5 +1,9 @@
 package com.lolita.app.data.tryon
 
+import com.lolita.app.domain.model.ImageGenerationCredentials
+import com.lolita.app.domain.model.ImageGenerationProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -13,12 +17,44 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /** Personal credentials never enter DataStore, Room, Android backup, logs or the APK. */
+data class ImageServiceStatus(val provider: ImageGenerationProvider, val hasKey: Boolean)
+
 class TryOnSettings(context: Context) {
-    private val file = AtomicFile(File(context.noBackupFilesDir, "tryon-credential-v1"))
+    private val directory = context.noBackupFilesDir
+    private val selection = AtomicFile(File(directory, "image-generation-provider-v1"))
+    private val revision = MutableStateFlow(0)
+    val changes = revision.asStateFlow()
+    private fun credentialFile(provider: ImageGenerationProvider) = AtomicFile(File(directory,
+        if (provider == ImageGenerationProvider.OPENAI) "tryon-credential-v1" else "seedream-credential-v1"))
 
-    @Synchronized fun hasKey(): Boolean = runCatching { readKey().isNotBlank() }.getOrDefault(false)
+    @Synchronized fun readProvider(): ImageGenerationProvider {
+        if (!selection.baseFile.exists()) return if (credentialFile(ImageGenerationProvider.OPENAI).baseFile.exists())
+            ImageGenerationProvider.OPENAI else ImageGenerationProvider.SEEDREAM
+        return try { ImageGenerationProvider.valueOf(selection.openRead().use { it.readBytes().toString(Charsets.UTF_8) }) }
+        catch (_: Exception) { error("图像服务配置无法读取，请重新选择服务") }
+    }
 
-    @Synchronized fun readKey(): String {
+    @Synchronized fun selectProvider(provider: ImageGenerationProvider) {
+        val output = selection.startWrite()
+        try { output.write(provider.name.toByteArray(Charsets.UTF_8)); selection.finishWrite(output) }
+        catch (failure: Exception) { selection.failWrite(output); throw failure }
+        revision.value += 1
+    }
+
+    @Synchronized fun readCredentials(): ImageGenerationCredentials {
+        val provider = readProvider()
+        return ImageGenerationCredentials(provider, readKey(provider))
+    }
+
+    @Synchronized fun readStatus(): ImageServiceStatus {
+        val provider = readProvider()
+        return ImageServiceStatus(provider, hasKey(provider))
+    }
+
+    @Synchronized fun hasKey(provider: ImageGenerationProvider = readProvider()): Boolean = runCatching { readKey(provider).isNotBlank() }.getOrDefault(false)
+
+    @Synchronized fun readKey(provider: ImageGenerationProvider = readProvider()): String {
+        val file = credentialFile(provider)
         if (!file.baseFile.exists()) return ""
         return try {
             val parts = file.openRead().use { it.readBytes().toString(Charsets.UTF_8) }.split(':')
@@ -29,7 +65,8 @@ class TryOnSettings(context: Context) {
         } catch (_: Exception) { throw IllegalStateException("本机密钥无法读取，请重新配置 API Key") }
     }
 
-    @Synchronized fun saveKey(value: String) {
+    @Synchronized fun saveKey(value: String, provider: ImageGenerationProvider = readProvider()) {
+        val file = credentialFile(provider)
         val value = value.trim()
         require(value.isNotBlank() && value.length <= 512 && value.all { it.code in 33..126 }) { "请填写有效的 API Key" }
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -39,9 +76,16 @@ class TryOnSettings(context: Context) {
         val output = file.startWrite()
         try { output.write(encoded.toByteArray(Charsets.UTF_8)); file.finishWrite(output) }
         catch (error: Exception) { file.failWrite(output); throw error }
+        revision.value += 1
     }
 
-    @Synchronized fun clearKey() { file.delete() }
+    @Synchronized fun clearKey(provider: ImageGenerationProvider = readProvider()) {
+        // Legacy installs infer OpenAI from the old credential. Persist that choice
+        // before deletion so clearing a key cannot silently switch its recipient.
+        if (!selection.baseFile.exists()) selectProvider(readProvider())
+        credentialFile(provider).delete()
+        revision.value += 1
+    }
 
     private fun key(): SecretKey = synchronized(keyLock) {
         val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }

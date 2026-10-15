@@ -17,6 +17,39 @@ import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class TryOnInfrastructureTest {
+    @Test fun clearingLegacyGptCredentialKeepsTheSelectedService() {
+        val context = fixture()
+        try {
+            val settings = TryOnSettings(context)
+            settings.saveKey("legacy-gpt-only", com.lolita.app.domain.model.ImageGenerationProvider.OPENAI)
+            assertEquals(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, settings.readProvider())
+            settings.clearKey()
+            assertFalse(settings.hasKey())
+            assertEquals(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, TryOnSettings(context).readProvider())
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
+    @Test fun legacyKeySurvivesServiceSwitchAndOtherCredentialDeletion() {
+        val context = fixture()
+        try {
+            val settings = TryOnSettings(context)
+            val gpt = com.lolita.app.domain.model.ImageGenerationProvider.OPENAI
+            val seed = com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM
+            assertEquals(seed, settings.readProvider())
+            settings.saveKey("legacy-private-gpt", gpt)
+            assertEquals(gpt, TryOnSettings(context).readProvider())
+            settings.selectProvider(seed)
+            assertFalse(settings.hasKey())
+            settings.saveKey("private-seedream")
+            assertEquals(seed, TryOnSettings(context).readCredentials().provider)
+            assertEquals("private-seedream", TryOnSettings(context).readCredentials().apiKey)
+            settings.clearKey()
+            assertFalse(settings.hasKey())
+            settings.selectProvider(gpt)
+            assertEquals("legacy-private-gpt", settings.readCredentials().apiKey)
+            val raw = context.noBackupFilesDir.walkTopDown().filter { it.isFile }.joinToString { it.readText() }
+            assertFalse(raw.contains("legacy-private-gpt")); assertFalse(raw.contains("private-seedream"))
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
     private fun fixture(): ContextWrapper = object : ContextWrapper(InstrumentationRegistry.getInstrumentation().targetContext) {
         val root = File(baseContext.cacheDir,"tryon-${UUID.randomUUID()}").apply { mkdirs() }
         override fun getFilesDir() = File(root,"files").apply { mkdirs() }

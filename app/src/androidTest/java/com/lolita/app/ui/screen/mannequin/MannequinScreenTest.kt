@@ -45,6 +45,7 @@ class MannequinScreenTest {
     private lateinit var vm: MannequinViewModel
     private lateinit var photos: List<String>
     private var key: String? = null
+    private var provider = com.lolita.app.domain.model.ImageGenerationProvider.OPENAI
     private var generated = CompletableDeferred<String>()
     private var calls = 0
     private var appended: String? = null
@@ -66,8 +67,8 @@ class MannequinScreenTest {
             vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L)),
                 item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED, imageUrls = photos.take(2))),
                 categories = flowOf(listOf(Category(id = 1, name = "OP"))),
-                hasApiKey = { key != null }, saveApiKey = { key = it }, clearApiKey = { key = null },
-                globalGenerating = MutableStateFlow(false), generateImage = { _, phase -> calls++; phase(com.lolita.app.data.tryon.TryOnGenerationPhase.GENERATING); generated.await() },
+                readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, key != null) }, selectService = { provider = it }, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
+                globalGenerating = MutableStateFlow(false), generateImage = { _, phase, _ -> calls++; phase(com.lolita.app.data.tryon.TryOnGenerationPhase.GENERATING); generated.await() },
                 appendImage = { _, path -> appended = path }, validatePreview = { true }, discardImage = { discarded = it })
             store.put("vm", vm)
         }
@@ -101,6 +102,29 @@ class MannequinScreenTest {
         compose.onNodeWithText("API Key", substring = false).performScrollTo().performTextInput("sk-ui-private")
         compose.onNodeWithText("保存密钥").performClick()
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
+    }
+    @Test fun seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls() {
+        show()
+        scroll("即梦 5.0 Pro")
+        compose.onNodeWithTag("imageService-SEEDREAM").performClick()
+        compose.waitUntil(10_000) { vm.uiState.value.provider == com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM && !vm.uiState.value.busy }
+        compose.onNodeWithTag("imageService-SEEDREAM").assertIsSelected()
+        compose.onNodeWithTag("imageService-OPENAI").assertIsNotSelected()
+        compose.onNodeWithText("配置 API Key").performClick()
+        compose.onNodeWithText("API Key", substring = false).performTextInput("private-seed-test")
+        compose.onNodeWithText("API Key", substring = false).assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Password))
+        compose.onNodeWithText("保存密钥").performClick()
+        compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.busy }
+        compose.onNodeWithText("上传所选原图、固定模板及补充说明至 火山方舟，共2张图片；API 单独计费。").assertIsDisplayed()
+        val output = File(instrumentation.targetContext.filesDir, "seedream-service-contact-sheets").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
+            scroll("即梦 5.0 Pro")
+            compose.onNodeWithTag("imageService-SEEDREAM").assertIsDisplayed().assertIsSelected()
+            compose.onNodeWithTag("imageService-OPENAI").assertIsDisplayed().assertIsNotSelected()
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
     }
     @Test fun sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration() {
         show()

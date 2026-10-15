@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.mannequin
 
+import com.lolita.app.data.tryon.ImageServiceStatus
+import com.lolita.app.domain.model.ImageGenerationProvider
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +24,7 @@ data class MannequinUiState(
     val isLoading: Boolean = true,
     val loadFailed: Boolean = false,
     val keyLoaded: Boolean = false,
+    val provider: ImageGenerationProvider = ImageGenerationProvider.SEEDREAM,
     val hasKey: Boolean = false,
     val keyRevision: Int = 0,
     val isConfiguring: Boolean = false,
@@ -52,12 +55,14 @@ class MannequinViewModel @JvmOverloads constructor(
     private val savedStateHandle: SavedStateHandle = SavedStateHandle(),
     item: Flow<Item?> = AppModule.itemRepository().observeItem(savedStateHandle.get<Long>("itemId") ?: 0L),
     categories: Flow<List<Category>> = AppModule.categoryRepository().getAllCategories(),
-    private val hasApiKey: suspend () -> Boolean = { AppModule.tryOnSettings().hasKey() },
-    private val saveApiKey: suspend (String) -> Unit = { AppModule.tryOnSettings().saveKey(it) },
-    private val clearApiKey: suspend () -> Unit = { AppModule.tryOnSettings().clearKey() },
+    private val readService: suspend () -> ImageServiceStatus = { AppModule.tryOnSettings().readStatus() },
+    private val selectService: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().selectProvider(it) },
+    serviceChanges: Flow<Int> = AppModule.tryOnSettings().changes,
+    private val saveApiKey: suspend (ImageGenerationProvider, String) -> Unit = { provider, value -> AppModule.tryOnSettings().saveKey(value, provider) },
+    private val clearApiKey: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().clearKey(it) },
     globalGenerating: StateFlow<Boolean> = AppModule.mannequinGenerator().isGenerating,
-    private val generateImage: suspend (MannequinRequest, (TryOnGenerationPhase) -> Unit) -> String = { request, phase ->
-        AppModule.mannequinGenerator().generate(request, phase)
+    private val generateImage: suspend (MannequinRequest, (TryOnGenerationPhase) -> Unit, ImageGenerationProvider) -> String = { request, phase, provider ->
+        AppModule.mannequinGenerator().generate(request, phase, provider)
     },
     private val appendImage: suspend (Long, String) -> Unit = { id, path -> AppModule.itemRepository().appendGeneratedImage(id, path) },
     private val validatePreview: suspend (String) -> Boolean = { ImageFileHelper.isOwnedGeneratedImage(AppModule.context(), it) },
@@ -100,9 +105,16 @@ class MannequinViewModel @JvmOverloads constructor(
         }
         viewModelScope.launch { globalGenerating.collect { busy -> state.update { it.copy(globalGenerating = busy) } } }
         viewModelScope.launch {
-            val configured = try { withContext(Dispatchers.IO) { hasApiKey() } }
-                catch (failure: Exception) { if (failure is CancellationException) throw failure; false }
-            state.update { it.copy(hasKey = configured, keyLoaded = true) }
+            serviceChanges.collect {
+                state.update { it.copy(keyLoaded = false) }
+                try {
+                    val status = withContext(Dispatchers.IO) { readService() }
+                    state.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true) }
+                } catch (failure: Exception) {
+                    if (failure is CancellationException) throw failure
+                    state.update { it.copy(hasKey = false, keyLoaded = true, error = "图像服务配置读取失败，请重新选择服务") }
+                }
+            }
         }
     }
 
@@ -117,23 +129,30 @@ class MannequinViewModel @JvmOverloads constructor(
         savedStateHandle[INSTRUCTIONS] = value.take(200)
         state.update { it.copy(instructions = value.take(200)) }
     }
+    fun selectProvider(provider: ImageGenerationProvider) {
+        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded || provider == state.value.provider) return
+        configureService { selectService(provider) }
+    }
     fun saveKey(value: String) {
-        if (state.value.busy) return
+        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded) return
         if (value.isBlank()) { state.update { it.copy(error = "请填写 API Key") }; return }
-        configureKey { saveApiKey(value); true }
+        val provider = state.value.provider
+        configureService { saveApiKey(provider, value) }
     }
     fun clearKey() {
-        if (!state.value.busy) configureKey { clearApiKey(); false }
+        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded) return
+        val provider = state.value.provider
+        configureService { clearApiKey(provider) }
     }
-    private fun configureKey(operation: suspend () -> Boolean) {
+    private fun configureService(operation: suspend () -> Unit) {
         state.update { it.copy(isConfiguring = true, error = null) }
         viewModelScope.launch {
             try {
-                val configured = withContext(Dispatchers.IO) { operation() }
-                state.update { it.copy(hasKey = configured, keyLoaded = true, keyRevision = it.keyRevision + 1) }
+                val status = withContext(Dispatchers.IO) { operation(); readService() }
+                state.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true, keyRevision = it.keyRevision + 1) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                state.update { it.copy(error = "API Key 配置失败，请重新输入后重试") }
+                state.update { it.copy(error = "图像服务配置失败，请重新输入后重试") }
             } finally { state.update { it.copy(isConfiguring = false) } }
         }
     }
@@ -147,7 +166,7 @@ class MannequinViewModel @JvmOverloads constructor(
         generationJob = viewModelScope.launch {
             var delivered: String? = null
             try {
-                val path = generateImage(request) { phase -> state.update { it.copy(phase = phase) } }
+                val path = generateImage(request, { phase -> state.update { it.copy(phase = phase) } }, current.provider)
                 delivered = path
                 currentCoroutineContext().ensureActive()
                 savedStateHandle[PREVIEW_ITEM] = itemId

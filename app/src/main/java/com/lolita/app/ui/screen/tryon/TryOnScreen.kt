@@ -64,7 +64,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     if (state.hasKey && !state.isGenerating) {
-                        Text("上传共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 OpenAI，可能计费。",
+                        Text("上传共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
@@ -117,13 +117,14 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 }
             }
             item(key = "service") {
-                LolitaSection(title = "OpenAI 图像服务", action = {
+                LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
                     TextButton(onClick = { showKey = true }, enabled = !state.busy) { Text("服务配置") }
                 }) {
                     row {
+                        ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
                         Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
                             modifier = Modifier.padding(vertical = skin.spacingMedium), style = MaterialTheme.typography.bodyMedium)
-                        Text("API 按量付费，与 ChatGPT 订阅分开计费。密钥仅加密保存在本机，不进入备份。", style = MaterialTheme.typography.bodySmall)
+                        Text("${state.provider.keyHelp} 两家密钥分开加密保存在本机，不进入备份。", style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -166,7 +167,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             item(key = "disclosure") {
                 LolitaSection(title = "生成前确认") {
                     row {
-                        Text("点击生成后，将上传固定模特与已选的 ${state.selected.size} 张服饰图片到 OpenAI，共 ${state.selected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
+                        Text("点击生成后，将上传固定模特与已选的 ${state.selected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.selected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         Text("试衣图独立保存，不会改变服饰归属、穿搭次数或账目。取消、超时后服务端仍可能处理；应用不会自动重试。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
@@ -211,7 +212,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null })
     val role = state.selected.firstOrNull { it.itemId == roleItemId }
     if (role != null) TryOnRolePicker(role.role, onSelect = { viewModel.setRole(role.itemId, it) }, onDismiss = { roleItemId = null })
-    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error, viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false })
+    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error, viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     preview?.let { FullScreenImageViewer(listOf(it), onDismiss = { preview = null }) }
     rename?.let { result -> TryOnRenameDialog(result.name, onSave = { viewModel.rename(result.id, it); rename = null }, onDismiss = { rename = null }) }
     delete?.let { result -> AlertDialog(onDismissRequest = { delete = null }, title = { Text("删除试衣图？") },

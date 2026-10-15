@@ -1,0 +1,33 @@
+{
+  "model": "doubao-seedream-5-0-pro-260628",
+  "size": "1024x1536",
+  "reference_count": 2,
+  "watermark": true,
+  "response_format": "b64_json",
+  "source_sha256": "13fec7a753ae0abb2a166a99efa408066dfec150b730ee7e4f99abe0f2ff625a",
+  "template_sha256": "7a2c57ff168e8232ec4c312fbda1818f63fefffb8bfadc97d0adc76d2ba49eea",
+  "automatic_retries": 0,
+  "http_status": 200,
+  "dimensions": [
+    1024,
+    1536
+  ],
+  "output": "docs/visuals/2026-10-16-seedream/poppy-front.png",
+  "sha256": "4d062367a3bab416ca964aadaecc0c7cf43b68e42e0918b7daa96d13bea4fff4",
+  "usage": {
+    "input_images": 2,
+    "generated_images": 1,
+    "output_tokens": 6144,
+    "total_tokens": 6144
+  },
+  "success": true,
+  "seconds": 76.29,
+  "first_attempt": {
+    "http_status": 429,
+    "error_code": "SetLimitExceeded",
+    "outcome": "No image; user adjusted safety usage limit before explicitly authorizing a second request."
+  },
+  "prompt_source": "docs/mannequin-front-evaluation-2026-10-15.json:base_prompt",
+  "date": "2026-10-16",
+  "verdict": "可供预览：领片、长袖、侧腰结、大花裙摆和完整人台保留；印花与刺绣仍重绘。保留服务AI水印。"
+}

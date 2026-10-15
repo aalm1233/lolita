@@ -27,12 +27,12 @@ object AppModule {
     fun tryOnRepository() = _tryOnRepository
     private val _tryOnSettings by lazy { com.lolita.app.data.tryon.TryOnSettings(appContext) }
     fun tryOnSettings() = _tryOnSettings
-    private val _imageGenerationApi by lazy { com.lolita.app.data.remote.TryOnImageApi() }
+    private val _imageGenerationApi by lazy { com.lolita.app.data.remote.ImageGenerationApi() }
     private val _generationImages by lazy { com.lolita.app.data.tryon.TryOnImages(appContext) }
     private val _tryOnGenerator by lazy {
         com.lolita.app.data.tryon.TryOnGenerator(
             findItem = { database.itemDao().getItemById(it) },
-            readKey = { _tryOnSettings.readKey() },
+            readCredentials = { _tryOnSettings.readCredentials() },
             prepareImages = _generationImages::prepare,
             generateImage = _imageGenerationApi::generate,
             saveResult = { bytes, selected, model ->
@@ -46,7 +46,7 @@ object AppModule {
         com.lolita.app.data.mannequin.MannequinGenerator(
             findItem = { database.itemDao().getItemById(it) },
             findCategory = { database.categoryDao().getCategoryById(it) },
-            readKey = { _tryOnSettings.readKey() },
+            readCredentials = { _tryOnSettings.readCredentials() },
             prepareImages = _generationImages::prepareMannequin,
             generateImage = _imageGenerationApi::generate,
             savePreview = { ImageFileHelper.saveGeneratedImage(appContext, it) },

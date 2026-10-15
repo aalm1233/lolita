@@ -13,11 +13,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
+import com.lolita.app.domain.model.ImageGenerationProvider
 
 @Composable
-fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy: Boolean, error: String?, onSave: (String) -> Unit, onClear: () -> Unit, onDismiss: () -> Unit) {
+fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy: Boolean, error: String?, onSave: (String) -> Unit, onClear: () -> Unit, onDismiss: () -> Unit, provider: ImageGenerationProvider = ImageGenerationProvider.OPENAI) {
     val skin = LolitaSkin.current
-    var value by remember { mutableStateOf("") }
+    var value by remember(provider) { mutableStateOf("") }
     val initialRevision = remember { keyRevision }
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
@@ -25,7 +26,8 @@ fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy
     AlertDialog(onDismissRequest = { if (!isConfiguring) onDismiss() }, title = { Text("个人 API Key") },
         text = {
             Column(Modifier.verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                Text(if (hasKey) "当前已配置。输入新密钥可替换，旧密钥不会回填。" else "填写 OpenAI API Key 后才能生成。API 需单独充值，ChatGPT 订阅不含此额度。", style = MaterialTheme.typography.bodySmall)
+                Text(provider.label, style = MaterialTheme.typography.titleSmall)
+                Text(if (hasKey) "当前服务已配置。输入新密钥可替换，旧密钥不会回填。" else provider.keyHelp, style = MaterialTheme.typography.bodySmall)
                 OutlinedTextField(value = value, onValueChange = { value = it }, enabled = !busy,
                     label = { Text("API Key") }, modifier = Modifier.fillMaxWidth(), singleLine = true,
                     visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

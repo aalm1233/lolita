@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=107, versionName="2.49.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=108, versionName="2.50.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -401,3 +401,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - SavedState只存Item身份、参考图、说明和待保存预览路径；恢复须校验本应用images目录、精确绝对路径、完整PNG/尺寸/解码及Item身份，不接管或删除被拒路径。保存任务独立于UI等待；清理通过引用保护，删除Item在事务内取最新图片集合，防旧快照遗漏新图。
 - NavHost在内容组合前观察同一个entry VM，恢复/生成/保存/待处理预览及离开状态均阻止底栏和快捷穿搭。系统/顶栏返回在恢复未完成时禁用；取消或保存先完成原entry离开，再消费排队快捷意图，pop按entry身份保护。Key配置与试衣共用遮罩对话框，不回填旧Key。
 - 回归为 `MannequinRequestTest`、`MannequinGeneratorTest`、独立AVD的 `MannequinInfrastructureTest/MannequinPersistenceTest/MannequinApplicationCleanupTest` 和 `MannequinViewModelTest/MannequinScreenTest/MannequinDetailEntryTest/MannequinNavigationTest`；真实Room校验并发最新字段、幂等追加、旧快照删除、ZIP图片顺序与原图保全，七皮肤浅暗320dp/2倍字体及受影响试衣回归。实现与验证见 `docs/mannequin-front-implementation-2026-10-15.md`。
+
+
+## 即梦 / Seedream 图像服务（2.50.0）
+
+- 虚拟试衣及正面人台图共用服务切换：`ImageGenerationProvider` 保留 GPT，新增即梦 5.0 Pro（火山方舟 `doubao-seedream-5-0-pro-260628`）。新安装默认即梦；存在旧 OpenAI 密文而无选择记录时保留 GPT。两家密钥分别 Keystore AES-GCM 加密存放于 noBackupFilesDir，切换或删除一家的 Key 不影响另一家；不回填、不进备份或 APK。
+- `TryOnSettings.readCredentials()` 原子读取服务与密钥，生成器全程使用该快照，并在上传前校验页面确认的服务；试衣历史写入实际模型型号。`changes` 通知两个保留的 ViewModel 同步状态。生成中、保存中及人台待处理预览禁止改服务或密钥。
+- `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 JPEG Data URL、1024×1536、PNG、b64_json、stream=false、watermark=true，复用2–9张及原图片总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。
+- Room27／备份7及图片归属不变。实际付费联调在用量限制调整后成功返回1张图（76.29秒，2张输入）；不能推论所有印花准确。验证、来源与样片见 `docs/seedream-provider-2026-10-16.md`，回归包含 API／不可变快照 JVM、独立AVD真实Keystore双Key保全、双VM同步及七皮肤浅暗服务选择、原生成与导航测试。

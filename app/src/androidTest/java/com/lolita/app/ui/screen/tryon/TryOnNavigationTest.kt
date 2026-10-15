@@ -47,7 +47,7 @@ class TryOnNavigationTest {
         val item = Item(id = 11, name = "导航测试裙", brandId = 1, categoryId = 1,
             description = "", status = ItemStatus.OWNED, imageUrls = listOf(source.absolutePath))
         generator = TryOnGenerator(findItem = { item.takeIf { row -> row.id == it } },
-            readKey = { "sk-controlled-test-only" }, prepareImages = { listOf(byteArrayOf(1), byteArrayOf(2)) },
+            readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, "sk-controlled-test-only") }, prepareImages = { listOf(byteArrayOf(1), byteArrayOf(2)) },
             generateImage = { _, _, _ -> requests++; awaitCancellation() },
             saveResult = { _, _, _ -> error("取消不能保存结果") })
         compose.setContent {
@@ -64,7 +64,7 @@ class TryOnNavigationTest {
                     navController = nav, createTryOnViewModel = { handle ->
                         TryOnViewModel(savedStateHandle = handle, items = flowOf(listOf(item)),
                             categories = flowOf(listOf(Category(id = 1, name = "JSK"))), results = flowOf(emptyList()),
-                            hasApiKey = { true }, saveApiKey = {}, clearApiKey = {},
+                            readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value ->  }, clearApiKey = { _ ->  },
                             globalGenerating = generator.isGenerating, generateImage = generator::generate,
                             renameResult = { _, _ -> }, deleteResult = {}).also { model = it }
                     })

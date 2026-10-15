@@ -50,7 +50,7 @@ class MannequinNavigationTest {
         previewFile = File(source.parentFile, "mannequin-preview-${UUID.randomUUID()}.png").apply { writeBytes(byteArrayOf(1)) }
         val item = Item(id = 11, name = "心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.PENDING_PAYMENT, imageUrls = listOf(source.absolutePath))
         val category = Category(id = 1, name = "OP")
-        generator = MannequinGenerator(findItem = { item.takeIf { row -> row.id == it } }, findCategory = { category }, readKey = { "sk-controlled-only" },
+        generator = MannequinGenerator(findItem = { item.takeIf { row -> row.id == it } }, findCategory = { category }, readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, "sk-controlled-only") },
             prepareImages = { listOf(byteArrayOf(1), byteArrayOf(2)) }, generateImage = { _, _, _ ->
                 requests++
                 try { response.await() } finally {
@@ -74,7 +74,7 @@ class MannequinNavigationTest {
                                 handle["mannequinPreviewItem"] = 11L
                             }
                             MannequinViewModel(savedStateHandle = handle, item = flowOf(item), categories = flowOf(listOf(category)),
-                                hasApiKey = { true }, saveApiKey = {}, clearApiKey = {}, globalGenerating = generator.isGenerating,
+                                readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value ->  }, clearApiKey = { _ ->  }, globalGenerating = generator.isGenerating,
                                 generateImage = generator::generate, appendImage = { _, _ -> appendEntered.complete(Unit); appendRelease.await() },
                                 validatePreview = {
                                     withContext(Dispatchers.IO) { restoreEntered.complete(Unit); restoreRelease.await(); true }

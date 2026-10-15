@@ -87,7 +87,7 @@ fun MannequinScreen(
                         TextButton(onClick = { leaveAfterDiscard = false; discard = true }, enabled = !state.isSaving,
                             modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("放弃预览") }
                     } else {
-                        Text("上传所选原图、固定模板及补充说明至 OpenAI，共2张图片；API 单独计费。",
+                        Text("上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                             style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
                         Button(onClick = { if (!state.hasKey) showKey = true else viewModel.generate() },
                             enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null && (!state.hasKey || state.canGenerate),
@@ -147,12 +147,13 @@ fun MannequinScreen(
                 }
             } else {
                 item("service") {
-                    LolitaSection(title = "OpenAI 图像服务", action = {
-                        TextButton(onClick = { showKey = true }, enabled = !state.busy) { Text("服务配置") }
+                    LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
+                        TextButton(onClick = { showKey = true }, enabled = !state.busy && state.previewPath == null && !state.saved) { Text("服务配置") }
                     }) { row {
+                        ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded && state.previewPath == null && !state.saved, onSelect = viewModel::selectProvider)
                         Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
                             style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = skin.spacingMedium))
-                        Text("与虚拟试衣共用本机加密密钥；API 与 ChatGPT 订阅分开计费。取消等待后服务端仍可能处理并计费，应用不会自动重试。",
+                        Text("${state.provider.keyHelp} 与虚拟试衣共用服务配置，两家密钥分开保存。取消等待后服务端仍可能处理并计费，应用不会自动重试。",
                             style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
                     } }
                 }
@@ -189,7 +190,7 @@ fun MannequinScreen(
         }
     }
     if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
-        viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false })
+        viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     if (zoom && state.previewPath != null) FullScreenImageViewer(listOf(state.previewPath!!), onDismiss = { zoom = false })
     if (cancel) AlertDialog(onDismissRequest = { cancel = false; leaveAfterCancel = false }, title = { Text("取消等待？") },
         text = { Text("服务端可能仍在处理并计费，应用不会自动重试。") },

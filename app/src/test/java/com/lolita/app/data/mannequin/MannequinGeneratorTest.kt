@@ -14,6 +14,12 @@ import org.junit.Test
 import java.io.File
 
 class MannequinGeneratorTest {
+    @Test fun staleDisclosedProviderCannotUploadOrProducePreview() = runBlocking {
+        Fixture().use { f ->
+            reject { f.generator().generate(f.request, expectedProvider = com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM) }
+            assertEquals(0, f.apiCalls); assertFalse(f.preview.exists())
+        }
+    }
     private class Fixture : AutoCloseable {
         val folder = kotlin.io.path.createTempDirectory("mannequin-").toFile()
         val source = File(folder, "dress.jpg").apply { writeBytes(byteArrayOf(1)) }
@@ -40,8 +46,8 @@ class MannequinGeneratorTest {
         }
         var save: suspend (ByteArray)->String = { bytes -> saveCalls++; preview.writeBytes(bytes); preview.absolutePath }
         fun generator() = MannequinGenerator(
-            findItem={ item },findCategory={ category },readKey={ key },prepareImages={ prepare(it) },
-            generateImage={ key, images, prompt -> api(key,images,prompt) },savePreview={ save(it) },
+            findItem={ item },findCategory={ category },readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key) },prepareImages={ prepare(it) },
+            generateImage={ key, images, prompt -> api(key.apiKey,images,prompt) },savePreview={ save(it) },
             discardPreview={ File(it).delete(); Unit }
         )
         override fun close() { folder.deleteRecursively() }
@@ -106,7 +112,7 @@ class MannequinGeneratorTest {
             val entered=CompletableDeferred<Unit>()
             f.api={ _,_,_ -> entered.complete(Unit); awaitCancellation() }
             val mannequin=f.generator()
-            val tryOn=TryOnGenerator(findItem={ f.item!!.copy(status=ItemStatus.OWNED) },readKey={ f.key },
+            val tryOn=TryOnGenerator(findItem={ f.item!!.copy(status=ItemStatus.OWNED) },readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, f.key) },
                 prepareImages={ error("gate must reject before preparation") },generateImage={ _,_,_ -> error("no paid call") },
                 saveResult={ _,_,_ -> error("no result") })
             val job=async(start=CoroutineStart.UNDISPATCHED) { mannequin.generate(f.request) }
@@ -128,7 +134,7 @@ class MannequinGeneratorTest {
             f.prepare={ listOf("TEMPLATE".toByteArray(),byteArrayOf(1)) }
             val beforeSave=async {
                 val job=currentCoroutineContext().job
-                f.generator().generate(f.request) { if(it==TryOnGenerationPhase.SAVING) job.cancel() }
+                f.generator().generate(f.request, onPhase = { if(it==TryOnGenerationPhase.SAVING) job.cancel() })
             }
             try { beforeSave.await(); fail("cancelled request delivered preview") } catch (_: CancellationException) { }
             assertEquals(0,f.saveCalls); assertFalse(f.preview.exists()); assertFalse(f.generator().isGenerating.value)

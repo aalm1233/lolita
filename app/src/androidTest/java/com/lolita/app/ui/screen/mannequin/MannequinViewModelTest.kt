@@ -59,8 +59,8 @@ class MannequinViewModelTest {
             val store = ViewModelStore().also { stores += it }
             val vm = withContext(Dispatchers.Main) {
                 MannequinViewModel(savedStateHandle = handle, item = db.itemDao().observeItem(11),
-                    categories = db.categoryDao().getAllCategories(), hasApiKey = { key }, saveApiKey = { key = true }, clearApiKey = { key = false },
-                    globalGenerating = global, generateImage = { request, phase -> calls++; generation(request, phase) },
+                    categories = db.categoryDao().getAllCategories(), readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = true }, clearApiKey = { _ -> key = false },
+                    globalGenerating = global, generateImage = { request, phase, _ -> calls++; generation(request, phase) },
                     appendImage = { id, path -> append(id, path) }, validatePreview = { ImageFileHelper.isOwnedGeneratedImage(context, it) },
                     discardImage = { ImageFileHelper.cleanupUnreferencedImages(listOf(it)); Unit }).also { store.put("vm", it) }
             }

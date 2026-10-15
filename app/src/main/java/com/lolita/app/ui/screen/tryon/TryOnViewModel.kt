@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.tryon
 
+import com.lolita.app.data.tryon.ImageServiceStatus
+import com.lolita.app.domain.model.ImageGenerationProvider
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,6 +39,7 @@ data class TryOnUiState(
     val isLoading: Boolean = true,
     val loadFailed: Boolean = false,
     val historyFailed: Boolean = false,
+    val provider: ImageGenerationProvider = ImageGenerationProvider.SEEDREAM,
     val hasKey: Boolean = false,
     val keyLoaded: Boolean = false,
     val keyRevision: Int = 0,
@@ -70,12 +73,14 @@ class TryOnViewModel @JvmOverloads constructor(
     items: Flow<List<Item>> = AppModule.itemRepository().getItemsByStatus(ItemStatus.OWNED),
     categories: Flow<List<Category>> = AppModule.categoryRepository().getAllCategories(),
     results: Flow<List<TryOnResult>> = AppModule.tryOnRepository().results,
-    private val hasApiKey: suspend () -> Boolean = { AppModule.tryOnSettings().hasKey() },
-    private val saveApiKey: suspend (String) -> Unit = { AppModule.tryOnSettings().saveKey(it) },
-    private val clearApiKey: suspend () -> Unit = { AppModule.tryOnSettings().clearKey() },
+    private val readService: suspend () -> ImageServiceStatus = { AppModule.tryOnSettings().readStatus() },
+    private val selectService: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().selectProvider(it) },
+    serviceChanges: Flow<Int> = AppModule.tryOnSettings().changes,
+    private val saveApiKey: suspend (ImageGenerationProvider, String) -> Unit = { provider, value -> AppModule.tryOnSettings().saveKey(value, provider) },
+    private val clearApiKey: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().clearKey(it) },
     globalGenerating: StateFlow<Boolean> = AppModule.tryOnGenerator().isGenerating,
-    private val generateImage: suspend (List<TryOnSelection>, (TryOnGenerationPhase) -> Unit) -> Long = { rows, phase ->
-        AppModule.tryOnGenerator().generate(rows, phase)
+    private val generateImage: suspend (List<TryOnSelection>, (TryOnGenerationPhase) -> Unit, ImageGenerationProvider) -> Long = { rows, phase, provider ->
+        AppModule.tryOnGenerator().generate(rows, phase, provider)
     },
     private val renameResult: suspend (Long, String) -> Unit = { id, name -> AppModule.tryOnRepository().rename(id, name) },
     private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) }
@@ -119,8 +124,16 @@ class TryOnViewModel @JvmOverloads constructor(
         }
         viewModelScope.launch { globalGenerating.collect { value -> _uiState.update { it.copy(globalGenerating = value) } } }
         viewModelScope.launch {
-            val configured = runCatching { withContext(Dispatchers.IO) { hasApiKey() } }.getOrDefault(false)
-            _uiState.update { it.copy(hasKey = configured, keyLoaded = true) }
+            serviceChanges.collect {
+                _uiState.update { it.copy(keyLoaded = false) }
+                try {
+                    val status = withContext(Dispatchers.IO) { readService() }
+                    _uiState.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true) }
+                } catch (failure: Exception) {
+                    if (failure is CancellationException) throw failure
+                    _uiState.update { it.copy(hasKey = false, keyLoaded = true, error = "图像服务配置读取失败，请重新选择服务") }
+                }
+            }
         }
     }
 
@@ -166,35 +179,33 @@ class TryOnViewModel @JvmOverloads constructor(
         setSelection(_uiState.value.selected.map { if (it.itemId == itemId) it.copy(role = role) else it })
     }
 
+    fun selectProvider(provider: ImageGenerationProvider) {
+        if (_uiState.value.busy || !_uiState.value.keyLoaded || provider == _uiState.value.provider) return
+        configureService { selectService(provider) }
+    }
     fun saveKey(value: String) {
-        if (_uiState.value.busy) return
+        if (_uiState.value.busy || !_uiState.value.keyLoaded) return
         if (value.isBlank()) { _uiState.update { it.copy(error = "请填写 API Key") }; return }
-        _uiState.update { it.copy(isConfiguring = true, error = null) }
-        viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) { saveApiKey(value) }
-                _uiState.update { it.copy(hasKey = true, keyLoaded = true, keyRevision = it.keyRevision + 1) }
-            } catch (failure: Exception) {
-                if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(error = "API Key 保存失败，请核对后重新输入") }
-            } finally { _uiState.update { it.copy(isConfiguring = false) } }
-        }
+        val provider = _uiState.value.provider
+        configureService { saveApiKey(provider, value) }
     }
-
     fun clearKey() {
-        if (_uiState.value.busy) return
+        if (_uiState.value.busy || !_uiState.value.keyLoaded) return
+        val provider = _uiState.value.provider
+        configureService { clearApiKey(provider) }
+    }
+    private fun configureService(operation: suspend () -> Unit) {
         _uiState.update { it.copy(isConfiguring = true, error = null) }
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) { clearApiKey() }
-                _uiState.update { it.copy(hasKey = false, keyRevision = it.keyRevision + 1) }
+                val status = withContext(Dispatchers.IO) { operation(); readService() }
+                _uiState.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true, keyRevision = it.keyRevision + 1) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(error = "密钥删除失败，请重试") }
+                _uiState.update { it.copy(error = "图像服务配置失败，请重新输入后重试") }
             } finally { _uiState.update { it.copy(isConfiguring = false) } }
         }
     }
-
     fun generate() {
         val state = _uiState.value
         if (state.busy || state.isLoading || state.loadFailed || !state.keyLoaded) return
@@ -204,7 +215,7 @@ class TryOnViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(isGenerating = true, phase = TryOnGenerationPhase.PREPARING, error = null) }
         generationJob = viewModelScope.launch {
             try {
-                val id = generateImage(snapshot) { phase -> _uiState.update { it.copy(phase = phase) } }
+                val id = generateImage(snapshot, { phase -> _uiState.update { it.copy(phase = phase) } }, state.provider)
                 _uiState.update { it.copy(latestResultId = id) }
             } catch (failure: CancellationException) {
                 _uiState.update { it.copy(error = "已取消等待；服务端可能仍在处理并计费，重试需主动点击") }

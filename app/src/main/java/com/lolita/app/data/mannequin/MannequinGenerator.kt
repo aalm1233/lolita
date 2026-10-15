@@ -1,5 +1,6 @@
 package com.lolita.app.data.mannequin
 
+import com.lolita.app.domain.model.ImageGenerationCredentials
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.tryon.ImageGenerationGate
@@ -18,9 +19,9 @@ import java.io.File
 class MannequinGenerator(
     private val findItem: suspend (Long) -> Item?,
     private val findCategory: suspend (Long) -> Category?,
-    private val readKey: () -> String,
+    private val readCredentials: () -> ImageGenerationCredentials,
     private val prepareImages: suspend (List<String>) -> List<ByteArray>,
-    private val generateImage: suspend (String, List<ByteArray>, String) -> ByteArray,
+    private val generateImage: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray,
     private val savePreview: suspend (ByteArray) -> String,
     private val discardPreview: suspend (String) -> Unit,
     private val gate: ImageGenerationGate = ImageGenerationGate.process
@@ -29,12 +30,15 @@ class MannequinGenerator(
 
     suspend fun generate(
         request: MannequinRequest,
-        onPhase: (TryOnGenerationPhase) -> Unit = {}
+        onPhase: (TryOnGenerationPhase) -> Unit = {},
+        expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null
     ): String = gate.runExclusive {
         var preview: String? = null
         try {
             onPhase(TryOnGenerationPhase.PREPARING)
-            val key = withContext(Dispatchers.IO) { readKey() }
+            val credentials = withContext(Dispatchers.IO) { readCredentials() }
+            require(expectedProvider == null || credentials.provider == expectedProvider) { "图像服务已更换，请核对服务配置后重新生成" }
+            val key = credentials.apiKey
             require(key.isNotBlank() && key.length <= 512 && key.all { it.code in 33..126 }) {
                 "请先在服务配置中填写有效的 API Key"
             }
@@ -48,7 +52,7 @@ class MannequinGenerator(
             currentCoroutineContext().ensureActive()
             onPhase(TryOnGenerationPhase.GENERATING)
             currentCoroutineContext().ensureActive()
-            val bytes = generateImage(key, images, request.prompt())
+            val bytes = generateImage(credentials, images, request.prompt())
             currentCoroutineContext().ensureActive()
             onPhase(TryOnGenerationPhase.SAVING)
             currentCoroutineContext().ensureActive()

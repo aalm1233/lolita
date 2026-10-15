@@ -68,11 +68,11 @@ class TryOnViewModelTest {
                 items = database.itemDao().getAllItems(),
                 categories = database.categoryDao().getAllCategories(),
                 results = repository.results,
-                hasApiKey = { configured },
-                saveApiKey = { configured = true },
-                clearApiKey = { configured = false },
+                readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, configured) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0),
+                saveApiKey = { _, value -> configured = true },
+                clearApiKey = { _ -> configured = false },
                 globalGenerating = globalBusy,
-                generateImage = { rows, phase -> requests++; operation(rows, phase) },
+                generateImage = { rows, phase, _ -> requests++; operation(rows, phase) },
                 renameResult = repository::rename,
                 deleteResult = repository::delete
             ).also { store.put("vm-${System.nanoTime()}", it) }

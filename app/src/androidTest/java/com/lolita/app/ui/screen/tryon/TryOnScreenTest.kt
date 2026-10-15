@@ -70,8 +70,8 @@ class TryOnScreenTest {
                     Item(id = 12, brandId = 1, categoryId = 2, name = "蝴蝶结", description = "", imageUrls = photos.take(1), status = ItemStatus.OWNED)
                 )),
                 categories = flowOf(listOf(Category(id = 1, name = "JSK"), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY))),
-                results = flowOf(emptyList()), hasApiKey = { key != null }, saveApiKey = { key = it }, clearApiKey = { key = null },
-                globalGenerating = MutableStateFlow(false), generateImage = { _, _ -> error("UI测试不应发出请求") },
+                results = flowOf(emptyList()), readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
+                globalGenerating = MutableStateFlow(false), generateImage = { _, _, _ -> error("UI测试不应发出请求") },
                 renameResult = { _, _ -> }, deleteResult = {})
             store.put("ui", vm)
         }
@@ -204,8 +204,8 @@ class TryOnScreenTest {
                 Item(id = id, name = "第${id}件主裙", brandId = 1, categoryId = 1, description = "",
                     status = ItemStatus.OWNED, imageUrls = photos.take(1))
             }), categories = flowOf(listOf(Category(id = 1, name = "JSK"))), results = flowOf(emptyList()),
-                hasApiKey = { true }, saveApiKey = {}, clearApiKey = {}, globalGenerating = MutableStateFlow(false),
-                generateImage = { _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
+                readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value ->  }, clearApiKey = { _ ->  }, globalGenerating = MutableStateFlow(false),
+                generateImage = { _, _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
             store.put("eight-pieces", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }

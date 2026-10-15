@@ -27,25 +27,25 @@
 ### Task 1: Provider routing and encrypted settings
 **Files:** domain/model/ImageGenerationProvider.kt; data/remote/SeedreamImageApi.kt; data/remote/ImageGenerationApi.kt; data/tryon/TryOnSettings.kt; both generators; di/AppModule.kt; matching JVM and Android infrastructure tests.
 **Interfaces:** ImageGenerationCredentials(provider,key); TryOnSettings.readCredentials/readProvider/selectProvider and changes StateFlow; ImageGenerationApi.generate(credentials,images,prompt); existing generators consume immutable credentials.
-- [ ] Write failing routing/request/error/cancellation tests and a generator snapshot/model provenance test; add settings preservation test.
-- [ ] Run targeted JVM tests, expect missing interfaces before implementation.
-- [ ] Implement bounded official JSON adapter, routing, per-provider encryption and atomic snapshot; adapt generator fixtures.
-- [ ] Run testDebugUnitTest; expected all tests pass.
-- [ ] Commit task with validation evidence.
+- [x] Write failing routing/request/error/cancellation tests and a generator snapshot/model provenance test; add settings preservation test.
+- [x] Run targeted JVM tests, expect missing interfaces before implementation.
+- [x] Implement bounded official JSON adapter, routing, per-provider encryption and atomic snapshot; adapt generator fixtures.
+- [x] Run testDebugUnitTest; expected all tests pass.
+- [x] Commit task with validation evidence.
 
 ### Task 2: Shared provider configuration UI
 **Files:** both ViewModels/screens; common/ApiKeyDialog.kt; common/ImageServiceSelector.kt; relevant Android tests.
 **Interfaces:** both UiStates expose provider; ViewModels observe settings changes and switch provider with busy guards; dialog describes and saves only current service.
-- [ ] Add Android tests for provider switch, separate keys, masking, shared configuration, busy/preview guard.
-- [ ] Run new tests or compile to observe missing behavior.
-- [ ] Implement provider selection and correct recipient/credential text, preserving current test injection boundaries.
-- [ ] Run independent AVD targeted tests, assembleDebug and whole JVM suite; expected pass.
-- [ ] Commit task and update AGENTS/version/docs.
+- [x] Add Android tests for provider switch, separate keys, masking, shared configuration, busy/preview guard.
+- [x] Run new tests or compile to observe missing behavior.
+- [x] Implement provider selection and correct recipient/credential text, preserving current test injection boundaries.
+- [x] Run independent AVD targeted tests, assembleDebug and whole JVM suite; expected pass.
+- [x] Commit task and update AGENTS/version/docs.
 
 ### Task 3: Live verification and release
 **Files:** docs/seedream-provider-2026-10-16.md; docs/release-2.50.0.md; docs/release-2.50.0-verification.json; local artifacts outside Git.
-- [ ] Inspect the single live result and record model, timing, dimensions, hashes and limitations without secrets.
-- [ ] Fresh whole-branch code review; resolve important findings with failing regression first.
-- [ ] Integrate source, clean assembleRelease; verify original signature, version, non-debuggable APK and preserved upgrade data.
-- [ ] Publish same signed APK and SHA256SUMS on GitHub/Gitee; anonymous complete downloads, hashes and update endpoint must pass.
-- [ ] Clean temporary credentials, attach artifacts and report actual outcome.
+- [x] Inspect the single live result and record model, timing, dimensions, hashes and limitations without secrets.
+- [x] Fresh whole-branch code review; resolve important findings with failing regression first.
+- [x] Integrate source, clean assembleRelease; verify original signature, version, non-debuggable APK and preserved upgrade data.
+- [x] Publish same signed APK and SHA256SUMS on GitHub/Gitee; anonymous complete downloads, hashes and update endpoint must pass.
+- [x] Clean temporary credentials, attach artifacts and report actual outcome.

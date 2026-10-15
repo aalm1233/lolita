@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-16",
+  "version": "2.50.0",
+  "version_code": 108,
+  "source_commit": "b57e4f1a43f904834631fad690f0e3f1b2dff456",
+  "source_tag": "v2.50.0",
+  "source_pushed": true,
+  "clean_release_build": "BUILD SUCCESSFUL in 1m 52s",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_name": "2.50.0",
+    "version_code": 108,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "sha256": "8976b8ed6c5cbc9078da2fc2fa083e0190c211160c629d77f98398be66a0482d",
+    "bytes": 58344762,
+    "personal_credential_absent": true,
+    "compiled_models": [
+      "doubao-seedream-5-0-pro-260628",
+      "gpt-image-2.5-sunburst"
+    ]
+  },
+  "tests": {
+    "jvm": {
+      "tests": 230,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device": {
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device_serial": "emulator-5564",
+    "avd": "Lolita_TryOn_20261015",
+    "merged_main_debug_build_and_jvm": "passed"
+  },
+  "independent_review": {
+    "important": 1,
+    "critical": 0,
+    "minor": 0,
+    "fixed": "Reject top-level/per-image errors accompanying valid PNG on HTTP200; regression RED→GREEN, no retry or saved preview."
+  },
+  "paid_api": {
+    "success": true,
+    "model": "doubao-seedream-5-0-pro-260628",
+    "http_status": 200,
+    "seconds": 76.29,
+    "input_images": 2,
+    "generated_images": 1,
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "first_attempt_error": "SetLimitExceeded",
+    "user_authorized_second_request_after_adjustment": true,
+    "automatic_retries": 0,
+    "billed_amount_read": false,
+    "temporary_credential_removed": true
+  },
+  "upgrade": {
+    "from_version": "2.49.0",
+    "from_code": 107,
+    "to_code": 108,
+    "same_signature": true,
+    "device_serial": "emulator-5566",
+    "avd": "Lolita_TryOn_Release_20261015",
+    "preservation": {
+      "preservation_pass": true,
+      "errors": [],
+      "exact_all_tables": true,
+      "table_differences": {},
+      "original_image_count": 172,
+      "original_images_unchanged": 172,
+      "image_differences": [],
+      "added_images": [],
+      "unresolved_image_references": []
+    },
+    "table_count": 30,
+    "items": 198,
+    "brands": 202,
+    "outfit_logs": 48,
+    "preferences": {
+      "unchanged": true,
+      "sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+      "bytes": 51
+    }
+  },
+  "distribution": {
+    "github": {
+      "release_url": "https://github.com/aalm1233/lolita/releases/tag/v2.50.0",
+      "release_id": 414054730,
+      "formal": true,
+      "anonymous_apk_sha256": "8976b8ed6c5cbc9078da2fc2fa083e0190c211160c629d77f98398be66a0482d",
+      "sha256sums_verified": true,
+      "head_verified": true,
+      "source_tag_commit": "b57e4f1a43f904834631fad690f0e3f1b2dff456"
+    },
+    "gitee": {
+      "release_url": "https://gitee.com/aalm1233/lolita/releases/tag/v2.50.0",
+      "apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.50.0/lolita-2.50.0.apk",
+      "release_id": 1208595,
+      "formal": true,
+      "anonymous_apk_sha256": "8976b8ed6c5cbc9078da2fc2fa083e0190c211160c629d77f98398be66a0482d",
+      "sha256sums_verified": true,
+      "head_verified": true,
+      "public_update": {
+        "latest_tag": "v2.50.0",
+        "pages": 1,
+        "formal_only": true,
+        "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.50.0/lolita-2.50.0.apk",
+        "source_commit": "b57e4f1a43f904834631fad690f0e3f1b2dff456"
+      }
+    }
+  },
+  "formal_ui": [
+    "docs/visuals/2026-10-16-seedream/formal-service-workspace.png",
+    "docs/visuals/2026-10-16-seedream/formal-key-dialog.png"
+  ],
+  "limitations": "Single paid mannequin sample only; print/embroidery and bow placement may be redrawn. API was exercised with a local script, while app routing/configuration/preview/save were validated with controlled transports and real Android components."
+}

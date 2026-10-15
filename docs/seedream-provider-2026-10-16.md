@@ -21,3 +21,5 @@ JVM覆盖官方请求字段、有序参考图、错误/重定向/空数据/URL-o
 官方文档：[图像API](https://docs.volcengine.com/docs/ark/image-generation-api?lang=zh)、[模型说明](https://docs.volcengine.com/docs/ark/seedream-5-0-pro?lang=zh)、[模型价格](https://docs.volcengine.com/docs/ark/model-pricing?lang=zh)。
 
 独立复核发现HTTP200同时带错误标记和有效PNG时应优先判失败；新增真实有效PNG回归，覆盖顶层及单图error字段，断言仅一次请求且不产生预览/保存。修复前失败，修复后纳入完整回归。
+
+正式发布2.50.0/108：230项JVM、36项独立AVD回归通过；2.49.0同签名覆盖后30张表、172张原图和原设置保全；GitHub/Gitee匿名完整下载、SHA256与HEAD均通过。记录见[发布验证](release-2.50.0-verification.json)。正式包服务选择与空白遮罩密钥框实拍已归档。

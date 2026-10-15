@@ -23,6 +23,9 @@ object AppModule {
 
     fun database() = database
 
+    private val _imageTaskRepository by lazy { ImageTaskRepository(database.imageTaskDao()) }
+    fun imageTaskRepository() = _imageTaskRepository
+
     private val _tryOnRepository by lazy { TryOnRepository(appContext,database) }
     fun tryOnRepository() = _tryOnRepository
     private val _tryOnSettings by lazy { com.lolita.app.data.tryon.TryOnSettings(appContext) }

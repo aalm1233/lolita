@@ -5,6 +5,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lolita.app.data.local.entity.*
 import android.util.Log
+import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.domain.model.ImageTaskKind
+import com.lolita.app.domain.model.ImageTaskStatus
 
 class Converters {
     private val gson = Gson()
@@ -68,6 +71,14 @@ class Converters {
         Log.w("Converters", "Unknown CategoryGroup: $value, defaulting to CLOTHING")
         CategoryGroup.CLOTHING
     }
+
+    // Task enums fail closed: unknown persisted values must never become a runnable task.
+    @TypeConverter fun fromImageTaskKind(value: ImageTaskKind): String = value.name
+    @TypeConverter fun toImageTaskKind(value: String): ImageTaskKind = ImageTaskKind.valueOf(value)
+    @TypeConverter fun fromImageTaskStatus(value: ImageTaskStatus): String = value.name
+    @TypeConverter fun toImageTaskStatus(value: String): ImageTaskStatus = ImageTaskStatus.valueOf(value)
+    @TypeConverter fun fromImageGenerationProvider(value: ImageGenerationProvider): String = value.name
+    @TypeConverter fun toImageGenerationProvider(value: String): ImageGenerationProvider = ImageGenerationProvider.valueOf(value)
 
     // String List
     @TypeConverter

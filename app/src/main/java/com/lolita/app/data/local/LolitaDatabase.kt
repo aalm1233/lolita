@@ -12,6 +12,7 @@ import com.lolita.app.data.local.entity.*
 
 @Database(
     entities = [
+        TryOnResult::class,
         MonthlyBudget::class,
         Coordinate::class,
         Item::class,
@@ -39,11 +40,12 @@ import com.lolita.app.data.local.entity.*
         RemoteSharedItem::class,
         RemoteSharedPricePlan::class
     ],
-    version = 26,
+    version = 27,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
 abstract class LolitaDatabase : RoomDatabase() {
+    abstract fun tryOnDao(): TryOnDao
     abstract fun budgetDao(): BudgetDao
     abstract fun coordinateDao(): CoordinateDao
     abstract fun itemDao(): ItemDao
@@ -792,6 +794,16 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
+        internal val MIGRATION_26_27 = object : Migration(26, 27) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""CREATE TABLE IF NOT EXISTS try_on_results (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    name TEXT NOT NULL,image_url TEXT NOT NULL,
+                    item_ids TEXT NOT NULL DEFAULT '[]',item_names TEXT NOT NULL DEFAULT '[]',
+                    model TEXT NOT NULL,created_at INTEGER NOT NULL)""")
+            }
+        }
+
         internal val MIGRATION_25_26 = object : Migration(25, 26) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE items ADD COLUMN import_token TEXT DEFAULT NULL")
@@ -817,7 +829,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26, MIGRATION_26_27)
                     .build()
                 INSTANCE = instance
                 instance

@@ -120,7 +120,8 @@ object ImageFileHelper {
         if (file.parentFile != root || !file.isFile) return@withContext
         // Imported historical backups may share one file between multiple records.
         db.withTransaction {
-            val localReference = db.brandDao().getAllBrandsList().any { it.logoUrl == path } ||
+            val localReference = db.tryOnDao().getAll().any { it.imageUrl == path } ||
+                db.brandDao().getAllBrandsList().any { it.logoUrl == path } ||
                 db.itemDao().getAllItemsList().any { path in it.imageUrls || it.sizeChartImageUrl == path || path in it.sizeChartImageUrls } ||
                 db.coordinateDao().getAllCoordinatesList().any { path in it.imageUrls } ||
                 db.outfitLogDao().getAllOutfitLogsList().any { path in it.imageUrls } ||

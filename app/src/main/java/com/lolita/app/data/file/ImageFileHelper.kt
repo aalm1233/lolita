@@ -23,6 +23,24 @@ import com.google.gson.JsonParser
  */
 object ImageFileHelper {
 
+    suspend fun saveGeneratedImage(context: Context, bytes: ByteArray): String {
+        require(bytes.isNotEmpty() && bytes.size <= 32*1024*1024) { "生成图片无效或过大" }
+        val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+        require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..6144 && bounds.outMimeType == "image/png") { "生成服务未返回有效的 PNG 图片" }
+        val directory = File(context.filesDir, IMAGE_DIR)
+        val destination = File(directory,"${UUID.randomUUID()}.png")
+        return try {
+            withContext(Dispatchers.IO) {
+                currentCoroutineContext().ensureActive()
+                check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
+                destination.outputStream().use { it.write(bytes) }
+                currentCoroutineContext().ensureActive()
+                destination.absolutePath
+            }
+        } catch (failure: Throwable) { destination.delete(); throw failure }
+    }
+
     private const val IMAGE_DIR = "images"
     private val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Volatile private var ownedImagesDir: File? = null

@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 26，26 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 27，27 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=105, versionName="2.47.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=106, versionName="2.48.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -302,7 +302,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式 version 5、schemaVersion 23；完整 JSON/ZIP 覆盖 24 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- 备份格式 version 7、schemaVersion 27；完整 JSON/ZIP 覆盖 26 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
 - 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
@@ -383,3 +383,12 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 套装与穿搭详情支持分享预览，缓存 PNG 经 FileProvider 调起系统分享；仅包含标题、图片、服饰名称和可选品牌，不读取金额、备注、渠道与位置。每六件分页，消费当前皮肤的浅暗配色。
 - 统计第六页签为预算：每月独立额度，本月实付按 paidDate 归月，剩余阶段复用 STAGE_BALANCES；此前待付计入预计余额，未定日期的待付和实付单列。金额隐私设置实时生效。
 - 新实体 MonthlyBudget、BudgetDao、BudgetRepository 接到数据库及 AppModule；23→24 只新增预算表，备份格式 6 支持预算 JSON/ZIP/CSV/预览/恢复，格式 1–5 缺失预算兼容为空。
+
+## 虚拟试衣实验（2.48.0）
+
+- 个人页、已拥有服饰及套装详情进入 `Screen.TryOn`，固定成年虚拟模特＋1–8件已有服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥。
+- `TryOnGenerator` 用进程共用Mutex防重复调用，上传前校验最新Item仍已拥有且图片归属/本地文件完整。`TryOnImages` 处理EXIF、长边1536及透明底白色合成；`TryOnImageApi` 仅调用官方HTTPS `/v1/images/edits`，型号 `gpt-image-2.5-sunburst`，medium/1024×1536/n=1/PNG；无付费自动重试，取消等待不承诺服务端停止计费。
+- 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。
+- Room26→27仅增加 `TryOnResult`/`TryOnDao`，结果由薄 `TryOnRepository` 独立持久化，原服饰删除后保留名称/ID快照，不改变账本/穿搭/归属。生成PNG需完整尾块、可解码及大小/尺寸校验，取消或失败清理未保存文件；删除复用图片引用保护。
+- 备份格式7/schema27完整支持试衣历史JSON/ZIP/CSV/预览/恢复；旧1–6格式缺失历史数组视为空。新增DAO同步接LolitaDatabase、Repository和AppModule。
+- 回归包含TryOn领域/API/Generator JVM测试及独立AVD上的Infrastructure/Persistence/ViewModel/Screen测试，真实Compose核对七皮肤浅暗、大字、Key遮罩与图片缩放。统一人台与三视图仍仅探索样片，侧背结构缺少真实来源时必须标明AI推测；说明见 `docs/virtual-mannequin-exploration-2026-10-15.md`。

@@ -78,6 +78,8 @@ import com.lolita.app.ui.screen.settings.SettingsScreen
 import com.lolita.app.ui.screen.settings.AppUpdateViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.lolita.app.ui.screen.tryon.TryOnScreen
@@ -135,11 +137,13 @@ val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope
 fun LolitaNavHost(
     openQuickOutfit: Boolean = false,
     onQuickOutfitOpened: () -> Unit = {},
-    appUpdateViewModel: AppUpdateViewModel = viewModel()
+    appUpdateViewModel: AppUpdateViewModel = viewModel(),
+    navController: NavHostController = rememberNavController(),
+    createTryOnViewModel: (SavedStateHandle) -> TryOnViewModel = { TryOnViewModel(it) }
 ) {
-    val navController = rememberNavController()
-    LaunchedEffect(openQuickOutfit) {
-        if (openQuickOutfit) {
+    val tryOnGenerating by com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.collectAsState()
+    LaunchedEffect(openQuickOutfit, tryOnGenerating) {
+        if (openQuickOutfit && !tryOnGenerating) {
             navController.navigate(Screen.QuickOutfitLog.route) { launchSingleTop = true }
             onQuickOutfitOpened()
         }
@@ -196,12 +200,14 @@ fun LolitaNavHost(
                     } == true
                     val tint = if (selected) accent else MaterialTheme.colorScheme.onSurfaceVariant
                     NavigationBarItem(
+                        enabled = !tryOnGenerating,
                         icon = {
                             SkinIcon(item.iconKey, modifier = Modifier.size(26.dp), tint = tint)
                         },
                         label = { Text(item.label, modifier = Modifier.offset(y = (-4).dp)) },
                         selected = selected,
                         onClick = {
+                            if (com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.value) return@NavigationBarItem
                             navController.navigate(item.screen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
@@ -676,7 +682,7 @@ fun LolitaNavHost(
                 )
             ) { entry ->
                 val factory = remember(entry) {
-                    viewModelFactory { initializer { TryOnViewModel(createSavedStateHandle()) } }
+                    viewModelFactory { initializer { createTryOnViewModel(createSavedStateHandle()) } }
                 }
                 TryOnScreen(
                     onNavigateBack = { navController.popBackStack() },

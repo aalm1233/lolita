@@ -69,6 +69,11 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                    if (state.hasKey && !state.isGenerating) {
+                        Text("上传共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 OpenAI，可能计费。",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.testTag("tryOnUploadSummary"))
+                    }
                     if (state.isGenerating) {
                         Text("请保持页面开启；取消等待后服务端仍可能处理并计费。", style = MaterialTheme.typography.bodySmall)
                     }
@@ -89,7 +94,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                                 else -> "正在生成…"
                             }
                             state.globalGenerating -> "另一试衣任务正在进行"
-                            !state.hasKey -> "配置 API Key 后生成"
+                            !state.hasKey -> "配置 API Key"
                             else -> "生成一张试衣图"
                         })
                     }

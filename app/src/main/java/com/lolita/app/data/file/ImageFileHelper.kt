@@ -26,27 +26,29 @@ object ImageFileHelper {
     suspend fun saveGeneratedImage(context: Context, bytes: ByteArray): String {
         val directory = File(context.filesDir, IMAGE_DIR)
         val destination = File(directory,"${UUID.randomUUID()}.png")
-        return try { withContext(Dispatchers.IO) {
-        require(bytes.isNotEmpty() && bytes.size <= 32*1024*1024) { "生成图片无效或过大" }
-        val pngEnd = byteArrayOf(0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126)
-        require(bytes.size >= pngEnd.size && bytes.copyOfRange(bytes.size - pngEnd.size, bytes.size).contentEquals(pngEnd)) {
-            "生成服务未返回完整的 PNG 图片"
-        }
-        val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
-        require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..6144 && bounds.outMimeType == "image/png") { "生成服务未返回有效的 PNG 图片" }
-        var sample = 1
-        while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1024) sample *= 2
-        val decoded = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
-            android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
-        requireNotNull(decoded) { "生成服务未返回可读取的 PNG 图片" }
-        decoded.recycle()
-        currentCoroutineContext().ensureActive()
-            check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
-            destination.outputStream().use { it.write(bytes) }
-            currentCoroutineContext().ensureActive()
-            destination.absolutePath
-        } } catch (failure: Throwable) {
+        return try {
+            withContext(Dispatchers.IO) {
+                require(bytes.isNotEmpty() && bytes.size <= 32*1024*1024) { "生成图片无效或过大" }
+                val pngEnd = byteArrayOf(0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126)
+                require(bytes.size >= pngEnd.size && bytes.copyOfRange(bytes.size - pngEnd.size, bytes.size).contentEquals(pngEnd)) {
+                    "生成服务未返回完整的 PNG 图片"
+                }
+                val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+                require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..6144 && bounds.outMimeType == "image/png") { "生成服务未返回有效的 PNG 图片" }
+                var sample = 1
+                while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1024) sample *= 2
+                val decoded = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
+                    android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
+                requireNotNull(decoded) { "生成服务未返回可读取的 PNG 图片" }
+                decoded.recycle()
+                currentCoroutineContext().ensureActive()
+                check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
+                destination.outputStream().use { it.write(bytes) }
+                currentCoroutineContext().ensureActive()
+                destination.absolutePath
+            }
+        } catch (failure: Throwable) {
             withContext(kotlinx.coroutines.NonCancellable + Dispatchers.IO) { destination.delete() }
             throw failure
         }

@@ -149,7 +149,7 @@ class TryOnScreenTest {
             compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
             workspace("从衣橱选择")
             compose.onNodeWithText("从衣橱选择").assertIsDisplayed().assertHasClickAction()
-            compose.onNodeWithText("配置 API Key 后生成").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("配置 API Key").assertIsDisplayed().assertIsEnabled()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -161,6 +161,15 @@ class TryOnScreenTest {
             compose.onNodeWithText("API Key", substring = false).performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("返回", substring = false).performClick()
         }
+        for ((skin, dark) in listOf(SkinType.DEFAULT to false, SkinType.VICTORIAN to true)) {
+            compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
+            workspace("固定成年虚拟模特")
+            compose.onNodeWithText("配置 API Key").assertIsDisplayed()
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(output, "normal-${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+        }
     }
 
     @Test fun fullScreenResultPreviewActuallyZoomsTheImage() {
@@ -168,7 +177,7 @@ class TryOnScreenTest {
         compose.waitUntil(10_000) {
             compose.onAllNodesWithContentDescription("图片预览 1").fetchSemanticsNodes().isNotEmpty()
         }
-        val preview = compose.onNodeWithContentDescription("图片预览 1")
+        val preview = compose.onAllNodesWithContentDescription("图片预览 1").onFirst()
         fun colorPixels(): Int {
             val bitmap = preview.captureToImage().asAndroidBitmap()
             var colored = 0
@@ -187,6 +196,24 @@ class TryOnScreenTest {
         compose.waitForIdle()
         assertTrue("Pinch must enlarge actual photo pixels", colorPixels() > before * 1.15)
         compose.onNodeWithContentDescription("关闭图片预览").assertIsDisplayed().assertHasClickAction()
+    }
+
+    @Test fun configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText() {
+        compose.runOnIdle {
+            vm = TryOnViewModel(items = flowOf((1L..8L).map { id ->
+                Item(id = id, name = "第${id}件主裙", brandId = 1, categoryId = 1, description = "",
+                    status = ItemStatus.OWNED, imageUrls = photos.take(1))
+            }), categories = flowOf(listOf(Category(id = 1, name = "JSK"))), results = flowOf(emptyList()),
+                hasApiKey = { true }, saveApiKey = {}, clearApiKey = {}, globalGenerating = MutableStateFlow(false),
+                generateImage = { _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
+            store.put("eight-pieces", vm)
+        }
+        compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }
+        compose.runOnIdle { (1L..8L).forEach(vm::toggleItem) }
+        show()
+        compose.onNodeWithTag("tryOnUploadSummary").assertIsDisplayed().assertTextContains("9 张", substring = true)
+        compose.onNodeWithTag("tryOnUploadSummary").assertTextContains("计费", substring = true)
+        compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
     }
 
     private data class Presentation(val width: Int = 320, val scale: Float = 2f,

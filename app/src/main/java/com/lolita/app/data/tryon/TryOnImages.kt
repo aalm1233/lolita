@@ -14,9 +14,19 @@ import java.io.File
 import java.io.InputStream
 
 class TryOnImages(private val context: Context) {
-    suspend fun prepare(paths: List<String>): List<ByteArray> = withContext(Dispatchers.IO) {
+    suspend fun prepare(paths: List<String>): List<ByteArray> {
         require(paths.size in 1..8) { "请选择1至8张服饰参考图" }
-        val result = mutableListOf(normalize { context.assets.open(MODEL_ASSET) })
+        return prepareWithTemplate(paths, MODEL_ASSET)
+    }
+
+    suspend fun prepareMannequin(paths: List<String>): List<ByteArray> {
+        require(paths.size == 1) { "请选择一张裙子参考图" }
+        return prepareWithTemplate(paths, MANNEQUIN_ASSET)
+    }
+
+    private suspend fun prepareWithTemplate(paths: List<String>, template: String): List<ByteArray> = withContext(Dispatchers.IO) {
+        currentCoroutineContext().ensureActive()
+        val result = mutableListOf(normalize { context.assets.open(template) })
         for (path in paths) {
             currentCoroutineContext().ensureActive()
             val file = File(path)
@@ -73,5 +83,8 @@ class TryOnImages(private val context: Context) {
         } finally { bitmap.recycle() }
     }
 
-    companion object { const val MODEL_ASSET = "tryon/model.png" }
+    companion object {
+        const val MODEL_ASSET = "tryon/model.png"
+        const val MANNEQUIN_ASSET = "mannequin/front-template.png"
+    }
 }

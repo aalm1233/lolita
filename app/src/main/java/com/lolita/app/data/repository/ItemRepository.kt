@@ -71,6 +71,27 @@ class ItemRepository(
         itemDao.updateSharedChildrenStatus(normalized.id, normalized.status.name)
     }
 
+    /** Serialize with image cleanup and merge into the latest row, never a stale edit snapshot. */
+    suspend fun appendGeneratedImage(itemId: Long, path: String) {
+        val db = checkNotNull(database) { "保存人台图需要数据库事务" }
+        val appContext = checkNotNull(context) { "无法验证人台图片目录" }
+        db.withTransaction {
+            val item = itemDao.getItemById(itemId) ?: error("裙子已删除，无法添加人台图")
+            val root = java.io.File(appContext.filesDir, "images")
+            val file = java.io.File(path)
+            require(file.isAbsolute && file.parentFile?.absolutePath == root.absolutePath &&
+                file.canonicalFile.parentFile == root.canonicalFile && file.canonicalFile.name == file.name &&
+                file.isFile && file.canRead() && file.length() > 0) {
+                "人台预览已丢失或不是本应用图片，请重新生成"
+            }
+            if (path !in item.imageUrls) {
+                check(itemDao.updateImages(itemId, item.imageUrls + path, System.currentTimeMillis()) == 1) {
+                    "裙子已删除，无法添加人台图"
+                }
+            }
+        }
+    }
+
     suspend fun attachChild(childId: Long, parentId: Long, includedInPrice: Boolean) = inTransaction {
         val child = itemDao.getItemById(childId) ?: error("小物不存在")
         updateItem(child.copy(parentItemId = parentId, includedInParentPrice = includedInPrice))

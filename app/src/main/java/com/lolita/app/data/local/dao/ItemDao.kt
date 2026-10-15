@@ -91,6 +91,9 @@ interface ItemDao {
     @Update
     suspend fun updateItem(item: Item)
 
+    @Query("UPDATE items SET image_urls = :imageUrls, updated_at = :updatedAt WHERE id = :itemId")
+    suspend fun updateImages(itemId: Long, imageUrls: List<String>, updatedAt: Long): Int
+
     @Delete
     suspend fun deleteItem(item: Item)
 

@@ -44,6 +44,7 @@
 - 根代理最终JDK17构建 `testDebugUnitTest assembleDebug assembleDebugAndroidTest`：通过；JVM **221项，0失败/错误/跳过**。
 - 根代理在专用 `Lolita_TryOn_20261015 / emulator-5564` 同签名安装2.49.0/107，直接运行 **52项仪器化测试，0失败**，54.413秒。包含所有新人台类、现有试衣Infrastructure/Persistence/ViewModel/Screen/Navigation、ImageCopyCancellation和DataIntegrity。
 - 14张真实Compose截图归档于 `docs/visuals/2026-10-15-mannequin-ui/`，使用受控纯色PNG验证布局/动作，**不是AI样片**。DEFAULT浅色和VICTORIAN暗色已目视；真实图像能力证据是另外保存的四张内置生成样片。
-- 正式构建、同签名升级与双平台发布的最终结果另见 `docs/release-2.49.0-verification.json`。
+- 正式包由源码 `14f707e` 执行 `clean assembleRelease`（81秒），原正式签名覆盖2.48.0/106。30张表逐值完全一致，198件服饰、202品牌、48穿搭、172原图片SHA与设置字节保全。正式包心愿OP详情入口/人台页/Key遮罩实拍为同目录 `formal-*.png`；未填写Key。
+- GitHub与Gitee均已正式发布2.49.0；匿名完整下载APK和校验文件一致，HEAD及源码标签验证通过，Gitee公开更新API选中最高正式版本v2.49.0。GitHub首次完整下载后HEAD超时，复用已完整且SHA匹配的下载文件进行新的严格HEAD/源码验证后通过；冗余重下载已停止。最终证据见 `docs/release-2.49.0-verification.json`。
 
 未配置真实个人 API Key，因此没有执行付费API生成，未据此证明账号权限、计费或应用API的实际生成质量。内置工具未报告模型名称，不能把它冒认为应用调用型号。

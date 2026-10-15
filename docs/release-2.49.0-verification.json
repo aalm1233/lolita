@@ -1,0 +1,243 @@
+{
+  "version": "2.49.0",
+  "version_code": 107,
+  "source_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+  "signed_apk": {
+    "version": "2.49.0",
+    "version_code": 107,
+    "tag": "v2.49.0",
+    "apk": "lolita-2.49.0.apk",
+    "size": 58328378,
+    "sha256": "e037fe62eea0c0ff8df05009e0a4046fca3a76d5b52c9ca31799d5847ce5145e",
+    "source_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+    "body_sha256": "a5d0aaf03b5e16426cda549d27b2ee4302768b45a5ac7f84a1be2849d357a24f"
+  },
+  "signature": {
+    "version": "2.49.0",
+    "version_code": 107,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "debuggable": false,
+    "old_version": "2.48.0/106",
+    "same_signature": true
+  },
+  "tests": {
+    "jvm": {
+      "tests": 221,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "merged_main_jvm": {
+      "tests": 221,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device": {
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 54.413,
+      "avd": "Lolita_TryOn_20261015",
+      "serial": "emulator-5564",
+      "classes": {
+        "MannequinInfrastructureTest": 1,
+        "MannequinPersistenceTest": 6,
+        "MannequinApplicationCleanupTest": 1,
+        "MannequinViewModelTest": 6,
+        "MannequinScreenTest": 4,
+        "MannequinDetailEntryTest": 1,
+        "MannequinNavigationTest": 5,
+        "TryOnInfrastructureTest": 4,
+        "TryOnPersistenceTest": 2,
+        "TryOnViewModelTest": 6,
+        "TryOnScreenTest": 5,
+        "TryOnNavigationTest": 2,
+        "ImageCopyCancellationTest": 1,
+        "DataIntegrityTest": 8
+      }
+    }
+  },
+  "upgrade": {
+    "preservation_pass": true,
+    "errors": [],
+    "exact_all_tables": true,
+    "table_differences": {},
+    "original_image_count": 172,
+    "original_images_unchanged": 172,
+    "image_differences": [],
+    "added_images": [],
+    "unresolved_image_references": [],
+    "from": "2.48.0/106",
+    "to": "2.49.0/107",
+    "schema_before": 27,
+    "schema_after": 27,
+    "settings_bytes_unchanged": true,
+    "settings_sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+    "same_signature_upgrade": true,
+    "items": 198,
+    "brands": 202,
+    "outfits": 48,
+    "avd": "Lolita_TryOn_Release_20261015",
+    "serial": "emulator-5566"
+  },
+  "formal_apk_ui": {
+    "version": "2.49.0",
+    "serial": "emulator-5566",
+    "avd": "Lolita_TryOn_Release_20261015",
+    "wished_op_detail_entry": true,
+    "workspace_title": true,
+    "key_configuration": true,
+    "password_semantics": true,
+    "key_entered": false,
+    "paid_request": false
+  },
+  "live_paid_openai_call": {
+    "executed": false,
+    "reason": "No API Key configured; controlled test boundaries do not establish paid API quality/account entitlement/billing."
+  },
+  "review": {
+    "independent": true,
+    "critical": 0,
+    "important_unresolved": 0,
+    "important_fixed": [
+      "latest image cleanup after stale Item deletion",
+      "restore global ImageFileHelper after test fixtures",
+      "back navigation while restored preview ownership unresolved",
+      "serialize departure before queued quick-outfit navigation"
+    ],
+    "red_green_regressions": true
+  },
+  "exploration": {
+    "tool": "built-in imagegen",
+    "model_reported": false,
+    "new_garments": 3,
+    "generation_calls": 4,
+    "three_views": false,
+    "sample_failures_retained": 1,
+    "api_request_quality_proven": false,
+    "evaluation": "docs/mannequin-front-evaluation-2026-10-15.json",
+    "raw_generated_template_sha256": "7a2c57ff168e8232ec4c312fbda1818f63fefffb8bfadc97d0adc76d2ba49eea"
+  },
+  "github": {
+    "tag": "v2.49.0",
+    "source_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+    "release_id": 413905254,
+    "prerelease": false,
+    "files": {
+      "lolita-2.49.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.49.0/lolita-2.49.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 58328378,
+        "sha256": "e037fe62eea0c0ff8df05009e0a4046fca3a76d5b52c9ca31799d5847ce5145e",
+        "verified_complete_from_initial_attempt": true
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.49.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "e318dda4893bcc940afd10e5a699809b25755fd61a194127221cc01a548a0005",
+        "verified_complete_from_initial_attempt": true
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 58328378,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+    "transient_failure": "Initial complete anonymous downloads passed, then HEAD timed out; fresh HEAD and source API verification succeeded using the already complete SHA-matched files."
+  },
+  "gitee": {
+    "tag": "v2.49.0",
+    "source_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+    "release_id": 1208275,
+    "prerelease": true,
+    "files": {
+      "lolita-2.49.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.49.0/lolita-2.49.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 58328378,
+        "sha256": "e037fe62eea0c0ff8df05009e0a4046fca3a76d5b52c9ca31799d5847ce5145e",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.49.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "e318dda4893bcc940afd10e5a699809b25755fd61a194127221cc01a548a0005",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 58328378,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "gitee_final": {
+    "tag": "v2.49.0",
+    "release_id": 1208275,
+    "prerelease": false,
+    "source_commit": "14f707e763d4902e17ebc91134c666d92df53482",
+    "sha256": "e037fe62eea0c0ff8df05009e0a4046fca3a76d5b52c9ca31799d5847ce5145e"
+  },
+  "gitee_public_update": {
+    "latest_tag": "v2.49.0",
+    "pages": 1,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.49.0/lolita-2.49.0.apk",
+    "source_commit": "14f707e763d4902e17ebc91134c666d92df53482"
+  }
+}

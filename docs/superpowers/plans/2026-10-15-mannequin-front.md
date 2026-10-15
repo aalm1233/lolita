@@ -1,6 +1,6 @@
 # Front Mannequin Image Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 裙子详情生成正面人台预览，人工确认后追加图片。
 **Architecture:** 复用现有图像 API/Key/归一化与共享生成锁；新增独立人台页与 VM；Room 事务只追加最新图片字段。
@@ -41,7 +41,7 @@ Interfaces: 读取 Task1 API；Item Repository observeItem，Category flow；同
 ### Task 3: Evidence, verification and release
 Files: assets/mannequin/front-template.png; docs/visuals/2026-10-15-mannequin-tests/*; docs/mannequin-front-evaluation-2026-10-15.json; implementation doc; AGENTS.md; app/build.gradle.kts; release verification JSON.
 - [x] 保存3件4次样片与通用提示词/补充说明、原图ZIP条目、SHA、取舍理由；复制原模板资产保持原SHA。
-- [ ] JVM 全套和 assembleDebug，独立 AVD 新功能及受影响试衣/备份/导航回归。
-- [ ] 新代理完整分支审阅，修复负载关键发现再重验；核对 diff 仅本任务文件。
-- [ ] 2.49.0/107 clean release；2.48.0同签名覆盖、数据库/图片保全；GitHub/Gitee发布/匿名附件与更新入口验证。
-- [ ] 只提交本任务，集成 master 普通推送并核对远端，归档工作区。
+- [x] JVM 全套和 assembleDebug，独立 AVD 新功能及受影响试衣/备份/导航回归。
+- [x] 新代理完整分支审阅，修复负载关键发现再重验；核对 diff 仅本任务文件。
+- [x] 2.49.0/107 clean release；2.48.0同签名覆盖、数据库/图片保全；GitHub/Gitee发布/匿名附件与更新入口验证。
+- [x] 只提交本任务，集成 master 普通推送并核对远端，归档工作区。

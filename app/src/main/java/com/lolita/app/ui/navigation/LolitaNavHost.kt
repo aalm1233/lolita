@@ -82,6 +82,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.lolita.app.ui.screen.mannequin.MannequinScreen
+import com.lolita.app.ui.screen.mannequin.MannequinViewModel
 import com.lolita.app.ui.screen.tryon.TryOnScreen
 import com.lolita.app.ui.screen.tryon.TryOnViewModel
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
@@ -139,11 +141,23 @@ fun LolitaNavHost(
     onQuickOutfitOpened: () -> Unit = {},
     appUpdateViewModel: AppUpdateViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
-    createTryOnViewModel: (SavedStateHandle) -> TryOnViewModel = { TryOnViewModel(it) }
+    createTryOnViewModel: (SavedStateHandle) -> TryOnViewModel = { TryOnViewModel(it) },
+    createMannequinViewModel: (SavedStateHandle) -> MannequinViewModel = { MannequinViewModel(it) }
 ) {
     val tryOnGenerating by com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.collectAsState()
-    LaunchedEffect(openQuickOutfit, tryOnGenerating) {
-        if (openQuickOutfit && !tryOnGenerating) {
+    val activeEntry by navController.currentBackStackEntryAsState()
+    // Observe the entry's VM here so even restored previews block outer navigation
+    // before the page content has finished loading or composing.
+    val mannequinModel: MannequinViewModel? = activeEntry?.takeIf { it.destination.route == Screen.Mannequin.route }?.let { entry ->
+        val factory = remember(entry) {
+            viewModelFactory { initializer { createMannequinViewModel(createSavedStateHandle()) } }
+        }
+        viewModel(viewModelStoreOwner = entry, factory = factory)
+    }
+    val mannequinState = mannequinModel?.uiState?.collectAsState()?.value
+    val mannequinBlocked = mannequinState?.let { it.isLoading || it.navigationBlocked || it.isConfiguring } == true
+    LaunchedEffect(openQuickOutfit, tryOnGenerating, mannequinBlocked) {
+        if (openQuickOutfit && !tryOnGenerating && !mannequinBlocked) {
             navController.navigate(Screen.QuickOutfitLog.route) { launchSingleTop = true }
             onQuickOutfitOpened()
         }
@@ -200,14 +214,15 @@ fun LolitaNavHost(
                     } == true
                     val tint = if (selected) accent else MaterialTheme.colorScheme.onSurfaceVariant
                     NavigationBarItem(
-                        enabled = !tryOnGenerating,
+                        enabled = !tryOnGenerating && !mannequinBlocked,
                         icon = {
                             SkinIcon(item.iconKey, modifier = Modifier.size(26.dp), tint = tint)
                         },
                         label = { Text(item.label, modifier = Modifier.offset(y = (-4).dp)) },
                         selected = selected,
                         onClick = {
-                            if (com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.value) return@NavigationBarItem
+                            if (com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.value ||
+                                mannequinModel?.uiState?.value?.let { it.isLoading || it.navigationBlocked || it.isConfiguring } == true) return@NavigationBarItem
                             navController.navigate(item.screen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
@@ -321,7 +336,8 @@ fun LolitaNavHost(
                     },
                     onNavigateToTryOn = { id ->
                         navController.navigate(Screen.TryOn.createRoute(itemId = id))
-                    }
+                    },
+                    onNavigateToMannequin = { id -> navController.navigate(Screen.Mannequin.createRoute(id)) }
                 )
                 } // LocalNavAnimatedVisibilityScope
             }
@@ -673,7 +689,17 @@ fun LolitaNavHost(
                 )
             }
 
-            // Quick Outfit Log
+            composable(
+                route = Screen.Mannequin.route,
+                arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+            ) { entry ->
+                val factory = remember(entry) {
+                    viewModelFactory { initializer { createMannequinViewModel(createSavedStateHandle()) } }
+                }
+                MannequinScreen(onNavigateBack = { navController.popBackStack() },
+                    viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
+            }
+
             composable(
                 route = Screen.TryOn.route,
                 arguments = listOf(

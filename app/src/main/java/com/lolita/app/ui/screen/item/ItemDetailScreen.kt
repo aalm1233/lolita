@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.domain.model.supportsMannequin
 import com.lolita.app.domain.usecase.OrderAccounting
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.data.local.entity.ItemPriority
@@ -66,6 +67,7 @@ fun ItemDetailScreen(
     onCreateChild: (Long) -> Unit = {},
     onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem,
     onNavigateToTryOn: (Long) -> Unit = {},
+    onNavigateToMannequin: (Long) -> Unit = {},
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -718,6 +720,8 @@ fun ItemDetailScreen(
                                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
 
+                                MannequinDetailEntry(item, uiState.categories.firstOrNull { it.id == item.categoryId }, onNavigateToMannequin)
+
                                 if (item.status == ItemStatus.OWNED) {
                                     Row(
                                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -1077,4 +1081,15 @@ private fun SizeChartGallery(images: List<String>) {
         modifier = Modifier.fillMaxWidth().height(240.dp), contentDescription = "尺码表",
         contentScale = ContentScale.Fit)
     preview?.let { page -> FullScreenImageViewer(images, page) { preview = null } }
+}
+
+@Composable
+internal fun MannequinDetailEntry(item: Item, category: com.lolita.app.data.local.entity.Category?, onNavigate: (Long) -> Unit) {
+    if (!supportsMannequin(category) || item.imageUrls.none { it.isNotBlank() }) return
+    val skin = LolitaSkin.current
+    OutlinedButton(onClick = { onNavigate(item.id) }, modifier = Modifier.fillMaxWidth()) {
+        SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(skin.spacingMedium))
+        Text("生成人台图（实验）")
+    }
 }

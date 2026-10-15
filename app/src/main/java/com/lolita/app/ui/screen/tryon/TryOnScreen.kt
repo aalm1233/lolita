@@ -2,12 +2,9 @@ package com.lolita.app.ui.screen.tryon
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,9 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.TryOnResult
@@ -217,7 +211,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null })
     val role = state.selected.firstOrNull { it.itemId == roleItemId }
     if (role != null) TryOnRolePicker(role.role, onSelect = { viewModel.setRole(role.itemId, it) }, onDismiss = { roleItemId = null })
-    if (showKey) TryOnKeyDialog(state, viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false })
+    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error, viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false })
     preview?.let { FullScreenImageViewer(listOf(it), onDismiss = { preview = null }) }
     rename?.let { result -> TryOnRenameDialog(result.name, onSave = { viewModel.rename(result.id, it); rename = null }, onDismiss = { rename = null }) }
     delete?.let { result -> AlertDialog(onDismissRequest = { delete = null }, title = { Text("删除试衣图？") },
@@ -230,33 +224,6 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         dismissButton = { TextButton(onClick = { cancel = false }) { Text("继续等待") } })
 }
 
-
-@Composable
-private fun TryOnKeyDialog(state: TryOnUiState, onSave: (String) -> Unit, onClear: () -> Unit, onDismiss: () -> Unit) {
-    val skin = LolitaSkin.current
-    var value by remember { mutableStateOf("") }
-    val initialRevision = remember { state.keyRevision }
-    val scroll = rememberScrollState()
-    ObserveSkinScroll(scroll)
-    LaunchedEffect(state.keyRevision) { if (state.keyRevision != initialRevision) { value = ""; onDismiss() } }
-    AlertDialog(onDismissRequest = { if (!state.isConfiguring) onDismiss() }, title = { Text("个人 API Key") },
-        text = {
-            Column(Modifier.verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                Text(if (state.hasKey) "当前已配置。输入新密钥可替换，旧密钥不会回填。" else "填写 OpenAI API Key 后才能生成。API 需单独充值，ChatGPT 订阅不含此额度。", style = MaterialTheme.typography.bodySmall)
-                OutlinedTextField(value = value, onValueChange = { value = it }, enabled = !state.busy,
-                    label = { Text("API Key") }, modifier = Modifier.fillMaxWidth(), singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    shape = RoundedCornerShape(skin.cornerRadiusMedium))
-                Text("密钥经 Android Keystore 加密保存在本机，不进入业务备份。", style = MaterialTheme.typography.bodySmall)
-                state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
-                if (state.hasKey) TextButton(onClick = onClear, enabled = !state.busy) { Text("删除本机密钥") }
-            }
-        },
-        confirmButton = { TextButton(onClick = { onSave(value); value = "" }, enabled = value.isNotBlank() && !state.busy) {
-            if (state.isConfiguring) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp) else Text(if (state.hasKey) "保存替换" else "保存密钥")
-        } },
-        dismissButton = { TextButton(onClick = { value = ""; onDismiss() }, enabled = !state.isConfiguring) { Text("返回") } })
-}
 
 @Composable
 private fun TryOnRenameDialog(initial: String, onSave: (String) -> Unit, onDismiss: () -> Unit) {

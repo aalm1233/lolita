@@ -23,25 +23,27 @@ import com.google.gson.JsonParser
  */
 object ImageFileHelper {
 
+    /** Restore only a complete generated PNG inside this application's image store. No mutation. */
+    suspend fun isOwnedGeneratedImage(context: Context, path: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val file = File(path).canonicalFile
+            val root = File(context.filesDir, IMAGE_DIR).canonicalFile
+            if (path != File(File(context.filesDir, IMAGE_DIR), file.name).absolutePath ||
+                file.parentFile != root || !file.isFile || !file.canRead() || file.length() !in 1..32L*1024*1024) return@withContext false
+            validateGeneratedPng(file.readBytes())
+            true
+        } catch (failure: Exception) {
+            if (failure is kotlinx.coroutines.CancellationException) throw failure
+            false
+        }
+    }
+
     suspend fun saveGeneratedImage(context: Context, bytes: ByteArray): String {
         val directory = File(context.filesDir, IMAGE_DIR)
         val destination = File(directory,"${UUID.randomUUID()}.png")
         return try {
             withContext(Dispatchers.IO) {
-                require(bytes.isNotEmpty() && bytes.size <= 32*1024*1024) { "生成图片无效或过大" }
-                val pngEnd = byteArrayOf(0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126)
-                require(bytes.size >= pngEnd.size && bytes.copyOfRange(bytes.size - pngEnd.size, bytes.size).contentEquals(pngEnd)) {
-                    "生成服务未返回完整的 PNG 图片"
-                }
-                val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
-                require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..6144 && bounds.outMimeType == "image/png") { "生成服务未返回有效的 PNG 图片" }
-                var sample = 1
-                while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1024) sample *= 2
-                val decoded = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
-                    android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
-                requireNotNull(decoded) { "生成服务未返回可读取的 PNG 图片" }
-                decoded.recycle()
+                validateGeneratedPng(bytes)
                 currentCoroutineContext().ensureActive()
                 check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
                 destination.outputStream().use { it.write(bytes) }
@@ -52,6 +54,23 @@ object ImageFileHelper {
             withContext(kotlinx.coroutines.NonCancellable + Dispatchers.IO) { destination.delete() }
             throw failure
         }
+    }
+
+    private fun validateGeneratedPng(bytes: ByteArray) {
+        require(bytes.isNotEmpty() && bytes.size <= 32*1024*1024) { "生成图片无效或过大" }
+        val pngEnd = byteArrayOf(0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126)
+        require(bytes.size >= pngEnd.size && bytes.copyOfRange(bytes.size - pngEnd.size, bytes.size).contentEquals(pngEnd)) {
+            "生成服务未返回完整的 PNG 图片"
+        }
+        val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+        require(bounds.outWidth in 1..4096 && bounds.outHeight in 1..6144 && bounds.outMimeType == "image/png") { "生成服务未返回有效的 PNG 图片" }
+        var sample = 1
+        while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1024) sample *= 2
+        val decoded = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
+            android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
+        requireNotNull(decoded) { "生成服务未返回可读取的 PNG 图片" }
+        decoded.recycle()
     }
 
     private const val IMAGE_DIR = "images"

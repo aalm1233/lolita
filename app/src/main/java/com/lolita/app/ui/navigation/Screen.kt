@@ -12,6 +12,11 @@ sealed interface Screen {
         fun createRoute(itemId: Long) = "item_detail/$itemId"
     }
 
+    data object Mannequin : Screen {
+        override val route = "mannequin/{itemId}"
+        fun createRoute(itemId: Long) = "mannequin/$itemId"
+    }
+
     data object ItemEdit : Screen {
         override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}&parentId={parentId}"
         fun createRoute(

@@ -57,5 +57,5 @@ Files: OutfitWidget.kt、MainActivity.kt或共用导航 Intent 工具与测试�
 - [x] 桌面组件复用快捷穿搭 Intent，验证冷/热启动消费且恢复不重复。
 - [x] 全部任务独立复核、修正复核发现后，运行完整 JVM 与定向设备套件。
 - [x] 更新至2.47.1 / 105，刷新约定与10项覆盖记录，精确暂存并提交。
-- [ ] clean assembleRelease；同签名覆盖2.47.0并逐表/图片/设置核对。
-- [ ] 推送 master/源码标签；GitHub、Gitee附件匿名下载摘要和公开更新入口核验；提交发布证据。
+- [x] clean assembleRelease；同签名覆盖2.47.0并逐表/图片/设置核对。
+- [x] 推送 master/源码标签；GitHub、Gitee附件匿名下载摘要和公开更新入口核验；提交发布证据。

@@ -61,9 +61,17 @@ fun OutfitLogEditScreen(
     viewModel: OutfitLogEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val exitEditor: () -> Unit = {
+        if (!viewModel.uiState.value.isSaving) {
+            viewModel.cleanupNewImages()
+            onBack()
+        }
+    }
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val skin = LolitaSkin.current
+    val canEdit = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null
     val gridState = rememberLazyGridState()
     var showDiscardDialog by remember { mutableStateOf(false) }
 
@@ -98,8 +106,8 @@ fun OutfitLogEditScreen(
     }
 
     UnsavedChangesHandler(
-        hasUnsavedChanges = viewModel.hasUnsavedChanges,
-        onBack = onBack
+        hasUnsavedChanges = !uiState.isSaving && viewModel.hasUnsavedChanges,
+        onBack = exitEditor
     )
 
     if (showDiscardDialog) {
@@ -110,7 +118,7 @@ fun OutfitLogEditScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
-                    onBack()
+                    exitEditor()
                 }) {
                     Text("放弃", color = MaterialTheme.colorScheme.error)
                 }
@@ -123,6 +131,16 @@ fun OutfitLogEditScreen(
         )
     }
 
+    uiState.loadError?.let { message ->
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("读取失败") },
+            text = { Text(message) },
+            confirmButton = { TextButton(onClick = { viewModel.loadOutfitLog(logId) }) { Text("重试") } },
+            dismissButton = { TextButton(onClick = exitEditor) { Text("返回") } }
+        )
+    }
+
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
@@ -130,11 +148,11 @@ fun OutfitLogEditScreen(
                 title = { Text(if (logId == null) "添加穿搭" else "编辑穿搭") },
                 compact = true,
                 navigationIcon = {
-                    IconButton(onClick = {
+                    IconButton(enabled = !uiState.isSaving, onClick = {
                         if (viewModel.hasUnsavedChanges) {
                             showDiscardDialog = true
                         } else {
-                            onBack()
+                            exitEditor()
                         }
                     }) {
                         SkinIcon(IconKey.ArrowBack)
@@ -162,6 +180,7 @@ fun OutfitLogEditScreen(
                 item(key = "date", span = { GridItemSpan(maxLineSpan) }) {
                     DatePickerCard(
                         date = uiState.date,
+                        enabled = canEdit,
                         onDateSelected = { viewModel.updateDate(it) }
                     )
                 }
@@ -169,6 +188,7 @@ fun OutfitLogEditScreen(
                 item(key = "note", span = { GridItemSpan(maxLineSpan) }) {
                     NoteInputCard(
                         note = uiState.note,
+                        enabled = canEdit,
                         onNoteChange = { viewModel.updateNote(it) }
                     )
                 }
@@ -181,13 +201,14 @@ fun OutfitLogEditScreen(
                     item {
                         PhotoCardWithDelete(
                             imageUrl = imageUrl,
+                            enabled = canEdit,
                             onDelete = { viewModel.removeImage(imageUrl) }
                         )
                     }
                 }
 
                 item(key = "add-photo") {
-                    AddPhotoCard {
+                    AddPhotoCard(enabled = canEdit) {
                         photoPickerLauncher.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
@@ -197,6 +218,7 @@ fun OutfitLogEditScreen(
                 item(key = "items", span = { GridItemSpan(maxLineSpan) }) {
                     ItemSelectionCard(
                         availableItems = uiState.availableItems,
+                        enabled = canEdit,
                         selectedIds = uiState.selectedItemIds,
                         onToggleItem = { viewModel.toggleItemSelection(it) }
                     )
@@ -237,7 +259,7 @@ fun OutfitLogEditScreen(
 }
 
 @Composable
-private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
+private fun DatePickerCard(date: Long?, enabled: Boolean, onDateSelected: (Long) -> Unit) {
     val skin = LolitaSkin.current
     val dateFormat = remember { SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA) }
     val dateLabel = date?.let { dateFormat.format(Date(it)) } ?: "选择日期"
@@ -248,7 +270,7 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
             .fillMaxWidth()
             .semantics(mergeDescendants = true) { contentDescription = "日期：$dateLabel，点击修改" },
         variant = CardVariant.COMPACT,
-        onClick = { showDatePicker = true }
+        onClick = if (enabled) ({ showDatePicker = true }) else null
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
@@ -299,7 +321,7 @@ private fun DatePickerCard(date: Long?, onDateSelected: (Long) -> Unit) {
 }
 
 @Composable
-private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
+private fun NoteInputCard(note: String, enabled: Boolean, onNoteChange: (String) -> Unit) {
     val skin = LolitaSkin.current
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -308,6 +330,7 @@ private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
             OutlinedTextField(
                 value = note,
                 onValueChange = onNoteChange,
+                enabled = enabled,
                 placeholder = { Text("记录穿搭心得...") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(skin.cornerRadiusMedium),
@@ -319,7 +342,7 @@ private fun NoteInputCard(note: String, onNoteChange: (String) -> Unit) {
 }
 
 @Composable
-private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
+private fun PhotoCardWithDelete(imageUrl: String, enabled: Boolean, onDelete: () -> Unit) {
     val skin = LolitaSkin.current
     val shape = RoundedCornerShape(skin.cornerRadiusMedium)
     LolitaCard(
@@ -341,6 +364,7 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
             )
             IconButton(
                 onClick = onDelete,
+                enabled = enabled,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(skin.spacingSmall)
@@ -356,14 +380,14 @@ private fun PhotoCardWithDelete(imageUrl: String, onDelete: () -> Unit) {
 }
 
 @Composable
-private fun AddPhotoCard(onAddPhoto: () -> Unit) {
+private fun AddPhotoCard(enabled: Boolean, onAddPhoto: () -> Unit) {
     val skin = LolitaSkin.current
     LolitaCard(
         modifier = Modifier
             .fillMaxWidth(),
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(skin.cornerRadiusMedium),
-        onClick = onAddPhoto
+        onClick = if (enabled) onAddPhoto else null
     ) {
         Box(
             modifier = Modifier
@@ -389,6 +413,7 @@ private fun AddPhotoCard(onAddPhoto: () -> Unit) {
 
 @Composable
 private fun ItemSelectionCard(
+    enabled: Boolean,
     availableItems: List<Item>,
     selectedIds: Set<Long>,
     onToggleItem: (Long) -> Unit
@@ -404,6 +429,7 @@ private fun ItemSelectionCard(
             Spacer(modifier = Modifier.height(skin.spacingMedium))
             OutlinedButton(
                 onClick = { expanded = true },
+                enabled = enabled,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(skin.cornerRadiusMedium)
             ) {
@@ -424,7 +450,7 @@ private fun ItemSelectionCard(
                 ) {
                     items(availableItems, key = { it.id }) { item ->
                         val isSelected = selectedIds.contains(item.id)
-                        val isEnabled = item.status == ItemStatus.OWNED
+                        val isEnabled = enabled && (isSelected || item.status == ItemStatus.OWNED)
 
                         Row(
                             modifier = Modifier

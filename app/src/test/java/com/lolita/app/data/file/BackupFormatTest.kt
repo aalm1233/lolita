@@ -37,6 +37,37 @@ class BackupFormatTest {
         get("prices").asJsonArray.forEach { it.asJsonObject.remove("purchaseRecordStatus") }
     }
 
+    @Test fun currentColorArraysPreserveLiteralBracketNames() {
+        for (colors in listOf(listOf("[浅粉]"), listOf("[]"), listOf("["), listOf("[\"浅粉\"]"), listOf("浅粉", "[深粉]"))) {
+            val original = data().copy(items = listOf(data().items.single().copy(colors = colors)))
+            assertEquals(colors, BackupFormat.parse(Gson().toJson(original)).items.single().colors)
+        }
+    }
+
+    @Test fun completeVersionedBackupsKeepLiteralColorsAndRejectScalarColors() {
+        for (version in 2..BackupFormat.VERSION) {
+            val root = when (version) { 2 -> historicalJson(2); 3 -> v3Json(); 4 -> v4Json(); else -> json() }
+            root.addProperty("formatVersion", version)
+            val row = root["items"].asJsonArray[0].asJsonObject
+            row.add("colors", Gson().toJsonTree(listOf("[")))
+            assertEquals(listOf("["), BackupFormat.parse(root.toString()).items.single().colors)
+            row.addProperty("colors", "粉色")
+            assertThrows(IllegalArgumentException::class.java) { BackupFormat.parse(root.toString()) }
+        }
+    }
+
+    @Test fun legacyEncodedColorsRemainCompatible() {
+        for (raw in listOf("[\"粉色\",\"白色\"]", "粉色")) {
+            val old = historicalJson()
+            old["items"].asJsonArray[0].asJsonObject.addProperty("colors", raw)
+            val expected = if (raw == "粉色") listOf("粉色") else listOf("粉色", "白色")
+            assertEquals(expected, BackupFormat.parse(old.toString()).items.single().colors)
+        }
+        val wrapped = historicalJson()
+        wrapped["items"].asJsonArray[0].asJsonObject.add("colors", Gson().toJsonTree(listOf("[\"粉色\"]")))
+        assertEquals(listOf("粉色"), BackupFormat.parse(wrapped.toString()).items.single().colors)
+    }
+
     @Test fun preservesEveryFieldOnRoundTrip() {
         assertEquals(data(), BackupFormat.parse(Gson().toJson(data())))
     }

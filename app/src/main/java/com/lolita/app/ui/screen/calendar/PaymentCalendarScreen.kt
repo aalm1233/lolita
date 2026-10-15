@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 
 import androidx.compose.material3.*
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,10 +38,13 @@ import com.lolita.app.data.repository.PaymentRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
 
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import java.time.ZoneId
+import java.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
 import com.lolita.app.ui.theme.skin.icon.IconKey
@@ -52,6 +56,13 @@ import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.preferences.AppPreferences
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -98,78 +109,84 @@ data class PaymentCalendarUiState(
     val yearUnpaidTotal: Double = 0.0,
     val yearUnpaidCount: Int = 0,
     val yearOverdueAmount: Double = 0.0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val observedAtMillis: Long = System.currentTimeMillis()
 )
 
 class PaymentCalendarViewModel(
     private val priceRepository: PriceRepository = AppModule.priceRepository(),
     private val paymentRepository: PaymentRepository = AppModule.paymentRepository(),
-    private val itemRepository: ItemRepository = AppModule.itemRepository()
+    private val itemRepository: ItemRepository = AppModule.itemRepository(),
+    private val currentTimeMillis: () -> Long = System::currentTimeMillis,
+    private val currentTimeZone: () -> TimeZone = TimeZone::getDefault
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PaymentCalendarUiState())
+    private data class ClockSnapshot(val millis: Long, val zone: ZoneId)
+    private fun clockSnapshot() = ClockSnapshot(currentTimeMillis(), currentTimeZone().toZoneId())
+    private val clock = MutableStateFlow(clockSnapshot())
+    private val selectedYear = MutableStateFlow(
+        java.time.Instant.ofEpochMilli(clock.value.millis).atZone(clock.value.zone).year
+    )
+    private val _uiState = MutableStateFlow(PaymentCalendarUiState(
+        currentYear = selectedYear.value, observedAtMillis = clock.value.millis
+    ))
     val uiState: StateFlow<PaymentCalendarUiState> = _uiState.asStateFlow()
 
-    private var loadDataJob: Job? = null
-
     init {
-        loadData()
-    }
-
-    private fun loadData() {
-        loadDataJob?.cancel()
-        val state = _uiState.value
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.YEAR, state.currentYear)
-            set(Calendar.MONTH, Calendar.JANUARY)
-            set(Calendar.DAY_OF_MONTH, 1)
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        val yearStart = cal.timeInMillis
-        cal.add(Calendar.YEAR, 1)
-        val yearEnd = cal.timeInMillis - 1
-        val now = System.currentTimeMillis()
-
-        loadDataJob = viewModelScope.launch {
-            priceRepository.getPaymentsWithItemInfoByDateRange(yearStart, yearEnd)
-                .collect { payments ->
-                    val monthStatsMap = buildMonthStatsMap(payments, state.currentYear, now)
-                    val paid = payments.filter { it.isPaid }
-                    val unpaid = payments.filter { !it.isPaid }
-                    _uiState.value = _uiState.value.copy(
-                        yearPayments = payments,
-                        monthStatsMap = monthStatsMap,
-                        yearPaidTotal = paid.sumOf { it.amount },
-                        yearPaidCount = paid.size,
-                        yearUnpaidTotal = unpaid.sumOf { it.amount },
-                        yearUnpaidCount = unpaid.size,
-                        yearOverdueAmount = unpaid.filter { it.dueDate < now }.sumOf { it.amount },
-                        isLoading = false
-                    )
+        viewModelScope.launch {
+            // Only changing the selected year or local zone replaces the Room subscription.
+            combine(selectedYear, clock.map { it.zone }.distinctUntilChanged()) { year, zone -> year to zone }
+                .collectLatest { (year, zone) ->
+                    val start = LocalDate.of(year, 1, 1).atStartOfDay(zone).toInstant().toEpochMilli()
+                    val end = LocalDate.of(year + 1, 1, 1).atStartOfDay(zone).toInstant().toEpochMilli() - 1
+                    priceRepository.getPaymentsWithItemInfoByDateRange(start, end)
+                        .combine(clock) { payments, _ -> payments to currentTimeMillis() }
+                        .collect { (payments, now) ->
+                            val paid = payments.filter { it.isPaid }
+                            val unpaid = payments.filter { !it.isPaid }
+                            _uiState.update { state ->
+                                state.copy(
+                                    currentYear = year,
+                                    yearPayments = payments,
+                                    monthStatsMap = buildMonthStatsMap(payments, year, now, zone),
+                                    yearPaidTotal = paid.sumOf { it.amount },
+                                    yearPaidCount = paid.size,
+                                    yearUnpaidTotal = unpaid.sumOf { it.amount },
+                                    yearUnpaidCount = unpaid.size,
+                                    yearOverdueAmount = unpaid.filter { it.dueDate < now }.sumOf { it.amount },
+                                    observedAtMillis = now,
+                                    isLoading = false
+                                )
+                            }
+                        }
                 }
         }
+        viewModelScope.launch {
+            // Wake at the next due boundary while resident, and poll at most once per minute otherwise.
+            uiState.map { state ->
+                state.yearPayments.filter { !it.isPaid && it.dueDate >= state.observedAtMillis }
+                    .minOfOrNull { it.dueDate }
+            }.distinctUntilChanged().collectLatest { nextDue ->
+                while (isActive) {
+                    delay(nextDue?.let { (it - currentTimeMillis() + 1).coerceIn(1L, 60_000L) } ?: 60_000L)
+                    refreshTime()
+                }
+            }
+        }
     }
 
-    fun previousYear() {
-        _uiState.value = _uiState.value.copy(
-            currentYear = _uiState.value.currentYear - 1,
-            selectedMonth = null,
-            isLoading = true
-        )
-        loadData()
+    fun refreshTime() {
+        clock.value = clockSnapshot()
     }
 
-    fun nextYear() {
-        _uiState.value = _uiState.value.copy(
-            currentYear = _uiState.value.currentYear + 1,
-            selectedMonth = null,
-            isLoading = true
-        )
-        loadData()
+    private fun changeYear(offset: Int) {
+        _uiState.update { it.copy(selectedMonth = null, isLoading = true) }
+        selectedYear.value += offset
     }
+
+    fun previousYear() = changeYear(-1)
+
+    fun nextYear() = changeYear(1)
 
     fun selectMonth(month: Int) {
         val current = _uiState.value.selectedMonth
@@ -199,9 +216,10 @@ class PaymentCalendarViewModel(
     private fun buildMonthStatsMap(
         payments: List<PaymentWithItemInfo>,
         year: Int,
-        now: Long
+        now: Long,
+        zone: ZoneId
     ): Map<Int, MonthStats> {
-        val cal = Calendar.getInstance()
+        val cal = Calendar.getInstance(TimeZone.getTimeZone(zone))
         val monthPayments = mutableMapOf<Int, MutableList<PaymentWithItemInfo>>()
         payments.forEach { p ->
             cal.timeInMillis = p.dueDate
@@ -235,6 +253,27 @@ fun PaymentCalendarContent(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(context, lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) viewModel.refreshTime()
+        }
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) { viewModel.refreshTime() }
+        }
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_DATE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        viewModel.refreshTime()
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            context.unregisterReceiver(receiver)
+        }
+    }
     val scope = rememberCoroutineScope()
     val hazeState = rememberHazeState()
 
@@ -393,6 +432,7 @@ fun PaymentCalendarContent(
                     items(selectedPayments, key = { it.paymentId }) { payment ->
                         PaymentInfoCard(
                             payment = payment,
+                            now = uiState.observedAtMillis,
                             onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null,
                             frosted = hasBackground,
                             hazeState = hazeState
@@ -710,6 +750,7 @@ private fun formatCompactAmount(amount: Double): String {
 @Composable
 private fun PaymentInfoCard(
     payment: PaymentWithItemInfo,
+    now: Long,
     onMarkPaid: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     frosted: Boolean = false,
@@ -720,7 +761,6 @@ private fun PaymentInfoCard(
         PriceType.FULL -> "全款"
         PriceType.MULTI_STAGE -> "多段付款"
     }
-    val now = System.currentTimeMillis()
     val isOverdue = !payment.isPaid && payment.dueDate < now
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var showConfirmDialog by remember { mutableStateOf(false) }

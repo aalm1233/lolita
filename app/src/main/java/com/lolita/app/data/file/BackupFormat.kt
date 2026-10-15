@@ -72,9 +72,11 @@ internal object BackupFormat {
                 }
                 if (name == "items") {
                     if (!row.has("sizeChartImageUrls")) row.add("sizeChartImageUrls", JsonArray())
-                    if (row.has("color") && !row.has("colors")) row.add("colors", row.remove("color"))
-                    row.remove("color")
-                    normalizeColors(row)
+                    if (version == 1) {
+                        if (row.has("color") && !row.has("colors")) row.add("colors", row.remove("color"))
+                        row.remove("color")
+                        migrateLegacyColors(row)
+                    }
                     default(row, "priority", "MEDIUM")
                     default(row, "coordinateOrder", 0)
                 }
@@ -223,7 +225,8 @@ internal object BackupFormat {
         }
     }
 
-    private fun normalizeColors(row: JsonObject) {
+    /** Only unversioned/v1 exports used scalar or doubly encoded colors. Modern arrays are literal data. */
+    private fun migrateLegacyColors(row: JsonObject) {
         val colors = row["colors"]
         val array = when {
             colors == null || colors.isJsonNull -> JsonArray()

@@ -33,27 +33,40 @@ object ImageFileHelper {
         imageDatabase = database
     }
 
-    suspend fun copyToInternalStorage(context: Context, sourceUri: Uri): String =
-        withContext(Dispatchers.IO) {
-            val dir = File(context.filesDir, IMAGE_DIR)
-            if (!dir.exists()) dir.mkdirs()
-
-            val extension = context.contentResolver.getType(sourceUri)
-                ?.substringAfter("/")
-                ?.let { if (it == "jpeg") "jpg" else it }
-                ?: "jpg"
-
-            val fileName = "${UUID.randomUUID()}.$extension"
-            val destFile = File(dir, fileName)
-
-            context.contentResolver.openInputStream(sourceUri)?.use { input ->
-                destFile.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            } ?: throw IllegalStateException("Cannot open input stream for $sourceUri")
-
-            destFile.absolutePath
+    suspend fun copyToInternalStorage(context: Context, sourceUri: Uri): String {
+        // Own the destination outside withContext so cancellation during its return
+        // cannot strand a completed copy before the editor receives the path.
+        var destination: File? = null
+        return try {
+            withContext(Dispatchers.IO) {
+                currentCoroutineContext().ensureActive()
+                val dir = File(context.filesDir, IMAGE_DIR)
+                check(dir.isDirectory || dir.mkdirs()) { "无法创建图片目录" }
+                val extension = context.contentResolver.getType(sourceUri)
+                    ?.substringAfter("/")
+                    ?.let { if (it == "jpeg") "jpg" else it }
+                    ?: "jpg"
+                val destFile = File(dir, "${UUID.randomUUID()}.$extension")
+                destination = destFile
+                context.contentResolver.openInputStream(sourceUri)?.use { input ->
+                    destFile.outputStream().use { output ->
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        while (true) {
+                            currentCoroutineContext().ensureActive()
+                            val count = input.read(buffer)
+                            if (count < 0) break
+                            output.write(buffer, 0, count)
+                        }
+                    }
+                } ?: throw IllegalStateException("Cannot open input stream for $sourceUri")
+                currentCoroutineContext().ensureActive()
+                destFile.absolutePath
+            }
+        } catch (failure: Throwable) {
+            destination?.delete()
+            throw failure
         }
+    }
 
     /** Copies packaged assets to the same persistent image store used by user photographs. */
     suspend fun copyAssetToInternalStorage(context: Context, assetPath: String): String {

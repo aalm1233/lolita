@@ -1,5 +1,9 @@
 package com.lolita.app.ui.screen.outfit
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.CancellationException
+import com.lolita.app.data.file.ImageFileHelper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
@@ -54,6 +58,7 @@ data class OutfitLogEditUiState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val isDeleted: Boolean = false,
+    val loadError: String? = null,
     val error: String? = null
 )
 
@@ -189,6 +194,10 @@ class OutfitLogEditViewModel(
     val uiState: StateFlow<OutfitLogEditUiState> = _uiState.asStateFlow()
 
     private var editingLogId: Long? = null
+    private var hasRequestedLog = false
+    private var editorLoaded = false
+    private var loadJob: Job? = null
+    private val newImages = mutableSetOf<String>()
     private var originalLog: OutfitLog? = null
     private var originalItemIds: Set<Long> = emptySet()
     var hasUnsavedChanges: Boolean = false
@@ -207,56 +216,85 @@ class OutfitLogEditViewModel(
     }
 
     fun loadOutfitLog(logId: Long?) {
+        if (_uiState.value.isSaving) return
+        if (hasRequestedLog && editingLogId == logId && (editorLoaded || loadJob?.isActive == true)) return
+        loadJob?.cancel()
+        if (hasRequestedLog && editingLogId != logId) cleanupNewImages()
+        hasRequestedLog = true
         editingLogId = logId
+        editorLoaded = false
         originalLog = null
+        originalItemIds = emptySet()
+        hasUnsavedChanges = false
+        _uiState.update { OutfitLogEditUiState(availableItems = it.availableItems, isLoading = logId != null,
+            date = if (logId == null) System.currentTimeMillis() else null) }
         if (logId == null) {
-            _uiState.update { it.copy(date = System.currentTimeMillis(), isLoading = false) }
+            editorLoaded = true
             return
         }
-
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            val result = outfitLogRepository.getOutfitLogWithItems(logId).first()
-            if (result == null) {
-                _uiState.update { it.copy(isDeleted = true, isLoading = false) }
-            } else {
-                originalLog = result.outfitLog
-                val itemIds = result.items.map { it.id }.toSet()
-                originalItemIds = itemIds
-                _uiState.update {
-                    it.copy(
-                        date = result.outfitLog.date,
-                        note = result.outfitLog.note,
-                        imageUrls = result.outfitLog.imageUrls,
-                        selectedItemIds = itemIds,
-                        isLoading = false
-                    )
+        loadJob = viewModelScope.launch {
+            try {
+                val result = outfitLogRepository.getOutfitLogWithItems(logId).first()
+                if (result == null) {
+                    _uiState.update { it.copy(isDeleted = true, isLoading = false, loadError = "原记录不存在，请重试") }
+                } else {
+                    originalLog = result.outfitLog
+                    val itemIds = result.items.map { it.id }.toSet()
+                    originalItemIds = itemIds
+                    editorLoaded = true
+                    _uiState.update { it.copy(date = result.outfitLog.date, note = result.outfitLog.note,
+                        imageUrls = result.outfitLog.imageUrls, selectedItemIds = itemIds, isLoading = false) }
                 }
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取穿搭失败") }
             }
         }
     }
 
+    fun cleanupNewImages() {
+        ImageFileHelper.cleanupUnreferencedImages(newImages.toList())
+        newImages.clear()
+    }
+
+    override fun onCleared() {
+        cleanupNewImages()
+        super.onCleared()
+    }
+
     fun updateDate(date: Long) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(date = date) }
     }
 
     fun updateNote(note: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(note = note) }
     }
 
     fun addImage(imageUrl: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) {
+            if (imageUrl !in _uiState.value.imageUrls) ImageFileHelper.cleanupUnreferencedImages(listOf(imageUrl))
+            return
+        }
+        newImages.add(imageUrl)
         hasUnsavedChanges = true
         _uiState.update { it.copy(imageUrls = it.imageUrls + imageUrl) }
     }
 
     fun removeImage(imageUrl: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(imageUrls = it.imageUrls - imageUrl) }
+        if (imageUrl !in _uiState.value.imageUrls && newImages.remove(imageUrl)) {
+            ImageFileHelper.cleanupUnreferencedImages(listOf(imageUrl))
+        }
     }
 
     fun toggleItemSelection(itemId: Long) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update {
             val newSelection = if (itemId in it.selectedItemIds) it.selectedItemIds - itemId else it.selectedItemIds + itemId
@@ -268,7 +306,17 @@ class OutfitLogEditViewModel(
         _uiState.update { it.copy(error = null) }
     }
 
+    // The VM owns persistence; a recreated screen may cancel its await without cancelling the save.
+    private var saveTask: Deferred<Result<Long>>? = null
+
     suspend fun save(): Result<Long> {
+        val task = saveTask?.takeIf { it.isActive } ?: viewModelScope.async { saveDraft() }
+            .also { saveTask = it }
+        return task.await()
+    }
+
+    private suspend fun saveDraft(): Result<Long> {
+        if (_uiState.value.isSaving) return Result.failure(Exception("正在保存中"))
         if (_uiState.value.isDeleted) {
             return Result.failure(Exception("原记录已被删除，无法保存"))
         }
@@ -288,7 +336,7 @@ class OutfitLogEditViewModel(
                 note = _uiState.value.note,
                 imageUrls = _uiState.value.imageUrls
             )
-            val isNew = editingLogId == null
+            val isNew = original == null
             val currentItems = _uiState.value.selectedItemIds
             val removedItems = if (isNew) emptySet() else originalItemIds - currentItems
             val addedItems = if (isNew) currentItems else currentItems - originalItemIds
@@ -296,9 +344,14 @@ class OutfitLogEditViewModel(
             val logId = outfitLogRepository.saveOutfitLogWithItems(
                 outfitLog, isNew, addedItems, removedItems
             )
+            originalLog = outfitLog.copy(id = logId)
+            originalItemIds = currentItems
+            cleanupNewImages()
+            hasUnsavedChanges = false
             _uiState.update { it.copy(isSaving = false) }
             Result.success(logId)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             _uiState.update { it.copy(isSaving = false, error = e.message ?: "保存失败") }
             Result.failure(e)
         }

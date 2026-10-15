@@ -43,6 +43,8 @@ import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.domain.time.localDateToPickerMillis
+import com.lolita.app.domain.time.pickerMillisToLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -262,7 +264,11 @@ private fun LazyListScope.importOrderSummaries(uiState: TaobaoImportUiState, sho
         val original = uiState.orders.firstOrNull { it.orderId == orderId }
         if (original != null) item(key = "source-order-$orderId") {
             LolitaSection("源订单 $orderId") { row {
-                Text("源实付 ¥${original.totalPaid} · 源邮费 ¥${original.shipping}")
+                Text("${original.orderStatus} · 源实付 ¥${original.totalPaid} · 源邮费 ¥${original.shipping}")
+                if (original.orderStatus.contains("关闭") || original.orderStatus.contains("退款")) {
+                    Text("该订单存在关闭或退款状态，请按真实付款及退款情况核对本件实付。源金额保留供核对，不会自动归零。",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                }
                 Text("本次选择 ${rows.size}/${original.items.sumOf { it.quantity }} 件，分摊邮费 ¥${rows.filter { it.shipping.isFinite() }.sumOf { it.shipping }}，待核对实付 ¥${rows.filter { it.paidAmount.isFinite() }.sumOf { it.paidAmount }}。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
         }
@@ -480,9 +486,6 @@ private fun ImportItemCard(
 
                     val balanceText = item.balanceInput ?: item.manualBalance?.let { String.format("%.2f", it) }.orEmpty()
                     var showBalanceDatePicker by remember { mutableStateOf(false) }
-                    val balanceDatePickerState = rememberDatePickerState(
-                        initialSelectedDateMillis = item.balanceDueDate
-                    )
 
                     Row(
                         Modifier.fillMaxWidth(),
@@ -522,12 +525,15 @@ private fun ImportItemCard(
                     }
 
                     if (showBalanceDatePicker) {
+                        val balanceDatePickerState = rememberDatePickerState(
+                            initialSelectedDateMillis = item.balanceDueDate?.let { localDateToPickerMillis(it) }
+                        )
                         DatePickerDialog(
                             onDismissRequest = { showBalanceDatePicker = false },
                             confirmButton = {
                                 TextButton(onClick = {
                                     balanceDatePickerState.selectedDateMillis?.let { millis ->
-                                        onUpdate { it.copy(balanceDueDate = millis) }
+                                        onUpdate { it.copy(balanceDueDate = pickerMillisToLocalDate(millis)) }
                                     }
                                     showBalanceDatePicker = false
                                 }) { Text("确定") }
@@ -689,18 +695,15 @@ private fun ImportImageFields(
                     SkinIcon(IconKey.Close, tint = MaterialTheme.colorScheme.error)
                 }
             }
-        } else {
-            OutlinedButton(
-                onClick = onPickLocalImage,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("选择图片")
-            }
         }
-
-
+        OutlinedButton(
+            onClick = onPickLocalImage,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            SkinIcon(IconKey.AddPhoto, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(skin.spacingSmall))
+            Text(if (item.imageUrl == null) "选择图片" else "替换图片")
+        }
 }
 
 

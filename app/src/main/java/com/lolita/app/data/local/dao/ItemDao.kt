@@ -154,10 +154,27 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE status = :status AND id != :excludeId ORDER BY updated_at DESC")
     suspend fun getOwnedItemsExcluding(status: ItemStatus, excludeId: Long): List<Item>
 
-    @Query("SELECT * FROM items WHERE style = :style OR style LIKE '%' || :style || '%' ORDER BY updated_at DESC")
+    @Query("SELECT * FROM items WHERE style = :style ORDER BY updated_at DESC")
     fun getItemsByStyle(style: String): Flow<List<Item>>
 
-    @Query("SELECT * FROM items WHERE season = :season OR season LIKE '%' || :season || '%' ORDER BY updated_at DESC")
+    // Match Kotlin Char.isWhitespace used by SpendingBreakdown.seasons when trimming tokens.
+    @Query("""
+        WITH RECURSIVE season_tokens(item_id, token, rest) AS (
+            SELECT id, '', COALESCE(season, '') || ',' FROM items
+            UNION ALL
+            SELECT item_id,
+                trim(substr(rest, 1, instr(rest, ',') - 1), char(
+                    9, 10, 11, 12, 13, 28, 29, 30, 31, 32, 160, 5760,
+                    8192, 8193, 8194, 8195, 8196, 8197, 8198, 8199, 8200, 8201, 8202,
+                    8232, 8233, 8239, 8287, 12288
+                )),
+                substr(rest, instr(rest, ',') + 1)
+            FROM season_tokens WHERE rest != ''
+        )
+        SELECT * FROM items WHERE id IN (
+            SELECT item_id FROM season_tokens WHERE token = :season AND token != ''
+        ) ORDER BY updated_at DESC
+    """)
     fun getItemsBySeason(season: String): Flow<List<Item>>
 
     @Query("SELECT * FROM items WHERE status = 'WISHED' AND priority = :priority ORDER BY updated_at DESC")

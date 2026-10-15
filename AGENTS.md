@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=104, versionName="2.47.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=105, versionName="2.47.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -346,6 +346,16 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 统计概览分别展示“当前订单实付”和包含归档订单的“全部已录实付”；后者仅汇总真实已付记录，归档、共用主件价格不得删减原实付。显示当前缺付款资料订单数；“订单参考均价”明确来自当前已拥有订单总价。分布、趋势继续使用当前绑定订单口径，回归位于 `SpendingOverviewTest`。
 
 ## 提醒联动与残余改动回归
+
+### 2.47.1 逻辑联动修复约定
+
+- Material3 日期框统一通过 `domain/time/DatePickerDates.kt` 的 `localDateToPickerMillis` / `pickerMillisToLocalDate` 转换本地日期与 UTC 日首；已有实付/阶段日期不批量改写。尾款导入弹窗每次打开读取最新草稿。
+- 普通服饰、套装、完整穿搭编辑按实体身份幂等初始化；旋转或重入不覆盖草稿，换实体取消旧读取，失败可重试且原记录未读到不得当新建保存。保存由 ViewModel 持有任务，屏幕取消等待不取消提交及身份记录，重试不重复新建；保留原记录字段与创建时间。读取/保存期间禁用提交和相关编辑；`ColorSelector`、`SizeSelector` 的 `enabled` 默认 true，编辑器按忙碌状态传入。
+- 编辑器和订单导入跟踪本轮新增图片，移除/替换/放弃/跳过时经 `ImageFileHelper.cleanupUnreferencedImages` 清理；原图仅提交后清理。旋转的 composition dispose 不视为放弃，已保存及共享引用始终保护。`copyToInternalStorage` 在失败及取消返回边界清理未交付副本。
+- 淘宝订单源实付分摊不以“交易成功”判断是否归零；关闭/退款显示明确核对提示并保留源状态/实付证据。连写规格先提取有效尺码、最长类型优先，规范类别不得把 JSK 回退为 SK。
+- 统计风格下钻使用精确名称，季节按去首尾空白后的逗号 token 等值查询，不使用包含或 SQL 通配符匹配。当前备份颜色数组原样保留，旧 scalar/双重编码迁移仅用于格式 1。
+- 付款年历时钟、时区与 Room 查询组合；前台/时间广播/最近到期边界刷新同一时间快照，月份、全年与明细逾期一致，不因单纯刷新时间累积查询订阅。桌面穿搭组件使用现有快捷穿搭导航参数。
+- 回归位于 `TaobaoOrderParserTest`、`TaobaoOrderImportEvidenceTest`、`ImageCopyCancellationTest`、`EditorLifecycleTest`、`DatePickerDatesTest`、`PricingDateFieldTest`、`ItemTagFilterTest`、`PaymentCalendarClockTest` 及扩展的备份/订单交互测试；记录见 `docs/audit-logic-fixes-2026-10-15.md`。
 
 - 每日穿搭提醒配置通过 `AppPreferences.outfitReminderConfig` 原子读取 enabled/hour/minute；旧设置没有 minute 时默认 0，保存时间必须调用 `setOutfitReminderTime`，更新后从最新配置 `reschedule()`，不能用 UI 旧快照安排闹钟。
 - 每日提醒使用 `DailyOutfitReminderPolicy` 按本地日期、时区及墙上时间计算下一次，广播校验当前配置和目标日期；关闭、改时间、已有今日穿搭或当天已成功送达时不再次通知。送达回执保存在独立本机设置，不改服饰/账本或穿搭记录。

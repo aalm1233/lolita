@@ -15,6 +15,8 @@ import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.domain.time.localDateToPickerMillis
+import com.lolita.app.domain.time.pickerMillisToLocalDate
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -60,9 +62,9 @@ internal fun PricingDateField(label: String, date: Long?, onDateChange: (Long?) 
         if (date != null && clearable) TextButton(onClick = { onDateChange(null) }, enabled = enabled) { Text("日期待定") }
     }
     if (showPicker) {
-        val state = rememberDatePickerState(initialSelectedDateMillis = date ?: System.currentTimeMillis())
+        val state = rememberDatePickerState(initialSelectedDateMillis = localDateToPickerMillis(date ?: System.currentTimeMillis()))
         DatePickerDialog(onDismissRequest = { showPicker = false },
-            confirmButton = { TextButton(onClick = { state.selectedDateMillis?.let(onDateChange); showPicker = false }) { Text("确定") } },
+            confirmButton = { TextButton(onClick = { state.selectedDateMillis?.let { onDateChange(pickerMillisToLocalDate(it)) }; showPicker = false }) { Text("确定") } },
             dismissButton = { TextButton(onClick = { showPicker = false }) { Text("取消") } }) { DatePicker(state = state) }
     }
 }

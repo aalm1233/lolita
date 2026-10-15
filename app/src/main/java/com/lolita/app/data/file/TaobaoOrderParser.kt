@@ -171,23 +171,24 @@ object TaobaoOrderParser {
         // 1. 纯尺寸
         if (isSizeKeyword(part)) return Triple(null, part, null)
 
-        // 2. 精确类型匹配
-        if (typeKeywords.any { part.equals(it, ignoreCase = true) }) {
-            return Triple(part, null, null)
-        }
-
-        // 3. 后缀类型匹配 (如 "粉色柳波芙jsk", "深海色FS")
-        for (suffix in typeSuffixes) {
-            if (part.endsWith(suffix, ignoreCase = true) && part.length > suffix.length) {
-                val prefix = part.substring(0, part.length - suffix.length)
-                val extractedColor = if (isColorKeyword(prefix)) prefix else null
-                return Triple(part, null, extractedColor)
+        // 2. 先提取连写的尺码，避免类型匹配吞掉 M半裙 / L白色JSK 的尺码。
+        val sizePrefix = if (typeKeywords.any { part.startsWith(it, ignoreCase = true) }) null else extractLeadingSize(part)
+        if (sizePrefix != null) {
+            val remaining = part.substring(sizePrefix.length).trim()
+            if (remaining.isNotBlank()) {
+                val (t, _, c) = classifyPart(remaining)
+                return Triple(t, sizePrefix, c)
             }
+            return Triple(null, sizePrefix, null)
         }
 
-        // 4. 包含类型匹配（长关键词优先）
-        val sortedTypeKeywords = typeKeywords.sortedByDescending { it.length }
-        for (keyword in sortedTypeKeywords) {
+        // 3. 规范拼写，优先保留完整的类型变体。
+        typeKeywords.firstOrNull { part.equals(it, ignoreCase = true) }?.let {
+            return Triple(it, null, null)
+        }
+
+        // 4. 最长类型优先，JSK 不能先按 SK 拆成颜色“白色J”。
+        for (keyword in typeKeywords.sortedByDescending { it.length }) {
             if (part.contains(keyword, ignoreCase = true)) {
                 val remaining = part.replace(
                     Regex(Regex.escape(keyword), RegexOption.IGNORE_CASE), ""
@@ -199,30 +200,31 @@ object TaobaoOrderParser {
             }
         }
 
-        // 5. 前缀尺寸提取 (如 "M半裙", "L白色JSK", "XL上衣")
-        val sizePrefix = extractLeadingSize(part)
-        if (sizePrefix != null) {
-            val remaining = part.substring(sizePrefix.length).trim()
-            if (remaining.isNotBlank()) {
-                val (t, _, c) = classifyPart(remaining)
-                return Triple(t, sizePrefix, c)
-            }
-            return Triple(null, sizePrefix, null)
-        }
-
-        // 6. 颜色匹配
+        // 5. 颜色匹配
         if (isColorKeyword(part)) return Triple(null, null, part)
 
-        // 7. 兜底：归为颜色
+        // 6. 兜底：归为颜色
         return Triple(null, null, part)
     }
 
     private fun extractLeadingSize(part: String): String? {
-        Regex("^(Lady\\d+)", RegexOption.IGNORE_CASE).find(part)?.let {
-            if (it.value.length < part.length) return it.value
+        fun hasSizeBoundary(prefix: String): Boolean {
+            val remaining = part.substring(prefix.length)
+            if (remaining.isBlank()) return false
+            fun Char.isAsciiLetter() = this in 'a'..'z' || this in 'A'..'Z'
+            if (!remaining.first().isAsciiLetter()) return true
+            // MJSK is a size followed by a complete type; Mint/Sax/Lavender are
+            // words, whose initial letter alone is not size evidence.
+            return typeKeywords.any { keyword ->
+                remaining.startsWith(keyword, ignoreCase = true) &&
+                    (remaining.length == keyword.length || !remaining[keyword.length].isAsciiLetter())
+            }
         }
-        Regex("^(XS|XXL|XXXL|2XL|3XL|XL|S|M|L)", RegexOption.IGNORE_CASE).find(part)?.let {
-            if (it.value.length < part.length) return it.value
+        Regex("^(Lady\\d+)", RegexOption.IGNORE_CASE).find(part)?.let {
+            if (hasSizeBoundary(it.value)) return it.value
+        }
+        Regex("^(XXXL|XXL|2XL|3XL|XS|XL|S|M|L)", RegexOption.IGNORE_CASE).find(part)?.let {
+            if (hasSizeBoundary(it.value)) return it.value
         }
         return null
     }
@@ -254,8 +256,6 @@ object TaobaoOrderParser {
         Regex("^F$", RegexOption.IGNORE_CASE)
     )
 
-    private val typeSuffixes = listOf("OP", "SK", "JSK", "SET", "FS")
-
     // 颜色关键词（基于实际订单数据提取）
     private val colorKeywords = listOf(
         // 基础色
@@ -278,13 +278,6 @@ object TaobaoOrderParser {
         // 图色等特殊值
         "图色"
     )
-
-    private fun isTypeKeyword(part: String): Boolean {
-        if (typeKeywords.any { part.equals(it, ignoreCase = true) }) return true
-        return typeSuffixes.any { suffix ->
-            part.endsWith(suffix, ignoreCase = true) && part.length > suffix.length
-        }
-    }
 
     private fun isSizeKeyword(part: String): Boolean {
         return sizePatterns.any { it.matches(part) }

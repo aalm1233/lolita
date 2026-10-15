@@ -25,6 +25,8 @@ import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -118,6 +120,7 @@ data class ItemEditUiState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val recoveredImport: Boolean = false,
+    val loadError: String? = null,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
@@ -718,131 +721,154 @@ class ItemEditViewModel(
     var hasUnsavedChanges: Boolean = false
         private set
 
-    private val importedImages = mutableListOf<String>()
-    private var appliedImport: String? = null
+    private val importedImages = mutableSetOf<String>()
+    private data class EditorIdentity(val itemId: Long, val defaultStatus: String,
+        val defaultParentItemId: Long?, val importedDraftJson: String?)
+    private var requestedIdentity: EditorIdentity? = null
+    private var loadedIdentity: EditorIdentity? = null
+    private var loadJob: Job? = null
     private var currentImportToken: String? = null
 
     fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null) {
-        if (importedDraftJson != null && appliedImport == importedDraftJson) return
+        if (_uiState.value.isSaving) return
+        val identity = EditorIdentity(itemId, if (itemId > 0) "" else defaultStatus,
+            if (itemId > 0) null else defaultParentItemId, importedDraftJson)
+        if (requestedIdentity == identity && (loadedIdentity == identity || loadJob?.isActive == true)) return
+        loadJob?.cancel()
+        priceJob?.cancel()
+        hierarchyJob?.cancel()
+        if (requestedIdentity != identity) {
+            cleanupNewImages()
+        }
+        locationJob?.cancel()
+        locationJob = null
+        supportingDataLoaded.set(false)
+        requestedIdentity = identity
+        loadedIdentity = null
+        _uiState.value = ItemEditUiState(isLoading = true)
         val importDraft = importedDraftJson?.let { json ->
             runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
         }
         currentImportToken = importDraft?.importToken
         if (importDraft != null) {
-            appliedImport = importedDraftJson
-            importedImages.clear()
             importedImages.addAll(importDraft.imagePaths)
             importedImages.addAll(importDraft.sizeChartImagePaths.orEmpty())
             importDraft.sizeChartImagePath?.let { importedImages.add(it) }
         }
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            loadReferenceData()
-            ensureLocationCollection()
-            priceJob?.cancel()
-            hierarchyJob?.cancel()
-            _pendingImageDeletions.update { emptySet() }
-            hasUnsavedChanges = false
+        loadJob = viewModelScope.launch {
+            try {
+                loadReferenceData()
+                ensureLocationCollection()
+                priceJob?.cancel()
+                hierarchyJob?.cancel()
+                _pendingImageDeletions.update { emptySet() }
+                hasUnsavedChanges = false
 
-            val committedImport = if (itemId == 0L) currentImportToken?.let {
-                itemRepository.getItemByImportToken(it)
-            } else null
-            val effectiveItemId = committedImport?.id ?: itemId
-            if (effectiveItemId > 0) {
-                val item = committedImport ?: itemRepository.getItemById(effectiveItemId)
-                if (item != null) {
-                    val prices = priceRepository.getPricesWithPaymentsByItem(effectiveItemId).first()
-                    _uiState.update {
-                        it.copy(
-                            item = item,
-                            name = item.name,
-                            description = item.description,
-                            brandId = item.brandId,
-                            categoryId = item.categoryId,
-                            coordinateId = item.coordinateId,
-                            parentItemId = item.parentItemId,
-                            includedInParentPrice = item.includedInParentPrice,
-                            status = item.status,
-                            priority = item.priority,
-                            imageUrls = item.imageUrls,
-                            imageUrlsToDelete = emptyList(),
-                            colors = item.colors,
-                            seasons = item.season?.split(",")?.filter { season -> season.isNotBlank() } ?: emptyList(),
-                            style = item.style,
-                            size = item.size,
-                            sizeChartImageUrl = item.sizeChartImageUrl,
-                            sizeChartImageUrls = item.sizeChartImageUrls,
-                            source = item.source,
-                            locationId = item.locationId,
-                            pricesWithPayments = prices,
-                            recoveredImport = committedImport != null,
-                            isLoading = false
-                        )
+                val committedImport = if (itemId == 0L) currentImportToken?.let {
+                    itemRepository.getItemByImportToken(it)
+                } else null
+                val effectiveItemId = committedImport?.id ?: itemId
+                if (effectiveItemId > 0) {
+                    val item = committedImport ?: itemRepository.getItemById(effectiveItemId)
+                    if (item != null) {
+                        val prices = priceRepository.getPricesWithPaymentsByItem(effectiveItemId).first()
+                        _uiState.update {
+                            it.copy(
+                                item = item,
+                                name = item.name,
+                                description = item.description,
+                                brandId = item.brandId,
+                                categoryId = item.categoryId,
+                                coordinateId = item.coordinateId,
+                                parentItemId = item.parentItemId,
+                                includedInParentPrice = item.includedInParentPrice,
+                                status = item.status,
+                                priority = item.priority,
+                                imageUrls = item.imageUrls,
+                                imageUrlsToDelete = emptyList(),
+                                colors = item.colors,
+                                seasons = item.season?.split(",")?.filter { season -> season.isNotBlank() } ?: emptyList(),
+                                style = item.style,
+                                size = item.size,
+                                sizeChartImageUrl = item.sizeChartImageUrl,
+                                sizeChartImageUrls = item.sizeChartImageUrls,
+                                source = item.source,
+                                locationId = item.locationId,
+                                pricesWithPayments = prices,
+                                recoveredImport = committedImport != null,
+                                isLoading = false
+                            )
+                        }
+                    } else {
+                        error("服饰不存在，请重试")
                     }
-                } else {
-                    _uiState.update { it.copy(isLoading = false) }
-                }
-                if (committedImport != null) {
-                    ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
-                    importedImages.clear()
-                }
-                observeHierarchy(effectiveItemId)
-                priceJob = viewModelScope.launch {
-                    priceRepository.getPricesWithPaymentsByItem(effectiveItemId).collect { prices ->
-                        val historicalCount = priceRepository.getPricesByItemList(effectiveItemId).size - prices.size
-                        _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
+                    loadedIdentity = identity
+                    if (committedImport != null) {
+                        ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
+                        importedImages.clear()
                     }
+                    observeHierarchy(effectiveItemId)
+                    priceJob = viewModelScope.launch {
+                        priceRepository.getPricesWithPaymentsByItem(effectiveItemId).collect { prices ->
+                            val historicalCount = priceRepository.getPricesByItemList(effectiveItemId).size - prices.size
+                            _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
+                        }
+                    }
+                    return@launch
                 }
-                return@launch
-            }
 
-            val defaultItemStatus = defaultStatus
-                .takeIf { it.isNotBlank() }
-                ?.let { runCatching { ItemStatus.valueOf(it) }.getOrNull() }
-                ?: ItemStatus.OWNED
+                val defaultItemStatus = defaultStatus
+                    .takeIf { it.isNotBlank() }
+                    ?.let { runCatching { ItemStatus.valueOf(it) }.getOrNull() }
+                    ?: ItemStatus.OWNED
 
-            val defaultParent = defaultParentItemId?.let { itemRepository.getItemById(it) }
-            _uiState.update { current ->
-                current.copy(
-                    item = null,
-                    name = "",
-                    description = "",
-                    brandId = defaultParent?.brandId ?: 0L,
-                    categoryId = 0L,
-                    coordinateId = defaultParent?.coordinateId,
-                    parentItemId = defaultParentItemId,
-                    includedInParentPrice = defaultParentItemId != null,
-                    children = emptyList(),
-                    legacyPriceCount = 0,
-                    status = defaultItemStatus,
-                    priority = ItemPriority.MEDIUM,
-                    imageUrls = emptyList(),
-                    imageUrlsToDelete = emptyList(),
-                    colors = emptyList(),
-                    seasons = emptyList(),
-                    style = null,
-                    size = null,
-                    sizeChartImageUrl = null,
-                    sizeChartImageUrls = emptyList(),
-                    source = null,
-                    pricesWithPayments = emptyList(),
-                    locationId = null,
-                    isLoading = false,
-                    isSaving = false,
-                    recoveredImport = false
-                )
+                val defaultParent = defaultParentItemId?.let { itemRepository.getItemById(it) }
+                _uiState.update { current ->
+                    current.copy(
+                        item = null,
+                        name = "",
+                        description = "",
+                        brandId = defaultParent?.brandId ?: 0L,
+                        categoryId = 0L,
+                        coordinateId = defaultParent?.coordinateId,
+                        parentItemId = defaultParentItemId,
+                        includedInParentPrice = defaultParentItemId != null,
+                        children = emptyList(),
+                        legacyPriceCount = 0,
+                        status = defaultItemStatus,
+                        priority = ItemPriority.MEDIUM,
+                        imageUrls = emptyList(),
+                        imageUrlsToDelete = emptyList(),
+                        colors = emptyList(),
+                        seasons = emptyList(),
+                        style = null,
+                        size = null,
+                        sizeChartImageUrl = null,
+                        sizeChartImageUrls = emptyList(),
+                        source = null,
+                        pricesWithPayments = emptyList(),
+                        locationId = null,
+                        isLoading = false,
+                        isSaving = false,
+                        recoveredImport = false
+                    )
+                }
+                importDraft?.let { draft ->
+                        _uiState.update { it.copy(name = draft.name, description = draft.description,
+                            brandId = com.lolita.app.data.file.TaobaoProductParser.matchBrand(it.brands.map { b -> b.name }, draft.brandAliases.orEmpty().ifEmpty { listOf(draft.brand) })?.let { name -> it.brands.first { b -> b.name == name }.id } ?: 0L,
+                            categoryId = it.categories.firstOrNull { c -> c.name.equals(draft.category.orEmpty(), ignoreCase = true) }?.id ?: 0L,
+                            sizeChartImageUrl = draft.sizeChartImagePaths.orEmpty().firstOrNull() ?: draft.sizeChartImagePath,
+                            sizeChartImageUrls = draft.sizeChartImagePaths.orEmpty().drop(1),
+                            size = draft.size.ifBlank { null }, source = "淘宝", imageUrls = draft.imagePaths,
+                            status = ItemStatus.WISHED) }
+                        hasUnsavedChanges = true
+                }
+                observeHierarchy(0L)
+                loadedIdentity = identity
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取服饰失败") }
             }
-            importDraft?.let { draft ->
-                    _uiState.update { it.copy(name = draft.name, description = draft.description,
-                        brandId = com.lolita.app.data.file.TaobaoProductParser.matchBrand(it.brands.map { b -> b.name }, draft.brandAliases.orEmpty().ifEmpty { listOf(draft.brand) })?.let { name -> it.brands.first { b -> b.name == name }.id } ?: 0L,
-                        categoryId = it.categories.firstOrNull { c -> c.name.equals(draft.category.orEmpty(), ignoreCase = true) }?.id ?: 0L,
-                        sizeChartImageUrl = draft.sizeChartImagePaths.orEmpty().firstOrNull() ?: draft.sizeChartImagePath,
-                        sizeChartImageUrls = draft.sizeChartImagePaths.orEmpty().drop(1),
-                        size = draft.size.ifBlank { null }, source = "淘宝", imageUrls = draft.imagePaths,
-                        status = ItemStatus.WISHED) }
-                    hasUnsavedChanges = true
-            }
-            observeHierarchy(0L)
         }
     }
 
@@ -911,31 +937,37 @@ class ItemEditViewModel(
     }
 
     fun updateName(name: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(name = name) }
     }
 
     fun updateDescription(description: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(description = description) }
     }
 
     fun updateBrand(brandId: Long) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(brandId = brandId) }
     }
 
     fun updateCategory(categoryId: Long) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(categoryId = categoryId) }
     }
 
     fun updateCoordinate(coordinateId: Long?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(coordinateId = coordinateId) }
     }
 
     fun updateParent(parentItemId: Long?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { current ->
             val parent = current.allItems.find { it.id == parentItemId }
@@ -948,6 +980,7 @@ class ItemEditViewModel(
     }
 
     fun updateIncludedInParentPrice(included: Boolean) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { current ->
             val parent = current.allItems.find { it.id == current.parentItemId }
@@ -957,25 +990,31 @@ class ItemEditViewModel(
     }
 
     fun updateStatus(status: ItemStatus) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         if (_uiState.value.includedInParentPrice || _uiState.value.pricesWithPayments.isNotEmpty()) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(status = status) }
     }
 
     fun updatePriority(priority: ItemPriority) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(priority = priority) }
     }
 
     fun addImage(url: String) {
-        hasUnsavedChanges = true
-        _uiState.update { current ->
-            if (current.imageUrls.size >= 5) current
-            else current.copy(imageUrls = current.imageUrls + url)
+        val current = _uiState.value
+        if (current.isSaving || current.isLoading || current.imageUrls.size >= 5) {
+            if (url !in draftImages()) ImageFileHelper.cleanupUnreferencedImages(listOf(url))
+            return
         }
+        importedImages.add(url)
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(imageUrls = it.imageUrls + url) }
     }
 
     fun removeImage(index: Int) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { current ->
             val mutableUrls = current.imageUrls.toMutableList()
@@ -988,9 +1027,11 @@ class ItemEditViewModel(
                 )
             }
         }
+        cleanupRemovedNewImages()
     }
 
     fun reorderImages(fromIndex: Int, toIndex: Int) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { current ->
             val mutableUrls = current.imageUrls.toMutableList()
@@ -1004,11 +1045,13 @@ class ItemEditViewModel(
     }
 
     fun updateColors(colors: List<String>) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(colors = colors) }
     }
 
     fun toggleSeason(season: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { current ->
             val updated = if (season in current.seasons) current.seasons - season else current.seasons + season
@@ -1017,21 +1060,28 @@ class ItemEditViewModel(
     }
 
     fun updateStyle(style: String?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(style = style) }
     }
 
     fun updateSource(source: String?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(source = source) }
     }
 
     fun updateSize(size: String?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(size = size) }
     }
 
     fun addSizeChartImage(url: String) {
+        if (_uiState.value.isSaving || _uiState.value.isLoading) {
+            if (url !in draftImages()) ImageFileHelper.cleanupUnreferencedImages(listOf(url))
+            return
+        }
         importedImages.add(url)
         hasUnsavedChanges = true
         _uiState.update { current ->
@@ -1041,6 +1091,7 @@ class ItemEditViewModel(
     }
 
     fun removeSizeChartImage(index: Int) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         val current = _uiState.value
         val images = (listOfNotNull(current.sizeChartImageUrl) + current.sizeChartImageUrls).toMutableList()
         if (index !in images.indices) return
@@ -1048,18 +1099,26 @@ class ItemEditViewModel(
         hasUnsavedChanges = true
         _pendingImageDeletions.update { it + removed }
         _uiState.update { it.copy(sizeChartImageUrl = images.firstOrNull(), sizeChartImageUrls = images.drop(1)) }
+        cleanupRemovedNewImages()
     }
 
     fun updateSizeChartImageUrl(url: String?) {
+        if (_uiState.value.isSaving || _uiState.value.isLoading) {
+            if (url != null && url !in draftImages()) ImageFileHelper.cleanupUnreferencedImages(listOf(url))
+            return
+        }
+        url?.let { importedImages.add(it) }
         hasUnsavedChanges = true
         val oldUrl = _uiState.value.sizeChartImageUrl
         if (oldUrl != null && url != oldUrl) {
             _pendingImageDeletions.update { it + oldUrl }
         }
         _uiState.update { it.copy(sizeChartImageUrl = url) }
+        cleanupRemovedNewImages()
     }
 
     fun updateLocation(locationId: Long?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         _uiState.update { it.copy(locationId = locationId) }
         hasUnsavedChanges = true
     }
@@ -1069,9 +1128,21 @@ class ItemEditViewModel(
         return state.name.isNotBlank() && state.brandId != 0L && state.categoryId != 0L
     }
 
+    // The VM owns persistence; a recreated screen may cancel its await without cancelling the save.
+    private var saveTask: Deferred<Result<Long>>? = null
+
     suspend fun saveItem(): Result<Long> {
+        val task = saveTask?.takeIf { it.isActive } ?: viewModelScope.async { saveItemDraft() }
+            .also { saveTask = it }
+        return task.await()
+    }
+
+    private suspend fun saveItemDraft(): Result<Long> {
         val state = _uiState.value
         if (state.isLoading) return Result.failure(Exception("正在读取服饰"))
+        if (state.loadError != null || (requestedIdentity?.itemId?.let { it > 0 } == true && state.item == null)) {
+            return Result.failure(Exception("原记录尚未读取完成，暂时无法保存"))
+        }
         if (state.isSaving) return Result.failure(Exception("正在保存中"))
         if (state.recoveredImport && !hasUnsavedChanges && state.item != null) {
             return Result.success(state.item.id)
@@ -1151,15 +1222,12 @@ class ItemEditViewModel(
             } else {
                 itemRepository.insertItem(item)
             }
-            ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
+            // Store the committed identity before any further suspension.
+            _uiState.update { it.copy(item = item.copy(id = savedItemId)) }
+            ImageFileHelper.cleanupUnreferencedImages(
+                importedImages + state.imageUrlsToDelete + _pendingImageDeletions.value
+            )
             importedImages.clear()
-            // Delete pending images after successful save
-            state.imageUrlsToDelete.forEach { path ->
-                try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
-            }
-            _pendingImageDeletions.value.forEach { path ->
-                try { ImageFileHelper.deleteImage(path) } catch (_: Exception) { }
-            }
             _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
             val savedItem = itemRepository.getItemById(savedItemId) ?: item.copy(id = savedItemId)
@@ -1174,14 +1242,29 @@ class ItemEditViewModel(
             }
             Result.success(savedItemId)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             _uiState.update { it.copy(isSaving = false) }
             Result.failure(e)
         }
     }
 
-    override fun onCleared() {
+    private fun draftImages(): Set<String> = with(_uiState.value) {
+        (imageUrls + listOfNotNull(sizeChartImageUrl) + sizeChartImageUrls).toSet()
+    }
+
+    private fun cleanupRemovedNewImages() {
+        val removed = importedImages - draftImages()
+        importedImages.removeAll(removed)
+        ImageFileHelper.cleanupUnreferencedImages(removed)
+    }
+
+    fun cleanupNewImages() {
         ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
         importedImages.clear()
+    }
+
+    override fun onCleared() {
+        cleanupNewImages()
         super.onCleared()
     }
 

@@ -44,29 +44,31 @@ fun MannequinScreen(
     var leaveAfterCancel by remember { mutableStateOf(false) }
     var leaveAfterDiscard by remember { mutableStateOf(false) }
     val blockedCallback by rememberUpdatedState(onNavigationBlockedChanged)
-    SideEffect { blockedCallback(state.navigationBlocked || state.isConfiguring) }
+    SideEffect { blockedCallback(state.navigationBlocked) }
     DisposableEffect(Unit) { onDispose { blockedCallback(false) } }
     val navigateBack = {
         when {
-            state.isSaving || state.isConfiguring -> Unit
+            state.backUnavailable -> Unit
             state.isGenerating -> { leaveAfterCancel = true; cancel = true }
             state.previewPath != null -> { leaveAfterDiscard = true; discard = true }
-            else -> onNavigateBack()
+            else -> viewModel.requestDeparture()
         }
     }
-    BackHandler(state.navigationBlocked || state.isConfiguring) { navigateBack() }
-    LaunchedEffect(state.saved) { if (state.saved) onNavigateBack() }
-    LaunchedEffect(state.isGenerating, leaveAfterCancel, cancel) {
-        if (leaveAfterCancel && !state.isGenerating && !cancel) {
-            leaveAfterCancel = false
-            if (state.previewPath != null) { leaveAfterDiscard = true; discard = true } else onNavigateBack()
+    BackHandler(state.navigationBlocked) { navigateBack() }
+    LaunchedEffect(state.readyToLeave) { if (state.readyToLeave) onNavigateBack() }
+    LaunchedEffect(state.isLeaving, state.isGenerating, state.previewPath) {
+        // Completion may win the race with cancel-and-return. A newly delivered
+        // preview still requires a discard decision before its entry can depart.
+        if (state.isLeaving && !state.isGenerating && state.previewPath != null) {
+            leaveAfterDiscard = true
+            discard = true
         }
     }
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             GradientTopAppBar(title = { Text("正面人台图（实验）", maxLines = 2) }, navigationIcon = {
-                IconButton(onClick = navigateBack, enabled = !state.isSaving && !state.isConfiguring) {
+                IconButton(onClick = navigateBack, enabled = !state.backUnavailable) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
                 }
             })
@@ -191,14 +193,13 @@ fun MannequinScreen(
     if (zoom && state.previewPath != null) FullScreenImageViewer(listOf(state.previewPath!!), onDismiss = { zoom = false })
     if (cancel) AlertDialog(onDismissRequest = { cancel = false; leaveAfterCancel = false }, title = { Text("取消等待？") },
         text = { Text("服务端可能仍在处理并计费，应用不会自动重试。") },
-        confirmButton = { TextButton(onClick = { cancel = false; viewModel.cancelGeneration() }) { Text("取消等待") } },
+        confirmButton = { TextButton(onClick = { cancel = false; viewModel.cancelGeneration(leavePage = leaveAfterCancel); leaveAfterCancel = false }) { Text("取消等待") } },
         dismissButton = { TextButton(onClick = { cancel = false; leaveAfterCancel = false }) { Text("继续等待") } })
-    if (discard) AlertDialog(onDismissRequest = { discard = false; leaveAfterDiscard = false }, title = { Text("放弃未保存预览？") },
+    if (discard) AlertDialog(onDismissRequest = { discard = false; leaveAfterDiscard = false; viewModel.cancelDeparture() }, title = { Text("放弃未保存预览？") },
         text = { Text("这张预览尚未添加到裙子图片，放弃后将清理。原图片保留。") },
         confirmButton = { TextButton(onClick = {
-            discard = false; viewModel.discardPreview(); zoom = false
-            if (leaveAfterDiscard) onNavigateBack()
+            discard = false; viewModel.discardPreview(leavePage = leaveAfterDiscard); zoom = false
             leaveAfterDiscard = false
         }) { Text(if (leaveAfterDiscard) "放弃并返回" else "确认放弃") } },
-        dismissButton = { TextButton(onClick = { discard = false; leaveAfterDiscard = false }) { Text("继续核对") } })
+        dismissButton = { TextButton(onClick = { discard = false; leaveAfterDiscard = false; viewModel.cancelDeparture() }) { Text("继续核对") } })
 }

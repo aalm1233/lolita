@@ -29,10 +29,11 @@ data class MannequinUiState(
     val globalGenerating: Boolean = false,
     val isSaving: Boolean = false,
     val saved: Boolean = false,
+    val isLeaving: Boolean = false,
     val phase: TryOnGenerationPhase? = null,
     val error: String? = null
 ) {
-    val busy get() = isGenerating || globalGenerating || isSaving || isConfiguring
+    val busy get() = isGenerating || globalGenerating || isSaving || isConfiguring || isLeaving
     val selectionIssue: String? get() = when {
         item == null -> "这件裙子已被删除或无法读取"
         !supportsMannequin(category) -> "仅支持服装分类中的 JSK、OP、SK 和明确裙类"
@@ -41,7 +42,9 @@ data class MannequinUiState(
     }
     val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && previewPath == null && !saved && selectionIssue == null
     val canSave get() = previewPath != null && item != null && !busy && !isLoading && !loadFailed && !saved
-    val navigationBlocked get() = isGenerating || isSaving || previewPath != null
+    val navigationBlocked get() = isLoading || isConfiguring || isLeaving || isGenerating || isSaving || previewPath != null
+    val backUnavailable get() = isLoading || isSaving || isConfiguring || isLeaving
+    val readyToLeave get() = isLeaving && !isLoading && !isGenerating && !isSaving && !isConfiguring && previewPath == null
 }
 
 /** Owns only the uncommitted preview; attaching it always reads the latest Item in a Room transaction. */
@@ -162,7 +165,22 @@ class MannequinViewModel @JvmOverloads constructor(
             }
         }
     }
-    fun cancelGeneration() { generationJob?.cancel() }
+    fun cancelGeneration(leavePage: Boolean = false) {
+        if (leavePage && !state.value.isLoading && !state.value.isSaving && !state.value.isConfiguring) {
+            // Publish the departure before cancellation can release the global gate.
+            state.update { it.copy(isLeaving = true) }
+        }
+        generationJob?.cancel()
+    }
+    fun requestDeparture() {
+        val current = state.value
+        if (!current.backUnavailable && !current.isGenerating && current.previewPath == null) {
+            state.update { it.copy(isLeaving = true) }
+        }
+    }
+    fun cancelDeparture() {
+        if (!state.value.isSaving && !state.value.saved) state.update { it.copy(isLeaving = false) }
+    }
     fun savePreview() {
         val current = state.value
         if (!current.canSave) return
@@ -172,7 +190,7 @@ class MannequinViewModel @JvmOverloads constructor(
             try {
                 appendImage(itemId, path)
                 clearStoredPreview()
-                state.update { it.copy(previewPath = null, saved = true) }
+                state.update { it.copy(previewPath = null, saved = true, isLeaving = true) }
             } catch (failure: Exception) {
                 state.update { it.copy(error = safeMessage(failure, "图片添加失败，请核对裙子是否仍存在后重试")) }
             } finally {
@@ -181,8 +199,9 @@ class MannequinViewModel @JvmOverloads constructor(
             }
         }
     }
-    fun discardPreview() {
-        if (state.value.isSaving || state.value.isGenerating) return
+    fun discardPreview(leavePage: Boolean = false) {
+        if (state.value.isLoading || state.value.isSaving || state.value.isGenerating) return
+        if (leavePage) state.update { it.copy(isLeaving = true) }
         releasePreview()
     }
     private fun releasePreview() {

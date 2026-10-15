@@ -155,7 +155,7 @@ fun LolitaNavHost(
         viewModel(viewModelStoreOwner = entry, factory = factory)
     }
     val mannequinState = mannequinModel?.uiState?.collectAsState()?.value
-    val mannequinBlocked = mannequinState?.let { it.isLoading || it.navigationBlocked || it.isConfiguring } == true
+    val mannequinBlocked = mannequinState?.navigationBlocked == true
     LaunchedEffect(openQuickOutfit, tryOnGenerating, mannequinBlocked) {
         if (openQuickOutfit && !tryOnGenerating && !mannequinBlocked) {
             navController.navigate(Screen.QuickOutfitLog.route) { launchSingleTop = true }
@@ -222,7 +222,7 @@ fun LolitaNavHost(
                         selected = selected,
                         onClick = {
                             if (com.lolita.app.di.AppModule.tryOnGenerator().isGenerating.value ||
-                                mannequinModel?.uiState?.value?.let { it.isLoading || it.navigationBlocked || it.isConfiguring } == true) return@NavigationBarItem
+                                mannequinModel?.uiState?.value?.navigationBlocked == true) return@NavigationBarItem
                             navController.navigate(item.screen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
@@ -696,7 +696,11 @@ fun LolitaNavHost(
                 val factory = remember(entry) {
                     viewModelFactory { initializer { createMannequinViewModel(createSavedStateHandle()) } }
                 }
-                MannequinScreen(onNavigateBack = { navController.popBackStack() },
+                MannequinScreen(onNavigateBack = {
+                    // A departing page may remain composed during an exit animation.
+                    // Its completion must never pop a newer destination.
+                    if (navController.currentBackStackEntry?.id == entry.id) navController.popBackStack()
+                },
                     viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
             }
 

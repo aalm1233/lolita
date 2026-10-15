@@ -263,7 +263,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=102, versionName="2.46.3"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=103, versionName="2.46.4"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -314,6 +314,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `Price.shipping` 已包含在 totalPrice 中；阶段金额与实际付款分离。新输入最多两位小数，计算使用 `OrderAccounting` 整数分，历史 Double 原值不改写。
 - `OrderLedger` 在 domain/usecase 中集中校验、事务记账、状态刷新及提交后的提醒恢复；`OrderRepository` 为薄封装。修改价格和阶段不得重建实付，删除阶段不得减少未付余额。
 - 完整账本（`TRACKED`）付清=已拥有，未付清=待付款；定金尾款仍用待补尾款文案。有当前订单时服饰编辑不能手动覆盖状态；无价格不能默认零元付清。
+- 服饰顶部“待付款”筛选使用 `filterPendingPaymentOnly` / `togglePendingPaymentOnly`，同时包含 `PENDING_PAYMENT` 和 `PENDING_BALANCE`，并显示主件及小物；OWNED/WISHED/PENDING_REVIEW不纳入。搜索、品牌、分类组、季节、风格、颜色及排序继续叠加，列表/网格/画廊同源；账本付清或撤销实付后通过Room Flow实时移除/恢复，共价小物同步。仅统一筛选入口，保留各服饰细分状态，不迁移实体或改写账本。`PendingPaymentFilterTest` 使用独立内存Room与UUID设置，4项真实ViewModel/Compose回归覆盖包含/取消、属性搜索与视图、付清撤销及共价小物、实际顶部文案与选中状态；记录见 `docs/pending-payment-filter-2026-10-15.md`。
 - Item.parentItemId 与 includedInParentPrice 支持一层小物关系，独立于 Coordinate；禁止自挂、循环、多层关系与删除有小物的主件。共用价格的小物继承主件状态，独立计价的小物单独记账。
 - 价格页只允许设置/编辑唯一当前订单；加号用于阶段和实付。主件编辑与详情支持搜索挂载、新建、解绑；列表默认主件，搜索/筛选保留小物。
 - 价格与付款页先展示状态、订单金额、实付和余额；价格明细、记账和购买资料说明可展开，历史未知余额、日期缺失、只读及超额提示必须常显。`PurchaseRecordNotice` 继续复用于价格/付款编辑，展开只影响解释文案。付款计划、实付和保留的旧未付记录采用紧凑分组，每条仍为独立 Lazy item，分别使用 `stage-`、`payment-`、`legacy-payment-` key，并保留原回归 testTag；只有组头显示 `SectionHeader`，首尾圆角与分隔线消费皮肤令牌。

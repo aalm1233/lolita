@@ -408,9 +408,9 @@ fun ItemListScreen(
                         )
                     }
                     FilterChip(
-                        selected = uiState.filterPendingBalanceOnly,
-                        onClick = { viewModel.togglePendingBalanceOnly() },
-                        label = { Text("待补尾款", fontSize = 12.sp) },
+                        selected = uiState.filterPendingPaymentOnly,
+                        onClick = { viewModel.togglePendingPaymentOnly() },
+                        label = { Text("待付款", fontSize = 12.sp) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = filterAccent.copy(alpha = 0.15f),
                             selectedLabelColor = filterAccent

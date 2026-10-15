@@ -15,6 +15,34 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class SeedreamImageApiTest {
+    @Test fun explicitServiceErrorsAlongsideValidPngNeverCreatePreviewOrRetry() = runBlocking {
+        // A real 32x48 PNG; failure must come from the error marker, not broken pixels.
+        val png = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAwCAIAAAD/zu84AAAAQ0lEQVR4nO3RsQ3AMAwEMcX77+yMcG7UkQO8gNM3c2fTWV0fBx74QZIoSZQkShIliZJESaIkUZIoSZQkShIlidJ6oh+XPgFfIViZugAAAABJRU5ErkJggg=="
+        val rows = listOf(
+            """{"error":{"code":"ServiceFailure"},"data":[{"b64_json":"$png"}]}""",
+            """{"data":[{"error":{"code":"ContentPolicyViolation"},"b64_json":"$png"}]}"""
+        )
+        for (body in rows) {
+            val root = kotlin.io.path.createTempDirectory("seedream-error-").toFile()
+            try {
+                val source = java.io.File(root, "source.jpg").apply { writeBytes(byteArrayOf(1)) }
+                var requests = 0
+                var saves = 0
+                val api = SeedreamImageApi { requests++; Transport(body = body) }
+                val generator = com.lolita.app.data.mannequin.MannequinGenerator(
+                    findItem = { com.lolita.app.data.local.entity.Item(id = 11, name = "裙子", description = "", brandId = 1, categoryId = 1, status = com.lolita.app.data.local.entity.ItemStatus.WISHED, imageUrls = listOf(source.absolutePath)) },
+                    findCategory = { com.lolita.app.data.local.entity.Category(id = 1, name = "OP") },
+                    readCredentials = { ImageGenerationCredentials(ImageGenerationProvider.SEEDREAM, "test-key") },
+                    prepareImages = { listOf(byteArrayOf(1), byteArrayOf(2)) },
+                    generateImage = { credentials, images, prompt -> api.generate(credentials.apiKey, images, prompt) },
+                    savePreview = { saves++; java.io.File(root, "preview.png").apply { writeBytes(it) }.absolutePath }, discardPreview = {})
+                val failure = runCatching { generator.generate(com.lolita.app.domain.model.MannequinRequest(11, source.absolutePath)) }.exceptionOrNull()
+                assertNotNull("HTTP200中显式错误必须优先于PNG结果", failure)
+                assertEquals(1, requests); assertEquals(0, saves)
+                assertFalse(java.io.File(root, "preview.png").exists())
+            } finally { root.deleteRecursively() }
+        }
+    }
     private open class Transport(val code: Int = 200, val body: String = """{"model":"doubao-seedream-5-0-pro-260628","data":[{"b64_json":"aW1hZ2U="}],"usage":{"generated_images":1}}""") : HttpURLConnection(URL("https://ark.cn-beijing.volces.com/api/v3/images/generations")) {
         val uploaded = ByteArrayOutputStream()
         @Volatile var closed = false

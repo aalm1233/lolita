@@ -10,7 +10,7 @@
 
 首次请求被账号安全体验模式的用量上限拦截（HTTP429 SetLimitExceeded），没有返回图片。用户自行调整限制并明确允许再测后，第二次请求HTTP200，76.29秒返回1024×1536 PNG；2张输入、1张输出。没有自动重试。请求使用现有人台模板和测试资料113号虞美人OP，与先前探索相同提示词；详细参数、来源SHA与结果SHA见[验证记录](seedream-live-verification-2026-10-16.json)。实际金额以火山账单为准，未读取用户账单。
 
-样片保留黑色长袖、奶油领片、侧腰结和大花裙摆，完整人台与底座可见；印花和刺绣细节仍有重绘，继续作为需人工确认的实验效果图。只测这一张，未宣称所有服饰或小物已验证。
+样片保留黑色长袖、奶油领片和大花裙摆主体，完整人台与底座可见；腰结位置、印花和刺绣细节仍有重绘，原图为正背拼图，可能混入背面信息，继续作为需人工确认的实验效果图。只测这一张，未宣称所有服饰或小物已验证。
 
 ![真实Seedream人台图](visuals/2026-10-16-seedream/poppy-front.png)
 
@@ -19,3 +19,5 @@
 JVM覆盖官方请求字段、有序参考图、错误/重定向/空数据/URL-only拒绝、取消及零自动重试；生成器覆盖不可变服务/Key、实际模型入历史、页面服务变更上传前拒绝。独立AVD覆盖真实Keystore双Key隔离与旧GPT保全、双VM同步、生成/预览期间配置禁止、原试衣/人台/导航行为。七皮肤浅暗320dp/两倍字体服务选择截图来自实际Compose，受控Key不是用户密钥。
 
 官方文档：[图像API](https://docs.volcengine.com/docs/ark/image-generation-api?lang=zh)、[模型说明](https://docs.volcengine.com/docs/ark/seedream-5-0-pro?lang=zh)、[模型价格](https://docs.volcengine.com/docs/ark/model-pricing?lang=zh)。
+
+独立复核发现HTTP200同时带错误标记和有效PNG时应优先判失败；新增真实有效PNG回归，覆盖顶层及单图error字段，断言仅一次请求且不产生预览/保存。修复前失败，修复后纳入完整回归。

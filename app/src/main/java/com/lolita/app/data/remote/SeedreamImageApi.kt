@@ -85,9 +85,13 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
         check(conn.contentLengthLong <= MAX_RESPONSE_BYTES) { "生成结果超出大小限制" }
         val json = conn.inputStream.use { readBounded(it, MAX_RESPONSE_BYTES).toString(Charsets.UTF_8) }
         return try {
-            val data = JsonParser.parseString(json).asJsonObject["data"].asJsonArray
+            val response = JsonParser.parseString(json).asJsonObject
+            check(!response.has("error") || response["error"].isJsonNull)
+            val data = response["data"].asJsonArray
             check(data.size() == 1)
-            val encoded = data[0].asJsonObject["b64_json"].asString
+            val row = data[0].asJsonObject
+            check(!row.has("error") || row["error"].isJsonNull)
+            val encoded = row["b64_json"].asString
             check(encoded.isNotBlank() && encoded.length <= 44 * 1024 * 1024)
             Base64.getDecoder().decode(encoded).also { check(it.isNotEmpty() && it.size <= MAX_IMAGE_BYTES) }
         } catch (error: Exception) {

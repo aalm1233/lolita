@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-15",
+  "tool": "image_gen.imagegen (built-in)",
+  "model_reported": false,
+  "paid_api_tested": false,
+  "base_prompt": "Use case: compositing.\nEdit image 1, the canonical empty warm-white tailoring mannequin, by dressing it in only the main dress or skirt visible in image 2, the user's garment reference. Produce ONE frontal catalog image.\nImage 1 is the edit target and fixes the full portrait 2:3 frame, camera, pale-gray seamless studio, diffuse lighting, upright headless armless adult dress form, silver neck cap, thin support pole and round silver base. Preserve these proportions and positions as closely as possible. Do not crop any hem, sleeve or stand. Do not lengthen the bodice to fill the frame.\nImage 2 is the only authority for garment identity. Preserve its real color, neckline, straps, sleeve silhouette, waist height relative to the bodice, skirt length and width, layer count, lace and trim placements, fastening, fabric and print design. Fit the garment naturally to the same mannequin, using only invisible internal skirt support. Sleeves must hang naturally without human arms or hands.\nIf the source shows multiple views or a product board, use the front view of the main dress/skirt only. Do not combine front and back or copy separate products. Retain decorations visibly belonging to the dress, but exclude separate headwear, wigs, necklaces, bags, parasols, wrist cuffs, gloves, shoes, stockings, additional outerwear and hand-held props. For a skirt-only source, leave the white upper torso bare; do not invent a matching top.\nRemove the original mannequin or person, source background, watermark, logo, border, layout and text. No face, head, hair, human skin, arms, hands or legs. No extra garment, no new accessories, no added jewels, no text, no labels, no collage, no side or back view.\nDo not redesign, beautify by adding bows or lace, symmetrize distinctive asymmetric garment construction, or replace detailed prints with generic motifs. Where a tiny detail is not readable, keep it visually restrained rather than inventing elaborate decoration. Only one garment on one fixed front mannequin.",
+  "template": "docs/visuals/2026-10-15-mannequin-front-template.png",
+  "asset": "app/src/main/assets/mannequin/front-template.png",
+  "calls": [
+    {
+      "id": "poppy",
+      "item_id": 113,
+      "source": "/tmp/lolita-mannequin-round3-20261015/item-113.png",
+      "original": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-083324e9-33e4-4acc-b85f-c686f00684e2.png",
+      "output": "docs/visuals/2026-10-15-mannequin-tests/poppy-front.png",
+      "additional_instruction": "",
+      "seconds": 37.6,
+      "verdict": "可供人工预览；主体长袖、奶油领片、大花保留，印花和腰结重绘。",
+      "sha256": "cf9fdfe7dc36522b031f9f276587620034207f0c4d01595dd38f5760eadca9a1",
+      "width": 1024,
+      "height": 1536,
+      "source_sha256": "13fec7a753ae0abb2a166a99efa408066dfec150b730ee7e4f99abe0f2ff625a",
+      "source_zip_entry": "images/a4f5c533-4698-411c-ae5e-1f92f3521f20.png"
+    },
+    {
+      "id": "cake_first",
+      "item_id": 86,
+      "source": "/tmp/lolita-mannequin-round3-20261015/item-86.png",
+      "original": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-d737efc6-5d21-4258-b706-af1b14f7faab.png",
+      "output": "docs/visuals/2026-10-15-mannequin-tests/cake-with-unwanted-cuffs.png",
+      "additional_instruction": "",
+      "seconds": 60.6,
+      "verdict": "不接受直接保存：混入原图明确排除的独立手袖，保留作失败证据。",
+      "sha256": "7415fc0baecdb3e63f0db004537f1905b6f5ebae39c30fdda67e3c77585bfb02",
+      "width": 1024,
+      "height": 1536,
+      "source_sha256": "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+      "source_zip_entry": "images/61c3816d-a543-4199-8e74-f68c0b9c3964.png"
+    },
+    {
+      "id": "insect",
+      "item_id": 153,
+      "source": "/tmp/lolita-mannequin-round3-20261015/item-153.jpg",
+      "original": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-69c187e6-f04e-44df-b58c-6de0c0b71026.png",
+      "output": "docs/visuals/2026-10-15-mannequin-tests/insect-front.png",
+      "additional_instruction": "",
+      "seconds": 47.4,
+      "verdict": "可供人工预览；真人、头饰与手被移除，泡袖和三层裙体保留，细印花重绘。",
+      "sha256": "505dd5c5c56279b36671003ec613f368969893c171b2ec05810cddcb6f5aedc5",
+      "width": 1024,
+      "height": 1536,
+      "source_sha256": "3b6f9548ddb12ae87b23cdaec7ff7e4e244db4b605ce4dab68a913cb63afa815",
+      "source_zip_entry": "images/5f74f742-52b5-4b24-93e4-a8177e7c0cff.jpg"
+    },
+    {
+      "id": "cake_corrected",
+      "item_id": 86,
+      "source": "/tmp/lolita-mannequin-round3-20261015/item-86.png",
+      "original": "/Users/dengtong/.codex/generated_images/01a13df8-ce57-7dc2-b30a-8630993e5ee4/exec-9745e0be-820a-42e1-ab87-38d28ad88a4e.png",
+      "output": "docs/visuals/2026-10-15-mannequin-tests/cake-front-corrected.png",
+      "additional_instruction": "Additional user instruction about the garment: 原图文字明确写着“OP不会包含手袖”。请只展示连衣裙，排除另外戴在手腕上的独立手袖/腕饰。连衣裙本身的蓝色袖子和袖端简洁米白蕾丝保留，但去掉最末端围着木手的巨大花朵蝴蝶结手袖，去掉手及所有腕饰。",
+      "seconds": 57.2,
+      "verdict": "补充说明后可供人工预览；独立手袖已移除，保留裙子袖端蕾丝，心形与花边细节仍重绘。",
+      "sha256": "d707ff79935e4a5720be5fa174135b2b9a612d466e201286a0e2deace8402e8b",
+      "width": 1024,
+      "height": 1536,
+      "source_sha256": "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+      "source_zip_entry": "images/61c3816d-a543-4199-8e74-f68c0b9c3964.png"
+    }
+  ],
+  "inspected_not_generated": [
+    {
+      "item_id": 151,
+      "source": "/tmp/lolita-mannequin-round3-20261015/item-151.jpg",
+      "reason": "原图裁切、侧向并混入独立头饰，不能验证缺失裙侧和完整结构。"
+    }
+  ],
+  "conclusion": "有条件接受为实验效果图：必须保留原图、可补充说明，先预览确认再追加，不自动存图、不替换主图；不能证明正式API质量。",
+  "template_sha256": "7a2c57ff168e8232ec4c312fbda1818f63fefffb8bfadc97d0adc76d2ba49eea"
+}

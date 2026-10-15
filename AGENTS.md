@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=106, versionName="2.48.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=107, versionName="2.49.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -391,4 +391,13 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。
 - Room26→27仅增加 `TryOnResult`/`TryOnDao`，结果由薄 `TryOnRepository` 独立持久化，原服饰删除后保留名称/ID快照，不改变账本/穿搭/归属。生成PNG需完整尾块、可解码及大小/尺寸校验，取消或失败清理未保存文件；删除复用图片引用保护。
 - 备份格式7/schema27完整支持试衣历史JSON/ZIP/CSV/预览/恢复；旧1–6格式缺失历史数组视为空。新增DAO同步接LolitaDatabase、Repository和AppModule。
-- 回归包含TryOn领域/API/Generator JVM测试及独立AVD上的Infrastructure/Persistence/ViewModel/Screen测试，真实Compose核对七皮肤浅暗、大字、Key遮罩与图片缩放。统一人台仍仅探索样片；2026-10-15用户选择只保留正面、停止三视图方向。第二轮共用空白模板独立生成花鸟龙月与暴食魔女JSK，仍有腰线与纹样重绘；不替代原图，不声称正式API已实测。说明见 `docs/virtual-mannequin-exploration-2026-10-15.md`，完整提示词与来源见 `docs/virtual-mannequin-front-round2-2026-10-15.json`。
+- 回归包含TryOn领域/API/Generator JVM测试及独立AVD上的Infrastructure/Persistence/ViewModel/Screen测试，真实Compose核对七皮肤浅暗、大字、Key遮罩与图片缩放。2.48.0阶段的人台仅为探索样片；用户选择只保留正面、停止三视图，后续正面实验功能见2.49.0章节。旧样片仍有腰线与纹样重绘，不替代原图，不声称正式API已实测；说明见 `docs/virtual-mannequin-exploration-2026-10-15.md`，完整提示词与来源见 `docs/virtual-mannequin-front-round2-2026-10-15.json`。
+
+## 裙子正面人台图实验（2.49.0）
+
+- JSK/OP/SK及固定中文裙类、CLOTHING分组且有图片的详情进入 `Screen.Mannequin(itemId)`，不限制拥有状态，不按商品名猜类别。仅选一张已有参考图，可填200字内补充说明；不做三视图。固定空白模板 `assets/mannequin/front-template.png` 来源与SHA见 `docs/mannequin-front-evaluation-2026-10-15.json`，三件四次内置试验包含独立手袖误混入及说明纠正记录，不能代替付费API实测。
+- `MannequinGenerator` 与 `TryOnGenerator` 共用 `ImageGenerationGate.process`、API实例和加密Key。上传前复核当前Item/Category/原图归属；模板和原图共两张，经既有EXIF/尺寸/白底归一化。无自动付费重试，取消不承诺停止服务端计费。
+- 独立 `MannequinViewModel/Screen` 持有预览，完整Fit/放大后明确“添加到裙子图片”才保存；未处理预览不能再次生成。`ItemRepository.appendGeneratedImage` 强制Room事务读取最新行，只更新图片列表/修改时间，幂等追加到末尾，保留原主图顺序与最新其他字段，删除后拒绝保存。无新实体、schema或备份格式，已追加图片沿用现有Item导出/恢复/删除清理；不建TryOnResult历史。
+- SavedState只存Item身份、参考图、说明和待保存预览路径；恢复须校验本应用images目录、精确绝对路径、完整PNG/尺寸/解码及Item身份，不接管或删除被拒路径。保存任务独立于UI等待；清理通过引用保护，删除Item在事务内取最新图片集合，防旧快照遗漏新图。
+- NavHost在内容组合前观察同一个entry VM，恢复/生成/保存/待处理预览及离开状态均阻止底栏和快捷穿搭。系统/顶栏返回在恢复未完成时禁用；取消或保存先完成原entry离开，再消费排队快捷意图，pop按entry身份保护。Key配置与试衣共用遮罩对话框，不回填旧Key。
+- 回归为 `MannequinRequestTest`、`MannequinGeneratorTest`、独立AVD的 `MannequinInfrastructureTest/MannequinPersistenceTest/MannequinApplicationCleanupTest` 和 `MannequinViewModelTest/MannequinScreenTest/MannequinDetailEntryTest/MannequinNavigationTest`；真实Room校验并发最新字段、幂等追加、旧快照删除、ZIP图片顺序与原图保全，七皮肤浅暗320dp/2倍字体及受影响试衣回归。实现与验证见 `docs/mannequin-front-implementation-2026-10-15.md`。

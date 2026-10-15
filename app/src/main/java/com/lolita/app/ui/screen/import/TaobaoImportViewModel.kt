@@ -34,6 +34,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -122,6 +124,32 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     private val _uiState = MutableStateFlow(TaobaoImportUiState())
     val uiState: StateFlow<TaobaoImportUiState> = _uiState.asStateFlow()
 
+    // Only files copied during this import are ours to discard. Persisted/shared paths
+    // are protected by ImageFileHelper's database reference check.
+    private val draftImages = mutableSetOf<String>()
+    private var imageGeneration = 0L
+    private val imageRequests = mutableMapOf<Int, Long>()
+
+    private fun releaseDraftImages() {
+        imageGeneration++
+        imageRequests.clear()
+        val paths = draftImages.toList()
+        draftImages.clear()
+        ImageFileHelper.cleanupUnreferencedImages(paths)
+    }
+
+    private fun releaseUnusedDraftImages() {
+        val retained = _uiState.value.importItems.mapNotNull { it.imageUrl }.toSet()
+        val removed = draftImages.filter { it !in retained }
+        draftImages.removeAll(removed.toSet())
+        ImageFileHelper.cleanupUnreferencedImages(removed)
+    }
+
+    override fun onCleared() {
+        releaseDraftImages()
+        super.onCleared()
+    }
+
     init {
         // 合并品牌和分类列表的加载，避免竞态
         viewModelScope.launch {
@@ -137,7 +165,8 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     }
 
     fun onFileSelected(uris: List<Uri>) {
-        if (uris.isEmpty()) return
+        if (uris.isEmpty() || _uiState.value.currentStep == ImportStep.IMPORTING) return
+        releaseDraftImages()
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -300,12 +329,14 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                 // 等待 Flow 更新品牌和分类列表
                 val brands = brandRepository.getAllBrands().first()
                 val categories = categoryRepository.getAllCategories().first()
-                _uiState.value = _uiState.value.copy(
-                    brands = brands,
-                    categories = categories,
-                    isLoading = false
-                )
-                buildDetailItems()
+                withContext(Dispatchers.Main.immediate) {
+                    _uiState.value = _uiState.value.copy(
+                        brands = brands,
+                        categories = categories,
+                        isLoading = false
+                    )
+                    buildDetailItems()
+                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -337,7 +368,9 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                 val fullyPaid = order.orderStatus == "交易成功"
                 pieces.forEachIndexed { pieceIndex, (line, unit, item) ->
                     if ("${order.orderId}:$line" in _uiState.value.selectedItems) {
-                        val amountPaid = if (fullyPaid) paid[pieceIndex] else 0.0
+                        // Fulfilment/refund status is not evidence of zero payment. Keep
+                        // the exported amount and let the mandatory financial review confirm it.
+                        val amountPaid = paid[pieceIndex]
                         val merchandise = if (fullyPaid && paid[pieceIndex] >= shipping[pieceIndex]) importSubtract(paid[pieceIndex], shipping[pieceIndex]) else item.price
                         importItems += ImportItemState(
                             originalItem = item, name = cleanItemName(item.name),
@@ -351,6 +384,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                     }
                 }
             }
+            releaseDraftImages()
             _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL,
                 importItems = autoMatchDepositBalance(importItems), currentItemIndex = 0)
         } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "金额解析失败") }
@@ -364,10 +398,14 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     }
 
     fun goBackToSelect() {
-        _uiState.value = _uiState.value.copy(currentStep = ImportStep.SELECT, missingItems = emptyList())
+        if (_uiState.value.currentStep == ImportStep.IMPORTING) return
+        releaseDraftImages()
+        _uiState.value = _uiState.value.copy(currentStep = ImportStep.SELECT,
+            missingItems = emptyList(), importItems = emptyList())
     }
 
     fun updateImportItem(index: Int, update: (ImportItemState) -> ImportItemState) {
+        if (_uiState.value.currentStep == ImportStep.IMPORTING) return
         val items = _uiState.value.importItems.toMutableList()
         if (index in items.indices) {
             val old = items[index]
@@ -375,6 +413,10 @@ class TaobaoImportViewModel @JvmOverloads constructor(
             val moneyChanged = old.price != changed.price || old.shipping != changed.shipping || old.paidAmount != changed.paidAmount || old.purchaseDate != changed.purchaseDate || old.manualBalance != changed.manualBalance
             items[index] = if (moneyChanged) changed.copy(financialConfirmed = false) else changed
             _uiState.value = _uiState.value.copy(importItems = items)
+            if (old.imageUrl != changed.imageUrl) {
+                imageRequests[index] = (imageRequests[index] ?: 0L) + 1L
+                releaseUnusedDraftImages()
+            }
         }
     }
 
@@ -383,12 +425,26 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     }
 
     fun onLocalImageSelected(itemIndex: Int, uri: Uri?) {
-        if (uri == null || itemIndex < 0) return
-        viewModelScope.launch(Dispatchers.IO) {
+        if (uri == null || _uiState.value.currentStep != ImportStep.DETAIL ||
+            itemIndex !in _uiState.value.importItems.indices) return
+        val generation = imageGeneration
+        val request = (imageRequests[itemIndex] ?: 0L) + 1L
+        imageRequests[itemIndex] = request
+        viewModelScope.launch {
             try {
                 val localPath = ImageFileHelper.copyToInternalStorage(getApplication(), uri)
+                if (generation != imageGeneration || imageRequests[itemIndex] != request ||
+                    _uiState.value.currentStep != ImportStep.DETAIL) {
+                    ImageFileHelper.cleanupUnreferencedImages(listOf(localPath))
+                    return@launch
+                }
+                draftImages += localPath
                 updateImportItem(itemIndex) { it.copy(imageUrl = localPath) }
-            } catch (_: Exception) { }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = "读取图片失败，请重新选择")
+            }
         }
     }
 
@@ -408,6 +464,9 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                 require(importCents(importSum(rows.map { it.paidAmount })) <= importCents(original.totalPaid)) { "订单 $orderId 导入实付超过源订单实付，请核对分配" }
             }
         } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message); return }
+        // A picker still copying must not attach its result to the committed snapshot.
+        imageGeneration++
+        imageRequests.clear()
         _uiState.value = _uiState.value.copy(currentStep = ImportStep.IMPORTING)
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -444,7 +503,8 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                             stages = listOf(Triple("全款", total, null))
                         }
                         val metadata = sourceRows.joinToString("\n") { source ->
-                            "淘宝订单：${source.originalItem.orderId}；原行：${source.sourceLineIndex + 1}；件号：${source.sourceUnitIndex + 1}/${source.originalItem.quantity}；原商品金额：${source.originalItem.price}；分摊邮费：${source.shipping}；核对实付：${source.paidAmount}"
+                            val originalOrder = _uiState.value.orders.first { it.orderId == source.originalItem.orderId }
+                            "淘宝订单：${source.originalItem.orderId}；源状态：${originalOrder.orderStatus}；源订单实付：${originalOrder.totalPaid}；原行：${source.sourceLineIndex + 1}；件号：${source.sourceUnitIndex + 1}/${source.originalItem.quantity}；原商品金额：${source.originalItem.price}；分摊邮费：${source.shipping}；核对实付：${source.paidAmount}"
                         }
                         val itemId = itemRepository.insertItem(Item(
                             name = main.name, brandId = main.brandId, categoryId = main.categoryId,
@@ -469,6 +529,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                     }
                     database.orderDao().refreshStatuses()
                 }
+                withContext(Dispatchers.Main.immediate) { releaseDraftImages() }
                 // All external reminders are reconciled only after the complete import commits.
                 runCatching { orderRepository.reconcileReminders() }
                     .onFailure { android.util.Log.w("TaobaoImport", "Import committed; reminders will retry", it) }
@@ -768,13 +829,18 @@ class TaobaoImportViewModel @JvmOverloads constructor(
         // 先精确匹配关键词
         for ((categoryName, keywords) in typeMap) {
             if (keywords.any { parsedType.equals(it, ignoreCase = true) }) {
-                categories.firstOrNull { it.name == categoryName }?.let { return it }
+                return categories.firstOrNull { it.name.equals(categoryName, ignoreCase = true) }
             }
         }
-        // 再包含匹配兜底
-        for ((categoryName, keywords) in typeMap) {
-            if (keywords.any { parsedType.contains(it, ignoreCase = true) }) {
-                categories.firstOrNull { it.name == categoryName }?.let { return it }
+        // 再包含匹配兜底：按关键词长度处理，避免 JSK 被先匹配成 SK。
+        val mappedKeywords = typeMap.flatMap { (categoryName, keywords) ->
+            keywords.map { keyword -> keyword to categoryName }
+        }.sortedByDescending { it.first.length }
+        for ((keyword, categoryName) in mappedKeywords) {
+            if (parsedType.contains(keyword, ignoreCase = true)) {
+                // A missing JSK category must be prepared as JSK, never silently
+                // downgraded to an existing SK category through a shorter keyword.
+                return categories.firstOrNull { it.name.equals(categoryName, ignoreCase = true) }
             }
         }
         return null

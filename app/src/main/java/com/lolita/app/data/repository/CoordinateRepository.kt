@@ -52,7 +52,7 @@ class CoordinateRepository(
         var oldCoordinate: Coordinate? = null
 
         database.withTransaction {
-            oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
+            oldCoordinate = requireNotNull(coordinateDao.getCoordinateById(coordinate.id)) { "原套装已删除，无法保存" }
             coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
             removedItemIds.forEach { itemId ->
                 val item = itemDao.getItemById(itemId)
@@ -66,7 +66,7 @@ class CoordinateRepository(
 
         oldCoordinate?.let { old ->
             val removedImages = old.imageUrls.filter { it !in coordinate.imageUrls }
-            removedImages.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
+            ImageFileHelper.cleanupUnreferencedImages(removedImages)
         }
     }
 
@@ -74,13 +74,13 @@ class CoordinateRepository(
         var oldCoordinate: Coordinate? = null
 
         database.withTransaction {
-            oldCoordinate = coordinateDao.getCoordinateById(coordinate.id)
+            oldCoordinate = requireNotNull(coordinateDao.getCoordinateById(coordinate.id)) { "原套装已删除，无法保存" }
             coordinateDao.updateCoordinate(coordinate.copy(updatedAt = System.currentTimeMillis()))
         }
 
         oldCoordinate?.let { old ->
             val removedImages = old.imageUrls.filter { it !in coordinate.imageUrls }
-            removedImages.forEach { try { ImageFileHelper.deleteImage(it) } catch (_: Exception) {} }
+            ImageFileHelper.cleanupUnreferencedImages(removedImages)
         }
     }
 

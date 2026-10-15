@@ -39,6 +39,13 @@ fun CoordinateEditScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
+    val exitEditor: () -> Unit = {
+        if (!viewModel.uiState.value.isSaving) {
+            viewModel.cleanupNewImages()
+            onBack()
+        }
+    }
+
     var showError by remember { mutableStateOf<String?>(null) }
     var showDiscardDialog by remember { mutableStateOf(false) }
 
@@ -67,7 +74,7 @@ fun CoordinateEditScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
-                    onBack()
+                    exitEditor()
                 }) {
                     Text("放弃", color = MaterialTheme.colorScheme.error)
                 }
@@ -81,9 +88,19 @@ fun CoordinateEditScreen(
     }
 
     UnsavedChangesHandler(
-        hasUnsavedChanges = viewModel.hasUnsavedChanges,
-        onBack = onBack
+        hasUnsavedChanges = !uiState.isSaving && viewModel.hasUnsavedChanges,
+        onBack = exitEditor
     )
+
+    uiState.loadError?.let { message ->
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("读取失败") },
+            text = { Text(message) },
+            confirmButton = { TextButton(onClick = { viewModel.loadCoordinate(coordinateId) }) { Text("重试") } },
+            dismissButton = { TextButton(onClick = exitEditor) { Text("返回") } }
+        )
+    }
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -91,11 +108,11 @@ fun CoordinateEditScreen(
             GradientTopAppBar(
                 title = { Text(if (coordinateId == null) "新建套装" else "编辑套装") },
                 navigationIcon = {
-                    IconButton(onClick = {
+                    IconButton(enabled = !uiState.isSaving, onClick = {
                         if (viewModel.hasUnsavedChanges) {
                             showDiscardDialog = true
                         } else {
-                            onBack()
+                            exitEditor()
                         }
                     }) {
                         SkinIcon(IconKey.ArrowBack)
@@ -117,7 +134,7 @@ fun CoordinateEditScreen(
                                 }
                             }
                         },
-                        enabled = uiState.name.isNotBlank() && !uiState.isSaving
+                        enabled = uiState.name.isNotBlank() && !uiState.isSaving && !uiState.isLoading && uiState.loadError == null
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(
@@ -146,7 +163,8 @@ fun CoordinateEditScreen(
                 imageUrls = uiState.imageUrls,
                 maxImages = 5,
                 onAddImage = { viewModel.addImage(it) },
-                onRemoveImage = { viewModel.removeImage(it) }
+                onRemoveImage = { viewModel.removeImage(it) },
+                        enabled = !uiState.isLoading && !uiState.isSaving
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -160,7 +178,7 @@ fun CoordinateEditScreen(
                     capitalization = KeyboardCapitalization.Sentences
                 ),
                 singleLine = true,
-                enabled = !uiState.isSaving
+                enabled = !uiState.isSaving && !uiState.isLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -176,7 +194,7 @@ fun CoordinateEditScreen(
                 ),
                 minLines = 2,
                 maxLines = 4,
-                enabled = !uiState.isSaving
+                enabled = !uiState.isSaving && !uiState.isLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -222,6 +240,7 @@ fun CoordinateEditScreen(
                         val isSelected = item.id in uiState.selectedItemIds
                         Surface(
                             onClick = { viewModel.toggleItemSelection(item.id) },
+                            enabled = !uiState.isLoading && !uiState.isSaving,
                             shape = MaterialTheme.shapes.small,
                             color = if (isSelected)
                                 MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)

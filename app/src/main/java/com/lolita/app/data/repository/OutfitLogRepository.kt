@@ -32,8 +32,14 @@ class OutfitLogRepository(
     suspend fun insertOutfitLog(outfitLog: OutfitLog): Long =
         outfitLogDao.insertOutfitLog(outfitLog)
 
-    suspend fun updateOutfitLog(outfitLog: OutfitLog) =
-        outfitLogDao.updateOutfitLog(outfitLog.copy(updatedAt = System.currentTimeMillis()))
+    suspend fun updateOutfitLog(outfitLog: OutfitLog) {
+        val oldImages = database.withTransaction {
+            val original = requireNotNull(outfitLogDao.getOutfitLogById(outfitLog.id)) { "原穿搭已删除，无法保存" }
+            outfitLogDao.updateOutfitLog(outfitLog.copy(updatedAt = System.currentTimeMillis()))
+            original.imageUrls
+        }
+        ImageFileHelper.cleanupUnreferencedImages(oldImages - outfitLog.imageUrls.toSet())
+    }
 
     suspend fun deleteOutfitLog(outfitLog: OutfitLog) {
         database.withTransaction {
@@ -109,7 +115,8 @@ class OutfitLogRepository(
     }
 
     suspend fun updateOutfitLogWithItems(log: OutfitLog, itemIds: List<Long>) {
-        database.withTransaction {
+        val oldImages = database.withTransaction {
+            val original = requireNotNull(outfitLogDao.getOutfitLogById(log.id)) { "原穿搭已删除，无法保存" }
             outfitLogDao.updateOutfitLog(log.copy(updatedAt = System.currentTimeMillis()))
             val existing = outfitLogDao.getOutfitItemCrossRefsByLogId(log.id)
             existing.forEach { outfitLogDao.deleteOutfitItemCrossRef(it) }
@@ -118,7 +125,9 @@ class OutfitLogRepository(
                     OutfitItemCrossRef(itemId = itemId, outfitLogId = log.id)
                 )
             }
+            original.imageUrls
         }
+        ImageFileHelper.cleanupUnreferencedImages(oldImages - log.imageUrls.toSet())
     }
 
     suspend fun saveOutfitLogWithItems(
@@ -127,7 +136,11 @@ class OutfitLogRepository(
         addedItemIds: Set<Long>,
         removedItemIds: Set<Long>
     ): Long {
-        return database.withTransaction {
+        var oldImages: List<String> = emptyList()
+        val savedId = database.withTransaction {
+            if (!isNew) {
+                oldImages = requireNotNull(outfitLogDao.getOutfitLogById(outfitLog.id)) { "原穿搭已删除，无法保存" }.imageUrls
+            }
             val logId = if (isNew) {
                 outfitLogDao.insertOutfitLog(outfitLog)
             } else {
@@ -146,5 +159,7 @@ class OutfitLogRepository(
             }
             logId
         }
+        ImageFileHelper.cleanupUnreferencedImages(oldImages - outfitLog.imageUrls.toSet())
+        return savedId
     }
 }

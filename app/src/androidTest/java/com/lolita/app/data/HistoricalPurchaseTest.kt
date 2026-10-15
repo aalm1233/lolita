@@ -333,7 +333,13 @@ class HistoricalPurchaseTest {
             }
             val migrated=helper.runMigrationsAndValidate(name,23,true,LolitaDatabase.MIGRATION_20_21,LolitaDatabase.MIGRATION_21_22,LolitaDatabase.MIGRATION_22_23)
             migrated.close()
-            val target=Room.databaseBuilder(context,LolitaDatabase::class.java,name).build()
+            val target=Room.databaseBuilder(context,LolitaDatabase::class.java,name)
+                .addMigrations(
+                    LolitaDatabase.MIGRATION_23_24,
+                    LolitaDatabase.MIGRATION_24_25,
+                    LolitaDatabase.MIGRATION_25_26
+                )
+                .build()
             try {
                 target.orderDao().refreshStatuses()
                 assertEquals(PurchaseRecordStatus.HISTORICAL_OWNED,target.orderDao().getBinding(1)!!.purchaseRecordStatus)

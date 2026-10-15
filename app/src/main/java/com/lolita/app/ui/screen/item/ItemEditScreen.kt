@@ -57,6 +57,14 @@ fun ItemEditScreen(
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val exitEditor: () -> Unit = {
+        if (!viewModel.uiState.value.isSaving) {
+            viewModel.cleanupNewImages()
+            onBack()
+        }
+    }
+
+    val canEdit = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null
     val coroutineScope = rememberCoroutineScope()
     var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
@@ -65,7 +73,7 @@ fun ItemEditScreen(
 
     UnsavedChangesHandler(
         hasUnsavedChanges = !uiState.isSaving && viewModel.hasUnsavedChanges,
-        onBack = { if (!viewModel.uiState.value.isSaving) onBack() }
+        onBack = { if (!viewModel.uiState.value.isSaving) exitEditor() }
     )
 
     val importProgress = remember(importedDraftJson) { importedDraftJson?.let { json ->
@@ -142,7 +150,7 @@ fun ItemEditScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
-                    if (!viewModel.uiState.value.isSaving) onBack()
+                    if (!viewModel.uiState.value.isSaving) exitEditor()
                 }, enabled = !uiState.isSaving) { Text("返回") }
             },
             dismissButton = {
@@ -150,6 +158,16 @@ fun ItemEditScreen(
                     Text("继续编辑")
                 }
             }
+        )
+    }
+
+    uiState.loadError?.let { message ->
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("读取失败") },
+            text = { Text(message) },
+            confirmButton = { TextButton(onClick = { viewModel.loadItem(itemId ?: 0L, defaultStatus, defaultParentItemId, importedDraftJson) }) { Text("重试") } },
+            dismissButton = { TextButton(onClick = exitEditor) { Text("返回") } }
         )
     }
 
@@ -164,7 +182,7 @@ fun ItemEditScreen(
                         if (viewModel.hasUnsavedChanges) {
                             showDiscardDialog = true
                         } else {
-                            onBack()
+                            exitEditor()
                         }
                     }) {
                         SkinIcon(IconKey.ArrowBack)
@@ -181,7 +199,7 @@ fun ItemEditScreen(
                                     .onFailure { showError = it.message }
                             }
                         },
-                        enabled = !uiState.isLoading && !uiState.isSaving && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
+                        enabled = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(
@@ -224,6 +242,7 @@ fun ItemEditScreen(
                 OutlinedTextField(
                     value = uiState.name,
                     onValueChange = { viewModel.updateName(it) },
+                    enabled = canEdit,
                     label = { Text("服饰名称 *") },
                     placeholder = { Text("例如：梦幻童话JSK") },
                     modifier = Modifier.fillMaxWidth(),
@@ -238,6 +257,7 @@ fun ItemEditScreen(
                 OutlinedTextField(
                     value = uiState.description,
                     onValueChange = { viewModel.updateDescription(it) },
+                    enabled = canEdit,
                     label = { Text("描述") },
                     placeholder = { Text("例如：粉色款，无瑕疵") },
                     modifier = Modifier.fillMaxWidth(),
@@ -247,6 +267,7 @@ fun ItemEditScreen(
 
                 // Brand selector
                 BrandSelector(
+                    enabled = canEdit,
                     selectedBrandId = uiState.brandId,
                     brands = uiState.brands,
                     onBrandSelected = { viewModel.updateBrand(it) },
@@ -255,6 +276,7 @@ fun ItemEditScreen(
 
                 // Category selector
                 CategorySelector(
+                    enabled = canEdit,
                     selectedCategoryId = uiState.categoryId,
                     categories = uiState.categories,
                     onCategorySelected = { viewModel.updateCategory(it) },
@@ -263,12 +285,14 @@ fun ItemEditScreen(
 
                 // Coordinate selector (optional)
                 CoordinateSelector(
+                    enabled = canEdit,
                     selectedCoordinateId = uiState.coordinateId,
                     coordinates = uiState.coordinates,
                     onCoordinateSelected = { viewModel.updateCoordinate(it) }
                 )
 
                 ParentItemSelector(
+                    enabled = canEdit,
                     selectedParentId = uiState.parentItemId,
                     currentItemId = uiState.item?.id,
                     items = uiState.allItems,
@@ -281,6 +305,7 @@ fun ItemEditScreen(
 
                 // Location selector (optional)
                 LocationSelector(
+                    enabled = canEdit,
                     selectedLocationId = uiState.locationId,
                     locations = uiState.locations,
                     onLocationSelected = { viewModel.updateLocation(it) }
@@ -302,6 +327,7 @@ fun ItemEditScreen(
                     }
                 } else {
                     StatusSelector(
+                        enabled = canEdit,
                         selectedStatus = uiState.status,
                         onStatusSelected = { viewModel.updateStatus(it) }
                     )
@@ -310,6 +336,7 @@ fun ItemEditScreen(
                 // Priority selector (only show when status is WISHED)
                 if (uiState.status == ItemStatus.WISHED) {
                     PrioritySelector(
+                        enabled = canEdit,
                         selectedPriority = uiState.priority,
                         onPrioritySelected = { viewModel.updatePriority(it) }
                     )
@@ -317,12 +344,14 @@ fun ItemEditScreen(
 
                 // Color selector
                 ColorSelector(
+                    enabled = canEdit,
                     selectedColors = uiState.colors,
                     onColorsChanged = { viewModel.updateColors(it) }
                 )
 
                 // Season selector
                 SeasonSelector(
+                    enabled = canEdit,
                     selectedSeasons = uiState.seasons,
                     seasonOptions = uiState.seasonOptions,
                     onSeasonToggled = { viewModel.toggleSeason(it) }
@@ -330,6 +359,7 @@ fun ItemEditScreen(
 
                 // Style selector
                 StyleSelector(
+                    enabled = canEdit,
                     selectedStyle = uiState.style,
                     styleOptions = uiState.styleOptions,
                     onStyleSelected = { viewModel.updateStyle(it) }
@@ -337,12 +367,13 @@ fun ItemEditScreen(
 
                 // Source selector
                 SourceSelector(
+                    enabled = canEdit,
                     selectedSource = uiState.source,
                     sourceOptions = uiState.sourceOptions,
                     onSourceSelected = { viewModel.updateSource(it) }
                 )
 
-                SizeSelector(selectedSize = uiState.size, onSizeSelected = viewModel::updateSize,
+                SizeSelector(selectedSize = uiState.size, onSizeSelected = viewModel::updateSize, enabled = canEdit,
                     modifier = Modifier.fillMaxWidth())
 
                 // Image upload - multi-image editor
@@ -357,12 +388,14 @@ fun ItemEditScreen(
                         imageUrls = uiState.imageUrls,
                         maxImages = 5,
                         onAddImage = { viewModel.addImage(it) },
-                        onRemoveImage = { viewModel.removeImage(it) }
+                        onRemoveImage = { viewModel.removeImage(it) },
+                        enabled = !uiState.isLoading && !uiState.isSaving
                     )
                 }
 
                 // Size chart image
                 SizeChartImageSection(
+                    enabled = canEdit,
                     imageUrls = listOfNotNull(uiState.sizeChartImageUrl) + uiState.sizeChartImageUrls,
                     onAddImage = viewModel::addSizeChartImage,
                     onRemoveImage = viewModel::removeSizeChartImage
@@ -373,6 +406,7 @@ fun ItemEditScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedButton(
                         onClick = { showDeleteConfirm = true },
+                        enabled = canEdit,
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.error
@@ -393,6 +427,7 @@ fun ItemEditScreen(
  */
 @Composable
 private fun BrandSelector(
+    enabled: Boolean,
     selectedBrandId: Long,
     brands: List<com.lolita.app.data.local.entity.Brand>,
     onBrandSelected: (Long) -> Unit,
@@ -403,7 +438,7 @@ private fun BrandSelector(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .skinClickable { showDialog = true }
+            .skinClickable(enabled = enabled) { showDialog = true }
     ) {
         OutlinedTextField(
             value = brands.find { it.id == selectedBrandId }?.name ?: "",
@@ -426,7 +461,7 @@ private fun BrandSelector(
         )
     }
 
-    if (showDialog) {
+    if (showDialog && enabled) {
         var searchQuery by remember { mutableStateOf("") }
         val filtered = remember(searchQuery, brands) {
             if (searchQuery.isBlank()) brands
@@ -486,6 +521,7 @@ private fun BrandSelector(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategorySelector(
+    enabled: Boolean,
     selectedCategoryId: Long,
     categories: List<com.lolita.app.data.local.entity.Category>,
     onCategorySelected: (Long) -> Unit,
@@ -494,18 +530,19 @@ private fun CategorySelector(
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        expanded = expanded && enabled,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         OutlinedTextField(
             value = categories.find { it.id == selectedCategoryId }?.name ?: "",
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text("类型 *") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled),
             isError = isError,
             supportingText = if (isError) {
                 { Text("请选择类型") }
@@ -513,7 +550,7 @@ private fun CategorySelector(
         )
 
         ExposedDropdownMenu(
-            expanded = expanded,
+            expanded = expanded && enabled,
             onDismissRequest = { expanded = false }
         ) {
             categories.forEach { category ->
@@ -535,6 +572,7 @@ private fun CategorySelector(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CoordinateSelector(
+    enabled: Boolean,
     selectedCoordinateId: Long?,
     coordinates: List<com.lolita.app.data.local.entity.Coordinate>,
     onCoordinateSelected: (Long?) -> Unit
@@ -547,22 +585,23 @@ private fun CoordinateSelector(
     }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        expanded = expanded && enabled,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         OutlinedTextField(
             value = selectedName,
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text("所属套装 (可选)") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled)
         )
 
         ExposedDropdownMenu(
-            expanded = expanded,
+            expanded = expanded && enabled,
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
@@ -590,6 +629,7 @@ private fun CoordinateSelector(
  */
 @Composable
 private fun StatusSelector(
+    enabled: Boolean,
     selectedStatus: ItemStatus,
     onStatusSelected: (ItemStatus) -> Unit
 ) {
@@ -605,6 +645,7 @@ private fun StatusSelector(
         ) {
             listOf(ItemStatus.OWNED, ItemStatus.WISHED).forEach { status ->
                 FilterChip(
+                    enabled = enabled,
                     selected = selectedStatus == status,
                     onClick = { onStatusSelected(status) },
                     label = {
@@ -630,6 +671,7 @@ private fun StatusSelector(
  */
 @Composable
 private fun PrioritySelector(
+    enabled: Boolean,
     selectedPriority: ItemPriority,
     onPrioritySelected: (ItemPriority) -> Unit
 ) {
@@ -645,6 +687,7 @@ private fun PrioritySelector(
         ) {
             ItemPriority.entries.forEach { priority ->
                 FilterChip(
+                    enabled = enabled,
                     selected = selectedPriority == priority,
                     onClick = { onPrioritySelected(priority) },
                     label = {
@@ -668,6 +711,7 @@ private fun PrioritySelector(
  */
 @Composable
 private fun SeasonSelector(
+    enabled: Boolean,
     selectedSeasons: List<String>,
     seasonOptions: List<String>,
     onSeasonToggled: (String) -> Unit
@@ -684,6 +728,7 @@ private fun SeasonSelector(
         ) {
             seasonOptions.forEach { season ->
                 FilterChip(
+                    enabled = enabled,
                     selected = season in selectedSeasons,
                     onClick = { onSeasonToggled(season) },
                     label = { Text(season) }
@@ -698,6 +743,7 @@ private fun SeasonSelector(
  */
 @Composable
 private fun StyleSelector(
+    enabled: Boolean,
     selectedStyle: String?,
     styleOptions: List<String>,
     onStyleSelected: (String?) -> Unit
@@ -716,6 +762,7 @@ private fun StyleSelector(
             ) {
                 rowItems.forEach { style ->
                     FilterChip(
+                    enabled = enabled,
                         selected = selectedStyle == style,
                         onClick = {
                             onStyleSelected(if (selectedStyle == style) null else style)
@@ -738,6 +785,7 @@ private fun StyleSelector(
  */
 @Composable
 private fun SourceSelector(
+    enabled: Boolean,
     selectedSource: String?,
     sourceOptions: List<String>,
     onSourceSelected: (String?) -> Unit
@@ -756,6 +804,7 @@ private fun SourceSelector(
             ) {
                 rowItems.forEach { source ->
                     FilterChip(
+                    enabled = enabled,
                         selected = selectedSource == source,
                         onClick = {
                             onSourceSelected(if (selectedSource == source) null else source)
@@ -777,6 +826,7 @@ private fun SourceSelector(
  */
 @Composable
 private fun SizeChartImageSection(
+    enabled: Boolean,
     imageUrls: List<String>,
     onAddImage: (String) -> Unit,
     onRemoveImage: (Int) -> Unit
@@ -785,7 +835,7 @@ private fun SizeChartImageSection(
     LolitaSection("尺码表图片（可选）") {
         row { Text("共 ${imageUrls.size} 张，点击图片可放大查看。") }
         row {
-            MultiImageEditor(imageUrls = imageUrls, maxImages = 50, onAddImage = onAddImage,
+            MultiImageEditor(enabled = enabled, imageUrls = imageUrls, maxImages = 50, onAddImage = onAddImage,
                 onRemoveImage = onRemoveImage, contentScale = ContentScale.Fit,
                 onImageClick = { preview = it })
         }
@@ -798,6 +848,7 @@ private fun SizeChartImageSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LocationSelector(
+    enabled: Boolean,
     selectedLocationId: Long?,
     locations: List<com.lolita.app.data.local.entity.Location>,
     onLocationSelected: (Long?) -> Unit
@@ -810,21 +861,22 @@ private fun LocationSelector(
     }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        expanded = expanded && enabled,
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         OutlinedTextField(
             value = selectedName,
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text("存放位置 (可选)") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled)
         )
         ExposedDropdownMenu(
-            expanded = expanded,
+            expanded = expanded && enabled,
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
@@ -844,6 +896,7 @@ private fun LocationSelector(
 
 @Composable
 private fun ParentItemSelector(
+    enabled: Boolean,
     selectedParentId: Long?,
     currentItemId: Long?,
     items: List<Item>,
@@ -857,7 +910,7 @@ private fun ParentItemSelector(
     val parent = items.find { it.id == selectedParentId }
     LolitaSection(title = "所属主件与价格") {
         row {
-            OutlinedButton(onClick = { showPicker = true }, enabled = !hasChildren, modifier = Modifier.fillMaxWidth()) {
+            OutlinedButton(onClick = { showPicker = true }, enabled = enabled && !hasChildren, modifier = Modifier.fillMaxWidth()) {
                 SkinIcon(IconKey.Search, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(parent?.name ?: "独立服饰（选择主件可挂为小物）")
@@ -871,7 +924,7 @@ private fun ParentItemSelector(
             row {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = includedInParentPrice, onCheckedChange = onIncludedChanged,
-                        enabled = canSharePrice || includedInParentPrice)
+                        enabled = enabled && (canSharePrice || includedInParentPrice))
                     Column(Modifier.weight(1f)) {
                         Text("包含在主件价格中")
                         Text(if (includedInParentPrice) "不单独计价，收货状态随主件"
@@ -883,11 +936,11 @@ private fun ParentItemSelector(
                     Text("已有价格记录，请先在价格与付款中核对后再改为共用价格",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                TextButton(onClick = { onParentSelected(null) }) { Text("解除主件挂载") }
+                TextButton(enabled = enabled, onClick = { onParentSelected(null) }) { Text("解除主件挂载") }
             }
         }
     }
-    if (showPicker) {
+    if (showPicker && enabled) {
         ItemSearchPickerDialog(
             title = "选择所属主件",
             items = items.filter { it.parentItemId == null && it.id != currentItemId },

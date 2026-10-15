@@ -23,7 +23,8 @@ fun SizeSelector(
     selectedSize: String?,
     onSizeSelected: (String?) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SizeOptionsViewModel = viewModel()
+    viewModel: SizeOptionsViewModel = viewModel(),
+    enabled: Boolean = true
 ) {
     val options by viewModel.options.collectAsState()
     val skin = LolitaSkin.current
@@ -36,17 +37,18 @@ fun SizeSelector(
     Row(modifier, verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
         ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
+            expanded = expanded && enabled,
+            onExpandedChange = { if (enabled) expanded = it },
             modifier = Modifier.weight(1f)
         ) {
             OutlinedTextField(
+                enabled = enabled,
                 value = selectedSize.orEmpty(), onValueChange = {}, readOnly = true,
                 label = { Text("尺码 (可选)") }, placeholder = { Text("请选择尺码") }, singleLine = true,
                 trailingIcon = { SkinIcon(if (expanded) IconKey.ExpandLess else IconKey.ExpandMore) },
-                modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled)
             )
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false },
+            ExposedDropdownMenu(expanded = expanded && enabled, onDismissRequest = { expanded = false },
                 modifier = Modifier.heightIn(max = 320.dp)) {
                 DropdownMenuItem(text = { Text("未设置") }, onClick = { onSizeSelected(null); expanded = false })
                 SizeOptions.merge(options, listOfNotNull(selectedSize)).forEach { size ->
@@ -54,12 +56,12 @@ fun SizeSelector(
                 }
             }
         }
-        IconButton(onClick = { expanded = false; draft = ""; error = null; showAdd = true },
+        IconButton(enabled = enabled, onClick = { expanded = false; draft = ""; error = null; showAdd = true },
             modifier = Modifier.semantics { contentDescription = "添加尺码" }) {
             SkinIcon(IconKey.Add, tint = MaterialTheme.colorScheme.primary)
         }
     }
-    if (showAdd) {
+    if (showAdd && enabled) {
         AlertDialog(
             onDismissRequest = { if (!saving) showAdd = false },
             title = { Text("添加尺码") },

@@ -1,11 +1,12 @@
 package com.lolita.app.ui.widget
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.*
-import androidx.glance.action.actionStartActivity
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
@@ -34,6 +35,7 @@ class OutfitWidget : GlanceAppWidget() {
 
 @Composable
 private fun WidgetContent(hasOutfit: Boolean, itemCount: Int) {
+    val context = LocalContext.current
     val dateFormat = SimpleDateFormat("M月d日 EEEE", Locale.CHINESE)
     val today = dateFormat.format(Date())
     val pink = ColorProvider(android.graphics.Color.parseColor("#FF69B4"))
@@ -43,7 +45,10 @@ private fun WidgetContent(hasOutfit: Boolean, itemCount: Int) {
             .fillMaxSize()
             .padding(16.dp)
             .background(GlanceTheme.colors.surface)
-            .clickable(actionStartActivity<MainActivity>()),
+            .clickable(actionStartActivity(Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                putExtra("navigate_to", "quick_outfit_log")
+            })),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

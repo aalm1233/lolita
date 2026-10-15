@@ -13,6 +13,9 @@ import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.local.dao.ItemPriceSum
 import com.lolita.app.data.local.dao.PriceWithPayments
 import com.lolita.app.ui.screen.common.SortOption
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +63,9 @@ data class CoordinateEditUiState(
     val allItems: List<Item> = emptyList(),
     val selectedItemIds: Set<Long> = emptySet(),
     val coordinateNames: Map<Long, String> = emptyMap(),
-    val isSaving: Boolean = false
+    val isSaving: Boolean = false,
+    val isLoading: Boolean = false,
+    val loadError: String? = null
 )
 
 class CoordinateListViewModel(
@@ -331,9 +336,13 @@ class CoordinateEditViewModel(
     private val _uiState = MutableStateFlow(CoordinateEditUiState())
     val uiState: StateFlow<CoordinateEditUiState> = _uiState.asStateFlow()
 
-    private var originalCreatedAt: Long = 0L
+    private var originalCoordinate: Coordinate? = null
+    private var requestedCoordinateId: Long? = null
+    private var hasRequestedCoordinate = false
+    private var editorLoaded = false
+    private var loadJob: Job? = null
+    private val newImages = mutableSetOf<String>()
     private var originalSelectedItemIds: Set<Long> = emptySet()
-    private var originalImageUrls: List<String> = emptyList()
     var hasUnsavedChanges: Boolean = false
         private set
 
@@ -354,54 +363,88 @@ class CoordinateEditViewModel(
     }
 
     fun loadCoordinate(coordinateId: Long?) {
-        if (coordinateId == null) return
-
-        viewModelScope.launch {
-            val coordinate = coordinateRepository.getCoordinateById(coordinateId)
-            coordinate?.let {
-                originalCreatedAt = it.createdAt
-                originalImageUrls = it.imageUrls
-                _uiState.value = _uiState.value.copy(
-                    name = it.name,
-                    description = it.description,
-                    imageUrls = it.imageUrls
-                )
+        if (_uiState.value.isSaving) return
+        if (hasRequestedCoordinate && requestedCoordinateId == coordinateId &&
+            (editorLoaded || loadJob?.isActive == true)) return
+        loadJob?.cancel()
+        if (hasRequestedCoordinate && requestedCoordinateId != coordinateId) cleanupNewImages()
+        requestedCoordinateId = coordinateId
+        hasRequestedCoordinate = true
+        editorLoaded = false
+        originalCoordinate = null
+        originalSelectedItemIds = emptySet()
+        hasUnsavedChanges = false
+        _uiState.update { CoordinateEditUiState(allItems = it.allItems,
+            coordinateNames = it.coordinateNames, isLoading = coordinateId != null) }
+        if (coordinateId == null) {
+            editorLoaded = true
+            return
+        }
+        loadJob = viewModelScope.launch {
+            try {
+                val result = coordinateRepository.getCoordinateWithItems(coordinateId).first()
+                    ?: error("套装不存在，请重试")
+                val coordinate = result.coordinate
+                val itemIds = result.items.map { it.id }.toSet()
+                originalCoordinate = coordinate
+                originalSelectedItemIds = itemIds
+                editorLoaded = true
+                _uiState.update { it.copy(name = coordinate.name, description = coordinate.description,
+                    imageUrls = coordinate.imageUrls, selectedItemIds = itemIds, isLoading = false) }
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取套装失败") }
             }
-
-            // Load items already in this coordinate
-            val result = coordinateRepository.getCoordinateWithItems(coordinateId).first()
-            val itemIds = result?.items?.map { it.id }?.toSet() ?: emptySet()
-            originalSelectedItemIds = itemIds
-            _uiState.value = _uiState.value.copy(selectedItemIds = itemIds)
         }
     }
 
+    fun cleanupNewImages() {
+        ImageFileHelper.cleanupUnreferencedImages(newImages.toList())
+        newImages.clear()
+    }
+
+    override fun onCleared() {
+        cleanupNewImages()
+        super.onCleared()
+    }
+
     fun updateName(name: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(name = name)
     }
 
     fun updateDescription(description: String) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         _uiState.value = _uiState.value.copy(description = description)
     }
 
     fun addImage(url: String) {
+        val current = _uiState.value
+        if (current.isSaving || current.isLoading || current.imageUrls.size >= 5) {
+            if (url !in current.imageUrls) ImageFileHelper.cleanupUnreferencedImages(listOf(url))
+            return
+        }
+        newImages.add(url)
         hasUnsavedChanges = true
-        val current = _uiState.value.imageUrls
-        if (current.size >= 5) return
-        _uiState.value = _uiState.value.copy(imageUrls = current + url)
+        _uiState.value = current.copy(imageUrls = current.imageUrls + url)
     }
 
     fun removeImage(index: Int) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         val current = _uiState.value.imageUrls.toMutableList()
         if (index !in current.indices) return
-        current.removeAt(index)
+        val removed = current.removeAt(index)
         _uiState.value = _uiState.value.copy(imageUrls = current)
+        if (removed !in current && newImages.remove(removed)) {
+            ImageFileHelper.cleanupUnreferencedImages(listOf(removed))
+        }
     }
 
     fun reorderImages(fromIndex: Int, toIndex: Int) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         val current = _uiState.value.imageUrls.toMutableList()
         if (fromIndex !in current.indices || toIndex !in current.indices) return
@@ -411,6 +454,7 @@ class CoordinateEditViewModel(
     }
 
     fun toggleItemSelection(itemId: Long) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
         hasUnsavedChanges = true
         val current = _uiState.value.selectedItemIds
         _uiState.value = _uiState.value.copy(
@@ -422,7 +466,23 @@ class CoordinateEditViewModel(
         return _uiState.value.name.isNotBlank()
     }
 
-    suspend fun save(): Result<Long> {
+    // The VM owns persistence; a recreated screen may cancel its await without cancelling the save.
+    private var saveTask: Deferred<Result<Long>>? = null
+
+    private fun startSave(coordinateId: Long?): Deferred<Result<Long>> =
+        saveTask?.takeIf { it.isActive } ?: viewModelScope.async {
+            if (coordinateId == null) saveDraft() else updateDraft(coordinateId).map { coordinateId }
+        }.also { saveTask = it }
+
+    suspend fun save(): Result<Long> = startSave(null).await()
+
+    suspend fun update(coordinateId: Long): Result<Unit> = startSave(coordinateId).await().map { Unit }
+
+    private suspend fun saveDraft(): Result<Long> {
+        if (_uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadError != null || requestedCoordinateId != null) {
+            return Result.failure(IllegalStateException("数据未加载完成，请稍后再试"))
+        }
+        originalCoordinate?.let { original -> return updateDraft(original.id).map { original.id } }
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
             val now = System.currentTimeMillis()
@@ -436,39 +496,42 @@ class CoordinateEditViewModel(
             val id = coordinateRepository.insertCoordinateWithItems(
                 coordinate, _uiState.value.selectedItemIds
             )
+            originalCoordinate = coordinate.copy(id = id)
+            originalSelectedItemIds = _uiState.value.selectedItemIds
+            cleanupNewImages()
+            hasUnsavedChanges = false
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(id)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.failure(e)
         }
     }
 
-    suspend fun update(coordinateId: Long): Result<Unit> {
+    private suspend fun updateDraft(coordinateId: Long): Result<Unit> {
+        if (_uiState.value.isSaving || _uiState.value.isLoading || !editorLoaded || originalCoordinate?.id != coordinateId) {
+            return Result.failure(IllegalStateException("数据未加载完成，请稍后再试"))
+        }
         _uiState.value = _uiState.value.copy(isSaving = true)
         return try {
-            if (originalCreatedAt == 0L) {
-                throw IllegalStateException("数据未加载完成，请稍后再试")
-            }
-            val coordinate = Coordinate(
-                id = coordinateId,
+            val coordinate = requireNotNull(originalCoordinate).copy(
                 name = _uiState.value.name,
                 description = _uiState.value.description,
                 imageUrls = _uiState.value.imageUrls,
-                createdAt = originalCreatedAt,
                 updatedAt = System.currentTimeMillis()
             )
             val removedIds = originalSelectedItemIds - _uiState.value.selectedItemIds
             val addedIds = _uiState.value.selectedItemIds - originalSelectedItemIds
             coordinateRepository.updateCoordinateWithItems(coordinate, addedIds, removedIds)
-            // Clean up removed image files
-            val removedImages = originalImageUrls - _uiState.value.imageUrls.toSet()
-            removedImages.forEach { url ->
-                try { ImageFileHelper.deleteImage(url) } catch (_: Exception) {}
-            }
+            cleanupNewImages()
+            originalCoordinate = coordinate
+            originalSelectedItemIds = _uiState.value.selectedItemIds
+            hasUnsavedChanges = false
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.success(Unit)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             _uiState.value = _uiState.value.copy(isSaving = false)
             Result.failure(e)
         }

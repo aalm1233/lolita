@@ -1,0 +1,222 @@
+{
+  "version": "2.47.1",
+  "version_code": 105,
+  "source_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a",
+  "signed_apk": {
+    "version": "2.47.1",
+    "version_code": 105,
+    "tag": "v2.47.1",
+    "apk": "lolita-2.47.1.apk",
+    "size": 54746777,
+    "sha256": "3fc79e439468bb0696cc32f8c7bd57f44eafaf81b63525cae7f68a6d2320e2d7",
+    "source_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a",
+    "body_sha256": "8c606d6aa3988b6cf5224daf69085596bbca90cd8f3623c115bd27eb67af980e"
+  },
+  "tests": {
+    "jvm": {
+      "tests": 185,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device": {
+      "tests": 112,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "classes": {
+        "com.lolita.app.ui.screen.editor.EditorLifecycleTest": 18,
+        "com.lolita.app.ui.screen.import.TaobaoOrderImportEvidenceTest": 9,
+        "com.lolita.app.data.local.dao.ItemTagFilterTest": 3,
+        "com.lolita.app.ui.screen.price.PricingDateFieldTest": 3,
+        "com.lolita.app.ui.screen.calendar.PaymentCalendarClockTest": 2,
+        "com.lolita.app.data.file.ImageCopyCancellationTest": 1,
+        "com.lolita.app.ui.screen.import.OrderImportInteractionTest": 18,
+        "com.lolita.app.data.DataIntegrityTest": 8,
+        "com.lolita.app.data.OrderBusinessTest": 12,
+        "com.lolita.app.data.HistoricalPurchaseTest": 13,
+        "com.lolita.app.ui.screen.item.ItemImportRecoveryTest": 2,
+        "com.lolita.app.ui.screen.outfit.OutfitLogEditViewModelTest": 4,
+        "com.lolita.app.ui.screen.outfit.QuickOutfitLogViewModelTest": 2,
+        "com.lolita.app.ui.screen.stats.SpendingStatisticsViewModelTest": 4,
+        "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest": 8,
+        "com.lolita.app.ui.screen.item.ItemSizeSelectorTest": 5
+      }
+    }
+  },
+  "upgrade": {
+    "preservation_pass": true,
+    "errors": [],
+    "exact_all_tables": true,
+    "table_differences": {},
+    "original_image_count": 172,
+    "original_images_unchanged": 172,
+    "image_differences": [],
+    "added_images": [],
+    "unresolved_image_references": []
+  },
+  "signature_and_settings": {
+    "version": "2.47.1",
+    "version_code": 105,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "same_signature_upgrade": true,
+    "settings_bytes_unchanged": true,
+    "settings_sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+    "avd": "Lolita_Release_2392_Test",
+    "serial": "emulator-5558"
+  },
+  "formal_apk_ui": {
+    "version": "2.47.1",
+    "cold_launch": true,
+    "hot_new_intent": true,
+    "no_record_saved": true,
+    "scope": "Explicit Activity Intent matching widget parameters; launcher widget click not automated",
+    "serial": "emulator-5558",
+    "avd": "Lolita_Release_2392_Test"
+  },
+  "github": {
+    "tag": "v2.47.1",
+    "source_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a",
+    "release_id": 413471219,
+    "prerelease": false,
+    "files": {
+      "lolita-2.47.1.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.47.1/lolita-2.47.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 54746777,
+        "sha256": "3fc79e439468bb0696cc32f8c7bd57f44eafaf81b63525cae7f68a6d2320e2d7",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.47.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f8d27aabd1107ba31f4509d9a4d1aa20bd8d406e92de110df8967127d3fba572",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 54746777,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a"
+  },
+  "gitee": {
+    "tag": "v2.47.1",
+    "source_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a",
+    "release_id": 1207070,
+    "prerelease": false,
+    "files": {
+      "lolita-2.47.1.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.47.1/lolita-2.47.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 54746777,
+        "sha256": "3fc79e439468bb0696cc32f8c7bd57f44eafaf81b63525cae7f68a6d2320e2d7",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.47.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f8d27aabd1107ba31f4509d9a4d1aa20bd8d406e92de110df8967127d3fba572",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 54746777,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "gitee_update": {
+    "latest_tag": "v2.47.1",
+    "pages": 1,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.47.1/lolita-2.47.1.apk",
+    "source_commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a"
+  },
+  "review": {
+    "scope": "Frozen implementation plus HistoricalPurchaseTest migration fixture registration",
+    "reviewers": [
+      "independent data/import review",
+      "independent editor review and re-review",
+      "final whole-change review",
+      "final fixture-delta review"
+    ],
+    "unresolved_critical": 0,
+    "unresolved_important": 0,
+    "unresolved_minor": 0,
+    "widget_limit": "Explicit-intent cold/hot Activity routes verified; native launcher widget click not automated",
+    "verification_date": "2026-10-15"
+  },
+  "verification_date": "2026-10-15"
+}

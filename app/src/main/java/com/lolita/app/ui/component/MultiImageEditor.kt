@@ -40,7 +40,8 @@ fun MultiImageEditor(
     onRemoveImage: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
-    onImageClick: ((Int) -> Unit)? = null
+    onImageClick: ((Int) -> Unit)? = null,
+    enabled: Boolean = true
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -65,7 +66,7 @@ fun MultiImageEditor(
             Box(
                 modifier = Modifier
                     .size(100.dp, 120.dp)
-                    .clickable(enabled = onImageClick != null) { onImageClick?.invoke(index) }
+                    .clickable(enabled = enabled && onImageClick != null) { onImageClick?.invoke(index) }
                     .clip(shape)
             ) {
                 LolitaShimmerImage(
@@ -77,6 +78,7 @@ fun MultiImageEditor(
                 )
                 IconButton(
                     onClick = { onRemoveImage(index) },
+                    enabled = enabled,
                     modifier = Modifier.align(Alignment.TopEnd).size(24.dp),
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
@@ -102,7 +104,7 @@ fun MultiImageEditor(
                             shape = shape
                         )
                         .clip(shape)
-                        .clickable {
+                        .clickable(enabled = enabled) {
                             picker.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )

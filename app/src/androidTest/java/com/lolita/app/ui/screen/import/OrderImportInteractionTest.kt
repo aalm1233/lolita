@@ -139,6 +139,27 @@ class OrderImportInteractionTest {
         db.close(); preferencesDirectory.deleteRecursively(); Unit
     }
 
+    @Test fun balanceDateConfirmationKeepsLocalDateAndReopeningUsesLatestDraft() {
+        val previousZone = java.util.TimeZone.getDefault()
+        try {
+            java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Shanghai"))
+            val first = java.time.Instant.parse("2026-09-30T16:00:00Z").toEpochMilli()
+            val second = java.time.Instant.parse("2026-10-31T16:00:00Z").toEpochMilli()
+            compose.runOnIdle { vm.updateImportItem(0) { it.copy(balanceDueDate = first) } }
+            reveal("尾款应付日期")
+            compose.onNodeWithText("尾款应付日期").performClick()
+            compose.onNodeWithText("确定").performClick()
+            compose.runOnIdle { assertEquals(first, vm.uiState.value.importItems[0].balanceDueDate) }
+            compose.runOnIdle { vm.updateImportItem(0) { it.copy(balanceDueDate = second) } }
+            reveal("尾款应付日期")
+            compose.onNodeWithText("尾款应付日期").performClick()
+            compose.onNodeWithText("确定").performClick()
+            compose.runOnIdle { assertEquals(second, vm.uiState.value.importItems[0].balanceDueDate) }
+        } finally {
+            java.util.TimeZone.setDefault(previousZone)
+        }
+    }
+
     @Test fun sizeDropdownAndQuickAddPreserveEachImportedItemsChoice() {
         reveal("展开资料")
         compose.onNodeWithText("展开资料").performClick()

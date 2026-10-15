@@ -75,7 +75,8 @@ fun parseColorsJson(json: String?): List<String> {
 fun ColorSelector(
     selectedColors: List<String>,
     onColorsChanged: (List<String>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
     val predefinedNames = remember { PREDEFINED_COLORS.map { it.name }.toSet() }
@@ -95,6 +96,7 @@ fun ColorSelector(
             PREDEFINED_COLORS.forEach { predefined ->
                 val isSelected = predefined.name in selectedColors
                 ColorChip(
+                    enabled = enabled,
                     name = predefined.name,
                     color = Color(predefined.hex),
                     isSelected = isSelected,
@@ -111,6 +113,7 @@ fun ColorSelector(
             // Custom colors already selected
             selectedColors.filter { it !in predefinedNames }.forEach { custom ->
                 ColorChip(
+                    enabled = enabled,
                     name = custom,
                     color = MaterialTheme.colorScheme.outline,
                     isSelected = true,
@@ -121,13 +124,14 @@ fun ColorSelector(
             }
             // Add custom color button
             SuggestionChip(
+                enabled = enabled,
                 onClick = { showCustomDialog = true },
                 label = { Text("+") }
             )
         }
     }
 
-    if (showCustomDialog) {
+    if (showCustomDialog && enabled) {
         AddCustomColorDialog(
             onDismiss = { showCustomDialog = false },
             onConfirm = { name ->
@@ -142,6 +146,7 @@ fun ColorSelector(
 
 @Composable
 private fun ColorChip(
+    enabled: Boolean,
     name: String,
     color: Color,
     isSelected: Boolean,
@@ -164,7 +169,7 @@ private fun ColorChip(
         modifier = Modifier
             .border(borderWidth, borderColor, RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),

@@ -20,15 +20,19 @@ import org.junit.runner.RunWith
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 @RunWith(AndroidJUnit4::class)
 class ImageTaskBackupTest {
     private val target = InstrumentationRegistry.getInstrumentation().targetContext
     private inner class Fixture {
         val root = File(target.cacheDir,"image-task-backup-${UUID.randomUUID()}").apply { mkdirs() }
+        var onCacheDir: () -> Unit = {}
         val context = object : ContextWrapper(target) {
             override fun getFilesDir() = File(root,"files").apply { mkdirs() }
-            override fun getCacheDir() = File(root,"cache").apply { mkdirs() }
+            override fun getCacheDir() = File(root,"cache").apply { mkdirs(); onCacheDir() }
         }
         val db = Room.inMemoryDatabaseBuilder(context,LolitaDatabase::class.java).build()
         val scope = CoroutineScope(SupervisorJob()+Dispatchers.IO)
@@ -165,5 +169,41 @@ class ImageTaskBackupTest {
             assertNotEquals(pending.resultImagePath,restored.resultImagePath)
             assertArrayEquals(f.bytes,File(restored.resultImagePath!!).readBytes())
         } finally { release.complete(Unit); importing.cancelAndJoin() }
+    } }
+
+    @Test fun jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted() = runBlocking { fixture { f ->
+        val coordinator=ImageTaskCoordinator(f.db,f.scope,{},
+            { ImageFileHelper.saveGeneratedImage(f.context,it) },ImageFileHelper::deleteImage,
+            { ImageFileHelper.isOwnedGeneratedImage(f.context,it) })
+        coordinator.awaitStartup()
+        val manager=BackupManager(f.context,f.db,withImageTasksPaused={ action -> coordinator.withRestorePaused(action) })
+        val json=manager.exportToJson().getOrThrow().also(f.exports::add)
+        coordinator.submitMannequin(MannequinRequest(f.itemId,f.source,"保持腰线"),ImageGenerationProvider.SEEDREAM)
+        val item=f.db.itemDao().getItemById(f.itemId)!!
+        f.db.itemDao().updateItem(item.copy(imageUrls=emptyList()))
+        ImageFileHelper.deleteImage(f.source)
+        assertTrue(File(f.source).exists()) // currently held only by the queued task
+        manager.importBackup(json).getOrThrow()
+        assertEquals(listOf(f.source),f.db.itemDao().getItemById(f.itemId)!!.imageUrls)
+        assertArrayEquals(f.bytes,File(f.source).readBytes())
+    } }
+
+    @Test fun zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport() = runBlocking { fixture { f ->
+        val coordinator=ImageTaskCoordinator(f.db,f.scope,{},
+            { ImageFileHelper.saveGeneratedImage(f.context,it) },ImageFileHelper::deleteImage,
+            { ImageFileHelper.isOwnedGeneratedImage(f.context,it) })
+        coordinator.awaitStartup()
+        val pending=f.task(); f.db.imageTaskDao().insert(pending)
+        val reached=CompletableDeferred<Unit>(); val release=CountDownLatch(1); val armed=AtomicBoolean(true)
+        f.onCacheDir={ if (armed.getAndSet(false)) { reached.complete(Unit); check(release.await(5,TimeUnit.SECONDS)) } }
+        val manager=BackupManager(f.context,f.db)
+        val exporting=async(Dispatchers.IO) { manager.exportToZip().also { result -> result.getOrNull()?.let(f.exports::add) } }
+        try {
+            reached.await(); coordinator.discard(pending.id)
+            assertTrue("snapshot must keep the discarded preview until its ZIP is copied",File(f.preview).exists())
+            release.countDown()
+            exporting.await().getOrThrow()
+            assertFalse(File(f.preview).exists())
+        } finally { release.countDown(); exporting.cancelAndJoin() }
     } }
 }

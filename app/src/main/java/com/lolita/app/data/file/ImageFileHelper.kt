@@ -77,6 +77,42 @@ object ImageFileHelper {
     private val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Volatile private var ownedImagesDir: File? = null
     @Volatile private var imageDatabase: LolitaDatabase? = null
+    private val referencePinLock = Any()
+    private val referencePins = mutableMapOf<String, Int>()
+    private val deferredDeletes = mutableMapOf<String, String>()
+
+    /** Call while holding the same Room transaction that captures the references. */
+    fun pinImageReferences(context: Context, paths: Collection<String>): ImageReferenceLease {
+        val directory = File(context.filesDir, IMAGE_DIR).canonicalFile
+        val owned = paths.filterNot { it.startsWith("https://") || it.startsWith("http://") }
+            .map { File(it).canonicalFile }.filter { it.parentFile == directory }.map { it.path }.toSet()
+        synchronized(referencePinLock) {
+            owned.forEach { referencePins[it] = (referencePins[it] ?: 0) + 1 }
+        }
+        return ImageReferenceLease(owned)
+    }
+
+    class ImageReferenceLease internal constructor(private val paths: Set<String>) {
+        private val released = java.util.concurrent.atomic.AtomicBoolean(false)
+        suspend fun release() {
+            if (!released.compareAndSet(false, true)) return
+            withContext(kotlinx.coroutines.NonCancellable + Dispatchers.IO) {
+                val retry = synchronized(referencePinLock) {
+                    buildList {
+                        paths.forEach { path ->
+                            val remaining = (referencePins[path] ?: 1) - 1
+                            if (remaining > 0) referencePins[path] = remaining
+                            else {
+                                referencePins.remove(path)
+                                deferredDeletes.remove(path)?.let(::add)
+                            }
+                        }
+                    }
+                }
+                retry.forEach { deleteImage(it) }
+            }
+        }
+    }
 
     fun configure(context: Context, database: LolitaDatabase) {
         ownedImagesDir = File(context.filesDir, IMAGE_DIR).canonicalFile
@@ -183,7 +219,15 @@ object ImageFileHelper {
                     images.any { it.asString == path }
                 } ?: false
             }
-            if (!localReference && !remoteReference && !archiveReference) file.delete()
+            if (!localReference && !remoteReference && !archiveReference) {
+                val canDelete = synchronized(referencePinLock) {
+                    if ((referencePins[file.path] ?: 0) > 0) {
+                        deferredDeletes[file.path] = path
+                        false
+                    } else true
+                }
+                if (canDelete) file.delete()
+            }
         }
     }
 

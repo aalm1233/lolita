@@ -128,6 +128,24 @@ class BackupManager(
         ).also(BackupFormat::validate)
     }
 
+    private suspend fun <T> withPinnedSnapshot(block: suspend (BackupData) -> T): T {
+        var lease: ImageFileHelper.ImageReferenceLease? = null
+        try {
+            val data = database.withTransaction {
+                snapshot().also { lease = ImageFileHelper.pinImageReferences(context, collectImagePaths(it)) }
+            }
+            return block(data)
+        } finally { lease?.release() }
+    }
+
+    private suspend fun <T> withPinnedImages(data: BackupData, block: suspend () -> T): T {
+        var lease: ImageFileHelper.ImageReferenceLease? = null
+        try {
+            database.withTransaction { lease = ImageFileHelper.pinImageReferences(context, collectImagePaths(data)) }
+            return block()
+        } finally { lease?.release() }
+    }
+
     private fun validateStoredValues() {
         // DAO converters have display fallbacks. Backups must never persist those fallbacks as data.
         val db = database.openHelper.readableDatabase
@@ -316,8 +334,8 @@ class BackupManager(
         }
     }
     suspend fun exportToZip(): Result<Uri> = serializedResult {
+        withPinnedSnapshot { backupData ->
         try {
-            val backupData = snapshot()
 
             val (imageArchiveNamesByPath, missingImageCount) = buildImageArchiveNames(collectImagePaths(backupData))
             require(missingImageCount == 0) { "有 $missingImageCount 张本地图片缺失，无法创建完整备份" }
@@ -358,6 +376,7 @@ class BackupManager(
             if (e is CancellationException) throw e
             Result.failure(e)
         }
+        }
     }
 
     suspend fun importBackup(uri: Uri): Result<ImportSummary> = serializedResult {
@@ -365,9 +384,11 @@ class BackupManager(
             check(recoverPendingRemindersLocked() == 0) { "上次恢复的提醒尚未完成，请授予权限后重试" }
             val prepared = prepareBackup(uri, cacheResult = true)
             BackupFormat.validate(prepared.backupData)
-            validatePreparedTaskImages(prepared)
-            // Validate the source first: a bad backup must not interrupt an ongoing paid request.
-            withImageTasksPaused { importPreparedBackup(prepared) }
+            withPinnedImages(prepared.backupData) {
+                validatePreparedTaskImages(prepared)
+                // Keep JSON image references alive before task cancellation releases them.
+                withImageTasksPaused { importPreparedBackup(prepared) }
+            }
         } catch (e: Exception) {
             clearPreparedBackupCache()
             if (e is CancellationException) throw e

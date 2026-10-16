@@ -36,11 +36,11 @@
 
 **Interfaces:** `ImageTaskKind { TRY_ON, MANNEQUIN }`; `ImageTaskStatus { QUEUED, PREPARING, GENERATING, SAVING, AWAITING_CONFIRMATION, COMPLETED, FAILED, INTERRUPTED, CANCELLED, DISCARDED }`. Entity `ImageTask(id:String, kind, provider, title:String, requestJson:String, sourceImagePaths:List<String>, status, requestSent:Boolean, resultImagePath:String?, tryOnResultId:Long?, createdAt:Long, updatedAt:Long, error:String?)`. Request JSON contains version 1, garment ID/name/role snapshots and instructions, no paths/Key; ordered source paths live separately. Terminal requests may have no source paths. Repository exposes `tasks:Flow<List<ImageTask>>`, `observe(id):Flow<ImageTask?>`, `get(id)`, insertion, conditional queued claim and restart interruption. Source paths are released when no longer needed. Completed output paths are informational; only pending output is a protected image reference.
 
-- [ ] Write request validation/status tests (8/9 garment boundary, duplicate IDs, no required image refs for archived tasks, active states interrupted); run failing JVM target.
-- [ ] Add typed model/codec helpers `ImageTaskRequest.encode/decode`, `selections(paths)`, validation and protected-path helpers; use existing Gson and list converters.
-- [ ] Add entity/DAO/repository, 27→28 additive migration and registration; generated schema 28. Atomic claim uses affected-row conditional update.
-- [ ] Add migration sentinel/parallel claim/reference persistence tests with independent Room; run JVM and compile instrumented tests.
-- [ ] Commit contract and migration.
+- [x] Write request validation/status tests (8/9 garment boundary, duplicate IDs, no required image refs for archived tasks, active states interrupted); run failing JVM target.
+- [x] Add typed model/codec helpers `ImageTaskRequest.encode/decode`, `selections(paths)`, validation and protected-path helpers; use existing Gson and list converters.
+- [x] Add entity/DAO/repository, 27→28 additive migration and registration; generated schema 28. Atomic claim uses affected-row conditional update.
+- [x] Add migration sentinel/parallel claim/reference persistence tests with independent Room; run JVM and compile instrumented tests.
+- [x] Commit contract and migration.
 
 ### Task 2: Background execution and atomic results
 
@@ -48,12 +48,12 @@
 
 **Interfaces:** Coordinator `submitTryOn(List<TryOnSelection>,provider):String`, `submitMannequin(MannequinRequest,provider):String`, `cancel(id)`, `confirmMannequin(id)`, `discard(id)`, `delete(id)`, `withRestorePaused(block)`. Operations run in application-owned scope so caller disposal does not cancel accepted mutations. Runner `runQueue(onChanged:suspend(ImageTask?)->Unit)` is service owned, serial, await startup recovery. Add a defaulted suspend `beforeRequest` hook to generators to durably mark requestSent before HTTP; task-specific save callbacks atomically publish results/status. `readCredentials(provider)` reads exact provider without changing global selection.
 
-- [ ] Write tests for one claim/request, stage ordering, cancellation before/after request, provider switching and process interruption; observe zero automatic retries and exact call counts.
-- [ ] Implement app-scope submit/confirm/discard/delete and service-scope runner. Capture provider credentials once. Save TryOnResult and task completion together; save mannequin preview and pending ownership together. NonCancellable handoff must not delete committed output.
-- [ ] Implement dataSync service with immediate foreground notification, click intent `navigate_to=image_tasks`, bounded wake lock, 12-minute per-task watchdog, onTimeout cancellation, START_NOT_STICKY and clean idle stop. Start exceptions produce visible interruption; service only processes accepted queue.
-- [ ] Register service/permissions/channel, start one-time interruption recovery at Application startup, and add task image reference protection. Restore barrier cancels/joins execution and serializes short local commits without lock inversion.
-- [ ] Run controlled transport/real Room tests including VM disposal, empty-queue/new-submit race, service start rejection, lock-screen continuation, successful output handoff, deleted Item and confirm/discard race. No production test hooks that bypass credentials/API routing.
-- [ ] Commit background execution.
+- [x] Write tests for one claim/request, stage ordering, cancellation before/after request, provider switching and process interruption; observe zero automatic retries and exact call counts.
+- [x] Implement app-scope submit/confirm/discard/delete and service-scope runner. Capture provider credentials once. Save TryOnResult and task completion together; save mannequin preview and pending ownership together. NonCancellable handoff must not delete committed output.
+- [x] Implement dataSync service with immediate foreground notification, click intent `navigate_to=image_tasks`, bounded wake lock, 12-minute per-task watchdog, onTimeout cancellation, START_NOT_STICKY and clean idle stop. Start exceptions produce visible interruption; service only processes accepted queue.
+- [x] Register service/permissions/channel, start one-time interruption recovery at Application startup, and add task image reference protection. Restore barrier cancels/joins execution and serializes short local commits without lock inversion.
+- [x] Run controlled transport/real Room tests including VM disposal, empty-queue/new-submit race, service start rejection, lock-screen continuation, successful output handoff, deleted Item and confirm/discard race. No production test hooks that bypass credentials/API routing.
+- [x] Commit background execution.
 
 ### Task 3: Task backup compatibility
 
@@ -61,10 +61,10 @@
 
 **Interfaces:** `BackupData.imageTasks:List<ImageTask> = emptyList()`, format 8/schema 28, `BackupPreview.imageTaskCount`. Snapshot/clear/import/verify/count/CSV include tasks. Protected image refs include queued/active source images and pending output only. ZIP remaps actual task refs structurally; completed output maps through business image map if present, otherwise null. Archived tasks clear unused source refs, so deleted photos cannot break ZIP. Import normalizes queued/active states to INTERRUPTED and never starts the service.
 
-- [ ] Write failing format tests for old 1–7 defaults, unknown enums/request versions, malformed task/path arrays and interrupted restore.
-- [ ] Add strict validation and all backup integration points, using coordinator restore barrier only for database replacement; export uses a consistent snapshot without waiting for HTTP.
-- [ ] Test real ZIP round-trip pending preview and confirmed image order, sentinel preservation, failure rollback and import during blocked generation. Verify no post-import old writes and no automatic request.
-- [ ] Run JVM/Android backup targets and commit.
+- [x] Write failing format tests for old 1–7 defaults, unknown enums/request versions, malformed task/path arrays and interrupted restore.
+- [x] Add strict validation and all backup integration points, using coordinator restore barrier only for database replacement; export uses a consistent snapshot without waiting for HTTP.
+- [x] Test real ZIP round-trip pending preview and confirmed image order, sentinel preservation, failure rollback and import during blocked generation. Verify no post-import old writes and no automatic request.
+- [x] Run JVM/Android backup targets and commit.
 
 ### Task 4: Nonblocking generation pages and task center
 
@@ -84,10 +84,10 @@
 
 **Interfaces:** `AppRelease.releaseNotes:String = ""`. Parsers copy highest stable release body with null/missing handling within existing 1MiB response bound. Dialog scrolls text content, keeps buttons reachable, and shows notes for manual current-version check. Existing silent auto-check rules remain.
 
-- [ ] Add failing parser tests for highest release body, null/missing/blank, long multiline/Markdown and legacy GitHub body. Run test targets.
-- [ ] Implement body extraction and readable plain-text presentation, no HTML execution/new library; scroll using skin spacing and standard section heading. Empty text uses specified fallback.
-- [ ] Extend Compose host tests for manual equal version, long notes scroll and large-font download/close reachability; run existing automatic-check tests.
-- [ ] Commit notes support.
+- [x] Add failing parser tests for highest release body, null/missing/blank, long multiline/Markdown and legacy GitHub body. Run test targets.
+- [x] Implement body extraction and readable plain-text presentation, no HTML execution/new library; scroll using skin spacing and standard section heading. Empty text uses specified fallback.
+- [x] Extend Compose host tests for manual equal version, long notes scroll and large-font download/close reachability; run existing automatic-check tests.
+- [x] Commit notes support.
 
 ### Task 6: Whole-feature verification and formal release
 

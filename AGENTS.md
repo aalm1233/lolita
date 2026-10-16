@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 27，27 个实体（含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 28，28 个实体（新增本机图像任务 `ImageTask`，含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=108, versionName="2.50.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=109, versionName="2.51.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -302,7 +302,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式 version 7、schemaVersion 27；完整 JSON/ZIP 覆盖 26 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- 备份格式 version 8、schemaVersion 28；完整 JSON/ZIP 覆盖 27 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
 - 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
@@ -409,3 +409,14 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `TryOnSettings.readCredentials()` 原子读取服务与密钥，生成器全程使用该快照，并在上传前校验页面确认的服务；试衣历史写入实际模型型号。`changes` 通知两个保留的 ViewModel 同步状态。生成中、保存中及人台待处理预览禁止改服务或密钥。
 - `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 JPEG Data URL、1024×1536、PNG、b64_json、stream=false、watermark=true，复用2–9张及原图片总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。
 - Room27／备份7及图片归属不变。实际付费联调在用量限制调整后成功返回1张图（76.29秒，2张输入）；不能推论所有印花准确。验证、来源与样片见 `docs/seedream-provider-2026-10-16.md`，回归包含 API／不可变快照 JVM、独立AVD真实Keystore双Key保全、双VM同步及七皮肤浅暗服务选择、原生成与导航测试。
+
+## 后台图像任务与版本说明（2.51.0）
+
+- 虚拟试衣与人台图提交到持久 `ImageTask`，由 `ImageTaskCoordinator` 的应用作用域接收，`ImageTaskRunner` / `ImageTaskService` 串行执行。页面仅观察并提交，离开、底栏和快捷穿搭不再受全局生成/预览状态限制；短暂提交防双击，付费确认固定展示的服务，配置变化时拒绝陈旧确认。旧版 SavedState 预览单独验证、查看及明确追加/舍弃，不因 VM 销毁删除。
+- 个人页、两种生成页和通知进入 `Screen.ImageTasks` / `ImageTaskDetail`。展示真实阶段，不伪造百分比；试衣结果仍写独立历史，人台结果停在待确认，只有明确确认才事务追加最新 Item 图片末尾。删除任务不删除已保存业务结果；重新发起只回填当前服饰/图片到生成页，再次明确确认。
+- 服务为用户主动启动的 dataSync 前台服务，持续通知、有限唤醒锁、每任务 12 分钟超时、onTimeout 停止及 `START_NOT_STICKY`，不从开机广播发起付费调用。请求前先持久化 `requestSent`，一个任务只领取一次；重启与备份恢复把未结束任务改中断，保留证据而不自动重发。取消本地等待不保证服务端停止计费。
+- 任务固定服务，执行时原子捕获该服务的本机加密 Key；修改全局选择不影响已提交任务。密钥不进入任务、Intent、SavedState、日志和备份。现有两家官方 API、原图归属/PNG 校验及共享生成互斥继续保留；试衣结果与任务完成、预览引用与待确认状态分别原子提交。
+- Room27→28仅追加 `image_tasks`，DAO/薄 Repository/AppModule 接线及新枚举转换齐全。备份8包含任务 JSON/ZIP/CSV/预览/逐字段校验，旧1–7缺少数组视为空。完成任务的结果路径仅为信息，不强制备份已删除图片；排队/运行源图及待确认 PNG 才是任务持久图片引用。
+- 恢复先校验结构及暂存/本机完整 PNG，再通过协调层取消并等待旧执行退出；仅恢复屏障的等待保持 NonCancellable，保证页面离开后备份锁和 ZIP 暂存仍保留到恢复完成。图片保护租约在 Room 快照/导入引用事务内获取，导出/恢复结束后释放并重新核对延迟删除；避免取消任务或丢弃预览删掉备份正在使用的图片。恢复只清理本次激活且无引用的文件，不删除导入前旧图片。
+- `AppRelease.releaseNotes` 从同一次 Gitee 最高正式发布查询读取 body，遗留 GitHub 解析兼容正文；手动检查当前版本也可查看，缺失正文明确回退。对话框正文可滚动/选择，操作区适配大字，仍保持静默自动检查、下载探测和可信链接规则。
+- 回归包括 `ImageTaskTest`、`ImageTaskPersistenceTest/ExecutionTest/ServiceTest/BackupTest`、`ImageTaskBackupFormatTest`、任务中心/导航及现有生成页真实 Compose 测试、`AppUpdateNotesTest`。所有模拟器操作必须定向到独立 AVD，受控传输不能冒充真实付费 API 或锁屏 HTTP 联调；发布另做 clean 同签名覆盖升级及原表/图片/设置保全。

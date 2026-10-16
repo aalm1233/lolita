@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=112, versionName="2.53.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=113, versionName="2.54.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -451,3 +451,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 个人参考JPEG/PNG在平台解码前严格检查压缩流，避免截断熵数据＋伪EOI被当完整图；完整主JPEG允许Motion Photo/UltraHDR附加尾部（只验证主静态图）。API26/27只接受完整JPEG/PNG；28+其他格式继续ImageDecoder完整读取。预算为80MiB/36MP/单边16384，PNG展开256MiB、JPEG系数访问256M与渐进状态32MiB上限；此限制不改变原服饰读取器。
 - 回归：`PersonalModelRequestTest`、`PersonalImageIntegrityTest`、`PersonalModelApiTest`、`PersonalModelGeneratorTest`，以及独立AVD的`PersonalModelPersistenceTest/ExecutionTest/BackupTest`、个人编辑/管理、试衣/任务/导航Compose。真实七皮肤浅暗小屏大字图在`docs/visuals/2026-10-16-personal-model/`。真人相似度和身体尺寸还原尚未付费实测，不可用色块/内置图/草图宣称已验证。
 - 2.53.0 / 112 clean正式构建、297项JVM及148项设备回归通过；从2.52.0同签名覆盖升级，旧表字段、172张原图和设置字节保全。GitHub/Gitee正式发布及匿名完整APK/校验文件下载、SHA256、HEAD通过。Gitee公开列表仍HTTP403，正式包一次真实检查显示拒绝访问/频繁请求，最新版本和完整正文未验证；直接下载可用。回执与实拍见`docs/personal-model-release-2.53.0-verification.json`及`docs/visuals/2026-10-16-personal-model/manual/release-update-error.png`。
+
+## 无杆人台与小物展示（2.54.0）
+
+- 裙类沿用明确 JSK/OP/SK 与中文裙类准入，固定正面模板保留完整躯干和2:3画幅，去掉支撑杆/圆底座；提示词禁止以裁裙摆或加长裙身掩盖支架。素材与完整imagegen编辑提示见`docs/mannequin-accessory-assets-2026-10-16.json`。
+- `CategoryGroup.ACCESSORY`（含自定义名、独立和挂载小物）生成单独商品展示图，仅上传所选1张原图，不使用人台模板；保留原本成对/成组，不补造配套裙装。准入不根据Item名称或parentItemId推断，CLOTHING非裙仍不开放。
+- 新MANNEQUIN严格v3请求保存`MannequinSubject`分类id/名称/展示类型；v1/v2原样兼容，v2个人模特编码不写新null字段。Room仍29、备份仍9；JSON/ZIP包含请求快照并恢复幂等追加原物品图片，保留封面顺序。
+- 页面确认固定原图、说明、分类、服务及keyRevision，变动后重新确认；Coordinator事务与Generator准备前后核对当前分类和图片。`prepareAccessory`只处理1张原图，专用`generateMannequin`允许1–2输入，原试衣2–9、个人模特1–5边界不变。
+- 回归覆盖`MannequinSubjectTaskTest`、单图基础设施/API、确认变化、JSON/ZIP往返和旧任务；七皮肤浅暗320dp/两倍字体实拍在`docs/visuals/2026-10-16-mannequin-accessories/`。色块是布局夹具，无付费API生成品质试验。

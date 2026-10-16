@@ -41,9 +41,10 @@ class MannequinPersistenceTest {
                 description="私人备注",imageUrls=listOf(image()),createdAt=123,updatedAt=456)
             return item.copy(id=db.itemDao().insertItem(item))
         }
-        suspend fun image():String {
+        suspend fun image(color: Int = android.graphics.Color.TRANSPARENT):String {
             val bytes=ByteArrayOutputStream().use { out ->
                 val bitmap=Bitmap.createBitmap(32,48,Bitmap.Config.ARGB_8888)
+                bitmap.eraseColor(color)
                 bitmap.compress(Bitmap.CompressFormat.PNG,100,out); bitmap.recycle(); out.toByteArray()
             }
             return ImageFileHelper.saveGeneratedImage(context,bytes)
@@ -116,9 +117,11 @@ class MannequinPersistenceTest {
 
     @Test fun confirmedPreviewSurvivesExistingZipBackupAndRestoreInImageOrder()=runBlocking {
         Fixture().use { f ->
-            val original=f.setup(); val preview=f.image()
+            val original=f.setup(); val preview=f.image(android.graphics.Color.MAGENTA)
             f.repository.appendGeneratedImage(original.id,preview)
+            f.repository.setCoverImage(original.id,preview)
             val before=f.db.itemDao().getItemById(original.id)!!
+            assertEquals(listOf(preview,original.imageUrls.single()),before.imageUrls)
             val bytes=before.imageUrls.map { File(it).readBytes() }
             val manager=BackupManager(f.context,f.db)
             val zip=manager.exportToZip().getOrThrow()
@@ -130,6 +133,40 @@ class MannequinPersistenceTest {
                 bytes.forEachIndexed { index, expected -> assertArrayEquals(expected,File(restored.imageUrls[index]).readBytes()) }
                 assertEquals(0,f.db.tryOnDao().getAll().size)
             } finally { f.context.contentResolver.delete(zip,null,null) }
+        }
+    }
+
+    @Test fun coverChangeKeepsLatestFieldsAndConcurrentAppendWithoutDroppingRepeatedReferences()=runBlocking {
+        Fixture().use { f ->
+            val original=f.setup(); val target=f.image(); val extra=f.image()
+            val latest=original.copy(name="新名称",description="新备注",imageUrls=original.imageUrls+listOf(target,target))
+            val entered=CompletableDeferred<Unit>(); val release=CompletableDeferred<Unit>()
+            val edit=async(Dispatchers.IO) { f.db.withTransaction {
+                f.db.itemDao().updateItem(latest);entered.complete(Unit);release.await()
+            } }
+            entered.await()
+            val cover=async(Dispatchers.IO) { f.repository.setCoverImage(original.id,target) }
+            val append=async(Dispatchers.IO) { f.repository.appendGeneratedImage(original.id,extra) }
+            release.complete(Unit);edit.await();cover.await();append.await()
+            val saved=f.db.itemDao().getItemById(original.id)!!
+            assertEquals(listOf(target,original.imageUrls.single(),target,extra),saved.imageUrls)
+            assertEquals(latest.copy(imageUrls=saved.imageUrls,updatedAt=saved.updatedAt),saved)
+            saved.imageUrls.forEach { assertTrue(File(it).isFile) }
+        }
+    }
+
+    @Test fun currentCoverIsIdempotentAndRemovedForeignOrDeletedPhotosCannotBecomeCover()=runBlocking {
+        Fixture().use { f ->
+            val original=f.setup()
+            f.repository.setCoverImage(original.id,original.imageUrls.single())
+            assertEquals(original,f.db.itemDao().getItemById(original.id))
+            for(path in listOf("",f.image())) {
+                reject { f.repository.setCoverImage(original.id,path) }
+                assertEquals(original,f.db.itemDao().getItemById(original.id))
+            }
+            f.db.itemDao().deleteItem(original)
+            reject { f.repository.setCoverImage(original.id,original.imageUrls.single()) }
+            assertNull(f.db.itemDao().getItemById(original.id))
         }
     }
 

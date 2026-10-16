@@ -84,6 +84,9 @@ fun ItemDetailScreen(
     var childToAttach by remember { mutableStateOf<Item?>(null) }
     var shareChildPrice by remember { mutableStateOf(false) }
     var childToDetach by remember { mutableStateOf<Item?>(null) }
+    LaunchedEffect(uiState.coverError) {
+        uiState.coverError?.let { showError = it; viewModel.clearCoverError() }
+    }
 
     // Load item data
     LaunchedEffect(itemId) {
@@ -294,31 +297,36 @@ fun ItemDetailScreen(
                     ) {
                     // Image section
                     if (item.imageUrls.isNotEmpty()) {
-                        var showFullScreen by remember { mutableStateOf(false) }
-                        var selectedPage by remember { mutableIntStateOf(0) }
-
-                        ImageGalleryPager(
-                            imageUrls = item.imageUrls,
-                            onImageClick = { page ->
-                                selectedPage = page
-                                showFullScreen = true
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(heroHeight),
-                            contentDescription = item.name,
-                            sharedTransitionKey = "itemImage-${item.id}",
-                            contentScale = ContentScale.Fit,
-                            imageShape = heroShape,
-                            imageBackgroundColor = MaterialTheme.colorScheme.surface
-                        )
-
-                        if (showFullScreen) {
-                            FullScreenImageViewer(
+                        key(item.id, item.imageUrls.first()) {
+                            var showFullScreen by remember { mutableStateOf(false) }
+                            var selectedPage by remember { mutableIntStateOf(0) }
+                            var currentPage by remember { mutableIntStateOf(0) }
+                            ImageGalleryPager(
                                 imageUrls = item.imageUrls,
-                                initialPage = selectedPage,
-                                onDismiss = { showFullScreen = false }
+                                onImageClick = { page -> selectedPage = page; showFullScreen = true },
+                                modifier = Modifier.fillMaxWidth().height(heroHeight).testTag("item-detail-images"),
+                                contentDescription = item.name,
+                                sharedTransitionKey = "itemImage-${item.id}",
+                                contentScale = ContentScale.Fit,
+                                imageShape = heroShape,
+                                imageBackgroundColor = MaterialTheme.colorScheme.surface,
+                                onPageChanged = { currentPage = it }
                             )
+                            val path = item.imageUrls.getOrNull(currentPage)
+                            val isCover = path == item.imageUrls.first()
+                            Row(Modifier.fillMaxWidth().padding(horizontal = skin.spacingLarge),
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Text("${currentPage + 1} / ${item.imageUrls.size}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Spacer(Modifier.weight(1f))
+                                TextButton(onClick = { path?.let(viewModel::setImageCover) },
+                                    enabled = path != null && !isCover && !uiState.isSettingCover && !uiState.isSaving) {
+                                    Text(if (uiState.isSettingCover) "设置中…" else if (isCover) "当前封面" else "设为封面")
+                                }
+                            }
+                            if (showFullScreen) FullScreenImageViewer(imageUrls = item.imageUrls,
+                                initialPage = selectedPage, onDismiss = { showFullScreen = false })
                         }
                     } else {
                         Box(

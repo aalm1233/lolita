@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=110, versionName="2.51.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=111, versionName="2.52.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -430,3 +430,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 回归包含真实 loopback HTTP 断连、超时、API→coordinator→Room 原因保留、标准设置入口和帮助对话框。独立 AVD 受控 Doze 与实际付费息屏生成的结果均不能冒充 vivo 真机已修复；详细测试和复杂搭配评估见 `docs/image-generation-screen-off-2026-10-16.md`。
 
 - 2.51.1 / 110 clean 正式包从已发布2.51.0同签名覆盖升级，31张表全字段、172张图片及归档设置字节保全，GitHub/Gitee匿名下载、SHA256、HEAD和最高正式更新入口核验完成。真实 Seedream 实验52次请求/51张图后保留原提示词，不能将这批定性评估或 AVD 息屏结果表述为 vivo 网络已根治；回执 `docs/image-generation-release-2.51.1-verification.json`。
+
+## 服饰图片封面（2.52.0）
+
+- 服饰详情滑动图片后可“设为封面”，首张显示禁用的“当前封面”；保存完成回到新封面，原图和已追加的人台图均可选。列表、心愿、位置缩略图和详情继续统一读取 `imageUrls` 首项，不新增封面字段、数据库迁移或备份格式。
+- `ItemRepository.setCoverImage` 在 Room 事务中读取最新行，校验所选路径仍在该服饰图片里，只更新图片顺序和修改时间。仅把一个选中引用移到首位，保留其他引用的相对顺序与重复项；当前封面不重复写入，删除或不再归属的图片拒绝，和人台图追加串行，不能用详情旧快照覆盖整条服饰。
+- `ItemEditViewModel` 用 StateFlow 管理设置中/错误，异步由 viewModelScope 持有；身份改变后不回写旧结果，不覆盖未保存草稿。`ImageGalleryPager.onPageChanged` 为可选回调，只报告停稳的页，原调用保持兼容。
+- 回归为 `ItemCoverTest` 的真实详情→ViewModel→Room 操作，以及 `MannequinPersistenceTest` 的最新字段、并发追加、重复引用、幂等/删除/外部图片拒绝和带封面的 ZIP 顺序恢复。图片本体不复制、不删除，不调用图像服务。

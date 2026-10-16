@@ -131,7 +131,9 @@ data class ItemEditUiState(
     val locationId: Long? = null,
     val locations: List<com.lolita.app.data.local.entity.Location> = emptyList(),
     val purchaseReviews: List<ItemPurchaseReview> = emptyList(),
-    val purchaseReviewsLoaded: Boolean = false
+    val purchaseReviewsLoaded: Boolean = false,
+    val isSettingCover: Boolean = false,
+    val coverError: String? = null
 )
 
 /**
@@ -900,6 +902,32 @@ class ItemEditViewModel(
         itemRepository.attachChild(childId, parentId, includedInPrice)
     }
 
+    fun setImageCover(path: String) {
+        val current = _uiState.value
+        val item = current.item ?: return
+        if (current.isLoading || current.isSaving || current.isSettingCover || hasUnsavedChanges) return
+        val identity = requestedIdentity
+        _uiState.update { it.copy(isSettingCover = true, coverError = null) }
+        viewModelScope.launch {
+            try {
+                itemRepository.setCoverImage(item.id, path)
+                val latest = itemRepository.getItemById(item.id)
+                if (requestedIdentity == identity && latest != null && !hasUnsavedChanges) {
+                    _uiState.update { it.copy(item = latest, imageUrls = latest.imageUrls) }
+                }
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                if (requestedIdentity == identity) _uiState.update {
+                    it.copy(coverError = failure.message ?: "设置封面失败，请重试")
+                }
+            } finally {
+                if (requestedIdentity == identity) _uiState.update { it.copy(isSettingCover = false) }
+            }
+        }
+    }
+
+    fun clearCoverError() { _uiState.update { it.copy(coverError = null) } }
+
     suspend fun detachChild(childId: Long): Result<Unit> = runCatching {
         itemRepository.detachChild(childId)
     }
@@ -1144,6 +1172,7 @@ class ItemEditViewModel(
             return Result.failure(Exception("原记录尚未读取完成，暂时无法保存"))
         }
         if (state.isSaving) return Result.failure(Exception("正在保存中"))
+        if (state.isSettingCover) return Result.failure(Exception("正在设置封面"))
         if (state.recoveredImport && !hasUnsavedChanges && state.item != null) {
             return Result.success(state.item.id)
         }

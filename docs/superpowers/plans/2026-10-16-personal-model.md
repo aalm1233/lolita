@@ -1,6 +1,6 @@
 # Personal Model Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 创建照片／参数两种专属全身模特，明确保存后接入现有虚拟试衣，并保持旧资料、任务和备份兼容。
 
@@ -48,10 +48,10 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 
 **Interfaces:** produces the domain contracts above. `TryOnRequest.prompt(personalModel: Boolean = false)` keeps old no-argument behavior.
 
-- [ ] Add failing tests: `parameterModeRejectsPersonalPhotos`, `photoModeRequiresFaceOrFront`, `optionalMeasurementsStayUnknown`, `nonFiniteAndInvalidValuesFail`, `promptSeparatesLayoutFromIdentity`, `v1StillDecodesExactly`, `v2TryOnSeparatesModelFromGarments`.
-- [ ] Run `./gradlew testDebugUnitTest --tests '*PersonalModelRequestTest' --tests '*ImageTaskTest' --tests '*TryOnTest'`; verify new behavior fails before implementation.
-- [ ] Implement the named types and strict whitelisted parsing. Use centralized broad bounds: height 50–260 cm, weight 10–500 kg, circumferences 10–350 cm, shoulders 10–120 cm, inseam 10–180 cm; support decimal values. Do not validate fixed body ratios.
-- [ ] Run the same tests to PASS, then commit this task's domain files and tests.
+- [x] Add failing tests: `parameterModeRejectsPersonalPhotos`, `photoModeRequiresFaceOrFront`, `optionalMeasurementsStayUnknown`, `nonFiniteAndInvalidValuesFail`, `promptSeparatesLayoutFromIdentity`, `v1StillDecodesExactly`, `v2TryOnSeparatesModelFromGarments`.
+- [x] Run `./gradlew testDebugUnitTest --tests '*PersonalModelRequestTest' --tests '*ImageTaskTest' --tests '*TryOnTest'`; verify new behavior fails before implementation.
+- [x] Implement the named types and strict whitelisted parsing. Use centralized broad bounds: height 50–260 cm, weight 10–500 kg, circumferences 10–350 cm, shoulders 10–120 cm, inseam 10–180 cm; support decimal values. Do not validate fixed body ratios.
+- [x] Run the same tests to PASS, then commit this task's domain files and tests.
 
 ### Task 2: Room records, persistent drafts, selection and image ownership
 
@@ -59,11 +59,11 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 
 **Interfaces:** produces DAO/repository/preferences contracts above. Model and draft reference queries participate in `deleteImage`'s same Room transaction. `AppModule.personalModelRepository()` returns repository.
 
-- [ ] Write `PersonalModelPersistenceTest` covering 28→29 preserving old rows, rename only changes name/time, draft references protecting copies, deleting an accepted model while a task protects its image, missing default fallback and original history preservation.
-- [ ] Run targeted instrumentation on an explicitly selected independent AVD, confirming missing schema/DAO fails before implementation.
-- [ ] Add additive migration and KSP schema 29; extend old entities with nullable default columns. Keep no foreign key from historical try-on/task snapshots to mutable personal models. Implement repository cleanup after transaction and DataStore selection.
-- [ ] Store editor raw strings in a strict versioned draft format, images only in enumerable `sourceImagePaths`; preserve drafts on process recreation; cleanup exclusively on explicit discard or successful ownership transfer.
-- [ ] Run targeted tests and `assembleDebug` after integrating task 3 dependencies; commit data and schema files.
+- [x] Write `PersonalModelPersistenceTest` covering 28→29 preserving old rows, rename only changes name/time, draft references protecting copies, deleting an accepted model while a task protects its image, missing default fallback and original history preservation.
+- [x] Run targeted instrumentation on an explicitly selected independent AVD, confirming missing schema/DAO fails before implementation.
+- [x] Add additive migration and KSP schema 29; extend old entities with nullable default columns. Keep no foreign key from historical try-on/task snapshots to mutable personal models. Implement repository cleanup after transaction and DataStore selection.
+- [x] Store editor raw strings in a strict versioned draft format, images only in enumerable `sourceImagePaths`; preserve drafts on process recreation; cleanup exclusively on explicit discard or successful ownership transfer.
+- [x] Run targeted tests and `assembleDebug` after integrating task 3 dependencies; commit data and schema files.
 
 ### Task 3: Generation, durable confirmation and personal try-on
 
@@ -71,12 +71,12 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 
 **Interfaces:** consumes tasks 1–2. Coordinator methods above are application-scope accepted operations; new executor constructor parameters appended with defaults for existing tests.
 
-- [ ] Add failing JVM/API tests for one-template generation only through the new operation, no hidden photos, provider snapshot and no automatic retry; add device tests for preview/source publication, duplicate confirmation, restore/stop/cancel boundaries and queued model deletion.
-- [ ] Run targeted JVM tests then device task tests; confirm new expectations fail.
-- [ ] Implement explicit PERSONAL_MODEL task kind, immutable v2 metadata and path grouping, startup/retry source retention for personal tasks, and atomic confirm→accepted model plus task result id. Preserve existing mannequin cleanup semantics.
-- [ ] Snapshot personal try-on reference at submission in a Room transaction, pin it through execution, pass its identity-aware prompt, and persist person id/name in TryOnResult. Do not reload current default at execution time.
-- [ ] Expose new per-operation API entrypoint with unchanged HTTPS, 32MiB PNG, normalization and error handling. First template controls layout only; explicit original photographs govern identity. Use existing shared generation gate.
-- [ ] Run targeted JVM and independent AVD tests to PASS; commit pipeline files.
+- [x] Add failing JVM/API tests for one-template generation only through the new operation, no hidden photos, provider snapshot and no automatic retry; add device tests for preview/source publication, duplicate confirmation, restore/stop/cancel boundaries and queued model deletion.
+- [x] Run targeted JVM tests then device task tests; confirm new expectations fail.
+- [x] Implement explicit PERSONAL_MODEL task kind, immutable v2 metadata and path grouping, startup/retry source retention for personal tasks, and atomic confirm→accepted model plus task result id. Preserve existing mannequin cleanup semantics.
+- [x] Snapshot personal try-on reference at submission in a Room transaction, pin it through execution, pass its identity-aware prompt, and persist person id/name in TryOnResult. Do not reload current default at execution time.
+- [x] Expose new per-operation API entrypoint with unchanged HTTPS, 32MiB PNG, normalization and error handling. First template controls layout only; explicit original photographs govern identity. Use existing shared generation gate.
+- [x] Run targeted JVM and independent AVD tests to PASS; commit pipeline files.
 
 ### Task 4: Complete backup 9 and restore mapping
 
@@ -84,11 +84,11 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 
 **Interfaces:** consumes tasks 1–3; exports `personalModels` and `personalModelDrafts`; schema 29, format 9.
 
-- [ ] Write failing tests for formats 1–8 defaulting arrays/person snapshot, v1 pending mannequin restoration, strict v2 validation, JSON/ZIP roundtrip including accepted/reference/draft/pending-source images, mapped paths, and unknown enums/nonfinite values rejection.
-- [ ] Run targeted JVM and independent Room/ZIP tests to observe failure.
-- [ ] Extend all snapshot/clear/insert/preview/count/CSV/required-array/field-comparison/image-mapping paths. Pending model source images and result stay protected; interrupted personal requests keep necessary input references but never execute automatically.
-- [ ] During restore invalidate stale local defaults safely and use existing restore barrier and reference leases; reject mismatched task/result ownership without deleting prior files.
-- [ ] Re-run existing and new backup tests to PASS; commit backup files.
+- [x] Write failing tests for formats 1–8 defaulting arrays/person snapshot, v1 pending mannequin restoration, strict v2 validation, JSON/ZIP roundtrip including accepted/reference/draft/pending-source images, mapped paths, and unknown enums/nonfinite values rejection.
+- [x] Run targeted JVM and independent Room/ZIP tests to observe failure.
+- [x] Extend all snapshot/clear/insert/preview/count/CSV/required-array/field-comparison/image-mapping paths. Pending model source images and result stay protected; interrupted personal requests keep necessary input references but never execute automatically.
+- [x] During restore invalidate stale local defaults safely and use existing restore barrier and reference leases; reject mismatched task/result ownership without deleting prior files.
+- [x] Re-run existing and new backup tests to PASS; commit backup files.
 
 ### Task 5: Real seven-skin library, editor, task preview and try-on picker
 
@@ -96,19 +96,19 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 
 **Interfaces:** consumes coordinator/repository/default preference APIs; shared draft DTO is versioned and only path arrays contain files. `PersonalModelScreen(onBack, onCreate, onAdjust, viewModel)`; `PersonalModelEditScreen(onBack, onTask, viewModel)`. Navigation loads identity once via ViewModel, not recomposition resets.
 
-- [ ] Add ViewModel/Compose tests for invalid input, PHOTO→PARAMETERS excluding retained hidden photos, process/draft restoration, photo copy cancellation, retry prefill waiting, task submission once, save preview idempotence and deleted model retry requiring reselection.
-- [ ] Implement library and editor with existing top bar, sections/cards/images, Photo Picker and image preview; use skin spacing, scroll observation, scaffold/IME consumption. Name / height / weight, optional measurements and description, photo roles and parameter-only appearance. Dirty exit confirms explicit discard; rotation is not discard.
-- [ ] Extend task detail for new previews, meaningful save/discard and confirmed model navigation. Extend retry using current photo/parameter sources, never auto-submit. Preserve all old route patterns.
-- [ ] Add model picker and manage entry to try-on, retain item selection while switching characters, display this request's selected person; UI selection validation prevents generating with deleted/missing images. New calls preserve existing VM test constructor defaults.
-- [ ] Run focused Compose and VM tests on independent AVD; export actual light/dark and 320dp/large font screenshots. Compare primary flow to approved mockup; commit UI/navigation files.
+- [x] Add ViewModel/Compose tests for invalid input, PHOTO→PARAMETERS excluding retained hidden photos, process/draft restoration, photo copy cancellation, retry prefill waiting, task submission once, save preview idempotence and deleted model retry requiring reselection.
+- [x] Implement library and editor with existing top bar, sections/cards/images, Photo Picker and image preview; use skin spacing, scroll observation, scaffold/IME consumption. Name / height / weight, optional measurements and description, photo roles and parameter-only appearance. Dirty exit confirms explicit discard; rotation is not discard.
+- [x] Extend task detail for new previews, meaningful save/discard and confirmed model navigation. Extend retry using current photo/parameter sources, never auto-submit. Preserve all old route patterns.
+- [x] Add model picker and manage entry to try-on, retain item selection while switching characters, display this request's selected person; UI selection validation prevents generating with deleted/missing images. New calls preserve existing VM test constructor defaults.
+- [x] Run focused Compose and VM tests on independent AVD; export actual light/dark and 320dp/large font screenshots. Compare primary flow to approved mockup; commit UI/navigation files.
 
 ### Task 6: Integration review, full regression and release
 
 **Files:** docs implementation/verification records, AGENTS.md new feature facts, build version metadata and release notes; source fixes only if evidence requires.
 
-- [ ] Run `./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest`; inspect totals/failures, then targeted connected tests for personal model, old generation/navigation, task service and backup on independent AVD.
-- [ ] Fresh independent review checks spec coverage, corrupt import data, path ownership, concurrency, old constructor compatibility, no embedded credentials and no privacy regression; fix actionable findings and re-run affected checks.
-- [ ] With no user portrait or new paid test authorization supplied, explicitly report likeness/target measurements as unverified; controlled transfer and built-in demonstration do not prove real-person results. Do not reuse prior complex-outfit API budget for a different experiment.
+- [x] Run `./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest`; inspect totals/failures, then targeted connected tests for personal model, old generation/navigation, task service and backup on independent AVD.
+- [x] Fresh independent review checks spec coverage, corrupt import data, path ownership, concurrency, old constructor compatibility, no embedded credentials and no privacy regression; fix actionable findings and re-run affected checks.
+- [x] With no user portrait or new paid test authorization supplied, explicitly report likeness/target measurements as unverified; controlled transfer and built-in demonstration do not prove real-person results. Do not reuse prior complex-outfit API budget for a different experiment.
 - [ ] Update implementation records and AGENTS.md. For normal authorized release use 2.53.0 / 112, `clean assembleRelease`, original signing identity and independent AVD 2.52.0→2.53.0 upgrade, table/image/settings preservation. Publish via the established GitHub/Gitee flow and validate public APK/SHA256/update notes; preserve source credentials outside repo.
 - [ ] Commit verification and integration; report installable result, actual evidence and remaining visual-generation limits concisely.
 

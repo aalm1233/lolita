@@ -46,9 +46,9 @@
 **Files:** ui/screen/item/ItemDetailScreen.kt、ui/screen/mannequin/{MannequinViewModel,MannequinScreen}.kt、ui/screen/tasks/{ImageTaskScreen,ImageTaskDetailScreen,ImageTaskViewModel}.kt；MannequinDetailEntryTest、MannequinViewModelTest、MannequinScreenTest、ImageTaskBackupTest。
 **Interfaces:** UiState从当前category派生subject、title与上传张数；提交时传完整subject。配饰界面不显示空白人台图；上传确认只列1张原图。任务详情使用“添加到原物品图片”。
 
-- [ ] 先补独立/挂载配饰入口、有图/无图、裙装2图与小物1图确认、分类变化与旧重试回归，在独立AVD观察RED。
-- [ ] 复用现有皮肤组件调整文案/模板区和确认输入；展示类型变更后重新核对，不沿用旧确认。
-- [ ] 新小物待确认预览JSON/ZIP往返/恢复后幂等追加，旧裙装/个人模特回归；浅暗七皮肤320dp大字截图核对。提交`feat: expose accessory display generation in item details`。
+- [x] 先补独立/挂载配饰入口、有图/无图、裙装2图与小物1图确认、分类变化与旧重试回归，在独立AVD观察RED。
+- [x] 复用现有皮肤组件调整文案/模板区和确认输入；展示类型变更后重新核对，不沿用旧确认。
+- [x] 新小物待确认预览JSON/ZIP往返/恢复后幂等追加，旧裙装/个人模特回归；浅暗七皮肤320dp大字截图核对。提交`feat: expose accessory display generation in item details`。
 
 ### Task 4: 集成、审查与发布
 

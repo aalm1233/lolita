@@ -26,6 +26,56 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @RunWith(AndroidJUnit4::class)
 class ImageTaskBackupTest {
+    @Test fun standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(false) }
+    @Test fun standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(true) }
+
+    private suspend fun standaloneRoundTrip(zip: Boolean) = fixture { f ->
+        val original = f.db.itemDao().getItemById(f.itemId)!!
+        val category = f.db.categoryDao().getCategoryById(original.categoryId)!!.copy(name = "袜子", group = CategoryGroup.ACCESSORY)
+        f.db.categoryDao().updateCategory(category)
+        f.db.itemDao().updateItem(original.copy(name = "配套袜子"))
+        val coordinator = ImageTaskCoordinator(f.db, f.scope, {},
+            { ImageFileHelper.saveGeneratedImage(f.context, it) }, ImageFileHelper::deleteImage,
+            { ImageFileHelper.isOwnedGeneratedImage(f.context, it) })
+        coordinator.awaitStartup()
+        val images = com.lolita.app.data.tryon.TryOnImages(f.context)
+        var calls = 0
+        val executor = ImageTaskExecutor(coordinator, f.db, { ImageGenerationCredentials(it, "controlled-key") },
+            images::prepare, images::prepareMannequin,
+            { _, _, _ -> error("Standalone display must use its dedicated generator") },
+            prepareAccessory = images::prepareAccessory,
+            generateMannequin = { _, references, prompt ->
+                calls++
+                assertEquals(1, references.size)
+                assertTrue(prompt.contains("\"袜子\""))
+                assertFalse(prompt.contains("Edit image 1, the canonical empty warm-white tailoring mannequin"))
+                f.bytes
+            })
+        val id = coordinator.submitMannequin(MannequinRequest(f.itemId, f.source, "保留原来的一双", mannequinSubject(category)), ImageGenerationProvider.SEEDREAM)
+        ImageTaskRunner(coordinator, executor::execute).runQueue()
+        val pending = f.db.imageTaskDao().get(id)!!
+        assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, pending.status)
+        assertEquals(1, calls)
+        assertEquals(MannequinSubject(category.id, "袜子", MannequinPresentation.ACCESSORY), ImageTaskRequest.decode(pending.requestJson).mannequinSubject)
+        val manager = BackupManager(f.context, f.db, withImageTasksPaused = { action -> coordinator.withRestorePaused(action) })
+        val uri = (if (zip) manager.exportToZip() else manager.exportToJson()).getOrThrow().also(f.exports::add)
+        assertEquals(1, manager.previewBackup(uri).getOrThrow().imageTaskCount)
+        manager.importBackup(uri).getOrThrow()
+        val restored = f.db.imageTaskDao().get(id)!!
+        assertEquals(pending.requestJson, restored.requestJson)
+        assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, restored.status)
+        assertArrayEquals(f.bytes, File(restored.resultImagePath!!).readBytes())
+        // The paid preview is historical; later category edits cannot prevent attaching it.
+        f.db.categoryDao().updateCategory(category.copy(name = "鞋"))
+        coordinator.confirmMannequin(id); coordinator.confirmMannequin(id)
+        val item = f.db.itemDao().getItemById(f.itemId)!!
+        assertEquals(2, item.imageUrls.size)
+        assertEquals(restored.resultImagePath, item.imageUrls.last())
+        assertArrayEquals(f.bytes, File(item.imageUrls.first()).readBytes())
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(id)!!.status)
+        assertEquals(1, calls)
+    }
+
     private val target = InstrumentationRegistry.getInstrumentation().targetContext
     private inner class Fixture {
         val root = File(target.cacheDir,"image-task-backup-${UUID.randomUUID()}").apply { mkdirs() }

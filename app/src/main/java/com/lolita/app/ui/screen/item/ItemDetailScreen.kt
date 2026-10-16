@@ -1098,6 +1098,6 @@ internal fun MannequinDetailEntry(item: Item, category: com.lolita.app.data.loca
     OutlinedButton(onClick = { onNavigate(item.id) }, modifier = Modifier.fillMaxWidth()) {
         SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(skin.spacingMedium))
-        Text("生成人台图（实验）")
+        Text(if (category?.group == com.lolita.app.data.local.entity.CategoryGroup.ACCESSORY) "生成小物展示图（实验）" else "生成人台图（实验）")
     }
 }

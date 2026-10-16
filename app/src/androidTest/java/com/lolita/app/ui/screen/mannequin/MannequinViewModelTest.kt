@@ -80,6 +80,20 @@ class MannequinViewModelTest {
     private suspend fun main(action: () -> Unit) = withContext(Dispatchers.Main) { action() }
     private suspend fun ready(vm: MannequinViewModel, condition: (MannequinUiState) -> Boolean) = withTimeout(10_000) { vm.uiState.first(condition) }
 
+    @Test fun accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault() = runBlocking {
+        Fixture().use { f ->
+            f.setup()
+            f.db.categoryDao().updateCategory(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY))
+            val (vm, _) = f.model()
+            main { vm.generate() }
+            val final = ready(vm) { !it.isSubmitting && (it.latestTaskId != null || it.error != null) }
+            assertNotNull("Standalone accessory must enqueue with its subject", final.latestTaskId)
+            val request = ImageTaskRequest.decode(f.db.imageTaskDao().get(final.latestTaskId!!)!!.requestJson)
+            assertEquals(MannequinSubject(1, "KC", MannequinPresentation.ACCESSORY), request.mannequinSubject)
+            assertEquals(listOf(f.item.imageUrls.first()), f.db.imageTaskDao().get(final.latestTaskId)!!.sourceImagePaths)
+        }
+    }
+
     @Test fun selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview() = runBlocking {
         Fixture().use { f ->
             f.setup(); val handle = SavedStateHandle(mapOf("itemId" to 11L)); val (vm, store) = f.model(handle)

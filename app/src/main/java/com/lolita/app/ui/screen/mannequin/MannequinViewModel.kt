@@ -12,7 +12,9 @@ import com.lolita.app.domain.model.ImageTaskRequest
 import com.lolita.app.data.local.entity.ImageTask
 import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.MannequinRequest
-import com.lolita.app.domain.model.supportsMannequin
+import com.lolita.app.domain.model.MannequinPresentation
+import com.lolita.app.domain.model.MannequinSubject
+import com.lolita.app.domain.model.mannequinSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -36,14 +38,18 @@ data class MannequinUiState(
     val isSubmitting: Boolean = false,
     val error: String? = null
 ) {
+    val subject: MannequinSubject? get() = mannequinSubject(category)
+    val presentation: MannequinPresentation get() = subject?.presentation ?: MannequinPresentation.DRESS_FORM
     val busy get() = isSubmitting || isConfiguring || savingLegacy
     val selectionIssue: String? get() = when {
-        item == null -> "这件裙子已被删除或无法读取"
-        !supportsMannequin(category) -> "仅支持服装分类中的 JSK、OP、SK 和明确裙类"
+        item == null || item.id <= 0 -> "这件物品已被删除或无法读取"
+        subject == null -> "仅支持 JSK、OP、SK、明确裙类和配饰分类"
         selectedImage.isBlank() || selectedImage !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
         else -> null
     }
     val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
+    val generationRequest: MannequinRequest? get() = if (selectionIssue == null)
+        MannequinRequest(requireNotNull(item).id, selectedImage, instructions, requireNotNull(subject)) else null
 
 }
 
@@ -85,7 +91,7 @@ class MannequinViewModel @JvmOverloads constructor(
             combine(item, categories) { row, groups -> row to groups.firstOrNull { it.id == row?.categoryId } }
                 .catch { failure ->
                     if (failure is CancellationException) throw failure
-                    state.update { it.copy(isLoading = false, loadFailed = true, error = "裙子读取失败，请返回后重试") }
+                    state.update { it.copy(isLoading = false, loadFailed = true, error = "物品读取失败，请返回后重试") }
                 }.collect { (row, category) ->
                     if (!restored) {
                         restored = true
@@ -169,15 +175,22 @@ class MannequinViewModel @JvmOverloads constructor(
             } finally { state.update { it.copy(isConfiguring = false) } }
         }
     }
-    fun generate(confirmedProvider: ImageGenerationProvider = state.value.provider) {
+    fun generate(confirmedProvider: ImageGenerationProvider = state.value.provider,
+        confirmedRequest: MannequinRequest? = null, confirmedKeyRevision: Int? = null) {
         val current = state.value
         if (current.busy || current.isLoading || current.loadFailed || !current.keyLoaded) return
         if (confirmedProvider != current.provider) {
             state.update { it.copy(error = "图像服务已改变，请核对后重新确认") }; return
         }
+        if (confirmedKeyRevision != null && confirmedKeyRevision != current.keyRevision) {
+            state.update { it.copy(error = "服务配置已改变，请核对后重新确认") }; return
+        }
         if (!current.hasKey) { state.update { it.copy(error = "请先配置个人 API Key") }; return }
         current.selectionIssue?.let { issue -> state.update { it.copy(error = issue) }; return }
-        val request = MannequinRequest(itemId, current.selectedImage, current.instructions)
+        val request = requireNotNull(current.generationRequest)
+        if (confirmedRequest != null && confirmedRequest != request) {
+            state.update { it.copy(error = "图片、分类或说明已改变，请重新核对后确认") }; return
+        }
         state.update { it.copy(isSubmitting = true, error = null) }
         viewModelScope.launch {
             try {

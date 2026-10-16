@@ -54,6 +54,10 @@ val ImageTaskKind.label: String get() = when (this) {
     ImageTaskKind.PERSONAL_MODEL -> "个人模特"
 }
 
+val ImageTask.displayTypeLabel: String get() = if (kind == ImageTaskKind.MANNEQUIN)
+    runCatching { ImageTaskRequest.decode(requestJson).mannequinSubject?.presentation?.label }.getOrNull() ?: kind.label
+    else kind.label
+
 val ImageTask.garmentId: Long? get() = runCatching { ImageTaskRequest.decode(requestJson).garments.singleOrNull()?.itemId }.getOrNull()
 val ImageTask.canRetry: Boolean get() = status in setOf(ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED)
 val ImageTaskStatus.label: String get() = when (this) {

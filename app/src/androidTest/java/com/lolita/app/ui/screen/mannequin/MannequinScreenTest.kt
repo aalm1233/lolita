@@ -52,6 +52,8 @@ class MannequinScreenTest {
     private var discarded: String? = null
     private var navigated = 0
     private var blocked = false
+    private lateinit var categoryRows: MutableStateFlow<List<Category>>
+    private var submitted: com.lolita.app.domain.model.MannequinRequest? = null
     private val presentation = mutableStateOf(Presentation())
 
     @Before fun setup() {
@@ -63,12 +65,13 @@ class MannequinScreenTest {
             }
         }.absolutePath }
         store = ViewModelStore()
+        categoryRows = MutableStateFlow(listOf(Category(id = 1, name = "OP")))
         instrumentation.runOnMainSync {
             vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L)),
                 item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED, imageUrls = photos.take(2))),
-                categories = flowOf(listOf(Category(id = 1, name = "OP"))),
+                categories = categoryRows,
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, key != null) }, selectService = { provider = it }, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
-                tasks = flowOf(emptyList()), submitTask = { _, _ -> calls++; generated.await() })
+                tasks = flowOf(emptyList()), submitTask = { request, _ -> calls++; submitted = request; generated.await() })
             store.put("vm", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }
@@ -102,6 +105,63 @@ class MannequinScreenTest {
         compose.onNodeWithText("保存密钥").performClick()
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
     }
+    @Test fun standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory() {
+        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY)) }
+        compose.waitUntil(10_000) { vm.uiState.value.category?.name == "KC" }
+        show(); configure()
+        compose.onNodeWithText("小物展示图（实验）").assertIsDisplayed()
+        compose.onNodeWithTag("mannequinUploadSummary").assertTextContains("共1张图片", substring = true)
+        val output = File(instrumentation.targetContext.filesDir, "accessory-ui-contact-sheets").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
+            compose.onNodeWithText("生成小物展示图").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithTag("mannequinUploadSummary").assertTextContains("共1张图片", substring = true)
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+        compose.onNodeWithText("生成小物展示图").performClick()
+        compose.onNodeWithText("确认生成小物展示图？").assertIsDisplayed()
+        compose.waitForIdle()
+        instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
+            File(output, "confirmation.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
+        }
+        assertEquals(0, calls)
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { calls == 1 }
+        generated.complete("accessory-task")
+        compose.waitUntil(10_000) { !vm.uiState.value.isSubmitting }
+        assertEquals(photos.first(), submitted!!.imagePath)
+        assertEquals(com.lolita.app.domain.model.MannequinSubject(1, "KC", com.lolita.app.domain.model.MannequinPresentation.ACCESSORY), submitted!!.subject)
+    }
+
+    @Test fun categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation() {
+        show(); configure()
+        compose.onNodeWithText("生成正面人台图").performClick()
+        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "SK")) }
+        compose.waitUntil(10_000) { vm.uiState.value.category?.name == "SK" }
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { calls > 0 || vm.uiState.value.error != null }
+        compose.runOnIdle { assertEquals(0, calls) }
+    }
+
+    @Test fun selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation() {
+        show(); configure()
+        compose.onNodeWithText("生成正面人台图").performClick()
+        compose.runOnIdle { vm.selectImage(photos[1]) }
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { calls > 0 || vm.uiState.value.error != null }
+        compose.runOnIdle { assertEquals(0, calls) }
+    }
+
+    @Test fun instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation() {
+        show(); configure()
+        compose.onNodeWithText("生成正面人台图").performClick()
+        compose.runOnIdle { vm.updateInstructions("保留原裙摆") }
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { calls > 0 || vm.uiState.value.error != null }
+        compose.runOnIdle { assertEquals(0, calls) }
+    }
+
     @Test fun seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls() {
         show()
         scroll("即梦 5.0 Pro")

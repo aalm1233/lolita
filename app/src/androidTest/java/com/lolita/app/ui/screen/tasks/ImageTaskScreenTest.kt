@@ -182,7 +182,7 @@ class ImageTaskScreenTest {
         compose.onNodeWithContentDescription("关闭图片预览").assertIsDisplayed().performClick()
         val latest = db.itemDao().getItemById(11)!!.copy(name = "已编辑的裙名", description = "最新备注", imageUrls = listOf("/original.png", "/added.png"))
         db.itemDao().updateItem(latest)
-        scrollTo("添加到裙子图片"); compose.onNodeWithText("添加到裙子图片").performClick()
+        scrollTo("添加到原物品图片"); compose.onNodeWithText("添加到原物品图片").performClick()
         compose.onNodeWithText("确认").performClick()
         withTimeout(10_000) { db.imageTaskDao().observe(pendingId).first { it?.status == ImageTaskStatus.COMPLETED } }
         val saved = db.itemDao().getItemById(11)!!
@@ -195,8 +195,8 @@ class ImageTaskScreenTest {
     }
     @Test fun deletedOriginalCannotAppendButPreviewCanStillBeViewedAndDiscarded() = runBlocking {
         db.itemDao().deleteItem(db.itemDao().getItemById(11)!!)
-        show(); scrollTo("添加到裙子图片")
-        compose.onNodeWithText("添加到裙子图片").assertIsNotEnabled()
+        show(); scrollTo("添加到原物品图片")
+        compose.onNodeWithText("添加到原物品图片").assertIsNotEnabled()
         compose.onNodeWithText("舍弃预览").performScrollTo().performClick()
         compose.onNodeWithText("确认").performClick()
         withTimeout(10_000) { db.imageTaskDao().observe(pendingId).first { it?.status == ImageTaskStatus.DISCARDED } }
@@ -245,8 +245,8 @@ class ImageTaskScreenTest {
         val output = File(instrumentation.targetContext.filesDir, "image-task-ui-contact-sheets").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(skin, dark); detail.value = true }
-            scrollTo("添加到裙子图片")
-            compose.onNodeWithText("添加到裙子图片").assertIsDisplayed().assertIsEnabled()
+            scrollTo("添加到原物品图片")
+            compose.onNodeWithText("添加到原物品图片").assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithText("舍弃预览").performScrollTo().assertIsDisplayed().assertHasClickAction()
             save(output, skin, dark, "detail-actions")
             scrollTo("点击图片放大核对")

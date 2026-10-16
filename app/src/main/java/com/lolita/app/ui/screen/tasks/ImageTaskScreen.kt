@@ -51,13 +51,13 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }
             if (!state.isLoading && state.visibleTasks.isEmpty()) item("empty") {
                 LolitaSection(title = "暂无${if (state.filter == ImageTaskFilter.ALL) "" else state.filter.label}任务") { row {
-                    Text("从虚拟试衣、个人模特或裙子详情的正面人台图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
+                    Text("从虚拟试衣、个人模特或物品详情的人台图、小物展示图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
                 } }
             }
             items(state.visibleTasks, key = { it.id }) { task ->
                 LolitaSection(title = task.title, modifier = Modifier.skinClickable { onOpenTask(task.id) }) { row {
                     Spacer(Modifier.height(skin.spacingMedium))
-                    Text("${task.kind.label} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)
+                    Text("${task.displayTypeLabel} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)
                     TaskStage(task)
                     Text(formatTaskDate(task.createdAt), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     task.error?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }

@@ -49,7 +49,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
             if (task != null) {
                 item("status") { LolitaSection(title = task.title) { row {
                     Spacer(Modifier.height(skin.spacingMedium))
-                    Text("${task.kind.label} · ${task.provider.label}", style = MaterialTheme.typography.bodyMedium)
+                    Text("${task.displayTypeLabel} · ${task.provider.label}", style = MaterialTheme.typography.bodyMedium)
                     TaskStage(task)
                     Text("创建于 ${formatTaskDate(task.createdAt)}", style = MaterialTheme.typography.bodySmall)
                     Text("更新于 ${formatTaskDate(task.updatedAt)}", style = MaterialTheme.typography.bodySmall)
@@ -66,7 +66,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                         Text("请求可能已发送，停止本地等待不代表远端取消，服务可能仍会计费。", Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
                     }
                 } } }
-                if (path != null) item("result") { LolitaSection(title = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) (if (task.kind == ImageTaskKind.PERSONAL_MODEL) "待确认个人模特" else "待确认人台图") else "生成结果") { row {
+                if (path != null) item("result") { LolitaSection(title = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) "待确认${task.displayTypeLabel}" else "生成结果") { row {
                     Spacer(Modifier.height(skin.spacingMedium))
                     ImageFrame(Modifier.fillMaxWidth()) {
                         LolitaShimmerImage(model = path, contentDescription = "放大生成结果", contentScale = ContentScale.Fit,
@@ -92,8 +92,8 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                             }
                             ImageTaskKind.MANNEQUIN -> {
                                 Text("核对花纹、版型与细节后再添加。离开页面和重启均保留此预览。", style = MaterialTheme.typography.bodySmall)
-                                if (!state.canAppend(task)) Text("原服饰已删除，可查看或舍弃预览。", color = MaterialTheme.colorScheme.error)
-                                Button(onClick = { confirmation = "append" }, enabled = !busy && path != null && state.canAppend(task), modifier = Modifier.fillMaxWidth()) { Text("添加到裙子图片") }
+                                if (!state.canAppend(task)) Text("原物品已删除，可查看或舍弃预览。", color = MaterialTheme.colorScheme.error)
+                                Button(onClick = { confirmation = "append" }, enabled = !busy && path != null && state.canAppend(task), modifier = Modifier.fillMaxWidth()) { Text("添加到原物品图片") }
                             }
                             ImageTaskKind.TRY_ON -> Unit
                         }
@@ -126,13 +126,13 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
     }
     if (zoom && path != null) FullScreenImageViewer(listOf(path), onDismiss = { zoom = false })
     confirmation?.let { action ->
-        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text(when (action) { "save-personal" -> "保存个人模特？"; "append" -> "添加到裙子图片？"; "discard" -> "舍弃此预览？"; "cancel" -> "停止等待？"; else -> "删除任务记录？" }) },
+        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text(when (action) { "save-personal" -> "保存个人模特？"; "append" -> "添加到原物品图片？"; "discard" -> "舍弃此预览？"; "cancel" -> "停止等待？"; else -> "删除任务记录？" }) },
             text = { Text(when (action) {
                 "save-personal" -> "将保存已确认底图与人物资料，可用于后续试衣；此操作不会重新生成或计费。"
-                "append" -> "此图片将追加到原裙子图片末尾，原图片顺序保持不变。"
+                "append" -> "此图片将追加到原物品图片末尾，原图片顺序保持不变。"
                 "discard" -> "未保存的预览将被清理。"
                 "cancel" -> "停止本地等待可能仍会计费，应用不会自动重试。"
-                else -> if (task?.status == ImageTaskStatus.AWAITING_CONFIRMATION) "将删除任务记录并清理未保存预览。" else "删除记录后，已保存的个人模特、试衣历史和裙子图片仍保留。"
+                else -> if (task?.status == ImageTaskStatus.AWAITING_CONFIRMATION) "将删除任务记录并清理未保存预览。" else "删除记录后，已保存的个人模特、试衣历史和物品图片仍保留。"
             }) },
             confirmButton = { TextButton(onClick = {
                 confirmation = null

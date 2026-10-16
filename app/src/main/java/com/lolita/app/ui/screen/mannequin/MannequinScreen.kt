@@ -1,6 +1,8 @@
 package com.lolita.app.ui.screen.mannequin
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,6 +20,8 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.domain.model.MannequinRequest
+import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
@@ -26,6 +30,8 @@ import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+
+private data class MannequinConfirmation(val provider: ImageGenerationProvider, val request: MannequinRequest, val keyRevision: Int)
 
 @Composable
 fun MannequinScreen(
@@ -41,11 +47,12 @@ fun MannequinScreen(
     var showKey by remember { mutableStateOf(false) }
     var zoomLegacy by remember { mutableStateOf(false) }
     var discardLegacy by remember { mutableStateOf(false) }
-    var confirmation by remember { mutableStateOf<ImageGenerationProvider?>(null) }
+    var confirmation by remember { mutableStateOf<MannequinConfirmation?>(null) }
+    val accessory = state.presentation == MannequinPresentation.ACCESSORY
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            GradientTopAppBar(title = { Text("正面人台图（实验）", maxLines = 2) }, navigationIcon = {
+            GradientTopAppBar(title = { Text("${state.presentation.label}（实验）", maxLines = 2) }, navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
                 }
@@ -56,13 +63,14 @@ fun MannequinScreen(
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    Text("上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
+                    Text(if (accessory) "上传所选小物原图及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
+                        else "上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
-                    Button(onClick = { if (!state.hasKey) showKey = true else confirmation = state.provider },
+                    Button(onClick = { if (!state.hasKey) showKey = true else state.generationRequest?.let { confirmation = MannequinConfirmation(state.provider, it, state.keyRevision) } },
                         enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null,
                         modifier = Modifier.fillMaxWidth()) {
                         if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
-                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成正面人台图")
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成${state.presentation.label}")
                     }
                 }
             }
@@ -94,8 +102,9 @@ fun MannequinScreen(
             }
             item("background-advice") { ImageBackgroundAdvice() }
             item("notice") {
-                LolitaSection(title = state.item?.name ?: "裙子参考图") { row {
-                    Text("仅生成正面；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
+                LolitaSection(title = state.item?.name ?: "物品参考图") { row {
+                    Text(if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
+                        else "仅生成无杆正面人台图，不保留支撑杆和底座；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                     Text("结果保存在任务中心，核对后可追加到原图片末尾。离开页面不会放弃预览。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
@@ -116,7 +125,8 @@ fun MannequinScreen(
             }
             item("source") {
                 LolitaSection(title = "选择一张原图") { row {
-                    Text("选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
+                    Text(if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
+                        else "选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                 } }
             }
@@ -137,10 +147,10 @@ fun MannequinScreen(
             item("instructions") {
                 LolitaSection(title = "补充说明") { row {
                     OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
-                        label = { Text("补充说明（可选）") }, placeholder = { Text("例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
+                        label = { Text("补充说明（可选）") }, placeholder = { Text(if (accessory) "例如：只保留头上的红色KC" else "例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
                         modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium), minLines = 2, maxLines = 5,
                         supportingText = { Text("${state.instructions.length}/200") }, shape = RoundedCornerShape(skin.cornerRadiusMedium))
-                    Text("使用固定空白正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
+                    Text(if (accessory) "不上传人台模板，按原图角度生成独立物品展示图。" else "使用固定无杆正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
                 } }
             }
         }
@@ -152,10 +162,20 @@ fun MannequinScreen(
         text = { Text("此预览尚未添加到裙子图片，放弃后将按引用保护清理。") },
         confirmButton = { TextButton(onClick = { discardLegacy = false; viewModel.discardLegacyPreview() }) { Text("确认放弃") } },
         dismissButton = { TextButton(onClick = { discardLegacy = false }) { Text("继续核对") } })
-    confirmation?.let { provider ->
-        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成人台图？") },
-            text = { Text("将上传所选原图与模板至 ${provider.recipient}，API 单独计费。可离开页面，稍后在任务中心核对并添加图片。") },
-            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider) }) { Text("确认并加入任务") } },
+    confirmation?.let { confirmed ->
+        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成${confirmed.request.presentation.label}？") },
+            text = { Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                ImageFrame(Modifier.fillMaxWidth()) {
+                    LolitaShimmerImage(model = confirmed.request.imagePath, contentDescription = "本次将上传的原图", contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxWidth().height(120.dp), circularRevealEnabled = false)
+                }
+                Text("分类：${confirmed.request.subject?.categoryName.orEmpty()}")
+                if (confirmed.request.instructions.isNotBlank()) Text("补充说明：${confirmed.request.instructions}")
+                Text(if (confirmed.request.presentation == MannequinPresentation.ACCESSORY)
+                    "将上传这张小物原图与补充说明至 ${confirmed.provider.recipient}，不上传人台模板，共1张图片；API 单独计费。结果在任务中心核对后再添加。"
+                    else "将上传这张原图、无杆人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。结果在任务中心核对后再添加。")
+            } },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(confirmed.provider, confirmed.request, confirmed.keyRevision) }) { Text("确认并加入任务") } },
             dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
     }
 }

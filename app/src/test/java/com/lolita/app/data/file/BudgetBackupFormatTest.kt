@@ -8,7 +8,7 @@ import org.junit.Test
 class BudgetBackupFormatTest {
     private fun data() = BackupData(brands = emptyList(), categories = emptyList(), coordinates = emptyList(),
         items = emptyList(), prices = emptyList(), payments = emptyList(), outfitLogs = emptyList(), outfitItemCrossRefs = emptyList(),
-        monthlyBudgets = listOf(MonthlyBudget("2026-10", 10001), MonthlyBudget("2026-11", 0)))
+        backupDate = 123L, monthlyBudgets = listOf(MonthlyBudget("2026-10", 10001), MonthlyBudget("2026-11", 0)))
     @Test fun newBudgetsRoundTripAndVersionFiveWithoutBudgetsIsAccepted() {
         assertEquals(data(), BackupFormat.parse(Gson().toJson(data())))
         val json = Gson().toJsonTree(data()).asJsonObject.apply {

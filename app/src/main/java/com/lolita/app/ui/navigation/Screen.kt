@@ -13,8 +13,13 @@ sealed interface Screen {
     }
 
     data object Mannequin : Screen {
-        override val route = "mannequin/{itemId}?retryTaskId={retryTaskId}"
-        fun createRoute(itemId: Long, retryTaskId: String = "") = "mannequin/$itemId?retryTaskId=${android.net.Uri.encode(retryTaskId)}"
+        override val route = "mannequin/{itemId}"
+        fun createRoute(itemId: Long) = "mannequin/$itemId"
+    }
+
+    data object MannequinRetry : Screen {
+        override val route = "mannequin_retry/{itemId}/{retryTaskId}"
+        fun createRoute(itemId: Long, taskId: String) = "mannequin_retry/$itemId/${android.net.Uri.encode(taskId)}"
     }
 
     data object ItemEdit : Screen {
@@ -124,9 +129,14 @@ sealed interface Screen {
     }
 
     data object TryOn : Screen {
-        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}&retryTaskId={retryTaskId}"
-        fun createRoute(itemId: Long? = null, coordinateId: Long? = null, retryTaskId: String = ""): String =
-            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}&retryTaskId=${android.net.Uri.encode(retryTaskId)}"
+        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}"
+        fun createRoute(itemId: Long? = null, coordinateId: Long? = null): String =
+            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}"
+    }
+
+    data object TryOnRetry : Screen {
+        override val route = "virtual_try_on_retry/{retryTaskId}"
+        fun createRoute(taskId: String) = "virtual_try_on_retry/${android.net.Uri.encode(taskId)}"
     }
 
     data object ImageTasks : Screen { override val route = "image_tasks" }

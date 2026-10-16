@@ -75,6 +75,7 @@ class MannequinViewModel @JvmOverloads constructor(
     ))
     val uiState: StateFlow<MannequinUiState> = state.asStateFlow()
     private var restored = false
+    private var retryEntryConsumed = savedStateHandle.get<Boolean>(RETRY_ENTRY_CONSUMED) == true || savedStateHandle.contains(INSTRUCTIONS)
     private var observedTasks = emptyList<ImageTask>()
     private val legacySaveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var cleared = false
@@ -91,12 +92,18 @@ class MannequinViewModel @JvmOverloads constructor(
                         if (!savedStateHandle.contains(SOURCE)) {
                             savedStateHandle[SOURCE] = row?.imageUrls?.firstOrNull { it.isNotBlank() }.orEmpty()
                         }
-                        savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
-                            val retry = runCatching { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }.getOrNull()
-                            if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
-                                savedStateHandle[INSTRUCTIONS] = retry.instructions
-                                state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
+                        if (!retryEntryConsumed) {
+                            savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
+                                val retry = try { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }
+                                catch (failure: CancellationException) { throw failure }
+                                catch (_: Exception) { null }
+                                if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
+                                    savedStateHandle[INSTRUCTIONS] = retry.instructions
+                                    state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
+                                }
                             }
+                            retryEntryConsumed = true
+                            savedStateHandle[RETRY_ENTRY_CONSUMED] = true
                         }
                         val legacy = savedStateHandle.get<String>(PREVIEW)
                         val owner = savedStateHandle.get<Long>("mannequinPreviewItem")
@@ -219,6 +226,7 @@ class MannequinViewModel @JvmOverloads constructor(
         super.onCleared()
     }
     companion object {
+        private const val RETRY_ENTRY_CONSUMED = "mannequinRetryEntryConsumed"
         private const val LAST_TASK = "mannequinLatestTaskId"
         private const val SOURCE = "mannequinSource"
         private const val INSTRUCTIONS = "mannequinInstructions"

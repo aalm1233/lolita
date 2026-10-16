@@ -143,6 +143,26 @@ class MannequinViewModelTest {
         }
     }
 
+    @Test fun restoredRetryKeepsEditedAndExplicitlyClearedInstructionsWithoutResubmitting() = runBlocking {
+        Fixture().use { f ->
+            f.setup()
+            f.db.imageTaskDao().insert(ImageTask("retry-edited", ImageTaskKind.MANNEQUIN, ImageGenerationProvider.OPENAI, "原任务",
+                ImageTaskRequest(listOf(ImageTaskGarment(11, "旧名称", TryOnRole.MAIN)), "最初说明").encode(), emptyList(), status = ImageTaskStatus.FAILED))
+            var handle = SavedStateHandle(mapOf("itemId" to 11L, "retryTaskId" to "retry-edited"))
+            var (vm, owner) = f.model(handle)
+            assertEquals("最初说明", vm.uiState.value.instructions)
+            for (edited in listOf("用户核对后的新说明", "")) {
+                main { vm.updateInstructions(edited); vm.selectImage(f.item.imageUrls[1]); owner.clear() }
+                handle = SavedStateHandle(handle.keys().associateWith { key -> handle.get<Any?>(key) })
+                val restored = f.model(handle)
+                vm = restored.first; owner = restored.second
+                assertEquals("重建不得把用户草稿覆盖回原任务说明", edited, vm.uiState.value.instructions)
+                assertEquals(f.item.imageUrls[1], vm.uiState.value.selectedImage)
+                assertEquals(0, f.calls)
+            }
+        }
+    }
+
     @Test fun retryDraftCannotBeEditedBeforeItsInstructionsFinishLoading() = runBlocking {
         Fixture().use { f ->
             f.setup(); f.retryReader = { awaitCancellation() }

@@ -687,41 +687,45 @@ fun LolitaNavHost(
                 )
             }
 
-            composable(
-                route = Screen.Mannequin.route,
-                arguments = listOf(navArgument("itemId") { type = NavType.LongType },
-                    navArgument("retryTaskId") { type = NavType.StringType; defaultValue = "" })
-            ) { entry ->
-                val factory = remember(entry) {
-                    viewModelFactory { initializer { createMannequinViewModel(createSavedStateHandle()) } }
+            listOf(Screen.Mannequin.route, Screen.MannequinRetry.route).forEach { route ->
+                composable(
+                    route = route,
+                    arguments = listOf(navArgument("itemId") { type = NavType.LongType },
+                        navArgument("retryTaskId") { type = NavType.StringType; defaultValue = "" })
+                ) { entry ->
+                    val factory = remember(entry) {
+                        viewModelFactory { initializer { createMannequinViewModel(createSavedStateHandle()) } }
+                    }
+                    MannequinScreen(onNavigateBack = {
+                        // A departing page may remain composed during an exit animation.
+                        // Its completion must never pop a newer destination.
+                        if (navController.currentBackStackEntry?.id == entry.id) navController.popBackStack()
+                    },
+                        viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
+                        onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
+                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) })
                 }
-                MannequinScreen(onNavigateBack = {
-                    // A departing page may remain composed during an exit animation.
-                    // Its completion must never pop a newer destination.
-                    if (navController.currentBackStackEntry?.id == entry.id) navController.popBackStack()
-                },
-                    viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
-                    onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
-                    onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) })
             }
 
-            composable(
-                route = Screen.TryOn.route,
-                arguments = listOf(
-                    navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
-                    navArgument("coordinateId") { type = NavType.LongType; defaultValue = 0L },
-                    navArgument("retryTaskId") { type = NavType.StringType; defaultValue = "" }
-                )
-            ) { entry ->
-                val factory = remember(entry) {
-                    viewModelFactory { initializer { createTryOnViewModel(createSavedStateHandle()) } }
+            listOf(Screen.TryOn.route, Screen.TryOnRetry.route).forEach { route ->
+                composable(
+                    route = route,
+                    arguments = listOf(
+                        navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
+                        navArgument("coordinateId") { type = NavType.LongType; defaultValue = 0L },
+                        navArgument("retryTaskId") { type = NavType.StringType; defaultValue = "" }
+                    )
+                ) { entry ->
+                    val factory = remember(entry) {
+                        viewModelFactory { initializer { createTryOnViewModel(createSavedStateHandle()) } }
+                    }
+                    TryOnScreen(
+                        onNavigateBack = { navController.popBackStack() },
+                        viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
+                        onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
+                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) }
+                    )
                 }
-                TryOnScreen(
-                    onNavigateBack = { navController.popBackStack() },
-                    viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
-                    onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
-                    onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) }
-                )
             }
 
             composable(Screen.ImageTasks.route) { entry ->
@@ -734,8 +738,8 @@ fun LolitaNavHost(
                 val factory = remember(entry) { viewModelFactory { initializer { createImageTaskViewModel() } } }
                 ImageTaskDetailScreen(taskId = entry.arguments?.getString("taskId").orEmpty(),
                     onNavigateBack = { navController.popBackStack() }, onRetry = { task ->
-                        val route = if (task.kind == ImageTaskKind.TRY_ON) Screen.TryOn.createRoute(retryTaskId = task.id)
-                            else Screen.Mannequin.createRoute(task.garmentId ?: 0L, retryTaskId = task.id)
+                        val route = if (task.kind == ImageTaskKind.TRY_ON) Screen.TryOnRetry.createRoute(task.id)
+                            else Screen.MannequinRetry.createRoute(task.garmentId ?: 0L, task.id)
                         navController.navigate(route)
                     }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
             }

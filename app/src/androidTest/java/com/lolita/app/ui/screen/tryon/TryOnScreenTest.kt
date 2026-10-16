@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.lolita.app.data.local.entity.*
-import com.lolita.app.domain.model.TryOnRole
+import com.lolita.app.domain.model.*
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.theme.LolitaTheme
 import com.lolita.app.ui.theme.SkinType
@@ -48,6 +48,8 @@ class TryOnScreenTest {
     private lateinit var store: ViewModelStore
     private lateinit var vm: TryOnViewModel
     private val presentation = mutableStateOf(Presentation())
+    private val acceptedModels = MutableStateFlow<List<PersonalModel>>(emptyList())
+    private val defaultModelId = MutableStateFlow<Long?>(null)
     private var key: String? = null
     private lateinit var photos: List<String>
 
@@ -72,7 +74,7 @@ class TryOnScreenTest {
                 categories = flowOf(listOf(Category(id = 1, name = "JSK"), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY))),
                 results = flowOf(emptyList()), readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
                 tasks = flowOf(emptyList()), submitTask = { _, _ -> error("UI测试不应发出请求") },
-                renameResult = { _, _ -> }, deleteResult = {})
+                renameResult = { _, _ -> }, deleteResult = {}, personalModels = acceptedModels, defaultPersonalModelId = defaultModelId)
             store.put("ui", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }
@@ -163,12 +165,41 @@ class TryOnScreenTest {
         }
         for ((skin, dark) in listOf(SkinType.DEFAULT to false, SkinType.VICTORIAN to true)) {
             compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
-            workspace("固定成年虚拟模特")
+            workspace("本次试衣人物")
             compose.onNodeWithText("配置 API Key").assertIsDisplayed()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "normal-${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
+        }
+    }
+
+    @Test fun personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens() {
+        val request = PersonalModelRequest("已确认的小月", PersonalModelMode.PARAMETERS, BodyMeasurements(165.0, 52.0))
+        acceptedModels.value = listOf(PersonalModel(id = 91, name = request.name, requestJson = request.encode(), sourceImagePaths = emptyList(),
+            imageUrl = photos.first(), provider = ImageGenerationProvider.OPENAI, model = "test"))
+        compose.runOnIdle { vm.toggleItem(11) }
+        show()
+        val output = File(instrumentation.targetContext.filesDir, "personal-try-on-ui-contact-sheets").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
+            workspace("更换试衣人物")
+            compose.onNodeWithText("更换试衣人物").performClick()
+            compose.onNodeWithText("已确认的小月").performClick()
+            compose.onNodeWithTag("tryOnSelectedModel").assertTextEquals("已确认的小月")
+            assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+            workspace("本次试衣人物")
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}-model.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            workspace("更换试衣人物")
+            compose.onNodeWithText("更换试衣人物").performClick()
+            compose.onNodeWithText("搜索个人模特").performTextInput("小月")
+            compose.onNodeWithText("已确认的小月 · 已选择").assertExists()
+            val picker = requireNotNull(instrumentation.uiAutomation.takeScreenshot()) { "人物选择弹窗截图失败" }
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}-picker.png").outputStream().use { picker.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            compose.onNodeWithText("内置虚拟模特").performClick()
+            assertNull(vm.uiState.value.selectedPersonalModelId)
+            assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
         }
     }
 

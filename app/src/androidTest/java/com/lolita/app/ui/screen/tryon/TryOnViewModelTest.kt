@@ -15,6 +15,10 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import java.io.File
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -31,6 +35,11 @@ class TryOnViewModelTest {
     private lateinit var database: LolitaDatabase
     private lateinit var store: ViewModelStore
     private lateinit var repository: TryOnRepository
+    private val personalModels = MutableStateFlow<List<PersonalModel>>(emptyList())
+    private val defaultModel = MutableStateFlow<Long?>(null)
+    private var personalRequests = 0
+    private var submittedModelId: Long? = null
+    private lateinit var directory: File
     private var configured = true
     private val tasks = MutableStateFlow<List<ImageTask>>(emptyList())
     private var requests = 0
@@ -38,6 +47,7 @@ class TryOnViewModelTest {
     private var operation: suspend (List<TryOnSelection>) -> String = { "task-91" }
 
     @Before fun setup() = runBlocking {
+        directory = File(instrumentation.targetContext.cacheDir, "tryon-personal-${UUID.randomUUID()}").apply { mkdirs() }
         database = Room.inMemoryDatabaseBuilder(instrumentation.targetContext, LolitaDatabase::class.java).build()
         store = ViewModelStore()
         repository = TryOnRepository(instrumentation.targetContext, database)
@@ -55,6 +65,7 @@ class TryOnViewModelTest {
         instrumentation.runOnMainSync { store.clear() }
         instrumentation.waitForIdleSync()
         database.close()
+        directory.deleteRecursively()
     }
 
     private fun item(id: Long, name: String, category: Long, images: List<String>) = Item(
@@ -62,7 +73,7 @@ class TryOnViewModelTest {
         imageUrls = images, status = ItemStatus.OWNED
     )
 
-    private suspend fun model(handle: SavedStateHandle = SavedStateHandle()): TryOnViewModel {
+    private suspend fun model(handle: SavedStateHandle = SavedStateHandle(), models: Flow<List<PersonalModel>> = personalModels, defaults: Flow<Long?> = defaultModel, waitModels: Boolean = true): TryOnViewModel {
         val vm = withContext(Dispatchers.Main) {
             TryOnViewModel(
                 savedStateHandle = handle,
@@ -75,10 +86,12 @@ class TryOnViewModelTest {
                 tasks = tasks, readRetryTask = { retryReader(it) },
                 submitTask = { rows, _ -> requests++; operation(rows) },
                 renameResult = repository::rename,
-                deleteResult = repository::delete
+                deleteResult = repository::delete,
+                personalModels = models, defaultPersonalModelId = defaults,
+                submitPersonalTask = { _, _, id, _ -> personalRequests++; submittedModelId = id; "personal-task" }
             ).also { store.put("vm-${System.nanoTime()}", it) }
         }
-        withTimeout(10_000) { vm.uiState.first { !it.isLoading && it.keyLoaded } }
+        withTimeout(10_000) { vm.uiState.first { !it.isLoading && it.keyLoaded && (!waitModels || it.modelsLoaded) } }
         return vm
     }
 
@@ -212,6 +225,102 @@ class TryOnViewModelTest {
         withTimeout(10_000) { vm.uiState.first { !it.isSubmitting && it.error != null } }
         assertEquals(1, requests)
         assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+    }
+
+    @Test fun personalChoiceSubmitsCapturedModelAndKeepsGarmentsWhenSwitching() = runBlocking {
+        val file = File(directory, "accepted.png").also { image ->
+            android.graphics.Bitmap.createBitmap(32, 48, android.graphics.Bitmap.Config.ARGB_8888).also { bitmap ->
+                image.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
+            }
+        }
+        val request = com.lolita.app.domain.model.PersonalModelRequest("小月", com.lolita.app.domain.model.PersonalModelMode.PARAMETERS,
+            com.lolita.app.domain.model.BodyMeasurements(165.0, 52.0))
+        val accepted = PersonalModel(id = 91, name = "小月", requestJson = request.encode(), sourceImagePaths = emptyList(),
+            imageUrl = file.absolutePath, provider = com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, model = "test")
+        personalModels.value = listOf(accepted)
+        defaultModel.value = 91
+        val handle = SavedStateHandle()
+        val vm = model(handle)
+        assertEquals(91L, vm.uiState.value.selectedPersonalModelId)
+        main { vm.toggleItem(11); vm.selectPersonalModel(null); vm.selectPersonalModel(91) }
+        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+        defaultModel.value = null
+        val restored = model(handle)
+        assertEquals(91L, restored.uiState.value.selectedPersonalModelId)
+        main { restored.generate() }
+        withTimeout(10_000) { restored.uiState.first { it.latestTaskId != null } }
+        assertEquals(91L, submittedModelId)
+        assertEquals(1, personalRequests)
+        assertEquals(0, requests)
+        file.delete()
+        assertFalse(restored.uiState.value.canGenerate)
+        main { restored.generate() }
+        assertEquals(1, personalRequests)
+    }
+
+    @Test fun sameIdRestoredWithDifferentImageRejectsStaleConfirmation() = runBlocking {
+        val originalPath = File(directory, "original.png").apply { writeBytes(byteArrayOf(1)) }.absolutePath
+        val replacedPath = File(directory, "restored.png").apply { writeBytes(byteArrayOf(2)) }.absolutePath
+        val request = com.lolita.app.domain.model.PersonalModelRequest("旧人物", com.lolita.app.domain.model.PersonalModelMode.PARAMETERS,
+            com.lolita.app.domain.model.BodyMeasurements(165.0, 52.0))
+        val original = PersonalModel(id = 91, name = "旧人物", requestJson = request.encode(), sourceImagePaths = emptyList(),
+            imageUrl = originalPath, provider = com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, model = "test")
+        personalModels.value = listOf(original); defaultModel.value = 91
+        val vm = model()
+        main { vm.toggleItem(11) }
+        personalModels.value = listOf(original.copy(name = "恢复后其他人物", imageUrl = replacedPath))
+        withTimeout(10_000) { vm.uiState.first { it.selectedPersonalModel?.imageUrl == replacedPath } }
+        main { vm.generate(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, 91, originalPath) }
+        assertEquals(0, personalRequests + requests)
+        assertTrue(vm.uiState.value.error!!.contains("底图已改变"))
+    }
+
+    @Test fun modelAndDefaultMustBothLoadBeforeGenerationCanStart() = runBlocking {
+        val models = MutableSharedFlow<List<PersonalModel>>(replay = 1)
+        val defaults = MutableSharedFlow<Long?>(replay = 1)
+        val vm = model(models = models, defaults = defaults, waitModels = false)
+        main { vm.toggleItem(11); vm.generate() }
+        assertFalse(vm.uiState.value.canGenerate)
+        assertEquals(0, requests)
+        models.emit(emptyList())
+        instrumentation.waitForIdleSync()
+        assertFalse(vm.uiState.value.canGenerate)
+        defaults.emit(null)
+        withTimeout(10_000) { vm.uiState.first { it.modelsLoaded } }
+        assertTrue(vm.uiState.value.canGenerate)
+    }
+
+    @Test fun deletedCapturedPersonalRetryRequiresExplicitReselectionAndNeverFallsBack() = runBlocking {
+        val original = backgroundTask().copy(id = "personal-retry", status = com.lolita.app.domain.model.ImageTaskStatus.FAILED,
+            requestJson = com.lolita.app.domain.model.ImageTaskRequest(
+                listOf(com.lolita.app.domain.model.ImageTaskGarment(11, "裙子", TryOnRole.MAIN)), version = 2,
+                tryOnModel = com.lolita.app.domain.model.TryOnModelSnapshot(91, "原人物")).encode())
+        database.imageTaskDao().insert(original)
+        val vm = model(SavedStateHandle(mapOf("retryTaskId" to original.id)))
+        assertEquals(91L, vm.uiState.value.selectedPersonalModelId)
+        assertFalse(vm.uiState.value.canGenerate)
+        main { vm.generate() }
+        assertEquals(0, requests + personalRequests)
+        assertTrue(vm.uiState.value.modelIssue!!.contains("重新选择"))
+        main { vm.selectPersonalModel(null) }
+        assertTrue(vm.uiState.value.canGenerate)
+        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+    }
+
+    @Test fun explicitBuiltinChoiceSurvivesRecreationAndDefaultChanges() = runBlocking {
+        defaultModel.value = 404
+        val handle = SavedStateHandle()
+        val vm = model(handle)
+        assertNull(vm.uiState.value.selectedPersonalModelId)
+        main { vm.toggleItem(11); vm.selectPersonalModel(null) }
+        defaultModel.value = 405
+        val restored = model(handle)
+        assertNull(restored.uiState.value.selectedPersonalModelId)
+        assertEquals(listOf(11L), restored.uiState.value.selected.map { it.itemId })
+        main { restored.generate() }
+        withTimeout(10_000) { restored.uiState.first { it.latestTaskId != null } }
+        assertEquals(1, requests)
+        assertEquals(0, personalRequests)
     }
 
     private fun backgroundTask() = ImageTask("running", com.lolita.app.domain.model.ImageTaskKind.TRY_ON,

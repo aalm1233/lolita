@@ -12,6 +12,9 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.TryOnResult
 import com.lolita.app.data.local.entity.ImageTask
+import com.lolita.app.data.local.entity.PersonalModel
+import java.io.File
+import kotlinx.coroutines.flow.flowOf
 import com.lolita.app.domain.model.ImageTaskRequest
 import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.TryOnRequest
@@ -47,7 +50,10 @@ data class TryOnUiState(
     val isSubmitting: Boolean = false,
     val latestTaskId: String? = null,
     val latestTask: ImageTask? = null,
-    val error: String? = null
+    val error: String? = null,
+    val personalModels: List<PersonalModel> = emptyList(),
+    val selectedPersonalModelId: Long? = null,
+    val modelsLoaded: Boolean = false
 ) {
     val busy: Boolean get() = isSubmitting || isConfiguring
     val visibleItems: List<Item> get() = items.filter { item ->
@@ -63,7 +69,15 @@ data class TryOnUiState(
         }
         return runCatching { TryOnRequest(selected) }.exceptionOrNull()?.message
     }
-    val canGenerate: Boolean get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
+    val selectedPersonalModel: PersonalModel? get() = personalModels.firstOrNull { it.id == selectedPersonalModelId }
+    val modelName: String get() = selectedPersonalModel?.name ?: if (selectedPersonalModelId == null) "内置虚拟模特" else "已删除的个人模特"
+    val modelIssue: String? get() = when {
+        !modelsLoaded -> "正在读取模特资料…"
+        selectedPersonalModelId != null && selectedPersonalModel == null -> "原个人模特已删除，请重新选择人物后再生成"
+        selectedPersonalModel != null && !File(selectedPersonalModel!!.imageUrl).isFile -> "个人模特底图已丢失，请重新选择或调整人物"
+        else -> null
+    }
+    val canGenerate: Boolean get() = modelIssue == null && !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
 }
 
 /** The function boundaries isolate personal credentials and the paid request from UI/Room tests. */
@@ -83,15 +97,32 @@ class TryOnViewModel @JvmOverloads constructor(
         AppModule.imageTaskCoordinator().submitTryOn(rows, provider)
     },
     private val renameResult: suspend (Long, String) -> Unit = { id, name -> AppModule.tryOnRepository().rename(id, name) },
-    private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) }
+    private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) },
+    personalModels: Flow<List<PersonalModel>> = flowOf(emptyList()),
+    defaultPersonalModelId: Flow<Long?> = flowOf(null),
+    private val submitPersonalTask: suspend (List<TryOnSelection>, ImageGenerationProvider, Long, String) -> String = { rows, provider, id, path ->
+        AppModule.imageTaskCoordinator().submitTryOn(rows, provider, id, path)
+    }
+
 ) : ViewModel() {
     private val gson = Gson()
-    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), latestTaskId = savedStateHandle[LAST_TASK]))
+    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
     val uiState: StateFlow<TryOnUiState> = _uiState.asStateFlow()
     private var observedTasks = emptyList<ImageTask>()
     private var entryConsumed = savedStateHandle.get<Boolean>(ENTRY_CONSUMED) == true || savedStateHandle.contains(SELECTION)
 
     init {
+        viewModelScope.launch {
+            combine(personalModels, defaultPersonalModelId) { models, defaultId -> models to defaultId }
+                .catch { failure ->
+                    if (failure is CancellationException) throw failure
+                    _uiState.update { it.copy(modelsLoaded = false, error = "模特资料读取失败，请返回后重试") }
+                }.collect { (models, defaultId) ->
+                    val chosen = savedStateHandle.get<Boolean>(MODEL_CHOSEN) == true
+                    val id = if (chosen) _uiState.value.selectedPersonalModelId else defaultId?.takeIf { candidate -> models.any { it.id == candidate } }
+                    _uiState.update { it.copy(personalModels = models, selectedPersonalModelId = id, modelsLoaded = true) }
+                }
+        }
         viewModelScope.launch {
             combine(items, categories) { rows, groups -> rows.filter { it.status == ItemStatus.OWNED } to groups }
                 .catch { failure ->
@@ -105,6 +136,11 @@ class TryOnViewModel @JvmOverloads constructor(
                         val parents = rows.filter { it.coordinateId == coordinateId && coordinateId != null }.map { it.id }.toSet()
                         val retry = savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
                             runCatching { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }.getOrNull()
+                        }
+                        if (retry != null && savedStateHandle.get<Boolean>(MODEL_CHOSEN) != true) {
+                            savedStateHandle[MODEL_CHOSEN] = true
+                            savedStateHandle[MODEL_ID] = retry.tryOnModel?.personalModelId
+                            _uiState.update { it.copy(selectedPersonalModelId = retry.tryOnModel?.personalModelId) }
                         }
                         entryConsumed = true
                         savedStateHandle[ENTRY_CONSUMED] = true
@@ -165,6 +201,15 @@ class TryOnViewModel @JvmOverloads constructor(
         _uiState.update { it.copy(selected = rows, error = null) }
     }
 
+    fun selectPersonalModel(id: Long?) {
+        val state = _uiState.value
+        if (state.busy || state.isLoading || !state.modelsLoaded) return
+        if (id != null && state.personalModels.none { it.id == id }) return
+        savedStateHandle[MODEL_CHOSEN] = true
+        savedStateHandle[MODEL_ID] = id
+        _uiState.update { it.copy(selectedPersonalModelId = id, error = null) }
+    }
+
     fun updateSearchQuery(value: String) { _uiState.update { if (it.busy) it else it.copy(searchQuery = value) } }
     fun selectCategory(value: Long?) { _uiState.update { if (it.busy) it else it.copy(selectedCategoryId = value) } }
     fun toggleItem(itemId: Long) {
@@ -214,20 +259,29 @@ class TryOnViewModel @JvmOverloads constructor(
             } finally { _uiState.update { it.copy(isConfiguring = false) } }
         }
     }
-    fun generate(confirmedProvider: ImageGenerationProvider = _uiState.value.provider) {
+    fun generate(confirmedProvider: ImageGenerationProvider = _uiState.value.provider,
+        confirmedPersonalModelId: Long? = _uiState.value.selectedPersonalModelId,
+        confirmedModelImagePath: String? = _uiState.value.selectedPersonalModel?.imageUrl) {
         val state = _uiState.value
         if (state.busy || state.isLoading || state.loadFailed || !state.keyLoaded) return
         if (confirmedProvider != state.provider) {
             _uiState.update { it.copy(error = "图像服务已改变，请核对后重新确认") }; return
         }
+        if (state.selectedPersonalModelId != confirmedPersonalModelId ||
+            state.selectedPersonalModel?.imageUrl != confirmedModelImagePath) {
+            _uiState.update { it.copy(error = "试衣人物或底图已改变，请重新选择并核对后生成") }; return
+        }
         if (!state.hasKey) { _uiState.update { it.copy(error = "请先配置个人 API Key") }; return }
+        state.modelIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
         state.selectionIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
         val snapshot = state.selected.toList()
+        val selectedModelId = state.selectedPersonalModelId
         _uiState.update { it.copy(isSubmitting = true, error = null) }
         viewModelScope.launch {
             try {
                 // Coordinator accepts in application scope before this screen's waiter can disappear.
-                val id = submitTask(snapshot, confirmedProvider)
+                val id = if (selectedModelId == null) submitTask(snapshot, confirmedProvider)
+                    else submitPersonalTask(snapshot, confirmedProvider, selectedModelId, requireNotNull(confirmedModelImagePath))
                 savedStateHandle[LAST_TASK] = id
                 _uiState.update { it.copy(latestTaskId = id, latestTask = observedTasks.firstOrNull { row -> row.id == id }) }
             } catch (failure: CancellationException) { throw failure }
@@ -258,6 +312,8 @@ class TryOnViewModel @JvmOverloads constructor(
     }
 
     companion object {
+        private const val MODEL_ID = "tryOnPersonalModelId"
+        private const val MODEL_CHOSEN = "tryOnPersonalModelChosen"
         private const val LAST_TASK = "tryOnLatestTaskId"
         private const val SELECTION = "tryOnSelections"
         private const val ENTRY_CONSUMED = "tryOnEntryConsumed"

@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.TryOnResult
 import com.lolita.app.domain.model.ImageGenerationProvider
@@ -31,11 +32,13 @@ import java.util.Locale
 
 @Composable
 fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewModel(),
-    onNavigateToTasks: () -> Unit = {}, onTaskSubmitted: (String) -> Unit = {}) {
+    onNavigateToTasks: () -> Unit = {}, onTaskSubmitted: (String) -> Unit = {},
+    onManagePersonalModels: () -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
+    var showModelPicker by remember { mutableStateOf(false) }
     var showPicker by remember { mutableStateOf(false) }
     var showKey by remember { mutableStateOf(false) }
     var imageItemId by remember { mutableStateOf<Long?>(null) }
@@ -43,7 +46,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     var preview by remember { mutableStateOf<String?>(null) }
     var rename by remember { mutableStateOf<TryOnResult?>(null) }
     var delete by remember { mutableStateOf<TryOnResult?>(null) }
-    var confirmation by remember { mutableStateOf<ImageGenerationProvider?>(null) }
+    var confirmation by remember { mutableStateOf<TryOnConfirmation?>(null) }
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
@@ -58,12 +61,12 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     if (state.hasKey && !state.isSubmitting) {
-                        Text("上传共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
+                        Text("上传“${state.modelName}”与服饰共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
                     Button(
-                        onClick = { if (!state.hasKey) showKey = true else confirmation = state.provider },
+                        onClick = { if (!state.hasKey) showKey = true else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName) },
                         enabled = !state.busy && !state.isLoading && state.keyLoaded && (!state.hasKey || state.canGenerate),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -86,17 +89,27 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 LatestImageTask(state.latestTask, onOpen = { onTaskSubmitted(id) })
             } }
             item(key = "model") {
-                LolitaSection(title = "固定成年虚拟模特") {
+                LolitaSection(title = "本次试衣人物", action = {
+                    TextButton(onClick = onManagePersonalModels, enabled = !state.busy) { Text("管理模特") }
+                }) {
                     row {
                         Spacer(Modifier.height(skin.spacingMedium))
-                        ImageFrame(Modifier.fillMaxWidth()) {
-                            LolitaShimmerImage(model = "file:///android_asset/tryon/model.png",
-                                contentDescription = "固定成年虚拟模特参考图", contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxWidth().height(210.dp), circularRevealEnabled = false)
+                        if (!state.modelsLoaded) ShimmerRect(140.dp, 210.dp, modifier = Modifier.fillMaxWidth())
+                        else {
+                            Text(state.modelName, style = MaterialTheme.typography.titleSmall, modifier = Modifier.testTag("tryOnSelectedModel"))
+                            val modelPath = state.selectedPersonalModel?.imageUrl
+                                ?: if (state.selectedPersonalModelId == null) "file:///android_asset/tryon/model.png" else null
+                            if (modelPath != null) ImageFrame(Modifier.fillMaxWidth()) {
+                                LolitaShimmerImage(model = modelPath,
+                                    contentDescription = "放大本次试衣人物：${state.modelName}", contentScale = ContentScale.Fit,
+                                    modifier = Modifier.fillMaxWidth().height(210.dp).skinClickable { preview = modelPath }, circularRevealEnabled = false)
+                            }
                         }
-                        Spacer(Modifier.height(skin.spacingMedium))
-                        Text("将衣橱服饰穿到同一位虚拟模特身上，预览整套搭配。生成可能偏离花纹、版型与细节，不能用于判断真实尺码。",
-                            style = MaterialTheme.typography.bodySmall)
+                        OutlinedButton(onClick = { showModelPicker = true }, enabled = !state.busy && !state.isLoading && state.modelsLoaded,
+                            modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium)) { Text("更换试衣人物") }
+                        state.modelIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                        Text("使用已确认的个人模特或内置虚拟模特预览搭配，更换人物保留已选服饰。生成可能偏离花纹、版型与细节，不能用于判断真实尺码。",
+                            modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -152,7 +165,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             item(key = "disclosure") {
                 LolitaSection(title = "生成前确认") {
                     row {
-                        Text("点击生成后，将上传固定模特与已选的 ${state.selected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.selected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
+                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.selected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.selected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         Text("试衣图独立保存，不会改变服饰归属、穿搭次数或账目。取消、超时后服务端仍可能处理；应用不会自动重试。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
@@ -180,6 +193,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                                     .then(Modifier.semantics { contentDescription = "放大试衣图：${result.name}" })
                                     .skinClickable { preview = result.imageUrl }, circularRevealEnabled = false)
                         }
+                        Text("试衣人物：${result.personalModelName ?: "内置虚拟模特"}", style = MaterialTheme.typography.bodySmall)
                         Text(result.itemNames.joinToString("、"), style = MaterialTheme.typography.bodySmall)
                         Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             TextButton(onClick = { rename = result }, modifier = Modifier.weight(1f)) { SkinIcon(IconKey.Edit, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingSmall)); Text("重命名") }
@@ -191,6 +205,8 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         }
     }
 
+    if (showModelPicker) PersonalModelPicker(state, onSelect = { viewModel.selectPersonalModel(it); showModelPicker = false },
+        onManage = { showModelPicker = false; onManagePersonalModels() }, onDismiss = { showModelPicker = false })
     if (showPicker) TryOnPicker(state, viewModel::updateSearchQuery, viewModel::selectCategory, viewModel::toggleItem) { showPicker = false }
     val imageItem = state.items.firstOrNull { it.id == imageItemId }
     if (imageItem != null) TryOnImagePicker(imageItem, state.selected.firstOrNull { it.itemId == imageItem.id }?.imagePath.orEmpty(),
@@ -204,10 +220,11 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         text = { Text("将删除“${result.name}”及对应结果图，衣橱服饰不会改变。") },
         confirmButton = { TextButton(onClick = { viewModel.delete(result.id); delete = null }) { Text("删除") } },
         dismissButton = { TextButton(onClick = { delete = null }) { Text("保留") } }) }
-    confirmation?.let { provider ->
+    confirmation?.let { captured ->
+        val provider = captured.provider
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成试衣图？") },
-            text = { Text("将上传已选图片至 ${provider.recipient}，API 单独计费。任务提交后可离开页面，在任务中心查看结果。") },
-            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider) }) { Text("确认并加入任务") } },
+            text = { Text("将使用“${captured.name}”，上传其底图与已选服饰图片至 ${provider.recipient}，API 单独计费。任务提交后可离开页面，在任务中心查看结果。") },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider, captured.id, captured.path) }) { Text("确认并加入任务") } },
             dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
     }
 }
@@ -221,3 +238,30 @@ private fun TryOnRenameDialog(initial: String, onSave: (String) -> Unit, onDismi
         confirmButton = { TextButton(onClick = { onSave(value.trim()) }, enabled = value.isNotBlank() && value.trim().length <= 120) { Text("保存") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("取消") } })
 }
+
+@Composable
+private fun PersonalModelPicker(state: TryOnUiState, onSelect: (Long?) -> Unit, onManage: () -> Unit, onDismiss: () -> Unit) {
+    val skin = LolitaSkin.current
+    var query by rememberSaveable { mutableStateOf("") }
+    val scroll = rememberLazyListState()
+    ObserveSkinScroll(scroll)
+    AlertDialog(onDismissRequest = onDismiss, title = { Text("选择试衣人物") }, text = {
+        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+            OutlinedTextField(value = query, onValueChange = { query = it }, label = { Text("搜索个人模特") }, singleLine = true)
+            LazyColumn(state = scroll, modifier = Modifier.heightIn(max = 340.dp), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                item("builtin") { OutlinedButton(onClick = { onSelect(null) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (state.selectedPersonalModelId == null) "内置虚拟模特 · 已选择" else "内置虚拟模特")
+                } }
+                items(state.personalModels.filter { it.name.contains(query.trim(), ignoreCase = true) }, key = { it.id }) { model ->
+                    OutlinedButton(onClick = { onSelect(model.id) }, modifier = Modifier.fillMaxWidth()) {
+                        Text(model.name + if (state.selectedPersonalModelId == model.id) " · 已选择" else "")
+                    }
+                }
+                if (state.personalModels.isEmpty()) item("empty") { Text("暂无已保存的个人模特，可前往管理创建。") }
+            }
+        }
+    }, confirmButton = { TextButton(onClick = onManage) { Text("管理模特") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("关闭") } })
+}
+
+private data class TryOnConfirmation(val provider: ImageGenerationProvider, val id: Long?, val path: String?, val name: String)

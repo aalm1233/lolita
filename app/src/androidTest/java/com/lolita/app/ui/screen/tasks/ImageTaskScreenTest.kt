@@ -48,6 +48,8 @@ class ImageTaskScreenTest {
     private val presentation = mutableStateOf(Presentation())
     private val detail = mutableStateOf(true)
     private var retried = 0
+    private var defaultFailure = false
+    private var defaultModelId: Long? = null
     private val pendingId = UUID.randomUUID().toString()
     private val failedId = UUID.randomUUID().toString()
     private val runningId = UUID.randomUUID().toString()
@@ -72,7 +74,9 @@ class ImageTaskScreenTest {
         db.imageTaskDao().insert(task(runningId, ImageTaskStatus.GENERATING).copy(sourceImagePaths = listOf("/original.png"), requestSent = true))
         model = withContext(Dispatchers.Main) {
             ImageTaskViewModel(db.imageTaskDao().observe(), db.itemDao().getAllItems(), db.tryOnDao().observe(),
-                coordinator::cancel, coordinator::confirmMannequin, coordinator::discard, coordinator::delete).also { store.put("tasks", it) }
+                coordinator::cancel, coordinator::confirmMannequin, coordinator::discard, coordinator::delete,
+                personalModels = db.personalModelDao().observe(), setDefaultPersonalModel = { if (defaultFailure) error("受控偏好失败") else defaultModelId = it },
+                confirmPersonalTask = coordinator::confirmPersonalModel).also { store.put("tasks", it) }
         }
         withTimeout(10_000) { model.uiState.first { !it.isLoading && it.tasks.size == 3 } }
         Unit
@@ -114,6 +118,48 @@ class ImageTaskScreenTest {
         compose.onNodeWithTag(if (detail.value) "imageTaskDetail" else "imageTasks").performScrollToNode(hasText(text))
         compose.onNodeWithText(text).performScrollTo()
     }
+    @Test fun personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried() = runBlocking {
+        val request = PersonalModelRequest("我的模特", PersonalModelMode.PARAMETERS, BodyMeasurements(165.0, 52.0))
+        db.imageTaskDao().update(task(pendingId, ImageTaskStatus.AWAITING_CONFIRMATION).copy(
+            kind = ImageTaskKind.PERSONAL_MODEL, title = "我的模特 · 个人模特", resultImagePath = preview,
+            requestJson = ImageTaskRequest(emptyList(), version = 2, personalModel = request).encode()))
+        withTimeout(10_000) { model.uiState.first { it.tasks.any { row -> row.id == pendingId && row.kind == ImageTaskKind.PERSONAL_MODEL } } }
+        defaultFailure = true
+        show()
+        scrollTo("保存个人模特")
+        compose.onNodeWithText("设为默认试衣人物").performScrollTo().performClick()
+        compose.onNodeWithText("保存个人模特").performScrollTo().performClick()
+        compose.onNodeWithText("确认").performClick()
+        withTimeout(10_000) { model.uiState.first { pendingId in it.defaultSaveFailed } }
+        assertEquals(1, db.personalModelDao().getAll().size)
+        assertEquals(ImageTaskStatus.COMPLETED, db.imageTaskDao().get(pendingId)!!.status)
+        assertTrue(File(preview).isFile)
+        defaultFailure = false
+        scrollTo("重试设为默认")
+        compose.onNodeWithText("重试设为默认").performClick()
+        withTimeout(10_000) { model.uiState.first { pendingId !in it.defaultSaveFailed && it.mutating.isEmpty() } }
+        assertEquals(db.personalModelDao().getAll().single().id, defaultModelId)
+        assertEquals(1, db.personalModelDao().getAll().size)
+        db.personalModelDao().delete(defaultModelId!!)
+        withTimeout(10_000) { model.uiState.first { it.personalModels.isEmpty() } }
+        assertNull(model.uiState.value.resultPath(db.imageTaskDao().get(pendingId)!!))
+    }
+
+    @Test fun personalPreviewAdjustKeepsOriginalAndCannotAppendToGarment() = runBlocking {
+        val request = PersonalModelRequest("我的模特", PersonalModelMode.PARAMETERS, BodyMeasurements(165.0, 52.0))
+        db.imageTaskDao().update(task(pendingId, ImageTaskStatus.AWAITING_CONFIRMATION).copy(
+            kind = ImageTaskKind.PERSONAL_MODEL, title = "我的模特 · 个人模特", resultImagePath = preview,
+            requestJson = ImageTaskRequest(emptyList(), version = 2, personalModel = request).encode()))
+        withTimeout(10_000) { model.uiState.first { it.tasks.any { row -> row.id == pendingId && row.kind == ImageTaskKind.PERSONAL_MODEL } } }
+        show()
+        scrollTo("调整后另存")
+        compose.onNodeWithText("调整后另存").performClick()
+        assertEquals(1, retried)
+        assertFalse(model.uiState.value.canAppend(db.imageTaskDao().get(pendingId)!!))
+        assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, db.imageTaskDao().get(pendingId)!!.status)
+        assertTrue(File(preview).isFile)
+    }
+
     @Test fun backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask() {
         detail.value = false; show()
         scrollTo("后台与息屏")
@@ -172,6 +218,26 @@ class ImageTaskScreenTest {
         compose.onNodeWithText("进行中").performClick(); assertEquals(listOf(runningId), model.uiState.value.visibleTasks.map { it.id })
         compose.onNodeWithText("已结束").performClick(); assertEquals(listOf(failedId), model.uiState.value.visibleTasks.map { it.id })
     }
+    @Test fun sevenSkinsPersonalPreviewActionsFit320dpDoubleFontAndExportActualScreens() = runBlocking {
+        val request = PersonalModelRequest("我的模特", PersonalModelMode.PARAMETERS, BodyMeasurements(165.0, 52.0))
+        db.imageTaskDao().update(task(pendingId, ImageTaskStatus.AWAITING_CONFIRMATION).copy(
+            kind = ImageTaskKind.PERSONAL_MODEL, title = "我的模特 · 个人模特", resultImagePath = preview,
+            requestJson = ImageTaskRequest(emptyList(), version = 2, personalModel = request).encode()))
+        withTimeout(10_000) { model.uiState.first { it.tasks.any { row -> row.id == pendingId && row.kind == ImageTaskKind.PERSONAL_MODEL } } }
+        show()
+        val output = File(instrumentation.targetContext.filesDir, "personal-task-ui-contact-sheets").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(skin, dark) }
+            scrollTo("保存个人模特")
+            compose.onNodeWithText("保存个人模特").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("调整后另存").performScrollTo().assertIsDisplayed().assertHasClickAction()
+            save(output, skin, dark, "personal-actions")
+            scrollTo("点击图片放大核对")
+            compose.onNodeWithContentDescription("放大生成结果").assertHasClickAction()
+            save(output, skin, dark, "personal-preview")
+        }
+    }
+
     @Test fun sevenSkinsLightDark320dpDoubleFontKeepDetailActionsAndFiltersReachable() {
         show()
         val output = File(instrumentation.targetContext.filesDir, "image-task-ui-contact-sheets").apply { mkdirs() }

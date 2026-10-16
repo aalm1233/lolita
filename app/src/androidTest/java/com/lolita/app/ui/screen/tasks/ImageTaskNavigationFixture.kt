@@ -10,6 +10,7 @@ import com.lolita.app.data.tryon.ImageServiceStatus
 import com.lolita.app.domain.model.*
 import com.lolita.app.ui.navigation.*
 import com.lolita.app.ui.screen.tryon.TryOnViewModel
+import com.lolita.app.ui.screen.personalmodel.PersonalModelEditViewModel
 import com.lolita.app.ui.screen.mannequin.MannequinViewModel
 import com.lolita.app.ui.theme.*
 import com.lolita.app.ui.theme.skin.animation.SkinAnimationProvider
@@ -47,7 +48,14 @@ open class ImageTaskNavigationFixture {
                         createMannequinViewModel = { handle -> MannequinViewModel(handle, item = flowOf(item), categories = flowOf(listOf(Category(id = 1, name = "OP"))),
                             readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = tasks,
                             readRetryTask = { null }, submitTask = { _, provider -> submit(ImageTaskKind.MANNEQUIN, provider) }) },
-                        createImageTaskViewModel = { ImageTaskViewModel(tasks, flowOf(listOf(item)), flowOf(emptyList()), {}, {}, {}, {}) })
+                        createImageTaskViewModel = { ImageTaskViewModel(tasks, flowOf(listOf(item)), flowOf(emptyList()), {}, {}, {}, {}) },
+                        createPersonalModelEditViewModel = { handle -> PersonalModelEditViewModel(handle,
+                            readDraft = { null }, saveDraft = {}, deleteDraft = {}, readModel = { null },
+                            readRetryTask = { id -> tasks.value.firstOrNull { it.id == id } },
+                            readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, serviceChanges = flowOf(0),
+                            selectService = {}, saveApiKey = { _, _ -> }, clearApiKey = {},
+                            submitTask = { _, _, _ -> error("导航测试不得生成") }, imageReadable = { true },
+                            copyPhoto = { _, _ -> error("导航测试不得拷贝") }, deleteImage = {}) })
                 }
             }
         }

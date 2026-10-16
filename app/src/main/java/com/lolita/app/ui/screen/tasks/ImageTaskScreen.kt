@@ -46,18 +46,18 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                 }
             }
             item("background-advice") { ImageBackgroundAdvice() }
-            item("description") { Text("离开页面后继续处理。人台图需核对并添加；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
+            item("description") { Text("离开页面后继续处理。人台图与个人模特需核对后保存；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
             if (state.isLoading) item("loading") { LolitaCard { Column { ShimmerLine(0.7f, 18.dp); Spacer(Modifier.height(skin.spacingMedium)); ShimmerLine(0.9f, 14.dp) } } }
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }
             if (!state.isLoading && state.visibleTasks.isEmpty()) item("empty") {
                 LolitaSection(title = "暂无${if (state.filter == ImageTaskFilter.ALL) "" else state.filter.label}任务") { row {
-                    Text("从虚拟试衣或裙子详情的正面人台图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
+                    Text("从虚拟试衣、个人模特或裙子详情的正面人台图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
                 } }
             }
             items(state.visibleTasks, key = { it.id }) { task ->
                 LolitaSection(title = task.title, modifier = Modifier.skinClickable { onOpenTask(task.id) }) { row {
                     Spacer(Modifier.height(skin.spacingMedium))
-                    Text("${if (task.kind == ImageTaskKind.TRY_ON) "虚拟试衣" else "正面人台图"} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)
+                    Text("${task.kind.label} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)
                     TaskStage(task)
                     Text(formatTaskDate(task.createdAt), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     task.error?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }

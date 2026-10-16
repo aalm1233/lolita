@@ -33,7 +33,8 @@ class ImageTaskBackupTest {
         val original = f.db.itemDao().getItemById(f.itemId)!!
         val category = f.db.categoryDao().getCategoryById(original.categoryId)!!.copy(name = "袜子", group = CategoryGroup.ACCESSORY)
         f.db.categoryDao().updateCategory(category)
-        f.db.itemDao().updateItem(original.copy(name = "配套袜子"))
+        val second = ImageFileHelper.saveGeneratedImage(f.context, f.bytes)
+        f.db.itemDao().updateItem(original.copy(name = "配套袜子", imageUrls = listOf(f.source, second, f.source)))
         val coordinator = ImageTaskCoordinator(f.db, f.scope, {},
             { ImageFileHelper.saveGeneratedImage(f.context, it) }, ImageFileHelper::deleteImage,
             { ImageFileHelper.isOwnedGeneratedImage(f.context, it) })
@@ -67,9 +68,13 @@ class ImageTaskBackupTest {
         assertArrayEquals(f.bytes, File(restored.resultImagePath!!).readBytes())
         // The paid preview is historical; later category edits cannot prevent attaching it.
         f.db.categoryDao().updateCategory(category.copy(name = "鞋"))
+        val originalImages = f.db.itemDao().getItemById(f.itemId)!!.imageUrls
+        assertEquals(3, originalImages.size)
+        assertEquals(originalImages.first(), originalImages.last())
+        assertTrue(originalImages.first() != originalImages[1])
         coordinator.confirmMannequin(id); coordinator.confirmMannequin(id)
         val item = f.db.itemDao().getItemById(f.itemId)!!
-        assertEquals(2, item.imageUrls.size)
+        assertEquals(originalImages + restored.resultImagePath, item.imageUrls)
         assertEquals(restored.resultImagePath, item.imageUrls.last())
         assertArrayEquals(f.bytes, File(item.imageUrls.first()).readBytes())
         assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(id)!!.status)

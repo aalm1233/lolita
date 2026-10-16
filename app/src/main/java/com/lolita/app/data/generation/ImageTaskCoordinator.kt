@@ -205,7 +205,7 @@ class ImageTaskCoordinator(
                 val item = requireNotNull(db.itemDao().getItemById(request.garments.single().itemId)) { "原服饰已删除，请放弃此预览" }
                 val path = requireNotNull(task.resultImagePath)
                 require(validateImage(path)) { "预览图片已丢失，请放弃后重新生成" }
-                db.itemDao().updateImages(item.id, (item.imageUrls + path).distinct(), System.currentTimeMillis())
+                db.itemDao().updateImages(item.id, if (path in item.imageUrls) item.imageUrls else item.imageUrls + path, System.currentTimeMillis())
                 dao.update(task.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis(), error = null))
             }
         }

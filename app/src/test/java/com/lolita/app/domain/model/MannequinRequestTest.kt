@@ -6,10 +6,18 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class MannequinRequestTest {
+    @Test fun accessoriesAreEligibleByExplicitGroupIncludingCustomNames() {
+        for (name in listOf("KC", "Bonnet", "鞋", "包", "手套", "袜子", "自定义小物", "OP配件")) {
+            assertTrue(name, supportsMannequin(Category(id = 3, name = name, group = CategoryGroup.ACCESSORY)))
+        }
+        assertFalse(supportsMannequin(Category(id = 3, name = "上衣", group = CategoryGroup.CLOTHING)))
+        assertFalse(supportsMannequin(Category(id = 3, name = " ", group = CategoryGroup.ACCESSORY)))
+    }
+
     @Test fun onlyExplicitClothingDressCategoriesAreEligible() {
         for (name in listOf("JSK", " op ", "s K", "裙子", "连衣裙", "吊带裙", "背带裙", "半身裙", "长裙", "短裙")) {
             assertTrue(name, supportsMannequin(Category(name = name)))
-            assertFalse(name, supportsMannequin(Category(name = name, group = CategoryGroup.ACCESSORY)))
+            assertTrue(name, supportsMannequin(Category(name = name, group = CategoryGroup.ACCESSORY)))
         }
         for (name in listOf("", "裙撑", "OP配件", "上衣", "TOP", "JSK套装", "短裙配件", "连 衣裙", "\uFF2F\uFF30")) {
             assertFalse(name, supportsMannequin(Category(name = name)))

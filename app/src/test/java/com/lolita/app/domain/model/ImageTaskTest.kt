@@ -5,6 +5,38 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ImageTaskTest {
+    private val accessoryV3 = """{"version":3,"garments":[{"itemId":9,"name":"红色KC","role":"MAIN"}],"instructions":"只保留红色发饰","personalModel":null,"tryOnModel":null,"mannequinSubject":{"categoryId":4,"categoryName":"KC","presentation":"ACCESSORY"}}"""
+
+    @Test fun standaloneAccessorySnapshotSurvivesStrictTaskRoundTrip() {
+        val accepted = runCatching { ImageTaskRequest.decode(accessoryV3).also { it.validate(ImageTaskKind.MANNEQUIN) } }
+        assertTrue("a valid standalone accessory task must decode", accepted.isSuccess)
+        val decoded = accepted.getOrThrow()
+        assertEquals(com.google.gson.JsonParser.parseString(accessoryV3), com.google.gson.JsonParser.parseString(decoded.encode()))
+        assertEquals(listOf(9L), decoded.selections(listOf("/kc.jpg")).map { it.itemId })
+        assertThrows(IllegalArgumentException::class.java) { decoded.validate(ImageTaskKind.TRY_ON) }
+        assertThrows(IllegalArgumentException::class.java) { decoded.validate(ImageTaskKind.PERSONAL_MODEL) }
+    }
+
+    @Test fun malformedAccessorySnapshotsAreRejectedRatherThanBecomingDressTasks() {
+        listOf(
+            accessoryV3.replace("\"presentation\":\"ACCESSORY\"", "\"presentation\":\"FUTURE\""),
+            accessoryV3.replace("\"categoryId\":4", "\"categoryId\":0"),
+            accessoryV3.replace("\"categoryId\":4", "\"categoryId\":4.5"),
+            accessoryV3.replace("\"categoryName\":\"KC\"", "\"categoryName\":false"),
+            accessoryV3.replace("\"categoryName\":\"KC\"", "\"categoryName\":\" \""),
+            accessoryV3.replace("\"categoryId\":4", "\"unexpected\":true,\"categoryId\":4"),
+            accessoryV3.replace("\"version\":3", "\"version\":2"),
+            accessoryV3.replace("\"version\":3", "\"version\":4")
+        ).forEach { assertThrows(IllegalArgumentException::class.java) { ImageTaskRequest.decode(it) } }
+    }
+
+    @Test fun v2EncodingKeepsExactlyTheLegacyFieldSet() {
+        val request = ImageTaskRequest(listOf(garment()), version = 2)
+        val objectValue = com.google.gson.JsonParser.parseString(request.encode()).asJsonObject
+        assertEquals(setOf("version", "garments", "instructions", "personalModel", "tryOnModel"), objectValue.keySet())
+        assertEquals(request, ImageTaskRequest.decode(objectValue.toString()))
+    }
+
     private fun garment(id: Long = 1, role: TryOnRole = TryOnRole.MAIN) = ImageTaskGarment(id, "裙子$id", role)
     private fun request() = ImageTaskRequest(listOf(garment()))
     private fun task(status: ImageTaskStatus) = ImageTask(

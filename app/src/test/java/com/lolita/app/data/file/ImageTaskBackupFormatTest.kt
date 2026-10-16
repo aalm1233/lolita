@@ -9,6 +9,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ImageTaskBackupFormatTest {
+    @Test fun pendingStandaloneAccessoryTaskKeepsItsPresentationThroughBackup() {
+        val request = """{"version":3,"garments":[{"itemId":41,"name":"袜子","role":"MAIN"}],"instructions":"保留原来的一双","personalModel":null,"tryOnModel":null,"mannequinSubject":{"categoryId":7,"categoryName":"袜子","presentation":"ACCESSORY"}}"""
+        val input = modern(task().copy(requestJson = request))
+        val accepted = runCatching { BackupFormat.parse(input.toString()) }
+        assertTrue("pending accessory task must remain restorable", accepted.isSuccess)
+        val result = gson.toJsonTree(accepted.getOrThrow()).asJsonObject
+        assertEquals(input["imageTasks"], result["imageTasks"])
+    }
+
     private val gson = Gson()
     private fun root() = gson.toJsonTree(BackupData(emptyList(),emptyList(),emptyList(),emptyList(),emptyList(),emptyList(),emptyList(),emptyList())).asJsonObject
     private fun task(id: String = "9145fafd-e0b9-4a85-9e20-87bea5e3e279") = ImageTask(

@@ -27,9 +27,9 @@
 **Files:** domain/model/MannequinRequest.kt、domain/model/ImageTask.kt、data/generation/ImageTaskCoordinator.kt、ImageTaskRunner.kt；MannequinRequestTest、ImageTaskTest、ImageTaskBackupFormatTest、ImageTaskExecutionTest。
 **Interfaces:** 新增`enum class MannequinPresentation { DRESS_FORM, ACCESSORY }`，`MannequinSubject(categoryId: Long, categoryName: String, presentation: MannequinPresentation)`，`mannequinSubject(category: Category?): MannequinSubject?`。MannequinRequest追加`subject: MannequinSubject? = null`，null代表旧裙装。ImageTaskRequest追加`mannequinSubject: MannequinSubject? = null`，新MANNEQUIN v3；Runner传入快照。
 
-- [ ] 先补准入、v1/v2原样兼容、v3严格枚举/跨类型拒绝、快照持久往返测试；运行定向JVM观察RED。
-- [ ] 实现准入/提示词分支、v3显式字段解析与v2编码移除新字段；Coordinator事务中核对当前类别与页面快照，Runner重建同一subject。仅MANNEQUIN可用v3。
-- [ ] 定向JVM GREEN；真实Room验证快照与分类改动拒绝，旧预览仍可确认。提交`feat: persist mannequin presentation snapshots`。
+- [x] 先补准入、v1/v2原样兼容、v3严格枚举/跨类型拒绝、快照持久往返测试；运行定向JVM观察RED。
+- [x] 实现准入/提示词分支、v3显式字段解析与v2编码移除新字段；Coordinator事务中核对当前类别与页面快照，Runner重建同一subject。仅MANNEQUIN可用v3。
+- [x] 定向JVM GREEN；真实Room验证快照与分类改动拒绝，旧预览仍可确认。提交`feat: persist mannequin presentation snapshots`。
 
 ### Task 2: 无杆模板、图像准备与服务边界
 

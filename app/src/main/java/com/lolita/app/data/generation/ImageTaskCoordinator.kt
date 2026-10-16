@@ -130,9 +130,14 @@ class ImageTaskCoordinator(
     }
 
     suspend fun submitMannequin(request: MannequinRequest, provider: ImageGenerationProvider): String = accepted {
-        val item = requireNotNull(db.itemDao().getItemById(request.itemId)) { "裙子已删除，请重新选择" }
-        enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · 人台图",
-            ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN)), request.instructions), listOf(request.imagePath))
+        val item = requireNotNull(db.itemDao().getItemById(request.itemId)) { "物品已删除，请重新选择" }
+        val subject = requireNotNull(mannequinSubject(db.categoryDao().getCategoryById(item.categoryId))) { "此分类暂不支持展示图" }
+        require(request.subject?.let { it == subject } ?: (subject.presentation == MannequinPresentation.DRESS_FORM)) {
+            "物品分类已改变，请重新核对展示方式"
+        }
+        enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}",
+            ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN)), request.instructions,
+                version = 3, mannequinSubject = subject), listOf(request.imagePath))
     }
 
     private suspend fun enqueue(kind: ImageTaskKind, provider: ImageGenerationProvider, title: String,
@@ -150,6 +155,12 @@ class ImageTaskCoordinator(
                 }
                 if (kind == ImageTaskKind.PERSONAL_MODEL) {
                     sources.forEach { require(validateSourceImage(it)) { "参考照片已丢失或无法完整读取，请重新选择" } }
+                }
+                if (kind == ImageTaskKind.MANNEQUIN) {
+                    val item = requireNotNull(db.itemDao().getItemById(metadata.garments.single().itemId)) { "物品已删除，请重新选择" }
+                    require(sources.size == 1 && sources.single() in item.imageUrls) { "参考图片已改变，请重新选择" }
+                    val currentSubject = mannequinSubject(db.categoryDao().getCategoryById(item.categoryId))
+                    require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
                 }
                 ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources).also {
                     it.validate()

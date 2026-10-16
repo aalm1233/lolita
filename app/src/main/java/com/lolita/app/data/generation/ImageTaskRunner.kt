@@ -62,7 +62,7 @@ class ImageTaskExecutor(
                 findItem = db.itemDao()::getItemById, findCategory = db.categoryDao()::getCategoryById,
                 readCredentials = { credentials }, prepareImages = prepareMannequin, generateImage = generateImage,
                 savePreview = { coordinator.publishMannequin(task.id, it) }, discardPreview = coordinator::discardUnownedImage
-            ).generate(MannequinRequest(request.garments.single().itemId, task.sourceImagePaths.single(), request.instructions),
+            ).generate(MannequinRequest(request.garments.single().itemId, task.sourceImagePaths.single(), request.instructions, request.mannequinSubject),
                 expectedProvider = task.provider, beforeRequest = { coordinator.beforeRequest(task.id) })
         }
     }

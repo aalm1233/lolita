@@ -84,7 +84,8 @@ fun SettingsScreen(
     onNavigateToTasks: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel(),
-    appUpdateViewModel: AppUpdateViewModel = viewModel()
+    appUpdateViewModel: AppUpdateViewModel = viewModel(),
+    onNavigateToPersonalModels: () -> Unit = {}
 ) {
     val isDark = isSystemInDarkTheme()
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
@@ -193,6 +194,14 @@ fun SettingsScreen(
                 iconKey = IconKey.ViewAgenda,
                 iconTint = MaterialTheme.colorScheme.primary,
                 onClick = onNavigateToTasks
+            )
+
+            SettingsMenuItem(
+                title = "我的模特",
+                description = "根据照片或身体参数捏模特，用自己的模特试衣",
+                iconKey = IconKey.Outfit,
+                iconTint = MaterialTheme.colorScheme.primary,
+                onClick = onNavigateToPersonalModels
             )
 
             SettingsMenuItem(

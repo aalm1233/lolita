@@ -139,6 +139,14 @@ sealed interface Screen {
         fun createRoute(taskId: String) = "virtual_try_on_retry/${android.net.Uri.encode(taskId)}"
     }
 
+    data object PersonalModels : Screen { override val route = "personal_models" }
+
+    data object PersonalModelEdit : Screen {
+        override val route = "personal_model_edit?modelId={modelId}&retryTaskId={retryTaskId}"
+        fun createRoute(modelId: Long? = null, retryTaskId: String? = null): String =
+            "personal_model_edit?modelId=${modelId ?: 0L}&retryTaskId=${android.net.Uri.encode(retryTaskId.orEmpty())}"
+    }
+
     data object ImageTasks : Screen { override val route = "image_tasks" }
 
     data object ImageTaskDetail : Screen {

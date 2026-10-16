@@ -1,0 +1,131 @@
+{
+  "device": "emulator-5570",
+  "avd": "Lolita_Personal_Model_Test",
+  "run": "2026-10-16T06:07:16Z",
+  "tests": 14,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "screenshots": [
+    {
+      "file": "editor-chinese-dark-320-large.png",
+      "sha256": "fff9a419af7dbff61256e59c55d0fdd055c481a07b5e9016b02253178783a751"
+    },
+    {
+      "file": "editor-chinese-dark-360.png",
+      "sha256": "744cc3b8b07a701794b0fa4a5c607f4608fde6a2e401c3e82152269ecbe94d2c"
+    },
+    {
+      "file": "editor-chinese-light-320-large.png",
+      "sha256": "e7e397010411ecc8fbd470e468643185f064c76a4a5a3a8a3497995edc1b81e5"
+    },
+    {
+      "file": "editor-chinese-light-360.png",
+      "sha256": "610c4ad695631658fdce4116f2f563e30b86ebd1598dfd2155de9b81582c3ad7"
+    },
+    {
+      "file": "editor-classic-dark-320-large.png",
+      "sha256": "a3bbdf11d080fba359bd8cb51cf1d7a6009149a12a650738a8a0236ffe9f2491"
+    },
+    {
+      "file": "editor-classic-dark-360.png",
+      "sha256": "4b7680bb9488a753ad574ad10be66d11984a3f652961ed7c1de7a82f6e4c66f0"
+    },
+    {
+      "file": "editor-classic-light-320-large.png",
+      "sha256": "bc8afe256ddb89bc6005579b5467080a0d469bd6df9483300c04c6e3730e3f64"
+    },
+    {
+      "file": "editor-classic-light-360.png",
+      "sha256": "a498f339bbf144f9920b09d7bd01aa953fc73f317f1900e82e0baa5975648868"
+    },
+    {
+      "file": "editor-country-dark-320-large.png",
+      "sha256": "a4547811f7864c82a45ac99de0553fdeab9b5c439c2db8a5458f742988a94661"
+    },
+    {
+      "file": "editor-country-dark-360.png",
+      "sha256": "18d73bf31eed1a22a1630bdd75beaf0dffa74014709bebcd7ed548083c979c34"
+    },
+    {
+      "file": "editor-country-light-320-large.png",
+      "sha256": "eba8bc4068a877c5653caf778face4c3d23c7ed3e6c30c4f020312f0982730fd"
+    },
+    {
+      "file": "editor-country-light-360.png",
+      "sha256": "6e06c503c2267b0f9ba3be66600f26938d960a163aac5ccd81b2c50a9f567eb9"
+    },
+    {
+      "file": "editor-default-dark-320-large.png",
+      "sha256": "3fa86f36ef998fcf46bca158aa319e15d5dee6297aaa89e49af89303603e8464"
+    },
+    {
+      "file": "editor-default-dark-360.png",
+      "sha256": "c09765b628b8135b06ef03addbbdb5d30b183f1a5cf179c0aff281de2e21dbe1"
+    },
+    {
+      "file": "editor-default-light-320-large.png",
+      "sha256": "ba6edce3150fed272b2a821fbf1e8f9a399c63a0b48a1f85e1eafbf5b545e7f2"
+    },
+    {
+      "file": "editor-default-light-360.png",
+      "sha256": "a420e40a2067a76964ccfae666c11b7ed31873c9b2b76943de5b495f7fa5d736"
+    },
+    {
+      "file": "editor-gothic-dark-320-large.png",
+      "sha256": "2bbb48d04f0d006d38f5ce5741160939e0d5c4e31f0f02e666a1e8cdb6eeabde"
+    },
+    {
+      "file": "editor-gothic-dark-360.png",
+      "sha256": "c934a8fe83e0acd93dac0c96057ce0cdc8a795e41cfcb08cfadd548b882bdfa8"
+    },
+    {
+      "file": "editor-gothic-light-320-large.png",
+      "sha256": "a0f8de311bbcd9bd89a1d8a31728ea471a99bcf36c7a199af1dd1601e948fbbc"
+    },
+    {
+      "file": "editor-gothic-light-360.png",
+      "sha256": "94d4cecd884a6615bfb6f9f0a6746964645daf42d4c7137a401ff2e6ca58c1ae"
+    },
+    {
+      "file": "editor-navy-dark-320-large.png",
+      "sha256": "ab39e31a5627275ca17bb56110273c833f76391768ee353875b1b0e3012542d5"
+    },
+    {
+      "file": "editor-navy-dark-360.png",
+      "sha256": "e03bec990e3e1b4b4c21fe0a9e58c5e922645a5411efc04459e4225983474948"
+    },
+    {
+      "file": "editor-navy-light-320-large.png",
+      "sha256": "b168a0b36cdaafe8dbf39480a9c30ae175ef7c8ce7c486a0dc6804b87c77302c"
+    },
+    {
+      "file": "editor-navy-light-360.png",
+      "sha256": "eef7db4077a15d0d94808aa4b202f93d481c79c45f2d67558c96940066185b23"
+    },
+    {
+      "file": "editor-seven-skins-320-large.jpg",
+      "sha256": "3d87d8f22009165b593b7e2b54d8f3427c8eb1748656df2f65930000b000afb3"
+    },
+    {
+      "file": "editor-seven-skins-360.jpg",
+      "sha256": "0f44eced27882b17cc0962f1e4f6692be7f71ef2d811a9be5b7811bed2797a95"
+    },
+    {
+      "file": "editor-victorian-dark-320-large.png",
+      "sha256": "a291e32d463dee2766606c85f8b31f6e698ed1e29f50c85eb2e7be143e1d46e7"
+    },
+    {
+      "file": "editor-victorian-dark-360.png",
+      "sha256": "cb919d2657a5a052643d8a2e33e9e3b6fecdde665406fa9f9719eaecaef578dc"
+    },
+    {
+      "file": "editor-victorian-light-320-large.png",
+      "sha256": "de534c1edb18fcb281afa478b470c918724d43e7f5b5f042bc8fadacee5ccfc1"
+    },
+    {
+      "file": "editor-victorian-light-360.png",
+      "sha256": "a9985bddfedebd59cd6d6654ba7503b55dce6f870f6087cf2c4db306501d2876"
+    }
+  ]
+}

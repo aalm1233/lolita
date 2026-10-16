@@ -28,4 +28,4 @@ Room仍29，备份仍9。v1/v2严格读取与原编码字段集合保留，v2个
 
 集成验证：全量JVM307/307（43类，0失败/错误/跳过），Debug/AndroidTest构建通过；扩大独立AVD回归69/69（66.431秒，含2项前轮重复）。审查修复观察JSON/ZIP两项失败，修复后全量JVM与APK再次通过，相关备份/并发/UI11/11通过（4.436秒）。
 
-正式包2.54.0 /113由4be8e506254e4b62c67491e03d949513b20c0e12执行clean assembleRelease（99秒），原签名及实际安装包字节一致。2.53.0覆盖升级和实际小物入口/页面/检查更新操作后，33表全部字段、198件服饰、172图SHA与设置字节均保全。GitHub正式发布与匿名完整APK/校验下载及HEAD通过；Gitee本次需额外旧包清理授权，当前尚未发布。应用内一次检查仍显示Gitee拒绝访问/频繁请求。见[发布回执](mannequin-accessories-release-2.54.0-verification.json)及[正式包实拍](visuals/2026-10-16-mannequin-accessories/release/)。
+正式包2.54.0 /113由4be8e506254e4b62c67491e03d949513b20c0e12执行clean assembleRelease（99秒），原签名及实际安装包字节一致。2.53.0覆盖升级和实际小物入口/页面/检查更新操作后，33表全部字段、198件服饰、172图SHA与设置字节均保全。GitHub/Gitee均已正式发布，同一APK/校验文件匿名完整下载及HEAD通过。2026-10-16 19:21明确授权后仅清理Gitee2.44.0 APK，旧发布、校验文件和本机/GitHub副本保留。Gitee转正前后分别完整下载核验，正式Release为1210661；公开API仍HTTP403，正式包本阶段一次真实检查仍显示Gitee拒绝访问/频繁请求，未点重试，不能宣称最新版本与完整正文已验证。见[发布回执](mannequin-accessories-release-2.54.0-verification.json)及[正式包实拍](visuals/2026-10-16-mannequin-accessories/release/)。

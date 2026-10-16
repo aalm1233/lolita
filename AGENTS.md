@@ -460,4 +460,4 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 页面确认固定原图、说明、分类、服务及keyRevision，变动后重新确认；Coordinator事务与Generator准备前后核对当前分类和图片。`prepareAccessory`只处理1张原图，专用`generateMannequin`允许1–2输入，原试衣2–9、个人模特1–5边界不变。
 - 回归覆盖`MannequinSubjectTaskTest`、单图基础设施/API、确认变化、JSON/ZIP往返和旧任务；七皮肤浅暗320dp/两倍字体实拍在`docs/visuals/2026-10-16-mannequin-accessories/`。色块是布局夹具，无付费API生成品质试验。
 
-- 2.54.0 /113 clean正式包原签名核验通过，307项JVM及相关设备回归通过；2.53.0覆盖升级与实际详情/小物页面操作后33表、198件、172图及设置逐字节保全。GitHub正式发布、匿名APK/校验下载与HEAD已通过；Gitee因配额等待单独2.44.0清理授权，未删除或发布新国内附件，正式包一次检查仍HTTP403。状态见`docs/mannequin-accessories-release-2.54.0-verification.json`。
+- 2.54.0 /113 clean正式包原签名核验通过，307项JVM及相关设备回归通过；2.53.0覆盖升级与实际详情/小物页面操作后33表、198件、172图及设置逐字节保全。GitHub/Gitee均已正式发布，同一APK/校验文件匿名完整下载、SHA256及HEAD通过；按2026-10-16 19:21单独授权仅删除Gitee2.44.0 APK（保留旧发布/校验及本机/GitHub副本）。Gitee正式发布后公开API仍HTTP403，正式包本阶段一次真实检查仍显示拒绝访问/频繁请求，不冒充最新版本与完整正文已验证。状态见`docs/mannequin-accessories-release-2.54.0-verification.json`。

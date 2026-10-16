@@ -92,6 +92,18 @@ class ItemRepository(
         }
     }
 
+    /** Reorder only the latest persisted pictures, serialized with generated-image appends. */
+    suspend fun setCoverImage(itemId: Long, path: String) {
+        val db = checkNotNull(database) { "设置封面需要数据库事务" }
+        db.withTransaction {
+            val item = itemDao.getItemById(itemId) ?: error("服饰已删除，无法设置封面")
+            require(path.isNotBlank() && path in item.imageUrls) { "这张图片已不属于该服饰，请重新选择" }
+            if (item.imageUrls.firstOrNull() == path) return@withTransaction
+            val images = item.imageUrls.toMutableList().apply { removeAt(indexOf(path)); add(0, path) }
+            check(itemDao.updateImages(itemId, images, System.currentTimeMillis()) == 1) { "服饰已删除，无法设置封面" }
+        }
+    }
+
     suspend fun attachChild(childId: Long, parentId: Long, includedInPrice: Boolean) = inTransaction {
         val child = itemDao.getItemById(childId) ?: error("小物不存在")
         updateItem(child.copy(parentItemId = parentId, includedInParentPrice = includedInPrice))

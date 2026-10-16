@@ -14,6 +14,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,11 +34,15 @@ fun ImageGalleryPager(
     sharedTransitionKey: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
     imageShape: Shape? = null,
-    imageBackgroundColor: Color = Color.Transparent
+    imageBackgroundColor: Color = Color.Transparent,
+    onPageChanged: ((Int) -> Unit)? = null
 ) {
     if (imageUrls.isEmpty()) return
 
     val pagerState = rememberPagerState(pageCount = { imageUrls.size })
+    LaunchedEffect(pagerState.settledPage, imageUrls) {
+        onPageChanged?.invoke(pagerState.settledPage.coerceIn(imageUrls.indices))
+    }
 
     Box(modifier = modifier) {
         HorizontalPager(

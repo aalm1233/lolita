@@ -33,18 +33,21 @@ object ImageFileHelper {
             if (UUID.fromString(file.nameWithoutExtension).toString() != file.nameWithoutExtension) return@withContext false
             val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
             android.graphics.BitmapFactory.decodeFile(path, bounds)
-            if (bounds.outWidth !in 1..16384 || bounds.outHeight !in 1..16384) return@withContext false
-            // ImageDecoder rejects truncated data by default, unlike BitmapFactory's tolerant JPEG decoder.
+            if (!PersonalImageIntegrity.supportsDimensions(bounds.outWidth, bounds.outHeight)) return@withContext false
+            // A forged JPEG EOI can make even ImageDecoder report success after gray-filling missing rows.
+            // Strictly consume JPEG/PNG compressed data before either platform decoder.
+            val strictFormat = bounds.outMimeType == "image/jpeg" || bounds.outMimeType == "image/png"
+            if (strictFormat) {
+                if (!PersonalImageIntegrity.isComplete(file.readBytes(), bounds.outMimeType)) return@withContext false
+            } else if (android.os.Build.VERSION.SDK_INT < 28) return@withContext false
             val decoded = if (android.os.Build.VERSION.SDK_INT >= 28) {
                 android.graphics.ImageDecoder.decodeBitmap(android.graphics.ImageDecoder.createSource(file)) { decoder, info, _ ->
                     decoder.setTargetSampleSize(maxOf(1, maxOf(info.size.width, info.size.height) / 1024))
                     decoder.setOnPartialImageListener { false }
                 }
             } else {
-                // API 26/27: verify format terminators before decoding the complete bounded bitmap.
-                val bytes = file.readBytes()
-                if (!hasCompleteImageTerminator(bytes, bounds.outMimeType)) return@withContext false
-                android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size,
+                // API 26/27 BitmapFactory accepts incomplete input. Validate JPEG/PNG entropy first.
+                android.graphics.BitmapFactory.decodeFile(path,
                     android.graphics.BitmapFactory.Options().apply {
                         var sample = 1
                         while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 1024) sample *= 2
@@ -57,14 +60,6 @@ object ImageFileHelper {
             if (failure is kotlinx.coroutines.CancellationException) throw failure
             false
         }
-    }
-
-    private fun hasCompleteImageTerminator(bytes: ByteArray, mimeType: String?): Boolean = when (mimeType) {
-        "image/jpeg" -> bytes.size >= 2 && bytes[bytes.size - 2] == 0xff.toByte() && bytes.last() == 0xd9.toByte()
-        "image/png" -> bytes.takeLast(12).toByteArray().contentEquals(byteArrayOf(0,0,0,0,73,69,78,68,-82,66,96,-126))
-        "image/webp" -> bytes.size >= 12 && java.nio.ByteBuffer.wrap(bytes,4,4).order(java.nio.ByteOrder.LITTLE_ENDIAN).int.toLong() + 8 == bytes.size.toLong()
-        "image/gif" -> bytes.lastOrNull() == 0x3b.toByte()
-        else -> false
     }
 
     /** Restore only a complete generated PNG inside this application's image store. No mutation. */

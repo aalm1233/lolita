@@ -13,6 +13,7 @@ import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.lolita.app.data.file.PersonalImageIntegrity
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.ImageTask
@@ -157,6 +158,29 @@ class PersonalModelPersistenceTest {
             assertNull(PersonalModelRepository(db).observe().first().firstOrNull { it.id==prefs.defaultPersonalModelId.first() })
             prefs.setDefaultPersonalModelId(null); assertNull(prefs.defaultPersonalModelId.first())
         } finally { scope.coroutineContext[Job]!!.cancelAndJoin(); directory.deleteRecursively(); db.close() }
+    }
+
+    @Test fun realJpegAndDamagedEntropyUseStrictGateAndOwnedFileInputPath() = runBlocking {
+        val bytes=context.assets.open("builtin/brands/with_puji.jpg").use { it.readBytes() }
+        val valid=File(context.filesDir,"images/${UUID.randomUUID()}.jpg").apply { parentFile!!.mkdirs(); writeBytes(bytes) }
+        var at=2
+        var scanStart=-1
+        while (at<bytes.size-4) {
+            require(bytes[at++]==255.toByte())
+            val marker=bytes[at++].toInt() and 255
+            val size=((bytes[at].toInt() and 255) shl 8) or (bytes[at+1].toInt() and 255)
+            at+=size
+            if (marker==0xda) { scanStart=at; break }
+        }
+        require(scanStart>0)
+        val damaged=bytes.copyOf(scanStart+(bytes.size-scanStart)/3)+byteArrayOf(255.toByte(),0xd9.toByte())
+        val broken=File(context.filesDir,"images/${UUID.randomUUID()}.jpg").apply { writeBytes(damaged) }
+        try {
+            assertTrue(PersonalImageIntegrity.isComplete(bytes,"image/jpeg"))
+            assertFalse(PersonalImageIntegrity.isComplete(damaged,"image/jpeg"))
+            assertTrue(ImageFileHelper.isOwnedReadableImage(context,valid.path))
+            assertFalse(ImageFileHelper.isOwnedReadableImage(context,broken.path))
+        } finally { valid.delete(); broken.delete() }
     }
 
     @Test fun inputOwnershipRejectsOutsideMalformedAndAcceptsFullyDecodedUuidImage() = runBlocking {

@@ -45,7 +45,7 @@ class ImageTaskServiceTest {
             scenario.onActivity { assertNull(it.intent.getStringExtra("navigate_to")) }
             scenario.recreate()
             awaitText(taskCenterMarker)
-            var node = findText(instrumentation.uiAutomation.rootInActiveWindow, "个人") ?: error("个人导航未出现")
+            var node = findText(instrumentation.uiAutomation.rootInActiveWindow, "个人", exact = true) ?: error("个人导航未出现")
             while (!node.isClickable && node.parent != null) node = node.parent
             assertTrue(node.performAction(AccessibilityNodeInfo.ACTION_CLICK))
             withTimeout(10_000) {
@@ -63,10 +63,10 @@ class ImageTaskServiceTest {
         } finally { scenario.close() }
     }
     private fun hasText(text: String): Boolean = findText(instrumentation.uiAutomation.rootInActiveWindow, text) != null
-    private fun findText(node: AccessibilityNodeInfo?, text: String): AccessibilityNodeInfo? {
+    private fun findText(node: AccessibilityNodeInfo?, text: String, exact: Boolean = false): AccessibilityNodeInfo? {
         if (node == null) return null
-        if (node.text?.contains(text) == true) return node
-        for (index in 0 until node.childCount) findText(node.getChild(index), text)?.let { return it }
+        if (node.text?.let { if (exact) it.toString() == text else it.contains(text) } == true) return node
+        for (index in 0 until node.childCount) findText(node.getChild(index), text, exact)?.let { return it }
         return null
     }
     private suspend fun awaitText(text: String) {

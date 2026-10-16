@@ -11,8 +11,8 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 8
-    const val SCHEMA_VERSION = 28
+    const val VERSION = 9
+    const val SCHEMA_VERSION = 29
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -30,6 +30,7 @@ internal object BackupFormat {
         "remoteItems" to RemoteSharedItem::class.java, "remotePricePlans" to RemoteSharedPricePlan::class.java,
         "monthlyBudgets" to MonthlyBudget::class.java, "tryOnResults" to TryOnResult::class.java,
         "imageTasks" to ImageTask::class.java,
+        "personalModels" to PersonalModel::class.java, "personalModelDrafts" to PersonalModelDraft::class.java,
         "orderBindings" to OrderBinding::class.java, "paymentStages" to PaymentStage::class.java
     )
     private val requiredArrays = entities.keys.take(8)
@@ -42,7 +43,7 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
@@ -115,6 +116,8 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "personalModels" -> setOf("id","name","requestJson","sourceImagePaths","imageUrl","provider","model","createdAt","updatedAt")
+                    "personalModelDrafts" -> setOf("id","dataJson","sourceImagePaths","updatedAt")
                     "imageTasks" -> setOf("id","kind","provider","title","requestJson","sourceImagePaths","status","requestSent","createdAt","updatedAt")
                     "tryOnResults" -> setOf("id","name","imageUrl","itemIds","itemNames","model","createdAt")
                     "monthlyBudgets" -> setOf("month", "amountCents")
@@ -283,12 +286,16 @@ internal object BackupFormat {
             require(task.createdAt >= 0 && task.updatedAt >= 0 &&
                 (task.error == null || task.error.length <= 180) && (task.tryOnResultId == null || task.tryOnResultId > 0)) { "图像任务内容无效" }
             task.validate()
-            require(task.status.retainsSourceImages || task.sourceImagePaths.isEmpty()) { "已结束任务仍保留临时参考图片" }
+            require(task.retainsSourceImages || task.sourceImagePaths.isEmpty()) { "已结束任务仍保留临时参考图片" }
             require(task.kind == ImageTaskKind.TRY_ON || task.tryOnResultId == null) { "人台任务不能关联试衣历史" }
+            require(task.personalModelId == null || task.personalModelId > 0 && task.kind == ImageTaskKind.PERSONAL_MODEL && task.status == ImageTaskStatus.COMPLETED) { "模特任务关联无效" }
+            require(task.kind != ImageTaskKind.PERSONAL_MODEL || task.status != ImageTaskStatus.COMPLETED || task.personalModelId != null) { "已完成模特任务缺少已保存模特标识" }
             require(task.status !in setOf(ImageTaskStatus.GENERATING,ImageTaskStatus.SAVING,ImageTaskStatus.AWAITING_CONFIRMATION,ImageTaskStatus.COMPLETED) || task.requestSent) { "图像任务请求状态不一致" }
         }
         val previews = data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.map { it.resultImagePath }
         require(previews.distinct().size == previews.size) { "待确认图片不能由多个任务持有" }
+        val retainedInputs = data.imageTasks.filter { it.retainsSourceImages }.flatMap { it.sourceImagePaths }.toSet()
+        require(previews.none { it in retainedInputs }) { "待确认图片不能复用任务输入照片" }
         require(data.monthlyBudgets.map { it.month }.distinct().size == data.monthlyBudgets.size) { "预算月份重复" }
         data.monthlyBudgets.forEach { com.lolita.app.domain.usecase.BudgetAccounting.validate(it.month, it.amountCents) }
         fun ids(values: List<Long>, table: String): Set<Long> {
@@ -300,6 +307,30 @@ internal object BackupFormat {
             require(it.name.isNotBlank() && it.name.length <= 120 && it.imageUrl.isNotBlank() && it.model.isNotBlank() && it.createdAt >= 0 &&
                 it.itemIds.size in 1..8 && it.itemIds.size == it.itemNames.size && it.itemIds.distinct().size == it.itemIds.size &&
                 it.itemIds.all { id -> (id.toLongOrNull() ?: 0L) > 0 } && it.itemNames.all(String::isNotBlank)) { "试衣记录内容无效" }
+            require((it.personalModelId == null && it.personalModelName == null) ||
+                (it.personalModelId != null && it.personalModelId > 0 && !it.personalModelName.isNullOrBlank())) { "试衣人物快照无效" }
+        }
+        ids(data.personalModels.map { it.id }, "个人模特")
+        data.personalModels.forEach {
+            require(it.name == it.name.trim() && it.name.isNotBlank() && it.name.length <= 60 &&
+                it.imageUrl.isNotBlank() && it.model.isNotBlank() && it.createdAt >= 0 && it.updatedAt >= 0) { "个人模特内容无效" }
+            it.request().validatePaths(it.sourceImagePaths)
+        }
+        require(data.personalModelDrafts.map { it.id }.distinct().size == data.personalModelDrafts.size) { "人物草稿标识重复" }
+        data.personalModelDrafts.forEach { it.validate(); require(it.updatedAt >= 0) { "人物草稿时间无效" } }
+        val profiles = data.personalModels.associateBy { it.id }
+        val results = data.tryOnResults.associateBy { it.id }
+        data.imageTasks.forEach { task ->
+            // Deleted historical targets are allowed; an existing target must be the exact owned result.
+            task.personalModelId?.let(profiles::get)?.let { model ->
+                require(task.resultImagePath == model.imageUrl && task.requestJson == model.requestJson && task.provider == model.provider) { "模特任务与已保存底图不匹配" }
+            }
+            task.tryOnResultId?.let(results::get)?.let { result ->
+                val request = com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson)
+                require(task.status == ImageTaskStatus.COMPLETED && task.resultImagePath == result.imageUrl &&
+                    request.garments.map { it.itemId.toString() } == result.itemIds && request.garments.map { it.name } == result.itemNames &&
+                    request.tryOnModel?.personalModelId == result.personalModelId && request.tryOnModel?.name == result.personalModelName) { "图像任务与试衣历史不匹配" }
+            }
         }
         val brands = ids(data.brands.map { it.id }, "品牌")
         val categories = ids(data.categories.map { it.id }, "分类")

@@ -1,6 +1,8 @@
 package com.lolita.app.data.remote
 
 import com.google.gson.JsonParser
+import com.lolita.app.domain.model.ImageGenerationFailure
+import com.lolita.app.domain.model.ImageGenerationFailureKind
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -32,9 +34,9 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
                         check(continuation.isActive) { "已取消等待" }
                         execute(conn, apiKey, images, prompt)
                     } catch (error: SocketTimeoutException) {
-                        throw IllegalStateException("生成等待超时，服务端可能仍在处理，请稍后检查后再决定是否重试")
+                        throw ImageGenerationFailure(ImageGenerationFailureKind.TIMEOUT)
                     } catch (error: IOException) {
-                        throw IllegalStateException("网络连接中断，服务端可能仍在处理，请检查网络后再决定是否重试")
+                        throw ImageGenerationFailure(ImageGenerationFailureKind.NETWORK)
                     } finally {
                         activeConnection.compareAndSet(conn, null)
                         conn.disconnect()
@@ -72,22 +74,28 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
         }
         when (val code = conn.responseCode) {
             200 -> Unit
-            401, 403 -> error("API Key 无效或没有图像模型权限，请检查服务配置")
-            402 -> error("图像服务额度不足，请检查账户余额")
-            429 -> error("图像服务繁忙或额度受限，请稍后主动重试")
-            in 300..399 -> error("图像服务返回了重定向，已停止请求")
-            else -> error("图像服务未完成请求（HTTP $code），请检查账户和图片后重试")
+            401, 403 -> throw ImageGenerationFailure(ImageGenerationFailureKind.AUTH)
+            402 -> throw ImageGenerationFailure(ImageGenerationFailureKind.QUOTA)
+            429 -> throw ImageGenerationFailure(ImageGenerationFailureKind.RATE_LIMIT)
+            in 300..399 -> throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL)
+            else -> throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL)
         }
-        check(conn.contentLengthLong <= MAX_RESPONSE_BYTES) { "生成结果超出大小限制" }
+        if (conn.contentLengthLong > MAX_RESPONSE_BYTES) throw ImageGenerationFailure(ImageGenerationFailureKind.INVALID_IMAGE)
         val json = conn.inputStream.use { readBounded(it, MAX_RESPONSE_BYTES).toString(Charsets.UTF_8) }
         return try {
-            val data = JsonParser.parseString(json).asJsonObject["data"].asJsonArray
+            val response = JsonParser.parseString(json).asJsonObject
+            if (response.has("error") && !response["error"].isJsonNull) throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL)
+            val data = response["data"].asJsonArray
             check(data.size() == 1)
-            val encoded = data[0].asJsonObject["b64_json"].asString
+            val row = data[0].asJsonObject
+            if (row.has("error") && !row["error"].isJsonNull) throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL)
+            val encoded = row["b64_json"].asString
             check(encoded.isNotBlank() && encoded.length <= 44 * 1024 * 1024)
             Base64.getDecoder().decode(encoded).also { check(it.isNotEmpty() && it.size <= MAX_IMAGE_BYTES) }
+        } catch (error: ImageGenerationFailure) {
+            throw error
         } catch (error: Exception) {
-            throw IllegalStateException("图像服务没有返回有效图片，请稍后检查后重试")
+            throw ImageGenerationFailure(ImageGenerationFailureKind.INVALID_IMAGE)
         }
     }
 
@@ -98,7 +106,7 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
             check(!Thread.currentThread().isInterrupted) { "已取消等待" }
             val count = input.read(buffer)
             if (count < 0) break
-            check(output.size().toLong() + count <= limit) { "生成结果超出大小限制" }
+            if (output.size().toLong() + count > limit) throw ImageGenerationFailure(ImageGenerationFailureKind.INVALID_IMAGE)
             output.write(buffer, 0, count)
         }
         return output.toByteArray()

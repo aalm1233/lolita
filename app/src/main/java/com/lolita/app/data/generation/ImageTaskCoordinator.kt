@@ -220,9 +220,9 @@ class ImageTaskCoordinator(
                 } catch (failure: CancellationException) {
                     withContext(NonCancellable) { finish(task.id, ImageTaskStatus.INTERRUPTED, "执行已中断；服务可能仍会计费，请核对后重新发起") }
                     throw failure
-                } catch (_: Exception) {
-                    // Do not persist server text, URLs, credential fragments or response bodies.
-                    finish(task.id, ImageTaskStatus.FAILED, "生成未完成，请检查服饰、图片和服务配置后重新发起")
+                } catch (failure: Exception) {
+                    // Only local typed categories may select durable text.
+                    finish(task.id, ImageTaskStatus.FAILED, imageTaskFailureMessage(failure, dao.get(task.id)?.requestSent == true))
                 } finally {
                     withContext(NonCancellable) {
                         releaseSources(task.id)

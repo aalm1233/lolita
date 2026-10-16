@@ -45,6 +45,7 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                     }
                 }
             }
+            item("background-advice") { ImageBackgroundAdvice() }
             item("description") { Text("离开页面后继续处理。人台图需核对并添加；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
             if (state.isLoading) item("loading") { LolitaCard { Column { ShimmerLine(0.7f, 18.dp); Spacer(Modifier.height(skin.spacingMedium)); ShimmerLine(0.9f, 14.dp) } } }
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }

@@ -92,6 +92,7 @@ fun MannequinScreen(
                     ShimmerRect(width = 160.dp, height = 220.dp, modifier = Modifier.fillMaxWidth())
                 } }
             }
+            item("background-advice") { ImageBackgroundAdvice() }
             item("notice") {
                 LolitaSection(title = state.item?.name ?: "裙子参考图") { row {
                     Text("仅生成正面；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,

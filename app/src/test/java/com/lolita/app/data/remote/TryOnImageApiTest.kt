@@ -46,6 +46,14 @@ class TryOnImageApiTest {
         assertArrayEquals("image".toByteArray(), result)
         assertTrue(transport.closed)
     }
+    @Test fun accountModelAndMalformedFailuresAreTypedWithoutRawResponseText() = runBlocking {
+        for ((status, kind) in listOf(401 to "AUTH", 403 to "AUTH", 402 to "QUOTA", 429 to "RATE_LIMIT", 500 to "MODEL", 302 to "MODEL", 200 to "INVALID_IMAGE")) {
+            val failure = runCatching { TryOnImageApi { Transport(status, "Bearer private https://secret.invalid") }.generate("controlled-key", listOf(byteArrayOf(1), byteArrayOf(2)), "p") }.exceptionOrNull()
+            assertTrue(failure is com.lolita.app.domain.model.ImageGenerationFailure)
+            assertEquals(kind, (failure as com.lolita.app.domain.model.ImageGenerationFailure).kind.name)
+            assertFalse(failure.toString().contains("Bearer")); assertFalse(failure.toString().contains("secret.invalid"))
+        }
+    }
     @Test fun authAndRedirectErrorsNeverExposeServerBodyOrRetry() = runBlocking {
         for (code in listOf(401,402,429,302,500)) {
             var calls = 0

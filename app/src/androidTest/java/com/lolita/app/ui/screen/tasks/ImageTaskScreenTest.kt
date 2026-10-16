@@ -114,6 +114,17 @@ class ImageTaskScreenTest {
         compose.onNodeWithTag(if (detail.value) "imageTaskDetail" else "imageTasks").performScrollToNode(hasText(text))
         compose.onNodeWithText(text).performScrollTo()
     }
+    @Test fun backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask() {
+        detail.value = false; show()
+        scrollTo("后台与息屏")
+        compose.onNodeWithText("后台与息屏").performClick()
+        compose.onNodeWithText("电池设置").assertExists()
+        compose.onNodeWithText("应用设置").assertExists()
+        compose.onNodeWithText("vivo 手机：电池 → 后台耗电管理 → 允许高后台耗电。").assertExists()
+        compose.onNodeWithText("关闭").performClick()
+        compose.onNodeWithText("电池设置").assertDoesNotExist()
+    }
+
     @Test fun pendingPreviewSurvivesRestartAndExplicitAppendMergesLatestItemOnce() = runBlocking {
         val restarted = newCoordinator(); restarted.awaitStartup()
         assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, db.imageTaskDao().get(pendingId)!!.status)

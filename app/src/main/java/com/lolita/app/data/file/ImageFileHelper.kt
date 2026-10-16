@@ -43,7 +43,9 @@ object ImageFileHelper {
         val destination = File(directory,"${UUID.randomUUID()}.png")
         return try {
             withContext(Dispatchers.IO) {
-                validateGeneratedPng(bytes)
+                try { validateGeneratedPng(bytes) } catch (_: IllegalArgumentException) {
+                    throw com.lolita.app.domain.model.ImageGenerationFailure(com.lolita.app.domain.model.ImageGenerationFailureKind.INVALID_IMAGE)
+                }
                 currentCoroutineContext().ensureActive()
                 check(directory.isDirectory || directory.mkdirs()) { "无法创建图片目录" }
                 destination.outputStream().use { it.write(bytes) }

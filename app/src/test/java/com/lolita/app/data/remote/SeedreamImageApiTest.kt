@@ -43,6 +43,19 @@ class SeedreamImageApiTest {
             } finally { root.deleteRecursively() }
         }
     }
+    @Test fun trustedAccountAndModelFailuresCarryCategoriesInsteadOfRawServerText() = runBlocking {
+        val cases = listOf(
+            Triple(401, "{}", "AUTH"), Triple(402, "{}", "QUOTA"),
+            Triple(429, "{}", "RATE_LIMIT"), Triple(429, """{"error":{"code":"SetLimitExceeded","message":"Bearer secret"}}""", "SEEDREAM_LIMIT"),
+            Triple(500, "{}", "MODEL"), Triple(200, """{"error":{"code":"ModelError","message":"Bearer secret"}}""", "MODEL"),
+            Triple(200, """{"data":[{"error":{"code":"ModelError"}}]}""", "MODEL"), Triple(200, "{}", "INVALID_IMAGE"))
+        for ((status, body, kind) in cases) {
+            val failure = runCatching { SeedreamImageApi { Transport(status, body) }.generate("test-key", listOf(byteArrayOf(1), byteArrayOf(2)), "p") }.exceptionOrNull()
+            assertTrue(failure is com.lolita.app.domain.model.ImageGenerationFailure)
+            assertEquals(kind, (failure as com.lolita.app.domain.model.ImageGenerationFailure).kind.name)
+            assertFalse(failure.toString().contains("Bearer secret"))
+        }
+    }
     private open class Transport(val code: Int = 200, val body: String = """{"model":"doubao-seedream-5-0-pro-260628","data":[{"b64_json":"aW1hZ2U="}],"usage":{"generated_images":1}}""") : HttpURLConnection(URL("https://ark.cn-beijing.volces.com/api/v3/images/generations")) {
         val uploaded = ByteArrayOutputStream()
         @Volatile var closed = false

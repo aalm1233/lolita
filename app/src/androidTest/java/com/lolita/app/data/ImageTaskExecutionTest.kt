@@ -360,4 +360,60 @@ class ImageTaskExecutionTest {
         assertEquals(2, f.calls)
     } }
 
+    @Test fun safeNetworkReasonSurvivesApiToRoomAndNeverRetriesOrLeaksCredentials() = runBlocking { fixture { f ->
+        val server = java.net.ServerSocket(0, 1, java.net.InetAddress.getByName("127.0.0.1"))
+        val worker = java.util.concurrent.Executors.newSingleThreadExecutor()
+        val accepted = worker.submit {
+            server.accept().use { socket ->
+                val input = socket.getInputStream()
+                fun line(): String {
+                    val text = StringBuilder()
+                    while (true) {
+                        val byte = input.read()
+                        if (byte < 0 || byte == 10) return text.toString().trimEnd('\r')
+                        text.append(byte.toChar())
+                    }
+                }
+                var length = 0
+                while (true) {
+                    val line = line()
+                    if (line.startsWith("Content-Length:")) length = line.substringAfter(':').trim().toInt()
+                    if (line.isEmpty()) break
+                }
+                repeat(length) { input.read() }
+                socket.setSoLinger(true, 0)
+            }
+        }
+        val api = com.lolita.app.data.remote.SeedreamImageApi { ControlledImageHttpConnection("127.0.0.1", server.localPort) }
+        try {
+            f.transport = { credentials, images, prompt -> f.calls++; api.generate(credentials.apiKey, images, prompt) }
+            val id = f.submit()
+            f.runner.runQueue(); f.runner.runQueue()
+            val task = f.db.imageTaskDao().get(id)!!
+            assertEquals(ImageTaskStatus.FAILED, task.status)
+            assertTrue(task.requestSent)
+            assertEquals(1, f.calls)
+            assertTrue(task.error.orEmpty().contains("网络"))
+            assertTrue(task.error.orEmpty().contains("计费"))
+            assertTrue(task.error.orEmpty().contains("不会自动重试"))
+            assertFalse(task.error.orEmpty().contains("private-key"))
+            assertFalse(task.error.orEmpty().contains("secret.invalid"))
+            assertTrue(f.db.tryOnDao().getAll().isEmpty())
+            accepted.get(2, java.util.concurrent.TimeUnit.SECONDS)
+        } finally { server.close(); worker.shutdownNow() }
+    } }
+
+    @Test fun controlledSocketResponseCanCompleteThroughTaskPipeline() = runBlocking { fixture { f ->
+        val arguments = InstrumentationRegistry.getArguments()
+        val port = arguments.getString("screenOffProbePort")?.toInt()
+        org.junit.Assume.assumeTrue("Opt-in host socket probe; no official API", port != null)
+        val api = com.lolita.app.data.remote.SeedreamImageApi { ControlledImageHttpConnection("10.0.2.2", port!!) }
+        f.transport = { credentials, images, prompt -> f.calls++; api.generate(credentials.apiKey, images, prompt) }
+        val id = f.submit()
+        f.runner.runQueue()
+        val task = f.db.imageTaskDao().get(id)!!
+        assertEquals(ImageTaskStatus.COMPLETED, task.status)
+        assertTrue(task.requestSent); assertEquals(1, f.calls)
+    } }
+
 }

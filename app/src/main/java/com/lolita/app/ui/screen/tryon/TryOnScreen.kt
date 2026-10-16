@@ -148,6 +148,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                     }
                 }
             }
+            item("background-advice") { ImageBackgroundAdvice() }
             item(key = "disclosure") {
                 LolitaSection(title = "生成前确认") {
                     row {

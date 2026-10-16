@@ -56,10 +56,14 @@
 
 - [x] 全量`./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest`通过；定向相关独立AVD回归，无付费云调用。
 - [x] 全分支fresh gpt-6-astra审查（spec/plan/ledger/Review Focus）；对实质问题一次RED→GREEN修复并全量JVM，不把图像质量当作通过。
-- [ ] 依据未占用版本递增（预期2.54.0/113）、更新AGENTS和发布说明，提交源码并clean assembleRelease核验原签名；独立AVD从2.53.0覆盖升级，逐字段/图片/设置保全。
+- [x] 依据未占用版本递增（预期2.54.0/113）、更新AGENTS和发布说明，提交源码并clean assembleRelease核验原签名；独立AVD从2.53.0覆盖升级，逐字段/图片/设置保全。
 - [ ] 集成master普通推送与源码标签，GitHub/Gitee同一APK和校验文件匿名下载/HEAD核验。若Gitee配额仍不足，先备份下一候选并精确请求授权，不擅自清其他APK；公开列表403如实报告。
 - [ ] 保存证据，提交推送回执；归档本次worktree及本计划scratch，保留原工作区未跟踪内容。
 
 ## Self-review
 
 所有用户要求分配到任务1–3；五项Review Focus均有归属。subject由任务1定义，任务2/3消费相同类型；v3只供MANNEQUIN，v2个人模特保持原字段集合。任务2的单图边界不影响试衣和个人模特。root执行，独立调查/最终审查可并行，所有Gradle/设备命令由root串行。
+
+## 发布进度
+
+GitHub2.54.0已正式发布并匿名完整下载/HEAD核对；源码标签4be8e50。原签名从2.53.0覆盖升级，33表/198件/172图/设置逐项保全。Gitee本次还需额外清理2.44.0 APK，已保全副本并精确询问，尚未获授权，不执行删除或冒充国内发布完成；worktree保留供继续。实际正式包检查一次仍因Gitee403失败。回执见`docs/mannequin-accessories-release-2.54.0-verification.json`。

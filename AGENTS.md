@@ -459,3 +459,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 新MANNEQUIN严格v3请求保存`MannequinSubject`分类id/名称/展示类型；v1/v2原样兼容，v2个人模特编码不写新null字段。Room仍29、备份仍9；JSON/ZIP包含请求快照并恢复幂等追加原物品图片，保留封面顺序。
 - 页面确认固定原图、说明、分类、服务及keyRevision，变动后重新确认；Coordinator事务与Generator准备前后核对当前分类和图片。`prepareAccessory`只处理1张原图，专用`generateMannequin`允许1–2输入，原试衣2–9、个人模特1–5边界不变。
 - 回归覆盖`MannequinSubjectTaskTest`、单图基础设施/API、确认变化、JSON/ZIP往返和旧任务；七皮肤浅暗320dp/两倍字体实拍在`docs/visuals/2026-10-16-mannequin-accessories/`。色块是布局夹具，无付费API生成品质试验。
+
+- 2.54.0 /113 clean正式包原签名核验通过，307项JVM及相关设备回归通过；2.53.0覆盖升级与实际详情/小物页面操作后33表、198件、172图及设置逐字节保全。GitHub正式发布、匿名APK/校验下载与HEAD已通过；Gitee因配额等待单独2.44.0清理授权，未删除或发布新国内附件，正式包一次检查仍HTTP403。状态见`docs/mannequin-accessories-release-2.54.0-verification.json`。

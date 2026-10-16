@@ -1,0 +1,204 @@
+{
+  "version": "2.54.0",
+  "version_code": 113,
+  "source_commit": "4be8e506254e4b62c67491e03d949513b20c0e12",
+  "status": "github_formal_gitee_pending_user_cleanup_authorization",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 113,
+    "version": "2.54.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "e080f4404d49ee50019736247237d1f91dca2788c89469b577158393b8d4d145",
+    "bytes": 58552134,
+    "source_commit": "4be8e506254e4b62c67491e03d949513b20c0e12",
+    "build_log": "logs/mannequin-accessories-release-build.log"
+  },
+  "github": {
+    "tag": "v2.54.0",
+    "source_commit": "4be8e506254e4b62c67491e03d949513b20c0e12",
+    "release_id": 414821881,
+    "prerelease": false,
+    "files": {
+      "lolita-2.54.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.54.0/lolita-2.54.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 58552134,
+        "sha256": "e080f4404d49ee50019736247237d1f91dca2788c89469b577158393b8d4d145",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.54.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "d9ed147e5304bc68bc2043d424310a54835f1d45f22a5f4aeccf93825aec271b",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 58552134,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "4be8e506254e4b62c67491e03d949513b20c0e12",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "verification": {
+    "full_jvm": {
+      "tests": 307,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device_reported_passes": [
+      4,
+      2,
+      22,
+      69,
+      11
+    ],
+    "device_runs_overlap": true,
+    "release_build": "clean assembleRelease; BUILD SUCCESSFUL in1m39s",
+    "paid_cloud_image_calls": 0,
+    "upgrade": {
+      "preservation_pass": true,
+      "errors": [],
+      "exact_all_tables": true,
+      "table_differences": {},
+      "original_image_count": 172,
+      "original_images_unchanged": 172,
+      "image_differences": [],
+      "added_images": [],
+      "unresolved_image_references": [],
+      "schema_version": 29,
+      "source_room_identity": "ae2d0a2cd4794514f51f54c093208f2f",
+      "original_tables_checked": 33,
+      "items_before": 198,
+      "items_after": 198,
+      "preferences": {
+        "files/datastore/app_settings.preferences_pb": {
+          "exact_bytes": true,
+          "bytes_before": 51,
+          "bytes_after": 51,
+          "sha256_before": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+          "sha256_after": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f"
+        },
+        "shared_prefs/builtin_library.xml": {
+          "exact_bytes": true,
+          "bytes_before": 121,
+          "bytes_after": 121,
+          "sha256_before": "9d3831321bb3614f07322900357d5633c9ec6fa11774233bdca9a09104631052",
+          "sha256_after": "9d3831321bb3614f07322900357d5633c9ec6fa11774233bdca9a09104631052"
+        }
+      },
+      "integrity_check": [
+        "ok"
+      ],
+      "foreign_key_check": []
+    },
+    "after_manual_ui": {
+      "preservation_pass": true,
+      "errors": [],
+      "exact_all_tables": true,
+      "table_differences": {},
+      "original_image_count": 172,
+      "original_images_unchanged": 172,
+      "image_differences": [],
+      "added_images": [],
+      "unresolved_image_references": [],
+      "schema_version": 29,
+      "source_room_identity": "ae2d0a2cd4794514f51f54c093208f2f",
+      "original_tables_checked": 33,
+      "items_before": 198,
+      "items_after": 198,
+      "preferences": {
+        "files/datastore/app_settings.preferences_pb": {
+          "exact_bytes": true,
+          "bytes_before": 51,
+          "bytes_after": 51,
+          "sha256_before": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+          "sha256_after": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f"
+        },
+        "shared_prefs/builtin_library.xml": {
+          "exact_bytes": true,
+          "bytes_before": 121,
+          "bytes_after": 121,
+          "sha256_before": "9d3831321bb3614f07322900357d5633c9ec6fa11774233bdca9a09104631052",
+          "sha256_after": "9d3831321bb3614f07322900357d5633c9ec6fa11774233bdca9a09104631052"
+        }
+      },
+      "integrity_check": [
+        "ok"
+      ],
+      "foreign_key_check": []
+    }
+  },
+  "review": {
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "range": "9d331b2..79ac2cd",
+    "critical": 0,
+    "important": 1,
+    "important_resolved": "Original repeated image references are preserved; actual JSON/ZIP RED2/2 then GREEN11/11 plus fullJVM307",
+    "deferred_minor": "Design spec watermark wording should explicitly distinguish provider-controlled watermark=true",
+    "rulings": [
+      "Paid image-quality trial not authorized; actual output fidelity remains unverified.",
+      "Seedream watermark=true retained per existing AGENTS; no promise of watermark-free output.",
+      "Source-only reviewer did not judge publication; root performed signed upgrade/download verification separately."
+    ]
+  },
+  "gitee": {
+    "published": false,
+    "reason": "New APK58552134bytes exceeds estimated remaining43177699bytes; extra cleanup requires separate user authorization",
+    "cleanup_candidate": {
+      "tag": "v2.44.0",
+      "release_id": 1202624,
+      "attachment_id": 3380581,
+      "bytes": 48042353,
+      "sha256": "bd130b0329b74e4f1185d308827066fbd0d91a7c3aa7bb62699f20ec518a3370",
+      "local_and_github_backup_verified": true,
+      "authorized": false,
+      "deleted": false
+    },
+    "anonymous_public_update_api_http_status": 403,
+    "actual_app_check": {
+      "attempts": 1,
+      "current_version": "v2.54.0",
+      "result": "检查失败",
+      "message": "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+      "latest_version_and_full_notes_verified": false
+    }
+  },
+  "artifacts_preserved_at": "/Users/dengtong/code/lolita/artifacts/releases/2.54.0",
+  "worktree": "preserved pending Gitee cleanup authorization"
+}

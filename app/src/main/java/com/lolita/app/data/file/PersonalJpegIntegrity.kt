@@ -44,7 +44,9 @@ internal object PersonalJpegIntegrity {
             while (at < bytes.size) {
                 val marker = marker()
                 if (marker == 0xd9) {
-                    require(frame && scans > 0 && at == bytes.size && components.all { it.approximation[0] >= 0 })
+                    // EOI terminates the primary JPEG, not necessarily the containing file:
+                    // Motion Photo video/padding and Ultra HDR gain maps may follow it.
+                    require(frame && scans > 0 && components.all { it.approximation[0] >= 0 })
                     return true
                 }
                 require(marker !in 0xd0..0xd8 && marker != 0x01)

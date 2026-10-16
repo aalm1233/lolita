@@ -56,6 +56,36 @@ class PersonalImageIntegrityTest {
         }
     }
 
+    private fun syntheticContainerTails(): List<ByteArray> {
+        // Structural container fixtures only: no camera capture, real video track, or claim of HDR rendering.
+        // Motion Photo permits primary-image padding followed by an ISO-BMFF video container.
+        val ftyp = java.nio.ByteBuffer.allocate(24).putInt(24).put("ftyp".toByteArray())
+            .put("isom".toByteArray()).putInt(0).put("isom".toByteArray()).put("mp42".toByteArray()).array()
+        val mdat = java.nio.ByteBuffer.allocate(12).putInt(12).put("mdat".toByteArray()).putInt(0).array()
+        // Ultra HDR's primary-JPEG reader must also permit a second JPEG used for gain-map data.
+        return listOf(ByteArray(16) + ftyp + mdat, jpeg(gray=true), jpeg(gray=true) + ByteArray(8) + ftyp + mdat)
+    }
+
+    @Test fun acceptsCompleteRealPrimaryJpegsWithMotionPhotoAndUltraHdrStyleTails() {
+        val real = File("src/main/assets/builtin/brands").listFiles()!!.filter { it.extension == "jpg" }.map { it.readBytes() }
+        (real + listOf(jpeg(true))).forEach { primary ->
+            syntheticContainerTails().forEach { tail ->
+                assertTrue(PersonalImageIntegrity.isComplete(primary + tail,"image/jpeg"))
+            }
+        }
+    }
+
+    @Test fun rejectsTruncatedPrimaryEvenWhenValidEoiAndCompleteGainmapOrVideoTailFollow() {
+        val real = File("src/main/assets/builtin/brands/with_puji.jpg").readBytes()
+        listOf(real,jpeg(true)).forEach { primary ->
+            val scan=scans(primary).first()
+            val broken=primary.copyOf(scan.first+(scan.last-scan.first)/2)+byteArrayOf(255.toByte(),0xd9.toByte())
+            syntheticContainerTails().forEach { tail ->
+                assertFalse(PersonalImageIntegrity.isComplete(broken+tail,"image/jpeg"))
+            }
+        }
+    }
+
     @Test fun allPackagedRealJpegAssetsPassButEntropyTruncationDoesNot() {
         val files = File("src/main/assets/builtin/brands").listFiles()!!.filter { it.extension == "jpg" }
         assertEquals(13, files.size)

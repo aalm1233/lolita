@@ -1,6 +1,6 @@
 # Background Image Tasks Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Run both paid image features independently of pages, retain task/results across restart, and release 2.51.0 with readable update notes.
 
@@ -93,11 +93,11 @@
 
 **Files:** Build version, AGENTS, implementation/verification/release documents, visual evidence.
 
-- [ ] Run complete JVM suite and assembleDebug; run affected independent AVD instrumentation after verifying identity/version/signature and preserving test fixture data. Fix failures before claiming success.
-- [ ] Request fresh whole-branch code review; resolve actionable feedback and rerun affected checks, with crash/result/restore boundaries as focus.
-- [ ] Update AGENTS and release notes for 2.51.0/109. Commit/integrate source onto master and verify ordinary push.
-- [ ] `clean assembleRelease`; verify package/version/nondebuggable/original cert, overwrite upgrade from 2.50.0 on owned AVD and compare all preexisting rows/images/preferences. Archive evidence.
-- [ ] Publish source tag and matching signed APK/SHA256SUMS to GitHub and staged Gitee, anonymously download/hash before marking Gitee formal. Verify both notes/attachments/highest update endpoint/HEAD and source SHA.
-- [ ] Commit verification receipts, push, archive task worktree preserving required artifacts, and deliver download/update link with validation summary.
+- [x] Run complete JVM suite and assembleDebug; run affected independent AVD instrumentation after verifying identity/version/signature and preserving test fixture data. Fix failures before claiming success.
+- [x] Request fresh whole-branch code review; resolve actionable feedback and rerun affected checks, with crash/result/restore boundaries as focus.
+- [x] Update AGENTS and release notes for 2.51.0/109. Commit/integrate source onto master and verify ordinary push.
+- [x] `clean assembleRelease`; verify package/version/nondebuggable/original cert, overwrite upgrade from 2.50.0 on owned AVD and compare all preexisting rows/images/preferences. Archive evidence.
+- [x] Publish source tag and matching signed APK/SHA256SUMS to GitHub and staged Gitee, anonymously download/hash before marking Gitee formal. Verify both notes/attachments/highest update endpoint/HEAD and source SHA.
+- [x] Commit verification receipts, push, archive task worktree preserving required artifacts, and deliver download/update link with validation summary.
 
 Self-review: All approved spec sections map to tasks 1–6; five review-focus conditions have explicit regression ownership. Interfaces are shared here to prevent mismatched callback/state naming. The user already authorized implementation and formal release; continue without another scope approval prompt.

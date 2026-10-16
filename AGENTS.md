@@ -420,3 +420,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 恢复先校验结构及暂存/本机完整 PNG，再通过协调层取消并等待旧执行退出；仅恢复屏障的等待保持 NonCancellable，保证页面离开后备份锁和 ZIP 暂存仍保留到恢复完成。图片保护租约在 Room 快照/导入引用事务内获取，导出/恢复结束后释放并重新核对延迟删除；避免取消任务或丢弃预览删掉备份正在使用的图片。恢复只清理本次激活且无引用的文件，不删除导入前旧图片。
 - `AppRelease.releaseNotes` 从同一次 Gitee 最高正式发布查询读取 body，遗留 GitHub 解析兼容正文；手动检查当前版本也可查看，缺失正文明确回退。对话框正文可滚动/选择，操作区适配大字，仍保持静默自动检查、下载探测和可信链接规则。
 - 回归包括 `ImageTaskTest`、`ImageTaskPersistenceTest/ExecutionTest/ServiceTest/BackupTest`、`ImageTaskBackupFormatTest`、任务中心/导航及现有生成页真实 Compose 测试、`AppUpdateNotesTest`。所有模拟器操作必须定向到独立 AVD，受控传输不能冒充真实付费 API 或锁屏 HTTP 联调；发布另做 clean 同签名覆盖升级及原表/图片/设置保全。
+
+- 2.51.0 / 109 使用 clean Release 从已发布2.50.0同签名覆盖升级，原30表逐字段、172张图片SHA256及设置原字节保全；GitHub/Gitee匿名完整下载、HEAD、最高正式更新入口与正文验证通过。正式包任务中心与五段更新正文实拍位于 `docs/visuals/2026-10-16-image-tasks/release-*.png`；回执见 `docs/image-tasks-release-2.51.0-verification.json`。

@@ -1,0 +1,263 @@
+{
+  "version": "2.51.0",
+  "version_code": 109,
+  "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+  "source_tag": "v2.51.0",
+  "signed_apk": {
+    "package": "com.lolita.app",
+    "version_code": 109,
+    "version": "2.51.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "e7e200db850a086d33198f250f3fdd0b2d6e31252beb9262784e722ef83dbd81",
+    "bytes": 58426774,
+    "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+    "build_log": "logs/lolita-image-tasks-release-build.log"
+  },
+  "clean_release": {
+    "command": "JAVA_HOME=Java17 ./gradlew clean assembleRelease",
+    "successful": true,
+    "duration_seconds": 66
+  },
+  "tests": {
+    "jvm_final": 249,
+    "coherent_android_before_final_service_fix": 118,
+    "navigation_fix_android": 34,
+    "final_service_fix_android": 37,
+    "failures_errors_skips": 0,
+    "device": "emulator-5564 / Lolita_TryOn_20261015",
+    "final_runtime_commit": "2d83086c02c219c89868f49d7b4226f9722c1ceb"
+  },
+  "review": {
+    "task_reviews": "approved",
+    "whole_branch": "approved after one consolidated fix wave",
+    "unresolved_actionable_findings": 0,
+    "archive": "artifacts/releases/2.51.0/sdd"
+  },
+  "upgrade": {
+    "preservation_pass": true,
+    "before_schema": 27,
+    "after_schema": 28,
+    "original_tables_checked": 30,
+    "original_table_counts": {
+      "android_metadata": 1,
+      "brands": 202,
+      "categories": 12,
+      "coordinates": 48,
+      "items": 198,
+      "legacy_catalog_archive": 0,
+      "locations": 54,
+      "monthly_budgets": 0,
+      "order_bindings": 0,
+      "outfit_item_cross_ref": 0,
+      "outfit_logs": 48,
+      "payment_stages": 0,
+      "payments": 0,
+      "prices": 0,
+      "remote_brands": 0,
+      "remote_categories": 0,
+      "remote_seasons": 0,
+      "remote_shared_coordinates": 0,
+      "remote_shared_items": 0,
+      "remote_shared_price_plans": 0,
+      "remote_sources": 0,
+      "remote_styles": 0,
+      "restore_journal": 0,
+      "room_master_table": 1,
+      "seasons": 5,
+      "shared_library_sync_state": 0,
+      "sources": 3,
+      "sqlite_sequence": 9,
+      "styles": 6,
+      "try_on_results": 0
+    },
+    "new_tables": [
+      "image_tasks"
+    ],
+    "original_images_checked": 172,
+    "additional_images": 0,
+    "preferences_sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+    "room_identity_matches_source": true,
+    "integrity_check": [
+      "ok"
+    ],
+    "foreign_key_check": [],
+    "errors": []
+  },
+  "formal_ui": {
+    "installed_version": "2.51.0",
+    "entry": "个人→检查更新",
+    "latest_version": "2.51.0",
+    "latest_state_visible": true,
+    "release_body_all_paragraphs_match": true,
+    "paragraphs_checked": 5,
+    "scrolls": 1,
+    "source_commit_in_body": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+    "screenshots": [
+      "formal-update-notes.png",
+      "formal-update-notes-bottom.png"
+    ]
+  },
+  "formal_smoke": {
+    "task_center_opened": true,
+    "manual_update_all_5_paragraphs_match": true,
+    "settings_bytes_still_unchanged": true,
+    "app_fatal_or_anr_in_smoke_window": false,
+    "log_start_device_time": "10-16 08:46:50.000"
+  },
+  "distribution": {
+    "github": {
+      "tag": "v2.51.0",
+      "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+      "release_id": 414415582,
+      "prerelease": false,
+      "files": {
+        "lolita-2.51.0.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.51.0/lolita-2.51.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 58426774,
+          "sha256": "e7e200db850a086d33198f250f3fdd0b2d6e31252beb9262784e722ef83dbd81",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.51.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "7aca57c10643740376cf80da86d069ca85628621d3470efb151c664a2ffbd920",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 58426774,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140"
+    },
+    "gitee_download_before_formal": {
+      "tag": "v2.51.0",
+      "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+      "release_id": 1208905,
+      "prerelease": true,
+      "files": {
+        "lolita-2.51.0.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.0/lolita-2.51.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 58426774,
+          "sha256": "e7e200db850a086d33198f250f3fdd0b2d6e31252beb9262784e722ef83dbd81",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "7aca57c10643740376cf80da86d069ca85628621d3470efb151c664a2ffbd920",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 58426774,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "gitee_formal": {
+      "tag": "v2.51.0",
+      "release_id": 1208905,
+      "prerelease": false,
+      "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+      "sha256": "e7e200db850a086d33198f250f3fdd0b2d6e31252beb9262784e722ef83dbd81"
+    },
+    "gitee_highest_formal_update": {
+      "latest_tag": "v2.51.0",
+      "pages": 1,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.0/lolita-2.51.0.apk",
+      "source_commit": "620e72abdc5b2ebd70d801a30cc88659ae837140"
+    },
+    "release_body_sha256": "b3cc81a1222ec9f2ab05aaf589c16b2637f770150f9b7d47bde839ca2416bb55"
+  },
+  "visuals": {
+    "task_skin_screenshots": 42,
+    "update_skin_screenshots": 14,
+    "formal_release_screenshots": 3
+  },
+  "evidence_limits": [
+    "No new paid API call in this task.",
+    "Controlled in-flight transport exercises coordinator/runner and exact service-stop protocol using real Room.",
+    "Actual Android service coverage includes empty-queue foreground lifecycle and real notification PendingIntent/Activity recreation.",
+    "No actual locked-screen paid HTTP, OS-killed paid request, or OS-forced API35 timeout was performed.",
+    "USB coordinate suite was not run; independent AVD instrumentation and release upgrade were used."
+  ],
+  "local_evidence": "artifacts/releases/2.51.0"
+}

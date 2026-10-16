@@ -24,6 +24,11 @@ class TryOnImages(private val context: Context) {
         return prepareWithTemplate(paths, MANNEQUIN_ASSET)
     }
 
+    suspend fun prepareAccessory(paths: List<String>): List<ByteArray> {
+        require(paths.size == 1) { "请选择一张小物参考图" }
+        return prepareWithTemplate(paths, null)
+    }
+
     suspend fun preparePersonalModel(paths: List<String>): List<ByteArray> {
         require(paths.size in 0..3) { "最多选择三张模特参考照片" }
         return prepareWithTemplate(paths, MODEL_ASSET)
@@ -42,9 +47,10 @@ class TryOnImages(private val context: Context) {
         result
     }
 
-    private suspend fun prepareWithTemplate(paths: List<String>, template: String): List<ByteArray> = withContext(Dispatchers.IO) {
+    private suspend fun prepareWithTemplate(paths: List<String>, template: String?): List<ByteArray> = withContext(Dispatchers.IO) {
         currentCoroutineContext().ensureActive()
-        val result = mutableListOf(normalize { context.assets.open(template) })
+        val result = mutableListOf<ByteArray>()
+        if (template != null) result += normalize { context.assets.open(template) }
         for (path in paths) {
             currentCoroutineContext().ensureActive()
             val file = File(path)

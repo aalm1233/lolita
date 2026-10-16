@@ -1,11 +1,13 @@
 package com.lolita.app.data.mannequin
 
 import com.lolita.app.data.local.entity.Category
+import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.tryon.TryOnGenerator
 import com.lolita.app.data.tryon.TryOnGenerationPhase
 import com.lolita.app.domain.model.MannequinRequest
+import com.lolita.app.domain.model.mannequinSubject
 import com.lolita.app.domain.model.TryOnRole
 import com.lolita.app.domain.model.TryOnSelection
 import kotlinx.coroutines.*
@@ -14,6 +16,45 @@ import org.junit.Test
 import java.io.File
 
 class MannequinGeneratorTest {
+    @Test fun accessorySendsOnlyItsSelectedPhotoWithoutAnyMannequinTemplate() = runBlocking {
+        Fixture().use { f ->
+            f.category = Category(id = 7, name = "袜子", group = CategoryGroup.ACCESSORY)
+            var uploaded = emptyList<ByteArray>()
+            var actualPrompt = ""
+            f.api = { _, images, prompt -> f.apiCalls++; uploaded = images; actualPrompt = prompt; "RESULT".toByteArray() }
+            f.generator().generate(f.request.copy(subject = mannequinSubject(f.category)))
+            assertEquals(1, f.apiCalls)
+            assertEquals(1, uploaded.size)
+            assertArrayEquals(byteArrayOf(1), uploaded.single())
+            assertTrue(actualPrompt.contains("\"袜子\""))
+            assertFalse(actualPrompt.contains("Edit image 1, the canonical empty warm-white tailoring mannequin"))
+            assertFalse(actualPrompt.contains("private name"))
+        }
+    }
+
+    @Test fun legacyDressRequestCannotSilentlyTurnIntoAnAccessoryRequest() = runBlocking {
+        Fixture().use { f ->
+            f.category = Category(id = 7, name = "KC", group = CategoryGroup.ACCESSORY)
+            f.api = { _, _, _ -> f.apiCalls++; "RESULT".toByteArray() }
+            val failure = runCatching { f.generator().generate(f.request) }.exceptionOrNull()
+            assertNotNull(failure)
+            assertEquals(0, f.apiCalls)
+        }
+    }
+
+    @Test fun renamedAccessoryDuringPreparationNeverReachesPaidTransport() = runBlocking {
+        Fixture().use { f ->
+            f.category = Category(id = 7, name = "KC", group = CategoryGroup.ACCESSORY)
+            val request = f.request.copy(subject = mannequinSubject(f.category))
+            f.beforePreparation = { f.category = f.category!!.copy(name = "鞋") }
+            f.api = { _, _, _ -> f.apiCalls++; "RESULT".toByteArray() }
+            val failure = runCatching { f.generator().generate(request) }.exceptionOrNull()
+            assertNotNull(failure)
+            assertTrue(failure!!.message.orEmpty().contains("分类"))
+            assertEquals(0, f.apiCalls)
+        }
+    }
+
     @Test fun staleDisclosedProviderCannotUploadOrProducePreview() = runBlocking {
         Fixture().use { f ->
             reject { f.generator().generate(f.request, expectedProvider = com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM) }
@@ -31,7 +72,9 @@ class MannequinGeneratorTest {
         var key = "sk-personal-key"
         var apiCalls = 0
         var saveCalls = 0
+        var beforePreparation: () -> Unit = {}
         var prepare: suspend (List<String>)->List<ByteArray> = { paths ->
+            beforePreparation()
             listOf("TEMPLATE".toByteArray()) + paths.map { File(it).readBytes() }
         }
         var api: suspend (String,List<ByteArray>,String)->ByteArray = { key, images, prompt ->
@@ -48,7 +91,8 @@ class MannequinGeneratorTest {
         fun generator() = MannequinGenerator(
             findItem={ item },findCategory={ category },readCredentials = { com.lolita.app.domain.model.ImageGenerationCredentials(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key) },prepareImages={ prepare(it) },
             generateImage={ key, images, prompt -> api(key.apiKey,images,prompt) },savePreview={ save(it) },
-            discardPreview={ File(it).delete(); Unit }
+            discardPreview={ File(it).delete(); Unit },
+            prepareAccessoryImages={ paths -> beforePreparation(); paths.map { File(it).readBytes() } }
         )
         override fun close() { folder.deleteRecursively() }
     }

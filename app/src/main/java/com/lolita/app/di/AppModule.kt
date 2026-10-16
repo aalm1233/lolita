@@ -54,9 +54,10 @@ object AppModule {
             findCategory = { database.categoryDao().getCategoryById(it) },
             readCredentials = { _tryOnSettings.readCredentials() },
             prepareImages = _generationImages::prepareMannequin,
-            generateImage = _imageGenerationApi::generate,
+            generateImage = _imageGenerationApi::generateMannequin,
             savePreview = { ImageFileHelper.saveGeneratedImage(appContext, it) },
-            discardPreview = { ImageFileHelper.deleteImage(it) }
+            discardPreview = { ImageFileHelper.deleteImage(it) },
+            prepareAccessoryImages = _generationImages::prepareAccessory
         )
     }
     fun mannequinGenerator() = _mannequinGenerator
@@ -78,7 +79,9 @@ object AppModule {
             preparePersonalModel = _generationImages::preparePersonalModel,
             preparePersonalTryOn = _generationImages::prepareWithPersonalModel,
             generatePersonalModel = _imageGenerationApi::generatePersonalModel,
-            validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) })
+            validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) },
+            prepareAccessory = _generationImages::prepareAccessory,
+            generateMannequin = _imageGenerationApi::generateMannequin)
         com.lolita.app.data.generation.ImageTaskRunner(_imageTaskCoordinator, executor::execute)
     }
     fun imageTaskRunner() = _imageTaskRunner

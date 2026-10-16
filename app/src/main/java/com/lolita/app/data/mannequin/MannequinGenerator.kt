@@ -6,7 +6,8 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.tryon.ImageGenerationGate
 import com.lolita.app.data.tryon.TryOnGenerationPhase
 import com.lolita.app.domain.model.MannequinRequest
-import com.lolita.app.domain.model.supportsMannequin
+import com.lolita.app.domain.model.MannequinPresentation
+import com.lolita.app.domain.model.mannequinSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
@@ -24,7 +25,8 @@ class MannequinGenerator(
     private val generateImage: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray,
     private val savePreview: suspend (ByteArray) -> String,
     private val discardPreview: suspend (String) -> Unit,
-    private val gate: ImageGenerationGate = ImageGenerationGate.process
+    private val gate: ImageGenerationGate = ImageGenerationGate.process,
+    private val prepareAccessoryImages: (suspend (List<String>) -> List<ByteArray>)? = null
 ) {
     val isGenerating: StateFlow<Boolean> = gate.isGenerating
 
@@ -44,8 +46,10 @@ class MannequinGenerator(
                 "请先在服务配置中填写有效的 API Key"
             }
             validateSource(request)
-            val images = prepareImages(listOf(request.imagePath))
-            require(images.size == 2 && images.all { it.isNotEmpty() }) {
+            val prepare = if (request.presentation == MannequinPresentation.ACCESSORY)
+                requireNotNull(prepareAccessoryImages) { "小物图片准备尚未接入" } else prepareImages
+            val images = prepare(listOf(request.imagePath))
+            require(images.size == request.presentation.inputCount && images.all { it.isNotEmpty() }) {
                 "参考图片未全部准备完成，请重新选择图片"
             }
             // Preparation may take time; reject an edit/delete that happened while decoding.
@@ -78,11 +82,13 @@ class MannequinGenerator(
         currentCoroutineContext().ensureActive()
         val item = findItem(request.itemId)
         require(item != null && item.id == request.itemId && request.imagePath in item.imageUrls) {
-            "裙子或参考图片已变更，请重新选择后生成"
+            "物品或参考图片已变更，请重新选择后生成"
         }
         val category = findCategory(item.categoryId)
-        require(category?.id == item.categoryId && supportsMannequin(category)) {
-            "此服饰类别暂不支持正面人台图，请核对裙子类别"
+        val currentSubject = mannequinSubject(category)
+        require(category?.id == item.categoryId && currentSubject != null &&
+            (request.subject?.let { it == currentSubject } ?: (currentSubject.presentation == MannequinPresentation.DRESS_FORM))) {
+            "物品分类已改变或暂不支持展示图，请重新核对分类"
         }
         val source = File(request.imagePath)
         require(source.isFile && source.canRead() && source.length() > 0) {

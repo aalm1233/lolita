@@ -25,6 +25,9 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
     suspend fun generatePersonalModel(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
         generateChecked(apiKey, images, prompt, 1..5)
 
+    suspend fun generateMannequin(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
+        generateChecked(apiKey, images, prompt, 1..2)
+
     private suspend fun generateChecked(apiKey: String, images: List<ByteArray>, prompt: String, imageCount: IntRange): ByteArray {
         require(apiKey.isNotBlank() && apiKey.length <= 512 && apiKey.all { it.code in 33..126 }) { "请填写有效的 API Key" }
         require(images.size in imageCount && images.all { it.isNotEmpty() && it.size <= 10 * 1024 * 1024 } && images.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片数量或大小超出限制" }

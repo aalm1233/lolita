@@ -36,10 +36,10 @@
 **Files:** assets/mannequin/front-template.png、data/tryon/TryOnImages.kt、data/mannequin/MannequinGenerator.kt、data/remote/{ImageGenerationApi,TryOnImageApi,SeedreamImageApi}.kt、di/AppModule.kt；MannequinGeneratorTest、MannequinInfrastructureTest、两家API测试。
 **Interfaces:** `TryOnImages.prepareAccessory(paths: List<String>)`只归一化1张原图；`ImageGenerationApi.generateMannequin(credentials, images, prompt)`允许1..2；两provider提供对应方法。MannequinGenerator追加可选`prepareAccessoryImages`注入，null subject走DRESS_FORM，两次校验subject与最新类别相符。Executor追加可选accessory准备/专用生成注入，原构造兼容。
 
-- [ ] 先补真实Generator输入顺序/数量、分类在准备时改变阻止发送、配饰去人物提取提示、API专用1..2与旧2..9拒绝测试，运行观察RED。
-- [ ] 内置imagegen编辑原模板仅去杆/底座，目视确认完整躯干/原构图；保留完整提示词和SHA来源记录。
-- [ ] 实现单图准备、两provider专用入口、AppModule/Executor接线；原安全/取消/保存生命周期不改。
-- [ ] 定向JVM及独立AVD图片准备GREEN；提交`feat: generate standalone accessory images without mannequin stands`。
+- [x] 先补真实Generator输入顺序/数量、分类在准备时改变阻止发送、配饰去人物提取提示、API专用1..2与旧2..9拒绝测试，运行观察RED。
+- [x] 内置imagegen编辑原模板仅去杆/底座，目视确认完整躯干/原构图；保留完整提示词和SHA来源记录。
+- [x] 实现单图准备、两provider专用入口、AppModule/Executor接线；原安全/取消/保存生命周期不改。
+- [x] 定向JVM及独立AVD图片准备GREEN；提交`feat: generate standalone accessory images without mannequin stands`。
 
 ### Task 3: 详情、生成与任务确认页面
 

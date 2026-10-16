@@ -1,0 +1,39 @@
+{
+  "purpose": "Remove the mannequin support pole and circular base while preserving the original torso and canvas.",
+  "use_case": "precise-object-edit",
+  "tool": {
+    "type": "built-in image_gen",
+    "name": "tools.image_gen__imagegen",
+    "mode": "edit",
+    "transparent_background": false,
+    "iterations": 1
+  },
+  "prompt": "Use case: precise-object-edit\nAsset type: fixed portrait mannequin template for an Android clothing-preview canvas.\nInput image 1 is the edit target.\nPrimary request: Remove ONLY the metal support pole below the white mannequin torso, the circular metal floor base, and the hardware's shadows. Seamlessly fill their former area with the existing pale neutral gray studio backdrop and floor.\nPreserve the entire existing white fabric-covered headless, armless front-facing torso exactly: its silhouette, neck shape, silver neck cap, fabric texture, width, length, proportions, center position, height in the frame, orientation, lens, lighting and colors. The bottom of the torso must remain at exactly its current height, leaving all original empty space below available for future long skirts.\nComposition/framing: Keep the original full portrait 2:3 canvas, ideally 1024 x 1536 pixels. No crop, zoom, reframing or torso extension. Background stays opaque.\nConstraints: This is one localized object-removal edit. The torso should appear suspended with clean empty gray background beneath it. No pole, base, mounting nub, hardware, floor contact shadow, extra body parts, person, clothing, text, watermark, new objects or supports. Do not alter any pixels of the torso unnecessarily.",
+  "input": {
+    "path": "app/src/main/assets/mannequin/front-template.png",
+    "sha256": "7a2c57ff168e8232ec4c312fbda1818f63fefffb8bfadc97d0adc76d2ba49eea",
+    "width": 1024,
+    "height": 1536,
+    "has_alpha": false
+  },
+  "output": {
+    "path": "artifacts/mannequin-accessories-media/front-template-standless.png",
+    "generated_path": "/Users/dengtong/.codex/generated_images/01a14411-6bcd-7c32-8862-ada8b57ae9ba/exec-fe64df54-c650-4912-802d-f403cf4aaf0e.png",
+    "sha256": "4306a09e047b2749fea98e68bd2a413b52dad904877b37690ecaa9d2020ec2ab",
+    "width": 1024,
+    "height": 1536,
+    "has_alpha": false
+  },
+  "visual_review": {
+    "accepted": true,
+    "observations": [
+      "Metal support pole, circular base and their floor shadow are absent.",
+      "Full portrait 2:3 frame and empty lower space are retained.",
+      "Headless, armless white cloth torso, silver neck cap, front-facing pose and central placement visually match the original.",
+      "Opaque pale gray studio background fills the removed hardware area naturally."
+    ],
+    "limitations": "AI edit was visually reviewed; torso pixels are not claimed to be byte-identical."
+  },
+  "production_asset": "app/src/main/assets/mannequin/front-template.png",
+  "root_visual_verification": "Full original torso/neck cap/frame retained; pole, base and hardware shadow removed; original lower margin remains."
+}

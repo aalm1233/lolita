@@ -85,8 +85,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.lolita.app.ui.screen.mannequin.MannequinScreen
 import com.lolita.app.ui.screen.mannequin.MannequinViewModel
 import com.lolita.app.ui.screen.tasks.*
+import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.ImageTaskKind
 import com.lolita.app.ui.screen.tryon.TryOnScreen
+import com.lolita.app.ui.screen.personalmodel.*
 import com.lolita.app.ui.screen.tryon.TryOnViewModel
 import com.lolita.app.ui.screen.settings.AttributeManageScreen
 import com.lolita.app.ui.screen.settings.ThemeSelectScreen
@@ -145,9 +147,13 @@ fun LolitaNavHost(
     onQuickOutfitOpened: () -> Unit = {},
     appUpdateViewModel: AppUpdateViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
-    createTryOnViewModel: (SavedStateHandle) -> TryOnViewModel = { TryOnViewModel(it) },
+    createTryOnViewModel: (SavedStateHandle) -> TryOnViewModel = { TryOnViewModel(it,
+        personalModels = AppModule.personalModelRepository().observe(),
+        defaultPersonalModelId = AppModule.appPreferences().defaultPersonalModelId) },
     createMannequinViewModel: (SavedStateHandle) -> MannequinViewModel = { MannequinViewModel(it) },
-    createImageTaskViewModel: () -> ImageTaskViewModel = { ImageTaskViewModel() }
+    createImageTaskViewModel: () -> ImageTaskViewModel = { ImageTaskViewModel(personalModels = AppModule.personalModelRepository().observe()) },
+    createPersonalModelViewModel: () -> PersonalModelViewModel = { PersonalModelViewModel() },
+    createPersonalModelEditViewModel: (SavedStateHandle) -> PersonalModelEditViewModel = { PersonalModelEditViewModel(it) }
 ) {
     val activeEntry by navController.currentBackStackEntryAsState()
     LaunchedEffect(openQuickOutfit, activeEntry?.id) {
@@ -556,6 +562,7 @@ fun LolitaNavHost(
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) },
                     onNavigateToTryOn = { navController.navigate(Screen.TryOn.createRoute()) },
                     onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
+                    onNavigateToPersonalModels = { navController.navigate(Screen.PersonalModels.route) },
                     appUpdateViewModel = appUpdateViewModel
                 )
             }
@@ -723,9 +730,29 @@ fun LolitaNavHost(
                         onNavigateBack = { navController.popBackStack() },
                         viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
                         onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
-                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) }
+                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) },
+                        onManagePersonalModels = { navController.navigate(Screen.PersonalModels.route) }
                     )
                 }
+            }
+
+            composable(Screen.PersonalModels.route) { entry ->
+                val factory = remember(entry) { viewModelFactory { initializer { createPersonalModelViewModel() } } }
+                PersonalModelScreen(onBack = { navController.popBackStack() },
+                    onCreate = { navController.navigate(Screen.PersonalModelEdit.createRoute()) },
+                    onAdjust = { navController.navigate(Screen.PersonalModelEdit.createRoute(modelId = it)) },
+                    viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
+            }
+            composable(Screen.PersonalModelEdit.route, arguments = listOf(
+                navArgument("modelId") { type = NavType.LongType; defaultValue = 0L },
+                navArgument("retryTaskId") { type = NavType.StringType; defaultValue = "" }
+            )) { entry ->
+                val factory = remember(entry) { viewModelFactory { initializer { createPersonalModelEditViewModel(createSavedStateHandle()) } } }
+                PersonalModelEditScreen(onBack = { navController.popBackStack() }, onTask = { id ->
+                    navController.navigate(Screen.ImageTaskDetail.createRoute(id)) {
+                        popUpTo(Screen.PersonalModelEdit.route) { inclusive = true }
+                    }
+                }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
             }
 
             composable(Screen.ImageTasks.route) { entry ->
@@ -738,10 +765,14 @@ fun LolitaNavHost(
                 val factory = remember(entry) { viewModelFactory { initializer { createImageTaskViewModel() } } }
                 ImageTaskDetailScreen(taskId = entry.arguments?.getString("taskId").orEmpty(),
                     onNavigateBack = { navController.popBackStack() }, onRetry = { task ->
-                        val route = if (task.kind == ImageTaskKind.TRY_ON) Screen.TryOnRetry.createRoute(task.id)
-                            else Screen.MannequinRetry.createRoute(task.garmentId ?: 0L, task.id)
+                        val route = when (task.kind) {
+                            ImageTaskKind.TRY_ON -> Screen.TryOnRetry.createRoute(task.id)
+                            ImageTaskKind.MANNEQUIN -> Screen.MannequinRetry.createRoute(task.garmentId ?: 0L, task.id)
+                            ImageTaskKind.PERSONAL_MODEL -> Screen.PersonalModelEdit.createRoute(retryTaskId = task.id)
+                        }
                         navController.navigate(route)
-                    }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
+                    }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
+                    onOpenPersonalModels = { navController.navigate(Screen.PersonalModels.route) })
             }
 
             // Quick Outfit Log

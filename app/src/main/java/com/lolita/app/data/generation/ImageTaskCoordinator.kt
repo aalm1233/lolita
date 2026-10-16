@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.UUID
+import java.io.File
 
 /** Owns accepted mutations independently of a screen's lifetime. Never owns network execution. */
 class ImageTaskCoordinator(
@@ -17,7 +18,8 @@ class ImageTaskCoordinator(
     private val startService: (String) -> Unit,
     private val saveImage: suspend (ByteArray) -> String,
     private val deleteImage: suspend (String) -> Unit,
-    private val validateImage: suspend (String) -> Boolean
+    private val validateImage: suspend (String) -> Boolean,
+    private val validateSourceImage: suspend (String) -> Boolean = { File(it).let { f -> f.isFile && f.canRead() && f.length() > 0 } }
 ) {
     private val dao = db.imageTaskDao()
     private val admission = Mutex()
@@ -93,13 +95,37 @@ class ImageTaskCoordinator(
         admission.withLock { block() }
     }.await()
 
-    suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider): String {
+    suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider): String =
+        submitTryOn(selected, provider, null)
+
+    suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider, personalModelId: Long?): String {
+        return submitTryOnSnapshot(selected, provider, personalModelId, null)
+    }
+
+    suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider,
+        personalModelId: Long, expectedModelImagePath: String): String {
+        require(expectedModelImagePath.isNotBlank()) { "请重新选择试衣模特" }
+        return submitTryOnSnapshot(selected, provider, personalModelId, expectedModelImagePath)
+    }
+
+    private suspend fun submitTryOnSnapshot(selected: List<TryOnSelection>, provider: ImageGenerationProvider,
+        personalModelId: Long?, expectedModelImagePath: String?): String {
         val snapshot = selected.toList()
         val request = TryOnRequest(snapshot)
         return accepted {
             enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣",
                 ImageTaskRequest(request.selections.map { ImageTaskGarment(it.itemId, it.name, it.role) }),
-                request.selections.map { it.imagePath })
+                request.selections.map { it.imagePath }, personalModelId, expectedModelImagePath)
+        }
+    }
+
+    suspend fun submitPersonalModel(request: PersonalModelRequest, paths: List<String>, provider: ImageGenerationProvider): String {
+        val snapshot = PersonalModelRequest.decode(request.encode())
+        val sources = paths.toList()
+        snapshot.validatePaths(sources)
+        return accepted {
+            enqueue(ImageTaskKind.PERSONAL_MODEL, provider, "${snapshot.name} · 专属模特",
+                ImageTaskRequest(emptyList(), version = 2, personalModel = snapshot), sources)
         }
     }
 
@@ -110,12 +136,27 @@ class ImageTaskCoordinator(
     }
 
     private suspend fun enqueue(kind: ImageTaskKind, provider: ImageGenerationProvider, title: String,
-        request: ImageTaskRequest, paths: List<String>): String {
-        val task = ImageTask(UUID.randomUUID().toString(), kind, provider, title, request.encode(), paths)
-        task.validate()
-        state.withLock {
-            dao.insert(task)
-            synchronized(sessions) { pending += task.id }
+        request: ImageTaskRequest, paths: List<String>, personalModelId: Long? = null, expectedModelImagePath: String? = null): String {
+        val task = state.withLock {
+            db.withTransaction {
+                var metadata = request
+                var sources = paths.toList()
+                if (personalModelId != null) {
+                    val person = requireNotNull(db.personalModelDao().get(personalModelId)) { "所选模特已删除，请重新选择" }
+                    require(expectedModelImagePath == null || person.imageUrl == expectedModelImagePath) { "模特图片已更换，请核对后重新选择" }
+                    require(validateImage(person.imageUrl)) { "所选模特图片已丢失，请重新选择" }
+                    metadata = request.copy(version = 2, tryOnModel = TryOnModelSnapshot(person.id, person.name))
+                    sources = listOf(person.imageUrl) + sources
+                }
+                if (kind == ImageTaskKind.PERSONAL_MODEL) {
+                    sources.forEach { require(validateSourceImage(it)) { "参考照片已丢失或无法完整读取，请重新选择" } }
+                }
+                ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources).also {
+                    it.validate()
+                    dao.insert(it)
+                    synchronized(sessions) { pending += it.id }
+                }
+            }
         }
         try { startService(task.id) } catch (_: Exception) {
             // An existing service may have claimed the new row before start rejection.
@@ -159,14 +200,37 @@ class ImageTaskCoordinator(
         }
     }
 
-    suspend fun discard(id: String) = accepted {
-        val path = state.withLock {
-            val task = dao.get(id) ?: return@withLock null
-            if (task.status != ImageTaskStatus.AWAITING_CONFIRMATION) return@withLock null
-            dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null, updatedAt = System.currentTimeMillis()))
-            task.resultImagePath
+    suspend fun confirmPersonalModel(id: String): Long = accepted {
+        state.withLock {
+            db.withTransaction {
+                val task = requireNotNull(dao.get(id)) { "任务已删除" }
+                require(task.kind == ImageTaskKind.PERSONAL_MODEL) { "这不是专属模特任务" }
+                if (task.status == ImageTaskStatus.COMPLETED) return@withTransaction requireNotNull(task.personalModelId)
+                require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION) { "此任务没有待保存的模特" }
+                val request = requireNotNull(ImageTaskRequest.decode(task.requestJson).personalModel)
+                request.validatePaths(task.sourceImagePaths)
+                val path = requireNotNull(task.resultImagePath)
+                require(validateImage(path)) { "模特预览图片已丢失，请舍弃后重新生成" }
+                task.sourceImagePaths.forEach { require(validateSourceImage(it)) { "原参考照片已丢失，请重新生成" } }
+                val result = db.personalModelDao().insert(com.lolita.app.data.local.entity.PersonalModel(
+                    name = request.name, requestJson = request.encode(), sourceImagePaths = task.sourceImagePaths,
+                    imageUrl = path, provider = task.provider, model = task.provider.model))
+                dao.update(task.copy(status = ImageTaskStatus.COMPLETED, personalModelId = result,
+                    sourceImagePaths = emptyList(), updatedAt = System.currentTimeMillis(), error = null))
+                result
+            }
         }
-        path?.let { cleanup(listOf(it)) }
+    }
+
+    suspend fun discard(id: String) = accepted {
+        val paths = state.withLock {
+            val task = dao.get(id) ?: return@withLock emptyList()
+            if (task.status != ImageTaskStatus.AWAITING_CONFIRMATION) return@withLock emptyList()
+            dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null,
+                sourceImagePaths = emptyList(), updatedAt = System.currentTimeMillis()))
+            task.sourceImagePaths + listOfNotNull(task.resultImagePath)
+        }
+        cleanup(paths)
     }
 
     suspend fun delete(id: String) = accepted {
@@ -257,8 +321,10 @@ class ImageTaskCoordinator(
 
     suspend fun publishTryOn(id: String, bytes: ByteArray, selected: List<TryOnSelection>, model: String): Long =
         publish(id, bytes) { task, path ->
+            val person = ImageTaskRequest.decode(task.requestJson).tryOnModel
             val result = db.tryOnDao().insert(TryOnResult(name = task.title, imageUrl = path,
-                itemIds = selected.map { it.itemId.toString() }, itemNames = selected.map { it.name }, model = model))
+                itemIds = selected.map { it.itemId.toString() }, itemNames = selected.map { it.name }, model = model,
+                personalModelId = person?.personalModelId, personalModelName = person?.name))
             dao.update(task.copy(status = ImageTaskStatus.COMPLETED, sourceImagePaths = emptyList(), resultImagePath = path,
                 tryOnResultId = result, updatedAt = System.currentTimeMillis(), error = null))
             result
@@ -266,6 +332,13 @@ class ImageTaskCoordinator(
 
     suspend fun publishMannequin(id: String, bytes: ByteArray): String = publish(id, bytes) { task, path ->
         dao.update(task.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION, sourceImagePaths = emptyList(), resultImagePath = path,
+            updatedAt = System.currentTimeMillis(), error = null))
+        path
+    }
+
+    suspend fun publishPersonalModel(id: String, bytes: ByteArray): String = publish(id, bytes) { task, path ->
+        require(task.kind == ImageTaskKind.PERSONAL_MODEL)
+        dao.update(task.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION, resultImagePath = path,
             updatedAt = System.currentTimeMillis(), error = null))
         path
     }
@@ -326,6 +399,7 @@ class ImageTaskCoordinator(
                 pending -= id
                 owners.remove(id)?.taskIds?.remove(id)
             }
+            if (task.retainsSourceImages) return@withLock emptyList()
             if (task.sourceImagePaths.isEmpty()) return@withLock emptyList()
             dao.update(task.copy(sourceImagePaths = emptyList()))
             task.sourceImagePaths

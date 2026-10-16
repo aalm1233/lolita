@@ -24,6 +24,24 @@ class TryOnImages(private val context: Context) {
         return prepareWithTemplate(paths, MANNEQUIN_ASSET)
     }
 
+    suspend fun preparePersonalModel(paths: List<String>): List<ByteArray> {
+        require(paths.size in 0..3) { "最多选择三张模特参考照片" }
+        return prepareWithTemplate(paths, MODEL_ASSET)
+    }
+
+    suspend fun prepareWithPersonalModel(modelPath: String, garmentPaths: List<String>): List<ByteArray> = withContext(Dispatchers.IO) {
+        require(garmentPaths.size in 1..8) { "请选择1至8张服饰参考图" }
+        val result = mutableListOf<ByteArray>()
+        for (path in listOf(modelPath) + garmentPaths) {
+            currentCoroutineContext().ensureActive()
+            val file = File(path)
+            require(file.isFile && file.canRead() && file.length() in 1..80L * 1024 * 1024) { "模特或服饰图片已丢失，请重新选择" }
+            result += normalize { file.inputStream() }
+            require(result.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片总大小超出限制" }
+        }
+        result
+    }
+
     private suspend fun prepareWithTemplate(paths: List<String>, template: String): List<ByteArray> = withContext(Dispatchers.IO) {
         currentCoroutineContext().ensureActive()
         val result = mutableListOf(normalize { context.assets.open(template) })

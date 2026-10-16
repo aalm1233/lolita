@@ -21,7 +21,8 @@ class TryOnGenerator(
     private val prepareImages: suspend (List<String>) -> List<ByteArray>,
     private val generateImage: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray,
     private val saveResult: suspend (ByteArray, List<TryOnSelection>, String) -> Long,
-    private val gate: ImageGenerationGate = ImageGenerationGate.process
+    private val gate: ImageGenerationGate = ImageGenerationGate.process,
+    private val preparePersonalImages: (suspend (String, List<String>) -> List<ByteArray>)? = null
 ) {
     val isGenerating: StateFlow<Boolean> = gate.isGenerating
 
@@ -29,7 +30,8 @@ class TryOnGenerator(
         selected: List<TryOnSelection>,
         onPhase: (TryOnGenerationPhase) -> Unit = {},
         expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null,
-        beforeRequest: suspend () -> Unit = {}
+        beforeRequest: suspend () -> Unit = {},
+        personalModelImagePath: String? = null
     ): Long = gate.runExclusive {
         currentCoroutineContext().ensureActive()
         val request = TryOnRequest(selected.toList())
@@ -56,7 +58,12 @@ class TryOnGenerator(
                 }
             }
         }
-        val images = prepareImages(request.selections.map { it.imagePath })
+        if (personalModelImagePath != null) require(File(personalModelImagePath).let { it.isFile && it.canRead() && it.length() > 0 }) {
+            "模特图片已丢失，请重新选择"
+        }
+        val garmentPaths = request.selections.map { it.imagePath }
+        val images = if (personalModelImagePath == null) prepareImages(garmentPaths)
+            else requireNotNull(preparePersonalImages) { "专属模特图片准备尚未接入" }(personalModelImagePath, garmentPaths)
         require(images.size == request.selections.size + 1 && images.all { it.isNotEmpty() }) {
             "参考图片未全部准备完成，请重新选择图片"
         }
@@ -65,7 +72,7 @@ class TryOnGenerator(
         currentCoroutineContext().ensureActive()
         beforeRequest()
         currentCoroutineContext().ensureActive()
-        val result = generateImage(credentials, images, request.prompt())
+        val result = generateImage(credentials, images, request.prompt(personalModel = personalModelImagePath != null))
         currentCoroutineContext().ensureActive()
         onPhase(TryOnGenerationPhase.SAVING)
         currentCoroutineContext().ensureActive()

@@ -26,6 +26,9 @@ object AppModule {
     private val _imageTaskRepository by lazy { ImageTaskRepository(database.imageTaskDao()) }
     fun imageTaskRepository() = _imageTaskRepository
 
+    private val _personalModelRepository by lazy { PersonalModelRepository(database) }
+    fun personalModelRepository() = _personalModelRepository
+
     private val _tryOnRepository by lazy { TryOnRepository(appContext,database) }
     fun tryOnRepository() = _tryOnRepository
     private val _tryOnSettings by lazy { com.lolita.app.data.tryon.TryOnSettings(appContext) }
@@ -64,13 +67,18 @@ object AppModule {
             startService = { id -> com.lolita.app.data.generation.ImageTaskService.start(appContext, id) },
             saveImage = { ImageFileHelper.saveGeneratedImage(appContext, it) },
             deleteImage = { ImageFileHelper.deleteImage(it) },
-            validateImage = { ImageFileHelper.isOwnedGeneratedImage(appContext, it) })
+            validateImage = { ImageFileHelper.isOwnedGeneratedImage(appContext, it) },
+            validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) })
     }
     fun imageTaskCoordinator() = _imageTaskCoordinator
     private val _imageTaskRunner by lazy {
         val executor = com.lolita.app.data.generation.ImageTaskExecutor(_imageTaskCoordinator, database,
             _tryOnSettings::readCredentials, _generationImages::prepare, _generationImages::prepareMannequin,
-            _imageGenerationApi::generate)
+            _imageGenerationApi::generate,
+            preparePersonalModel = _generationImages::preparePersonalModel,
+            preparePersonalTryOn = _generationImages::prepareWithPersonalModel,
+            generatePersonalModel = _imageGenerationApi::generatePersonalModel,
+            validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) })
         com.lolita.app.data.generation.ImageTaskRunner(_imageTaskCoordinator, executor::execute)
     }
     fun imageTaskRunner() = _imageTaskRunner
@@ -146,7 +154,9 @@ object AppModule {
     fun sourceRepository() = _sourceRepository
 
     private val _backupManager by lazy { BackupManager(appContext, database,
-        withImageTasksPaused = { action -> _imageTaskCoordinator.withRestorePaused(action) }) { _builtInLibrary.initialize() } }
+        withImageTasksPaused = { action -> _imageTaskCoordinator.withRestorePaused {
+            action().also { result -> if (result.isSuccess) _appPreferences.setDefaultPersonalModelId(null) }
+        } }) { _builtInLibrary.initialize() } }
     fun backupManager() = _backupManager
 
     private val _appPreferences by lazy { AppPreferences(appContext) }

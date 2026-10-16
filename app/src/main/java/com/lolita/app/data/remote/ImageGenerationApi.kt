@@ -12,4 +12,10 @@ class ImageGenerationApi(
             ImageGenerationProvider.OPENAI -> openAi.generate(credentials.apiKey, images, prompt)
             ImageGenerationProvider.SEEDREAM -> seedream.generate(credentials.apiKey, images, prompt)
         }
+
+    suspend fun generatePersonalModel(credentials: ImageGenerationCredentials, images: List<ByteArray>, prompt: String): ByteArray =
+        when (credentials.provider) {
+            ImageGenerationProvider.OPENAI -> openAi.generatePersonalModel(credentials.apiKey, images, prompt)
+            ImageGenerationProvider.SEEDREAM -> seedream.generatePersonalModel(credentials.apiKey, images, prompt)
+        }
 }

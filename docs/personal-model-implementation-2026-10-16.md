@@ -41,4 +41,6 @@
 
 2.53.0/112 已通过112秒 clean Release、原正式签名及新独立AVD的2.52.0→2.53.0覆盖升级。旧31表的旧资料、198件服饰、172张图片SHA256及51字节设置保全，新Room29结构与源码一致；正式页面核对后再次保全检查通过。GitHub正式发布及匿名完整APK/SHA256SUMS下载、HEAD、精确正文与源码标签已核验，实际包SHA256为`da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68`。
 
-Gitee上传被1GB仓库附件配额拒绝，新版本保持预发布且无APK，未冒充国内正式发布或已可应用内更新。已请求确认清理最旧2.41.0/2.42.0 APK；两份在本机备份，GitHub副本与Gitee旧包SHA256一致。未收到确认，不删除已发布附件；GitHub可先下载使用。国内发布及2.53.0应用内更新入口验证仍待此授权，详见[发布回执](personal-model-release-2.53.0-verification.json)。
+Gitee 2.53.0 已正式发布。同一正式APK与SHA256SUMS先以预发布上传，经匿名完整下载、SHA256及HEAD核对后转为正式；正文与GitHub源码提交一致。2.41.0/2.42.0已由并行2.52.0发布任务按授权清理，本次仍差4,831,886字节；用户于15:45最新回复另行明确批准2.43.0 APK后，仅删除该48,009,585字节附件（HTTP204），保留其旧发布记录、SHA256SUMS及已核对一致的本机/GitHub副本。
+
+公开版本列表查询仍返回HTTP403。独立AVD5572上的2.53.0正式包只手动检查一次，真实对话框显示“检查失败”“当前版本：v2.53.0”“Gitee 暂时拒绝访问或请求过于频繁，请稍后重试”，未显示最新版本或更新正文；UI自身不区分403/429，不能宣称最高正式版本查询或应用内更新已通过。未重试、下载、注入凭据或替换元数据。截图为`docs/visuals/2026-10-16-personal-model/manual/release-update-error.png`，详见[发布回执](personal-model-release-2.53.0-verification.json)和`artifacts/releases/2.53.0/domestic-ui-report.md`。直接下载已验证可用：[Gitee](https://gitee.com/aalm1233/lolita/releases/download/v2.53.0/lolita-2.53.0.apk)、[GitHub](https://github.com/aalm1233/lolita/releases/download/v2.53.0/lolita-2.53.0.apk)。

@@ -211,28 +211,246 @@
       }
     },
     "gitee": {
-      "formal": false,
-      "status": "Pending explicit permission to remove old published APK attachments; repository attachment quota reached 1GB",
-      "prerelease_tag": "v2.53.0",
-      "prerelease_id": 1209827,
-      "apk_uploaded": false,
-      "old_attachments_deleted": false,
-      "requested_cleanup": [
-        "lolita-2.41.0.apk",
-        "lolita-2.42.0.apk"
-      ],
-      "local_and_github_backup_verified": true,
-      "cleanup_backup_receipt": "artifacts/releases/2.52.0/gitee-quota-preservation/preservation.json"
+      "formal": true,
+      "tag": "v2.53.0",
+      "release_id": 1209827,
+      "release_page": "https://gitee.com/aalm1233/lolita/releases/tag/v2.53.0",
+      "apk_uploaded": true,
+      "metadata_read": "Owner-authenticated exact release because anonymous release-list API returned HTTP403; no credentials sent for asset verification or app update.",
+      "body_and_source_commit_match": true,
+      "verification_before_formalization": {
+        "tag": "v2.53.0",
+        "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+        "release_id": 1209827,
+        "prerelease": true,
+        "files": {
+          "lolita-2.53.0.apk": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.53.0/lolita-2.53.0.apk",
+            "anonymous_full_download": true,
+            "bytes": 58590614,
+            "sha256": "da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.53.0/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "164c79d5d2e82b6acdb494fbd7380c4fed46d3c699348b696a84309211dfbfdc",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/zip",
+          "bytes": 58590614,
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "formalization": {
+        "tag": "v2.53.0",
+        "release_id": 1209827,
+        "prerelease": false,
+        "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+        "sha256": "da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68"
+      },
+      "quota_cleanup": {
+        "previously_authorized_already_removed_by_2_52_release": [
+          "lolita-2.41.0.apk",
+          "lolita-2.42.0.apk"
+        ],
+        "additional_human_authorization": "Latest 2026-10-16 15:45 CST reply explicitly permits 2.43.0 only, superseding the immediately prior defer reply.",
+        "removed_in_this_turn": {
+          "at_utc": "2026-10-16T07:45:20.937454+00:00",
+          "authorization": "Human explicitly approved removal of Gitee 2.43.0 APK only in this chat",
+          "tag": "v2.43.0",
+          "release_id": 1201199,
+          "attachment_id": 3375884,
+          "name": "lolita-2.43.0.apk",
+          "http_status": 204,
+          "already_absent": false,
+          "release_and_checksum_retained": true,
+          "github_and_local_backup_verified": true,
+          "other_attachments_not_deleted": true
+        },
+        "backup": {
+          "tag": "v2.43.0",
+          "apk": "lolita-2.43.0.apk",
+          "local_backup": "/Users/dengtong/code/lolita/artifacts/releases/2.53.0/gitee-quota-preservation-next/lolita-2.43.0.apk",
+          "github_release_formal": true,
+          "gitee_release_formal": true,
+          "github_asset_metadata": {
+            "bytes": 48009585,
+            "sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27"
+          },
+          "platforms": {
+            "github": {
+              "bytes": 48009585,
+              "sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27",
+              "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.43.0/lolita-2.43.0.apk",
+              "content_type": "application/vnd.android.package-archive",
+              "anonymous_full_download": true,
+              "redirect_chain": [
+                {
+                  "host": "github.com",
+                  "status": 302
+                },
+                {
+                  "host": "release-assets.githubusercontent.com",
+                  "status": 200
+                }
+              ]
+            },
+            "gitee": {
+              "bytes": 48009585,
+              "sha256": "2789d7b4c2ee3eb7829f075a7a794a2c1606a6e3c08d8a99853798492d71fd27",
+              "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.43.0/lolita-2.43.0.apk",
+              "content_type": "application/zip",
+              "anonymous_full_download": true,
+              "redirect_chain": [
+                {
+                  "host": "gitee.com",
+                  "status": 302
+                },
+                {
+                  "host": "gitee.com",
+                  "status": 302
+                },
+                {
+                  "host": "foruda.gitee.com",
+                  "status": 200
+                }
+              ]
+            }
+          },
+          "identical_sha256_and_bytes": true,
+          "apk_signature_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+          "apk_signature_verified": true,
+          "read_only_remote_operations": true
+        },
+        "old_releases_checksum_attachments_and_github_copies_retained": true
+      },
+      "anonymous_public_update_query": {
+        "at_utc": "2026-10-16T07:46:42.586229+00:00",
+        "query": "Anonymous Gitee release list, first page",
+        "http_status": 403,
+        "highest_formal_release_verified": false,
+        "token_not_in_app": true,
+        "asset_download_verified": true
+      },
+      "app_update_ui": {
+        "observed_at_utc": "2026-10-16T07:48:06.277546+00:00",
+        "device": {
+          "serial": "emulator-5572",
+          "avd": "Lolita_Personal_Model_Release_20261016",
+          "package": "com.lolita.app",
+          "version": "2.53.0",
+          "version_code": 112,
+          "uid": 10207
+        },
+        "gitee_formal_receipt": "artifacts/releases/2.53.0/gitee-final.json",
+        "method": "one manual tap on the app Check Update row; no retry, download, browser launch, or injected data",
+        "outcome": "failure",
+        "latest_version_confirmed_in_app": false,
+        "complete_release_notes_confirmed_in_app": false,
+        "dialog_title": "检查失败",
+        "actual_ui_text": [
+          "检查失败",
+          "当前版本：v2.53.0",
+          "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试"
+        ],
+        "http_status_observable_in_app": null,
+        "error_interpretation": "The app reports denial or request frequency; its UI does not distinguish HTTP 403 from 429.",
+        "screenshots": [
+          "docs/visuals/2026-10-16-personal-model/manual/release-update-error.png"
+        ],
+        "ui_trees": [
+          "artifacts/releases/2.53.0/release-update-error.xml"
+        ],
+        "attempts": 1,
+        "retry_tapped": false,
+        "download_tapped": false,
+        "dialog_dismissed": true,
+        "app_force_stopped": true,
+        "dialog_actions_visible": [
+          "查看发布页",
+          "关闭",
+          "重试"
+        ]
+      },
+      "status": "Formal release and anonymous stable downloads verified. Anonymous update list returned HTTP403; one real app check reported denial/frequency and did not confirm latest version or release notes.",
+      "formal_metadata": {
+        "verified_at_utc": "2026-10-16T07:50:51.682099+00:00",
+        "metadata_access": "owner authenticated, exact release ID",
+        "tag": "v2.53.0",
+        "release_id": 1209827,
+        "prerelease": false,
+        "body_and_source_commit_match": true,
+        "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+        "body_sha256": "1b6da607b336a17da4d1b45fad6a7871505e8d89457480d8bcbcadee19fc8151",
+        "assets": [
+          {
+            "browser_download_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.53.0/lolita-2.53.0.apk",
+            "name": "lolita-2.53.0.apk"
+          },
+          {
+            "browser_download_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.53.0/SHA256SUMS",
+            "name": "SHA256SUMS"
+          }
+        ],
+        "anonymous_assets_pre_formalization": "gitee-verification.json",
+        "anonymous_public_update_query": "gitee-public-update-error.json"
+      }
     }
   },
   "limitations": [
     "No supplied user portrait or newly authorized paid quality trial; real likeness and body reconstruction remain unverified.",
     "API26/27 strict JPEG/PNG parser has JVM coverage; actual legacy-device runtime was not executed.",
-    "No USB user device was used or cleared."
+    "No USB user device was used or cleared.",
+    "Gitee anonymous release list returned HTTP403. Genuine 2.53.0 app check reported denial or request frequency; highest formal version and full release notes were not verified in-app. Direct anonymous APK/checksum downloads and HEAD passed."
   ],
   "actual_screenshots": [
     "docs/visuals/2026-10-16-personal-model/manual/release-library.png",
-    "docs/visuals/2026-10-16-personal-model/manual/release-editor.png"
+    "docs/visuals/2026-10-16-personal-model/manual/release-editor.png",
+    "docs/visuals/2026-10-16-personal-model/manual/release-update-error.png"
   ],
   "local_evidence": "artifacts/releases/2.53.0"
 }

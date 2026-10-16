@@ -12,6 +12,9 @@ import android.util.Log
 import androidx.room.withTransaction
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
+import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.domain.model.ImageTaskKind
+import com.lolita.app.domain.model.ImageTaskStatus
 import com.lolita.app.data.notification.CalendarEventHelper
 import com.lolita.app.data.notification.PaymentReminderScheduler
 import com.google.gson.Gson
@@ -61,7 +64,8 @@ data class BackupData(
     val orderBindings: List<OrderBinding> = emptyList(),
     val paymentStages: List<PaymentStage> = emptyList(),
     val monthlyBudgets: List<MonthlyBudget> = emptyList(),
-    val tryOnResults: List<TryOnResult> = emptyList()
+    val tryOnResults: List<TryOnResult> = emptyList(),
+    val imageTasks: List<ImageTask> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -75,6 +79,7 @@ private data class PreparedBackup(
 class BackupManager(
     private val context: Context,
     private val database: LolitaDatabase,
+    private val withImageTasksPaused: suspend (suspend () -> Result<ImportSummary>) -> Result<ImportSummary> = { it() },
     private val awaitInitialization: suspend () -> Unit = {}
 ) {
     private val gson = Gson()
@@ -99,6 +104,7 @@ class BackupManager(
         validateStoredValues()
         val sync = database.sharedLibrarySyncDao()
         BackupData(
+            imageTasks = database.imageTaskDao().getAll(),
             tryOnResults = database.tryOnDao().getAll(),
             monthlyBudgets = database.budgetDao().getAll(),
             brands = database.brandDao().getAllBrandsList(),
@@ -126,6 +132,9 @@ class BackupManager(
         // DAO converters have display fallbacks. Backups must never persist those fallbacks as data.
         val db = database.openHelper.readableDatabase
         val enums = listOf(
+            Triple("image_tasks", "kind", ImageTaskKind.entries.map { it.name }),
+            Triple("image_tasks", "status", ImageTaskStatus.entries.map { it.name }),
+            Triple("image_tasks", "provider", ImageGenerationProvider.entries.map { it.name }),
             Triple("items", "status", ItemStatus.entries.map { it.name }),
             Triple("items", "priority", ItemPriority.entries.map { it.name }),
             Triple("order_bindings", "purchase_record_status", PurchaseRecordStatus.entries.map { it.name }),
@@ -140,7 +149,7 @@ class BackupManager(
                 while (cursor.moveToNext()) require(!cursor.isNull(0) && cursor.getString(0) in allowed) { "$table.$column 包含未知值，无法无损备份" }
             }
         }
-        val arrays = listOf("items" to "image_urls", "items" to "colors", "coordinates" to "image_urls",
+        val arrays = listOf("image_tasks" to "source_image_paths", "items" to "image_urls", "items" to "colors", "coordinates" to "image_urls",
             "outfit_logs" to "image_urls", "remote_shared_coordinates" to "image_urls",
             "remote_shared_items" to "image_urls", "remote_shared_items" to "colors")
         arrays.forEach { (table, column) ->
@@ -266,6 +275,11 @@ class BackupManager(
             backupData.tryOnResults.forEach {
                 sb.appendLine("${it.id},${escapeCsv(it.name)},${escapeCsv(it.imageUrl)},${escapeCsv(gson.toJson(it.itemIds))},${escapeCsv(gson.toJson(it.itemNames))},${escapeCsv(it.model)},${it.createdAt}")
             }
+            sb.appendLine("\n=== IMAGE_TASKS ===")
+            sb.appendLine("id,kind,provider,title,request_json,source_image_paths,status,request_sent,created_at,updated_at,try_on_result_id,result_image_path,error")
+            backupData.imageTasks.forEach {
+                sb.appendLine("${escapeCsv(it.id)},${it.kind},${it.provider},${escapeCsv(it.title)},${escapeCsv(it.requestJson)},${escapeCsv(gson.toJson(it.sourceImagePaths))},${it.status},${it.requestSent},${it.createdAt},${it.updatedAt},${it.tryOnResultId ?: ""},${escapeCsv(it.resultImagePath)},${escapeCsv(it.error)}")
+            }
 
             // OutfitLogs
             sb.appendLine("\n=== OUTFIT_LOGS ===")
@@ -347,12 +361,24 @@ class BackupManager(
     }
 
     suspend fun importBackup(uri: Uri): Result<ImportSummary> = serializedResult {
-        var images: ActivatedImages? = null
-        var committed = false
         try {
             check(recoverPendingRemindersLocked() == 0) { "上次恢复的提醒尚未完成，请授予权限后重试" }
             val prepared = prepareBackup(uri, cacheResult = true)
             BackupFormat.validate(prepared.backupData)
+            validatePreparedTaskImages(prepared)
+            // Validate the source first: a bad backup must not interrupt an ongoing paid request.
+            withImageTasksPaused { importPreparedBackup(prepared) }
+        } catch (e: Exception) {
+            clearPreparedBackupCache()
+            if (e is CancellationException) throw e
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun importPreparedBackup(prepared: PreparedBackup): Result<ImportSummary> {
+        var images: ActivatedImages? = null
+        var committed = false
+        return try {
             var previousPayments = emptyList<Payment>()
             var importedData = prepared.backupData
             // Finish this bounded commit even if the screen disappears; keep old files intact.
@@ -361,6 +387,12 @@ class BackupManager(
                     images = activateStagedImages(prepared)
                     importedData = images!!.data
                 }
+                importedData = importedData.copy(imageTasks = importedData.imageTasks.map { task ->
+                    if (!task.status.retainsSourceImages) task else task.copy(
+                        status = ImageTaskStatus.INTERRUPTED, sourceImagePaths = emptyList(),
+                        error = if (task.requestSent) "从备份恢复的任务已中断；原请求可能已计费，请核对后重新发起" else "从备份恢复的任务未自动执行，请核对后重新发起")
+                })
+                validatePendingTaskImages(importedData)
                 database.withTransaction {
                     previousPayments = database.paymentDao().getAllPaymentsList() +
                         database.orderDao().getAllStages().map { stageReminder(it) } +
@@ -368,6 +400,7 @@ class BackupManager(
                             gson.fromJson(it, Array<Payment>::class.java).toList()
                         } ?: emptyList())
                     clearAllTables()
+                    importedData.imageTasks.forEach { database.imageTaskDao().insert(it) }
                     importedData.tryOnResults.forEach { database.tryOnDao().insert(it) }
                     importedData.monthlyBudgets.forEach { database.budgetDao().save(it) }
                     importedData.brands.forEach { database.brandDao().insertBrand(it) }
@@ -397,6 +430,14 @@ class BackupManager(
                     database.restoreJournalDao().save(RestoreJournal(previousPaymentsJson = gson.toJson(com.lolita.app.domain.usecase.ReminderCleanup.deduplicate(previousPayments))))
                 }
                 committed = true
+                // Imported active tasks become interrupted. Remove only their newly
+                // activated, now-unreferenced sources; all pre-import files stay intact.
+                images?.let { activated ->
+                    database.withTransaction {
+                        val referenced = collectImagePaths(snapshot())
+                        activated.files.filter { it.absolutePath !in referenced }.forEach { it.delete() }
+                    }
+                }
             }
             val calendarFailures = withContext(NonCancellable) { recoverPendingRemindersLocked() }
             clearPreparedBackupCache()
@@ -414,19 +455,48 @@ class BackupManager(
         }
     }
 
+    private suspend fun validatePendingTaskImages(data: BackupData) {
+        val businessPaths = collectImagePaths(data.copy(imageTasks = emptyList()))
+        data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.forEach { task ->
+            val path = requireNotNull(task.resultImagePath)
+            require(path !in businessPaths && ImageFileHelper.isOwnedGeneratedImage(context, path)) {
+                "待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复"
+            }
+        }
+    }
+
+    private suspend fun validatePreparedTaskImages(prepared: PreparedBackup) {
+        val data = prepared.backupData
+        val businessPaths = collectImagePaths(data.copy(imageTasks = emptyList()))
+        val validationContext = if (prepared.isZip) object : android.content.ContextWrapper(context) {
+            override fun getFilesDir(): File = requireNotNull(prepared.stagingDir)
+        } else context
+        data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.forEach { task ->
+            val path = requireNotNull(task.resultImagePath)
+            val localPath = if (prepared.isZip) {
+                require(path.startsWith(ZIP_IMAGE_PREFIX)) { "ZIP 中的待确认图片引用无效" }
+                File(File(validationContext.filesDir, IMAGE_DIR), path.removePrefix(ZIP_IMAGE_PREFIX)).absolutePath
+            } else path
+            require(path !in businessPaths && ImageFileHelper.isOwnedGeneratedImage(validationContext, localPath)) {
+                "待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复"
+            }
+        }
+    }
+
     private fun recordCount(data: BackupData): Int = listOf(
         data.brands, data.categories, data.coordinates, data.items, data.prices, data.payments,
         data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
         data.legacyCatalogArchives, data.syncStates, data.remoteBrands, data.remoteCategories,
         data.remoteStyles, data.remoteSeasons, data.remoteSources, data.remoteCoordinates,
-        data.remoteItems, data.remotePricePlans, data.orderBindings, data.paymentStages, data.monthlyBudgets, data.tryOnResults
+        data.remoteItems, data.remotePricePlans, data.orderBindings, data.paymentStages, data.monthlyBudgets, data.tryOnResults, data.imageTasks
     ).sumOf { it.size }
 
     private suspend fun verifyRestoredData(expected: BackupData) {
         val actual = snapshot()
         // Sort by stable keys; compare every business field, including image order and timestamps.
         fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
-        check(equal(actual.tryOnResults, expected.tryOnResults) { it.id.toString() } &&
+        check(equal(actual.imageTasks, expected.imageTasks) { it.id } &&
+            equal(actual.tryOnResults, expected.tryOnResults) { it.id.toString() } &&
             equal(actual.monthlyBudgets, expected.monthlyBudgets) { it.month } &&
             equal(actual.brands, expected.brands) { it.id.toString() } &&
             equal(actual.categories, expected.categories) { it.id.toString() } &&
@@ -566,7 +636,8 @@ class BackupManager(
                 archiveCount = backupData.legacyCatalogArchives.size,
                 monthlyBudgetCount = backupData.monthlyBudgets.size,
                 tryOnResultCount = backupData.tryOnResults.size,
-                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size + backupData.tryOnResults.size),
+                imageTaskCount = backupData.imageTasks.size,
+                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size + backupData.tryOnResults.size + backupData.imageTasks.size),
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -577,6 +648,7 @@ class BackupManager(
     }
 
     private suspend fun clearAllTables() {
+        database.imageTaskDao().deleteAll()
         database.sharedLibrarySyncDao().clearPricePlans()
         database.sharedLibrarySyncDao().clearSharedItems()
         database.sharedLibrarySyncDao().clearCoordinates()
@@ -632,28 +704,39 @@ class BackupManager(
         mapImagePaths(data) { path -> names[path]?.let { "$ZIP_IMAGE_PREFIX$it" } ?: path }
 
     private fun mapImagePaths(data: BackupData, map: (String) -> String): BackupData {
-        fun nullable(path: String?) = path?.let(map)
-        return data.copy(
-            tryOnResults = data.tryOnResults.map { it.copy(imageUrl = map(it.imageUrl)) },
+        val businessPaths = mutableMapOf<String, String>()
+        fun business(path: String): String = businessPaths.getOrPut(path) { map(path) }
+        fun nullable(path: String?) = path?.let(::business)
+        val mapped = data.copy(
+            tryOnResults = data.tryOnResults.map { it.copy(imageUrl = business(it.imageUrl)) },
             brands = data.brands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
-            items = data.items.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl), sizeChartImageUrls = it.sizeChartImageUrls.map(map)) },
-            coordinates = data.coordinates.map { it.copy(imageUrls = it.imageUrls.map(map)) },
-            outfitLogs = data.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map(map)) },
+            items = data.items.map { it.copy(imageUrls = it.imageUrls.map(::business), sizeChartImageUrl = nullable(it.sizeChartImageUrl), sizeChartImageUrls = it.sizeChartImageUrls.map(::business)) },
+            coordinates = data.coordinates.map { it.copy(imageUrls = it.imageUrls.map(::business)) },
+            outfitLogs = data.outfitLogs.map { it.copy(imageUrls = it.imageUrls.map(::business)) },
             locations = data.locations.map { it.copy(imageUrl = nullable(it.imageUrl)) },
             remoteBrands = data.remoteBrands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
-            remoteCoordinates = data.remoteCoordinates.map { it.copy(imageUrls = it.imageUrls.map(map)) },
-            remoteItems = data.remoteItems.map { it.copy(imageUrls = it.imageUrls.map(map), sizeChartImageUrl = nullable(it.sizeChartImageUrl)) },
+            remoteCoordinates = data.remoteCoordinates.map { it.copy(imageUrls = it.imageUrls.map(::business)) },
+            remoteItems = data.remoteItems.map { it.copy(imageUrls = it.imageUrls.map(::business), sizeChartImageUrl = nullable(it.sizeChartImageUrl)) },
             legacyCatalogArchives = data.legacyCatalogArchives.map { archive ->
                 val row = JsonParser.parseString(archive.payload).asJsonObject
                 row.get("image_urls")?.takeUnless { it.isJsonNull }?.let { value ->
                     val images = if (value.isJsonArray) value.asJsonArray else JsonParser.parseString(value.asString).asJsonArray
-                    val mapped = JsonArray().apply { images.forEach { add(map(it.asString)) } }
+                    val mapped = JsonArray().apply { images.forEach { add(business(it.asString)) } }
                     // SQL column is encoded as TEXT in the lossless archive.
                     if (value.isJsonArray) row.add("image_urls", mapped) else row.addProperty("image_urls", mapped.toString())
                 }
                 archive.copy(payload = row.toString())
             }
         )
+        return mapped.copy(imageTasks = data.imageTasks.map { task ->
+            task.copy(
+                sourceImagePaths = if (task.status.retainsSourceImages) task.sourceImagePaths.map(map) else emptyList(),
+                // Completed paths are informational. Missing/deleted business images do not
+                // become mandatory ZIP entries or retain old-device absolute paths.
+                resultImagePath = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) task.resultImagePath?.let(map)
+                    else task.resultImagePath?.let(businessPaths::get)
+            )
+        })
     }
 
     private fun isZipFile(uri: Uri): Boolean {
@@ -881,6 +964,7 @@ data class BackupPreview(
     val archiveCount: Int = 0,
     val monthlyBudgetCount: Int = 0,
     val tryOnResultCount: Int = 0,
+    val imageTaskCount: Int = 0,
     val additionalRecordCount: Int = 0,
     val orderBindingCount: Int = 0,
     val historicalOwnedCount: Int = 0,
@@ -895,5 +979,5 @@ data class BackupPreview(
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount + monthlyBudgetCount + tryOnResultCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount + monthlyBudgetCount + tryOnResultCount + imageTaskCount
 }

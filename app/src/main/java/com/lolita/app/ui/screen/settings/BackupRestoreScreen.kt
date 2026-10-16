@@ -301,6 +301,7 @@ fun BackupRestoreScreen(
                     Text("历史图鉴归档: ${p.archiveCount} 条")
                     Text("月度预算: ${p.monthlyBudgetCount} 条")
                     Text("虚拟试衣: ${p.tryOnResultCount} 条")
+                    Text("图像任务: ${p.imageTaskCount} 条")
                     if (p.additionalRecordCount > 0) Text("关联与共享库: ${p.additionalRecordCount} 条")
                     if (p.missingImageCount > 0) Text("此 JSON 缺少 ${p.missingImageCount} 张本地图片，请使用含图片的 ZIP 备份", color = MaterialTheme.colorScheme.error)
                     if (p.imageCount > 0) {

@@ -46,6 +46,9 @@ class TryOnSettings(context: Context) {
         return ImageGenerationCredentials(provider, readKey(provider))
     }
 
+    @Synchronized fun readCredentials(provider: ImageGenerationProvider): ImageGenerationCredentials =
+        ImageGenerationCredentials(provider, readKey(provider))
+
     @Synchronized fun readStatus(): ImageServiceStatus {
         val provider = readProvider()
         return ImageServiceStatus(provider, hasKey(provider))

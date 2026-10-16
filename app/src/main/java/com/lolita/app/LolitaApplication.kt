@@ -13,6 +13,9 @@ class LolitaApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AppModule.init(applicationContext)
+        // Instantiation launches exactly one recovery barrier before any screen can submit.
+        AppModule.imageTaskCoordinator()
+        com.lolita.app.data.generation.ImageTaskNotifications.createChannel(applicationContext)
         NotificationChannelSetup.createNotificationChannel(applicationContext)
         NotificationChannelSetup.createOutfitNotificationChannel(applicationContext)
         CoroutineScope(Dispatchers.IO).launch {

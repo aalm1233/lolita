@@ -42,6 +42,23 @@ class TryOnGeneratorTest {
             assertEquals("doubao-seedream-5-0-pro-260628", savedModel)
         }
     }
+    @Test fun awaitedBeforeRequestCompletesBeforeTransportAndFailurePreventsSending() = runBlocking {
+        Fixture().use { f ->
+            val entered = CompletableDeferred<Unit>()
+            val release = CompletableDeferred<Unit>()
+            val running = async { f.generator().generate(f.selected, beforeRequest = {
+                entered.complete(Unit); release.await()
+            }) }
+            withTimeout(2_000) { entered.await() }
+            assertEquals(0, f.apiCalls)
+            release.complete(Unit)
+            assertEquals(91L, running.await())
+            assertEquals(1, f.apiCalls)
+            expectFailure { f.generator().generate(f.selected, beforeRequest = { error("durable write rejected") }) }
+            assertEquals(1, f.apiCalls)
+        }
+    }
+
     private class Fixture : AutoCloseable {
         val folder = kotlin.io.path.createTempDirectory("tryon-generator-").toFile()
         val dress = File(folder, "dress.jpg").apply { writeBytes(byteArrayOf(1)) }

@@ -58,6 +58,23 @@ object AppModule {
     }
     fun mannequinGenerator() = _mannequinGenerator
 
+    private val imageTaskScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
+    private val _imageTaskCoordinator by lazy {
+        com.lolita.app.data.generation.ImageTaskCoordinator(database, imageTaskScope,
+            startService = { com.lolita.app.data.generation.ImageTaskService.start(appContext) },
+            saveImage = { ImageFileHelper.saveGeneratedImage(appContext, it) },
+            deleteImage = { ImageFileHelper.deleteImage(it) },
+            validateImage = { ImageFileHelper.isOwnedGeneratedImage(appContext, it) })
+    }
+    fun imageTaskCoordinator() = _imageTaskCoordinator
+    private val _imageTaskRunner by lazy {
+        val executor = com.lolita.app.data.generation.ImageTaskExecutor(_imageTaskCoordinator, database,
+            _tryOnSettings::readCredentials, _generationImages::prepare, _generationImages::prepareMannequin,
+            _imageGenerationApi::generate)
+        com.lolita.app.data.generation.ImageTaskRunner(_imageTaskCoordinator, executor::execute)
+    }
+    fun imageTaskRunner() = _imageTaskRunner
+
     private val _restoreJournalRepository by lazy { RestoreJournalRepository(database.restoreJournalDao()) }
     fun restoreJournalRepository() = _restoreJournalRepository
 
@@ -128,7 +145,8 @@ object AppModule {
     }
     fun sourceRepository() = _sourceRepository
 
-    private val _backupManager by lazy { BackupManager(appContext, database) { _builtInLibrary.initialize() } }
+    private val _backupManager by lazy { BackupManager(appContext, database,
+        withImageTasksPaused = { action -> _imageTaskCoordinator.withRestorePaused(action) }) { _builtInLibrary.initialize() } }
     fun backupManager() = _backupManager
 
     private val _appPreferences by lazy { AppPreferences(appContext) }

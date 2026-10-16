@@ -28,7 +28,8 @@ class TryOnGenerator(
     suspend fun generate(
         selected: List<TryOnSelection>,
         onPhase: (TryOnGenerationPhase) -> Unit = {},
-        expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null
+        expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null,
+        beforeRequest: suspend () -> Unit = {}
     ): Long = gate.runExclusive {
         currentCoroutineContext().ensureActive()
         val request = TryOnRequest(selected.toList())
@@ -61,6 +62,8 @@ class TryOnGenerator(
         }
         currentCoroutineContext().ensureActive()
         onPhase(TryOnGenerationPhase.GENERATING)
+        currentCoroutineContext().ensureActive()
+        beforeRequest()
         currentCoroutineContext().ensureActive()
         val result = generateImage(credentials, images, request.prompt())
         currentCoroutineContext().ensureActive()

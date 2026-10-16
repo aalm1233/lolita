@@ -31,7 +31,8 @@ class MannequinGenerator(
     suspend fun generate(
         request: MannequinRequest,
         onPhase: (TryOnGenerationPhase) -> Unit = {},
-        expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null
+        expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null,
+        beforeRequest: suspend () -> Unit = {}
     ): String = gate.runExclusive {
         var preview: String? = null
         try {
@@ -51,6 +52,8 @@ class MannequinGenerator(
             validateSource(request)
             currentCoroutineContext().ensureActive()
             onPhase(TryOnGenerationPhase.GENERATING)
+            currentCoroutineContext().ensureActive()
+            beforeRequest()
             currentCoroutineContext().ensureActive()
             val bytes = generateImage(credentials, images, request.prompt())
             currentCoroutineContext().ensureActive()

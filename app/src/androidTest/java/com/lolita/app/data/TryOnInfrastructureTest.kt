@@ -8,6 +8,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.tryon.TryOnImages
 import com.lolita.app.data.tryon.TryOnSettings
+import com.lolita.app.domain.model.ImageGenerationFailure
+import com.lolita.app.domain.model.ImageGenerationFailureKind
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -87,7 +89,7 @@ class TryOnInfrastructureTest {
             assertArrayEquals(original,source.readBytes())
             val before = File(context.filesDir,"images").listFiles().orEmpty().size
             try { ImageFileHelper.saveGeneratedImage(context,byteArrayOf(1,2,3)); fail("invalid image accepted") }
-            catch (_: IllegalArgumentException) { }
+            catch (failure: ImageGenerationFailure) { assertEquals(ImageGenerationFailureKind.INVALID_IMAGE, failure.kind) }
             assertEquals(before,File(context.filesDir,"images").listFiles().orEmpty().size)
             val result = ImageFileHelper.saveGeneratedImage(context,original)
             assertTrue(File(result).isFile)
@@ -116,7 +118,9 @@ class TryOnInfrastructureTest {
             try {
                 ImageFileHelper.saveGeneratedImage(context, truncated)
                 fail("不能将只有头部的PNG作为成功的生成结果")
-            } catch (_: IllegalArgumentException) { }
+            } catch (failure: ImageGenerationFailure) {
+                assertEquals(ImageGenerationFailureKind.INVALID_IMAGE, failure.kind)
+            }
             assertTrue(File(context.filesDir, "images").listFiles().orEmpty().isEmpty())
         } finally { context.filesDir.parentFile!!.deleteRecursively() }
     }

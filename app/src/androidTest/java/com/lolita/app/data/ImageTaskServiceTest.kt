@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 class ImageTaskServiceTest {
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val context = instrumentation.targetContext
+    private val taskCenterMarker = "离开页面后继续处理。"
 
     @Test fun foregroundNotificationOpensTaskCenterAndEmptyServiceStops() = runBlocking {
         AppModule.imageTaskCoordinator().awaitStartup()
@@ -40,19 +41,19 @@ class ImageTaskServiceTest {
             scenario.onActivity { activity -> ImageTaskService.start(activity); notification.contentIntent.send() }
             scenario.recreate() // Preserve an entry request even if recreation wins the routing frame.
             instrumentation.waitForIdleSync()
-            awaitText("离开页面后继续处理。人台图需核对并添加")
+            awaitText(taskCenterMarker)
             scenario.onActivity { assertNull(it.intent.getStringExtra("navigate_to")) }
             scenario.recreate()
-            awaitText("离开页面后继续处理。人台图需核对并添加")
+            awaitText(taskCenterMarker)
             var node = findText(instrumentation.uiAutomation.rootInActiveWindow, "个人") ?: error("个人导航未出现")
             while (!node.isClickable && node.parent != null) node = node.parent
             assertTrue(node.performAction(AccessibilityNodeInfo.ACTION_CLICK))
             withTimeout(10_000) {
-                while (hasText("离开页面后继续处理。人台图需核对并添加")) delay(50)
+                while (hasText(taskCenterMarker)) delay(50)
             }
             scenario.recreate()
             awaitText("任务中心") // personal menu entry proves this is the restored personal screen.
-            assertFalse(hasText("离开页面后继续处理。人台图需核对并添加"))
+            assertFalse(hasText(taskCenterMarker))
             scenario.onActivity { assertNull(it.intent.getStringExtra("navigate_to")) }
             val manager = context.getSystemService(ActivityManager::class.java)
             withTimeout(10_000) {

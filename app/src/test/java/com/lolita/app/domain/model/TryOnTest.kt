@@ -26,6 +26,17 @@ class TryOnTest {
         assertFalse(prompt.contains("/images/"))
         assertEquals(listOf(33L,30L,29L), request.selections.map { it.itemId })
     }
+    @Test fun personalModelPromptPreservesSelectedIdentityWithoutFictionalClaim() {
+        val request = TryOnRequest(listOf(garment()))
+        assertEquals(request.prompt(), request.prompt(personalModel = false))
+        val personal = request.prompt(personalModel = true)
+        assertTrue(personal.contains("Image 1"))
+        assertTrue(personal.contains("selected personal model"))
+        assertTrue(personal.contains("body proportions"))
+        assertFalse(personal.contains("fictional"))
+        assertTrue(personal.contains("\"image\":2"))
+        assertFalse(personal.contains("/images/"))
+    }
     @Test fun categorySuggestionSeparatesAccessoriesAndClothes() {
         assertEquals(TryOnRole.HEAD, TryOnRole.suggest("KC/发箍"))
         assertEquals(TryOnRole.HAND, TryOnRole.suggest("手袖"))

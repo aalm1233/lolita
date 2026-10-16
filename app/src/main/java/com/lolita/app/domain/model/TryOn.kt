@@ -36,14 +36,20 @@ data class TryOnRequest(val selections: List<TryOnSelection>) {
         require(selections.any { it.role.garment }) { "请至少选择一件服装，并核对穿戴位置" }
     }
 
-    fun prompt(): String {
+    fun prompt(personalModel: Boolean = false): String {
         val references = selections.mapIndexed { index, row ->
             mapOf("image" to index + 2, "role" to row.role.instruction, "name" to row.name.take(160))
         }
+        val identity = if (personalModel) {
+            "Image 1 is the selected personal model. Preserve their exact face, age, body proportions,\n" +
+                "            hair, neutral standing pose, head-to-foot framing, plain gray studio background and lighting."
+        } else {
+            "Image 1 is the fixed fictional ADULT model. Preserve her exact face, age, body proportions,\n" +
+                "            hair, neutral standing pose, head-to-foot framing, plain gray studio background and lighting."
+        }
         return """
             Create one photorealistic full-body virtual wardrobe try-on photograph.
-            Image 1 is the fixed fictional ADULT model. Preserve her exact face, age, body proportions,
-            hair, neutral standing pose, head-to-foot framing, plain gray studio background and lighting.
+            $identity
             Following images are garment/accessory product references. Dress the same model in ALL
             selected items, matching their actual colors, patterns, embroidery, lace, fasteners, silhouettes
             and lengths as faithfully as possible. Respect the role and natural layering of each reference.

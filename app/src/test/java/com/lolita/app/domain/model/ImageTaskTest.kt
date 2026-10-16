@@ -45,6 +45,57 @@ class ImageTaskTest {
         assertEquals(TryOnRole.HAND, selections[1].role)
     }
 
+    @Test fun v1StillDecodesExactly() {
+        val json = """{"garments":[{"itemId":1,"name":"裙子1","role":"MAIN"}],"instructions":"","version":1}"""
+        assertEquals(json, request().encode())
+        assertEquals(request(), ImageTaskRequest.decode(json))
+    }
+
+    @Test fun v2TryOnSeparatesModelFromGarments() {
+        val json = """{"version":2,"garments":[{"itemId":9,"name":"裙子","role":"MAIN"}],"instructions":"","personalModel":null,"tryOnModel":{"personalModelId":7,"name":"本人"}}"""
+        val request = ImageTaskRequest.decode(json)
+        request.validate(ImageTaskKind.TRY_ON)
+        val rows = request.selections(listOf("/model.jpg", "/dress.jpg"))
+        assertEquals(listOf(9L), rows.map { it.itemId })
+        assertEquals(listOf("/dress.jpg"), rows.map { it.imagePath })
+    }
+
+    @Test fun v2PersonalGenerationAcceptsOnlyItsOwnMetadataAndPaths() {
+        val personal = PersonalModelRequest("本人", PersonalModelMode.PHOTO, BodyMeasurements(168.0, 65.0), listOf(PersonalModelPhotoRole.FACE))
+        val request = ImageTaskRequest(emptyList(), version = 2, personalModel = personal)
+        request.validate(ImageTaskKind.PERSONAL_MODEL)
+        assertEquals(request, ImageTaskRequest.decode(request.encode()))
+        assertTrue(request.selections(listOf("/face.jpg")).isEmpty())
+        assertNull(request.modelImagePath(listOf("/face.jpg")))
+        assertThrows(IllegalArgumentException::class.java) { request.selections(emptyList()) }
+        assertThrows(IllegalArgumentException::class.java) { request.validate(ImageTaskKind.TRY_ON) }
+        assertThrows(IllegalArgumentException::class.java) { request.copy(garments = listOf(garment())).validate(ImageTaskKind.PERSONAL_MODEL) }
+        assertThrows(IllegalArgumentException::class.java) { request.copy(tryOnModel = TryOnModelSnapshot(1, "其他")).validate(ImageTaskKind.PERSONAL_MODEL) }
+        assertThrows(IllegalArgumentException::class.java) { ImageTaskRequest(listOf(garment()), personalModel = personal) }
+    }
+
+    @Test fun v2OptionalFieldsAreExplicitAndStrict() {
+        val request = ImageTaskRequest(listOf(garment()), version = 2)
+        assertEquals(request, ImageTaskRequest.decode(request.encode()))
+        assertTrue(request.encode().contains("\"personalModel\":null"))
+        assertTrue(request.encode().contains("\"tryOnModel\":null"))
+        assertNull(request.modelImagePath(listOf("/dress.jpg")))
+        val selected = request.copy(tryOnModel = TryOnModelSnapshot(2, "本人"))
+        assertEquals("/model.jpg", selected.modelImagePath(listOf("/model.jpg", "/dress.jpg")))
+        assertThrows(IllegalArgumentException::class.java) { selected.selections(listOf("/dress.jpg")) }
+        assertThrows(IllegalArgumentException::class.java) { selected.selections(listOf("", "/dress.jpg")) }
+        assertThrows(IllegalArgumentException::class.java) { selected.validate(ImageTaskKind.MANNEQUIN) }
+        listOf(
+            selected.encode().replace("\"personalModel\":null,", ""),
+            selected.encode().replace("\"personalModelId\":2", "\"personalModelId\":0"),
+            selected.encode().replace("\"personalModelId\":2", "\"personalModelId\":2.5"),
+            selected.encode().replace("\"name\":\"本人\"", "\"name\":false"),
+            selected.encode().replace("\"name\":\"本人\"", "\"name\":\" \""),
+            selected.encode().replace("\"tryOnModel\":", "\"unknown\":null,\"tryOnModel\":")
+        ).forEach { json -> assertThrows(IllegalArgumentException::class.java) { ImageTaskRequest.decode(json) } }
+        assertThrows(IllegalArgumentException::class.java) { TryOnModelSnapshot(-1, "本人") }
+    }
+
     @Test fun rejectsUnknownVersionRoleAndUnexpectedRequestFields() {
         listOf(
             """{"version":2,"garments":[{"itemId":1,"name":"裙子","role":"MAIN"}],"instructions":""}""",

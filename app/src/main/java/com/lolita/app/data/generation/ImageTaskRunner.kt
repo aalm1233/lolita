@@ -39,6 +39,7 @@ class ImageTaskExecutor(
         val credentials = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { readCredentials(task.provider) }
         val request = ImageTaskRequest.decode(task.requestJson)
         when (task.kind) {
+            ImageTaskKind.PERSONAL_MODEL -> throw IllegalArgumentException("个人模特生成尚未接线")
             ImageTaskKind.TRY_ON -> TryOnGenerator(
                 findItem = db.itemDao()::getItemById, readCredentials = { credentials },
                 prepareImages = prepareTryOn, generateImage = generateImage,

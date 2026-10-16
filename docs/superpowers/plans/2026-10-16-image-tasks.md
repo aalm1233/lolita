@@ -72,11 +72,11 @@
 
 **Interfaces:** Both VMs accept submit functions returning task ID, observe latest submitted task, retain editable draft, and no longer own network jobs/preview files. SavedState stores compact task ID/draft only. Add `Screen.ImageTasks` and `Screen.ImageTaskDetail.createRoute(id:String)`; `onNavigateToTasks` / `onTaskSubmitted(id)` callbacks. Task center/detail use AppModule task repository/coordinator through VM. Retry opens the existing generator with garment IDs and current source images, requiring user confirmation; it does not silently resubmit stale paths.
 
-- [ ] Write VM/navigation tests proving clearing page retains task and pending image, all four bottom tabs/quick-outfit work during generation, and notifications route once after configuration change.
-- [ ] Replace page-owned generation/preview flow with submission and observed status, remove global navigation generation guard, preserve short editing/configuration safeguards and original selection logic. Add personal and generation-page task entry.
-- [ ] Build task center filters and detail with stage/elapsed status, Fit/zoom image, explicit confirm/discard/cancel/delete, controlled error and retry navigation. Reuse standard topbar/cards/section/image/scroll components and existing ViewAgenda icon. Handle absent Item/result and stale buttons through coordinator guards.
-- [ ] Run real Compose tests covering pending-save after restart, cancelled task, navigation, seven skins light/dark at 320dp and 2x font; inspect screenshots.
-- [ ] Commit UI.
+- [x] Write VM/navigation tests proving clearing page retains task and pending image, all four bottom tabs/quick-outfit work during generation, and notifications route once after configuration change.
+- [x] Replace page-owned generation/preview flow with submission and observed status, remove global navigation generation guard, preserve short editing/configuration safeguards and original selection logic. Add personal and generation-page task entry.
+- [x] Build task center filters and detail with stage/elapsed status, Fit/zoom image, explicit confirm/discard/cancel/delete, controlled error and retry navigation. Reuse standard topbar/cards/section/image/scroll components and existing ViewAgenda icon. Handle absent Item/result and stale buttons through coordinator guards.
+- [x] Run real Compose tests covering pending-save after restart, cancelled task, navigation, seven skins light/dark at 320dp and 2x font; inspect screenshots.
+- [x] Commit UI.
 
 ### Task 5: Latest version notes
 

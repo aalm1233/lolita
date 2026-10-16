@@ -24,7 +24,7 @@
 
 ## 数据库
 
-- Room 数据库版本 28，28 个实体（新增本机图像任务 `ImageTask`，含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本 29，30 个实体（新增个人模特 `PersonalModel`、持久草稿 `PersonalModelDraft`，含本机图像任务 `ImageTask`，含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -386,7 +386,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 虚拟试衣实验（2.48.0）
 
-- 个人页、已拥有服饰及套装详情进入 `Screen.TryOn`，固定成年虚拟模特＋1–8件已有服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥。
+- 个人页、已拥有服饰及套装详情进入 `Screen.TryOn`，内置成年虚拟模特或已确认个人模特＋1–8件已有服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥。
 - `TryOnGenerator` 用进程共用Mutex防重复调用，上传前校验最新Item仍已拥有且图片归属/本地文件完整。`TryOnImages` 处理EXIF、长边1536及透明底白色合成；`TryOnImageApi` 仅调用官方HTTPS `/v1/images/edits`，型号 `gpt-image-2.5-sunburst`，medium/1024×1536/n=1/PNG；无付费自动重试，取消等待不承诺服务端停止计费。
 - 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。
 - Room26→27仅增加 `TryOnResult`/`TryOnDao`，结果由薄 `TryOnRepository` 独立持久化，原服饰删除后保留名称/ID快照，不改变账本/穿搭/归属。生成PNG需完整尾块、可解码及大小/尺寸校验，取消或失败清理未保存文件；删除复用图片引用保护。
@@ -437,3 +437,15 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `ItemRepository.setCoverImage` 在 Room 事务中读取最新行，校验所选路径仍在该服饰图片里，只更新图片顺序和修改时间。仅把一个选中引用移到首位，保留其他引用的相对顺序与重复项；当前封面不重复写入，删除或不再归属的图片拒绝，和人台图追加串行，不能用详情旧快照覆盖整条服饰。
 - `ItemEditViewModel` 用 StateFlow 管理设置中/错误，异步由 viewModelScope 持有；身份改变后不回写旧结果，不覆盖未保存草稿。`ImageGalleryPager.onPageChanged` 为可选回调，只报告停稳的页，原调用保持兼容。
 - 回归为 `ItemCoverTest` 的真实详情→ViewModel→Room 操作，以及 `MannequinPersistenceTest` 的最新字段、并发追加、重复引用、幂等/删除/外部图片拒绝和带封面的 ZIP 顺序恢复。图片本体不复制、不删除，不调用图像服务。
+
+
+## 我的模特（2.53.0）
+
+- 个人页与试衣页进入“我的模特”。照片方式至少脸部或正面全身一张，可补侧面；参数方式生成虚拟面容，身高体重必填、围度等可选。PHOTO→PARAMETERS切换保留本机草稿，但提交只发送当前模式的有效引用，不能夹带隐藏本人照。人物名称仅本地管理，不进入生图提示词。
+- 原照选入即复制到 `filesDir/images/` UUID 文件；`PersonalModelDraft` 保存严格版本化原始字符串和可枚举图片引用，旋转/重建保留，显式放弃才删。参数调整可明确沿用已确认虚拟底图，调整保存为新人物。所有删除经 `ImageFileHelper` 的事务引用保护。
+- Room28→29追加两表和可空人物快照列；`PersonalModelDao` 同时管理模特/草稿，经薄 Repository、AppModule、StateFlow 接线。`TryOnResult.model` 仍是API模型名，人物id/name为历史快照，不设级联外键。默认id为本机DataStore，完整恢复成功后清空，防止导入复用Long id指向另一个人。
+- `PERSONAL_MODEL` 后台任务使用严格v2不可变请求，v1三字段任务继续兼容。新生成操作专用API允许1–5输入，旧试衣/人台入口仍2–9。固定模板只供布局；生成预览保留原照，显式确认在同一事务创建模特和完成任务，重复确认幂等；失败/中断/取消保留原照供人工核对重试，绝不自动付费重发。
+- 个人试衣只上传已确认底图＋服饰。生产入口在同一Room事务核对确认时id与底图路径并捕获引用；恢复后同id换图拒绝陈旧确认。排队后删除/改默认/改名不改本次人物。删除人物保留历史；重试已删除人物先让用户重选。
+- 备份9包含个人模特、草稿、原照、已确认底图、待确认/异常任务源图，JSON/ZIP/CSV/预览/恢复均接通；旧1–8补空。ZIP基于完整源路径生成确定性UUID归档名，避免同名不同源合并；不改变旧包读取。恢复前严格校验记录、图片和结果归属，活动任务只转中断。
+- 个人参考JPEG/PNG在平台解码前严格检查压缩流，避免截断熵数据＋伪EOI被当完整图；完整主JPEG允许Motion Photo/UltraHDR附加尾部（只验证主静态图）。API26/27只接受完整JPEG/PNG；28+其他格式继续ImageDecoder完整读取。预算为80MiB/36MP/单边16384，PNG展开256MiB、JPEG系数访问256M与渐进状态32MiB上限；此限制不改变原服饰读取器。
+- 回归：`PersonalModelRequestTest`、`PersonalImageIntegrityTest`、`PersonalModelApiTest`、`PersonalModelGeneratorTest`，以及独立AVD的`PersonalModelPersistenceTest/ExecutionTest/BackupTest`、个人编辑/管理、试衣/任务/导航Compose。真实七皮肤浅暗小屏大字图在`docs/visuals/2026-10-16-personal-model/`。真人相似度和身体尺寸还原尚未付费实测，不可用色块/内置图/草图宣称已验证。

@@ -1,0 +1,12 @@
+{
+  "device": "emulator-5570 / Lolita_Personal_Model_Test / API35",
+  "fixture": "Original bundled fictional adult layout template, copied to public Pictures only on independent test AVD; not a user portrait or new generation",
+  "system_picker": true,
+  "selected_photo_copied_and_previewed": true,
+  "photo_parameter_toggle_retains_local_photo": true,
+  "parameter_mode_upload_disclosure_excludes_personal_photo": true,
+  "keyboard_open_primary_action_visible": true,
+  "explicit_discard_returns_to_library": true,
+  "cloud_api_calls": 0,
+  "likeness_verified": false
+}

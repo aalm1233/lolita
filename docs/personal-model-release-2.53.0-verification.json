@@ -1,0 +1,238 @@
+{
+  "version": "2.53.0",
+  "version_code": 112,
+  "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+  "source_tag": "v2.53.0",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 112,
+    "version": "2.53.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68",
+    "bytes": 58590614,
+    "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+    "build_log": "logs/lolita-personal-model-release-build.log"
+  },
+  "clean_release_build": {
+    "successful": true,
+    "seconds": 112,
+    "java": 17,
+    "command": "./gradlew clean assembleRelease",
+    "log": "artifacts/releases/2.53.0/logs/lolita-personal-model-release-build.log"
+  },
+  "tests": {
+    "version": "2.53.0",
+    "version_code": 112,
+    "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+    "jvm": {
+      "tests": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "android": {
+      "unique_cases": 148,
+      "final_passing_cases": 148,
+      "coherent_run": {
+        "total": 148,
+        "passed": 147,
+        "failed": 1,
+        "skipped": 0
+      },
+      "test_only_repair": "32cdc60: exact bottom-navigation label prevents body substring match",
+      "targeted_followup": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "product_code_changed_after_coherent_run": false,
+      "device": "emulator-5570 / Lolita_Personal_Model_Test / API35"
+    },
+    "controlled_transport": {
+      "localhost_requests": 1,
+      "official_api_requests": 0,
+      "purpose": "existing raw socket pipeline probe"
+    },
+    "review": {
+      "whole_branch": "Approved after single repair wave; three findings addressed",
+      "fix_commit": "598b6b2",
+      "unresolved_actionable": 0,
+      "evidence": "artifacts/releases/2.53.0/sdd/final-rereview-report.md"
+    },
+    "limitations": [
+      "No supplied user portrait or newly authorized paid quality trial; real likeness and body reconstruction remain unverified.",
+      "API26/27 strict JPEG/PNG parser has JVM coverage; actual legacy-device runtime was not executed.",
+      "No USB user device was used or cleared."
+    ]
+  },
+  "upgrade": {
+    "device": {
+      "verified_at_utc": "2026-10-16T06:41:49.513110+00:00",
+      "serial": "emulator-5572",
+      "avd": "Lolita_Personal_Model_Release_20261016",
+      "package": "com.lolita.app",
+      "app_uid_before": 10207,
+      "app_uid_after": 10207,
+      "access": "root",
+      "install_method": "adb -s emulator-5572 install -r (no uninstall or data clear)",
+      "before_version": "2.52.0",
+      "before_version_code": 111,
+      "after_version": "2.53.0",
+      "after_version_code": 112,
+      "apk_bytes": 58590614,
+      "apk_sha256": "da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68",
+      "installed_base_apk_matches_build": true,
+      "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+      "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+      "before_snapshot": "/tmp/lolita-personal-model-release-20261016/before-upgrade",
+      "after_snapshot": "/tmp/lolita-personal-model-release-20261016/after-upgrade",
+      "before_preferences": "/tmp/lolita-personal-model-release-20261016/before-preferences.pb",
+      "after_preferences": "/tmp/lolita-personal-model-release-20261016/after-preferences.pb"
+    },
+    "preservation": {
+      "preservation_pass": true,
+      "before_schema": 28,
+      "after_schema": 29,
+      "source_schema_identity_hash": "ae2d0a2cd4794514f51f54c093208f2f",
+      "room_identity_matches_source": true,
+      "original_tables_checked": 31,
+      "original_table_counts": {
+        "android_metadata": 1,
+        "brands": 202,
+        "categories": 12,
+        "coordinates": 48,
+        "image_tasks": 0,
+        "items": 198,
+        "legacy_catalog_archive": 0,
+        "locations": 54,
+        "monthly_budgets": 0,
+        "order_bindings": 0,
+        "outfit_item_cross_ref": 0,
+        "outfit_logs": 48,
+        "payment_stages": 0,
+        "payments": 0,
+        "prices": 0,
+        "remote_brands": 0,
+        "remote_categories": 0,
+        "remote_seasons": 0,
+        "remote_shared_coordinates": 0,
+        "remote_shared_items": 0,
+        "remote_shared_price_plans": 0,
+        "remote_sources": 0,
+        "remote_styles": 0,
+        "restore_journal": 0,
+        "room_master_table": 1,
+        "seasons": 5,
+        "shared_library_sync_state": 0,
+        "sources": 3,
+        "sqlite_sequence": 9,
+        "styles": 6,
+        "try_on_results": 0
+      },
+      "new_tables": [
+        "personal_model_drafts",
+        "personal_models"
+      ],
+      "original_images_checked": 172,
+      "original_images_unchanged": 172,
+      "additional_images": 0,
+      "missing_image_references": 0,
+      "preferences_bytes": 51,
+      "preferences_sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+      "integrity_check": [
+        "ok"
+      ],
+      "foreign_key_check": [],
+      "errors": []
+    }
+  },
+  "published": {
+    "github": {
+      "page": "https://github.com/aalm1233/lolita/releases/tag/v2.53.0",
+      "verification": {
+        "tag": "v2.53.0",
+        "source_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+        "release_id": 414633457,
+        "prerelease": false,
+        "files": {
+          "lolita-2.53.0.apk": {
+            "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.53.0/lolita-2.53.0.apk",
+            "anonymous_full_download": true,
+            "bytes": 58590614,
+            "sha256": "da12b906aca4204da5c195a2d1f764dea86d0becfb632b2347811cd3bf866c68",
+            "redirect_chain": [
+              {
+                "host": "github.com",
+                "status": 302
+              },
+              {
+                "host": "release-assets.githubusercontent.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.53.0/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "164c79d5d2e82b6acdb494fbd7380c4fed46d3c699348b696a84309211dfbfdc",
+            "redirect_chain": [
+              {
+                "host": "github.com",
+                "status": 302
+              },
+              {
+                "host": "release-assets.githubusercontent.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/vnd.android.package-archive",
+          "bytes": 58590614,
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "source_tag_commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66"
+      }
+    },
+    "gitee": {
+      "formal": false,
+      "status": "Pending explicit permission to remove old published APK attachments; repository attachment quota reached 1GB",
+      "prerelease_tag": "v2.53.0",
+      "prerelease_id": 1209827,
+      "apk_uploaded": false,
+      "old_attachments_deleted": false,
+      "requested_cleanup": [
+        "lolita-2.41.0.apk",
+        "lolita-2.42.0.apk"
+      ],
+      "local_and_github_backup_verified": true,
+      "cleanup_backup_receipt": "artifacts/releases/2.52.0/gitee-quota-preservation/preservation.json"
+    }
+  },
+  "limitations": [
+    "No supplied user portrait or newly authorized paid quality trial; real likeness and body reconstruction remain unverified.",
+    "API26/27 strict JPEG/PNG parser has JVM coverage; actual legacy-device runtime was not executed.",
+    "No USB user device was used or cleared."
+  ],
+  "actual_screenshots": [
+    "docs/visuals/2026-10-16-personal-model/manual/release-library.png",
+    "docs/visuals/2026-10-16-personal-model/manual/release-editor.png"
+  ],
+  "local_evidence": "artifacts/releases/2.53.0"
+}

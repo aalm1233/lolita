@@ -109,8 +109,9 @@ The interfaces below are fixed across workers; backward-compatible defaults pres
 - [x] Run `./gradlew testDebugUnitTest assembleDebug assembleDebugAndroidTest`; inspect totals/failures, then targeted connected tests for personal model, old generation/navigation, task service and backup on independent AVD.
 - [x] Fresh independent review checks spec coverage, corrupt import data, path ownership, concurrency, old constructor compatibility, no embedded credentials and no privacy regression; fix actionable findings and re-run affected checks.
 - [x] With no user portrait or new paid test authorization supplied, explicitly report likeness/target measurements as unverified; controlled transfer and built-in demonstration do not prove real-person results. Do not reuse prior complex-outfit API budget for a different experiment.
-- [ ] Update implementation records and AGENTS.md. For normal authorized release use 2.53.0 / 112, `clean assembleRelease`, original signing identity and independent AVD 2.52.0→2.53.0 upgrade, table/image/settings preservation. Publish via the established GitHub/Gitee flow and validate public APK/SHA256/update notes; preserve source credentials outside repo.
-- [ ] Commit verification and integration; report installable result, actual evidence and remaining visual-generation limits concisely.
+- [x] Update implementation records and AGENTS.md; build2.53.0/112 with `clean assembleRelease`, verify original signature and independent2.52.0→2.53.0 upgrade, full old rows/images/preferences preservation. GitHub formal release, anonymous APK/SHA256/HEAD/body/source-tag checks passed. Credentials remain outside repository.
+- [ ] Complete Gitee formal release and app update check after explicit old-APK cleanup permission: 1GB repository quota rejected upload; requested removal only of backed-up2.41.0/2.42.0 APKs, no published files deleted.
+- [x] Commit verification and integration; report installable result, actual evidence and remaining visual-generation limits concisely.
 
 并行开发期间主分支已加入服饰封面功能并占用 2.52.0 / 111；已合入该变更，本功能顺延为 2.53.0 / 112。
 

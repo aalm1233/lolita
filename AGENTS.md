@@ -437,6 +437,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `ItemRepository.setCoverImage` 在 Room 事务中读取最新行，校验所选路径仍在该服饰图片里，只更新图片顺序和修改时间。仅把一个选中引用移到首位，保留其他引用的相对顺序与重复项；当前封面不重复写入，删除或不再归属的图片拒绝，和人台图追加串行，不能用详情旧快照覆盖整条服饰。
 - `ItemEditViewModel` 用 StateFlow 管理设置中/错误，异步由 viewModelScope 持有；身份改变后不回写旧结果，不覆盖未保存草稿。`ImageGalleryPager.onPageChanged` 为可选回调，只报告停稳的页，原调用保持兼容。
 - 回归为 `ItemCoverTest` 的真实详情→ViewModel→Room 操作，以及 `MannequinPersistenceTest` 的最新字段、并发追加、重复引用、幂等/删除/外部图片拒绝和带封面的 ZIP 顺序恢复。图片本体不复制、不删除，不调用图像服务。
+- 2.52.0 / 111 clean 正式构建、254 项 JVM 与 21 项独立 AVD 回归通过；从 2.51.1 同签名覆盖升级，31 张表全字段、172 张原图和设置原字节保全。发布回执见 `docs/item-image-cover-release-2.52.0-verification.json`。
 
 
 ## 我的模特（2.53.0）

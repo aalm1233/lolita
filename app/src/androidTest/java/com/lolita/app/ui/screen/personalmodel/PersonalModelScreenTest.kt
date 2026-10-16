@@ -85,7 +85,8 @@ class PersonalModelScreenTest {
         scroll("体重（必填）")
         compose.onNodeWithText("体重（必填）").performTextInput("52")
         scroll("模特名称（1至60字）")
-        compose.onNodeWithText("模特名称（1至60字）").performTextInput("我的日常模特")
+        compose.onNodeWithText("模特名称（1至60字）").assertTextContains("我的模特")
+        compose.onNodeWithText("模特名称（1至60字）").performTextReplacement("我的日常模特")
         compose.waitUntil(10_000) { editor.uiState.value.canGenerate }
         compose.onNodeWithTag("generatePersonalModel").performClick()
         assertEquals(0, submitted)

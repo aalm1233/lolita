@@ -110,6 +110,27 @@ class PersonalModelBackupFormatTest {
         assertEquals(snapshot, BackupFormat.parse(root().apply { add("tryOnResults", gson.toJsonTree(listOf(snapshot))) }.toString()).tryOnResults.single())
     }
 
+    @Test fun completedPersonalTaskComparesDecodedPayloadAndAllowsDisplayRename() {
+        val completed = task(ImageTaskStatus.COMPLETED).copy(sourceImagePaths = emptyList(), personalModelId = 12,
+            resultImagePath = "/images/model.png")
+        val input = withProfile().apply {
+            this["personalModels"].asJsonArray[0].asJsonObject.apply {
+                addProperty("name", "后来重命名")
+                addProperty("requestJson", Gson().newBuilder().serializeNulls().setPrettyPrinting().create().toJson(JsonParser.parseString(request)))
+            }
+            add("imageTasks", gson.toJsonTree(listOf(completed)))
+        }
+        assertEquals("后来重命名", BackupFormat.parse(input.toString()).personalModels.single().name)
+        val wrongPayload = completed.copy(requestJson = ImageTaskRequest(emptyList(), version = 2,
+            personalModel = PersonalModelRequest.decode(request).copy(measurements = BodyMeasurements(170.0, 55.0))).encode())
+        for (wrong in listOf(completed.copy(resultImagePath = "/images/wrong.png"),
+            completed.copy(provider = ImageGenerationProvider.OPENAI), wrongPayload)) {
+            assertThrows(IllegalArgumentException::class.java) {
+                BackupFormat.parse(input.deepCopy().apply { add("imageTasks", gson.toJsonTree(listOf(wrong))) }.toString())
+            }
+        }
+    }
+
     @Test fun taskCannotClaimUnrelatedAcceptedModelAndSnapshotMustBeComplete() {
         val wrongOwner = task(ImageTaskStatus.COMPLETED).copy(sourceImagePaths = emptyList(), personalModelId = 12, resultImagePath = "/images/wrong.png")
         val input = withProfile().apply { add("imageTasks", gson.toJsonTree(listOf(wrongOwner))) }

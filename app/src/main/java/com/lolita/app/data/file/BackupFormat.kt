@@ -323,7 +323,8 @@ internal object BackupFormat {
         data.imageTasks.forEach { task ->
             // Deleted historical targets are allowed; an existing target must be the exact owned result.
             task.personalModelId?.let(profiles::get)?.let { model ->
-                require(task.resultImagePath == model.imageUrl && task.requestJson == model.requestJson && task.provider == model.provider) { "模特任务与已保存底图不匹配" }
+                val request = com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson)
+                require(task.resultImagePath == model.imageUrl && request.personalModel == model.request() && task.provider == model.provider) { "模特任务与已保存底图不匹配" }
             }
             task.tryOnResultId?.let(results::get)?.let { result ->
                 val request = com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson)

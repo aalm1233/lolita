@@ -33,7 +33,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
     var confirmation by remember(taskId) { mutableStateOf<String?>(null) }
-    var makeDefault by rememberSaveable(taskId) { mutableStateOf(false) }
+    var makeDefault by rememberSaveable(taskId) { mutableStateOf(true) }
     var zoom by remember(taskId) { mutableStateOf(false) }
     val path = task?.let(state::resultPath)?.takeIf { File(it).isFile }
     val busy = taskId in state.mutating

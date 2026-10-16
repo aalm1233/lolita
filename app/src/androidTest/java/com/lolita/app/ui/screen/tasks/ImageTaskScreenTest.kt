@@ -50,6 +50,7 @@ class ImageTaskScreenTest {
     private var retried = 0
     private var defaultFailure = false
     private var defaultModelId: Long? = null
+    private var personalConfirmCalls = 0
     private val pendingId = UUID.randomUUID().toString()
     private val failedId = UUID.randomUUID().toString()
     private val runningId = UUID.randomUUID().toString()
@@ -76,7 +77,7 @@ class ImageTaskScreenTest {
             ImageTaskViewModel(db.imageTaskDao().observe(), db.itemDao().getAllItems(), db.tryOnDao().observe(),
                 coordinator::cancel, coordinator::confirmMannequin, coordinator::discard, coordinator::delete,
                 personalModels = db.personalModelDao().observe(), setDefaultPersonalModel = { if (defaultFailure) error("受控偏好失败") else defaultModelId = it },
-                confirmPersonalTask = coordinator::confirmPersonalModel).also { store.put("tasks", it) }
+                confirmPersonalTask = { personalConfirmCalls++; coordinator.confirmPersonalModel(it) }).also { store.put("tasks", it) }
         }
         withTimeout(10_000) { model.uiState.first { !it.isLoading && it.tasks.size == 3 } }
         Unit
@@ -127,7 +128,7 @@ class ImageTaskScreenTest {
         defaultFailure = true
         show()
         scrollTo("保存个人模特")
-        compose.onNodeWithText("设为默认试衣人物").performScrollTo().performClick()
+        compose.onNode(isToggleable()).assertIsOn()
         compose.onNodeWithText("保存个人模特").performScrollTo().performClick()
         compose.onNodeWithText("确认").performClick()
         withTimeout(10_000) { model.uiState.first { pendingId in it.defaultSaveFailed } }
@@ -140,6 +141,7 @@ class ImageTaskScreenTest {
         withTimeout(10_000) { model.uiState.first { pendingId !in it.defaultSaveFailed && it.mutating.isEmpty() } }
         assertEquals(db.personalModelDao().getAll().single().id, defaultModelId)
         assertEquals(1, db.personalModelDao().getAll().size)
+        assertEquals(1, personalConfirmCalls)
         db.personalModelDao().delete(defaultModelId!!)
         withTimeout(10_000) { model.uiState.first { it.personalModels.isEmpty() } }
         assertNull(model.uiState.value.resultPath(db.imageTaskDao().get(pendingId)!!))

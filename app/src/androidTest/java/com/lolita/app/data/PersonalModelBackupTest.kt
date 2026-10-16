@@ -8,11 +8,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.lolita.app.data.file.*
+import com.lolita.app.data.generation.ImageTaskCoordinator
+import com.lolita.app.data.generation.ImageTaskRunner
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
 import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,6 +54,88 @@ class PersonalModelBackupTest {
             "我的模特", ImageTaskRequest(emptyList(), version = 2, personalModel = request).encode(),
             listOf(source), status, true, preview, createdAt = 123, updatedAt = 124)
     }
+
+    // Real admission/publish/confirmation must remain composable with full backup after the task is retained.
+    @Test fun confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership() = runBlocking { fixture { f ->
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        try {
+            val coordinator = ImageTaskCoordinator(f.db, scope, {},
+                { ImageFileHelper.saveGeneratedImage(f.context, it) }, ImageFileHelper::deleteImage,
+                { ImageFileHelper.isOwnedReadableImage(f.context, it) },
+                { ImageFileHelper.isOwnedReadableImage(f.context, it) })
+            coordinator.awaitStartup()
+            val original = f.image()
+            val id = coordinator.submitPersonalModel(f.request, listOf(original), ImageGenerationProvider.SEEDREAM)
+            ImageTaskRunner(coordinator, { task ->
+                coordinator.beforeRequest(task.id)
+                coordinator.publishPersonalModel(task.id, f.bytes)
+            }).runQueue()
+            val pending = f.db.imageTaskDao().get(id)!!
+            assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, pending.status)
+            assertEquals(listOf(original), pending.sourceImagePaths)
+            assertTrue(f.db.personalModelDao().getAll().isEmpty())
+            val modelId = coordinator.confirmPersonalModel(id)
+            assertEquals(modelId, coordinator.confirmPersonalModel(id))
+            val accepted = f.db.personalModelDao().get(modelId)!!
+            assertEquals(listOf(original), accepted.sourceImagePaths)
+            assertEquals(pending.resultImagePath, accepted.imageUrl)
+            assertEquals(ImageGenerationProvider.SEEDREAM.model, accepted.model)
+            // A mutable display name and harmless JSON formatting cannot invalidate the captured request.
+            f.db.personalModelDao().rename(modelId, "更名后的模特", 456)
+            f.db.personalModelDao().update(f.db.personalModelDao().get(modelId)!!.copy(requestJson =
+                Gson().newBuilder().serializeNulls().setPrettyPrinting().create().toJson(com.google.gson.JsonParser.parseString(accepted.requestJson))))
+            val manager = BackupManager(f.context, f.db)
+            var previousPath = accepted.imageUrl
+            var previousSources = accepted.sourceImagePaths
+            for (zip in listOf(false, true)) {
+                val uri = (if (zip) manager.exportToZip() else manager.exportToJson()).getOrThrow().also(f.exports::add)
+                val preview = manager.previewBackup(uri).getOrThrow()
+                assertEquals(1, preview.personalModelCount)
+                assertEquals(0, preview.personalModelDraftCount)
+                assertEquals(2, preview.totalCount)
+                assertEquals(2, manager.importBackup(uri).getOrThrow().totalImported)
+                val model = f.db.personalModelDao().get(modelId)!!
+                val task = f.db.imageTaskDao().get(id)!!
+                assertEquals("更名后的模特", model.name)
+                assertEquals(f.request, model.request())
+                assertEquals(ImageTaskStatus.COMPLETED, task.status)
+                assertEquals(modelId, task.personalModelId)
+                assertNull(task.tryOnResultId)
+                assertTrue(task.requestSent)
+                assertTrue(task.sourceImagePaths.isEmpty())
+                assertEquals(model.imageUrl, task.resultImagePath)
+                assertEquals(accepted.provider, model.provider)
+                assertEquals(accepted.model, model.model)
+                assertEquals(f.request, ImageTaskRequest.decode(task.requestJson).personalModel)
+                if (zip) assertNotEquals(previousPath, model.imageUrl) else assertEquals(previousPath, model.imageUrl)
+                (model.sourceImagePaths + model.imageUrl).forEach {
+                    assertTrue(ImageFileHelper.isOwnedReadableImage(f.context, it))
+                    assertArrayEquals(f.bytes, File(it).readBytes())
+                }
+                if (zip) assertNotEquals(previousSources, model.sourceImagePaths) else assertEquals(previousSources, model.sourceImagePaths)
+                assertEquals(1, model.sourceImagePaths.size)
+                previousPath = model.imageUrl
+                previousSources = model.sourceImagePaths
+            }
+            val task = f.db.imageTaskDao().get(id)!!
+            val wrongRequest = ImageTaskRequest.decode(task.requestJson).copy(personalModel = f.request.copy(measurements = BodyMeasurements(170.0, 55.0)))
+            val unrelatedImage = f.image()
+            for (wrong in listOf(task.copy(resultImagePath = unrelatedImage),
+                task.copy(provider = ImageGenerationProvider.OPENAI), task.copy(requestJson = wrongRequest.encode()))) {
+                f.db.imageTaskDao().update(wrong)
+                assertTrue(manager.exportToJson().isFailure)
+                assertTrue(manager.exportToZip().isFailure)
+                val invalid = BackupData(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),
+                    imageTasks = listOf(wrong), personalModels = f.db.personalModelDao().getAll())
+                val file = File(f.context.cacheDir, "wrong-owner.json").apply { writeText(Gson().toJson(invalid)) }
+                assertTrue(manager.previewBackup(Uri.fromFile(file)).isFailure)
+                assertTrue(manager.importBackup(Uri.fromFile(file)).isFailure)
+                assertEquals(wrong, f.db.imageTaskDao().get(id))
+            }
+            f.db.imageTaskDao().update(task)
+            assertEquals(1, f.db.personalModelDao().getAll().size)
+        } finally { scope.coroutineContext.job.cancelAndJoin() }
+    } }
 
     // Dropping new arrays or using status-only retention loses accepted/draft/retry photos.
     @Test fun zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles() = runBlocking { fixture { f ->

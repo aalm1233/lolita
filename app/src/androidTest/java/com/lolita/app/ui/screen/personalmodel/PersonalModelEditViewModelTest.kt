@@ -66,10 +66,11 @@ class PersonalModelEditViewModelTest {
     @Test fun invalidRawInputDoesNotSubmitAndSurvivesDraftRestoration() = runBlocking {
         val handle = SavedStateHandle()
         val vm = model(handle)
-        main { vm.update { it.copy(name = "我的模特", heightCm = "1.", weightKg = "-", mode = PersonalModelMode.PARAMETERS) }; vm.generate() }
+        main { vm.update { it.copy(name = "", heightCm = "1.", weightKg = "-", mode = PersonalModelMode.PARAMETERS) }; vm.generate() }
         settled(vm)
         assertEquals(0, submissions)
         val recreated = model(handle)
+        assertEquals("", recreated.uiState.value.draft.name)
         assertEquals("1.", recreated.uiState.value.draft.heightCm)
         assertEquals("-", recreated.uiState.value.draft.weightKg)
         assertNotNull(recreated.uiState.value.validationIssue)

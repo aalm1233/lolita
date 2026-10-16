@@ -6,7 +6,7 @@ import com.google.gson.JsonParser
 /** Raw editor fields survive incomplete input; paths live exclusively on PersonalModelDraft. */
 data class PersonalModelDraftData(
     val version: Int = 1,
-    val name: String = "",
+    val name: String = "我的模特",
     val mode: PersonalModelMode = PersonalModelMode.PHOTO,
     val heightCm: String = "",
     val weightKg: String = "",

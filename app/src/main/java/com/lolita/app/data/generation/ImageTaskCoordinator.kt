@@ -122,9 +122,14 @@ class ImageTaskCoordinator(
         cleanup(paths)
     }
 
-    /** Never holds state while joining execution: publication needs the same mutex. */
-    suspend fun <T> withRestorePaused(block: suspend () -> T): T = pauseExecution(
-        "恢复备份前已中断任务，请核对后重新发起", block)
+    /**
+     * Join the accepted restore even if its screen disappears. The caller owns the backup
+     * mutex and ZIP staging, so it must not unwind cleanup while this callback still runs.
+     * Ordinary mutations keep their cancellable waits; only this resource barrier joins.
+     */
+    suspend fun <T> withRestorePaused(block: suspend () -> T): T = withContext(NonCancellable) {
+        pauseExecution("恢复备份前已中断任务，请核对后重新发起", block)
+    }
 
     fun serviceStartFailed(): Job = applicationScope.launch {
         pauseExecution("后台执行未能启动，请回到应用后重新发起") { }

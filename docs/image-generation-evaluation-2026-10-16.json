@@ -1,0 +1,2045 @@
+{
+  "date": "2026-10-16",
+  "model": "doubao-seedream-5-0-pro-260628",
+  "endpoint": "https://ark.cn-beijing.volces.com/api/v3/images/generations",
+  "request_parameters": {
+    "size": "1024x1536",
+    "response_format": "b64_json",
+    "output_format": "png",
+    "stream": false,
+    "watermark": true
+  },
+  "authorization_cap": 70,
+  "conservative_reserved_attempts": 54,
+  "actual_requests_sent": 52,
+  "successful_images": 51,
+  "http_failures": 1,
+  "local_not_sent_attempts": 2,
+  "automatic_retries": 0,
+  "selected_production_prompt": "baseline unchanged",
+  "tested_prompt_variants": [
+    "baseline",
+    "candidate (long role extraction)",
+    "refined (long structure emphasis)",
+    "chinese (compact native Chinese)",
+    "minimal (short additive construction emphasis)"
+  ],
+  "wardrobe_cases": [
+    "navy",
+    "cake",
+    "witch",
+    "bird",
+    "doll",
+    "snake",
+    "poppy",
+    "red",
+    "bluewhite"
+  ],
+  "research_only_crops": [
+    "cakecrop",
+    "snakecrop"
+  ],
+  "blind_assessment": {
+    "assessment": "Independent visual blind comparison",
+    "blinding": {
+      "read_key_or_prompt_files": false,
+      "reviewed": "Eight labelled A/B contact sheets, model reference, and selected original image paths from input-index.json only"
+    },
+    "criteria": [
+      "garment construction and sleeves",
+      "selected accessory presence, placement and quantity",
+      "layering",
+      "color, print and trim",
+      "approximate adult model, pose and framing",
+      "natural hands"
+    ],
+    "limitations": [
+      "One observed output per candidate and case; this does not estimate repeat-run reliability.",
+      "Some originals, especially doll, are very small; fine lace and print identity cannot be verified.",
+      "Approximate identity and pose assessed visually; no pixel identity claim.",
+      "Snake contact sheet shows four selected references; the additional OTHER record in input-index.json was not treated as required."
+    ],
+    "cases": [
+      {
+        "case": "navy",
+        "preference": "A",
+        "confidence": "medium",
+        "visible_reasons": [
+          "A retains the outer jacket's full wrist-length bell sleeves more closely. B shortens them to expose a distinct band of forearm above the hand sleeves.",
+          "Both include the navy layered dress, paired bun ornaments and tassels, paired hand sleeves, and buckled chain waist belt.",
+          "Both preserve the black jacket's blue-edged collar and embroidered sleeve treatment; A's overall sleeve silhouette is closer to the separate jacket original."
+        ],
+        "remaining_issues": [
+          "Both reinterpret the belt's buckles, cords and chains rather than reproduce their exact arrangement.",
+          "The hand sleeves overlap the outer jacket, limiting verification of their complete length and lacing."
+        ],
+        "person_and_hands": "Both are plausible adult frontal full-body studio images with the reference boots/background; no obvious gross hand failure at this scale."
+      },
+      {
+        "case": "cake",
+        "preference": "A",
+        "confidence": "high",
+        "visible_reasons": [
+          "A retains the bonnet's conspicuous pink under-chin ties. B omits them, despite their clear presence in the detailed bonnet original.",
+          "Both retain the teal OP's own puffed and flared sleeves, the separate floral wrist cuffs, the bonnet, the bodice heart and the large skirt hearts.",
+          "Color, broad lace bands, roses and pink waist bow are close in both; A has the more complete selected accessory construction."
+        ],
+        "remaining_issues": [
+          "Both reinterpret the exact skirt heart outlines, lace scallops and lower frill arrangement.",
+          "Sleeve and wrist-cuff boundaries blend together somewhat in both."
+        ],
+        "person_and_hands": "Both maintain a plausible adult model and neutral studio framing. Hands remain visible and broadly natural."
+      },
+      {
+        "case": "witch",
+        "preference": "tie",
+        "confidence": "medium",
+        "visible_reasons": [
+          "Both include the ivory long-sleeved underblouse, dark cape, witch hat, upper gingham bow and separate waist bow, and the illustrated ivory skirt.",
+          "A gives a more curved, decorated cape neckline, while B gives a cleaner open cape silhouette. Neither clearly reproduces the original broad scalloped embroidered cape yoke.",
+          "The front/back cape opening and dangling skirt ornaments differ, but the originals do not provide enough frontal construction evidence to rank those differences confidently."
+        ],
+        "remaining_issues": [
+          "Both simplify or alter the cape yoke and the exact print and tassel arrangement.",
+          "Both make layering readable but do not establish exact construction fidelity."
+        ],
+        "person_and_hands": "Both retain an adult frontal model with visible hands, hat fully in frame, and a consistent studio background."
+      },
+      {
+        "case": "bird",
+        "preference": "B",
+        "confidence": "high",
+        "visible_reasons": [
+          "B preserves the selected cape as a broad, short, tiered shoulder cape with its large front tie. A turns it into a narrow open shoulder drape and loses most of the characteristic tiered front construction.",
+          "B includes a visible neck band with the floral brooch near the collar, more consistent with the dedicated brooch reference.",
+          "Both retain the white blouse sleeves, long black gathered skirt and lace veil. B's longer visible veil sides are closer to the long veil original."
+        ],
+        "remaining_issues": [
+          "B's cape naturally hides much of the blouse front, so blouse ruffle detail cannot be checked fully.",
+          "Exact skirt textile and veil lace motifs remain approximate."
+        ],
+        "person_and_hands": "Both are plausible adult full-body images with natural-looking visible hands and the same broad studio framing."
+      },
+      {
+        "case": "doll",
+        "preference": "B",
+        "confidence": "medium-high",
+        "visible_reasons": [
+          "B pins the rabbit brooch to the upper side of the chest while keeping the dress's central oval bodice motif visible. A places the rabbit centrally and effectively replaces or covers that native motif.",
+          "Both include the lace choker, pink hair bow and matching bonnet, plus the dress's long tiered bell sleeves and horizontal skirt lace bands.",
+          "B therefore separates an added selected accessory from the dress's own ornament more successfully."
+        ],
+        "remaining_issues": [
+          "The 200px dress reference prevents reliable judgment of fine lace motifs or exact bow quantities.",
+          "Both enlarge and reinterpret some pink bow shapes."
+        ],
+        "person_and_hands": "Both keep adult appearance, neutral background and complete head-to-boot framing; hands appear broadly natural."
+      },
+      {
+        "case": "snake",
+        "preference": "B",
+        "confidence": "low-medium",
+        "visible_reasons": [
+          "Both closely preserve the blue velvet top, keyhole neckline, shoulder ribbons, sheer black hand sleeves, gathered blue skirt and one side floral hair ornament.",
+          "B more visibly preserves the flared lace hand-sleeve ends extending over the hands, closer to the original pointed, flaring cuff construction. A's ends are narrower and shorter.",
+          "B's front skirt drape is a little broader, closer to the gathered U-shaped blue drape in the skirt original; the difference is modest."
+        ],
+        "remaining_issues": [
+          "Both reinterpret bodice buttons, velvet highlights and skirt cords; neither is an exact textile match.",
+          "The two outputs are close enough that this is a weak preference and should not alone drive promotion."
+        ],
+        "person_and_hands": "Both maintain adult frontal full-body studio framing. Sleeve lace partly obscures fingers; no obvious extra limb or gross hand failure."
+      },
+      {
+        "case": "poppy",
+        "preference": "A",
+        "confidence": "low-medium",
+        "visible_reasons": [
+          "Both preserve the OP's original black long sleeves, cream collar and floral skirt, and put a cream sleeveless vest and one cameo bow brooch over it.",
+          "A retains long cream side ties, which are visible in the detailed vest original. B largely omits their long hanging extent.",
+          "Both have broadly similar collar, print and sleeve fidelity; A's extra vest detail provides only a modest advantage."
+        ],
+        "remaining_issues": [
+          "Both open and reshape the vest's originally buttoned front.",
+          "The vest's long sheer back panel cannot be confirmed from either frontal output; A's long strips do not establish that the complete back layer is present.",
+          "The floral print is recognizable in palette and scale but reorganized."
+        ],
+        "person_and_hands": "Both keep plausible adult identity, complete framing and natural visible hands."
+      },
+      {
+        "case": "bluewhite",
+        "preference": "B",
+        "confidence": "medium-high",
+        "visible_reasons": [
+          "B gives the paired hand sleeves the longer forearm coverage of the original, reaching closer to the elbows. A shortens them and starts them noticeably lower on the forearms.",
+          "Both include the paired floral head ornaments and tassels, the white/grey halter bodice, frog closures, front zipper and multiple skirt ruffle tiers.",
+          "B retains clearer upper and lower cuff ornament placement, matching the separate long sleeve reference more closely."
+        ],
+        "remaining_issues": [
+          "Both reinterpret the cuff's lace motif and small knotted ornaments.",
+          "Skirt ruffle shapes and bodice trim are approximate; neither supports an exact detail identity claim."
+        ],
+        "person_and_hands": "Both maintain adult frontal full-body studio framing with unobstructed head ornaments and plausible hands."
+      }
+    ],
+    "summary": {
+      "A_preferences": [
+        "navy",
+        "cake",
+        "poppy"
+      ],
+      "B_preferences": [
+        "bird",
+        "doll",
+        "snake",
+        "bluewhite"
+      ],
+      "ties": [
+        "witch"
+      ],
+      "strongest_evidence": [
+        "cake: bonnet chin ties",
+        "bird: cape structure",
+        "doll: native bodice motif plus separate brooch",
+        "bluewhite: long hand sleeves"
+      ],
+      "promotion_guidance": "Unblind only after freezing this assessment. Compare construction/accessory regressions by case; the aggregate is mixed and does not justify a universal winner from these eight pairs alone."
+    }
+  },
+  "blind_key": {
+    "navy": {
+      "A": "baseline",
+      "B": "chinese"
+    },
+    "cake": {
+      "A": "baseline",
+      "B": "chinese"
+    },
+    "witch": {
+      "A": "baseline",
+      "B": "chinese"
+    },
+    "bird": {
+      "A": "chinese",
+      "B": "baseline"
+    },
+    "doll": {
+      "A": "chinese",
+      "B": "baseline"
+    },
+    "snake": {
+      "A": "baseline",
+      "B": "chinese"
+    },
+    "poppy": {
+      "A": "baseline",
+      "B": "chinese"
+    },
+    "bluewhite": {
+      "A": "chinese",
+      "B": "baseline"
+    }
+  },
+  "records": [
+    {
+      "run": "01-navy-baseline",
+      "case": "navy",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 1,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+        "a206b9c86dbe97d1ecadc151701002bd60121e3276a475033b044ed5f40fcf0c",
+        "1354d16e436a13e7f8216a9332029661f7cbed0f20526fb36687be4fab27edf1",
+        "076283b74fea1570cf9d7140cf1ba7c8128d4332ff61ad6989b6cdd6ed17c9ca",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "prompt_sha256": "8d37dcef0bc0f7112fa931d77f9972688406ad5b33a357c88f68c651278151a1",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "d8f659bd9f65f513a71a5ef86b1b74f3ca1dff01e33bb3785fedf81f38b10e3b",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 67.32,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/01-navy-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "02-navy-candidate",
+      "case": "navy",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 3,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+        "a206b9c86dbe97d1ecadc151701002bd60121e3276a475033b044ed5f40fcf0c",
+        "1354d16e436a13e7f8216a9332029661f7cbed0f20526fb36687be4fab27edf1",
+        "076283b74fea1570cf9d7140cf1ba7c8128d4332ff61ad6989b6cdd6ed17c9ca",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "prompt_sha256": "b7f7ac60ed9d591dafd84734868a48d8e0fb3c0e17f71ee5bcd6010fdf231cf5",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "f7d577486cbd27ef816b1a75071395b59f5953995168d0de904ac28c17f8bf37",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 75.21,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/02-navy-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "03-cake-baseline",
+      "case": "cake",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 2,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "1a0bd0eef081b2aa9a49ca1818cc618b1eb9387a28f58c73f94d85f0340ea335",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "a608b429107dcecaf0d6d7a9c2afc8570792318fc17e94aa9f4c9ef385c40cbb",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 61.83,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/03-cake-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "04-cake-candidate",
+      "case": "cake",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 4,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "455c6908c3391972646e85c0f51703af7b9fd35a933ad47c3b5470268433c553",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "07ccf0cf0f76edc0d2f40f90a7406e0d74faf75284047f6cb8ac4f76169c5258",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 61.67,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/04-cake-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "05-witch-baseline",
+      "case": "witch",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 5,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "9a4cbc4925ab23a9e8e73511956f171b121b3ab3213bcfc015b21bfc9a72aa71",
+        "533d3b96bff362acd7ac5d4325003f00e0e6ad78e3560404244a0c705a7dcf6a",
+        "ce7f66de4bab1447dc575ad1acae8167e65284a012dbd95bd4493c6ad78eb8db",
+        "a573c03af76017287b8a6ae80de4030cfcab9660227d9abbdee57f74d44081d3",
+        "b95f16c42bb3271f3327c51920d73f6d1306b2924f64f696f514d7517ad95f89"
+      ],
+      "prompt_sha256": "f2a4febeac24202ae1889f708ded7e5f73be3fc5d972b36c8022c2520fc5b737",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "a90d2dc99afd3fb36ba468faa9c4c2e562aeb3297d49d4a9feb1354872640a05",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 64.92,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/05-witch-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "06-witch-candidate",
+      "case": "witch",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 6,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "9a4cbc4925ab23a9e8e73511956f171b121b3ab3213bcfc015b21bfc9a72aa71",
+        "533d3b96bff362acd7ac5d4325003f00e0e6ad78e3560404244a0c705a7dcf6a",
+        "ce7f66de4bab1447dc575ad1acae8167e65284a012dbd95bd4493c6ad78eb8db",
+        "a573c03af76017287b8a6ae80de4030cfcab9660227d9abbdee57f74d44081d3",
+        "b95f16c42bb3271f3327c51920d73f6d1306b2924f64f696f514d7517ad95f89"
+      ],
+      "prompt_sha256": "e49031bf2914497bb7ecc9e0b48aa35d4c8a605c55208fe0b4d8109a8b01b537",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "68776f026eaf18d91f101fcf4a87113774173ce15ec152434f2939bbf5ee6409",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 74.43,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/06-witch-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "07-bird-baseline",
+      "case": "bird",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 7,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "f24c1e9af23667e63830458b8c0c338ddc668379223a1ccc4091ad8b0cfa4776",
+        "9b6f4612a15ee059dfa5ae3044f00447a6c773273856d8eaa1e52dedc268f4a7",
+        "c33bf502142f69289023d063479573f0e4881b7db591f9d9da1eae65c44ee940",
+        "dad2febbbc865d27b8601c0a39c87a6633dc4b64848baf1e53607c3d3d038d87",
+        "f59368e0a63b6427c58236339aff07eb47da1abf168cbfa7cd6e65258fc19f96"
+      ],
+      "prompt_sha256": "a716c3af2ca832f3530bc56ea05248aaf4082d164ba08a17e2a84f36d473668e",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "2b0263804ec22c6fbd635a6237eb698f6990f3941ce4498bd373da252ffea6c0",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 73.23,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/07-bird-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "08-bird-candidate",
+      "case": "bird",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 8,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "f24c1e9af23667e63830458b8c0c338ddc668379223a1ccc4091ad8b0cfa4776",
+        "9b6f4612a15ee059dfa5ae3044f00447a6c773273856d8eaa1e52dedc268f4a7",
+        "c33bf502142f69289023d063479573f0e4881b7db591f9d9da1eae65c44ee940",
+        "dad2febbbc865d27b8601c0a39c87a6633dc4b64848baf1e53607c3d3d038d87",
+        "f59368e0a63b6427c58236339aff07eb47da1abf168cbfa7cd6e65258fc19f96"
+      ],
+      "prompt_sha256": "42748abac3a56624255124a17505630a42dc0120c400db5e55c86fd8a022046d",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "3a4dc835011e3713fc913628658db7190dff191fd3f7dabcdb3efc4f1c25a43e",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 66.04,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/08-bird-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "09-doll-baseline",
+      "case": "doll",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 9,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "bc087fd93a8609f8df4335f2ebd3853ca9b64bb083b270d04d4cfff2f0d8150f",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "9660fa263eac315197d38be55ec7ec371fa8aa1a1093556cf00216d82125c005",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 75.38,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/09-doll-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "10-doll-candidate",
+      "case": "doll",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 10,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "acc6a93dfec9d9397c27311528b2a9cd523747881977575d0af1ea7db0cba8b2",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "3c2588f2596c829471c3951af99f3e473bbff2ee181fca85e1584bc8c2682acb",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 77.1,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/10-doll-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "11-snake-baseline",
+      "case": "snake",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 11,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "1d7f448f80454838d7178ea252a141b49a8772937f3734200c89d6ece42418da",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "ac61d4233e806bd661d4b243f4a42fb3cf0a9cc5eace177efc5cfac8e10f1a00",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 67.27,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/11-snake-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "12-snake-candidate",
+      "case": "snake",
+      "variant": "candidate",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 12,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "145ad097574169181e8dc1c9b2a5501e5b90b6cdfe34768453ba59949ea7523c",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "0f3493e6b1b53fd5fb4aca18d778c13ec32cd4a484e3b512132876941bb575ab",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 64.41,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/12-snake-candidate",
+      "actual_request_sent": true
+    },
+    {
+      "run": "13-cake-refined",
+      "case": "cake",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 13,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "07bf00019f17c82a4b3026398e04972b3f151e4eb2e116e5f219407e0b56b9ff",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "a4fc0bc94ac00d1725844827e42318079d4e102fc3eb88b5b7094ba1e911ff9f",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 72.04,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/13-cake-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "14-snake-refined",
+      "case": "snake",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 14,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "9701cb69d44fa0b6fe431a462351cd77eebc0a35a92a963561fc77220888767c",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "4a1264fd7273e2268e1f391b2bb049f02c68151b8b6f20b65463bae83fa30856",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 75.84,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/14-snake-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "15-navy-refined",
+      "case": "navy",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 15,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+        "a206b9c86dbe97d1ecadc151701002bd60121e3276a475033b044ed5f40fcf0c",
+        "1354d16e436a13e7f8216a9332029661f7cbed0f20526fb36687be4fab27edf1",
+        "076283b74fea1570cf9d7140cf1ba7c8128d4332ff61ad6989b6cdd6ed17c9ca",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "prompt_sha256": "ccd94e55860ecb2322d9a28fc4e3cc9366bc7b4652e4f1fe5831530300400fa1",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "5e4659e4a278e3958bd8805dc3e2767c7a7f240804b22bf57cb7b08ebddc622c",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 78.48,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/15-navy-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "16-witch-refined",
+      "case": "witch",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 16,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "9a4cbc4925ab23a9e8e73511956f171b121b3ab3213bcfc015b21bfc9a72aa71",
+        "533d3b96bff362acd7ac5d4325003f00e0e6ad78e3560404244a0c705a7dcf6a",
+        "ce7f66de4bab1447dc575ad1acae8167e65284a012dbd95bd4493c6ad78eb8db",
+        "a573c03af76017287b8a6ae80de4030cfcab9660227d9abbdee57f74d44081d3",
+        "b95f16c42bb3271f3327c51920d73f6d1306b2924f64f696f514d7517ad95f89"
+      ],
+      "prompt_sha256": "ed27bc1d05d6ff2eb65408aa868cf52e96cb9d60664a92a907df4e762222686c",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "44f1f0bc2bb940081d6579d4cf209bb1fd1de9d40ae1727c106871bd0933c975",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 84.92,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/16-witch-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "17-bird-refined",
+      "case": "bird",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 17,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "f24c1e9af23667e63830458b8c0c338ddc668379223a1ccc4091ad8b0cfa4776",
+        "9b6f4612a15ee059dfa5ae3044f00447a6c773273856d8eaa1e52dedc268f4a7",
+        "c33bf502142f69289023d063479573f0e4881b7db591f9d9da1eae65c44ee940",
+        "dad2febbbc865d27b8601c0a39c87a6633dc4b64848baf1e53607c3d3d038d87",
+        "f59368e0a63b6427c58236339aff07eb47da1abf168cbfa7cd6e65258fc19f96"
+      ],
+      "prompt_sha256": "822de820d37c27f2f44829d4acffb764a47740108af8754fb3197e9225b78bd3",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "982e38a9f469e19238ddf87eb13b001883bd3cb0be41b9dc5d62be0616d15671",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 90.28,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/17-bird-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "18-doll-refined",
+      "case": "doll",
+      "variant": "refined",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 18,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "a11d39e940b61295b6244f0aa1157d4b41867694793635a4ee381a8a94b1dd8f",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "d794a5b41e1e9c12c630e570ae939e8f7a01e56b58264033c05c4ffdce226288",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 88.41,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/18-doll-refined",
+      "actual_request_sent": true
+    },
+    {
+      "run": "19-app-screen-on",
+      "case": "cake",
+      "variant": "baseline",
+      "mode": "screen-on",
+      "budget_attempt": 19,
+      "automatic_retries": 0,
+      "device": "emulator-5564",
+      "avd": "Lolita_TryOn_20261015",
+      "real_foreground_service": false,
+      "real_official_api": false,
+      "instrumented_environment": true,
+      "success": false,
+      "error_type": "JSONDecodeError",
+      "request_sent": false,
+      "not_sent_reason": "local harness removed required config before instrumentation assumed/skipped test; no generation ran",
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/19-app-screen-on",
+      "actual_request_sent": false
+    },
+    {
+      "run": "20-app-screen-on",
+      "case": "cake",
+      "variant": "baseline",
+      "mode": "screen-on",
+      "budget_attempt": 20,
+      "automatic_retries": 0,
+      "device": "emulator-5564",
+      "avd": "Lolita_TryOn_20261015",
+      "real_foreground_service": false,
+      "real_official_api": false,
+      "instrumented_environment": true,
+      "success": false,
+      "error_type": "JSONDecodeError",
+      "request_sent": false,
+      "not_sent_reason": "local harness removed required config before instrumentation assumed/skipped test; no generation ran",
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/20-app-screen-on",
+      "actual_request_sent": false
+    },
+    {
+      "run": "21-cake-chinese",
+      "case": "cake",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 21,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "3eca6d4f619efec110901bcc6b2fde791fbdce34303485a4f72e638a8ab6ad3a",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "ffe184c6d17cf34f6b43fba540e48650887be3f1b02a72f4dd08cb67b5f88e0d",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 57.74,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/21-cake-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "22-snake-chinese",
+      "case": "snake",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 22,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "6abf59e733b3e2713862d4a39eda80ad5299fe17369213e385316526ba95b3c3",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "3e046e3eaf3eb8f24e2c201fc5eff3e2dbe830444e31a2720945c51b31f476b0",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 57.79,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/22-snake-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "23-navy-chinese",
+      "case": "navy",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 24,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+        "a206b9c86dbe97d1ecadc151701002bd60121e3276a475033b044ed5f40fcf0c",
+        "1354d16e436a13e7f8216a9332029661f7cbed0f20526fb36687be4fab27edf1",
+        "076283b74fea1570cf9d7140cf1ba7c8128d4332ff61ad6989b6cdd6ed17c9ca",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "prompt_sha256": "51cfe389a51c26f83f49c60414f5d73a7367eade5c4bbbe612da84007bdf8d53",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "625fd2b3974141402dcba3f8f58290ddd862f2b8665bfb9b25bd9344b9d5534c",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 56.2,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/23-navy-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "24-witch-chinese",
+      "case": "witch",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 25,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "9a4cbc4925ab23a9e8e73511956f171b121b3ab3213bcfc015b21bfc9a72aa71",
+        "533d3b96bff362acd7ac5d4325003f00e0e6ad78e3560404244a0c705a7dcf6a",
+        "ce7f66de4bab1447dc575ad1acae8167e65284a012dbd95bd4493c6ad78eb8db",
+        "a573c03af76017287b8a6ae80de4030cfcab9660227d9abbdee57f74d44081d3",
+        "b95f16c42bb3271f3327c51920d73f6d1306b2924f64f696f514d7517ad95f89"
+      ],
+      "prompt_sha256": "d8cee36d43fb46b5e02b02e4b8ecd918df68164ffd5e6e0e828460e8c873ad05",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "388e534da3048971568d64186fb95e51817898aef83b7f4ad2f35e1c1aecea7d",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 55.41,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/24-witch-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "25-app-screen-on",
+      "case": "cake",
+      "variant": "baseline",
+      "mode": "screen-on",
+      "budget_attempt": 23,
+      "automatic_retries": 0,
+      "device": "emulator-5564",
+      "avd": "Lolita_TryOn_20261015",
+      "real_foreground_service": true,
+      "real_official_api": true,
+      "instrumented_environment": true,
+      "sent": {
+        "taskId": "7615a528-41f8-4f2a-94cd-b1ac6ef093e3",
+        "requestSent": true
+      },
+      "result": {
+        "status": "COMPLETED",
+        "requestSent": true,
+        "elapsedMillis": 57148,
+        "taskId": "7615a528-41f8-4f2a-94cd-b1ac6ef093e3"
+      },
+      "output_sha256": "32a6b1b3570cdd2bf6b25fc08872ba15e936a8eece5e1ebe6127dbb9620d67da",
+      "success": true,
+      "instrumentation_pass": true,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/25-app-screen-on",
+      "actual_request_sent": true
+    },
+    {
+      "run": "26-app-screen-off",
+      "case": "cake",
+      "variant": "baseline",
+      "mode": "screen-off",
+      "budget_attempt": 26,
+      "automatic_retries": 0,
+      "device": "emulator-5564",
+      "avd": "Lolita_TryOn_20261015",
+      "real_foreground_service": true,
+      "real_official_api": true,
+      "instrumented_environment": true,
+      "sent": {
+        "taskId": "ed0afc99-bee8-429c-80ae-004ee1fd58a4",
+        "requestSent": true
+      },
+      "screen_off_observed": false,
+      "foreground_service_observed": true,
+      "result": {
+        "status": "COMPLETED",
+        "requestSent": true,
+        "elapsedMillis": 41338,
+        "taskId": "ed0afc99-bee8-429c-80ae-004ee1fd58a4"
+      },
+      "output_sha256": "830d1a1a29da20ed95bb4c185203ff112ef0fc98f362729b130f1232c949315a",
+      "success": true,
+      "instrumentation_pass": true,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/26-app-screen-off",
+      "actual_request_sent": true
+    },
+    {
+      "run": "27-cake-chinese-repeat",
+      "case": "cake",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 27,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "3eca6d4f619efec110901bcc6b2fde791fbdce34303485a4f72e638a8ab6ad3a",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "961451f38bbe46d0ddd39881ff5326be4ca349c35971ef1f3932985058f3d9bb",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 40.07,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/27-cake-chinese-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "28-cake-baseline-repeat",
+      "case": "cake",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 28,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "1a0bd0eef081b2aa9a49ca1818cc618b1eb9387a28f58c73f94d85f0340ea335",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "6f99a7346fe66e9be5c55e40708830f3c3e76f4df34aba479912f47460fae337",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 41.93,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/28-cake-baseline-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "29-snake-chinese-repeat",
+      "case": "snake",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 29,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "6abf59e733b3e2713862d4a39eda80ad5299fe17369213e385316526ba95b3c3",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "3f24896febb62394f64e8be0f1973705211bfdedb3ece6734a942597714aae6b",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 38.05,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/29-snake-chinese-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "30-snake-baseline-repeat",
+      "case": "snake",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 30,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "1d7f448f80454838d7178ea252a141b49a8772937f3734200c89d6ece42418da",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "126b466905cf7863a38b18ce25604c998b2307fd8774a32c2c27973a73b25a37",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 39.35,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/30-snake-baseline-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "31-app-screen-off-verified",
+      "case": "cake",
+      "variant": "baseline",
+      "mode": "screen-off",
+      "budget_attempt": 31,
+      "automatic_retries": 0,
+      "device": "emulator-5564",
+      "avd": "Lolita_TryOn_20261015",
+      "real_foreground_service": true,
+      "real_official_api": true,
+      "instrumented_environment": true,
+      "sent": {
+        "taskId": "d002a3aa-a7ad-42c5-83b7-a125afcdacc7",
+        "requestSent": true
+      },
+      "screen_off_observed": true,
+      "power_asleep_observed": true,
+      "foreground_service_observed": true,
+      "result": {
+        "status": "COMPLETED",
+        "requestSent": true,
+        "elapsedMillis": 37839,
+        "taskId": "d002a3aa-a7ad-42c5-83b7-a125afcdacc7"
+      },
+      "output_sha256": "4ca8a806faab60bd3ed8e25e0488ef98216d9ecfa5cbffcb4873b96b3f5a03b6",
+      "success": true,
+      "instrumentation_pass": true,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/31-app-screen-off-verified",
+      "actual_request_sent": true
+    },
+    {
+      "run": "32-poppy-baseline",
+      "case": "poppy",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 32,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "13fec7a753ae0abb2a166a99efa408066dfec150b730ee7e4f99abe0f2ff625a",
+        "38d3dd21d29b2945239f6d45ca45a2363fed2b384a8ef017ef7da6cdd5189aad",
+        "c52c9e3f6d54859e3bef113ecf06d2c7d082985c54f8b05426b3a742d95fef21"
+      ],
+      "prompt_sha256": "68066103567738669719c0be2599fd1219d3b833129f05444100910ede1de5aa",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "6b77ff476122abd2f05146f27a806ae2f8a69380cab025eb0c78a0524b87fc5b",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 40.13,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/32-poppy-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "33-poppy-chinese",
+      "case": "poppy",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 33,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "13fec7a753ae0abb2a166a99efa408066dfec150b730ee7e4f99abe0f2ff625a",
+        "38d3dd21d29b2945239f6d45ca45a2363fed2b384a8ef017ef7da6cdd5189aad",
+        "c52c9e3f6d54859e3bef113ecf06d2c7d082985c54f8b05426b3a742d95fef21"
+      ],
+      "prompt_sha256": "569036c04fd2b993c504914a4efe7810b4637571168f6c8059031fb4e4920389",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "55112a36356188f8898065369d255c5ec2cb2358d5d6650e59429cb560d9dfe4",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 35.81,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/33-poppy-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "34-red-baseline",
+      "case": "red",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 34,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "5a23846aa2bc782c89d6beb396f7d3bd2be2a920bd1478ab1d3a56de3559687d",
+        "16f843b1748509bf75e75a5deecd857a010ac9dc8cc93b62819b8e394be139f2",
+        "3dccb9b5c61a60d0b256bbeea86a648ae4ea26edff504304adfc0cde0aa1b0db",
+        "da82f4f9e0f3624d5e4ad5c548bbe930a53269b2b62187352b85853044e86adc",
+        "5b704cb920e20ea794e15855b4f1dcf66d5994fff07c70f7ff17c8252a65943c"
+      ],
+      "prompt_sha256": "954e61a3da1c65fc795e188cbba7daae960952b5a9175b1e9c359607e35e1a44",
+      "success": false,
+      "http_status": 400,
+      "error_type": "HTTPError",
+      "seconds": 45.19,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/34-red-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "35-red-chinese",
+      "case": "red",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 35,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "5a23846aa2bc782c89d6beb396f7d3bd2be2a920bd1478ab1d3a56de3559687d",
+        "16f843b1748509bf75e75a5deecd857a010ac9dc8cc93b62819b8e394be139f2",
+        "3dccb9b5c61a60d0b256bbeea86a648ae4ea26edff504304adfc0cde0aa1b0db",
+        "da82f4f9e0f3624d5e4ad5c548bbe930a53269b2b62187352b85853044e86adc",
+        "5b704cb920e20ea794e15855b4f1dcf66d5994fff07c70f7ff17c8252a65943c"
+      ],
+      "prompt_sha256": "6b04c5845b46f55814647b765a074f27a1caaa93e2495d25e3da9e0399fc8dba",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "947050361bce0863f732fc860f8c4c0b99cad1ce0553a4f696293bb304bc206c",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 42.81,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/35-red-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "36-bluewhite-baseline",
+      "case": "bluewhite",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 36,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "6044a6320af50fbcc2cc5cd6cb8d034b4dbe41ab222269507a8296c55ad65ec3",
+        "08573c5bb33ef9126f7307e674d05e2a62025d731507411e758a0b589052d10f",
+        "22192bd3e418eb80d545cbb49d7a507a24f129d7ca36cb4c73786d113c840a2a"
+      ],
+      "prompt_sha256": "9432afd9f792832637fa7b207f4c3691d0bb4a0193bd15e06bc64c4f4089e950",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "c6ae2ca88bb5ccbf43a22510b0f62f77f2051c666f9488254380846ae0a4bfb7",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 35.55,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/36-bluewhite-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "37-bluewhite-chinese",
+      "case": "bluewhite",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 37,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "6044a6320af50fbcc2cc5cd6cb8d034b4dbe41ab222269507a8296c55ad65ec3",
+        "08573c5bb33ef9126f7307e674d05e2a62025d731507411e758a0b589052d10f",
+        "22192bd3e418eb80d545cbb49d7a507a24f129d7ca36cb4c73786d113c840a2a"
+      ],
+      "prompt_sha256": "56d97be1c6f6abec96af67e859d6dd4bdef03c89650a5081f20d186089b0ab2d",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "40ab9e0bb2ffd157e8dd8056e71858d36a3a3e95ae6d2a1e80fd6adc0c48249e",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 33.52,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/37-bluewhite-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "38-bird-chinese",
+      "case": "bird",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 38,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "f24c1e9af23667e63830458b8c0c338ddc668379223a1ccc4091ad8b0cfa4776",
+        "9b6f4612a15ee059dfa5ae3044f00447a6c773273856d8eaa1e52dedc268f4a7",
+        "c33bf502142f69289023d063479573f0e4881b7db591f9d9da1eae65c44ee940",
+        "dad2febbbc865d27b8601c0a39c87a6633dc4b64848baf1e53607c3d3d038d87",
+        "f59368e0a63b6427c58236339aff07eb47da1abf168cbfa7cd6e65258fc19f96"
+      ],
+      "prompt_sha256": "5ff70d6e354c2ecb80609e46f3cfb1c53dfbf2ac3a9081a55013fcbf4cd38846",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "f47579e3a9ade639e2a75a5e7af87bb42c524f34a40528cea7421f373bcbe8b1",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 41.22,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/38-bird-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "39-doll-chinese",
+      "case": "doll",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 39,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "4cfd4c130a4b0b1aa5e14b0c43eea81c334ce1ea5d034699745f4cf824e75d4b",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "a0fc0fb0f4ddf3ad2d21c39fe54f3be87a8f68bdc3d1d11b0c77c0d2a879f023",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 46.34,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/39-doll-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "40-cakecrop-baseline",
+      "case": "cakecrop",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 40,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "81872dcdc3f3f0ef8b566ac36ba74c92e603e174470418c7215e8232101a4101"
+      ],
+      "prompt_sha256": "1a0bd0eef081b2aa9a49ca1818cc618b1eb9387a28f58c73f94d85f0340ea335",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "4152cf13df63d1833cf1e56075bf3463c168e0997686981a44aeecab04aba0f2",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 39.91,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/40-cakecrop-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "41-snakecrop-baseline",
+      "case": "snakecrop",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 41,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "4e69a04b1a13dc5142a273be527d50715b464f6f736baa43f3f66548939e1590",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "1d7f448f80454838d7178ea252a141b49a8772937f3734200c89d6ece42418da",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "039c6430050c1b1de606f538c2ce27e855628fe891314a696196570d7f06a9a1",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 45.71,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/41-snakecrop-baseline",
+      "actual_request_sent": true
+    },
+    {
+      "run": "42-cakecrop-chinese",
+      "case": "cakecrop",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 42,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "81872dcdc3f3f0ef8b566ac36ba74c92e603e174470418c7215e8232101a4101"
+      ],
+      "prompt_sha256": "3eca6d4f619efec110901bcc6b2fde791fbdce34303485a4f72e638a8ab6ad3a",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "37ff5026ab2bab67452639a780547f34afa32aaeecd5baad5f37c3f13cee1959",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 37.31,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/42-cakecrop-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "43-snakecrop-chinese",
+      "case": "snakecrop",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 43,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "4e69a04b1a13dc5142a273be527d50715b464f6f736baa43f3f66548939e1590",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "6abf59e733b3e2713862d4a39eda80ad5299fe17369213e385316526ba95b3c3",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "08deda76554b4b1fd448dddbf934b5ad2c5481d5bc0a905b6bf76f501bf2ad93",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 38.78,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/43-snakecrop-chinese",
+      "actual_request_sent": true
+    },
+    {
+      "run": "44-red-baseline-repeat",
+      "case": "red",
+      "variant": "baseline",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 45,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "5a23846aa2bc782c89d6beb396f7d3bd2be2a920bd1478ab1d3a56de3559687d",
+        "16f843b1748509bf75e75a5deecd857a010ac9dc8cc93b62819b8e394be139f2",
+        "3dccb9b5c61a60d0b256bbeea86a648ae4ea26edff504304adfc0cde0aa1b0db",
+        "da82f4f9e0f3624d5e4ad5c548bbe930a53269b2b62187352b85853044e86adc",
+        "5b704cb920e20ea794e15855b4f1dcf66d5994fff07c70f7ff17c8252a65943c"
+      ],
+      "prompt_sha256": "954e61a3da1c65fc795e188cbba7daae960952b5a9175b1e9c359607e35e1a44",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "6adea1a45d98ee843c1f4a8faaf0c6331c457fb1ea1d193bc275544f0c390dba",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 42.8,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/44-red-baseline-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "45-doll-chinese-repeat",
+      "case": "doll",
+      "variant": "chinese",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 44,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "4cfd4c130a4b0b1aa5e14b0c43eea81c334ce1ea5d034699745f4cf824e75d4b",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "43acb7af5da344071929fca275c561ea8a716e0ec60ef21aed69f3a894e5151d",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 44.48,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/45-doll-chinese-repeat",
+      "actual_request_sent": true
+    },
+    {
+      "run": "46-cake-minimal",
+      "case": "cake",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 46,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "57d5f4267212a056aed1b31d3f3b67cd86e0237d7e9dcdb98634d8e4cef1817d",
+        "8f1efd71cedc115be48a0f9babc8a5adfdc1f85cdc1f48f4002451560b1dff45",
+        "091846d181ccc90a151b8229177d306976a8063f052e28774ccf1eb4ec1e7c07"
+      ],
+      "prompt_sha256": "31f69b9f079501b8141688c28c54536a3b736af9c04ad0bc703ae215c0a235fd",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "2dcae143e9d89ea11c9afb57ae1ab1eecfc48cac7acc6810771c72866883c6f8",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 44.28,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/46-cake-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "47-snake-minimal",
+      "case": "snake",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 5,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 47,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "fca732d87ac970e2c993cb47ddec3659da7fb40bbd941197a965a0ac94ffa47a",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "8d2d30fb66263298e71394b02f01af78be4a019cdb80b3bad4f3338d84464d61",
+        "88c972254ba128f2762a9d96b98d2de1f41e5bc38973c95c5e0d1ae91a1dd8bb"
+      ],
+      "prompt_sha256": "83b8a213a72a8a9aab887540e1d0b823b09ab84b00d001907a4052fa9e8c7d54",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "799293d861671941cf898767102df03fb10946a78f53cb4f3f382affeea21183",
+      "usage": {
+        "input_images": 5,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 42.66,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/47-snake-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "48-navy-minimal",
+      "case": "navy",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 48,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "e11b4d7978965b4b99f2c2366af95d75da885517680e820989d15636db3f2a71",
+        "a206b9c86dbe97d1ecadc151701002bd60121e3276a475033b044ed5f40fcf0c",
+        "1354d16e436a13e7f8216a9332029661f7cbed0f20526fb36687be4fab27edf1",
+        "076283b74fea1570cf9d7140cf1ba7c8128d4332ff61ad6989b6cdd6ed17c9ca",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "prompt_sha256": "e3e4be47149fec41002b68567c791ee2884098a0936d96c5c8cdaffba8ec114c",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "8bda056b6a0580e2e2d8a7c936e54699e124d3feec5d4d290c74d0a5330937d5",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 41.7,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/48-navy-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "49-witch-minimal",
+      "case": "witch",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 49,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "9a4cbc4925ab23a9e8e73511956f171b121b3ab3213bcfc015b21bfc9a72aa71",
+        "533d3b96bff362acd7ac5d4325003f00e0e6ad78e3560404244a0c705a7dcf6a",
+        "ce7f66de4bab1447dc575ad1acae8167e65284a012dbd95bd4493c6ad78eb8db",
+        "a573c03af76017287b8a6ae80de4030cfcab9660227d9abbdee57f74d44081d3",
+        "b95f16c42bb3271f3327c51920d73f6d1306b2924f64f696f514d7517ad95f89"
+      ],
+      "prompt_sha256": "6f6db368b5614e2a25b3791b6776b0c35c463f9ba543befff8753997325531bc",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "fbc0474b064b6f9aa68c5221c2f396bf51dcc12ddfd78a5ebc0d2373bbad320b",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 45.21,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/49-witch-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "50-bird-minimal",
+      "case": "bird",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 50,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "f24c1e9af23667e63830458b8c0c338ddc668379223a1ccc4091ad8b0cfa4776",
+        "9b6f4612a15ee059dfa5ae3044f00447a6c773273856d8eaa1e52dedc268f4a7",
+        "c33bf502142f69289023d063479573f0e4881b7db591f9d9da1eae65c44ee940",
+        "dad2febbbc865d27b8601c0a39c87a6633dc4b64848baf1e53607c3d3d038d87",
+        "f59368e0a63b6427c58236339aff07eb47da1abf168cbfa7cd6e65258fc19f96"
+      ],
+      "prompt_sha256": "9e5ed3ad8549a3e8f8405e80f76f27a76d465c5568d14fb515348e3a91e85eed",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "0e8f199b4336a7afbab3c9750c80584648b7b7024d84fc34c646396b0c01054c",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 53.63,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/50-bird-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "51-doll-minimal",
+      "case": "doll",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 51,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "b2272f27f925868c6d8383a68fb7ee6abe6dbab0c6ddd6068731409ba868f5a5",
+        "a079bef0764bc17b4600632933f104017a11817cc066b400f2f08f7373738547",
+        "308f9fe27c93ebc83115cb97ca4eaaf3b4dd281e6663b260b7c33036ff6541fd",
+        "86fbc8bd1956f0ff1794b8d4e1366b2a54816b76bac9eaa1c4dfc54f89cb8528",
+        "dfe3990e303870cc74bf7b66d8061112dd4a866129cfa310ce0855c72432d62b"
+      ],
+      "prompt_sha256": "8d70aaa394b3da250ef43d5ae9bfc2c897dfbd43664435bd10f9f286ac147e90",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "e0c847aaf96b0d5cd8df8ec999ad34962f273096333cd81f943d8d2f9d9d99ff",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 54.85,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/51-doll-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "52-poppy-minimal",
+      "case": "poppy",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 52,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "13fec7a753ae0abb2a166a99efa408066dfec150b730ee7e4f99abe0f2ff625a",
+        "38d3dd21d29b2945239f6d45ca45a2363fed2b384a8ef017ef7da6cdd5189aad",
+        "c52c9e3f6d54859e3bef113ecf06d2c7d082985c54f8b05426b3a742d95fef21"
+      ],
+      "prompt_sha256": "0c8f1d9bf8d4a98848d3e2c454d8de9efa788ab33e7878f4b839dfa21b618ca5",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "42cef8d0f2043fae466d638c99f72d1536fff325b9d2c18f1eb2d747cd6f9d9f",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 41.65,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/52-poppy-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "53-bluewhite-minimal",
+      "case": "bluewhite",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 4,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 53,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "6044a6320af50fbcc2cc5cd6cb8d034b4dbe41ab222269507a8296c55ad65ec3",
+        "08573c5bb33ef9126f7307e674d05e2a62025d731507411e758a0b589052d10f",
+        "22192bd3e418eb80d545cbb49d7a507a24f129d7ca36cb4c73786d113c840a2a"
+      ],
+      "prompt_sha256": "15808991be543cb352517fb9654123b3089fb61ddeea225924cb06501169934e",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "baa1db67ecb77594c7a7a27b4f0a2adcc3d92ab06d497d63da0a31a916ce0f80",
+      "usage": {
+        "input_images": 4,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 37.04,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/53-bluewhite-minimal",
+      "actual_request_sent": true
+    },
+    {
+      "run": "54-red-minimal",
+      "case": "red",
+      "variant": "minimal",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reference_count": 6,
+      "watermark": true,
+      "automatic_retries": 0,
+      "budget_attempt": 54,
+      "input_sha256": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "5a23846aa2bc782c89d6beb396f7d3bd2be2a920bd1478ab1d3a56de3559687d",
+        "16f843b1748509bf75e75a5deecd857a010ac9dc8cc93b62819b8e394be139f2",
+        "3dccb9b5c61a60d0b256bbeea86a648ae4ea26edff504304adfc0cde0aa1b0db",
+        "da82f4f9e0f3624d5e4ad5c548bbe930a53269b2b62187352b85853044e86adc",
+        "5b704cb920e20ea794e15855b4f1dcf66d5994fff07c70f7ff17c8252a65943c"
+      ],
+      "prompt_sha256": "5e56c385a2db71d6293ae3ccda45913909706c9e57aba99f4dc4e5efff0cbde2",
+      "http_status": 200,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "success": true,
+      "output_sha256": "5ac0e10c38007b9213544df34b70accd20afd199eb2cbf7063372ea4a7fed88e",
+      "usage": {
+        "input_images": 6,
+        "generated_images": 1,
+        "output_tokens": 6144,
+        "total_tokens": 6144
+      },
+      "seconds": 45.77,
+      "evidence_directory": "artifacts/image-evaluation/2026-10-16-screen-off/runs/54-red-minimal",
+      "actual_request_sent": true
+    }
+  ],
+  "limitations": [
+    "One or a few samples per variant; qualitative evidence, not statistically measured success rate.",
+    "Small original photos limit lace/print fidelity; no exact face or garment identity claim.",
+    "Vivo physical device unavailable. Real official API+FGS+screen-off observed only in instrumented owned AVD.",
+    "The original HTTP400 was counted against budget; error cause not captured and no automatic retry performed.",
+    "Two local harness starts skipped before sending; these reservations remain in conservative counter."
+  ]
+}

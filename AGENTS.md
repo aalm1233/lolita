@@ -264,7 +264,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=109, versionName="2.51.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=110, versionName="2.51.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -422,3 +422,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 回归包括 `ImageTaskTest`、`ImageTaskPersistenceTest/ExecutionTest/ServiceTest/BackupTest`、`ImageTaskBackupFormatTest`、任务中心/导航及现有生成页真实 Compose 测试、`AppUpdateNotesTest`。所有模拟器操作必须定向到独立 AVD，受控传输不能冒充真实付费 API 或锁屏 HTTP 联调；发布另做 clean 同签名覆盖升级及原表/图片/设置保全。
 
 - 2.51.0 / 109 使用 clean Release 从已发布2.50.0同签名覆盖升级，原30表逐字段、172张图片SHA256及设置原字节保全；GitHub/Gitee匿名完整下载、HEAD、最高正式更新入口与正文验证通过。正式包任务中心与五段更新正文实拍位于 `docs/visuals/2026-10-16-image-tasks/release-*.png`；回执见 `docs/image-tasks-release-2.51.0-verification.json`。
+
+### 生成任务网络与息屏诊断（2.51.1）
+
+- 两家官方图像 API 仅通过本地 `ImageGenerationFailureKind` 传递可信分类，任务中心保存固定中文网络、超时、鉴权、额度、服务错误说明；不保存原始服务错误、异常 cause、URL 或密钥。请求已发出时说明可能继续处理或计费且不自动重试。队列、服务会话、Room 28 和备份 8 格式不变。
+- 任务中心、虚拟试衣和人台生成页共用“后台与息屏”帮助，读取当前电池优化、系统后台限制和网络状态，回到前台刷新。按钮仅打开标准电池优化列表与本应用详情；vivo 指引为电池→后台耗电管理→允许高后台耗电。前台服务与 CPU 锁不能保证绕过 Doze 或厂商网络限制，禁止盲目加 WiFi 锁或自动重发付费请求。
+- 回归包含真实 loopback HTTP 断连、超时、API→coordinator→Room 原因保留、标准设置入口和帮助对话框。独立 AVD 受控 Doze 与实际付费息屏生成的结果均不能冒充 vivo 真机已修复；详细测试和复杂搭配评估见 `docs/image-generation-screen-off-2026-10-16.md`。

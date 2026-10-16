@@ -1,0 +1,219 @@
+{
+  "version": "2.51.1",
+  "version_code": 110,
+  "source_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c",
+  "base_version": "2.51.0/109",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 110,
+    "version": "2.51.1",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "1509c130c45f2caeed060f4cf96b224d022e08a1b55036b5ed583c9c20297e34",
+    "bytes": 58443158,
+    "source_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c",
+    "build_log": "logs/lolita-screen-off-release-build.log"
+  },
+  "clean_release_build": {
+    "success": true,
+    "seconds": 73,
+    "java": 17,
+    "log": "artifacts/releases/2.51.1/logs/lolita-screen-off-release-build.log"
+  },
+  "tests": {
+    "jvm": {
+      "passed": 254,
+      "failures": 0
+    },
+    "android_final": {
+      "passed": 39,
+      "conditionally_skipped": 1,
+      "reported_total": 40,
+      "log": "artifacts/releases/2.51.1/logs/lolita-screenoff-final-android.log"
+    },
+    "controlled_doze_probe": {
+      "separately_executed": true,
+      "passed": true,
+      "not_vivo_hardware": true
+    },
+    "real_api_screen_off": {
+      "observed_screen_off": true,
+      "observed_asleep": true,
+      "foreground_service": true,
+      "completed": true,
+      "milliseconds": 37839,
+      "instrumented_owned_avd": true,
+      "evidence_run": "31-app-screen-off-verified"
+    }
+  },
+  "upgrade": {
+    "serial": "emulator-5566",
+    "avd": "Lolita_TryOn_Release_20261015",
+    "same_original_release_certificate": true,
+    "uninstalled": false,
+    "cleared_data": false,
+    "all_31_tables_fields_and_rows_identical": true,
+    "images": 172,
+    "preferences": {
+      "byte_identical": true,
+      "sha256": "dc76f96c1daeb9f2b32d1a2ec744f3b6983ef5bd832bbe4d184add56980ff34f",
+      "bytes": 51,
+      "baseline_source": "Published2.51.0 preserved final preferences archive; not part of immediate database/image-only capture"
+    },
+    "database_and_image_baseline": "Fresh stopped2.51.0 snapshot captured before upgrade",
+    "ui_evidence": "docs/visuals/2026-10-16-image-evaluation/release-background-advice.png"
+  },
+  "evaluation": {
+    "actual_api_requests": 52,
+    "successful_images": 51,
+    "http_failures": 1,
+    "local_not_sent": 2,
+    "conservative_reservations": 54,
+    "cap": 70,
+    "retained_original_production_prompt": true,
+    "detail": "docs/image-generation-evaluation-2026-10-16.json",
+    "temporary_key_removed": true,
+    "paid_test_driver_removed_from_source": true
+  },
+  "published": {
+    "github": {
+      "page": "https://github.com/aalm1233/lolita/releases/tag/v2.51.1",
+      "verification": {
+        "tag": "v2.51.1",
+        "source_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c",
+        "release_id": 414515148,
+        "prerelease": false,
+        "files": {
+          "lolita-2.51.1.apk": {
+            "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.51.1/lolita-2.51.1.apk",
+            "anonymous_full_download": true,
+            "bytes": 58443158,
+            "sha256": "1509c130c45f2caeed060f4cf96b224d022e08a1b55036b5ed583c9c20297e34",
+            "redirect_chain": [
+              {
+                "host": "github.com",
+                "status": 302
+              },
+              {
+                "host": "release-assets.githubusercontent.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.51.1/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "f994fd2f4659f95c6cebf220ed2984489b685c741a66a1b8802bd4b03dc5bf9f",
+            "redirect_chain": [
+              {
+                "host": "github.com",
+                "status": 302
+              },
+              {
+                "host": "release-assets.githubusercontent.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/vnd.android.package-archive",
+          "bytes": 58443158,
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "source_tag_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c"
+      }
+    },
+    "gitee": {
+      "page": "https://gitee.com/aalm1233/lolita/releases/tag/v2.51.1",
+      "verification": {
+        "tag": "v2.51.1",
+        "source_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c",
+        "release_id": 1209354,
+        "prerelease": false,
+        "files": {
+          "lolita-2.51.1.apk": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.1/lolita-2.51.1.apk",
+            "anonymous_full_download": true,
+            "bytes": 58443158,
+            "sha256": "1509c130c45f2caeed060f4cf96b224d022e08a1b55036b5ed583c9c20297e34",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.1/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "f994fd2f4659f95c6cebf220ed2984489b685c741a66a1b8802bd4b03dc5bf9f",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/zip",
+          "bytes": 58443158,
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "public_update": {
+        "latest_tag": "v2.51.1",
+        "pages": 2,
+        "formal_only": true,
+        "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.51.1/lolita-2.51.1.apk",
+        "source_commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c"
+      }
+    }
+  },
+  "limitation": "No vivo hardware attached; no claim that vendor screen-off networking is universally fixed."
+}

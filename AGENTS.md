@@ -428,3 +428,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 两家官方图像 API 仅通过本地 `ImageGenerationFailureKind` 传递可信分类，任务中心保存固定中文网络、超时、鉴权、额度、服务错误说明；不保存原始服务错误、异常 cause、URL 或密钥。请求已发出时说明可能继续处理或计费且不自动重试。队列、服务会话、Room 28 和备份 8 格式不变。
 - 任务中心、虚拟试衣和人台生成页共用“后台与息屏”帮助，读取当前电池优化、系统后台限制和网络状态，回到前台刷新。按钮仅打开标准电池优化列表与本应用详情；vivo 指引为电池→后台耗电管理→允许高后台耗电。前台服务与 CPU 锁不能保证绕过 Doze 或厂商网络限制，禁止盲目加 WiFi 锁或自动重发付费请求。
 - 回归包含真实 loopback HTTP 断连、超时、API→coordinator→Room 原因保留、标准设置入口和帮助对话框。独立 AVD 受控 Doze 与实际付费息屏生成的结果均不能冒充 vivo 真机已修复；详细测试和复杂搭配评估见 `docs/image-generation-screen-off-2026-10-16.md`。
+
+- 2.51.1 / 110 clean 正式包从已发布2.51.0同签名覆盖升级，31张表全字段、172张图片及归档设置字节保全，GitHub/Gitee匿名下载、SHA256、HEAD和最高正式更新入口核验完成。真实 Seedream 实验52次请求/51张图后保留原提示词，不能将这批定性评估或 AVD 息屏结果表述为 vivo 网络已根治；回执 `docs/image-generation-release-2.51.1-verification.json`。

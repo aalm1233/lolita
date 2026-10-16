@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -20,6 +21,16 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_settings")
 
 class AppPreferences(context: Context, private val dataStore: DataStore<Preferences> = context.dataStore) {
+
+    val defaultPersonalModelId: Flow<Long?> = dataStore.data
+        .map { it[DEFAULT_PERSONAL_MODEL_ID]?.takeIf { id -> id > 0 } }.distinctUntilChanged()
+
+    suspend fun setDefaultPersonalModelId(id: Long?) {
+        require(id == null || id > 0) { "人物标识无效" }
+        dataStore.edit { prefs ->
+            if (id == null) prefs.remove(DEFAULT_PERSONAL_MODEL_ID) else prefs[DEFAULT_PERSONAL_MODEL_ID] = id
+        }
+    }
 
     val customSizes: Flow<List<String>> = dataStore.data
         .map { it[CUSTOM_SIZES].orEmpty().sorted() }.distinctUntilChanged()
@@ -128,6 +139,7 @@ class AppPreferences(context: Context, private val dataStore: DataStore<Preferen
     }
 
     companion object {
+        private val DEFAULT_PERSONAL_MODEL_ID = longPreferencesKey("default_personal_model_id")
         private val CUSTOM_SIZES = stringSetPreferencesKey("custom_sizes")
         private val SHOW_TOTAL_PRICE = booleanPreferencesKey("show_total_price")
         private val OUTFIT_REMINDER_ENABLED = booleanPreferencesKey("outfit_reminder_enabled")

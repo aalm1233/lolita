@@ -12,6 +12,8 @@ import com.lolita.app.data.local.entity.*
 
 @Database(
     entities = [
+        PersonalModel::class,
+        PersonalModelDraft::class,
         ImageTask::class,
         TryOnResult::class,
         MonthlyBudget::class,
@@ -41,11 +43,12 @@ import com.lolita.app.data.local.entity.*
         RemoteSharedItem::class,
         RemoteSharedPricePlan::class
     ],
-    version = 28,
+    version = 29,
     exportSchema = true
 )
 @androidx.room.TypeConverters(Converters::class)
 abstract class LolitaDatabase : RoomDatabase() {
+    abstract fun personalModelDao(): PersonalModelDao
     abstract fun imageTaskDao(): ImageTaskDao
     abstract fun tryOnDao(): TryOnDao
     abstract fun budgetDao(): BudgetDao
@@ -796,6 +799,24 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
             }
         }
 
+        internal val MIGRATION_28_29 = object : Migration(28, 29) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""CREATE TABLE IF NOT EXISTS personal_models (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL,
+                    request_json TEXT NOT NULL, source_image_paths TEXT NOT NULL DEFAULT '[]',
+                    image_url TEXT NOT NULL, provider TEXT NOT NULL, model TEXT NOT NULL,
+                    created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
+                )""")
+                db.execSQL("""CREATE TABLE IF NOT EXISTS personal_model_drafts (
+                    id TEXT NOT NULL PRIMARY KEY, data_json TEXT NOT NULL,
+                    source_image_paths TEXT NOT NULL DEFAULT '[]', updated_at INTEGER NOT NULL
+                )""")
+                db.execSQL("ALTER TABLE image_tasks ADD COLUMN personal_model_id INTEGER DEFAULT NULL")
+                db.execSQL("ALTER TABLE try_on_results ADD COLUMN personal_model_id INTEGER DEFAULT NULL")
+                db.execSQL("ALTER TABLE try_on_results ADD COLUMN personal_model_name TEXT DEFAULT NULL")
+            }
+        }
+
         internal val MIGRATION_27_28 = object : Migration(27, 28) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""CREATE TABLE IF NOT EXISTS image_tasks (
@@ -843,7 +864,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                     "lolita_database"
                 )
                     .addCallback(DatabaseCallback())
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28, MIGRATION_28_29)
                     .build()
                 INSTANCE = instance
                 instance

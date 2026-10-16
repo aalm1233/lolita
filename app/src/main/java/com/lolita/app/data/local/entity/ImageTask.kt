@@ -23,24 +23,33 @@ data class ImageTask(
     @ColumnInfo(name = "try_on_result_id") val tryOnResultId: Long? = null,
     @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "updated_at") val updatedAt: Long = createdAt,
-    val error: String? = null
+    val error: String? = null,
+    @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null
 ) {
     fun validate() {
         require(id.isNotBlank() && title.isNotBlank()) { "图像任务缺少标识或名称" }
         val request = ImageTaskRequest.decode(requestJson)
         request.validate(kind)
-        if (status.retainsSourceImages) request.selections(sourceImagePaths)
+        if (retainsSourceImages) {
+            if (kind == ImageTaskKind.PERSONAL_MODEL) request.personalModel!!.validatePaths(sourceImagePaths)
+            else request.selections(sourceImagePaths)
+        }
         if (status == ImageTaskStatus.AWAITING_CONFIRMATION) {
-            require(kind == ImageTaskKind.MANNEQUIN && !resultImagePath.isNullOrBlank()) { "待确认任务缺少人台预览" }
+            require(kind in setOf(ImageTaskKind.MANNEQUIN, ImageTaskKind.PERSONAL_MODEL) && !resultImagePath.isNullOrBlank()) { "待确认任务缺少生成预览" }
         }
     }
 
-    /** Completed paths are informational: the owning Item/TryOnResult protects its image. */
+    /** Personal generation keeps reference photos for confirmation and explicit retries. */
+    val retainsSourceImages: Boolean get() = status.retainsSourceImages ||
+        (kind == ImageTaskKind.PERSONAL_MODEL && status in setOf(ImageTaskStatus.AWAITING_CONFIRMATION,
+            ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED))
+
+    /** Completed paths are informational: the owning Item/TryOnResult/PersonalModel protects its image. */
     fun protectedImagePaths(): Set<String> = buildSet {
-        if (status.retainsSourceImages) addAll(sourceImagePaths.filter { it.isNotBlank() })
+        if (retainsSourceImages) addAll(sourceImagePaths.filter { it.isNotBlank() })
         if (status == ImageTaskStatus.AWAITING_CONFIRMATION) resultImagePath?.takeIf { it.isNotBlank() }?.let(::add)
     }
 
-    fun releaseUnusedSourceImages(): ImageTask = if (status.retainsSourceImages || sourceImagePaths.isEmpty()) this
+    fun releaseUnusedSourceImages(): ImageTask = if (retainsSourceImages || sourceImagePaths.isEmpty()) this
         else copy(sourceImagePaths = emptyList())
 }

@@ -13,5 +13,7 @@ data class TryOnResult(
     @ColumnInfo(name = "item_ids", defaultValue = "'[]'") val itemIds: List<String>,
     @ColumnInfo(name = "item_names", defaultValue = "'[]'") val itemNames: List<String>,
     val model: String,
-    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null,
+    @ColumnInfo(name = "personal_model_name", defaultValue = "NULL") val personalModelName: String? = null
 )

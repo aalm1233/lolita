@@ -37,14 +37,14 @@ class ImageServiceConfigurationTest {
                 TryOnViewModel(items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP"))), results = flowOf(emptyList()),
                     readService = settings::readStatus, selectService = settings::selectProvider, serviceChanges = settings.changes,
                     saveApiKey = { provider, value -> settings.saveKey(value, provider) }, clearApiKey = settings::clearKey,
-                    globalGenerating = busy, generateImage = { _, _, _ -> error("no paid calls") }, renameResult = { _, _ -> }, deleteResult = {})
+                    tasks = flowOf(emptyList()), submitTask = { _, _ -> error("no paid calls") }, renameResult = { _, _ -> }, deleteResult = {})
                     .also { store.put("tryOn", it) }
             }
             val mannequin = withContext(Dispatchers.Main) {
                 MannequinViewModel(savedStateHandle = SavedStateHandle(mapOf("itemId" to 11L)), item = flowOf(item), categories = flowOf(listOf(Category(id = 1, name = "OP"))),
                     readService = settings::readStatus, selectService = settings::selectProvider, serviceChanges = settings.changes,
                     saveApiKey = { provider, value -> settings.saveKey(value, provider) }, clearApiKey = settings::clearKey,
-                    globalGenerating = busy, generateImage = { _, _, _ -> File(root, "preview.png").absolutePath }, appendImage = { _, _ -> }, validatePreview = { true }, discardImage = {})
+                    tasks = flowOf(emptyList()), submitTask = { _, _ -> "task-id" })
                     .also { store.put("mannequin", it) }
             }
             suspend fun await(provider: ImageGenerationProvider, hasKey: Boolean) = withTimeout(10_000) {
@@ -57,19 +57,10 @@ class ImageServiceConfigurationTest {
             withContext(Dispatchers.Main) { tryOn.saveKey("seed-private-key") }
             await(ImageGenerationProvider.SEEDREAM, true)
             assertEquals("legacy-gpt-key", settings.readKey(ImageGenerationProvider.OPENAI))
-            withContext(Dispatchers.Main) { busy.value = true }
-            withTimeout(10_000) { tryOn.uiState.first { it.busy }; mannequin.uiState.first { it.busy } }
-            withContext(Dispatchers.Main) { tryOn.selectProvider(ImageGenerationProvider.OPENAI); mannequin.clearKey() }
-            assertEquals(ImageGenerationProvider.SEEDREAM, settings.readProvider())
-            assertEquals("seed-private-key", settings.readKey())
-            withContext(Dispatchers.Main) { busy.value = false }
-            withTimeout(10_000) { mannequin.uiState.first { !it.busy } }
+            // Background tasks no longer freeze service configuration in retained pages.
             withContext(Dispatchers.Main) { mannequin.generate() }
-            withTimeout(10_000) { mannequin.uiState.first { it.previewPath != null && !it.busy } }
-            withContext(Dispatchers.Main) { mannequin.selectProvider(ImageGenerationProvider.OPENAI); mannequin.clearKey() }
-            assertEquals(ImageGenerationProvider.SEEDREAM, settings.readProvider())
-            assertEquals("seed-private-key", settings.readKey())
-            withContext(Dispatchers.Main) { mannequin.discardPreview(); tryOn.clearKey() }
+            withTimeout(10_000) { mannequin.uiState.first { it.latestTaskId != null && !it.busy } }
+            withContext(Dispatchers.Main) { tryOn.clearKey() }
             await(ImageGenerationProvider.SEEDREAM, false)
             withContext(Dispatchers.Main) { tryOn.selectProvider(ImageGenerationProvider.OPENAI) }
             await(ImageGenerationProvider.OPENAI, true)

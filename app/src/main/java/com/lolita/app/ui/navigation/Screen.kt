@@ -13,8 +13,8 @@ sealed interface Screen {
     }
 
     data object Mannequin : Screen {
-        override val route = "mannequin/{itemId}"
-        fun createRoute(itemId: Long) = "mannequin/$itemId"
+        override val route = "mannequin/{itemId}?retryTaskId={retryTaskId}"
+        fun createRoute(itemId: Long, retryTaskId: String = "") = "mannequin/$itemId?retryTaskId=${android.net.Uri.encode(retryTaskId)}"
     }
 
     data object ItemEdit : Screen {
@@ -124,9 +124,16 @@ sealed interface Screen {
     }
 
     data object TryOn : Screen {
-        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}"
-        fun createRoute(itemId: Long? = null, coordinateId: Long? = null): String =
-            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}"
+        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}&retryTaskId={retryTaskId}"
+        fun createRoute(itemId: Long? = null, coordinateId: Long? = null, retryTaskId: String = ""): String =
+            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}&retryTaskId=${android.net.Uri.encode(retryTaskId)}"
+    }
+
+    data object ImageTasks : Screen { override val route = "image_tasks" }
+
+    data object ImageTaskDetail : Screen {
+        override val route = "image_task/{taskId}"
+        fun createRoute(id: String) = "image_task/${android.net.Uri.encode(id)}"
     }
 
     data object QuickOutfitLog : Screen {

@@ -23,6 +23,7 @@ import com.lolita.app.ui.theme.SkinType
 
 class MainActivity : ComponentActivity() {
     private var openQuickOutfit by mutableStateOf(false)
+    private var openImageTasks by mutableStateOf(false)
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -31,6 +32,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun consumeReminderIntent(intent: Intent) {
+        if (intent.getStringExtra("navigate_to") == "image_tasks") {
+            openImageTasks = true
+            intent.removeExtra("navigate_to")
+        }
         if (intent.getStringExtra("navigate_to") == "quick_outfit_log") {
             openQuickOutfit = true
             intent.removeExtra("navigate_to")
@@ -39,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean("pending_quick_outfit", openQuickOutfit)
+        outState.putBoolean("pending_image_tasks", openImageTasks)
         super.onSaveInstanceState(outState)
     }
 
@@ -48,6 +54,7 @@ class MainActivity : ComponentActivity() {
         if (savedInstanceState == null) consumeReminderIntent(intent)
         else {
             openQuickOutfit = savedInstanceState.getBoolean("pending_quick_outfit")
+            openImageTasks = savedInstanceState.getBoolean("pending_image_tasks")
             intent.removeExtra("navigate_to")
         }
         setContent {
@@ -61,6 +68,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     LolitaNavHost(
                         openQuickOutfit = openQuickOutfit,
+                        openImageTasks = openImageTasks,
+                        onImageTasksOpened = { openImageTasks = false },
                         onQuickOutfitOpened = { openQuickOutfit = false },
                         appUpdateViewModel = appUpdateViewModel
                     )

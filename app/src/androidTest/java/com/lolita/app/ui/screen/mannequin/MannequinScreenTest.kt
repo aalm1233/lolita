@@ -68,8 +68,7 @@ class MannequinScreenTest {
                 item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED, imageUrls = photos.take(2))),
                 categories = flowOf(listOf(Category(id = 1, name = "OP"))),
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, key != null) }, selectService = { provider = it }, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
-                globalGenerating = MutableStateFlow(false), generateImage = { _, phase, _ -> calls++; phase(com.lolita.app.data.tryon.TryOnGenerationPhase.GENERATING); generated.await() },
-                appendImage = { _, path -> appended = path }, validatePreview = { true }, discardImage = { discarded = it })
+                tasks = flowOf(emptyList()), submitTask = { _, _ -> calls++; generated.await() })
             store.put("vm", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }
@@ -86,7 +85,7 @@ class MannequinScreenTest {
                 LolitaTheme(skinType = display.skin, darkTheme = display.dark) {
                     Surface(color = MaterialTheme.colorScheme.background) {
                         Box(Modifier.size(display.width.dp, 640.dp)) {
-                            MannequinScreen(onNavigateBack = { navigated++ }, viewModel = vm, onNavigationBlockedChanged = { blocked = it })
+                            MannequinScreen(onNavigateBack = { navigated++ }, viewModel = vm)
                         }
                     }
                 }
@@ -138,48 +137,52 @@ class MannequinScreenTest {
         compose.onNodeWithText("删除本机密钥").performScrollTo().performClick()
         compose.waitUntil(10_000) { !vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }; assertNull(key)
     }
-    @Test fun selectionGenerationPreviewZoomAndExplicitSaveUseTheSamePendingPhoto() {
+    @Test fun selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable() {
         show(); configure()
-        scroll("参考图片 2"); compose.onNodeWithText("参考图片 2").assertIsDisplayed().performClick()
+        scroll("参考图片 2"); compose.onNodeWithText("参考图片 2").performClick()
         compose.waitUntil(10_000) { vm.uiState.value.selectedImage == photos[1] }
-        assertEquals(photos[1], vm.uiState.value.selectedImage)
         scroll("补充说明（可选）"); compose.onNodeWithText("补充说明（可选）").performTextInput("排除独立手袖")
         compose.onNodeWithText("生成正面人台图").performClick()
-        compose.waitUntil(10_000) { vm.uiState.value.isGenerating && blocked }
-        generated.complete(photos[2]); compose.waitUntil(10_000) { vm.uiState.value.previewPath != null }
-        assertEquals(1, calls); assertNull(appended)
-        compose.onNodeWithText("添加到裙子图片").assertIsDisplayed().assertIsEnabled()
-        scroll("点击放大核对人台图"); compose.onNodeWithContentDescription("放大正面人台图").performClick()
-        compose.onNodeWithContentDescription("关闭图片预览").assertIsDisplayed().performClick()
-        compose.onNodeWithText("添加到裙子图片").performClick()
-        compose.waitUntil(10_000) { appended != null && navigated == 1 }
-        assertEquals(photos[2], appended); assertNull(discarded)
-    }
-    @Test fun backDuringGenerationAndPreviewRequiresExplicitCancelOrDiscard() {
-        show(); configure(); compose.onNodeWithText("生成正面人台图").performClick()
-        compose.waitUntil(10_000) { vm.uiState.value.isGenerating }
+        assertEquals(0, calls)
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { vm.uiState.value.isSubmitting }
+        generated.complete("task-uuid")
+        compose.waitUntil(10_000) { vm.uiState.value.latestTaskId == "task-uuid" && !vm.uiState.value.isSubmitting }
+        assertEquals(1, calls)
+        scroll("已加入任务，可离开页面")
+        compose.onNodeWithText("查看任务").assertHasClickAction()
         compose.onNodeWithContentDescription("返回").performClick()
-        compose.onNodeWithText("继续等待").performClick(); assertEquals(0, navigated)
-        compose.onNodeWithText("取消等待").performClick()
-        compose.onAllNodesWithText("取消等待").onLast().performClick()
-        compose.waitUntil(10_000) { !vm.uiState.value.isGenerating }; assertEquals(1, calls)
-        generated = CompletableDeferred(); compose.onNodeWithText("生成正面人台图").performClick(); generated.complete(photos[2])
-        compose.waitUntil(10_000) { vm.uiState.value.previewPath != null }
-        compose.onNodeWithContentDescription("返回").performClick()
-        compose.onNodeWithText("继续核对").performClick(); assertEquals(0, navigated)
-        compose.onNodeWithContentDescription("返回").performClick(); compose.onNodeWithText("放弃并返回").performClick()
-        compose.waitUntil(10_000) { navigated == 1 }; assertEquals(photos[2], discarded); assertNull(appended)
+        assertEquals(1, navigated)
     }
-    @Test fun sevenSkinsLightDarkLargeFontKeepPreviewActionsReachableAndExportRealScreens() {
-        show(); configure(); compose.onNodeWithText("生成正面人台图").performClick(); generated.complete(photos[2])
-        compose.waitUntil(10_000) { vm.uiState.value.previewPath != null }
+    @Test fun legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup() {
+        instrumentation.runOnMainSync {
+            vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L, "mannequinPreview" to photos[2], "mannequinPreviewItem" to 11L)),
+                item = flowOf(Item(id = 11, name = "旧版裙子", brandId = 1, categoryId = 1, description = "", status = ItemStatus.OWNED, imageUrls = photos.take(2))),
+                categories = flowOf(listOf(Category(id = 1, name = "OP"))), readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, false) },
+                selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = flowOf(emptyList()),
+                validateLegacy = { true }, appendLegacy = { _, path -> appended = path }, discardLegacy = { discarded = it }, submitTask = { _, _ -> error("legacy must not pay") })
+            store.put("legacy", vm)
+        }
+        compose.waitUntil(10_000) { !vm.uiState.value.isLoading }
+        show(); scroll("添加旧版预览到裙子图片")
+        compose.onNodeWithContentDescription("放大旧版预览").performClick()
+        compose.onNodeWithContentDescription("关闭图片预览").performClick()
+        compose.onNodeWithText("添加旧版预览到裙子图片").performClick()
+        compose.waitUntil(10_000) { appended == photos[2] && !vm.uiState.value.savingLegacy }
+        assertNull(discarded); assertEquals(0, calls)
+    }
+
+    @Test fun sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable() {
+        show(); configure(); generated.complete("task-uuid")
+        compose.onNodeWithText("生成正面人台图").performClick(); compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { vm.uiState.value.latestTaskId != null && !vm.uiState.value.isSubmitting }
         val output = File(instrumentation.targetContext.filesDir, "mannequin-ui-contact-sheets").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
-            compose.onNodeWithText("添加到裙子图片").assertIsDisplayed().assertIsEnabled()
-            compose.onNodeWithText("放弃预览").assertIsDisplayed().assertHasClickAction()
-            scroll("点击放大核对人台图")
-            compose.onNodeWithContentDescription("放大正面人台图").assertIsDisplayed().assertHasClickAction()
+            scroll("已加入任务，可离开页面")
+            compose.onNodeWithText("查看任务").assertIsDisplayed().assertHasClickAction()
+            compose.onNodeWithContentDescription("任务中心").assertIsDisplayed().assertHasClickAction()
+            compose.onNodeWithText("生成正面人台图").assertIsDisplayed().assertIsEnabled()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }

@@ -81,6 +81,7 @@ fun SettingsScreen(
 
     onNavigateToThemeSelect: () -> Unit = {},
     onNavigateToTryOn: () -> Unit = {},
+    onNavigateToTasks: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel(),
     appUpdateViewModel: AppUpdateViewModel = viewModel()
@@ -184,6 +185,14 @@ fun SettingsScreen(
                 iconKey = IconKey.Link,
                 iconTint = if (isDark) Color(0xFFFFAB91) else Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
+            )
+
+            SettingsMenuItem(
+                title = "任务中心",
+                description = "查看图像生成进度、确认人台图与历史任务",
+                iconKey = IconKey.ViewAgenda,
+                iconTint = MaterialTheme.colorScheme.primary,
+                onClick = onNavigateToTasks
             )
 
             SettingsMenuItem(

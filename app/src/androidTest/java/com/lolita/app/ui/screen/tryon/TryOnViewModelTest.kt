@@ -32,9 +32,10 @@ class TryOnViewModelTest {
     private lateinit var store: ViewModelStore
     private lateinit var repository: TryOnRepository
     private var configured = true
-    private val globalBusy = MutableStateFlow(false)
+    private val tasks = MutableStateFlow<List<ImageTask>>(emptyList())
     private var requests = 0
-    private var operation: suspend (List<TryOnSelection>, (TryOnGenerationPhase) -> Unit) -> Long = { _, _ -> 91L }
+    private var retryReader: suspend (String) -> ImageTask? = { database.imageTaskDao().get(it) }
+    private var operation: suspend (List<TryOnSelection>) -> String = { "task-91" }
 
     @Before fun setup() = runBlocking {
         database = Room.inMemoryDatabaseBuilder(instrumentation.targetContext, LolitaDatabase::class.java).build()
@@ -71,8 +72,8 @@ class TryOnViewModelTest {
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, configured) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0),
                 saveApiKey = { _, value -> configured = true },
                 clearApiKey = { _ -> configured = false },
-                globalGenerating = globalBusy,
-                generateImage = { rows, phase, _ -> requests++; operation(rows, phase) },
+                tasks = tasks, readRetryTask = { retryReader(it) },
+                submitTask = { rows, _ -> requests++; operation(rows) },
                 renameResult = repository::rename,
                 deleteResult = repository::delete
             ).also { store.put("vm-${System.nanoTime()}", it) }
@@ -82,6 +83,16 @@ class TryOnViewModelTest {
     }
 
     private suspend fun main(action: () -> Unit) = withContext(Dispatchers.Main) { action() }
+
+    @Test fun backgroundGenerationDoesNotBlockEditingOrAnotherExplicitSubmission() = runBlocking {
+        val vm = model()
+        main { vm.toggleItem(11) }
+        tasks.value = listOf(backgroundTask())
+        instrumentation.waitForIdleSync()
+        assertTrue("后台任务不能锁住生成页草稿", vm.uiState.value.canGenerate)
+        main { vm.toggleItem(12) }
+        assertEquals(listOf(11L, 12L), vm.uiState.value.selected.map { it.itemId })
+    }
 
     @Test fun filtersKeepHiddenSelectionAndImageRoleCorrectionsSurviveRecreation() = runBlocking {
         val handle = SavedStateHandle()
@@ -119,38 +130,69 @@ class TryOnViewModelTest {
         assertFalse(handle.keys().any { key -> handle.get<Any>(key).toString().contains("a-private-key") })
     }
 
-    @Test fun duplicateClicksAndGlobalBusyAreBlockedAndFailureRetainsSelection() = runBlocking {
-        val pending = CompletableDeferred<Long>()
-        operation = { _, phase -> phase(TryOnGenerationPhase.GENERATING); pending.await() }
+    @Test fun duplicateSubmitIsBrieflyBlockedAndAcceptedTaskDoesNotLockDraft() = runBlocking {
+        val pending = CompletableDeferred<String>()
+        operation = { pending.await() }
         val vm = model()
         main { vm.toggleItem(11); vm.generate(); vm.generate(); vm.toggleItem(12) }
-        withTimeout(10_000) { vm.uiState.first { it.phase == TryOnGenerationPhase.GENERATING } }
+        assertTrue(vm.uiState.value.isSubmitting)
         assertEquals(1, requests)
-        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
-        pending.completeExceptionally(IllegalStateException("受控服务失败"))
-        withTimeout(10_000) { vm.uiState.first { !it.isGenerating && it.error != null } }
-        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
-        globalBusy.value = true
-        withTimeout(10_000) { vm.uiState.first { it.globalGenerating } }
-        main { vm.generate() }
-        assertEquals(1, requests)
+        pending.complete("task-91")
+        withTimeout(10_000) { vm.uiState.first { !it.isSubmitting && it.latestTaskId == "task-91" } }
+        main { vm.toggleItem(12) }
+        assertEquals(listOf(11L, 12L), vm.uiState.value.selected.map { it.itemId })
     }
 
-    @Test fun successPublishesSavedHistoryAndRenameDeleteDoNotChangeWardrobe() = runBlocking {
-        operation = { selected, _ ->
-            database.tryOnDao().insert(TryOnResult(name = "试衣结果", imageUrl = "/result.png",
-                itemIds = selected.map { it.itemId.toString() }, itemNames = selected.map { it.name }, model = "test-model"))
-        }
+    @Test fun historyRenameDeleteDoNotChangeWardrobeOrSelection() = runBlocking {
+        val resultId = database.tryOnDao().insert(TryOnResult(name = "试衣结果", imageUrl = "/result.png", itemIds = listOf("11"), itemNames = listOf("月光裙"), model = "test-model"))
         val vm = model()
-        main { vm.toggleItem(11); vm.generate() }
-        val completed = withTimeout(10_000) { vm.uiState.first { it.latestResultId != null && it.results.isNotEmpty() } }
-        val resultId = completed.latestResultId!!
-        main { vm.rename(resultId, "月光搭配") }
+        withTimeout(10_000) { vm.uiState.first { it.results.isNotEmpty() } }
+        main { vm.toggleItem(11); vm.rename(resultId, "月光搭配") }
         withTimeout(10_000) { vm.uiState.first { it.results.single().name == "月光搭配" } }
         main { vm.delete(resultId) }
         withTimeout(10_000) { vm.uiState.first { it.results.isEmpty() } }
         assertEquals(4, database.itemDao().getAllItemsList().size)
         assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+    }
+
+    @Test fun providerChangedAfterDialogCannotSubmitToAnotherProvider() = runBlocking {
+        val vm = model()
+        main { vm.toggleItem(11); vm.generate(com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM) }
+        assertEquals(0, requests)
+        assertTrue(vm.uiState.value.error!!.contains("服务已改变"))
+    }
+
+    @Test fun retryLoadingBlocksEditingUntilCurrentWardrobeSelectionIsResolved() = runBlocking {
+        val task = backgroundTask().copy(id = "retry-loading", status = com.lolita.app.domain.model.ImageTaskStatus.FAILED)
+        val pending = CompletableDeferred<ImageTask?>()
+        retryReader = { pending.await() }
+        val handle = SavedStateHandle(mapOf("retryTaskId" to "retry-loading"))
+        val vm = withContext(Dispatchers.Main) {
+            TryOnViewModel(handle, items = database.itemDao().getAllItems(), categories = database.categoryDao().getAllCategories(),
+                results = repository.results, readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) },
+                selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {},
+                tasks = tasks, readRetryTask = { retryReader(it) }, submitTask = { _, _ -> error("no paid work") }, renameResult = { _, _ -> }, deleteResult = {})
+                .also { store.put("loading", it) }
+        }
+        withTimeout(10_000) { vm.uiState.first { it.items.isNotEmpty() && it.keyLoaded } }
+        assertTrue("重试参考资料尚未读取完成时应保持加载态", vm.uiState.value.isLoading)
+        main { vm.toggleItem(12) }
+        assertTrue(vm.uiState.value.selected.isEmpty())
+        pending.complete(task)
+        withTimeout(10_000) { vm.uiState.first { !it.isLoading } }
+        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+    }
+
+    @Test fun retryLoadsCurrentImagesAndRolesButNeverAutomaticallySubmits() = runBlocking {
+        val original = backgroundTask().copy(id = "retry-task", sourceImagePaths = emptyList(), status = com.lolita.app.domain.model.ImageTaskStatus.FAILED)
+        database.imageTaskDao().insert(original)
+        database.itemDao().updateItem(item(11, "改名后的月光裙", 1, listOf("/current.png")))
+        val vm = model(SavedStateHandle(mapOf("retryTaskId" to "retry-task")))
+        assertEquals("/current.png", vm.uiState.value.selected.single().imagePath)
+        assertEquals("改名后的月光裙", vm.uiState.value.selected.single().name)
+        assertEquals(TryOnRole.MAIN, vm.uiState.value.selected.single().role)
+        assertEquals(0, requests)
+        assertEquals(com.lolita.app.domain.model.ImageTaskStatus.FAILED, database.imageTaskDao().get("retry-task")!!.status)
     }
 
     @Test fun genericAccessoryCategoriesSuggestRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative() = runBlocking {
@@ -163,15 +205,17 @@ class TryOnViewModelTest {
         assertEquals(listOf(TryOnRole.HAND, TryOnRole.WAIST, TryOnRole.MAIN), vm.uiState.value.selected.map { it.role })
     }
 
-    @Test fun cancellationKeepsSelectionAndRequiresExplicitRetry() = runBlocking {
-        operation = { _, _ -> CompletableDeferred<Long>().await() }
+    @Test fun failedSubmissionKeepsDraftAndNeverAutomaticallyRetries() = runBlocking {
+        operation = { error("受控服务失败") }
         val vm = model()
         main { vm.toggleItem(11); vm.generate() }
-        withTimeout(10_000) { vm.uiState.first { it.isGenerating } }
-        main { vm.cancelGeneration() }
-        withTimeout(10_000) { vm.uiState.first { !it.isGenerating && it.error != null } }
+        withTimeout(10_000) { vm.uiState.first { !it.isSubmitting && it.error != null } }
         assertEquals(1, requests)
-        assertTrue(vm.uiState.value.error!!.contains("计费"))
         assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
     }
+
+    private fun backgroundTask() = ImageTask("running", com.lolita.app.domain.model.ImageTaskKind.TRY_ON,
+        com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, "后台任务",
+        com.lolita.app.domain.model.ImageTaskRequest(listOf(com.lolita.app.domain.model.ImageTaskGarment(11, "裙子", TryOnRole.MAIN))).encode(),
+        listOf("/first.png"), status = com.lolita.app.domain.model.ImageTaskStatus.GENERATING)
 }

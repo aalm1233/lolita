@@ -11,14 +11,14 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.TryOnResult
-import com.lolita.app.data.tryon.TryOnGenerationPhase
+import com.lolita.app.data.local.entity.ImageTask
+import com.lolita.app.domain.model.ImageTaskRequest
 import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.TryOnRequest
 import com.lolita.app.domain.model.TryOnRole
 import com.lolita.app.domain.model.TryOnSelection
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,13 +44,12 @@ data class TryOnUiState(
     val keyLoaded: Boolean = false,
     val keyRevision: Int = 0,
     val isConfiguring: Boolean = false,
-    val isGenerating: Boolean = false,
-    val globalGenerating: Boolean = false,
-    val phase: TryOnGenerationPhase? = null,
-    val latestResultId: Long? = null,
+    val isSubmitting: Boolean = false,
+    val latestTaskId: String? = null,
+    val latestTask: ImageTask? = null,
     val error: String? = null
 ) {
-    val busy: Boolean get() = isGenerating || globalGenerating || isConfiguring
+    val busy: Boolean get() = isSubmitting || isConfiguring
     val visibleItems: List<Item> get() = items.filter { item ->
         (selectedCategoryId == null || item.categoryId == selectedCategoryId) &&
             (searchQuery.isBlank() || item.name.contains(searchQuery.trim(), ignoreCase = true))
@@ -78,17 +77,18 @@ class TryOnViewModel @JvmOverloads constructor(
     serviceChanges: Flow<Int> = AppModule.tryOnSettings().changes,
     private val saveApiKey: suspend (ImageGenerationProvider, String) -> Unit = { provider, value -> AppModule.tryOnSettings().saveKey(value, provider) },
     private val clearApiKey: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().clearKey(it) },
-    globalGenerating: StateFlow<Boolean> = AppModule.tryOnGenerator().isGenerating,
-    private val generateImage: suspend (List<TryOnSelection>, (TryOnGenerationPhase) -> Unit, ImageGenerationProvider) -> Long = { rows, phase, provider ->
-        AppModule.tryOnGenerator().generate(rows, phase, provider)
+    tasks: Flow<List<ImageTask>> = AppModule.imageTaskRepository().tasks,
+    private val readRetryTask: suspend (String) -> ImageTask? = { AppModule.imageTaskRepository().get(it) },
+    private val submitTask: suspend (List<TryOnSelection>, ImageGenerationProvider) -> String = { rows, provider ->
+        AppModule.imageTaskCoordinator().submitTryOn(rows, provider)
     },
     private val renameResult: suspend (Long, String) -> Unit = { id, name -> AppModule.tryOnRepository().rename(id, name) },
     private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) }
 ) : ViewModel() {
     private val gson = Gson()
-    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection()))
+    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), latestTaskId = savedStateHandle[LAST_TASK]))
     val uiState: StateFlow<TryOnUiState> = _uiState.asStateFlow()
-    private var generationJob: Job? = null
+    private var observedTasks = emptyList<ImageTask>()
     private var entryConsumed = savedStateHandle.get<Boolean>(ENTRY_CONSUMED) == true || savedStateHandle.contains(SELECTION)
 
     init {
@@ -98,21 +98,29 @@ class TryOnViewModel @JvmOverloads constructor(
                     if (failure is CancellationException) throw failure
                     _uiState.update { it.copy(isLoading = false, loadFailed = true, error = "衣橱读取失败，请返回后重试") }
                 }.collect { (rows, groups) ->
-                    _uiState.update { it.copy(items = rows, categories = groups, isLoading = false) }
+                    _uiState.update { it.copy(items = rows, categories = groups, isLoading = !entryConsumed) }
                     if (!entryConsumed) {
-                        entryConsumed = true
-                        savedStateHandle[ENTRY_CONSUMED] = true
                         val itemId = savedStateHandle.get<Long>("itemId")?.takeIf { it > 0 }
                         val coordinateId = savedStateHandle.get<Long>("coordinateId")?.takeIf { it > 0 }
                         val parents = rows.filter { it.coordinateId == coordinateId && coordinateId != null }.map { it.id }.toSet()
+                        val retry = savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
+                            runCatching { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }.getOrNull()
+                        }
+                        entryConsumed = true
+                        savedStateHandle[ENTRY_CONSUMED] = true
                         val initial = when {
+                            retry != null -> retry.garments.mapNotNull { garment -> rows.firstOrNull { it.id == garment.itemId } }
                             itemId != null -> rows.filter { it.id == itemId }
                             coordinateId != null -> rows.filter { it.id in parents || it.parentItemId in parents }
                             else -> emptyList()
                         }
-                        setSelection(initial.take(8).map { selection(it) })
+                        setSelection(initial.take(8).map { item -> selection(item).let { selected ->
+                            retry?.garments?.firstOrNull { it.itemId == item.id }?.let { selected.copy(role = it.role) } ?: selected
+                        } })
+                        if (retry != null) _uiState.update { it.copy(error = if (initial.size != retry.garments.size) "部分原服饰已删除或不在已拥有衣橱，请重新选择并核对；原任务保留" else "已载入当前服饰图片，请核对后再次确认生成；原任务保留") }
                         if (initial.size > 8) _uiState.update { it.copy(error = "此套装超过8件，已预选前8件，请核对后生成") }
                         if (itemId != null && initial.isEmpty()) _uiState.update { it.copy(error = "这件服饰已不在已拥有衣橱，请重新选择") }
+                        _uiState.update { it.copy(isLoading = false) }
                     }
                 }
         }
@@ -122,7 +130,7 @@ class TryOnViewModel @JvmOverloads constructor(
                 _uiState.update { it.copy(historyFailed = true, error = "试衣历史读取失败，请返回后重试") }
             }.collect { rows -> _uiState.update { it.copy(results = rows) } }
         }
-        viewModelScope.launch { globalGenerating.collect { value -> _uiState.update { it.copy(globalGenerating = value) } } }
+        viewModelScope.launch { tasks.collect { rows -> observedTasks = rows; _uiState.update { it.copy(latestTask = rows.firstOrNull { task -> task.id == it.latestTaskId }) } } }
         viewModelScope.launch {
             serviceChanges.collect {
                 _uiState.update { it.copy(keyLoaded = false) }
@@ -206,31 +214,29 @@ class TryOnViewModel @JvmOverloads constructor(
             } finally { _uiState.update { it.copy(isConfiguring = false) } }
         }
     }
-    fun generate() {
+    fun generate(confirmedProvider: ImageGenerationProvider = _uiState.value.provider) {
         val state = _uiState.value
         if (state.busy || state.isLoading || state.loadFailed || !state.keyLoaded) return
+        if (confirmedProvider != state.provider) {
+            _uiState.update { it.copy(error = "图像服务已改变，请核对后重新确认") }; return
+        }
         if (!state.hasKey) { _uiState.update { it.copy(error = "请先配置个人 API Key") }; return }
         state.selectionIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
         val snapshot = state.selected.toList()
-        _uiState.update { it.copy(isGenerating = true, phase = TryOnGenerationPhase.PREPARING, error = null) }
-        generationJob = viewModelScope.launch {
+        _uiState.update { it.copy(isSubmitting = true, error = null) }
+        viewModelScope.launch {
             try {
-                val id = generateImage(snapshot, { phase -> _uiState.update { it.copy(phase = phase) } }, state.provider)
-                _uiState.update { it.copy(latestResultId = id) }
-            } catch (failure: CancellationException) {
-                _uiState.update { it.copy(error = "已取消等待；服务端可能仍在处理并计费，重试需主动点击") }
-                throw failure
-            } catch (failure: Exception) {
-                // The transport provides bounded Chinese diagnostics; never show raw server bodies.
-                val message = failure.message?.takeIf { text -> text.length <= 180 && text.any { it in '\u4e00'..'\u9fff' } && !text.contains("sk-") }
-                _uiState.update { it.copy(error = message ?: "试衣生成失败，请检查图片与服务配置后主动重试") }
-            } finally { _uiState.update { it.copy(isGenerating = false, phase = null) } }
+                // Coordinator accepts in application scope before this screen's waiter can disappear.
+                val id = submitTask(snapshot, confirmedProvider)
+                savedStateHandle[LAST_TASK] = id
+                _uiState.update { it.copy(latestTaskId = id, latestTask = observedTasks.firstOrNull { row -> row.id == id }) }
+            } catch (failure: CancellationException) { throw failure }
+            catch (_: Exception) { _uiState.update { it.copy(error = "任务提交失败，请检查服饰与服务配置后重试") } }
+            finally { _uiState.update { it.copy(isSubmitting = false) } }
         }
     }
 
-    fun cancelGeneration() { generationJob?.cancel() }
     fun clearError() { _uiState.update { it.copy(error = null) } }
-    fun consumeLatestResult() { _uiState.update { it.copy(latestResultId = null) } }
     fun rename(id: Long, name: String) {
         if (name.isBlank() || name.trim().length > 120) { _uiState.update { it.copy(error = "请填写120字以内的名称") }; return }
         viewModelScope.launch {
@@ -252,6 +258,7 @@ class TryOnViewModel @JvmOverloads constructor(
     }
 
     companion object {
+        private const val LAST_TASK = "tryOnLatestTaskId"
         private const val SELECTION = "tryOnSelections"
         private const val ENTRY_CONSUMED = "tryOnEntryConsumed"
     }

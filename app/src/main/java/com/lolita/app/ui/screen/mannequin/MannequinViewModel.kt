@@ -5,10 +5,11 @@ import com.lolita.app.domain.model.ImageGenerationProvider
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.Item
-import com.lolita.app.data.tryon.TryOnGenerationPhase
+import com.lolita.app.data.file.ImageFileHelper
+import com.lolita.app.domain.model.ImageTaskRequest
+import com.lolita.app.data.local.entity.ImageTask
 import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.supportsMannequin
@@ -20,7 +21,11 @@ data class MannequinUiState(
     val category: Category? = null,
     val selectedImage: String = "",
     val instructions: String = "",
-    val previewPath: String? = null,
+    val latestTaskId: String? = null,
+    val latestTask: ImageTask? = null,
+    val legacyPreviewAvailable: Boolean = false,
+    val legacyPreviewPath: String? = null,
+    val savingLegacy: Boolean = false,
     val isLoading: Boolean = true,
     val loadFailed: Boolean = false,
     val keyLoaded: Boolean = false,
@@ -28,29 +33,21 @@ data class MannequinUiState(
     val hasKey: Boolean = false,
     val keyRevision: Int = 0,
     val isConfiguring: Boolean = false,
-    val isGenerating: Boolean = false,
-    val globalGenerating: Boolean = false,
-    val isSaving: Boolean = false,
-    val saved: Boolean = false,
-    val isLeaving: Boolean = false,
-    val phase: TryOnGenerationPhase? = null,
+    val isSubmitting: Boolean = false,
     val error: String? = null
 ) {
-    val busy get() = isGenerating || globalGenerating || isSaving || isConfiguring || isLeaving
+    val busy get() = isSubmitting || isConfiguring || savingLegacy
     val selectionIssue: String? get() = when {
         item == null -> "这件裙子已被删除或无法读取"
         !supportsMannequin(category) -> "仅支持服装分类中的 JSK、OP、SK 和明确裙类"
         selectedImage.isBlank() || selectedImage !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
         else -> null
     }
-    val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && previewPath == null && !saved && selectionIssue == null
-    val canSave get() = previewPath != null && item != null && !busy && !isLoading && !loadFailed && !saved
-    val navigationBlocked get() = isLoading || isConfiguring || isLeaving || isGenerating || isSaving || previewPath != null
-    val backUnavailable get() = isLoading || isSaving || isConfiguring || isLeaving
-    val readyToLeave get() = isLeaving && !isLoading && !isGenerating && !isSaving && !isConfiguring && previewPath == null
+    val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
+
 }
 
-/** Owns only the uncommitted preview; attaching it always reads the latest Item in a Room transaction. */
+/** Editable draft only. Accepted jobs and preview files belong to the application coordinator. */
 class MannequinViewModel @JvmOverloads constructor(
     private val savedStateHandle: SavedStateHandle = SavedStateHandle(),
     item: Flow<Item?> = AppModule.itemRepository().observeItem(savedStateHandle.get<Long>("itemId") ?: 0L),
@@ -60,25 +57,27 @@ class MannequinViewModel @JvmOverloads constructor(
     serviceChanges: Flow<Int> = AppModule.tryOnSettings().changes,
     private val saveApiKey: suspend (ImageGenerationProvider, String) -> Unit = { provider, value -> AppModule.tryOnSettings().saveKey(value, provider) },
     private val clearApiKey: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().clearKey(it) },
-    globalGenerating: StateFlow<Boolean> = AppModule.mannequinGenerator().isGenerating,
-    private val generateImage: suspend (MannequinRequest, (TryOnGenerationPhase) -> Unit, ImageGenerationProvider) -> String = { request, phase, provider ->
-        AppModule.mannequinGenerator().generate(request, phase, provider)
-    },
-    private val appendImage: suspend (Long, String) -> Unit = { id, path -> AppModule.itemRepository().appendGeneratedImage(id, path) },
-    private val validatePreview: suspend (String) -> Boolean = { ImageFileHelper.isOwnedGeneratedImage(AppModule.context(), it) },
-    private val discardImage: (String) -> Unit = { ImageFileHelper.cleanupUnreferencedImages(listOf(it)); Unit }
+    tasks: Flow<List<ImageTask>> = AppModule.imageTaskRepository().tasks,
+    private val readRetryTask: suspend (String) -> ImageTask? = { AppModule.imageTaskRepository().get(it) },
+    private val validateLegacy: suspend (String) -> Boolean = { ImageFileHelper.isOwnedGeneratedImage(AppModule.context(), it) },
+    private val appendLegacy: suspend (Long, String) -> Unit = { id, path -> AppModule.itemRepository().appendGeneratedImage(id, path) },
+    private val discardLegacy: (String) -> Unit = { ImageFileHelper.cleanupUnreferencedImages(listOf(it)); Unit },
+    private val submitTask: suspend (MannequinRequest, ImageGenerationProvider) -> String = { request, provider ->
+        AppModule.imageTaskCoordinator().submitMannequin(request, provider)
+    }
 ) : ViewModel() {
     private val itemId = savedStateHandle.get<Long>("itemId") ?: 0L
     private val state = MutableStateFlow(MannequinUiState(
+        latestTaskId = savedStateHandle[LAST_TASK],
+        legacyPreviewAvailable = savedStateHandle.contains(PREVIEW),
         selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty(),
         instructions = savedStateHandle.get<String>(INSTRUCTIONS).orEmpty().take(200)
     ))
     val uiState: StateFlow<MannequinUiState> = state.asStateFlow()
-    private var generationJob: Job? = null
-    // Saving must finish even when a UI waiter or the navigation entry is cancelled.
-    private val saveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private var cleared = false
     private var restored = false
+    private var observedTasks = emptyList<ImageTask>()
+    private val legacySaveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var cleared = false
 
     init {
         viewModelScope.launch {
@@ -92,18 +91,25 @@ class MannequinViewModel @JvmOverloads constructor(
                         if (!savedStateHandle.contains(SOURCE)) {
                             savedStateHandle[SOURCE] = row?.imageUrls?.firstOrNull { it.isNotBlank() }.orEmpty()
                         }
-                        val path = savedStateHandle.get<String>(PREVIEW)
-                        val owner = savedStateHandle.get<Long>(PREVIEW_ITEM)
-                        val valid = path != null && owner == itemId && itemId > 0 && row?.id == itemId &&
-                            path !in row.imageUrls && validateRestoredPreview(path)
-                        // Rejected paths were never owned by this VM and must never be cleaned up.
-                        if (!valid) clearStoredPreview()
-                        state.update { it.copy(previewPath = path.takeIf { valid }, selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty()) }
+                        savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
+                            val retry = runCatching { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }.getOrNull()
+                            if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
+                                savedStateHandle[INSTRUCTIONS] = retry.instructions
+                                state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
+                            }
+                        }
+                        val legacy = savedStateHandle.get<String>(PREVIEW)
+                        val owner = savedStateHandle.get<Long>("mannequinPreviewItem")
+                        if (legacy != null && owner == itemId && row?.id == itemId && legacy !in row.imageUrls && validLegacy(legacy)) {
+                            state.update { it.copy(legacyPreviewPath = legacy) }
+                        }
+                        // Rejected legacy paths remain untouched and cannot be used or deleted by this page.
+                        state.update { it.copy(selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty()) }
                     }
                     state.update { it.copy(item = row?.takeIf { it.id == itemId }, category = category, isLoading = false) }
                 }
         }
-        viewModelScope.launch { globalGenerating.collect { busy -> state.update { it.copy(globalGenerating = busy) } } }
+        viewModelScope.launch { tasks.collect { rows -> observedTasks = rows; state.update { it.copy(latestTask = rows.firstOrNull { row -> row.id == it.latestTaskId }) } } }
         viewModelScope.launch {
             serviceChanges.collect {
                 state.update { it.copy(keyLoaded = false) }
@@ -120,27 +126,27 @@ class MannequinViewModel @JvmOverloads constructor(
 
     fun selectImage(path: String) {
         val current = state.value
-        if (current.busy || current.previewPath != null || path.isBlank() || path !in current.item?.imageUrls.orEmpty()) return
+        if (current.busy || path.isBlank() || path !in current.item?.imageUrls.orEmpty()) return
         savedStateHandle[SOURCE] = path
         state.update { it.copy(selectedImage = path, error = null) }
     }
     fun updateInstructions(value: String) {
-        if (state.value.busy || state.value.previewPath != null) return
+        if (state.value.busy || state.value.isLoading) return
         savedStateHandle[INSTRUCTIONS] = value.take(200)
         state.update { it.copy(instructions = value.take(200)) }
     }
     fun selectProvider(provider: ImageGenerationProvider) {
-        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded || provider == state.value.provider) return
+        if (state.value.busy || !state.value.keyLoaded || provider == state.value.provider) return
         configureService { selectService(provider) }
     }
     fun saveKey(value: String) {
-        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded) return
+        if (state.value.busy || !state.value.keyLoaded) return
         if (value.isBlank()) { state.update { it.copy(error = "请填写 API Key") }; return }
         val provider = state.value.provider
         configureService { saveApiKey(provider, value) }
     }
     fun clearKey() {
-        if (state.value.busy || state.value.previewPath != null || state.value.saved || !state.value.keyLoaded) return
+        if (state.value.busy || !state.value.keyLoaded) return
         val provider = state.value.provider
         configureService { clearApiKey(provider) }
     }
@@ -156,101 +162,66 @@ class MannequinViewModel @JvmOverloads constructor(
             } finally { state.update { it.copy(isConfiguring = false) } }
         }
     }
-    fun generate() {
+    fun generate(confirmedProvider: ImageGenerationProvider = state.value.provider) {
         val current = state.value
-        if (current.busy || current.isLoading || current.loadFailed || current.previewPath != null || current.saved || !current.keyLoaded) return
+        if (current.busy || current.isLoading || current.loadFailed || !current.keyLoaded) return
+        if (confirmedProvider != current.provider) {
+            state.update { it.copy(error = "图像服务已改变，请核对后重新确认") }; return
+        }
         if (!current.hasKey) { state.update { it.copy(error = "请先配置个人 API Key") }; return }
         current.selectionIssue?.let { issue -> state.update { it.copy(error = issue) }; return }
         val request = MannequinRequest(itemId, current.selectedImage, current.instructions)
-        state.update { it.copy(isGenerating = true, phase = TryOnGenerationPhase.PREPARING, error = null) }
-        generationJob = viewModelScope.launch {
-            var delivered: String? = null
+        state.update { it.copy(isSubmitting = true, error = null) }
+        viewModelScope.launch {
             try {
-                val path = generateImage(request, { phase -> state.update { it.copy(phase = phase) } }, current.provider)
-                delivered = path
-                currentCoroutineContext().ensureActive()
-                savedStateHandle[PREVIEW_ITEM] = itemId
-                savedStateHandle[PREVIEW] = path
-                state.update { it.copy(previewPath = path) }
-                delivered = null // ownership has moved into the preview state
-            } catch (failure: CancellationException) {
-                state.update { it.copy(error = "已取消等待；服务端可能仍在处理并计费，重试需主动点击") }
-                throw failure
-            } catch (failure: Exception) {
-                state.update { it.copy(error = safeMessage(failure, "人台图生成失败，请检查图片与配置后主动重试")) }
-            } finally {
-                delivered?.let(discardImage)
-                state.update { it.copy(isGenerating = false, phase = null) }
-            }
+                val id = submitTask(request, confirmedProvider)
+                savedStateHandle[LAST_TASK] = id
+                state.update { it.copy(latestTaskId = id, latestTask = observedTasks.firstOrNull { row -> row.id == id }) }
+            } catch (failure: CancellationException) { throw failure }
+            catch (_: Exception) { state.update { it.copy(error = "任务提交失败，请检查图片与服务配置后重试") } }
+            finally { state.update { it.copy(isSubmitting = false) } }
         }
     }
-    fun cancelGeneration(leavePage: Boolean = false) {
-        if (leavePage && !state.value.isLoading && !state.value.isSaving && !state.value.isConfiguring) {
-            // Publish the departure before cancellation can release the global gate.
-            state.update { it.copy(isLeaving = true) }
-        }
-        generationJob?.cancel()
-    }
-    fun requestDeparture() {
+    private suspend fun validLegacy(path: String): Boolean = try { validateLegacy(path) }
+    catch (failure: CancellationException) { throw failure }
+    catch (_: Exception) { false }
+
+    fun saveLegacyPreview() {
         val current = state.value
-        if (!current.backUnavailable && !current.isGenerating && current.previewPath == null) {
-            state.update { it.copy(isLeaving = true) }
-        }
-    }
-    fun cancelDeparture() {
-        if (!state.value.isSaving && !state.value.saved) state.update { it.copy(isLeaving = false) }
-    }
-    fun savePreview() {
-        val current = state.value
-        if (!current.canSave) return
-        val path = current.previewPath ?: return
-        state.update { it.copy(isSaving = true, error = null) }
-        saveScope.launch {
+        val path = current.legacyPreviewPath ?: return
+        if (current.busy || current.item == null) return
+        state.update { it.copy(savingLegacy = true, error = null) }
+        legacySaveScope.launch {
             try {
-                appendImage(itemId, path)
-                clearStoredPreview()
-                state.update { it.copy(previewPath = null, saved = true, isLeaving = true) }
-            } catch (failure: Exception) {
-                state.update { it.copy(error = safeMessage(failure, "图片添加失败，请核对裙子是否仍存在后重试")) }
-            } finally {
-                state.update { it.copy(isSaving = false) }
-                if (cleared) { releasePreview(); saveScope.cancel() }
-            }
+                check(validateLegacy(path))
+                appendLegacy(itemId, path)
+                savedStateHandle.remove<String>(PREVIEW)
+                savedStateHandle.remove<Long>("mannequinPreviewItem")
+                state.update { it.copy(legacyPreviewPath = null, legacyPreviewAvailable = false) }
+            } catch (_: Exception) { state.update { it.copy(error = "旧版图片添加失败，请核对原裙子和预览后重试") } }
+            finally { state.update { it.copy(savingLegacy = false) }; if (cleared) legacySaveScope.cancel() }
         }
     }
-    fun discardPreview(leavePage: Boolean = false) {
-        if (state.value.isLoading || state.value.isSaving || state.value.isGenerating) return
-        if (leavePage) state.update { it.copy(isLeaving = true) }
-        releasePreview()
-    }
-    private fun releasePreview() {
-        val path = state.value.previewPath
-        clearStoredPreview()
-        state.update { it.copy(previewPath = null) }
-        path?.let(discardImage)
-    }
-    private suspend fun validateRestoredPreview(path: String): Boolean = try {
-        validatePreview(path)
-    } catch (failure: Exception) {
-        if (failure is CancellationException) throw failure
-        false
-    }
-    private fun clearStoredPreview() {
+    fun discardLegacyPreview() {
+        val current = state.value
+        val path = current.legacyPreviewPath ?: return
+        if (current.busy) return
+        // Only a validated owned preview can enter this branch; cleanup still checks all references.
         savedStateHandle.remove<String>(PREVIEW)
-        savedStateHandle.remove<Long>(PREVIEW_ITEM)
+        savedStateHandle.remove<Long>("mannequinPreviewItem")
+        state.update { it.copy(legacyPreviewPath = null, legacyPreviewAvailable = false) }
+        discardLegacy(path)
     }
     override fun onCleared() {
         cleared = true
-        if (!state.value.isSaving) { releasePreview(); saveScope.cancel() }
+        if (!state.value.savingLegacy) legacySaveScope.cancel()
+        // Legacy preview ownership is deliberately retained across navigation/recreation.
         super.onCleared()
     }
-    private fun safeMessage(failure: Exception, fallback: String): String = failure.message
-        ?.takeIf { it.length <= 180 && it.any { c -> c in '\u4e00'..'\u9fff' } && !it.contains("sk-") } ?: fallback
-
     companion object {
+        private const val LAST_TASK = "mannequinLatestTaskId"
         private const val SOURCE = "mannequinSource"
         private const val INSTRUCTIONS = "mannequinInstructions"
         private const val PREVIEW = "mannequinPreview"
-        private const val PREVIEW_ITEM = "mannequinPreviewItem"
     }
 }

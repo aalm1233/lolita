@@ -1,6 +1,5 @@
 package com.lolita.app.ui.screen.tryon
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +16,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.TryOnResult
-import com.lolita.app.data.tryon.TryOnGenerationPhase
+import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.theme.LolitaSkin
@@ -30,7 +30,8 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewModel()) {
+fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewModel(),
+    onNavigateToTasks: () -> Unit = {}, onTaskSubmitted: (String) -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
@@ -42,57 +43,37 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     var preview by remember { mutableStateOf<String?>(null) }
     var rename by remember { mutableStateOf<TryOnResult?>(null) }
     var delete by remember { mutableStateOf<TryOnResult?>(null) }
-    var cancel by remember { mutableStateOf(false) }
-    var leaveAfterCancel by remember { mutableStateOf(false) }
-    val navigateBack = {
-        if (state.isGenerating) { leaveAfterCancel = true; cancel = true } else onNavigateBack()
-    }
-    BackHandler(state.isGenerating) { navigateBack() }
-    LaunchedEffect(state.latestResultId, state.results) {
-        val result = state.results.firstOrNull { it.id == state.latestResultId }
-        if (result != null) { preview = result.imageUrl; viewModel.consumeLatestResult() }
-    }
+    var confirmation by remember { mutableStateOf<ImageGenerationProvider?>(null) }
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             GradientTopAppBar(title = { Text("虚拟试衣 · 实验") }, navigationIcon = {
-                IconButton(onClick = navigateBack) { SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" }) }
+                IconButton(onClick = onNavigateBack) { SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" }) }
+            }, actions = {
+                IconButton(onClick = onNavigateToTasks) { SkinIcon(IconKey.ViewAgenda, modifier = Modifier.semantics { contentDescription = "任务中心" }) }
             })
         },
         bottomBar = {
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    if (state.hasKey && !state.isGenerating) {
+                    if (state.hasKey && !state.isSubmitting) {
                         Text("上传共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
-                    if (state.isGenerating) {
-                        Text("请保持页面开启；取消等待后服务端仍可能处理并计费。", style = MaterialTheme.typography.bodySmall)
-                    }
                     Button(
-                        onClick = { if (!state.hasKey) showKey = true else viewModel.generate() },
+                        onClick = { if (!state.hasKey) showKey = true else confirmation = state.provider },
                         enabled = !state.busy && !state.isLoading && state.keyLoaded && (!state.hasKey || state.canGenerate),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        if (state.isGenerating) {
+                        if (state.isSubmitting) {
                             CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(skin.spacingMedium))
                         }
-                        Text(when {
-                            state.isGenerating -> when (state.phase) {
-                                TryOnGenerationPhase.PREPARING -> "准备参考图片…"
-                                TryOnGenerationPhase.GENERATING -> "正在生成试衣图…"
-                                TryOnGenerationPhase.SAVING -> "正在保存试衣图…"
-                                else -> "正在生成…"
-                            }
-                            state.globalGenerating -> "另一试衣任务正在进行"
-                            !state.hasKey -> "配置 API Key"
-                            else -> "生成一张试衣图"
-                        })
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成一张试衣图")
                     }
-                    if (state.isGenerating) TextButton(onClick = { leaveAfterCancel = false; cancel = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("取消等待") }
+
                 }
             }
         }
@@ -101,6 +82,9 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("tryOnWorkspace"),
             contentPadding = PaddingValues(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
+            state.latestTaskId?.let { id -> item(key = "latest-task") {
+                LatestImageTask(state.latestTask, onOpen = { onTaskSubmitted(id) })
+            } }
             item(key = "model") {
                 LolitaSection(title = "固定成年虚拟模特") {
                     row {
@@ -219,10 +203,12 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         text = { Text("将删除“${result.name}”及对应结果图，衣橱服饰不会改变。") },
         confirmButton = { TextButton(onClick = { viewModel.delete(result.id); delete = null }) { Text("删除") } },
         dismissButton = { TextButton(onClick = { delete = null }) { Text("保留") } }) }
-    if (cancel) AlertDialog(onDismissRequest = { cancel = false }, title = { Text("取消等待？") },
-        text = { Text("服务端可能仍在处理并计费，应用不会自动重试。已选服饰会保留。") },
-        confirmButton = { TextButton(onClick = { cancel = false; viewModel.cancelGeneration(); if (leaveAfterCancel) onNavigateBack() }) { Text("取消等待") } },
-        dismissButton = { TextButton(onClick = { cancel = false }) { Text("继续等待") } })
+    confirmation?.let { provider ->
+        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成试衣图？") },
+            text = { Text("将上传已选图片至 ${provider.recipient}，API 单独计费。任务提交后可离开页面，在任务中心查看结果。") },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider) }) { Text("确认并加入任务") } },
+            dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
+    }
 }
 
 

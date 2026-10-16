@@ -1,6 +1,5 @@
 package com.lolita.app.ui.screen.mannequin
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +17,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.data.tryon.TryOnGenerationPhase
+import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.theme.LolitaSkin
@@ -31,85 +31,38 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun MannequinScreen(
     onNavigateBack: () -> Unit,
     viewModel: MannequinViewModel = viewModel(),
-    onNavigationBlockedChanged: (Boolean) -> Unit = {}
+    onNavigateToTasks: () -> Unit = {},
+    onTaskSubmitted: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
     var showKey by remember { mutableStateOf(false) }
-    var zoom by remember { mutableStateOf(false) }
-    var cancel by remember { mutableStateOf(false) }
-    var discard by remember { mutableStateOf(false) }
-    var leaveAfterCancel by remember { mutableStateOf(false) }
-    var leaveAfterDiscard by remember { mutableStateOf(false) }
-    val blockedCallback by rememberUpdatedState(onNavigationBlockedChanged)
-    SideEffect { blockedCallback(state.navigationBlocked) }
-    DisposableEffect(Unit) { onDispose { blockedCallback(false) } }
-    val navigateBack = {
-        when {
-            state.backUnavailable -> Unit
-            state.isGenerating -> { leaveAfterCancel = true; cancel = true }
-            state.previewPath != null -> { leaveAfterDiscard = true; discard = true }
-            else -> viewModel.requestDeparture()
-        }
-    }
-    BackHandler(state.navigationBlocked) { navigateBack() }
-    LaunchedEffect(state.readyToLeave) { if (state.readyToLeave) onNavigateBack() }
-    LaunchedEffect(state.isLeaving, state.isGenerating, state.previewPath) {
-        // Completion may win the race with cancel-and-return. A newly delivered
-        // preview still requires a discard decision before its entry can depart.
-        if (state.isLeaving && !state.isGenerating && state.previewPath != null) {
-            leaveAfterDiscard = true
-            discard = true
-        }
-    }
+    var zoomLegacy by remember { mutableStateOf(false) }
+    var discardLegacy by remember { mutableStateOf(false) }
+    var confirmation by remember { mutableStateOf<ImageGenerationProvider?>(null) }
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             GradientTopAppBar(title = { Text("正面人台图（实验）", maxLines = 2) }, navigationIcon = {
-                IconButton(onClick = navigateBack, enabled = !state.backUnavailable) {
+                IconButton(onClick = onNavigateBack) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
                 }
+            }, actions = {
+                IconButton(onClick = onNavigateToTasks) { SkinIcon(IconKey.ViewAgenda, modifier = Modifier.semantics { contentDescription = "任务中心" }) }
             })
         }, bottomBar = {
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    if (state.previewPath != null) {
-                        Button(onClick = viewModel::savePreview, enabled = state.canSave, modifier = Modifier.fillMaxWidth()) {
-                            if (state.isSaving) {
-                                CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                                Spacer(Modifier.width(skin.spacingMedium))
-                            } else { SkinIcon(IconKey.Save, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingMedium)) }
-                            Text(if (state.isSaving) "正在添加图片…" else "添加到裙子图片")
-                        }
-                        TextButton(onClick = { leaveAfterDiscard = false; discard = true }, enabled = !state.isSaving,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("放弃预览") }
-                    } else {
-                        Text("上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
-                            style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
-                        Button(onClick = { if (!state.hasKey) showKey = true else viewModel.generate() },
-                            enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null && (!state.hasKey || state.canGenerate),
-                            modifier = Modifier.fillMaxWidth()) {
-                            if (state.isGenerating) {
-                                CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                                Spacer(Modifier.width(skin.spacingMedium))
-                            }
-                            Text(when {
-                                state.isGenerating -> when (state.phase) {
-                                    TryOnGenerationPhase.PREPARING -> "准备参考图片…"
-                                    TryOnGenerationPhase.GENERATING -> "正在生成人台图…"
-                                    TryOnGenerationPhase.SAVING -> "正在保存预览…"
-                                    else -> "正在生成…"
-                                }
-                                state.globalGenerating -> "另一图像任务正在进行"
-                                !state.hasKey -> "配置 API Key"
-                                else -> "生成正面人台图"
-                            })
-                        }
-                        if (state.isGenerating) TextButton(onClick = { leaveAfterCancel = false; cancel = true },
-                            modifier = Modifier.align(Alignment.CenterHorizontally)) { Text("取消等待") }
+                    Text("上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
+                        style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
+                    Button(onClick = { if (!state.hasKey) showKey = true else confirmation = state.provider },
+                        enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null,
+                        modifier = Modifier.fillMaxWidth()) {
+                        if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成正面人台图")
                     }
                 }
             }
@@ -117,6 +70,22 @@ fun MannequinScreen(
     ) { padding ->
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("mannequinWorkspace"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
+            state.latestTaskId?.let { id -> item("latest-task") {
+                LatestImageTask(state.latestTask, onOpen = { onTaskSubmitted(id) })
+            } }
+            if (state.legacyPreviewAvailable) item("legacy-preview") {
+                LolitaSection(title = "旧版未保存预览") { row {
+                    Text("旧版预览仍保留在本机，不属于任务中心。请在退出前添加到裙子图片；离开不会删除文件。", modifier = Modifier.padding(top = skin.spacingMedium))
+                    state.legacyPreviewPath?.let { path ->
+                        ImageFrame(Modifier.fillMaxWidth()) {
+                            LolitaShimmerImage(model = path, contentDescription = "放大旧版预览", contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxWidth().height(280.dp).skinClickable { zoomLegacy = true }, circularRevealEnabled = false)
+                        }
+                        Button(onClick = viewModel::saveLegacyPreview, enabled = !state.busy && state.item != null, modifier = Modifier.fillMaxWidth()) { Text("添加旧版预览到裙子图片") }
+                        TextButton(onClick = { discardLegacy = true }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("放弃旧版预览") }
+                    } ?: Text("旧版预览无法通过文件或归属校验；文件未删除。", color = MaterialTheme.colorScheme.error)
+                } }
+            }
             if (state.isLoading) item("loading") {
                 LolitaCard { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     ShimmerLine(widthFraction = 0.7f, height = 18.dp)
@@ -127,80 +96,65 @@ fun MannequinScreen(
                 LolitaSection(title = state.item?.name ?: "裙子参考图") { row {
                     Text("仅生成正面；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = skin.spacingMedium))
-                    Text(if (state.previewPath == null) "生成结果先供预览，确认后追加到原图片末尾。" else "当前预览尚未保存，也尚未纳入备份。原图与主图顺序保持不变。",
+                    Text("结果保存在任务中心，核对后可追加到原图片末尾。离开页面不会放弃预览。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
                     state.selectionIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall)) }
                     state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall) }
                 } }
             }
-            val preview = state.previewPath
-            if (preview != null) {
-                item("preview") {
-                    LolitaSection(title = "待保存人台图") { row {
-                        Spacer(Modifier.height(skin.spacingMedium))
+            item("service") {
+                LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
+                    TextButton(onClick = { showKey = true }, enabled = !state.busy) { Text("服务配置") }
+                }) { row {
+                    ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
+                    Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
+                        style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = skin.spacingMedium))
+                    Text("${state.provider.keyHelp} 与虚拟试衣共用服务配置，两家密钥分开保存。取消等待后服务端仍可能处理并计费，应用不会自动重试。",
+                        style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
+                } }
+            }
+            item("source") {
+                LolitaSection(title = "选择一张原图") { row {
+                    Text("选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = skin.spacingMedium))
+                } }
+            }
+            itemsIndexed(state.item?.imageUrls.orEmpty().filter { it.isNotBlank() }.distinct(), key = { _, path -> "source-$path" }) { index, path ->
+                LolitaCard {
+                    Column(Modifier.fillMaxWidth()) {
                         ImageFrame(Modifier.fillMaxWidth()) {
-                            LolitaShimmerImage(model = preview, contentDescription = "放大正面人台图", contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxWidth().height(300.dp).skinClickable { zoom = true }, circularRevealEnabled = false)
+                            LolitaShimmerImage(model = path, contentDescription = "原图 ${index + 1}", contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxWidth().height(160.dp), circularRevealEnabled = false)
                         }
-                        Text("点击放大核对人台图", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
-                    } }
-                }
-            } else {
-                item("service") {
-                    LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
-                        TextButton(onClick = { showKey = true }, enabled = !state.busy && state.previewPath == null && !state.saved) { Text("服务配置") }
-                    }) { row {
-                        ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded && state.previewPath == null && !state.saved, onSelect = viewModel::selectProvider)
-                        Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
-                            style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = skin.spacingMedium))
-                        Text("${state.provider.keyHelp} 与虚拟试衣共用服务配置，两家密钥分开保存。取消等待后服务端仍可能处理并计费，应用不会自动重试。",
-                            style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
-                    } }
-                }
-                item("source") {
-                    LolitaSection(title = "选择一张原图") { row {
-                        Text("选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(top = skin.spacingMedium))
-                    } }
-                }
-                itemsIndexed(state.item?.imageUrls.orEmpty().filter { it.isNotBlank() }.distinct(), key = { _, path -> "source-$path" }) { index, path ->
-                    LolitaCard {
-                        Column(Modifier.fillMaxWidth()) {
-                            ImageFrame(Modifier.fillMaxWidth()) {
-                                LolitaShimmerImage(model = path, contentDescription = "原图 ${index + 1}", contentScale = ContentScale.Fit,
-                                    modifier = Modifier.fillMaxWidth().height(160.dp), circularRevealEnabled = false)
-                            }
-                            Row(Modifier.fillMaxWidth().semantics { selected = state.selectedImage == path }.skinClickable(enabled = !state.busy) { viewModel.selectImage(path) }, verticalAlignment = Alignment.CenterVertically) {
-                                RadioButton(selected = state.selectedImage == path, onClick = null, enabled = !state.busy)
-                                Text("参考图片 ${index + 1}", modifier = Modifier.weight(1f))
-                            }
+                        Row(Modifier.fillMaxWidth().semantics { selected = state.selectedImage == path }.skinClickable(enabled = !state.busy) { viewModel.selectImage(path) }, verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(selected = state.selectedImage == path, onClick = null, enabled = !state.busy)
+                            Text("参考图片 ${index + 1}", modifier = Modifier.weight(1f))
                         }
                     }
                 }
-                item("instructions") {
-                    LolitaSection(title = "补充说明") { row {
-                        OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
-                            label = { Text("补充说明（可选）") }, placeholder = { Text("例如：排除独立手袖") }, enabled = !state.busy,
-                            modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium), minLines = 2, maxLines = 5,
-                            supportingText = { Text("${state.instructions.length}/200") }, shape = RoundedCornerShape(skin.cornerRadiusMedium))
-                        Text("使用固定空白正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
-                    } }
-                }
+            }
+            item("instructions") {
+                LolitaSection(title = "补充说明") { row {
+                    OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
+                        label = { Text("补充说明（可选）") }, placeholder = { Text("例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
+                        modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium), minLines = 2, maxLines = 5,
+                        supportingText = { Text("${state.instructions.length}/200") }, shape = RoundedCornerShape(skin.cornerRadiusMedium))
+                    Text("使用固定空白正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
+                } }
             }
         }
     }
     if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
         viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
-    if (zoom && state.previewPath != null) FullScreenImageViewer(listOf(state.previewPath!!), onDismiss = { zoom = false })
-    if (cancel) AlertDialog(onDismissRequest = { cancel = false; leaveAfterCancel = false }, title = { Text("取消等待？") },
-        text = { Text("服务端可能仍在处理并计费，应用不会自动重试。") },
-        confirmButton = { TextButton(onClick = { cancel = false; viewModel.cancelGeneration(leavePage = leaveAfterCancel); leaveAfterCancel = false }) { Text("取消等待") } },
-        dismissButton = { TextButton(onClick = { cancel = false; leaveAfterCancel = false }) { Text("继续等待") } })
-    if (discard) AlertDialog(onDismissRequest = { discard = false; leaveAfterDiscard = false; viewModel.cancelDeparture() }, title = { Text("放弃未保存预览？") },
-        text = { Text("这张预览尚未添加到裙子图片，放弃后将清理。原图片保留。") },
-        confirmButton = { TextButton(onClick = {
-            discard = false; viewModel.discardPreview(leavePage = leaveAfterDiscard); zoom = false
-            leaveAfterDiscard = false
-        }) { Text(if (leaveAfterDiscard) "放弃并返回" else "确认放弃") } },
-        dismissButton = { TextButton(onClick = { discard = false; leaveAfterDiscard = false; viewModel.cancelDeparture() }) { Text("继续核对") } })
+    if (zoomLegacy && state.legacyPreviewPath != null) FullScreenImageViewer(listOf(state.legacyPreviewPath!!), onDismiss = { zoomLegacy = false })
+    if (discardLegacy) AlertDialog(onDismissRequest = { discardLegacy = false }, title = { Text("放弃旧版预览？") },
+        text = { Text("此预览尚未添加到裙子图片，放弃后将按引用保护清理。") },
+        confirmButton = { TextButton(onClick = { discardLegacy = false; viewModel.discardLegacyPreview() }) { Text("确认放弃") } },
+        dismissButton = { TextButton(onClick = { discardLegacy = false }) { Text("继续核对") } })
+    confirmation?.let { provider ->
+        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成人台图？") },
+            text = { Text("将上传所选原图与模板至 ${provider.recipient}，API 单独计费。可离开页面，稍后在任务中心核对并添加图片。") },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider) }) { Text("确认并加入任务") } },
+            dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
+    }
 }

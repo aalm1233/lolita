@@ -242,10 +242,122 @@ class ImageTaskExecutionTest {
 
     @Test fun foregroundPromotionFailureInterruptsAcceptedQueueWithoutSending() = runBlocking { fixture { f ->
         val id = f.submit()
-        f.coordinator.serviceStartFailed().join()
+        f.coordinator.serviceStartFailed(f.coordinator.openServiceSession()).join()
         f.runner.runQueue()
         assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(id)!!.status)
         assertEquals(0, f.calls)
+    } }
+
+    @Test fun serviceStopInterruptsItsQueueAfterReaderExitAndLaterSubmissionRuns() = runBlocking { fixture { f ->
+        val first = f.submit(); val second = f.submit()
+        val entered = CompletableDeferred<Unit>(); val cancelled = CompletableDeferred<Unit>()
+        val exit = CompletableDeferred<Unit>(); var exited = false
+        f.transport = { _, _, _ ->
+            f.calls++
+            try { entered.complete(Unit); awaitCancellation() }
+            finally { withContext(NonCancellable) { cancelled.complete(Unit); exit.await(); exited = true } }
+        }
+        val session = f.coordinator.openServiceSession()
+        val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val running = serviceScope.launch { f.runner.runQueue(session) }; entered.await()
+        // Remove the business owner to make early source release observable on disk.
+        f.db.itemDao().updateImages(f.selection.itemId, emptyList(), System.currentTimeMillis())
+        val stopped = f.coordinator.serviceStopped(session)
+        serviceScope.cancel() // Android stops immediately; app-scope cleanup must survive.
+        cancelled.await()
+        assertFalse(exited)
+        assertFalse(f.db.imageTaskDao().get(first)!!.sourceImagePaths.isEmpty())
+        assertFalse(f.db.imageTaskDao().get(second)!!.sourceImagePaths.isEmpty())
+        assertTrue(f.source.exists())
+        exit.complete(Unit); stopped.join(); running.join()
+        assertTrue(exited)
+        assertFalse("Unowned source is released only after the reader exits", f.source.exists())
+        for (id in listOf(first, second)) {
+            val task = f.db.imageTaskDao().get(id)!!
+            assertEquals("Stopped service must make every admitted row actionable", ImageTaskStatus.INTERRUPTED, task.status)
+            assertTrue(task.sourceImagePaths.isEmpty())
+            assertTrue(task.error!!.contains("重新发起"))
+        }
+        assertEquals(1, f.calls)
+        f.source.writeBytes(byteArrayOf(1))
+        f.db.itemDao().updateImages(f.selection.itemId, listOf(f.source.absolutePath), System.currentTimeMillis())
+        f.transport = { _, _, _ -> f.calls++; byteArrayOf(4) }
+        val later = f.submit(); f.runner.runQueue()
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(later)!!.status)
+        assertEquals(2, f.calls)
+    } }
+
+    @Test fun delayedOldServiceStopCannotInterruptNewServiceOrLaterPendingSubmission() = runBlocking { fixture { f ->
+        val first = f.submit(); val oldQueued = f.submit()
+        val oldSession = f.coordinator.openServiceSession()
+        val oldEntered = CompletableDeferred<Unit>(); val oldCancelled = CompletableDeferred<Unit>()
+        val oldExit = CompletableDeferred<Unit>(); val newEntered = CompletableDeferred<Unit>()
+        val newExit = CompletableDeferred<Unit>()
+        f.transport = { _, _, _ ->
+            f.calls++
+            if (f.calls == 1) {
+                try { oldEntered.complete(Unit); awaitCancellation() }
+                finally { withContext(NonCancellable) { oldCancelled.complete(Unit); oldExit.await() } }
+            } else { newEntered.complete(Unit); newExit.await(); byteArrayOf(5) }
+        }
+        val oldRunning = launch { f.runner.runQueue(oldSession) }; oldEntered.await()
+        val newer = f.submit()
+        val newSession = f.coordinator.openServiceSession()
+        val newRunning = launch { f.runner.runQueue(newSession) }
+        // Deliver the old stop only after the new instance/start has admitted its row.
+        val stopped = f.coordinator.serviceStopped(oldSession)
+        oldCancelled.await()
+        val pending = f.submit() // Not admitted to either stopped or already-started session.
+        assertFalse(f.coordinator.admitServiceStart(oldSession, newer))
+        assertFalse(stopped.isCompleted)
+        assertEquals(ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(newer)!!.status)
+        assertEquals(ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(pending)!!.status)
+        oldExit.complete(Unit); stopped.join(); oldRunning.join(); newEntered.await()
+        // onDestroy/promotion failure from the old instance is idempotent and scoped.
+        f.coordinator.serviceStartFailed(oldSession).join()
+        assertEquals(ImageTaskStatus.GENERATING, f.db.imageTaskDao().get(newer)!!.status)
+        assertEquals(ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(pending)!!.status)
+        assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(first)!!.status)
+        assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(oldQueued)!!.status)
+        assertEquals(2, f.calls)
+        newExit.complete(Unit); newRunning.join()
+        f.runner.runQueue()
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(newer)!!.status)
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(pending)!!.status)
+        assertEquals(3, f.calls)
+    } }
+
+    @Test fun promotionFailureBeforeStartCommandOwnsOnlyItsCapturedPendingRows() = runBlocking { fixture { f ->
+        val rejected = f.submit()
+        val failedSession = f.coordinator.openServiceSession() // Service.onCreate
+        val later = f.submit()
+        val laterSession = f.coordinator.openServiceSession()
+        f.coordinator.serviceStartFailed(failedSession).join()
+        assertFalse(f.coordinator.admitServiceStart(failedSession, later))
+        assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(rejected)!!.status)
+        assertEquals(ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(later)!!.status)
+        f.runner.runQueue(laterSession)
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(later)!!.status)
+        assertEquals(1, f.calls)
+    } }
+
+    @Test fun lateRejectedStartCannotAdoptGenuinelyLaterPendingOrOwnedRows() = runBlocking { fixture { f ->
+        val stale = f.submit(); val oldSession = f.coordinator.openServiceSession()
+        f.coordinator.serviceStopped(oldSession).join()
+        val owned = f.submit(); val newSession = f.coordinator.openServiceSession()
+        val rejected = f.submit(); val pending = f.submit()
+        f.coordinator.rejectServiceStart(rejected).join()
+        assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(rejected)!!.status)
+        // Deliver the exact rejection protocol with the old Intent's durable task ID.
+        f.coordinator.rejectServiceStart(stale).join()
+        assertEquals(ImageTaskStatus.INTERRUPTED, f.db.imageTaskDao().get(stale)!!.status)
+        assertEquals(ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(owned)!!.status)
+        assertEquals("Late old start rejection must not sweep later pending submissions",
+            ImageTaskStatus.QUEUED, f.db.imageTaskDao().get(pending)!!.status)
+        f.runner.runQueue(newSession); f.runner.runQueue()
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(owned)!!.status)
+        assertEquals(ImageTaskStatus.COMPLETED, f.db.imageTaskDao().get(pending)!!.status)
+        assertEquals(2, f.calls)
     } }
 
 }

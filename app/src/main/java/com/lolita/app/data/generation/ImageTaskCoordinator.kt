@@ -14,7 +14,7 @@ import java.util.UUID
 class ImageTaskCoordinator(
     private val db: LolitaDatabase,
     private val applicationScope: CoroutineScope,
-    private val startService: () -> Unit,
+    private val startService: (String) -> Unit,
     private val saveImage: suspend (ByteArray) -> String,
     private val deleteImage: suspend (String) -> Unit,
     private val validateImage: suspend (String) -> Boolean
@@ -22,6 +22,16 @@ class ImageTaskCoordinator(
     private val dao = db.imageTaskDao()
     private val admission = Mutex()
     private val state = Mutex()
+    // This gate never suspends. Android can close a session immediately, without Room I/O
+    // on its main thread; durable cleanup then runs in the application scope.
+    private val sessions = Any()
+    private val pending = mutableSetOf<String>()
+    private val owners = mutableMapOf<String, ServiceSession>()
+    class ServiceSession internal constructor() {
+        internal val taskIds = mutableSetOf<String>()
+        internal var stopped = false
+        internal var cleanup: Job? = null
+    }
     private var paused = false
     private val cancelling = mutableSetOf<String>()
     private val interrupting = mutableSetOf<String>()
@@ -33,6 +43,50 @@ class ImageTaskCoordinator(
     }
 
     suspend fun awaitStartup() = startup.await()
+
+    /** onCreate captures existing pending starts, including foreground-promotion failure. */
+    fun openServiceSession(): ServiceSession = synchronized(sessions) {
+        ServiceSession().also { session -> pending.toList().forEach { assignPending(session, it) } }
+    }
+
+    /** Each later start can admit only its own durable submission ID. */
+    fun admitServiceStart(session: ServiceSession, taskId: String?): Boolean = synchronized(sessions) {
+        if (session.stopped) return@synchronized false
+        taskId?.let { assignPending(session, it) }
+        true
+    }
+
+    private fun assignPending(session: ServiceSession, id: String) {
+        if (pending.remove(id)) { owners[id] = session; session.taskIds += id }
+    }
+
+    /** A stale failed onStartCommand must not sweep unrelated, later pending starts. */
+    fun rejectServiceStart(taskId: String?): Job {
+        val rejected = synchronized(sessions) {
+            ServiceSession().also { session -> taskId?.let { assignPending(session, it) } }
+        }
+        return serviceStartFailed(rejected)
+    }
+
+    /** Close admission now; cancellation/join and source release survive Service.onDestroy. */
+    fun serviceStopped(session: ServiceSession, reason: String = "后台服务已停止；请求可能仍会计费，请核对后重新发起"): Job = synchronized(sessions) {
+        session.cleanup?.let { return@synchronized it }
+        session.stopped = true
+        val ids = session.taskIds.toList()
+        applicationScope.launch {
+            awaitStartup()
+            val job = state.withLock { current?.takeIf { it.first in ids }?.second }
+            job?.cancelAndJoin()
+            // The reader has left before any source reference is removed. Do not hold
+            // admission while joining: newer user submissions belong to another start.
+            ids.forEach { finish(it, ImageTaskStatus.INTERRUPTED, reason) }
+        }.also { session.cleanup = it }
+    }
+
+    private fun sessionStopped(session: ServiceSession) = synchronized(sessions) { session.stopped }
+    private fun sessionIds(session: ServiceSession) = synchronized(sessions) { session.taskIds.toList() }
+
+    val executionSummary get() = dao.observeExecutionSummary()
 
     private suspend fun <T> accepted(block: suspend () -> T): T = applicationScope.async {
         awaitStartup()
@@ -59,8 +113,11 @@ class ImageTaskCoordinator(
         request: ImageTaskRequest, paths: List<String>): String {
         val task = ImageTask(UUID.randomUUID().toString(), kind, provider, title, request.encode(), paths)
         task.validate()
-        state.withLock { dao.insert(task) }
-        try { startService() } catch (_: Exception) {
+        state.withLock {
+            dao.insert(task)
+            synchronized(sessions) { pending += task.id }
+        }
+        try { startService(task.id) } catch (_: Exception) {
             // An existing service may have claimed the new row before start rejection.
             val job = state.withLock {
                 interrupting += task.id
@@ -131,9 +188,8 @@ class ImageTaskCoordinator(
         pauseExecution("恢复备份前已中断任务，请核对后重新发起", block)
     }
 
-    fun serviceStartFailed(): Job = applicationScope.launch {
-        pauseExecution("后台执行未能启动，请回到应用后重新发起") { }
-    }
+    fun serviceStartFailed(session: ServiceSession): Job =
+        serviceStopped(session, "后台执行未能启动，请回到应用后重新发起")
 
     private suspend fun <T> pauseExecution(reason: String, block: suspend () -> T): T = accepted {
         val job = state.withLock { paused = true; current?.second }
@@ -149,13 +205,16 @@ class ImageTaskCoordinator(
         } finally { state.withLock { paused = false } }
     }
 
-    internal suspend fun runNext(execute: suspend (ImageTask) -> Unit, onChanged: suspend (ImageTask?) -> Unit): Boolean = coroutineScope {
+    internal suspend fun runNext(execute: suspend (ImageTask) -> Unit, onChanged: suspend (ImageTask?) -> Unit, session: ServiceSession = openServiceSession()): Boolean = coroutineScope {
         awaitStartup()
         val entry = state.withLock {
-            if (paused || current != null) return@withLock null
-            val task = dao.claimNextQueued(System.currentTimeMillis()) ?: return@withLock null
+            if (paused || current != null || sessionStopped(session)) return@withLock null
+            val queued = dao.oldestQueued(sessionIds(session)) ?: return@withLock null
+            if (dao.claimQueued(queued.id, System.currentTimeMillis()) != 1) return@withLock null
+            val task = requireNotNull(dao.get(queued.id))
             val child = launch(start = CoroutineStart.LAZY) {
                 try {
+                    if (sessionStopped(session)) throw CancellationException("后台服务已停止")
                     onChanged(task)
                     execute(task)
                 } catch (failure: CancellationException) {
@@ -242,7 +301,8 @@ class ImageTaskCoordinator(
 
     private suspend fun requireActive(id: String): ImageTask {
         val task = dao.get(id) ?: throw CancellationException("任务已删除")
-        if (!task.status.isActive || paused || id in cancelling || id in interrupting) throw CancellationException("任务已停止")
+        val serviceStopped = synchronized(sessions) { owners[id]?.stopped == true }
+        if (!task.status.isActive || paused || serviceStopped || id in cancelling || id in interrupting) throw CancellationException("任务已停止")
         return task
     }
 
@@ -261,7 +321,12 @@ class ImageTaskCoordinator(
     private suspend fun releaseSources(id: String) {
         val paths = state.withLock {
             val task = dao.get(id) ?: return@withLock emptyList()
-            if (task.status.retainsSourceImages || task.sourceImagePaths.isEmpty()) return@withLock emptyList()
+            if (task.status.retainsSourceImages) return@withLock emptyList()
+            synchronized(sessions) {
+                pending -= id
+                owners.remove(id)?.taskIds?.remove(id)
+            }
+            if (task.sourceImagePaths.isEmpty()) return@withLock emptyList()
             dao.update(task.copy(sourceImagePaths = emptyList()))
             task.sourceImagePaths
         }

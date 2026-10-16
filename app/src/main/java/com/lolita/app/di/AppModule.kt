@@ -61,7 +61,7 @@ object AppModule {
     private val imageTaskScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
     private val _imageTaskCoordinator by lazy {
         com.lolita.app.data.generation.ImageTaskCoordinator(database, imageTaskScope,
-            startService = { com.lolita.app.data.generation.ImageTaskService.start(appContext) },
+            startService = { id -> com.lolita.app.data.generation.ImageTaskService.start(appContext, id) },
             saveImage = { ImageFileHelper.saveGeneratedImage(appContext, it) },
             deleteImage = { ImageFileHelper.deleteImage(it) },
             validateImage = { ImageFileHelper.isOwnedGeneratedImage(appContext, it) })

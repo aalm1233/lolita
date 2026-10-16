@@ -16,9 +16,12 @@ class ImageTaskRunner(
     private val timeoutMillis: Long = 12 * 60 * 1000L
 ) {
     private val drain = Mutex()
-    suspend fun runQueue(onChanged: suspend (ImageTask?) -> Unit = {}) = drain.withLock {
+    suspend fun runQueue(
+        session: ImageTaskCoordinator.ServiceSession = coordinator.openServiceSession(),
+        onChanged: suspend (ImageTask?) -> Unit = {}
+    ) = drain.withLock {
         coordinator.awaitStartup()
-        while (coordinator.runNext({ task -> withTimeout(timeoutMillis) { execute(task) } }, onChanged)) { }
+        while (coordinator.runNext({ task -> withTimeout(timeoutMillis) { execute(task) } }, onChanged, session)) { }
         onChanged(null)
     }
 }

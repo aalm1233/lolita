@@ -75,3 +75,11 @@ data class ImageTaskRequest(
         }
     }
 }
+
+/** Compact durable notification state; no request, image paths or credentials. */
+data class ImageTaskExecutionSummary(
+    val taskId: String?,
+    val title: String?,
+    val status: ImageTaskStatus?,
+    val queuedCount: Int
+)

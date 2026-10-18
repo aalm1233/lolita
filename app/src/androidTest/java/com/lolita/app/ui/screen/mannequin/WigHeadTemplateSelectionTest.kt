@@ -46,7 +46,7 @@ class WigHeadTemplateSelectionTest {
                     saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = MutableStateFlow(emptyList()), readRetryTask = { null },
                     validateLegacy = { false }, appendLegacy = { _, _ -> }, discardLegacy = {}, submitTask = { _, _ -> paid++; "controlled-task" },
                     readHeadTemplates = { catalog.templates }, snapshotHead = catalog::snapshot,
-                    readHeadPreference = { WigHeadTemplateCatalog.readPreference(context) }, writeHeadPreference = { WigHeadTemplateCatalog.writePreference(context, it) })
+                    readHeadPreference = { WigHeadTemplateCatalog.readPreference(context) }, writeHeadPreference = { WigHeadTemplateCatalog.writePreference(context, it) }, pinCropReferences = { { } })
                 stores += ViewModelStore().also { it.put("vm", vm) }
             }
             return vm
@@ -78,6 +78,20 @@ class WigHeadTemplateSelectionTest {
             main { restored.confirmReferenceView(true); restored.generate(confirmedRequest = request) }
             assertEquals(0, paid)
             assertNotNull(restored.uiState.value.error)
+            val cropped = File(root, "derived-crop.jpg").apply { writeText("controlled cropped pixels") }
+            main { restored.acceptCroppedImage(source.path, cropped.path); restored.confirmReferenceView(true) }
+            assertEquals(source.path, restored.uiState.value.generationRequest!!.originalImagePath)
+            assertEquals(cropped.path, restored.uiState.value.generationRequest!!.imagePath)
+            assertEquals(listOf(source.path), restored.uiState.value.item!!.imageUrls)
+            main { stores.last().clear() }
+            val cropRestored = create()
+            withTimeout(5000) { cropRestored.uiState.first { !it.isLoading && !it.isLoadingHead && it.selectedHeadTemplate != null } }
+            assertEquals(cropped.path, cropRestored.uiState.value.selectedImage)
+            assertEquals(source.path, cropRestored.uiState.value.originalImagePath)
+            assertEquals(0, paid)
+            main { cropRestored.useOriginalImage() }
+            assertEquals(source.path, cropRestored.uiState.value.selectedImage)
+            assertNull(cropRestored.uiState.value.originalImagePath)
         } finally {
             main { stores.forEach { it.clear() } }
             root.deleteRecursively()

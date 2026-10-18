@@ -47,6 +47,7 @@ fun MannequinScreen(
     var showKey by remember { mutableStateOf(false) }
     var zoomLegacy by remember { mutableStateOf(false) }
     var discardLegacy by remember { mutableStateOf(false) }
+    var cropSource by remember { mutableStateOf<String?>(null) }
     var headPreview by remember { mutableStateOf<String?>(null) }
     var confirmation by remember { mutableStateOf<MannequinConfirmation?>(null) }
     val accessory = state.presentation == MannequinPresentation.ACCESSORY
@@ -147,6 +148,11 @@ fun MannequinScreen(
                         }
                         if (state.selectedImage.isNotBlank()) LolitaShimmerImage(model = state.selectedImage, contentDescription = "本次实际假发输入", contentScale = ContentScale.Fit,
                             circularRevealEnabled = false, modifier = Modifier.fillMaxWidth().height(180.dp).skinClickable { headPreview = state.selectedImage })
+                        OutlinedButton(onClick = { cropSource = state.originalImagePath ?: state.selectedImage }, enabled = !state.busy && state.selectedImage.isNotBlank(), modifier = Modifier.fillMaxWidth()) { Text("框选假发视图") }
+                        if (state.originalImagePath != null) {
+                            Text("本次只发送已确认的裁切副本，原图和相册封面保持。", style = MaterialTheme.typography.bodySmall)
+                            TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("改回整张原图") }
+                        }
                         Text("正面模板需要看得到刘海、头顶和正面轮廓的参考；只有背面或侧面的图请更换。长发应包含完整发梢，不凭空补出看不见的结构。", style = MaterialTheme.typography.bodySmall)
                         Row(Modifier.fillMaxWidth().skinClickable(enabled = !state.busy) { viewModel.confirmReferenceView(!state.referenceViewConfirmed) }, verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = state.referenceViewConfirmed, onCheckedChange = viewModel::confirmReferenceView, enabled = !state.busy)
@@ -200,6 +206,10 @@ fun MannequinScreen(
             }
         }
     }
+    cropSource?.let { original -> ImageRegionCropDialog(original, onDismiss = { cropSource = null }, onCropped = { path ->
+        viewModel.acceptCroppedImage(original, path)
+        cropSource = null
+    }) }
     headPreview?.let { FullScreenImageViewer(listOf(it), onDismiss = { headPreview = null }) }
     if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
         viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)

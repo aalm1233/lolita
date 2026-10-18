@@ -162,7 +162,8 @@ class ImageTaskCoordinator(
             val sources = listOfNotNull(template) + request.imagePath
             val metadata = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
                 request.instructions, version = 4, mannequinSubject = subject, promptVersion = 1,
-                promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.map(::imageSha256), wigHeadTemplate = request.wigHeadTemplate)
+                promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.map(::imageSha256), wigHeadTemplate = request.wigHeadTemplate,
+                productOriginalImagePath = request.originalImagePath)
             return@accepted enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources)
         }
         enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}",
@@ -188,12 +189,13 @@ class ImageTaskCoordinator(
                 }
                 if (kind == ImageTaskKind.MANNEQUIN) {
                     val item = requireNotNull(db.itemDao().getItemById(metadata.garments.single().itemId)) { "物品已删除，请重新选择" }
-                    require((metadata.version == 4 || sources.size == 1) && sources.last() in item.imageUrls) { "参考图片已改变，请重新选择" }
+                    require((metadata.version == 4 || sources.size == 1) && (metadata.productOriginalImagePath ?: sources.last()) in item.imageUrls) { "参考图片已改变，请重新选择" }
                     val currentSubject = mannequinSubject(db.categoryDao().getCategoryById(item.categoryId))
                     require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
                 }
                 if (metadata.version == 4) {
                     sources.forEach { require(validateSourceImage(it)) { "任务实际输入不属于本机图片或已无法读取" } }
+                    metadata.productOriginalImagePath?.let { require(validateSourceImage(it)) { "裁切原图已丢失，请重新核对" } }
                     metadata.validateInputImages(sources)
                 }
                 ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources, keepSourceImages = metadata.version == 4).also {
@@ -284,7 +286,7 @@ class ImageTaskCoordinator(
             val task = dao.get(id) ?: return@withLock emptyList()
             require(!task.status.retainsSourceImages) { "请先取消正在执行的任务" }
             dao.delete(id)
-            task.sourceImagePaths + listOfNotNull(task.resultImagePath)
+            task.protectedImagePaths().toList() + task.sourceImagePaths + listOfNotNull(task.resultImagePath)
         }
         cleanup(paths)
     }

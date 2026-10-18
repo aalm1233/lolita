@@ -61,9 +61,10 @@ fun mannequinSubject(category: Category?, confirmedSemantics: Boolean = false): 
 /** Eligibility is based on the explicit category, never a garment's free-form name. */
 fun supportsMannequin(category: Category?): Boolean = if (category?.categorySemantic != null && category.categorySemantic != CategorySemantic.UNCONFIRMED) mannequinSubject(category) != null else presentation(category) != null
 
-data class MannequinRequest(val itemId: Long, val imagePath: String, val instructions: String = "", val subject: MannequinSubject? = null, val wigHeadTemplate: WigHeadTemplateSnapshot? = null, val referenceViewConfirmed: Boolean = false) {
+data class MannequinRequest(val itemId: Long, val imagePath: String, val instructions: String = "", val subject: MannequinSubject? = null, val wigHeadTemplate: WigHeadTemplateSnapshot? = null, val referenceViewConfirmed: Boolean = false, val originalImagePath: String? = null) {
     init {
         require(itemId > 0 && imagePath.isNotBlank()) { "请选择物品的参考图片" }
+        require(originalImagePath == null || originalImagePath.isNotBlank() && originalImagePath != imagePath) { "裁切来源无效" }
         require(instructions.length <= 200) { "补充说明最多200字" }
     }
 

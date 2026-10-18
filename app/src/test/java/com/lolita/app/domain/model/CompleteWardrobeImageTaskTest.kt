@@ -40,6 +40,22 @@ class CompleteWardrobeImageTaskTest {
         }
     }
 
+    @Test fun croppedProductPreservesAndMapsItsOriginalWithoutUploadingTheOriginal() {
+        val head = WigHeadTemplateSnapshot("head", "候选", 1, "a".repeat(64), "/head", 1024, 1536)
+        val request = ImageTaskRequest(listOf(ImageTaskGarment(1, "假发", TryOnRole.MAIN, CategorySemantic.FULL_WIG)), version = 4,
+            mannequinSubject = MannequinSubject(2, "假发", MannequinPresentation.WIG_HEAD, CategorySemantic.FULL_WIG),
+            promptVersion = 1, promptSnapshot = "fixed", serviceModel = "model", inputSha256s = listOf(head.sha256, "b".repeat(64)),
+            wigHeadTemplate = head, productOriginalImagePath = "/private-original")
+        val inputs = listOf("/head", "/crop")
+        assertEquals("/crop", request.selections(inputs).single().imagePath)
+        assertEquals("zip/private-original", request.mapImagePaths { "zip" + it }.productOriginalImagePath)
+        val task = ImageTask("id", ImageTaskKind.MANNEQUIN, ImageGenerationProvider.OPENAI, "假发", request.encode(), inputs,
+            status = ImageTaskStatus.FAILED, keepSourceImages = true)
+        assertEquals(setOf("/head", "/crop", "/private-original"), task.protectedImagePaths())
+        val earlyV4 = com.google.gson.JsonParser.parseString(request.copy(productOriginalImagePath = null).encode()).asJsonObject.apply { remove("productOriginalImagePath") }
+        assertNull(ImageTaskRequest.decode(earlyV4.toString()).productOriginalImagePath)
+    }
+
     @Test fun oldRequestsKeepTheirExactFieldsAndLegacyHairRule() {
         val legacy = """{"garments":[{"itemId":1,"name":"原裙","role":"MAIN"}],"instructions":"","version":1}"""
         val decoded = ImageTaskRequest.decode(legacy)

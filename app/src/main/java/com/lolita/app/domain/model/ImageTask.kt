@@ -34,7 +34,8 @@ data class ImageTaskRequest(
     val promptSnapshot: String? = null,
     val serviceModel: String? = null,
     val inputSha256s: List<String>? = null,
-    val wigHeadTemplate: WigHeadTemplateSnapshot? = null
+    val wigHeadTemplate: WigHeadTemplateSnapshot? = null,
+    val productOriginalImagePath: String? = null
 ) {
     init {
         require(version in 1..4) { "不支持的图像任务请求版本" }
@@ -47,10 +48,11 @@ data class ImageTaskRequest(
         require(instructions.length <= 200) { "补充说明最多200字" }
         require(personalModel == null || tryOnModel == null) { "模特生成与试衣资料不能混用" }
         if (version < 4) {
-            require(promptVersion == null && promptSnapshot == null && serviceModel == null && inputSha256s == null && wigHeadTemplate == null)
+            require(promptVersion == null && promptSnapshot == null && serviceModel == null && inputSha256s == null && wigHeadTemplate == null && productOriginalImagePath == null)
             require(mannequinSubject?.semantic == null && mannequinSubject?.presentation != MannequinPresentation.WIG_HEAD) { "旧展示任务不能使用新模板" }
             require(garments.all { it.role.ordinal < 8 && it.semantic == null && it.composition == null }) { "旧任务不能使用新角色或语义" }
         } else {
+            require(productOriginalImagePath == null || productOriginalImagePath.isNotBlank() && mannequinSubject != null) { "裁切来源快照无效" }
             require(personalModel == null && promptVersion == 1 && !promptSnapshot.isNullOrBlank() && promptSnapshot.length <= 30000 && !serviceModel.isNullOrBlank()) { "不可变请求缺少服务或提示词快照" }
             require(inputSha256s != null && inputSha256s.size in 1..9 && inputSha256s.all { it.matches(Regex("[a-f0-9]{64}")) }) { "不可变输入校验信息无效" }
             require(mannequinSubject == null || mannequinSubject.semantic != null && mannequinSubject.semantic != CategorySemantic.UNCONFIRMED) { "展示图品类语义未确认" }
@@ -111,7 +113,8 @@ data class ImageTaskRequest(
     }
 
     fun mapImagePaths(map: (String) -> String): ImageTaskRequest = copy(
-        wigHeadTemplate = wigHeadTemplate?.let { it.copy(imagePath = map(it.imagePath)) })
+        wigHeadTemplate = wigHeadTemplate?.let { it.copy(imagePath = map(it.imagePath)) },
+        productOriginalImagePath = productOriginalImagePath?.let(map))
 
     /** History retains labels and roles after task deletion; images belong to the task. */
     fun historySnapshot(): String = mapImagePaths { "task-owned-input" }.encode()
@@ -120,7 +123,7 @@ data class ImageTaskRequest(
         val gson = if (version == 1) Gson() else GsonBuilder().serializeNulls().create()
         val root = gson.toJsonTree(this).asJsonObject
         if (version < 4) {
-            listOf("promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate").forEach(root::remove)
+            listOf("promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate", "productOriginalImagePath").forEach(root::remove)
             root["garments"].asJsonArray.forEach { entry -> entry.asJsonObject.apply { remove("semantic"); remove("composition") } }
             root["mannequinSubject"]?.takeUnless { it.isJsonNull }?.asJsonObject?.remove("semantic")
         }
@@ -135,11 +138,13 @@ data class ImageTaskRequest(
             val version = root.get("version").asJsonPrimitive.let {
                 require(it.isNumber); it.asBigDecimal.intValueExact()
             }
+            // Early v4 drafts did not yet contain the optional crop-source identity.
+            if (version == 4 && !root.has("productOriginalImagePath")) root.add("productOriginalImagePath", com.google.gson.JsonNull.INSTANCE)
             when (version) {
                 1 -> root.requireFields("version", "garments", "instructions")
                 2 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel")
                 3 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject")
-                4 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject", "promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate")
+                4 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject", "promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate", "productOriginalImagePath")
                 else -> throw IllegalArgumentException("不支持的图像任务请求版本")
             }
             val garments = root.getAsJsonArray("garments").map { entry ->
@@ -167,7 +172,8 @@ data class ImageTaskRequest(
                 root["promptSnapshot"]?.takeUnless { it.isJsonNull }?.let { root.strictString("promptSnapshot") },
                 root["serviceModel"]?.takeUnless { it.isJsonNull }?.let { root.strictString("serviceModel") },
                 root["inputSha256s"]?.takeUnless { it.isJsonNull }?.asJsonArray?.map { require(it.isJsonPrimitive && it.asJsonPrimitive.isString); it.asString },
-                root["wigHeadTemplate"]?.takeUnless { it.isJsonNull }?.let { WigHeadTemplateSnapshot.decode(it.toString()) })
+                root["wigHeadTemplate"]?.takeUnless { it.isJsonNull }?.let { WigHeadTemplateSnapshot.decode(it.toString()) },
+                root["productOriginalImagePath"]?.takeUnless { it.isJsonNull }?.let { root.strictString("productOriginalImagePath") })
         } catch (failure: Exception) {
             throw IllegalArgumentException("图像任务请求无效", failure)
         }

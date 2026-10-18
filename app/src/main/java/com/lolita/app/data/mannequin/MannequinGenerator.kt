@@ -41,6 +41,8 @@ class MannequinGenerator(
     ): String = gate.runExclusive {
         var preview: String? = null
         try {
+            require(immutableRequest == null || immutableRequest.version == 4) { "不可变展示任务协议无效" }
+            require(request.presentation != MannequinPresentation.WIG_HEAD || immutableRequest != null) { "假发头模展示需先建立不可变任务" }
             onPhase(TryOnGenerationPhase.PREPARING)
             val credentials = withContext(Dispatchers.IO) { readCredentials() }
             require(expectedProvider == null || credentials.provider == expectedProvider) { "图像服务已更换，请核对服务配置后重新生成" }

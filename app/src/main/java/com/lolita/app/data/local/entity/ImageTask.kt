@@ -32,6 +32,7 @@ data class ImageTask(
         val request = ImageTaskRequest.decode(requestJson)
         request.validate(kind)
         require(keepSourceImages == (request.version == 4)) { "任务输入保留策略与协议不匹配" }
+        if (keepSourceImages && resultImagePath != null) require(resultImagePath !in sourceImagePaths && resultImagePath != request.productOriginalImagePath) { "生成结果不能复用输入或裁切原图" }
         if (retainsSourceImages) {
             if (kind == ImageTaskKind.PERSONAL_MODEL) request.personalModel!!.validatePaths(sourceImagePaths)
             else request.selections(sourceImagePaths)
@@ -49,6 +50,7 @@ data class ImageTask(
     /** Completed paths are informational: the owning Item/TryOnResult/PersonalModel protects its image. */
     fun protectedImagePaths(): Set<String> = buildSet {
         if (retainsSourceImages) addAll(sourceImagePaths.filter { it.isNotBlank() })
+        if (keepSourceImages) ImageTaskRequest.decode(requestJson).productOriginalImagePath?.let(::add)
         if (status == ImageTaskStatus.AWAITING_CONFIRMATION) resultImagePath?.takeIf { it.isNotBlank() }?.let(::add)
     }
 

@@ -1,0 +1,434 @@
+{
+  "version": "2.55.1",
+  "version_code": 115,
+  "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+  "status": "github_and_gitee_formal_download_and_actual_app_update_verified",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 115,
+    "version": "2.55.1",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "275b664e2a5654e27ba63bda7287901a4ce420e285fac250d432b152cd49567d",
+    "bytes": 77518268,
+    "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+    "build_log": "logs/category-release-build.log"
+  },
+  "build": {
+    "command": "JAVA_HOME=<JDK17> ./gradlew clean assembleRelease",
+    "passed": true,
+    "seconds": 86,
+    "tasks_executed": 51,
+    "tasks_up_to_date": 1,
+    "tracked_source_assets_byte_exact": 34,
+    "private_credential_hits": 0
+  },
+  "tests": {
+    "device_tests": 36,
+    "passed": 36,
+    "failed": 0,
+    "ignored": 0,
+    "avd": "Lolita_Wardrobe_Final_35",
+    "version_code": 115,
+    "jvm": {
+      "tests": 394,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "paid_requests": 0,
+    "library_red": {
+      "tests": 5,
+      "failures": 3
+    },
+    "backup_red_frozen": {
+      "tests": 4,
+      "failures": 3
+    },
+    "source_sha256": {
+      "app/src/main/java/com/lolita/app/data/repository/WardrobeCategoryLibrary.kt": "159c3c775e0b26445eee2ffe5469615bae54b2ddd2adb99416e5da536f0a57c1",
+      "app/src/main/java/com/lolita/app/data/file/BackupFormat.kt": "1f9f2ed3fab833eb63302530f6c83c8e787ed1ec7f3d7e49982ab58533e55172",
+      "app/src/main/java/com/lolita/app/data/local/dao/CategoryDao.kt": "b2534d67052291d03c04a3fde0c691aab510a7d1a9b1d117bc5f34f6b345247e",
+      "app/src/main/java/com/lolita/app/domain/model/HistoricalCategoryRecognition.kt": "4fcaf6dcc68911dad1f6e579432c631981ed3d9970c0598bb2ad941e5015438b",
+      "app/src/test/java/com/lolita/app/data/file/HistoricalCategoryBackupFormatTest.kt": "d684855188c99e09a8741b3ba14f724ab335849637b8c406ea17d948893d7d2d",
+      "app/src/androidTest/java/com/lolita/app/data/WardrobeCategoryLibraryTest.kt": "4a3038c2f54a9de6cefeca31930bdfa980cfd035eacf5e3a9abe462050b3e6c4",
+      "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt": "2ec8b287374a24f5b6f2ac2e70e548df45abb83db1823a211884f7b479bd95c7"
+    }
+  },
+  "category_repair": {
+    "only_unconfirmed_semantics_updated": true,
+    "known_semantics_and_role_overrides_preserved": true,
+    "independent_one_time_marker": "historical_semantics_v1",
+    "does_not_reseed_deleted_defaults": true,
+    "same_normalized_names_not_merged": true,
+    "backup_formats_one_through_ten_covered": true,
+    "invalid_enums_and_nulls_still_rejected": true,
+    "database_version": 30,
+    "backup_version": 10,
+    "paid_provider_calls": 0
+  },
+  "upgrade": {
+    "passed": true,
+    "errors": [],
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "category_rows_updated": 12,
+    "mappings": [
+      {
+        "id": 1,
+        "name": "JSK",
+        "semantic": "JSK",
+        "role": null
+      },
+      {
+        "id": 2,
+        "name": "OP",
+        "semantic": "OP",
+        "role": null
+      },
+      {
+        "id": 3,
+        "name": "SK",
+        "semantic": "SK",
+        "role": null
+      },
+      {
+        "id": 4,
+        "name": "KC",
+        "semantic": "KC",
+        "role": null
+      },
+      {
+        "id": 5,
+        "name": "斗篷",
+        "semantic": "CAPE",
+        "role": null
+      },
+      {
+        "id": 6,
+        "name": "披肩",
+        "semantic": "SHAWL",
+        "role": null
+      },
+      {
+        "id": 7,
+        "name": "发带",
+        "semantic": "HEADBAND",
+        "role": null
+      },
+      {
+        "id": 8,
+        "name": "Bonnet",
+        "semantic": "BONNET",
+        "role": null
+      },
+      {
+        "id": 9,
+        "name": "其他头饰",
+        "semantic": "OTHER_ACCESSORY",
+        "role": "HEAD"
+      },
+      {
+        "id": 10,
+        "name": "袜子",
+        "semantic": "OTHER_HOSIERY",
+        "role": null
+      },
+      {
+        "id": 11,
+        "name": "手套",
+        "semantic": "GLOVES",
+        "role": null
+      },
+      {
+        "id": 12,
+        "name": "其他配饰",
+        "semantic": "OTHER_ACCESSORY",
+        "role": null
+      }
+    ],
+    "items_preserved_and_recognized": 198,
+    "original_images_sha256_checked": 172,
+    "other_tables_all_values_exact": true,
+    "category_identity_and_confirmed_values_preserved": true,
+    "original_settings_byte_exact": true,
+    "only_historical_marker_added": true,
+    "schema_version": 30,
+    "room_identity_hash": "8b34de22c932dcb184960e9abf2dc420"
+  },
+  "restart": {
+    "passed": true,
+    "errors": [],
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "category_rows_updated": 12,
+    "mappings": [
+      {
+        "id": 1,
+        "name": "JSK",
+        "semantic": "JSK",
+        "role": null
+      },
+      {
+        "id": 2,
+        "name": "OP",
+        "semantic": "OP",
+        "role": null
+      },
+      {
+        "id": 3,
+        "name": "SK",
+        "semantic": "SK",
+        "role": null
+      },
+      {
+        "id": 4,
+        "name": "KC",
+        "semantic": "KC",
+        "role": null
+      },
+      {
+        "id": 5,
+        "name": "斗篷",
+        "semantic": "CAPE",
+        "role": null
+      },
+      {
+        "id": 6,
+        "name": "披肩",
+        "semantic": "SHAWL",
+        "role": null
+      },
+      {
+        "id": 7,
+        "name": "发带",
+        "semantic": "HEADBAND",
+        "role": null
+      },
+      {
+        "id": 8,
+        "name": "Bonnet",
+        "semantic": "BONNET",
+        "role": null
+      },
+      {
+        "id": 9,
+        "name": "其他头饰",
+        "semantic": "OTHER_ACCESSORY",
+        "role": "HEAD"
+      },
+      {
+        "id": 10,
+        "name": "袜子",
+        "semantic": "OTHER_HOSIERY",
+        "role": null
+      },
+      {
+        "id": 11,
+        "name": "手套",
+        "semantic": "GLOVES",
+        "role": null
+      },
+      {
+        "id": 12,
+        "name": "其他配饰",
+        "semantic": "OTHER_ACCESSORY",
+        "role": null
+      }
+    ],
+    "items_preserved_and_recognized": 198,
+    "original_images_sha256_checked": 172,
+    "other_tables_all_values_exact": true,
+    "category_identity_and_confirmed_values_preserved": true,
+    "original_settings_byte_exact": true,
+    "only_historical_marker_added": true,
+    "schema_version": 30,
+    "room_identity_hash": "8b34de22c932dcb184960e9abf2dc420"
+  },
+  "signed_upgrade": {
+    "serial": "emulator-5584",
+    "avd": "Lolita_Personal_Model_Release_20261016",
+    "from": "2.55.0/114",
+    "to": "2.55.1/115",
+    "same_signature": true,
+    "normal_install_r": true,
+    "uninstall": false,
+    "clear_data": false,
+    "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+    "apk_sha256": "275b664e2a5654e27ba63bda7287901a4ce420e285fac250d432b152cd49567d",
+    "restart_all_tables_exact": true,
+    "private_snapshots_published": false,
+    "resumed_after_launcher_helper_correction": false
+  },
+  "github": {
+    "tag": "v2.55.1",
+    "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+    "release_id": 416272970,
+    "prerelease": false,
+    "files": {
+      "lolita-2.55.1.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.1/lolita-2.55.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 77518268,
+        "sha256": "275b664e2a5654e27ba63bda7287901a4ce420e285fac250d432b152cd49567d",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "1dcd3c6731792d3136304e6687efdddd9caccc2daf0e2b8d878d0cafa63c65ad",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 77518268,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.55.1",
+    "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+    "release_id": 1215084,
+    "prerelease": false,
+    "files": {
+      "lolita-2.55.1.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.1/lolita-2.55.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 77518268,
+        "sha256": "275b664e2a5654e27ba63bda7287901a4ce420e285fac250d432b152cd49567d",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "1dcd3c6731792d3136304e6687efdddd9caccc2daf0e2b8d878d0cafa63c65ad",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 77518268,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "quota_cleanup": {
+    "tag": "v2.55.0",
+    "release_id": 1214989,
+    "attachment_id": 3422073,
+    "name": "lolita-2.55.0.apk",
+    "bytes": 77518268,
+    "sha256": "eba92bf6327ae45579bf3f19885dd03b6041ae67d7c4e029dab15c7f3e2859b8",
+    "http_status": 204,
+    "other_attachments_unchanged": true,
+    "release_and_checksum_retained": true,
+    "github_and_local_backup_verified": true,
+    "authorization": "Human explicitly approved only Gitee v2.55.0 APK cleanup via call_d4e6ec01409943ed882c82116d375a27",
+    "at_utc": "2026-10-18T06:26:46.375260+00:00"
+  },
+  "public_update": {
+    "latest_tag": "v2.55.1",
+    "pages": 2,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.1/lolita-2.55.1.apk",
+    "source_commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d"
+  },
+  "actual_app_ui": {
+    "installed_version": "2.55.1",
+    "version_code": 115,
+    "avd": "Lolita_Personal_Model_Release_20261016",
+    "manual_attempts": 1,
+    "current_and_highest_release_correct": true,
+    "all_three_notes_and_cost_statement_present": true,
+    "source_footer_present": true,
+    "dialog_dismissed": true,
+    "category_list_js_kc_op_sk_known": true,
+    "paid_provider_requests": 0,
+    "screenshots": [
+      "ui/categories.png",
+      "ui/manual-update-result.png",
+      "ui/manual-update-footer.png"
+    ]
+  },
+  "private_evidence_directory": "artifacts/releases/2.55.1/",
+  "earlier_combined_ai_evaluation": {
+    "used": 18,
+    "authorized": 20,
+    "additional_calls_for_this_fix": 0,
+    "five_head_templates_still_candidates": true
+  }
+}

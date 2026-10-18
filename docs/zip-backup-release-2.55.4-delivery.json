@@ -1,0 +1,182 @@
+{
+  "version": "2.55.4",
+  "versionCode": 118,
+  "source_commit": "9fef3766c59c6ecb07bac9e481dd84be1695ca3e",
+  "database_schema": 30,
+  "backup_format": 10,
+  "apk": {
+    "apk": "lolita-2.55.4.apk",
+    "size": 77567420,
+    "sha256": "bec268dd6f5656d22438f58ab939e2d9213053c05875b30e214e3fd4ee92eae2"
+  },
+  "prior_regression": {
+    "version": "2.55.4",
+    "versionCode": 118,
+    "source_commit": "9fef3766c59c6ecb07bac9e481dd84be1695ca3e",
+    "unit": {
+      "tests": 400,
+      "passed": 400,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "android": {
+      "declared": 67,
+      "passed": 66,
+      "skipped": 1,
+      "failures": 0,
+      "errors": 0,
+      "platform": "Android15/API35 independent AVD Lolita_Wardrobe_Final_35, emulator-5586",
+      "new_legacy_backup_tests": 14,
+      "new_legacy_backup_tests_passed": 14,
+      "log_sha256": "86697436a5a3643d77213794c47bfb2631c6bd04ac5a36cd0b2d0d3fdfbd66a2"
+    },
+    "original_failures_reproduced": [
+      "legacy draft JSON export",
+      "legacy draft ZIP export",
+      "admitted v4 legacy source JSON export",
+      "admitted v4 legacy source ZIP export"
+    ],
+    "paid_requests": 0,
+    "independent_read_only_review": "no blocking findings",
+    "schema_version": 30,
+    "backup_format": 10
+  },
+  "signed_upgrade": {
+    "passed": true,
+    "errors": [],
+    "from": "2.55.3/117",
+    "to": "2.55.4/118",
+    "schema_version": 30,
+    "room_identity_hash": "8b34de22c932dcb184960e9abf2dc420",
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "items_checked": 198,
+    "categories_checked": 53,
+    "all_typed_values_and_schema_exact": true,
+    "category_values_exact": true,
+    "images_sha256_checked": 172,
+    "image_set_and_bytes_exact": true,
+    "settings_files_checked": 3,
+    "all_settings_byte_exact": true,
+    "no_data_transformations_allowed": true,
+    "private_snapshot_contents_published": false
+  },
+  "restart": {
+    "passed": true,
+    "errors": [],
+    "from": "2.55.4/118",
+    "to": "2.55.4/118",
+    "schema_version": 30,
+    "room_identity_hash": "8b34de22c932dcb184960e9abf2dc420",
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "items_checked": 198,
+    "categories_checked": 53,
+    "all_typed_values_and_schema_exact": true,
+    "category_values_exact": true,
+    "images_sha256_checked": 172,
+    "image_set_and_bytes_exact": true,
+    "settings_files_checked": 3,
+    "all_settings_byte_exact": true,
+    "no_data_transformations_allowed": true,
+    "private_snapshot_contents_published": false
+  },
+  "actual_signed_ui_zip_export": {
+    "version": "2.55.4/118",
+    "actual_signed_app_ui_export": true,
+    "zip_valid": true,
+    "items": 198,
+    "images": 172,
+    "all_172_original_image_sha256s_match": true,
+    "zip_image_manifest_verified": true,
+    "private_zip_published": false,
+    "private_screenshot_published": false,
+    "paid_calls": 0
+  },
+  "distribution": {
+    "gitee_release": "https://gitee.com/aalm1233/lolita/releases/tag/v2.55.4",
+    "gitee_apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.4/lolita-2.55.4.apk",
+    "gitee_formal": true,
+    "gitee_prior_anonymous_download_and_head": {
+      "tag": "v2.55.4",
+      "source_commit": "9fef3766c59c6ecb07bac9e481dd84be1695ca3e",
+      "release_id": 1215794,
+      "prerelease": false,
+      "files": {
+        "lolita-2.55.4.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.4/lolita-2.55.4.apk",
+          "anonymous_full_download": true,
+          "bytes": 77567420,
+          "sha256": "bec268dd6f5656d22438f58ab939e2d9213053c05875b30e214e3fd4ee92eae2",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.4/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "9af2ead2893622d28d0e779b834ef24ff02fbe4ef224dfdbfda7ffc43930617e",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 77567420,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "github_release": "https://github.com/aalm1233/lolita/releases/tag/v2.55.4",
+    "github_apk": "https://github.com/aalm1233/lolita/releases/download/v2.55.4/lolita-2.55.4.apk",
+    "github_attachment_upload_completed": true,
+    "github_post_upload_download_verification": "not run at user request",
+    "old_attachments_deleted": false
+  },
+  "handover": {
+    "user_instruction": "正常上传就行，不去管验证，我自己验",
+    "further_validation_stopped": true,
+    "gitee_public_update_api_before_handover": "HTTP403",
+    "signed_app_update_before_handover": "检查失败",
+    "private_photos_or_backup_published": false,
+    "paid_calls": 0
+  }
+}

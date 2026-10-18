@@ -24,4 +24,8 @@ Room30、备份格式10保持不变，无数据迁移或启动刷新。原订单
 - `assembleDebug assembleDebugAndroidTest testDebugUnitTest` 通过，400项 JVM 测试零失败。独立 AVD `Lolita_Wardrobe_Final_35` / `emulator-5586` 上运行六组真实 Android 回归：`LegacyDraftBackupTest`、`WardrobeBackupTest`、`ImageTaskBackupTest`、`PersonalModelBackupTest`、`DataIntegrityTest`、`MannequinNativeAdmissionTest`；67项声明、66项通过、1项私有图片 opt-in 按默认跳过，零失败。原始仪器化输出的 `OK (67 tests)` 包含该跳过项，不将它计为通过。
 - 独立只读审查通过。没有改用户界面或图片展示、没有付费请求；本轮验证为 Android15/API35，不宣称已在用户手机复现全部图片问题。
 
-正式发布与升级的状态见本轮发布回执；本次先提交已验证源码，再执行 clean 正式构建、同签名升级及两端分发检查。
+2.55.4/118 已完成 clean 正式构建，正式证书与旧包一致；2.55.3 同签名覆盖升级及重启保全38表254列、198件物品、172张图片SHA256与3份设置原字节。实际正式应用点击“导出ZIP备份”成功，完整ZIP含198件物品与172张原图，SHA256清单和原文件逐项一致；私人备份与图片未公开。
+
+源码提交 `9fef3766c59c6ecb07bac9e481dd84be1695ca3e` 与标签 `v2.55.4` 已推送。GitHub、Gitee 已正常上传正式版和校验附件；Gitee 在用户接管前已完成匿名完整下载与HEAD核对。本轮未删除旧安装包。GitHub 首次附件连接停滞，中断该请求后以正常附件上传完成并转为正式发布。
+
+用户随后明确要求“正常上传就行，不去管验证，我自己验”，因此停止后续验证，不再运行 GitHub 下载检查或更新入口重试。接管前本机 Gitee 公开更新查询返回HTTP403，正式应用手动检查显示“检查失败”，不宣称更新入口已验收通过；可直接使用正式安装包覆盖安装。完整交付状态见[本轮回执](zip-backup-release-2.55.4-delivery.json)。

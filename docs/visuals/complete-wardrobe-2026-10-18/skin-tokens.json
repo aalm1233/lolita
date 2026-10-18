@@ -1,0 +1,2383 @@
+{
+  "notice": "初版实现后补充的最终视觉对照方案；非前置图，非真实Compose截图。",
+  "sourceFiles": {
+    "app/src/main/java/com/lolita/app/ui/theme/SkinConfigs.kt": "44a5d3ca0fc5c6436c54d01828473b9b0d086ee2a98bbd5a25ae1486592fae52",
+    "app/src/main/java/com/lolita/app/ui/theme/Color.kt": "a15c6e4bc00167bb7905f03a5021604f73e6b87dc9be0eae0f148093374457a2",
+    "app/src/main/java/com/lolita/app/ui/screen/common/GradientTopAppBar.kt": "76fad501ea76b1b607011af6dea54eb68506542e8ddfce027cc56d82abe1d414",
+    "app/src/main/java/com/lolita/app/ui/screen/common/LolitaCard.kt": "6bdb0f2771b86bf520eb59bf620f33b479ef01913fd96218a4578e7039746d09"
+  },
+  "themes": [
+    {
+      "id": "DEFAULT",
+      "name": "甜美粉",
+      "font": "system",
+      "modes": {
+        "light": {
+          "primary": [
+            255,
+            105,
+            180,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            255,
+            192,
+            203,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "secondary": [
+            230,
+            230,
+            250,
+            1.0
+          ],
+          "onSecondary": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "secondaryContainer": [
+            255,
+            253,
+            208,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "tertiary": [
+            255,
+            145,
+            164,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            255,
+            240,
+            245,
+            1.0
+          ],
+          "onBackground": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "surface": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "onSurface": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "surfaceVariant": [
+            255,
+            214,
+            231,
+            1.0
+          ],
+          "error": [
+            211,
+            47,
+            47,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            189,
+            189,
+            189,
+            1.0
+          ],
+          "outlineVariant": [
+            255,
+            182,
+            193,
+            1.0
+          ],
+          "card": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "accent": [
+            255,
+            105,
+            180,
+            1.0
+          ],
+          "divider": [
+            255,
+            182,
+            193,
+            1.0
+          ],
+          "artTint": [
+            224,
+            186,
+            198,
+            1.0
+          ],
+          "artAlpha": 0.28,
+          "art": "bg_art_sweet",
+          "rSmall": 8.0,
+          "rMedium": 16.0,
+          "cardRadius": 16.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              255,
+              105,
+              180,
+              1.0
+            ],
+            [
+              255,
+              145,
+              164,
+              1.0
+            ]
+          ],
+          "buttonRadius": 16,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            255,
+            105,
+            180,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            233,
+            30,
+            140,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            255,
+            192,
+            203,
+            1.0
+          ],
+          "secondary": [
+            230,
+            230,
+            250,
+            1.0
+          ],
+          "onSecondary": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "secondaryContainer": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "tertiary": [
+            255,
+            145,
+            164,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            33,
+            33,
+            33,
+            1.0
+          ],
+          "onBackground": [
+            245,
+            245,
+            245,
+            1.0
+          ],
+          "surface": [
+            66,
+            66,
+            66,
+            1.0
+          ],
+          "onSurface": [
+            245,
+            245,
+            245,
+            1.0
+          ],
+          "surfaceVariant": [
+            58,
+            58,
+            58,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            66,
+            66,
+            66,
+            1
+          ],
+          "accent": [
+            255,
+            105,
+            180,
+            1.0
+          ],
+          "divider": [
+            58,
+            58,
+            58,
+            1.0
+          ],
+          "artTint": [
+            224,
+            186,
+            198,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_sweet",
+          "rSmall": 8.0,
+          "rMedium": 16.0,
+          "cardRadius": 16.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              233,
+              30,
+              140,
+              1.0
+            ],
+            [
+              255,
+              105,
+              180,
+              1.0
+            ]
+          ],
+          "buttonRadius": 16,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "✿"
+    },
+    {
+      "id": "GOTHIC",
+      "name": "哥特暗黑",
+      "font": "cinzel_regular",
+      "modes": {
+        "light": {
+          "primary": [
+            74,
+            14,
+            78,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            232,
+            213,
+            233,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            74,
+            14,
+            78,
+            1.0
+          ],
+          "secondary": [
+            139,
+            0,
+            0,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            255,
+            214,
+            214,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            139,
+            0,
+            0,
+            1.0
+          ],
+          "tertiary": [
+            155,
+            89,
+            182,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            245,
+            240,
+            245,
+            1.0
+          ],
+          "onBackground": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surface": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "onSurface": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surfaceVariant": [
+            237,
+            224,
+            237,
+            1.0
+          ],
+          "error": [
+            192,
+            57,
+            43,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            142,
+            142,
+            142,
+            1.0
+          ],
+          "outlineVariant": [
+            208,
+            192,
+            208,
+            1.0
+          ],
+          "card": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "accent": [
+            74,
+            14,
+            78,
+            1.0
+          ],
+          "divider": [
+            208,
+            192,
+            208,
+            1.0
+          ],
+          "artTint": [
+            200,
+            189,
+            217,
+            1.0
+          ],
+          "artAlpha": 0.26,
+          "art": "bg_art_gothic",
+          "rSmall": 4.0,
+          "rMedium": 8.0,
+          "cardRadius": 8.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 2.0,
+          "border": "0.5px solid rgba(74,14,78,1.0000)",
+          "gradient": [
+            [
+              74,
+              14,
+              78,
+              1.0
+            ],
+            [
+              155,
+              89,
+              182,
+              1.0
+            ]
+          ],
+          "buttonRadius": 8,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            155,
+            89,
+            182,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            74,
+            14,
+            78,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            232,
+            213,
+            233,
+            1.0
+          ],
+          "secondary": [
+            192,
+            57,
+            43,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            45,
+            45,
+            68,
+            1.0
+          ],
+          "tertiary": [
+            155,
+            89,
+            182,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            26,
+            26,
+            46,
+            1.0
+          ],
+          "onBackground": [
+            224,
+            224,
+            224,
+            1.0
+          ],
+          "surface": [
+            45,
+            45,
+            68,
+            1.0
+          ],
+          "onSurface": [
+            224,
+            224,
+            224,
+            1.0
+          ],
+          "surfaceVariant": [
+            58,
+            58,
+            80,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            45,
+            45,
+            68,
+            1
+          ],
+          "accent": [
+            155,
+            89,
+            182,
+            1.0
+          ],
+          "divider": [
+            58,
+            58,
+            80,
+            1.0
+          ],
+          "artTint": [
+            200,
+            189,
+            217,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_gothic",
+          "rSmall": 4.0,
+          "rMedium": 8.0,
+          "cardRadius": 8.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 2.0,
+          "border": "0.5px solid rgba(155,89,182,1.0000)",
+          "gradient": [
+            [
+              45,
+              10,
+              48,
+              1.0
+            ],
+            [
+              74,
+              14,
+              78,
+              1.0
+            ]
+          ],
+          "buttonRadius": 8,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "✝"
+    },
+    {
+      "id": "CHINESE",
+      "name": "中华风韵",
+      "font": "noto_serif_sc_regular",
+      "modes": {
+        "light": {
+          "primary": [
+            196,
+            30,
+            58,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            255,
+            224,
+            224,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            139,
+            37,
+            0,
+            1.0
+          ],
+          "secondary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onSecondary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "secondaryContainer": [
+            255,
+            248,
+            225,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "background": [
+            255,
+            248,
+            240,
+            1.0
+          ],
+          "onBackground": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surface": [
+            255,
+            253,
+            245,
+            1.0
+          ],
+          "onSurface": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surfaceVariant": [
+            255,
+            240,
+            224,
+            1.0
+          ],
+          "error": [
+            211,
+            47,
+            47,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            191,
+            168,
+            128,
+            1.0
+          ],
+          "outlineVariant": [
+            224,
+            208,
+            176,
+            1.0
+          ],
+          "card": [
+            255,
+            253,
+            245,
+            1
+          ],
+          "accent": [
+            196,
+            30,
+            58,
+            1.0
+          ],
+          "divider": [
+            224,
+            208,
+            176,
+            1.0
+          ],
+          "artTint": [
+            224,
+            186,
+            175,
+            1.0
+          ],
+          "artAlpha": 0.28,
+          "art": "bg_art_chinese",
+          "rSmall": 2.0,
+          "rMedium": 4.0,
+          "cardRadius": 4.0,
+          "cardInnerPadding": 10.0,
+          "cardGap": 6.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 14.0,
+          "spacingExtraLarge": 20.0,
+          "cardElevation": 1.0,
+          "border": "0.5px solid rgba(196,30,58,1.0000)",
+          "gradient": [
+            [
+              196,
+              30,
+              58,
+              1.0
+            ],
+            [
+              232,
+              80,
+              80,
+              1.0
+            ]
+          ],
+          "buttonRadius": 4,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            232,
+            80,
+            80,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            139,
+            37,
+            0,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            255,
+            224,
+            224,
+            1.0
+          ],
+          "secondary": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            45,
+            37,
+            32,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "background": [
+            26,
+            20,
+            16,
+            1.0
+          ],
+          "onBackground": [
+            224,
+            216,
+            208,
+            1.0
+          ],
+          "surface": [
+            45,
+            37,
+            32,
+            1.0
+          ],
+          "onSurface": [
+            224,
+            216,
+            208,
+            1.0
+          ],
+          "surfaceVariant": [
+            58,
+            48,
+            40,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            45,
+            37,
+            32,
+            1
+          ],
+          "accent": [
+            232,
+            80,
+            80,
+            1.0
+          ],
+          "divider": [
+            58,
+            48,
+            40,
+            1.0
+          ],
+          "artTint": [
+            224,
+            186,
+            175,
+            1.0
+          ],
+          "artAlpha": 0.2,
+          "art": "bg_art_chinese",
+          "rSmall": 2.0,
+          "rMedium": 4.0,
+          "cardRadius": 4.0,
+          "cardInnerPadding": 10.0,
+          "cardGap": 6.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 14.0,
+          "spacingExtraLarge": 20.0,
+          "cardElevation": 1.0,
+          "border": "0.5px solid rgba(232,80,80,1.0000)",
+          "gradient": [
+            [
+              139,
+              37,
+              0,
+              1.0
+            ],
+            [
+              196,
+              30,
+              58,
+              1.0
+            ]
+          ],
+          "buttonRadius": 4,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "☁"
+    },
+    {
+      "id": "CLASSIC",
+      "name": "经典优雅",
+      "font": "playfair_display_regular",
+      "modes": {
+        "light": {
+          "primary": [
+            114,
+            47,
+            55,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            240,
+            216,
+            216,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            91,
+            35,
+            51,
+            1.0
+          ],
+          "secondary": [
+            139,
+            69,
+            19,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            240,
+            224,
+            208,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            107,
+            52,
+            16,
+            1.0
+          ],
+          "tertiary": [
+            139,
+            69,
+            19,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            250,
+            245,
+            240,
+            1.0
+          ],
+          "onBackground": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surface": [
+            255,
+            248,
+            245,
+            1.0
+          ],
+          "onSurface": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surfaceVariant": [
+            240,
+            232,
+            224,
+            1.0
+          ],
+          "error": [
+            211,
+            47,
+            47,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            160,
+            144,
+            128,
+            1.0
+          ],
+          "outlineVariant": [
+            208,
+            192,
+            176,
+            1.0
+          ],
+          "card": [
+            255,
+            248,
+            245,
+            1
+          ],
+          "accent": [
+            114,
+            47,
+            55,
+            1.0
+          ],
+          "divider": [
+            208,
+            192,
+            176,
+            1.0
+          ],
+          "artTint": [
+            210,
+            193,
+            169,
+            1.0
+          ],
+          "artAlpha": 0.28,
+          "art": "bg_art_classic",
+          "rSmall": 6.0,
+          "rMedium": 12.0,
+          "cardRadius": 12.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 2.0,
+          "border": "0.5px solid rgba(184,134,11,1.0000)",
+          "gradient": [
+            [
+              114,
+              47,
+              55,
+              1.0
+            ],
+            [
+              160,
+              80,
+              96,
+              1.0
+            ]
+          ],
+          "buttonRadius": 12,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            160,
+            80,
+            96,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            91,
+            35,
+            51,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            240,
+            216,
+            216,
+            1.0
+          ],
+          "secondary": [
+            107,
+            52,
+            16,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            45,
+            37,
+            37,
+            1.0
+          ],
+          "tertiary": [
+            160,
+            112,
+            80,
+            1.0
+          ],
+          "onTertiary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "background": [
+            26,
+            21,
+            21,
+            1.0
+          ],
+          "onBackground": [
+            224,
+            216,
+            208,
+            1.0
+          ],
+          "surface": [
+            45,
+            37,
+            37,
+            1.0
+          ],
+          "onSurface": [
+            224,
+            216,
+            208,
+            1.0
+          ],
+          "surfaceVariant": [
+            58,
+            48,
+            48,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            45,
+            37,
+            37,
+            1
+          ],
+          "accent": [
+            160,
+            80,
+            96,
+            1.0
+          ],
+          "divider": [
+            58,
+            48,
+            48,
+            1.0
+          ],
+          "artTint": [
+            210,
+            193,
+            169,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_classic",
+          "rSmall": 6.0,
+          "rMedium": 12.0,
+          "cardRadius": 12.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 2.0,
+          "border": "0.5px solid rgba(218,165,32,1.0000)",
+          "gradient": [
+            [
+              91,
+              35,
+              51,
+              1.0
+            ],
+            [
+              114,
+              47,
+              55,
+              1.0
+            ]
+          ],
+          "buttonRadius": 12,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "♠"
+    },
+    {
+      "id": "NAVY",
+      "name": "清风水手",
+      "font": "pacifico_regular",
+      "modes": {
+        "light": {
+          "primary": [
+            74,
+            144,
+            217,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            214,
+            234,
+            255,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            27,
+            58,
+            92,
+            1.0
+          ],
+          "secondary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onSecondary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "secondaryContainer": [
+            255,
+            248,
+            225,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "background": [
+            240,
+            248,
+            255,
+            1.0
+          ],
+          "onBackground": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surface": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "onSurface": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "surfaceVariant": [
+            232,
+            244,
+            253,
+            1.0
+          ],
+          "error": [
+            211,
+            47,
+            47,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            142,
+            174,
+            192,
+            1.0
+          ],
+          "outlineVariant": [
+            189,
+            216,
+            234,
+            1.0
+          ],
+          "card": [
+            246,
+            250,
+            255,
+            1
+          ],
+          "accent": [
+            74,
+            144,
+            217,
+            1.0
+          ],
+          "divider": [
+            189,
+            216,
+            234,
+            1.0
+          ],
+          "artTint": [
+            183,
+            206,
+            218,
+            1.0
+          ],
+          "artAlpha": 0.28,
+          "art": "bg_art_navy",
+          "rSmall": 8.0,
+          "rMedium": 14.0,
+          "cardRadius": 14.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              74,
+              144,
+              217,
+              1.0
+            ],
+            [
+              135,
+              206,
+              235,
+              1.0
+            ]
+          ],
+          "buttonRadius": 14,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            91,
+            160,
+            233,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            46,
+            110,
+            181,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            214,
+            234,
+            255,
+            1.0
+          ],
+          "secondary": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            27,
+            45,
+            68,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            26,
+            26,
+            26,
+            1.0
+          ],
+          "background": [
+            13,
+            27,
+            42,
+            1.0
+          ],
+          "onBackground": [
+            208,
+            224,
+            240,
+            1.0
+          ],
+          "surface": [
+            27,
+            45,
+            68,
+            1.0
+          ],
+          "onSurface": [
+            208,
+            224,
+            240,
+            1.0
+          ],
+          "surfaceVariant": [
+            37,
+            58,
+            80,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            27,
+            45,
+            68,
+            1
+          ],
+          "accent": [
+            91,
+            160,
+            233,
+            1.0
+          ],
+          "divider": [
+            37,
+            58,
+            80,
+            1.0
+          ],
+          "artTint": [
+            183,
+            206,
+            218,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_navy",
+          "rSmall": 8.0,
+          "rMedium": 14.0,
+          "cardRadius": 14.0,
+          "cardInnerPadding": 12.0,
+          "cardGap": 8.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              27,
+              58,
+              92,
+              1.0
+            ],
+            [
+              46,
+              110,
+              181,
+              1.0
+            ]
+          ],
+          "buttonRadius": 14,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "⚓"
+    },
+    {
+      "id": "COUNTRY",
+      "name": "牧歌田园",
+      "font": "cormorant_garamond",
+      "modes": {
+        "light": {
+          "primary": [
+            124,
+            154,
+            105,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            227,
+            237,
+            216,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            93,
+            119,
+            81,
+            1.0
+          ],
+          "secondary": [
+            197,
+            103,
+            89,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            246,
+            221,
+            215,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            122,
+            63,
+            54,
+            1.0
+          ],
+          "tertiary": [
+            233,
+            204,
+            137,
+            1.0
+          ],
+          "onTertiary": [
+            59,
+            47,
+            31,
+            1.0
+          ],
+          "background": [
+            249,
+            244,
+            232,
+            1.0
+          ],
+          "onBackground": [
+            49,
+            40,
+            31,
+            1.0
+          ],
+          "surface": [
+            255,
+            252,
+            247,
+            1.0
+          ],
+          "onSurface": [
+            49,
+            40,
+            31,
+            1.0
+          ],
+          "surfaceVariant": [
+            241,
+            231,
+            216,
+            1.0
+          ],
+          "error": [
+            212,
+            87,
+            69,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            185,
+            170,
+            148,
+            1.0
+          ],
+          "outlineVariant": [
+            230,
+            215,
+            191,
+            1.0
+          ],
+          "card": [
+            255,
+            252,
+            247,
+            1
+          ],
+          "accent": [
+            197,
+            103,
+            89,
+            1.0
+          ],
+          "divider": [
+            230,
+            215,
+            191,
+            1.0
+          ],
+          "artTint": [
+            198,
+            208,
+            174,
+            1.0
+          ],
+          "artAlpha": 0.3,
+          "art": "bg_art_country",
+          "rSmall": 10.0,
+          "rMedium": 20.0,
+          "cardRadius": 20.0,
+          "cardInnerPadding": 14.0,
+          "cardGap": 10.0,
+          "spacingSmall": 6.0,
+          "spacingMedium": 10.0,
+          "spacingLarge": 18.0,
+          "spacingExtraLarge": 26.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              124,
+              154,
+              105,
+              1.0
+            ],
+            [
+              240,
+              216,
+              167,
+              1.0
+            ]
+          ],
+          "buttonRadius": 18,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            157,
+            184,
+            139,
+            1.0
+          ],
+          "onPrimary": [
+            23,
+            49,
+            27,
+            1.0
+          ],
+          "primaryContainer": [
+            93,
+            119,
+            81,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            227,
+            237,
+            216,
+            1.0
+          ],
+          "secondary": [
+            215,
+            134,
+            120,
+            1.0
+          ],
+          "onSecondary": [
+            44,
+            20,
+            17,
+            1.0
+          ],
+          "secondaryContainer": [
+            80,
+            53,
+            48,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            247,
+            221,
+            214,
+            1.0
+          ],
+          "tertiary": [
+            233,
+            204,
+            137,
+            1.0
+          ],
+          "onTertiary": [
+            59,
+            47,
+            31,
+            1.0
+          ],
+          "background": [
+            31,
+            38,
+            28,
+            1.0
+          ],
+          "onBackground": [
+            229,
+            223,
+            211,
+            1.0
+          ],
+          "surface": [
+            45,
+            53,
+            41,
+            1.0
+          ],
+          "onSurface": [
+            229,
+            223,
+            211,
+            1.0
+          ],
+          "surfaceVariant": [
+            57,
+            66,
+            53,
+            1.0
+          ],
+          "error": [
+            255,
+            180,
+            168,
+            1.0
+          ],
+          "onError": [
+            105,
+            0,
+            5,
+            1.0
+          ],
+          "card": [
+            45,
+            53,
+            41,
+            1
+          ],
+          "accent": [
+            215,
+            134,
+            120,
+            1.0
+          ],
+          "divider": [
+            57,
+            66,
+            53,
+            1.0
+          ],
+          "artTint": [
+            198,
+            208,
+            174,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_country",
+          "rSmall": 10.0,
+          "rMedium": 20.0,
+          "cardRadius": 20.0,
+          "cardInnerPadding": 14.0,
+          "cardGap": 10.0,
+          "spacingSmall": 6.0,
+          "spacingMedium": 10.0,
+          "spacingLarge": 18.0,
+          "spacingExtraLarge": 26.0,
+          "cardElevation": 1.0,
+          "border": "1px solid transparent",
+          "gradient": [
+            [
+              55,
+              68,
+              47,
+              1.0
+            ],
+            [
+              93,
+              119,
+              81,
+              1.0
+            ]
+          ],
+          "buttonRadius": 18,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "✿"
+    },
+    {
+      "id": "VICTORIAN",
+      "name": "维多利亚",
+      "font": "cormorant_garamond",
+      "modes": {
+        "light": {
+          "primary": [
+            123,
+            30,
+            58,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            240,
+            216,
+            224,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            156,
+            37,
+            77,
+            1.0
+          ],
+          "secondary": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "onSecondary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "secondaryContainer": [
+            255,
+            248,
+            225,
+            1.0
+          ],
+          "onSecondaryContainer": [
+            184,
+            134,
+            11,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            62,
+            39,
+            35,
+            1.0
+          ],
+          "background": [
+            255,
+            248,
+            240,
+            1.0
+          ],
+          "onBackground": [
+            62,
+            39,
+            35,
+            1.0
+          ],
+          "surface": [
+            255,
+            245,
+            230,
+            1.0
+          ],
+          "onSurface": [
+            62,
+            39,
+            35,
+            1.0
+          ],
+          "surfaceVariant": [
+            245,
+            232,
+            224,
+            1.0
+          ],
+          "error": [
+            211,
+            47,
+            47,
+            1.0
+          ],
+          "onError": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "outline": [
+            160,
+            144,
+            128,
+            1.0
+          ],
+          "outlineVariant": [
+            208,
+            192,
+            176,
+            1.0
+          ],
+          "card": [
+            255,
+            245,
+            230,
+            1
+          ],
+          "accent": [
+            156,
+            37,
+            77,
+            1.0
+          ],
+          "divider": [
+            208,
+            192,
+            176,
+            1.0
+          ],
+          "artTint": [
+            215,
+            193,
+            155,
+            1.0
+          ],
+          "artAlpha": 0.26,
+          "art": "bg_art_victorian",
+          "rSmall": 6.0,
+          "rMedium": 12.0,
+          "cardRadius": 12.0,
+          "cardInnerPadding": 16.0,
+          "cardGap": 10.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 3.0,
+          "border": "1.0px solid rgba(218,165,32,1.0000)",
+          "gradient": [
+            [
+              123,
+              30,
+              58,
+              1.0
+            ],
+            [
+              184,
+              134,
+              11,
+              1.0
+            ]
+          ],
+          "buttonRadius": 8,
+          "topBarForeground": [
+            26,
+            26,
+            46,
+            1
+          ]
+        },
+        "dark": {
+          "primary": [
+            196,
+            86,
+            106,
+            1.0
+          ],
+          "onPrimary": [
+            255,
+            255,
+            255,
+            1.0
+          ],
+          "primaryContainer": [
+            123,
+            30,
+            58,
+            1.0
+          ],
+          "onPrimaryContainer": [
+            240,
+            216,
+            224,
+            1.0
+          ],
+          "secondary": [
+            212,
+            168,
+            67,
+            1.0
+          ],
+          "onSecondary": [
+            62,
+            39,
+            35,
+            1.0
+          ],
+          "secondaryContainer": [
+            44,
+            30,
+            24,
+            1.0
+          ],
+          "tertiary": [
+            218,
+            165,
+            32,
+            1.0
+          ],
+          "onTertiary": [
+            62,
+            39,
+            35,
+            1.0
+          ],
+          "background": [
+            26,
+            18,
+            16,
+            1.0
+          ],
+          "onBackground": [
+            245,
+            230,
+            211,
+            1.0
+          ],
+          "surface": [
+            44,
+            30,
+            24,
+            1.0
+          ],
+          "onSurface": [
+            245,
+            230,
+            211,
+            1.0
+          ],
+          "surfaceVariant": [
+            58,
+            40,
+            32,
+            1.0
+          ],
+          "error": [
+            207,
+            102,
+            121,
+            1.0
+          ],
+          "onError": [
+            0,
+            0,
+            0,
+            1.0
+          ],
+          "card": [
+            44,
+            30,
+            24,
+            1
+          ],
+          "accent": [
+            196,
+            86,
+            106,
+            1.0
+          ],
+          "divider": [
+            58,
+            40,
+            32,
+            1.0
+          ],
+          "artTint": [
+            215,
+            193,
+            155,
+            1.0
+          ],
+          "artAlpha": 0.22,
+          "art": "bg_art_victorian",
+          "rSmall": 6.0,
+          "rMedium": 12.0,
+          "cardRadius": 12.0,
+          "cardInnerPadding": 16.0,
+          "cardGap": 10.0,
+          "spacingSmall": 4.0,
+          "spacingMedium": 8.0,
+          "spacingLarge": 16.0,
+          "spacingExtraLarge": 24.0,
+          "cardElevation": 3.0,
+          "border": "1.0px solid rgba(212,168,67,1.0000)",
+          "gradient": [
+            [
+              26,
+              18,
+              16,
+              1.0
+            ],
+            [
+              196,
+              86,
+              106,
+              1.0
+            ]
+          ],
+          "buttonRadius": 8,
+          "topBarForeground": [
+            255,
+            255,
+            255,
+            1
+          ]
+        }
+      },
+      "topBarDecoration": "⚜"
+    }
+  ]
+}

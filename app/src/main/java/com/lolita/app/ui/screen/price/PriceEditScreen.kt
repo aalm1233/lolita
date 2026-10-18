@@ -19,7 +19,7 @@ import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSuccess: () -> Unit, viewModel: PriceEditViewModel = viewModel()) {
     val state by viewModel.uiState.collectAsState()
@@ -45,7 +45,7 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                 }) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
             })
     }) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
+        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding().verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             if (state.isLoading) PricingSkeleton() else if (state.loadFailed) {
                 LolitaSection("价格暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
@@ -75,12 +75,14 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                 }
                 LolitaSection(if (tracked) "付款计划" else "原付款计划（只读）") {
                     row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             listOf(PriceType.FULL to "全款", PriceType.DEPOSIT_BALANCE to "定金尾款", PriceType.MULTI_STAGE to "多段").forEach { (type, label) ->
                                 FilterChip(selected = state.priceType == type, onClick = { viewModel.updatePriceType(type) }, label = { Text(label) }, enabled = canEdit)
                             }
                         }
                         OutlinedButton(onClick = { confirmTemplate = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth()) { Text("使用所选模板") }
+                        if (tracked) Text(state.calculationHint ?: "填入总额与部分阶段后，自动补算唯一缺项；阶段填齐时可反推商品金额。手动填写的金额会保留。",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(if (tracked) "阶段只是应付总额的拆分。实付请在付款页单独记录。" else "原阶段金额和日期保留，不据此认定欠款或设置提醒。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     } }
                 }

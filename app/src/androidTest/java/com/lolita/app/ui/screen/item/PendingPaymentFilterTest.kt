@@ -127,7 +127,7 @@ class PendingPaymentFilterTest {
         compose.runOnIdle { vm.filterByGroup(CategoryGroup.ACCESSORY) }
         assertIds(setOf(6, 7))
         compose.runOnIdle { vm.togglePendingPaymentOnly() }
-        assertIds(emptySet()) // Default overview still hides attached parts when payment filtering is off.
+        assertIds(setOf(6, 7)) // Explicit category/attribute filters continue to include matching attached parts.
     }
     @Test fun payingAndUndoingPaymentsRefreshesBothStatusesAndSharedAccessories() = runBlocking {
         val full = orders.createOrder(Price(itemId = 1, type = PriceType.FULL, totalPrice = 100.0), listOf(PaymentStage(priceId = 0, name = "全款", amount = 100.0)))
@@ -153,7 +153,7 @@ class PendingPaymentFilterTest {
         } }
         compose.onNode(hasText("服饰") and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
         val chip = compose.onNode(hasText("待付款") and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected))
-        chip.assertIsDisplayed().assertIsNotSelected().performClick().assertIsSelected()
+        chip.performScrollTo().assertIsDisplayed().assertIsNotSelected().performClick().assertIsSelected()
         assertIds(pending)
         val output = File(context.filesDir, "pending-payment-filter/chip.png")
         output.parentFile!!.mkdirs()
@@ -162,5 +162,27 @@ class PendingPaymentFilterTest {
         }
         chip.performClick().assertIsNotSelected()
         assertIds(wardrobeRoots)
+    }
+    @Test fun todayOutfitAppearsOnlyOnLocationTab() {
+        val owner = object : ViewModelStoreOwner { override val viewModelStore = store }
+        compose.setContent { CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
+            LolitaTheme { Surface { ItemListScreen(onNavigateToDetail = {}, onNavigateToEdit = {}, viewModel = vm) } }
+        } }
+        compose.onNodeWithText("今日穿搭").assertIsDisplayed()
+        fun capture(tab: String) {
+            val file = File(context.filesDir, "daily-price-tasks/home-$tab.png").apply { parentFile!!.mkdirs() }
+            compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap ->
+                file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            }
+        }
+        capture("location")
+        listOf("服饰", "套装", "心愿").forEach { tab ->
+            compose.onNode(hasText(tab) and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
+            compose.waitForIdle()
+            compose.onNodeWithText("今日穿搭").assertDoesNotExist()
+            capture(tab)
+        }
+        compose.onNode(hasText("位置") and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
+        compose.onNodeWithText("今日穿搭").assertIsDisplayed()
     }
 }

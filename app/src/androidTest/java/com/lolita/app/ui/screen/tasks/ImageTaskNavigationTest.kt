@@ -10,6 +10,25 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ImageTaskNavigationTest : ImageTaskNavigationFixture() {
+    @Test fun globalBarAppearsWithoutOpeningTaskCenterAndTracksQueueAcrossPages() {
+        start(false)
+        compose.onNodeWithTag("globalImageTaskBar").assertIsDisplayed()
+        compose.runOnIdle {
+            controller.navigate(Screen.Settings.route)
+            tasks.value = tasks.value + tasks.value.single().copy(id = "00000000-0000-0000-0000-000000000002", status = ImageTaskStatus.QUEUED)
+        }
+        compose.onNodeWithText("生成中 · 排队 1 项").assertIsDisplayed()
+        compose.onNodeWithTag("globalImageTaskBar").performClick()
+        compose.runOnIdle { assertEquals(Screen.ImageTasks.route, controller.currentDestination?.route) }
+        compose.runOnIdle { tasks.value = tasks.value.take(1).map { it.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION) } }
+        compose.onNodeWithTag("globalImageTaskBar").assertIsDisplayed()
+        compose.onNodeWithText("待确认 1 项").assertExists()
+        compose.runOnIdle { tasks.value = tasks.value.map { it.copy(status = ImageTaskStatus.COMPLETED) } }
+        compose.onNodeWithTag("globalImageTaskBar").assertDoesNotExist()
+        compose.runOnIdle { tasks.value = emptyList() }
+        compose.onNodeWithTag("globalImageTaskBar").assertDoesNotExist()
+        assertEquals(1, submissions)
+    }
     @Test fun notificationEntryWaitsForNavHostThenConsumesExactlyOnce() {
         start(false)
         compose.runOnIdle { openTasks.value = true }
@@ -24,7 +43,7 @@ class ImageTaskNavigationTest : ImageTaskNavigationFixture() {
         compose.onNodeWithTag("tryOnWorkspace").performScrollToNode(hasText("查看任务"))
         compose.onNodeWithText("查看任务").performClick()
         compose.waitUntil(10_000) { controller.currentDestination?.route == Screen.ImageTaskDetail.route }
-        compose.onNodeWithText("生成中").assertExists()
+        compose.onNode(hasText("生成中") and hasAnyAncestor(hasTestTag("imageTaskDetail"))).assertExists()
         assertEquals(1, submissions)
     }
     @Test fun failedTryOnUsesSeparateRetryRouteWithoutEnqueuing() {

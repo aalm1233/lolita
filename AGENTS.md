@@ -63,7 +63,7 @@
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
 - 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
 - Tab 页面沿用 `HorizontalPager + TabRow + SkinTabIndicator`。
-- 首页今日穿搭入口使用 `TodayOutfitShortcut`：紧凑卡片、穿搭图标/单张缩略图、标题与状态副文案、记录/查看操作；两种状态共享布局，颜色/圆角/内边距消费皮肤令牌，并合并无障碍语义。
+- 首页今日穿搭入口仅在“位置”Tab显示，服饰/套装/心愿及其他页面不重复展示；使用 `TodayOutfitShortcut`：紧凑卡片、穿搭图标/单张缩略图、标题与状态副文案、记录/查看操作；两种状态共享布局，颜色/圆角/内边距消费皮肤令牌，并合并无障碍语义。
 - 快捷穿搭记录支持名称/品牌搜索、分类筛选和已选缩略图移除；筛选不得清除隐藏的已选物品。控制区随网格滚动，底部保留数量保存按钮。编辑已有记录时保留照片、原日期及创建时间，读取失败或未完成时禁止保存。
 - 完整穿搭编辑的日期、备注和关联服饰通栏，只有照片采用两列；卡片仅一层内边距，照片使用皮肤圆角。底部提供唯一“保存穿搭”按钮，消费 Scaffold Insets 后应用 IME padding，键盘打开时保存仍可达；保存条件和原照片、日期、关联、放弃更改逻辑保持。网格注册 `ObserveSkinScroll`。 完整编辑保留原记录并复制可编辑字段，创建时间不变、修改时间由 Repository 更新；读取原记录期间通过 `isLoading` 禁用保存，ViewModel 同时拒绝原记录未读取完成的提交。回归为 `OutfitLogEditViewModelTest`（独立内存 Room、真实照片，覆盖已有/新建/读取中/已删除）。
 - 淘宝导入指南按“获取订单文件 / 回到应用导入”分组，完整保留七步正文及四项注意事项；使用皮肤卡片与 `SectionHeader`，没有真实截图时不绘制截图占位框。月份的紧凑布局保持既定设计。
@@ -272,7 +272,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=118, versionName="2.55.4"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=119, versionName="2.56.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -322,6 +322,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - `OrderBinding` 对 itemId 和 priceId 唯一约束，仅绑定一个当前订单；旧 Price/Payment 原记录完整保留，多价格与异常金额等待核对。愿望单无实付证据的历史预算不自动绑定。
 - `Price.shipping` 已包含在 totalPrice 中；阶段金额与实际付款分离。新输入最多两位小数，计算使用 `OrderAccounting` 整数分，历史 Double 原值不改写。
+- `PriceDraftAutofill` 在可编辑草稿中用十进制补算唯一空白阶段，或以完整阶段合计减邮费反推商品金额；自动结果可随来源修改重算，用户接管后不覆盖。加载旧订单不补算，历史只读/加载/保存保护保持；已有手动阶段切换类型不清空，明确使用模板才重设，保留当前商品金额。新建空计划切换类型即使用对应结构。保存才写账，实付、ID、日期和提醒沿用原规则。`PriceDraftAutofillTest` 和 `PriceAutofillIntegrationTest` 覆盖双向补算、手动冲突、精度、原账本及七皮肤浅暗小屏大字。
 - `OrderLedger` 在 domain/usecase 中集中校验、事务记账、状态刷新及提交后的提醒恢复；`OrderRepository` 为薄封装。修改价格和阶段不得重建实付，删除阶段不得减少未付余额。
 - 完整账本（`TRACKED`）付清=已拥有，未付清=待付款；定金尾款仍用待补尾款文案。有当前订单时服饰编辑不能手动覆盖状态；无价格不能默认零元付清。
 - 服饰顶部“待付款”筛选使用 `filterPendingPaymentOnly` / `togglePendingPaymentOnly`，同时包含 `PENDING_PAYMENT` 和 `PENDING_BALANCE`，并显示主件及小物；OWNED/WISHED/PENDING_REVIEW不纳入。搜索、品牌、分类组、季节、风格、颜色及排序继续叠加，列表/网格/画廊同源；账本付清或撤销实付后通过Room Flow实时移除/恢复，共价小物同步。仅统一筛选入口，保留各服饰细分状态，不迁移实体或改写账本。`PendingPaymentFilterTest` 使用独立内存Room与UUID设置，4项真实ViewModel/Compose回归覆盖包含/取消、属性搜索与视图、付清撤销及共价小物、实际顶部文案与选中状态；记录见 `docs/pending-payment-filter-2026-10-15.md`。
@@ -421,6 +422,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 后台图像任务与版本说明（2.51.0）
 
+- 全局 `ImageTaskBarViewModel` 在 `LolitaNavHost` 根层订阅持久任务；排队、执行和待确认时立即在底栏上方显示 `ImageTaskBar`，不依赖任务中心VM或进入页面。无活动/待确认即收起，显示真实阶段与队列/待确认数，点击进入任务中心；使用COMPACT卡片/皮肤图标，布局为页面留出空间，不暴露物品名称或图片，不改执行/通知/重试协议。回归覆盖启动前隐藏、跨页实时更新、点击、待确认与终态收起。
 - 虚拟试衣与人台图提交到持久 `ImageTask`，由 `ImageTaskCoordinator` 的应用作用域接收，`ImageTaskRunner` / `ImageTaskService` 串行执行。页面仅观察并提交，离开、底栏和快捷穿搭不再受全局生成/预览状态限制；短暂提交防双击，付费确认固定展示的服务，配置变化时拒绝陈旧确认。旧版 SavedState 预览单独验证、查看及明确追加/舍弃，不因 VM 销毁删除。
 - 个人页、两种生成页和通知进入 `Screen.ImageTasks` / `ImageTaskDetail`。展示真实阶段，不伪造百分比；试衣结果仍写独立历史，人台结果停在待确认，只有明确确认才事务追加最新 Item 图片末尾。删除任务不删除已保存业务结果；重新发起只回填当前服饰/图片到生成页，再次明确确认。保留2.50普通生成页route pattern与SavedState键，重试使用独立路由；重试种子只消费一次，重建保留编辑或主动清空的说明。
 - 服务为用户主动启动的 dataSync 前台服务，持续通知、有限唤醒锁、每任务 12 分钟超时、onTimeout 停止及 `START_NOT_STICKY`，不从开机广播发起付费调用。请求前先持久化 `requestSent`，一个任务只领取一次；重启与备份恢复把未结束任务改中断，保留证据而不自动重发。取消本地等待不保证服务端停止计费。服务会话只领取自身接收的UUID，停止/销毁/前台启动失败先关闭领取入口，再在应用作用域等待读图退出并中断所属队列；迟到旧启动通过Intent中的确切任务ID拒绝/接收，不扫新任务。通知按Room紧凑投影显示真实阶段与排队数，唤醒锁只在领取时续期。

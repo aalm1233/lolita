@@ -376,7 +376,7 @@ fun ItemListScreen(
                 )
             }
 
-            TodayOutfitShortcut(
+            if (pagerState.currentPage == 0) TodayOutfitShortcut(
                 hasTodayOutfit = uiState.hasTodayOutfit,
                 imageUrl = uiState.todayOutfitItemImages.firstOrNull { !it.isNullOrBlank() },
                 onClick = onNavigateToQuickOutfit,

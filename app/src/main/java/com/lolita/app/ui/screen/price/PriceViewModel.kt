@@ -70,9 +70,17 @@ data class PriceEditUiState(
     val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
     val hasRecordedPayments: Boolean = false,
     val loadFailed: Boolean = false,
-    val referenceQuote: com.lolita.app.data.file.TaobaoProductQuote? = null
+    val referenceQuote: com.lolita.app.data.file.TaobaoProductQuote? = null,
+    val autoFilledTotal: Boolean = false,
+    val autoFilledStageIndex: Int? = null
 ) {
     val payableTotal: Double? get() = parseMoney(totalPrice, true)?.let { amount -> parseMoney(shipping, true)?.let { moneySum(amount, it) } }
+    val calculationHint: String? get() = when {
+        autoFilledTotal && totalPrice.isNotBlank() -> "已按阶段合计减邮费补算商品金额，可直接修改。"
+        autoFilledStageIndex != null && stages.getOrNull(autoFilledStageIndex)?.amount?.isNotBlank() == true ->
+            "已按含邮费总额补算${stages[autoFilledStageIndex].name.ifBlank { "阶段 ${autoFilledStageIndex + 1}" }}，可直接修改。"
+        else -> null
+    }
 }
 
 data class PaymentManageUiState(
@@ -220,31 +228,32 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
         val quote = state.referenceQuote ?: return
         if (originalPrice != null || state.totalPrice.isNotBlank()) return
         val amount = com.lolita.app.data.file.TaobaoProductQuotes.amount(quote.amount) ?: return
-        change { it.copy(totalPrice = amount, stages =
-            if (it.priceType == PriceType.FULL && it.stages.size == 1 && it.stages.single().amount.isBlank())
-                listOf(it.stages.single().copy(amount = moneyText(moneySum(amount.toDouble(), parseMoney(it.shipping, true) ?: 0.0))))
-            else it.stages) }
+        change { it.copy(totalPrice = amount, autoFilledTotal = false) }
     }
 
     private fun change(transform: (PriceEditUiState) -> PriceEditUiState) {
         if (_uiState.value.purchaseRecordStatus != PurchaseRecordStatus.TRACKED || _uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadFailed) return
         hasUnsavedChanges = true
-        _uiState.update(transform)
+        _uiState.update { autofillPriceDraft(transform(it)) }
     }
-    fun updateTotalPrice(value: String) = change { it.copy(totalPrice = value) }
+    fun updateTotalPrice(value: String) = change { it.copy(totalPrice = value, autoFilledTotal = false) }
     fun updateShipping(value: String) = change { it.copy(shipping = value) }
-    fun updatePriceType(type: PriceType) = change { it.copy(priceType = type) }
-    fun updateStage(index: Int, stage: StageDraft) = change { it.copy(stages = it.stages.toMutableList().also { list -> list[index] = stage }) }
-    fun addStage() = change { it.copy(priceType = PriceType.MULTI_STAGE, stages = it.stages + StageDraft(name = "第${it.stages.size + 1}段")) }
-    fun removeStage(index: Int) = change { it.copy(stages = it.stages.filterIndexed { i, _ -> i != index }) }
-    fun applyTemplate() = change { state ->
-        val total = state.payableTotal?.let(::moneyText) ?: ""
-        state.copy(stages = when (state.priceType) {
-            PriceType.FULL -> listOf(StageDraft(name = "全款", amount = total))
-            PriceType.DEPOSIT_BALANCE -> listOf(StageDraft(name = "定金"), StageDraft(name = "尾款"))
-            PriceType.MULTI_STAGE -> listOf(StageDraft(name = "第1段"), StageDraft(name = "第2段"))
-        })
+    fun updatePriceType(type: PriceType) = change { state ->
+        val pristine = state.stages == priceStageTemplate(state.priceType).mapIndexed { index, stage ->
+            if (index == state.autoFilledStageIndex) stage.copy(amount = state.stages.getOrNull(index)?.amount.orEmpty()) else stage
+        }
+        if (pristine) state.copy(priceType = type, stages = priceStageTemplate(type), autoFilledStageIndex = null)
+        else state.copy(priceType = type)
     }
+    fun updateStage(index: Int, stage: StageDraft) = change { state ->
+        if (index !in state.stages.indices) state else state.copy(
+            stages = state.stages.toMutableList().also { it[index] = stage },
+            autoFilledStageIndex = state.autoFilledStageIndex.takeUnless { it == index && stage.amount != state.stages[index].amount })
+    }
+    fun addStage() = change { it.copy(priceType = PriceType.MULTI_STAGE, stages = it.stages + StageDraft(name = "第${it.stages.size + 1}段")) }
+    fun removeStage(index: Int) = change { state -> state.copy(stages = state.stages.filterIndexed { i, _ -> i != index },
+        autoFilledStageIndex = state.autoFilledStageIndex?.let { if (it == index) null else if (it > index) it - 1 else it }) }
+    fun applyTemplate() = change { it.copy(stages = priceStageTemplate(it.priceType), autoFilledTotal = false, autoFilledStageIndex = null) }
     fun clearError() { _uiState.update { it.copy(error = null) } }
 
     fun isValid(): Boolean {

@@ -11,6 +11,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -153,7 +154,8 @@ fun LolitaNavHost(
     createMannequinViewModel: (SavedStateHandle) -> MannequinViewModel = { MannequinViewModel(it) },
     createImageTaskViewModel: () -> ImageTaskViewModel = { ImageTaskViewModel(personalModels = AppModule.personalModelRepository().observe()) },
     createPersonalModelViewModel: () -> PersonalModelViewModel = { PersonalModelViewModel() },
-    createPersonalModelEditViewModel: (SavedStateHandle) -> PersonalModelEditViewModel = { PersonalModelEditViewModel(it) }
+    createPersonalModelEditViewModel: (SavedStateHandle) -> PersonalModelEditViewModel = { PersonalModelEditViewModel(it) },
+    imageTaskBarViewModel: ImageTaskBarViewModel = viewModel()
 ) {
     val activeEntry by navController.currentBackStackEntryAsState()
     LaunchedEffect(openQuickOutfit, activeEntry?.id) {
@@ -169,6 +171,7 @@ fun LolitaNavHost(
         }
     }
     val items = BottomNavItems.items
+    val globalTasks by imageTaskBarViewModel.tasks.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
     val skin = LolitaSkin.current
@@ -182,6 +185,10 @@ fun LolitaNavHost(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
+            Column {
+            ImageTaskBar(globalTasks, onOpenTasks = {
+                navController.navigate(Screen.ImageTasks.route) { launchSingleTop = true }
+            })
             NavigationBar(
                 modifier = Modifier
                     .height(60.dp)
@@ -247,6 +254,7 @@ fun LolitaNavHost(
                         )
                     )
                 }
+            }
             }
         }
     ) { paddingValues ->

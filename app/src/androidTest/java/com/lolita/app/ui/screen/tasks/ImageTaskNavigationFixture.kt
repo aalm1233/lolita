@@ -41,6 +41,7 @@ open class ImageTaskNavigationFixture {
                 val nav = rememberNavController(); SideEffect { controller = nav }
                 CompositionLocalProvider(LocalLolitaSkin provides still) {
                     LolitaNavHost(navController = nav, openQuickOutfit = quick.value, onQuickOutfitOpened = { quick.value = false },
+                        imageTaskBarViewModel = remember { ImageTaskBarViewModel(tasks) },
                         openImageTasks = openTasks.value, onImageTasksOpened = { opened++; openTasks.value = false },
                         createTryOnViewModel = { handle -> TryOnViewModel(handle, items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))), results = flowOf(emptyList()),
                             readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = tasks,
@@ -61,6 +62,7 @@ open class ImageTaskNavigationFixture {
         }
         compose.runOnIdle { controller.navigate(Screen.ItemDetail.createRoute(11)) }
         compose.runOnIdle { controller.navigate(if (mannequin) Screen.Mannequin.createRoute(11) else Screen.TryOn.createRoute(itemId = 11)) }
+        compose.onNodeWithTag("globalImageTaskBar").assertDoesNotExist()
         compose.onNodeWithText(if (mannequin) "生成正面人台图" else "生成一张试衣图").assertIsEnabled().performClick()
         assertEquals(0, submissions)
         compose.onNodeWithText("确认并加入任务").performClick()

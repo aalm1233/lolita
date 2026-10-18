@@ -65,7 +65,7 @@ class MannequinScreenTest {
             }
         }.absolutePath }
         store = ViewModelStore()
-        categoryRows = MutableStateFlow(listOf(Category(id = 1, name = "OP")))
+        categoryRows = MutableStateFlow(listOf(Category(id = 1, name = "OP", categorySemantic = com.lolita.app.domain.model.CategorySemantic.OP)))
         instrumentation.runOnMainSync {
             vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L)),
                 item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED, imageUrls = photos.take(2))),
@@ -106,21 +106,21 @@ class MannequinScreenTest {
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
     }
     @Test fun standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory() {
-        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY)) }
+        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY, categorySemantic = com.lolita.app.domain.model.CategorySemantic.KC)) }
         compose.waitUntil(10_000) { vm.uiState.value.category?.name == "KC" }
         show(); configure()
-        compose.onNodeWithText("小物展示图（实验）").assertIsDisplayed()
+        compose.onNodeWithText("AI 展示图 · 单品展示图").assertIsDisplayed()
         compose.onNodeWithTag("mannequinUploadSummary").assertTextContains("共1张图片", substring = true)
         val output = File(instrumentation.targetContext.filesDir, "accessory-ui-contact-sheets").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
-            compose.onNodeWithText("生成小物展示图").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("生成单品展示图").assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithTag("mannequinUploadSummary").assertTextContains("共1张图片", substring = true)
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
-        compose.onNodeWithText("生成小物展示图").performClick()
-        compose.onNodeWithText("确认生成小物展示图？").assertIsDisplayed()
+        compose.onNodeWithText("生成单品展示图").performClick()
+        compose.onNodeWithText("确认生成单品展示图？").assertIsDisplayed()
         compose.waitForIdle()
         instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
             File(output, "confirmation.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
@@ -131,13 +131,13 @@ class MannequinScreenTest {
         generated.complete("accessory-task")
         compose.waitUntil(10_000) { !vm.uiState.value.isSubmitting }
         assertEquals(photos.first(), submitted!!.imagePath)
-        assertEquals(com.lolita.app.domain.model.MannequinSubject(1, "KC", com.lolita.app.domain.model.MannequinPresentation.ACCESSORY), submitted!!.subject)
+        assertEquals(com.lolita.app.domain.model.MannequinSubject(1, "KC", com.lolita.app.domain.model.MannequinPresentation.ACCESSORY, com.lolita.app.domain.model.CategorySemantic.KC), submitted!!.subject)
     }
 
     @Test fun categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation() {
         show(); configure()
         compose.onNodeWithText("生成正面人台图").performClick()
-        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "SK")) }
+        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "SK", categorySemantic = com.lolita.app.domain.model.CategorySemantic.SK)) }
         compose.waitUntil(10_000) { vm.uiState.value.category?.name == "SK" }
         compose.onNodeWithText("确认并加入任务").performClick()
         compose.waitUntil(10_000) { calls > 0 || vm.uiState.value.error != null }
@@ -218,7 +218,7 @@ class MannequinScreenTest {
         instrumentation.runOnMainSync {
             vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L, "mannequinPreview" to photos[2], "mannequinPreviewItem" to 11L)),
                 item = flowOf(Item(id = 11, name = "旧版裙子", brandId = 1, categoryId = 1, description = "", status = ItemStatus.OWNED, imageUrls = photos.take(2))),
-                categories = flowOf(listOf(Category(id = 1, name = "OP"))), readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, false) },
+                categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = com.lolita.app.domain.model.CategorySemantic.OP))), readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, false) },
                 selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = flowOf(emptyList()),
                 validateLegacy = { true }, appendLegacy = { _, path -> appended = path }, discardLegacy = { discarded = it }, submitTask = { _, _ -> error("legacy must not pay") })
             store.put("legacy", vm)

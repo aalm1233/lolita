@@ -116,7 +116,7 @@ class TryOnScreenTest {
         compose.onNodeWithText("搜索服饰名称").performTextInput("蝴蝶")
         compose.onNodeWithText("头饰", substring = false).performClick()
         compose.onNodeWithContentDescription("选择服饰：蝴蝶结").assertIsDisplayed()
-        compose.onNodeWithText("完成选择（1/8）").performClick()
+        compose.onNodeWithText("完成搭配选择（1件）").performClick()
         assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
         workspace("更换参考图片")
         compose.onNodeWithText("更换参考图片").performClick()

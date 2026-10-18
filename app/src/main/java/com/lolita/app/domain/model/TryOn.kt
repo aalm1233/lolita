@@ -64,7 +64,11 @@ data class TryOnRequest(val selections: List<TryOnSelection>, val protocolVersio
         require(selections.map { it.itemId }.distinct().size == selections.size) { "同一件服饰只能选择一次" }
         require(protocolVersion in 1..4) { "不支持的试衣协议" }
         if (protocolVersion >= 4) require(selections.none { tryOnConflict(it, selections)?.requiresReplacement == true }) { "穿戴位置冲突，请明确替换或调整选择" }
-        require(selections.any { it.role.garment }) { "请至少选择一件服装，并核对穿戴位置" }
+        require(selections.any { row ->
+            row.role.garment && (protocolVersion < 4 || row.semantic == null ||
+                row.semantic == CategorySemantic.UNCONFIRMED ||
+                row.semantic.family == WardrobeFamily.CLOTHING && row.semantic != CategorySemantic.PETTICOAT)
+        }) { "请至少选择一件基础服装，并核对物品类型与穿戴位置" }
     }
 
     fun prompt(personalModel: Boolean = false): String {

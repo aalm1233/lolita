@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "generator": "built-in ImageGen",
+  "assets": [
+    {
+      "id": "wig_stand",
+      "file": "app/src/main/assets/builtin/storage/wig_stand.png",
+      "sha256": "0122c9dbbe109a46f6d66c70e8c214b4ac3d78bcbf7a4fde4acc0e1047014b24",
+      "prompt": "Use case: illustration-story\nAsset type: 中文 Lolita 衣橱 Android 应用的收纳位置模板卡片插图\nPrimary request: 绘制一张独立的收纳位置示意插图，主体为卧室梳妆收纳角的一座空置圆顶假发支撑架，圆顶是简洁亚麻包裹的无脸圆头托架，完全没有头发，没有眼睛鼻子嘴，旁边只放一两个空置收纳盒。\nStyle/medium: 温暖细腻的绘本室内插画，柔和自然光，干净细致的纸面笔触，低饱和暖白背景，浅木色与柔和中性色，少量舒缓淡粉。\nComposition/framing: 横向3:2，整个主要物体在居中的安全区，四周充足呼吸留白，裁成正方形时仍可识别用途，小尺寸缩略图清晰，画面简洁。\nConstraints: 没有文字、数字、标签、商标、水印、真人、真实人脸，不仿制具体商品，不表现为真实用户库存，不画拼图或分屏。背景不透明。"
+    },
+    {
+      "id": "shoe_cabinet",
+      "file": "app/src/main/assets/builtin/storage/shoe_cabinet.png",
+      "sha256": "f83520d7e0b80ae23a7c577053e2925181c36160e0fd5100bdbad4d1da1d9903",
+      "prompt": "Use case: illustration-story\nAsset type: 中文 Lolita 衣橱 Android 应用的收纳位置模板卡片插图\nPrimary request: 绘制一张独立的收纳位置示意插图，主体为玄关的一座低矮开放式鞋柜，清楚的三层开放隔层，大部分隔层是空的，仅底层可有两件极简无品牌抽象鞋形说明用途，没有细碎鞋堆。\nStyle/medium: 温暖细腻的绘本室内插画，柔和自然光，干净细致的纸面笔触，低饱和暖白背景，浅木色与柔和中性色，少量舒缓淡粉。\nComposition/framing: 横向3:2，整个主要物体在居中的安全区，四周充足呼吸留白，裁成正方形时仍可识别用途，小尺寸缩略图清晰，画面简洁。\nConstraints: 没有文字、数字、标签、商标、水印、真人、真实人脸，不仿制具体商品，不表现为真实用户库存，不画拼图或分屏。背景不透明。"
+    },
+    {
+      "id": "sock_drawer",
+      "file": "app/src/main/assets/builtin/storage/sock_drawer.png",
+      "sha256": "d173e46075e0750ff1ba8331d895be6237329336f02739af31fc2a33ef0314d9",
+      "prompt": "Use case: illustration-story\nAsset type: 中文 Lolita 衣橱 Android 应用的收纳位置模板卡片插图\nPrimary request: 绘制一张独立的收纳位置示意插图，主体为俯视一个打开的浅色木制分格袜子抽屉，清晰的六个大格，仅两三格放少量整齐折叠的素色袜形，剩下格子留空。\nStyle/medium: 温暖细腻的绘本室内插画，柔和自然光，干净细致的纸面笔触，低饱和暖白背景，浅木色与柔和中性色，少量舒缓淡粉。\nComposition/framing: 横向3:2，整个主要物体在居中的安全区，四周充足呼吸留白，裁成正方形时仍可识别用途，小尺寸缩略图清晰，画面简洁。\nConstraints: 没有文字、数字、标签、商标、水印、真人、真实人脸，不仿制具体商品，不表现为真实用户库存，不画拼图或分屏。背景不透明。"
+    },
+    {
+      "id": "accessory_box",
+      "file": "app/src/main/assets/builtin/storage/accessory_box.png",
+      "sha256": "79e597987e2c26ed98fd445ff34df8e6461657367da79648bb13eeb1fdaf5a7c",
+      "prompt": "Use case: illustration-story\nAsset type: 中文 Lolita 衣橱 Android 应用的收纳位置模板卡片插图\nPrimary request: 绘制一张独立的收纳位置示意插图，主体为略俯视一个打开的浅色分格配饰收纳盒，清楚的较大分格，少量中性无品牌蝴蝶结和简洁发夹作收纳用途提示，没有密集珠宝或闪亮高光。\nStyle/medium: 温暖细腻的绘本室内插画，柔和自然光，干净细致的纸面笔触，低饱和暖白背景，浅木色与柔和中性色，少量舒缓淡粉。\nComposition/framing: 横向3:2，整个主要物体在居中的安全区，四周充足呼吸留白，裁成正方形时仍可识别用途，小尺寸缩略图清晰，画面简洁。\nConstraints: 没有文字、数字、标签、商标、水印、真人、真实人脸，不仿制具体商品，不表现为真实用户库存，不画拼图或分屏。背景不透明。"
+    }
+  ]
+}

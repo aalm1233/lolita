@@ -11,11 +11,14 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 9
-    const val SCHEMA_VERSION = 29
+    const val VERSION = 10
+    const val SCHEMA_VERSION = 30
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
+        "storageNodes" to StorageNode::class.java, "itemDrafts" to ItemDraft::class.java,
+        "recognitionTasks" to RecognitionTask::class.java, "itemEvidence" to ItemEvidence::class.java,
+        "imageProvenance" to ImageProvenance::class.java,
         "brands" to Brand::class.java, "categories" to Category::class.java,
         "coordinates" to Coordinate::class.java, "items" to Item::class.java,
         "prices" to Price::class.java, "payments" to Payment::class.java,
@@ -33,7 +36,7 @@ internal object BackupFormat {
         "personalModels" to PersonalModel::class.java, "personalModelDrafts" to PersonalModelDraft::class.java,
         "orderBindings" to OrderBinding::class.java, "paymentStages" to PaymentStage::class.java
     )
-    private val requiredArrays = entities.keys.take(8)
+    private val requiredArrays = listOf("brands","categories","coordinates","items","prices","payments","outfitLogs","outfitItemCrossRefs")
 
     fun parse(json: String): BackupData {
         val root = JsonParser.parseString(json).asJsonObject
@@ -41,9 +44,9 @@ internal object BackupFormat {
         require(version in 1..VERSION) { "不支持的备份格式版本：$version" }
         val schema = root.get("schemaVersion")?.asBigDecimal?.intValueExact() ?: 0
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
-        val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion")
+        val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion", "wigHeadTemplatePreferenceJson")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
@@ -74,6 +77,11 @@ internal object BackupFormat {
                     else default(row, "note", "")
                     default(row, "updatedAt", row.get("createdAt") ?: error("缺少 createdAt"))
                 }
+                if (version < 10) {
+                    if (name == "items") { BackupFormat.default(row,"specificationsJson",""); BackupFormat.default(row,"composition","UNCONFIRMED") }
+                    if (name == "categories") BackupFormat.default(row,"categorySemantic","UNCONFIRMED")
+                    if (name == "imageTasks") { BackupFormat.default(row,"keepSourceImages",false); BackupFormat.default(row,"sourceResourcesMissing",false) }
+                }
                 if (name == "items") {
                     if (!row.has("sizeChartImageUrls")) row.add("sizeChartImageUrls", JsonArray())
                     if (version == 1) {
@@ -100,7 +108,7 @@ internal object BackupFormat {
                 type.declaredFields.filterNot { Modifier.isStatic(it.modifiers) }.forEach { field ->
                     val value = row[field.name] ?: return@forEach
                     if (value.isJsonNull) {
-                        require(!field.type.isPrimitive && field.name !in setOf("month", "name", "description", "note", "imageUrls", "sizeChartImageUrls", "colors", "status", "priority", "type", "group", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
+                        require(!field.type.isPrimitive && field.name !in setOf("month", "name", "description", "note", "imageUrls", "sizeChartImageUrls", "colors", "status", "priority", "type", "group", "categorySemantic", "composition", "specificationsJson", "draftId", "dataJson", "field", "candidateJson", "regionImagePaths", "sourceType", "mode", "imagePath", "normalizedName", "purchaseRecordStatus", "payload", "sourceTable", "recordKey", "publicId", "cacheKey", "backendBaseUrl", "assetBaseUrl", "sharedItemPublicId")) { "$name[$index].${field.name} 不能为空" }
                     } else when {
                         field.type.isEnum -> require(value.isJsonPrimitive && value.asString in requireNotNull(field.type.enumConstants).map { (it as Enum<*>).name }) { "未知枚举：$name[$index].${field.name}" }
                         List::class.java.isAssignableFrom(field.type) -> require(value.isJsonArray && value.asJsonArray.all { it.isJsonPrimitive && it.asJsonPrimitive.isString }) { "$name[$index].${field.name} 必须是字符串数组" }
@@ -116,9 +124,14 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "storageNodes" -> setOf("id","locationId","name","normalizedName","siblingScopeId","description","sortOrder","createdAt","updatedAt")
+                    "itemDrafts" -> setOf("id","dataJson","imagePaths","sizeChartImagePaths","evidenceImagePaths","appearanceOnlyImagePaths","updatedAt")
+                    "recognitionTasks" -> setOf("id","draftId","requestJson","regionImagePaths","status","requestSent","createdAt","updatedAt")
+                    "itemEvidence" -> setOf("id","draftId","field","candidateJson","regionImagePaths","createdAt")
+                    "imageProvenance" -> setOf("imagePath","itemId","sourceType","mode","createdAt")
                     "personalModels" -> setOf("id","name","requestJson","sourceImagePaths","imageUrl","provider","model","createdAt","updatedAt")
                     "personalModelDrafts" -> setOf("id","dataJson","sourceImagePaths","updatedAt")
-                    "imageTasks" -> setOf("id","kind","provider","title","requestJson","sourceImagePaths","status","requestSent","createdAt","updatedAt")
+                    "imageTasks" -> setOf("id","kind","provider","title","requestJson","sourceImagePaths","status","requestSent","createdAt","updatedAt") + if(version>=10) setOf("keepSourceImages","sourceResourcesMissing") else emptySet()
                     "tryOnResults" -> setOf("id","name","imageUrl","itemIds","itemNames","model","createdAt")
                     "monthlyBudgets" -> setOf("month", "amountCents")
                     "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
@@ -279,6 +292,7 @@ internal object BackupFormat {
     }
 
     fun validate(data: BackupData) {
+        WardrobeBackupValidation.validate(data)
         val taskIds = data.imageTasks.map { it.id }
         require(taskIds.distinct().size == taskIds.size) { "图像任务标识重复" }
         data.imageTasks.forEach { task ->

@@ -304,6 +304,10 @@ fun BackupRestoreScreen(
                     Text("图像任务: ${p.imageTaskCount} 条")
                     Text("个人模特: ${p.personalModelCount} 条")
                     Text("人物草稿: ${p.personalModelDraftCount} 条")
+                    Text("收纳节点: ${p.storageNodeCount} 条")
+                    Text("物品草稿: ${p.itemDraftCount} 条")
+                    Text("识图任务与证据: ${p.recognitionTaskCount} / ${p.itemEvidenceCount} 条")
+                    Text("图片来源: ${p.imageProvenanceCount} 条")
                     if (p.additionalRecordCount > 0) Text("关联与共享库: ${p.additionalRecordCount} 条")
                     if (p.missingImageCount > 0) Text("此 JSON 缺少 ${p.missingImageCount} 张本地图片，请使用含图片的 ZIP 备份", color = MaterialTheme.colorScheme.error)
                     if (p.imageCount > 0) {

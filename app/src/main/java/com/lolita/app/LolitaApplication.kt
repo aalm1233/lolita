@@ -15,6 +15,7 @@ class LolitaApplication : Application() {
         AppModule.init(applicationContext)
         // Instantiation launches exactly one recovery barrier before any screen can submit.
         AppModule.imageTaskCoordinator()
+        AppModule.recognitionCoordinator()
         com.lolita.app.data.generation.ImageTaskNotifications.createChannel(applicationContext)
         NotificationChannelSetup.createNotificationChannel(applicationContext)
         NotificationChannelSetup.createOutfitNotificationChannel(applicationContext)
@@ -25,6 +26,13 @@ class LolitaApplication : Application() {
                 throw e
             } catch (e: Exception) {
                 android.util.Log.e("LolitaApplication", "Failed to initialize built-in library", e)
+            }
+            try {
+                AppModule.wardrobeCategoryLibrary().awaitInitialization()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.e("LolitaApplication", "Failed to initialize wardrobe category library", e)
             }
             try {
                 DailyOutfitReminderScheduler(applicationContext).reschedule()

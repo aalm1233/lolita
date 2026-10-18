@@ -312,6 +312,8 @@ fun ItemEditScreen(
                     preferredFamily = uiState.preferredFamily
                 )
 
+                com.lolita.app.ui.screen.item.recognition.ItemRecognitionPanel(viewModel)
+
                 WardrobeSpecificationEditor(
                     semantic = uiState.categories.firstOrNull { it.id == uiState.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED,
                     specifications = uiState.specifications, composition = uiState.composition, enabled = canEdit,

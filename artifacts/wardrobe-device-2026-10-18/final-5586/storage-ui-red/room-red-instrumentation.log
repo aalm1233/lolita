@@ -1,0 +1,467 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.StorageDraftTest:
+INSTRUMENTATION_STATUS: test=movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode(StorageDraftTest.kt:101)
+
+INSTRUMENTATION_STATUS: stream=
+Error in movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode(com.lolita.app.data.StorageDraftTest):
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode(StorageDraftTest.kt:101)
+
+INSTRUMENTATION_STATUS: test=movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences(StorageDraftTest.kt:127)
+
+INSTRUMENTATION_STATUS: stream=
+Error in delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences(com.lolita.app.data.StorageDraftTest):
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences(StorageDraftTest.kt:127)
+
+INSTRUMENTATION_STATUS: test=delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode(StorageDraftTest.kt:112)
+
+INSTRUMENTATION_STATUS: stream=
+Error in deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode(com.lolita.app.data.StorageDraftTest):
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode(StorageDraftTest.kt:112)
+
+INSTRUMENTATION_STATUS: test=deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.ItemDraftBaselineTest:
+INSTRUMENTATION_STATUS: test=reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A stale durable draft must request explicit discard/reload
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation$1$1.invokeSuspend(ItemDraftBaselineTest.kt:68)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:35)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46)
+	at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:233)
+	at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:152)
+	at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core(CancellableContinuationImpl.kt:504)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core$default(CancellableContinuationImpl.kt:493)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeUndispatched(CancellableContinuationImpl.kt:596)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedResumeTask.run(EventLoop.common.kt:497)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation(ItemDraftBaselineTest.kt:64)
+
+INSTRUMENTATION_STATUS: stream=
+Error in reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation(com.lolita.app.data.ItemDraftBaselineTest):
+java.lang.AssertionError: A stale durable draft must request explicit discard/reload
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation$1$1.invokeSuspend(ItemDraftBaselineTest.kt:68)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:35)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46)
+	at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:233)
+	at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:152)
+	at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core(CancellableContinuationImpl.kt:504)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core$default(CancellableContinuationImpl.kt:493)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeUndispatched(CancellableContinuationImpl.kt:596)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedResumeTask.run(EventLoop.common.kt:497)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation(ItemDraftBaselineTest.kt:64)
+
+INSTRUMENTATION_STATUS: test=reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Concurrent detail append or batch move must not be lost
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline$1$1.invokeSuspend(ItemDraftBaselineTest.kt:81)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline(ItemDraftBaselineTest.kt:75)
+
+INSTRUMENTATION_STATUS: stream=
+Error in savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline(com.lolita.app.data.ItemDraftBaselineTest):
+java.lang.AssertionError: Concurrent detail append or batch move must not be lost
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline$1$1.invokeSuspend(ItemDraftBaselineTest.kt:81)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline(ItemDraftBaselineTest.kt:75)
+
+INSTRUMENTATION_STATUS: test=savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Known generated legacy previews need durable provenance
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction$1$1.invokeSuspend(ItemDraftBaselineTest.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction(ItemDraftBaselineTest.kt:98)
+
+INSTRUMENTATION_STATUS: stream=
+Error in legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction(com.lolita.app.data.ItemDraftBaselineTest):
+java.lang.AssertionError: Known generated legacy previews need durable provenance
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction$1$1.invokeSuspend(ItemDraftBaselineTest.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction(ItemDraftBaselineTest.kt:98)
+
+INSTRUMENTATION_STATUS: test=legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Repository must enforce the original draft baseline atomically
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor$1$1.invokeSuspend(ItemDraftBaselineTest.kt:88)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor(ItemDraftBaselineTest.kt:86)
+
+INSTRUMENTATION_STATUS: stream=
+Error in repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor(com.lolita.app.data.ItemDraftBaselineTest):
+java.lang.AssertionError: Repository must enforce the original draft baseline atomically
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor$1$1.invokeSuspend(ItemDraftBaselineTest.kt:88)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor(ItemDraftBaselineTest.kt:86)
+
+INSTRUMENTATION_STATUS: test=repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=aFreshEditorCanStillSaveWithoutInventingAConflict
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftBaselineTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=8
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=aFreshEditorCanStillSaveWithoutInventingAConflict
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.581
+There were 7 failures:
+1) movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode(com.lolita.app.data.StorageDraftTest)
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode(StorageDraftTest.kt:101)
+2) delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences(com.lolita.app.data.StorageDraftTest)
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences(StorageDraftTest.kt:127)
+3) deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode(com.lolita.app.data.StorageDraftTest)
+java.lang.AssertionError: A normal storage action must leave a valid exportable graph: 草稿收纳位置无效
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$Fixture.backupMustSucceed(StorageDraftTest.kt:80)
+	at com.lolita.app.data.StorageDraftTest$Fixture$backupMustSucceed$1.invokeSuspend(Unknown Source:14)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode(StorageDraftTest.kt:112)
+4) reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation(com.lolita.app.data.ItemDraftBaselineTest)
+java.lang.AssertionError: A stale durable draft must request explicit discard/reload
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation$1$1.invokeSuspend(ItemDraftBaselineTest.kt:68)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:35)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46)
+	at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:233)
+	at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:152)
+	at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core(CancellableContinuationImpl.kt:504)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$kotlinx_coroutines_core$default(CancellableContinuationImpl.kt:493)
+	at kotlinx.coroutines.CancellableContinuationImpl.resumeUndispatched(CancellableContinuationImpl.kt:596)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedResumeTask.run(EventLoop.common.kt:497)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation(ItemDraftBaselineTest.kt:64)
+5) savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline(com.lolita.app.data.ItemDraftBaselineTest)
+java.lang.AssertionError: Concurrent detail append or batch move must not be lost
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline$1$1.invokeSuspend(ItemDraftBaselineTest.kt:81)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline(ItemDraftBaselineTest.kt:75)
+6) legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction(com.lolita.app.data.ItemDraftBaselineTest)
+java.lang.AssertionError: Known generated legacy previews need durable provenance
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.lolita.app.data.ItemDraftBaselineTest$legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction$1$1.invokeSuspend(ItemDraftBaselineTest.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction(ItemDraftBaselineTest.kt:98)
+7) repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor(com.lolita.app.data.ItemDraftBaselineTest)
+java.lang.AssertionError: Repository must enforce the original draft baseline atomically
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftBaselineTest$repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor$1$1.invokeSuspend(ItemDraftBaselineTest.kt:88)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftBaselineTest.repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor(ItemDraftBaselineTest.kt:86)
+
+FAILURES!!!
+Tests run: 8,  Failures: 7
+
+
+INSTRUMENTATION_CODE: -1

@@ -1,0 +1,51 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest:
+INSTRUMENTATION_STATUS: test=sevenDarkSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sevenDarkSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sevenLightSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sevenLightSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=realButtonsFilterRowsApplyInPartsSaveAndReopenTheAcceptedEvidence
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=realButtonsFilterRowsApplyInPartsSaveAndReopenTheAcceptedEvidence
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 21.267
+
+OK (3 tests)
+
+
+INSTRUMENTATION_CODE: -1

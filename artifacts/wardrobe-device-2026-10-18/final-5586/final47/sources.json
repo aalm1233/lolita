@@ -1,0 +1,37 @@
+[
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/StorageRepositoryTest.kt",
+    "sha256": "8a76b18013d4e222338058120727cd5b26a60d4834a3b791e991bd3ed2acc0b5",
+    "tests": 8
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/StorageDraftTest.kt",
+    "sha256": "8b58a4bed33fd8a5c86441aa6b53c6cf2e65845cf79866e4aa6136af74eeb3df",
+    "tests": 4
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/ItemDraftBaselineTest.kt",
+    "sha256": "846fa61652d12062587d45950248c75d5dd20f0003fdfaecc55d288f99b3369d",
+    "tests": 6
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/NewDraftStorageCommitTest.kt",
+    "sha256": "d33f257904aa946e07aebf0fe62583238035677bcf55c073414bd80a966d2979",
+    "tests": 2
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt",
+    "sha256": "9202dd1493e349ecb0707791d44ca96fe576d0e17552b45376785311a1601749",
+    "tests": 16
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/RecognitionPersistenceTest.kt",
+    "sha256": "39dd0979f5674f676fe91db84b0f047336fd6574d15a4bd63403df15599802dc",
+    "tests": 8
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/item/WardrobeRecognitionFlowTest.kt",
+    "sha256": "9bda27517e9ba38f7c3a5df09fe86919f2bb3d9ce1584b87ad90ed74d5360fd0",
+    "tests": 3
+  }
+]

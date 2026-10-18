@@ -1,0 +1,57 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "testCount": 8,
+  "passed": 1,
+  "failed": 7,
+  "results": [
+    {
+      "class": "com.lolita.app.data.StorageDraftTest",
+      "test": "movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode",
+      "passed": false,
+      "stack": "java.lang.AssertionError: A normal storage action must leave a valid exportable graph: \u8349\u7a3f\u6536\u7eb3\u4f4d\u7f6e\u65e0\u6548"
+    },
+    {
+      "class": "com.lolita.app.data.StorageDraftTest",
+      "test": "delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences",
+      "passed": false,
+      "stack": "java.lang.AssertionError: A normal storage action must leave a valid exportable graph: \u8349\u7a3f\u6536\u7eb3\u4f4d\u7f6e\u65e0\u6548"
+    },
+    {
+      "class": "com.lolita.app.data.StorageDraftTest",
+      "test": "deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode",
+      "passed": false,
+      "stack": "java.lang.AssertionError: A normal storage action must leave a valid exportable graph: \u8349\u7a3f\u6536\u7eb3\u4f4d\u7f6e\u65e0\u6548"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation",
+      "passed": false,
+      "stack": "java.lang.AssertionError: A stale durable draft must request explicit discard/reload"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline",
+      "passed": false,
+      "stack": "java.lang.AssertionError: Concurrent detail append or batch move must not be lost"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction",
+      "passed": false,
+      "stack": "java.lang.AssertionError: Known generated legacy previews need durable provenance"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor",
+      "passed": false,
+      "stack": "java.lang.AssertionError: Repository must enforce the original draft baseline atomically"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "aFreshEditorCanStillSaveWithoutInventingAConflict",
+      "passed": true,
+      "stack": null
+    }
+  ]
+}

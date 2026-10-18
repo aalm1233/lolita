@@ -1,0 +1,32 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "sameInstalledApk": true,
+  "deviceTests": 47,
+  "deviceFailures": 0,
+  "suites": [
+    {
+      "suite": "room44",
+      "tests": 44,
+      "failures": 0,
+      "seconds": 3.374
+    },
+    {
+      "suite": "ui3",
+      "tests": 3,
+      "failures": 0,
+      "seconds": 21.267
+    }
+  ],
+  "jvm": {
+    "tests": 386,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "signatureSha256": "b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2",
+  "appVersionCode": 113,
+  "realProviderRequests": 0,
+  "clearedData": false,
+  "uninstalled": false
+}

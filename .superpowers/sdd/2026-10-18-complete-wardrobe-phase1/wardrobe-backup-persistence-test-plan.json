@@ -1,0 +1,46 @@
+[
+  {
+    "class": "com.lolita.app.data.WardrobeBackupTest",
+    "cases": [
+      "jsonRoundTripPreservesNewGraphsOrderFieldsAndActualCompletedV4Inputs",
+      "zipRoundTripMapsSharedRegionsAndActualTemplatesOnceAndPreservesTheirSha",
+      "oldFormatNineWithMissingWardrobeFieldsDefaultsToUnknownAndKeepsOldOrderAndImageOrder",
+      "unknownSemanticIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "cyclicNodesAreRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "crossRoomItemNodeIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "invalidZipGraphIsRejectedBeforeActivatingAnyNewImageOrWritingRows",
+      "orphanEvidenceIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "visualBrandGuessCannotBeRestoredAsAcceptedEvidence",
+      "missingDraftRegionCannotReplaceTheCurrentDatabase",
+      "recognitionRegionHashMismatchCannotReplaceTheCurrentDatabase",
+      "changedCompletedV4InputCannotBeExportedAsAnUnchangedFrozenRequest",
+      "jsonWithMissingCompletedV4HeadKeepsTheFrozenTaskAndMarksItsResourcesMissing",
+      "jsonRestoresTheHeadPreferenceAsMetadataWithoutAddingItsImageToTheBackup",
+      "zipRestoresTheHeadPreferenceAndDeduplicatesDistinctSourceFilesBySha",
+      "zipDedupKeepsBothRegionIdentitiesAndRemovingOneStillProtectsTheSharedImage"
+    ],
+    "status": "All24 real device GREEN; later UI cases are separate and unexecuted",
+    "redPassed": 8,
+    "redFailed": 4,
+    "currentTestCount": 16,
+    "greenPassed": 16
+  },
+  {
+    "class": "com.lolita.app.data.RecognitionPersistenceTest",
+    "cases": [
+      "regionsPersistExactHashesLimitRollbackAndRemovalCleansOnlyTheRemovedCopy",
+      "reviewedResultAndEvidenceSurviveRecreationCommitAndTaskDiscardWithoutEnteringTheAlbum",
+      "staleConfirmationAndChangedKeyNeverCallTheInjectedTransport",
+      "processRecreationInterruptsPreparedAndRunningTasksWithoutAnyAutomaticResend",
+      "restoreBarrierCancelsTheWaiterBeforeReplacementAndNeverResendsTheCancelledTask",
+      "alteredCropBytesNeverReachTheInjectedTransportOrOverwriteTheSnapshot",
+      "deepSeekReadsOnlyItsOwnKeyAndPersistsTheActualResponseModel",
+      "changingRevisionOrProviderWhileReadingTheKeyRejectsBeforeClaimOrTransport"
+    ],
+    "status": "All24 real device GREEN; later UI cases are separate and unexecuted",
+    "redPassed": 5,
+    "redFailed": 1,
+    "currentTestCount": 8,
+    "greenPassed": 8
+  }
+]

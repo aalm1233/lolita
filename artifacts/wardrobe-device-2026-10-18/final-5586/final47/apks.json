@@ -1,0 +1,14 @@
+[
+  {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "2f77a10a7481138c632448e543c40a3757a3e23a13bbf6636c2334451d0405ad",
+    "install": "Performing Streamed Install\nSuccess\n",
+    "certificateSha256": "b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2"
+  },
+  {
+    "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "sha256": "ba610ed03e43945208bea534196603587f37e08b4676833b9d3dadffe8e5829f",
+    "install": "Performing Streamed Install\nSuccess\n",
+    "certificateSha256": "b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2"
+  }
+]

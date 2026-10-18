@@ -1,0 +1,41 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest:
+INSTRUMENTATION_STATUS: test=fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Apply text overflow: [size=328 x 53, paragraph=524.0x53.0, w=true, h=false, lines=1, line=0.0..326.05713 / 0.0..53.0, font=14.0.sp, lineHeight=20.0.sp, constraints=Constraints(minWidth = 0, maxWidth = 524, minHeight = 0, maxHeight = Infinity)]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest.fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText(WardrobeRecognitionFlowTest.kt:282)
+
+INSTRUMENTATION_STATUS: stream=
+Error in fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText(com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest):
+java.lang.AssertionError: Apply text overflow: [size=328 x 53, paragraph=524.0x53.0, w=true, h=false, lines=1, line=0.0..326.05713 / 0.0..53.0, font=14.0.sp, lineHeight=20.0.sp, constraints=Constraints(minWidth = 0, maxWidth = 524, minHeight = 0, maxHeight = Infinity)]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest.fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText(WardrobeRecognitionFlowTest.kt:282)
+
+INSTRUMENTATION_STATUS: test=fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 3.57
+There was 1 failure:
+1) fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText(com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest)
+java.lang.AssertionError: Apply text overflow: [size=328 x 53, paragraph=524.0x53.0, w=true, h=false, lines=1, line=0.0..326.05713 / 0.0..53.0, font=14.0.sp, lineHeight=20.0.sp, constraints=Constraints(minWidth = 0, maxWidth = 524, minHeight = 0, maxHeight = Infinity)]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest.fourteenSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText(WardrobeRecognitionFlowTest.kt:282)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

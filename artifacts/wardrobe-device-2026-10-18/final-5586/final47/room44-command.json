@@ -1,0 +1,14 @@
+[
+  "/Users/dengtong/Library/Android/sdk/platform-tools/adb",
+  "-s",
+  "emulator-5586",
+  "shell",
+  "am",
+  "instrument",
+  "-w",
+  "-r",
+  "-e",
+  "class",
+  "com.lolita.app.data.StorageRepositoryTest,com.lolita.app.data.StorageDraftTest,com.lolita.app.data.ItemDraftBaselineTest,com.lolita.app.data.NewDraftStorageCommitTest,com.lolita.app.data.WardrobeBackupTest,com.lolita.app.data.RecognitionPersistenceTest",
+  "com.lolita.app.test/androidx.test.runner.AndroidJUnitRunner"
+]

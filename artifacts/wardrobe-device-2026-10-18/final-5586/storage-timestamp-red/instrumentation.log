@@ -1,0 +1,68 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.StorageDraftTest:
+INSTRUMENTATION_STATUS: test=movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.StorageDraftTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A storage move is a real Item edit; its old draft must not restore the still-valid previous node
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable$1$1.invokeSuspend(StorageDraftTest.kt:148)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable(StorageDraftTest.kt:142)
+
+INSTRUMENTATION_STATUS: stream=
+Error in movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable(com.lolita.app.data.StorageDraftTest):
+java.lang.AssertionError: A storage move is a real Item edit; its old draft must not restore the still-valid previous node
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable$1$1.invokeSuspend(StorageDraftTest.kt:148)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable(StorageDraftTest.kt:142)
+
+INSTRUMENTATION_STATUS: test=movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.255
+There was 1 failure:
+1) movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable(com.lolita.app.data.StorageDraftTest)
+java.lang.AssertionError: A storage move is a real Item edit; its old draft must not restore the still-valid previous node
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.StorageDraftTest$movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable$1$1.invokeSuspend(StorageDraftTest.kt:148)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.StorageDraftTest.movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable(StorageDraftTest.kt:142)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

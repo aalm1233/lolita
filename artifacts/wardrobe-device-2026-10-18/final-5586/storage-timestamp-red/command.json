@@ -1,0 +1,17 @@
+[
+  "/Users/dengtong/Library/Android/sdk/platform-tools/adb",
+  "-s",
+  "emulator-5586",
+  "shell",
+  "am",
+  "instrument",
+  "-w",
+  "-r",
+  "-e",
+  "timeout_msec",
+  "120000",
+  "-e",
+  "class",
+  "com.lolita.app.data.StorageDraftTest#movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable",
+  "com.lolita.app.test/androidx.test.runner.AndroidJUnitRunner"
+]

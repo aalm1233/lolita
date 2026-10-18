@@ -1,0 +1,153 @@
+package com.lolita.app.data
+
+import android.content.ContextWrapper
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.room.Room
+import androidx.test.platform.app.InstrumentationRegistry
+import com.lolita.app.data.file.BackupManager
+import com.lolita.app.data.file.ImageFileHelper
+import com.lolita.app.data.local.LolitaDatabase
+import com.lolita.app.data.local.entity.*
+import com.lolita.app.data.repository.*
+import com.lolita.app.di.AppModule
+import com.lolita.app.domain.model.*
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.*
+import org.junit.Test
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.UUID
+
+/** Real storage transactions, persistent JSON drafts, stale autosave and public backup. */
+class StorageDraftTest {
+    private val target = InstrumentationRegistry.getInstrumentation().targetContext
+    private inner class Fixture {
+        val root = File(target.cacheDir, "storage-draft-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = object : ContextWrapper(target) {
+            override fun getFilesDir() = File(root, "files").apply { mkdirs() }
+            override fun getCacheDir() = File(root, "cache").apply { mkdirs() }
+            override fun getNoBackupFilesDir() = File(root, "no-backup").apply { mkdirs() }
+        }
+        val db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
+        val storage = StorageRepository(db)
+        val drafts = ItemDraftRepository(db, ItemRepository(db.itemDao(), database = db))
+        val manager = BackupManager(context, db)
+        val exports = mutableListOf<Uri>()
+        lateinit var image: String
+        lateinit var originalImageSha: String
+        lateinit var original: Item
+        lateinit var linked: ItemDraft
+        lateinit var unsaved: ItemDraft
+        lateinit var roomOnly: ItemDraft
+        lateinit var unrelated: ItemDraft
+        var cabinet = 0L
+        var shelf = 0L
+
+        suspend fun init() {
+            ImageFileHelper.configure(context, db)
+            val bitmap = Bitmap.createBitmap(24, 32, Bitmap.Config.ARGB_8888).apply { eraseColor(android.graphics.Color.GREEN) }
+            val bytes = ByteArrayOutputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it); it.toByteArray() }
+            bitmap.recycle(); image = ImageFileHelper.saveGeneratedImage(context, bytes)
+            originalImageSha = imageSha256(image)
+            db.brandDao().insertBrand(Brand(id = 1, name = "保留品牌"))
+            db.categoryDao().insertCategory(Category(id = 1, name = "保留假发类型", categorySemantic = CategorySemantic.FULL_WIG))
+            db.locationDao().insertLocation(Location(id = 1, name = "原房间"))
+            db.locationDao().insertLocation(Location(id = 2, name = "新房间"))
+            cabinet = storage.createNode(1, null, "柜子")
+            shelf = storage.createNode(1, cabinet, "第一层")
+            original = Item(id = 1, brandId = 1, categoryId = 1, name = "原物品", description = "原备注",
+                status = ItemStatus.OWNED, imageUrls = listOf(image), locationId = 1, storageNodeId = shelf,
+                size = "原尺码 EU 37", createdAt = 100, updatedAt = 101)
+            db.itemDao().insertItem(original)
+            linked = draft(shelf, 1, 1)
+            unsaved = draft(shelf, 1)
+            roomOnly = draft(null, 1)
+            unrelated = draft(null, 2)
+            listOf(linked, unsaved, roomOnly, unrelated).forEach { db.itemDraftDao().save(it) }
+            backupMustSucceed()
+        }
+
+        fun draft(node: Long?, room: Long?, itemId: Long? = null): ItemDraft = ItemDraft(targetItemId = itemId,
+            dataJson = ItemDraftData(name = "未保存的手工名称", description = "保留草稿备注", brandId = 1, categoryId = 1,
+                size = "原始尺码 52～58 cm", colors = listOf("奶茶", "挑染蓝"), seasons = listOf("春", "秋"), style = "手工风格",
+                locationId = room, storageNodeId = node, composition = ItemComposition.SINGLE,
+                specificationsJson = WardrobeSpecifications(wig = WigSpecifications(lengthCm = "约 60 cm")).encode(),
+                importToken = UUID.randomUUID().toString(), baselineUpdatedAt = itemId?.let { original.updatedAt }).encode(),
+            imagePaths = listOf(image), sizeChartImagePaths = listOf(image), evidenceImagePaths = listOf(image),
+            appearanceOnlyImagePaths = listOf(image), updatedAt = 500)
+
+        suspend fun backupMustSucceed() {
+            val result = manager.exportToJson().also { it.getOrNull()?.let(exports::add) }
+            assertTrue("A normal storage action must leave a valid exportable graph: ${result.exceptionOrNull()?.message}", result.isSuccess)
+        }
+
+        suspend fun assertDraft(before: ItemDraft, room: Long?, node: Long?) {
+            val actual = db.itemDraftDao().get(before.id)!!
+            assertEquals(before.copy(dataJson = before.data().copy(locationId = room, storageNodeId = node).encode()), actual)
+            assertEquals(originalImageSha, actual.protectedImagePaths().map(::imageSha256).distinct().single())
+        }
+
+        fun close() {
+            exports.forEach { context.contentResolver.delete(it, null, null) }
+            db.close(); root.deleteRecursively()
+            ImageFileHelper.configure(AppModule.context(), AppModule.database())
+        }
+    }
+
+    private suspend fun fixture(block: suspend (Fixture) -> Unit) {
+        val f = Fixture()
+        try { f.init(); block(f) } finally { f.close() }
+    }
+
+    @Test fun movedSubtreeUpdatesBothDraftKindsAndStaleAutosaveFollowsTheExistingNode() = runBlocking { fixture { f ->
+        f.storage.moveNode(f.cabinet, 2, null)
+        f.backupMustSucceed()
+        f.assertDraft(f.linked, 2, f.shelf); f.assertDraft(f.unsaved, 2, f.shelf)
+        f.assertDraft(f.roomOnly, 1, null); f.assertDraft(f.unrelated, 2, null)
+        assertEquals(f.original.copy(locationId = 2), f.db.itemDao().getItemById(1))
+        f.drafts.save(f.unsaved)
+        f.assertDraft(f.unsaved, 2, f.shelf)
+        f.backupMustSucceed()
+    } }
+
+    @Test fun deletingSubtreeOrDraftOnlyLeafKeepsDraftRoomsAndNeverResurrectsADeletedNode() = runBlocking { fixture { f ->
+        val leaf = f.storage.createNode(1, null, "仅草稿使用的空柜")
+        val draftOnly = f.draft(leaf, 1)
+        f.db.itemDraftDao().save(draftOnly)
+        f.storage.deleteNode(leaf)
+        f.storage.deleteNode(f.cabinet, clearContents = true)
+        f.backupMustSucceed()
+        f.assertDraft(f.linked, 1, null); f.assertDraft(f.unsaved, 1, null); f.assertDraft(draftOnly, 1, null)
+        f.assertDraft(f.roomOnly, 1, null); f.assertDraft(f.unrelated, 2, null)
+        assertEquals(f.original.copy(locationId = null, storageNodeId = null), f.db.itemDao().getItemById(1))
+        f.drafts.save(f.unsaved); f.drafts.save(draftOnly)
+        f.assertDraft(f.unsaved, 1, null); f.assertDraft(draftOnly, 1, null)
+        f.backupMustSucceed()
+    } }
+
+    @Test fun delegatedRoomDeletionClearsNodeAndRoomDraftsAndRejectsTheirStaleAutosaveReferences() = runBlocking { fixture { f ->
+        val locations = LocationRepository(f.db.locationDao(), f.db.itemDao(), f.db, f.storage)
+        locations.deleteLocation(f.db.locationDao().getLocationByIdSync(1)!!, clearContents = true)
+        f.backupMustSucceed()
+        f.assertDraft(f.linked, null, null); f.assertDraft(f.unsaved, null, null); f.assertDraft(f.roomOnly, null, null)
+        f.assertDraft(f.unrelated, 2, null)
+        assertEquals(f.original.copy(locationId = null, storageNodeId = null), f.db.itemDao().getItemById(1))
+        assertNull(f.db.locationDao().getLocationByIdSync(1))
+        f.drafts.save(f.unsaved); f.drafts.save(f.roomOnly)
+        f.assertDraft(f.unsaved, null, null); f.assertDraft(f.roomOnly, null, null)
+        f.backupMustSucceed()
+    } }
+
+    @Test fun movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable() = runBlocking { fixture { f ->
+        val destination = f.storage.createNode(2, null, "仍有效的目标柜")
+        f.storage.moveItems(setOf(1), 2, destination)
+        val moved = f.db.itemDao().getItemById(1)!!
+        assertNotNull(f.db.storageNodeDao().getById(f.shelf))
+        val stale = runCatching { f.drafts.commit(f.linked.id, f.original.copy(name = "陈旧编辑不应覆盖")) }
+        assertTrue("A storage move is a real Item edit; its old draft must not restore the still-valid previous node", stale.isFailure)
+        assertEquals(moved, f.db.itemDao().getItemById(1))
+        assertEquals(f.linked, f.db.itemDraftDao().get(f.linked.id))
+        f.backupMustSucceed()
+    } }
+}

@@ -1,0 +1,37 @@
+{
+  "formatVersion": 1,
+  "templates": [
+    {
+      "id": "wig_stand",
+      "name": "假发架",
+      "assetPath": "builtin/storage/wig_stand.png",
+      "sha256": "0122c9dbbe109a46f6d66c70e8c214b4ac3d78bcbf7a4fde4acc0e1047014b24",
+      "description": "空置假发支撑架与收纳角",
+      "version": 1
+    },
+    {
+      "id": "shoe_cabinet",
+      "name": "鞋柜",
+      "assetPath": "builtin/storage/shoe_cabinet.png",
+      "sha256": "f83520d7e0b80ae23a7c577053e2925181c36160e0fd5100bdbad4d1da1d9903",
+      "description": "玄关开放式鞋柜",
+      "version": 1
+    },
+    {
+      "id": "sock_drawer",
+      "name": "袜子抽屉",
+      "assetPath": "builtin/storage/sock_drawer.png",
+      "sha256": "d173e46075e0750ff1ba8331d895be6237329336f02739af31fc2a33ef0314d9",
+      "description": "分格抽屉与素色袜形示意",
+      "version": 1
+    },
+    {
+      "id": "accessory_box",
+      "name": "配饰收纳盒",
+      "assetPath": "builtin/storage/accessory_box.png",
+      "sha256": "79e597987e2c26ed98fd445ff34df8e6461657367da79648bb13eeb1fdaf5a7c",
+      "description": "分格配饰盒与中性发夹示意",
+      "version": 1
+    }
+  ]
+}

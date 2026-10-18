@@ -117,7 +117,7 @@ class TryOnViewModel @JvmOverloads constructor(
 
 ) : ViewModel() {
     private val gson = Gson()
-    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), generationItemIds = savedStateHandle.get<List<Long>>(GENERATION_IDS).orEmpty().toSet(), requiresExplicitSubset = savedStateHandle[EXPLICIT_SUBSET] ?: (restoreSelection().size > 8), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
+    private val _uiState = MutableStateFlow(TryOnUiState(loadFailed = savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true, error = if (savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else null, selected = restoreSelection(), generationItemIds = savedStateHandle.get<List<Long>>(GENERATION_IDS).orEmpty().toSet(), requiresExplicitSubset = savedStateHandle[EXPLICIT_SUBSET] ?: (restoreSelection().size > 8), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
     val uiState: StateFlow<TryOnUiState> = _uiState.asStateFlow()
     private var observedTasks = emptyList<ImageTask>()
     private var entryConsumed = savedStateHandle.get<Boolean>(ENTRY_CONSUMED) == true || savedStateHandle.contains(SELECTION)
@@ -145,9 +145,15 @@ class TryOnViewModel @JvmOverloads constructor(
                         val itemId = savedStateHandle.get<Long>("itemId")?.takeIf { it > 0 }
                         val coordinateId = savedStateHandle.get<Long>("coordinateId")?.takeIf { it > 0 }
                         val parents = rows.filter { it.coordinateId == coordinateId && coordinateId != null }.map { it.id }.toSet()
-                        val retry = savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
-                            runCatching { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }.getOrNull()
+                        val retryTask = savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
+                            runCatching { readRetryTask(id) }.getOrNull()
                         }
+                        val retryBlocked = retryTask?.sourceResourcesMissing == true
+                        if (retryBlocked) {
+                            savedStateHandle[MISSING_RETRY_SOURCES] = true
+                            _uiState.update { it.copy(loadFailed = true, error = ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE) }
+                        }
+                        val retry = retryTask?.takeUnless { it.sourceResourcesMissing }?.let { runCatching { ImageTaskRequest.decode(it.requestJson) }.getOrNull() }
                         if (retry != null && savedStateHandle.get<Boolean>(MODEL_CHOSEN) != true) {
                             savedStateHandle[MODEL_CHOSEN] = true
                             savedStateHandle[MODEL_ID] = retry.tryOnModel?.personalModelId
@@ -156,6 +162,7 @@ class TryOnViewModel @JvmOverloads constructor(
                         entryConsumed = true
                         savedStateHandle[ENTRY_CONSUMED] = true
                         val initial = when {
+                            retryBlocked -> emptyList()
                             retry != null -> retry.garments.mapNotNull { garment -> rows.firstOrNull { it.id == garment.itemId } }
                             itemId != null -> rows.filter { it.id == itemId }
                             coordinateId != null -> rows.filter { it.id in parents || it.parentItemId in parents }
@@ -366,6 +373,7 @@ class TryOnViewModel @JvmOverloads constructor(
         private const val MODEL_CHOSEN = "tryOnPersonalModelChosen"
         private const val LAST_TASK = "tryOnLatestTaskId"
         private const val SELECTION = "tryOnSelections"
+        private const val MISSING_RETRY_SOURCES = "tryOnMissingRetrySources"
         private const val ENTRY_CONSUMED = "tryOnEntryConsumed"
     }
 }

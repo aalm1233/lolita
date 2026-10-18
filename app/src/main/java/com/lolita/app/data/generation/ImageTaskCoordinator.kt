@@ -350,6 +350,10 @@ class ImageTaskCoordinator(
                 try {
                     if (sessionStopped(session)) throw CancellationException("后台服务已停止")
                     onChanged(task)
+                    if (task.sourceResourcesMissing) {
+                        finish(task.id, ImageTaskStatus.FAILED, ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE)
+                        return@launch
+                    }
                     execute(task)
                 } catch (failure: CancellationException) {
                     withContext(NonCancellable) { finish(task.id, ImageTaskStatus.INTERRUPTED, "执行已中断；服务可能仍会计费，请核对后重新发起") }

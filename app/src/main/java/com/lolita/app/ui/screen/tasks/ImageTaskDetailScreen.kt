@@ -61,7 +61,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                             Text("${person.name} · ${person.measurements.heightCm} 厘米 · ${person.measurements.weightKg} 公斤", Modifier.padding(top = skin.spacingSmall))
                         }
                     }
-                    task.error?.let { Text(it, Modifier.padding(top = skin.spacingSmall), color = MaterialTheme.colorScheme.error) }
+                    (if (task.sourceResourcesMissing) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else task.error)?.let { Text(it, Modifier.padding(top = skin.spacingSmall), color = MaterialTheme.colorScheme.error) }
                     if (task.requestSent && task.status != ImageTaskStatus.COMPLETED && task.status != ImageTaskStatus.AWAITING_CONFIRMATION) {
                         Text("请求可能已发送，停止本地等待不代表远端取消，服务可能仍会计费。", Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
                     }

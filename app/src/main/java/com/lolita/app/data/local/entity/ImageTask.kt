@@ -25,12 +25,18 @@ data class ImageTask(
     @ColumnInfo(name = "updated_at") val updatedAt: Long = createdAt,
     val error: String? = null,
     @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null,
-    @ColumnInfo(name = "keep_source_images", defaultValue = "0") val keepSourceImages: Boolean = false
+    @ColumnInfo(name = "keep_source_images", defaultValue = "0") val keepSourceImages: Boolean = false,
+    @ColumnInfo(name = "source_resources_missing", defaultValue = "0") val sourceResourcesMissing: Boolean = false
 ) {
+    companion object {
+        const val SOURCE_RESOURCES_MISSING_MESSAGE = "原输入资源缺失，无法继续生成；原模板与请求快照已保留，请重新选择资料新建任务"
+    }
+
     fun validate() {
         require(id.isNotBlank() && title.isNotBlank()) { "图像任务缺少标识或名称" }
         val request = ImageTaskRequest.decode(requestJson)
         request.validate(kind)
+        require(!sourceResourcesMissing || keepSourceImages && request.version == 4) { "仅不可变输入任务可标记资源缺失" }
         require(keepSourceImages == (request.version == 4)) { "任务输入保留策略与协议不匹配" }
         if (keepSourceImages && resultImagePath != null) require(resultImagePath !in sourceImagePaths && resultImagePath != request.productOriginalImagePath) { "生成结果不能复用输入或裁切原图" }
         if (retainsSourceImages) {

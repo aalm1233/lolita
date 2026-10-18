@@ -60,7 +60,7 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                     Text("${task.displayTypeLabel} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)
                     TaskStage(task)
                     Text(formatTaskDate(task.createdAt), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    task.error?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
+                    (if (task.sourceResourcesMissing) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else task.error)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
                     TextButton(onClick = { onOpenTask(task.id) }, modifier = Modifier.fillMaxWidth()) { Text("查看任务") }
                 } }
             }

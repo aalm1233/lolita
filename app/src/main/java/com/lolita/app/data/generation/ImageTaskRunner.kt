@@ -44,6 +44,7 @@ class ImageTaskExecutor(
     private val prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null
 ) {
     suspend fun execute(task: ImageTask) {
+        require(!task.sourceResourcesMissing) { ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE }
         val credentials = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { readCredentials(task.provider) }
         val request = ImageTaskRequest.decode(task.requestJson)
         if (request.version == 4) require(request.serviceModel == task.provider.model) { "原服务型号已不可用，请核对后为新任务重新选择；原请求未改变" }

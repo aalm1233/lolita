@@ -96,6 +96,8 @@ class MannequinViewModel @JvmOverloads constructor(
 ) : ViewModel() {
     private val itemId = savedStateHandle.get<Long>("itemId") ?: 0L
     private val state = MutableStateFlow(MannequinUiState(
+        loadFailed = savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true,
+        error = if (savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else null,
         latestTaskId = savedStateHandle[LAST_TASK],
         legacyPreviewAvailable = savedStateHandle.contains(PREVIEW),
         selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty(),
@@ -129,15 +131,20 @@ class MannequinViewModel @JvmOverloads constructor(
                         }
                         if (!retryEntryConsumed) {
                             savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
-                                val retry = try { readRetryTask(id)?.let { ImageTaskRequest.decode(it.requestJson) } }
+                                val retryTask = try { readRetryTask(id) }
                                 catch (failure: CancellationException) { throw failure }
                                 catch (_: Exception) { null }
+                                val retry = retryTask?.let { runCatching { ImageTaskRequest.decode(it.requestJson) }.getOrNull() }
+                                if (retryTask?.sourceResourcesMissing == true) {
+                                    savedStateHandle[MISSING_RETRY_SOURCES] = true
+                                    state.update { it.copy(loadFailed = true, error = ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE) }
+                                }
                                 if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
                                     retry.wigHeadTemplate?.let { head ->
                                         adoptHeadSnapshot(head, pinCropReferences(listOf(head.imagePath)), validated = false)
                                     }
                                     savedStateHandle[INSTRUCTIONS] = retry.instructions
-                                    state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
+                                    state.update { it.copy(instructions = retry.instructions, error = if (retryTask?.sourceResourcesMissing == true) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else "已载入当前图片，请核对后再次确认费用；原任务保留") }
                                 }
                             }
                             retryEntryConsumed = true
@@ -154,7 +161,7 @@ class MannequinViewModel @JvmOverloads constructor(
                     val oldCategory = state.value.category
                     state.update { it.copy(item = row?.takeIf { it.id == itemId }, category = category, isLoading = false,
                         referenceViewConfirmed = if (oldCategory != null && oldCategory.categorySemantic != category?.categorySemantic) false else it.referenceViewConfirmed) }
-                    if (mannequinSubject(category, confirmedSemantics = true)?.presentation == MannequinPresentation.WIG_HEAD && !headCatalogStarted) loadHeadCatalog()
+                    if (mannequinSubject(category, confirmedSemantics = true)?.presentation == MannequinPresentation.WIG_HEAD && !headCatalogStarted && savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) != true) loadHeadCatalog()
                 }
         }
         viewModelScope.launch { tasks.collect { rows -> observedTasks = rows; state.update { it.copy(latestTask = rows.firstOrNull { row -> row.id == it.latestTaskId }) } } }
@@ -391,6 +398,7 @@ class MannequinViewModel @JvmOverloads constructor(
         private const val CROP_ORIGINAL = "mannequinCropOriginalImage"
         private const val HEAD_TEMPLATE = "mannequinHeadTemplateSnapshot"
         private const val VIEW_CONFIRMED = "mannequinReferenceViewConfirmed"
+        private const val MISSING_RETRY_SOURCES = "mannequinMissingRetrySources"
         private const val RETRY_ENTRY_CONSUMED = "mannequinRetryEntryConsumed"
         private const val LAST_TASK = "mannequinLatestTaskId"
         private const val SOURCE = "mannequinSource"

@@ -10,6 +10,12 @@ import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
+import com.lolita.app.domain.model.*
+import com.lolita.app.data.local.entity.Location
+import com.lolita.app.data.local.entity.StorageNode
+import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.WardrobeFamily
+import com.lolita.app.data.file.TaobaoProductParser
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.Payment
@@ -70,7 +76,12 @@ data class ImportItemState(
     val priceInput: String? = null,
     val shippingInput: String? = null,
     val paidInput: String? = null,
-    val balanceInput: String? = null
+    val balanceInput: String? = null,
+    val specifications: WardrobeSpecifications = WardrobeSpecifications(),
+    val composition: ItemComposition = ItemComposition.UNCONFIRMED,
+    val locationId: Long? = null,
+    val storageNodeId: Long? = null,
+    val locationMappingNote: String? = null
 )
 
 data class ImportResult(
@@ -86,7 +97,8 @@ data class MissingDataItem(
     val name: String,
     val type: MissingDataType,
     val checked: Boolean = true,
-    val extra: String = ""  // 附加信息，如 CategoryGroup
+    val extra: String = "",  // 附加信息，如 CategoryGroup
+    val semantic: CategorySemantic = CategorySemantic.UNCONFIRMED
 )
 
 enum class MissingDataType { BRAND, CATEGORY }
@@ -104,6 +116,8 @@ data class TaobaoImportUiState(
     val importItems: List<ImportItemState> = emptyList(),
     val brands: List<Brand> = emptyList(),
     val categories: List<Category> = emptyList(),
+    val locations: List<Location> = emptyList(),
+    val storageNodes: List<StorageNode> = emptyList(),
     val currentItemIndex: Int = 0,
     // Prepare step: missing data
     val missingItems: List<MissingDataItem> = emptyList(),
@@ -153,13 +167,15 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     init {
         // 合并品牌和分类列表的加载，避免竞态
         viewModelScope.launch {
+            brandRepository.ensureUnsetBrand()
+            categoryRepository.ensurePresetCategories()
             combine(
-                brandRepository.getAllBrands(),
-                categoryRepository.getAllCategories()
-            ) { brands, categories ->
-                Pair(brands, categories)
-            }.collect { (brands, categories) ->
-                _uiState.value = _uiState.value.copy(brands = brands, categories = categories)
+                brandRepository.getAllBrands(), categoryRepository.getAllCategories(),
+                database.locationDao().getAllLocations(), database.storageNodeDao().observeAll()
+            ) { brands, categories, locations, nodes ->
+                TaobaoImportUiState(brands = brands, categories = categories, locations = locations, storageNodes = nodes)
+            }.collect { data ->
+                _uiState.value = _uiState.value.copy(brands = data.brands, categories = data.categories, locations = data.locations, storageNodes = data.storageNodes)
             }
         }
     }
@@ -273,7 +289,12 @@ class TaobaoImportViewModel @JvmOverloads constructor(
             missingItems.add(MissingDataItem(name = it, type = MissingDataType.BRAND))
         }
         missingCategories.entries.sortedBy { it.key }.forEach { (name, group) ->
-            missingItems.add(MissingDataItem(name = name, type = MissingDataType.CATEGORY, extra = group))
+            val semantic = CategorySemantic.entries.firstOrNull { it.label.equals(name, true) }
+                ?: TaobaoProductParser.explicitCategoryCandidates(name, emptyMap()).firstOrNull()?.let { candidate ->
+                    CategorySemantic.entries.firstOrNull { it.label.equals(candidate, true) }
+                } ?: CategorySemantic.UNCONFIRMED
+            missingItems.add(MissingDataItem(name = name, type = MissingDataType.CATEGORY, extra = group,
+                semantic = semantic, checked = semantic != CategorySemantic.UNCONFIRMED))
         }
 
         if (missingItems.isEmpty()) {
@@ -295,6 +316,12 @@ class TaobaoImportViewModel @JvmOverloads constructor(
         }
     }
 
+    fun confirmMissingSemantic(index: Int, semantic: CategorySemantic) {
+        _uiState.value = _uiState.value.copy(missingItems = _uiState.value.missingItems.mapIndexed { i, row ->
+            if (i == index) row.copy(semantic = semantic, checked = true) else row
+        })
+    }
+
     fun toggleAllMissingItems(checked: Boolean) {
         _uiState.value = _uiState.value.copy(
             missingItems = _uiState.value.missingItems.map { it.copy(checked = checked) }
@@ -306,6 +333,10 @@ class TaobaoImportViewModel @JvmOverloads constructor(
      */
     fun confirmPrepare() {
         val checkedItems = _uiState.value.missingItems.filter { it.checked }
+        if (checkedItems.any { it.type == MissingDataType.CATEGORY && it.semantic == CategorySemantic.UNCONFIRMED }) {
+            _uiState.value = _uiState.value.copy(errorMessage = "请先确认所选新类型的品类与默认穿戴位置")
+            return
+        }
         if (checkedItems.isEmpty()) {
             buildDetailItems()
             return
@@ -320,9 +351,9 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                             brandRepository.insertBrand(Brand(name = item.name, logoUrl = ""))
                         }
                         MissingDataType.CATEGORY -> {
-                            val group = if (item.extra == "ACCESSORY") CategoryGroup.ACCESSORY
-                                else CategoryGroup.CLOTHING
-                            categoryRepository.insertCategory(Category(name = item.name, group = group))
+                            val group = if (item.semantic.family == WardrobeFamily.CLOTHING) CategoryGroup.CLOTHING else CategoryGroup.ACCESSORY
+                            categoryRepository.insertCategory(Category(name = item.name, group = group,
+                                categorySemantic = item.semantic, defaultWearRole = item.semantic.defaultWearRole))
                         }
                     }
                 }
@@ -372,14 +403,27 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                         // the exported amount and let the mandatory financial review confirm it.
                         val amountPaid = paid[pieceIndex]
                         val merchandise = if (fullyPaid && paid[pieceIndex] >= shipping[pieceIndex]) importSubtract(paid[pieceIndex], shipping[pieceIndex]) else item.price
+                        val locations = _uiState.value.locations
+                        val nodes = _uiState.value.storageNodes
+                        val candidateNode = item.requestedStoragePath?.let { path -> nodes.filter { node ->
+                            StorageTree.pathFor(node.locationId, node.id, locations, nodes) == path
+                        }.singleOrNull() }
+                        val requestedRoom = item.requestedRoomName?.let { name -> locations.filter { it.name == name }.singleOrNull()?.id }
+                        val conflictingRooms = item.requestedRoomName != null && candidateNode != null && candidateNode.locationId != requestedRoom
+                        val exactNode = candidateNode.takeUnless { conflictingRooms }
+                        val exactRoom = if (conflictingRooms) null else exactNode?.locationId ?: requestedRoom
+                        val unresolved = conflictingRooms || (item.requestedStoragePath != null && exactNode == null) || (item.requestedRoomName != null && exactRoom == null)
                         importItems += ImportItemState(
                             originalItem = item, name = cleanItemName(item.name),
-                            brandId = matchBrand(item.shopName, brands)?.id ?: 0L,
+                            brandId = matchBrand(item.shopName, brands)?.id ?: brands.firstOrNull { it.isUnsetBrand }?.id ?: 0L,
                             categoryId = matchCategory(item.parsedType, categories)?.id ?: 0L,
                             color = item.parsedColor ?: "", size = item.parsedSize ?: "",
                             price = merchandise, purchaseDate = item.orderTime, styleSpec = item.styleSpec,
                             paymentRole = detectPaymentRole(item.name), shipping = shipping[pieceIndex], paidAmount = amountPaid,
-                            sourceLineIndex = line, sourceUnitIndex = unit
+                            sourceLineIndex = line, sourceUnitIndex = unit,
+                            specifications = WardrobeSpecifications.decode(item.specificationsJson),
+                            locationId = exactRoom, storageNodeId = exactNode?.id,
+                            locationMappingNote = if (unresolved) "来源位置未精确匹配，请手动选择；原文：${item.requestedStoragePath ?: item.requestedRoomName}" else null
                         )
                     }
                 }
@@ -506,11 +550,19 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                             val originalOrder = _uiState.value.orders.first { it.orderId == source.originalItem.orderId }
                             "淘宝订单：${source.originalItem.orderId}；源状态：${originalOrder.orderStatus}；源订单实付：${originalOrder.totalPaid}；原行：${source.sourceLineIndex + 1}；件号：${source.sourceUnitIndex + 1}/${source.originalItem.quantity}；原商品金额：${source.originalItem.price}；分摊邮费：${source.shipping}；核对实付：${source.paidAmount}"
                         }
+                        val semantic = _uiState.value.categories.firstOrNull { it.id == main.categoryId }?.categorySemantic
+                        val specifications = when (semantic?.family) {
+                            WardrobeFamily.FOOTWEAR -> main.specifications.copy(footwear = main.specifications.footwear.let { if (it.sizeText.isBlank()) it.copy(sizeText = main.size) else it })
+                            WardrobeFamily.HOSIERY -> main.specifications.copy(hosiery = main.specifications.hosiery.let { if (it.sizeText.isBlank()) it.copy(sizeText = main.size) else it })
+                            else -> main.specifications
+                        }
                         val itemId = itemRepository.insertItem(Item(
                             name = main.name, brandId = main.brandId, categoryId = main.categoryId,
                             colors = main.color.takeIf { it.isNotBlank() }?.let(::listOf) ?: emptyList(),
                             size = main.size.ifBlank { null }, imageUrls = sourceRows.mapNotNull { it.imageUrl }.distinct(),
-                            status = ItemStatus.PENDING_PAYMENT, description = metadata))
+                            status = ItemStatus.PENDING_PAYMENT, description = metadata,
+                            locationId = main.locationId, storageNodeId = main.storageNodeId,
+                            specificationsJson = specifications.encode(), composition = main.composition))
                         val priceId = priceRepository.insertPrice(Price(itemId = itemId, type = type, totalPrice = total, shipping = shipping,
                             deposit = if (type == PriceType.DEPOSIT_BALANCE) stages[0].second else null,
                             balance = if (type == PriceType.DEPOSIT_BALANCE) stages[1].second else null))
@@ -782,10 +834,12 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     /**
      * 在导入流程中新增类型
      */
-    fun addCategory(name: String, group: CategoryGroup) {
+    fun addCategory(name: String, group: CategoryGroup, semantic: CategorySemantic) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                categoryRepository.insertCategory(Category(name = name, group = group))
+                require(semantic != CategorySemantic.UNCONFIRMED) { "请选择稳定类型" }
+                categoryRepository.insertCategory(Category(name = name, group = group, categorySemantic = semantic,
+                    defaultWearRole = semantic.defaultWearRole))
                 val categories = categoryRepository.getAllCategories().first()
                 _uiState.value = _uiState.value.copy(categories = categories)
             } catch (_: Exception) { }
@@ -795,10 +849,9 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     // --- 智能匹配逻辑 ---
 
     private fun matchBrand(shopName: String, brands: List<Brand>): Brand? {
-        return brands.firstOrNull { brand ->
-            shopName.contains(brand.name, ignoreCase = true) ||
-                brand.name.contains(shopName, ignoreCase = true)
-        }
+        val regular = brands.filter { it.systemKey == null }
+        val matched = TaobaoProductParser.matchBrand(regular.map { it.name }, listOf(shopName)) ?: return null
+        return regular.singleOrNull { it.name == matched }
     }
 
     private fun matchCategory(parsedType: String?, categories: List<Category>): Category? {

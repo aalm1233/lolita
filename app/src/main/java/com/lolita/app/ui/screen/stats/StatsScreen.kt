@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.*
+import com.lolita.app.domain.model.WardrobeFamily
+import com.lolita.app.domain.model.WardrobeInventoryCounts
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
@@ -46,6 +48,7 @@ import kotlinx.coroutines.launch
 
 data class StatsUiState(
     val ownedCount: Int = 0,
+    val wardrobeCounts: WardrobeInventoryCounts = WardrobeInventoryCounts(0, 0, emptyMap()),
     val wishedCount: Int = 0,
     val coordinateCount: Int = 0,
     val outfitLogCount: Int = 0,
@@ -85,14 +88,17 @@ class StatsViewModel(
                 priceRepository.getTotalSpending()
             ) { owned, wished, coordCount, logs, spending ->
                 StatsUiState(
-                    ownedCount = owned.size,
-                    wishedCount = wished.size,
+                    ownedCount = owned.distinctBy { it.id }.size,
+                    wishedCount = wished.distinctBy { it.id }.size,
                     coordinateCount = coordCount,
                     outfitLogCount = logs.size,
                     totalSpending = spending,
                     averagePrice = 0.0,
                     isLoading = false
                 )
+            }.combine(combine(itemRepository.getAllItems(), itemRepository.getCategories()) { all, categories ->
+                WardrobeInventoryCounts.from(all, categories)
+            }) { state, counts -> state.copy(wardrobeCounts = counts)
             }.combine(priceRepository.getAllRecordedSpending()) { state, allRecorded ->
                 state.copy(allRecordedSpending = allRecorded)
             }.combine(priceRepository.getIncompleteCurrentOrderCount()) { state, incompleteCount ->
@@ -141,6 +147,7 @@ fun StatsContent(
         )
         LolitaSection("衣橱概况") {
             row { WardrobeCounts(uiState, onNavigateToFilteredList) }
+            row { InventoryCategoryCounts(uiState.wardrobeCounts, onNavigateToFilteredList) }
         }
         if (uiState.showTotalPrice) {
             SpendingOverview(uiState)
@@ -150,6 +157,22 @@ fun StatsContent(
         }
         if (uiState.topBrands.isNotEmpty()) {
             OwnedBrands(uiState.topBrands, onNavigateToFilteredList)
+        }
+    }
+}
+
+@Composable
+private fun InventoryCategoryCounts(counts: WardrobeInventoryCounts, onNavigate: (String, String, String) -> Unit) {
+    val skin = LolitaSkin.current
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+        Text("全部登记 ${counts.allItemCount} 件（含配套小物与心愿） · 主件 ${counts.mainItemCount} 件", style = MaterialTheme.typography.bodyMedium)
+        WardrobeFamily.entries.forEach { family ->
+            val label = if (family == WardrobeFamily.UNCONFIRMED) "待确认品类" else family.label
+            Row(Modifier.fillMaxWidth().skinClickable { onNavigate("family", family.name, label) }
+                .padding(vertical = skin.spacingSmall), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("${counts.byFamily[family] ?: 0} 件")
+            }
         }
     }
 }

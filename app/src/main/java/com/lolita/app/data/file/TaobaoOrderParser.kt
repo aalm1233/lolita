@@ -30,6 +30,8 @@ object TaobaoOrderParser {
     fun parse(inputStream: InputStream): List<TaobaoOrder> = inputStream.use { stream ->
         XSSFWorkbook(stream).use { workbook ->
         val sheet = workbook.getSheetAt(0)
+        val header = sheet.getRow(0)
+        val extraColumns = (11 until (header?.lastCellNum?.toInt() ?: 11)).associateBy { getCellString(header?.getCell(it)).trim() }
 
         // 按订单号分组的临时结构
         val orderMap = linkedMapOf<String, OrderBuilder>()
@@ -71,6 +73,11 @@ object TaobaoOrderParser {
             val price = parsePrice(getCellString(row.getCell(8)))
 
             val parsed = parseStyleSpec(styleSpec)
+            fun extra(vararg names: String): String? = names.firstNotNullOfOrNull { name ->
+                extraColumns[name]?.let { getCellString(row.getCell(it)).trim().takeIf(String::isNotBlank) }
+            }
+            val specifications = extra("专属规格JSON", "规格JSON").orEmpty()
+            com.lolita.app.domain.model.WardrobeSpecifications.decode(specifications)
 
             val builder = orderMap[currentOrderId]!!
             builder.items.add(
@@ -80,12 +87,14 @@ object TaobaoOrderParser {
                     styleSpec = styleSpec,
                     quantity = quantity,
                     price = price,
-                    parsedType = parsed.type,
-                    parsedSize = parsed.size,
+                    parsedType = extra("物品类型", "类型") ?: parsed.type,
+                    parsedSize = extra("尺码", "鞋码") ?: parsed.size,
                     parsedColor = parsed.color,
                     orderId = currentOrderId,
                     orderTime = builder.orderTime,
-                    shopName = builder.shopName
+                    shopName = builder.shopName,
+                    requestedRoomName = extra("房间"), requestedStoragePath = extra("收纳路径", "收纳位置"),
+                    specificationsJson = specifications
                 )
             )
         }
@@ -131,7 +140,7 @@ object TaobaoOrderParser {
             .replace(Regex("需补[^;/]*"), "")
             .replace(Regex("还需补[^;/]*"), "")
             // 日期时间模式
-            .replace(Regex("\\d+\\.\\d+(?:晚上|上午|下午)?[^;/]{0,10}"), "")
+            .replace(Regex("\\d+\\.\\d+(?:晚上|上午|下午)[^;/]{0,10}"), "")
             .replace(Regex("\\d+月\\d+日[^;/]*"), "")
             // 杂项
             .replace(Regex("本体"), "")
@@ -148,7 +157,7 @@ object TaobaoOrderParser {
         // 阶段2: 多级分割
         val primaryParts = cleaned.split(Regex("[;/]")).map { it.trim() }.filter { it.isNotBlank() }
         val allParts = primaryParts.flatMap { part ->
-            part.split(Regex("\\s+|--")).map { it.trim() }.filter { it.isNotBlank() }
+            if (isSizeKeyword(part)) listOf(part) else part.split(Regex("\\s+|--")).map { it.trim() }.filter { it.isNotBlank() }
         }
 
         // 阶段3: 智能分类
@@ -230,6 +239,8 @@ object TaobaoOrderParser {
     }
 
     private val typeKeywords = listOf(
+        "全头假发", "刘海片", "假马尾", "假辫", "发片", "短袜", "中筒袜", "及膝袜", "过膝袜", "连裤袜", "袜套",
+        "玛丽珍鞋", "茶会鞋", "浅口鞋", "短靴", "长靴", "裙撑", "手提包", "斜挎包", "背包", "手拿包", "阳伞", "扇子", "手杖", "玩偶", "花束",
         // 基础类型
         "OP", "SK", "JSK", "SET", "FS",
         // 裙类变体
@@ -249,6 +260,8 @@ object TaobaoOrderParser {
     )
 
     private val sizePatterns = listOf(
+        Regex("^(EU|US|UK|CN|JP)\\s*\\d{1,3}(?:\\.\\d+)?$", RegexOption.IGNORE_CASE),
+        Regex("^\\d{1,3}(?:\\.\\d+)?\\s*(?:至|到|[-~～])?\\s*\\d{0,3}(?:\\.\\d+)?\\s*(?:cm|厘米|mm|毫米)$", RegexOption.IGNORE_CASE),
         Regex("^Lady\\d+$", RegexOption.IGNORE_CASE),
         Regex("^\\d{2,3}$"),                        // 2-3位数字（排除年份等4位数）
         Regex("^(XS|S|M|L|XL|XXL|XXXL|2XL|3XL)$", RegexOption.IGNORE_CASE),

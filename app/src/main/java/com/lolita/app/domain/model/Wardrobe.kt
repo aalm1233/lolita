@@ -56,7 +56,7 @@ data class BagSpecifications(val carryMode: String = "", val dimensions: String 
 data class HandheldSpecifications(val usage: String = "", val dimensions: String = "", val foldable: String = "", val material: String = "")
 
 /** Raw strings preserve units, ranges and incomplete editor input without invented conversions. */
-data class WardrobeSpecifications(val version: Int = 1, val wig: WigSpecifications = WigSpecifications(),
+data class WardrobeSpecifications(val version: Int = 1, val pattern: String = "", val wig: WigSpecifications = WigSpecifications(),
     val hosiery: HosierySpecifications = HosierySpecifications(), val footwear: FootwearSpecifications = FootwearSpecifications(),
     val petticoat: PetticoatSpecifications = PetticoatSpecifications(), val accessory: AccessorySpecifications = AccessorySpecifications(),
     val bag: BagSpecifications = BagSpecifications(), val handheld: HandheldSpecifications = HandheldSpecifications()) {
@@ -70,7 +70,8 @@ data class WardrobeSpecifications(val version: Int = 1, val wig: WigSpecificatio
                 val defaults = Gson().toJsonTree(WardrobeSpecifications()).asJsonObject
                 require(root.keySet().all { it in defaults.keySet() }) { "未知规格字段" }
                 require(root["version"]?.asJsonPrimitive?.let { it.isNumber && it.asBigDecimal.intValueExact() == 1 } == true) { "不支持的物品规格版本" }
-                root.entrySet().filter { it.key != "version" }.forEach { (key, value) ->
+                root["pattern"]?.let { require(it.isJsonPrimitive && it.asJsonPrimitive.isString && it.asString.length <= 4000); defaults.add("pattern", it) }
+                root.entrySet().filter { it.key !in setOf("version", "pattern") }.forEach { (key, value) ->
                     require(value.isJsonObject) { "规格类型无效" }
                     val profile = defaults[key].asJsonObject
                     require(value.asJsonObject.keySet().all { it in profile.keySet() }) { "未知专属规格字段" }

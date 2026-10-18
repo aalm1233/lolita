@@ -44,6 +44,34 @@ class TaobaoOrderParserTest {
         assertEquals("SET", parseSpec("SET白色;M").parsedType)
     }
 
+    @Test fun shoesAndSockSizesKeepOriginalSystemsRangesAndDecimals() {
+        val shoe = parseSpec("玛丽珍鞋;EU 37.5;黑色")
+        assertEquals("玛丽珍鞋", shoe.parsedType)
+        assertEquals("EU 37.5", shoe.parsedSize)
+        val sock = parseSpec("过膝袜;23 至 25 cm;白色")
+        assertEquals("过膝袜", sock.parsedType)
+        assertEquals("23 至 25 cm", sock.parsedSize)
+    }
+
+    @Test fun optionalWardrobeColumnsKeepExplicitSpecificationsAndLocationText() {
+        val bytes = ByteArrayOutputStream()
+        XSSFWorkbook().use { workbook ->
+            val sheet = workbook.createSheet()
+            val header = sheet.createRow(0)
+            listOf("物品类型", "房间", "收纳路径", "专属规格JSON").forEachIndexed { index, text -> header.createCell(11 + index).setCellValue(text) }
+            val row = sheet.createRow(1)
+            listOf("order-2", "2026-10-14", "交易成功", "测试品牌", "长卷", "", "EU 37.5", "1", "100", "110", "10",
+                "全头假发", "卧室", "卧室 → 假发架", "{\"version\":1,\"wig\":{\"lengthCm\":\"60 cm\"}}")
+                .forEachIndexed { index, value -> row.createCell(index).setCellValue(value) }
+            workbook.write(bytes)
+        }
+        val item = TaobaoOrderParser.parse(ByteArrayInputStream(bytes.toByteArray())).single().items.single()
+        assertEquals("全头假发", item.parsedType)
+        assertEquals("卧室", item.requestedRoomName)
+        assertEquals("卧室 → 假发架", item.requestedStoragePath)
+        assertEquals("60 cm", com.lolita.app.domain.model.WardrobeSpecifications.decode(item.specificationsJson).wig.lengthCm)
+    }
+
     private fun parseSpec(spec: String): com.lolita.app.data.model.TaobaoOrderItem {
         val bytes = ByteArrayOutputStream()
         XSSFWorkbook().use { workbook ->

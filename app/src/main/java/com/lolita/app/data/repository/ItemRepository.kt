@@ -30,6 +30,7 @@ class ItemRepository(
     private val context: Context? = null
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
+    fun getCategories() = database?.categoryDao()?.getAllCategories() ?: kotlinx.coroutines.flow.flowOf(emptyList())
 
     fun getSizes(): Flow<List<String>> = itemDao.getSizes()
 
@@ -68,6 +69,9 @@ class ItemRepository(
         require(itemDao.getItemById(item.id) != null) { "服饰已删除，无法保存修改" }
         val normalized = validateHierarchy(item).copy(updatedAt = System.currentTimeMillis())
         itemDao.updateItem(normalized)
+        database?.imageProvenanceDao()?.getForItem(item.id)?.filter { it.imagePath !in normalized.imageUrls }?.forEach {
+            database.imageProvenanceDao().delete(it.itemId, it.imagePath)
+        }
         itemDao.updateSharedChildrenStatus(normalized.id, normalized.status.name)
     }
 
@@ -115,6 +119,10 @@ class ItemRepository(
     }
 
     private suspend fun validateHierarchy(item: Item): Item {
+        item.storageNodeId?.let { nodeId ->
+            val node = database?.storageNodeDao()?.getById(nodeId) ?: error("收纳位置已不存在，请重新选择")
+            require(item.locationId != null && node.locationId == item.locationId) { "收纳位置不属于所选房间，请重新选择" }
+        }
         require(!item.includedInParentPrice || item.parentItemId != null) { "共用价格的小物必须选择主件" }
         val parent = item.parentItemId?.let { parentId ->
             require(parentId != item.id) { "不能把服饰挂在自己下面" }

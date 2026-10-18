@@ -72,6 +72,8 @@ fun WardrobeSpecificationEditor(semantic: CategorySemantic, specifications: Ward
     composition: ItemComposition, enabled: Boolean, onSpecifications: (WardrobeSpecifications) -> Unit, onComposition: (ItemComposition) -> Unit) {
     val profile = specificationProfile(semantic)
     LolitaSection("专属资料（选填）") {
+        row { OutlinedTextField(specifications.pattern, { onSpecifications(specifications.copy(pattern = it)) },
+            label = { Text("图案") }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true) }
         row {
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 ItemComposition.entries.forEach { value -> FilterChip(selected = composition == value, enabled = enabled,
@@ -98,8 +100,34 @@ fun WardrobeSpecificationDetails(semantic: CategorySemantic, specifications: War
         val data = Gson().toJsonTree(specifications).asJsonObject[name].asJsonObject
         specificationFields(name).mapNotNull { field -> data[field.key].asString.takeIf { it.isNotBlank() }?.let { field.label to it } }
     }.orEmpty()
-    if (values.isNotEmpty() || composition != ItemComposition.UNCONFIRMED) LolitaSection("专属资料") {
+    if (values.isNotEmpty() || specifications.pattern.isNotBlank() || composition != ItemComposition.UNCONFIRMED) LolitaSection("专属资料") {
+        if (specifications.pattern.isNotBlank()) row { Text("图案：${specifications.pattern}") }
         if (composition != ItemComposition.UNCONFIRMED) row { Text("组成：${composition.label}") }
         values.forEach { (label, value) -> row { Text("$label：$value") } }
+    }
+}
+
+@Composable
+fun CategorySemanticPicker(value: CategorySemantic, onSelected: (CategorySemantic) -> Unit) {
+    var show by remember { mutableStateOf(false) }
+    OutlinedButton(onClick = { show = true }, modifier = Modifier.fillMaxWidth()) {
+        Text(if (value == CategorySemantic.UNCONFIRMED) "确认品类与默认穿戴位置" else "${value.family.label} · ${value.label} · ${value.defaultWearRole.label}")
+    }
+    if (show) {
+        var query by remember { mutableStateOf("") }
+        var family by remember { mutableStateOf<WardrobeFamily?>(null) }
+        AlertDialog(onDismissRequest = { show = false }, title = { Text("选择稳定类型") }, text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, modifier = Modifier.fillMaxWidth())
+                Row(Modifier.horizontalScroll(rememberScrollState())) { WardrobeFamily.entries.filter { it != WardrobeFamily.UNCONFIRMED }.forEach { entry ->
+                    FilterChip(family == entry, { family = entry }, label = { Text(entry.label) })
+                } }
+                LazyColumn(Modifier.heightIn(max = 280.dp)) {
+                    items(CategorySemantic.entries.filter { it != CategorySemantic.UNCONFIRMED && (family == null || it.family == family) && it.label.contains(query, true) }) { entry ->
+                        TextButton(onClick = { onSelected(entry); show = false }, modifier = Modifier.fillMaxWidth()) { Text("${entry.label} · ${entry.defaultWearRole.label}") }
+                    }
+                }
+            }
+        }, confirmButton = { TextButton(onClick = { show = false }) { Text("取消") } })
     }
 }

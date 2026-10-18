@@ -29,5 +29,8 @@ data class TaobaoOrderItem(
     // 所属订单信息（冗余，方便后续处理）
     val orderId: String,
     val orderTime: String,
-    val shopName: String
+    val shopName: String,
+    val requestedRoomName: String? = null,
+    val requestedStoragePath: String? = null,
+    val specificationsJson: String = ""
 )

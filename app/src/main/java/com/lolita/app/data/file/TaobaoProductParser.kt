@@ -38,9 +38,15 @@ object TaobaoProductParser {
         val names = aliases.filter { it.isNotBlank() }.map(::normalizedBrand).toSet()
         return existing.filter { normalizedBrand(it) in names }.singleOrNull()
     }
-    private fun categories(title: String, properties: Map<String, String>): List<String> {
+    fun explicitCategoryCandidates(title: String, properties: Map<String, String>): List<String> {
         val text = listOf(properties["类型"], properties["类别"], properties["款式"], properties["套装"], title).filterNotNull().joinToString(" ")
         val result = mutableListOf<String>()
+        val explicit = listOf("全头假发", "刘海片", "假马尾", "假辫", "发片", "短袜", "中筒袜", "及膝袜", "过膝袜", "连裤袜", "袜套",
+            "玛丽珍鞋", "茶会鞋", "浅口鞋", "短靴", "长靴", "裙撑", "手提包", "斜挎包", "背包", "手拿包", "阳伞", "扇子", "手杖", "玩偶", "花束")
+        explicit.filter { it in text }.sortedByDescending { it.length }.forEach { key ->
+            if (result.none { it.contains(key) }) result += key
+        }
+
         for (key in listOf("JSK", "OP", "SK", "KC", "Bonnet")) {
             if (Regex("(?i)(?<![a-z])$key(?![a-z])").containsMatchIn(text)) result += key
         }
@@ -59,7 +65,7 @@ object TaobaoProductParser {
     private fun variantCategory(name: String): String {
         // A mixed listing's OP title must not classify its men's set or accessories.
         if ("男款" in name && Regex("(?i)(?<![a-z])SET(?![a-z])").containsMatchIn(name)) return ""
-        return categories(name, emptyMap()).firstOrNull().orEmpty()
+        return explicitCategoryCandidates(name, emptyMap()).firstOrNull().orEmpty()
     }
 
     private fun variants(data: JsonObject, parameters: Map<String, String>): List<TaobaoProductVariant> {
@@ -206,7 +212,7 @@ object TaobaoProductParser {
             }?.distinct()?.take(5).orEmpty()
             val brand = values["品牌"].orEmpty().takeUnless { normalizedBrand(it) in setOf("other其他", "other", "其他", "无品牌") }.orEmpty()
             val shopName = data.getAsJsonObject("featureVO")?.getAsJsonObject("seller")?.get("shopName")?.asString.orEmpty()
-            val categoryCandidates = categories(title, values)
+            val categoryCandidates = explicitCategoryCandidates(title, values)
             val detailImages = root.getAsJsonArray("detailImages")?.mapNotNull { image ->
                 val value = image.asJsonObject["url"]?.asString.orEmpty()
                 val url = if (value.startsWith("//")) "https:$value" else value

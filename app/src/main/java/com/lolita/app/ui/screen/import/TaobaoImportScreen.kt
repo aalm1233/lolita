@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.`import`
 
+import com.lolita.app.ui.screen.item.CategorySemanticPicker
+import com.lolita.app.domain.model.CategorySemantic
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -403,7 +405,8 @@ private fun ImportPrepareContent(
                 itemsIndexed(missingCategories) { localIdx, item ->
                     MissingDataRow(
                         item = item,
-                        onToggle = { viewModel.toggleMissingItem(catStartIdx + localIdx) }
+                        onToggle = { viewModel.toggleMissingItem(catStartIdx + localIdx) },
+                        onSemanticSelected = { viewModel.confirmMissingSemantic(catStartIdx + localIdx, it) }
                     )
                 }
             }
@@ -414,7 +417,8 @@ private fun ImportPrepareContent(
 @Composable
 private fun MissingDataRow(
     item: MissingDataItem,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    onSemanticSelected: (CategorySemantic) -> Unit = {}
 ) {
     LolitaCard(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -430,7 +434,7 @@ private fun MissingDataRow(
                 Text(item.name, style = MaterialTheme.typography.bodyMedium)
                 if (item.type == MissingDataType.CATEGORY && item.extra.isNotBlank()) {
                     Text(
-                        if (item.extra == "ACCESSORY") "配饰" else "服装",
+                        "${item.semantic.family.label} · ${item.semantic.defaultWearRole.label}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -450,6 +454,7 @@ private fun MissingDataRow(
                 )
             }
         }
+        if (item.type == MissingDataType.CATEGORY) CategorySemanticPicker(item.semantic, onSemanticSelected)
     }
 }
 

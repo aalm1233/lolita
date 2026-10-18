@@ -38,6 +38,14 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
+import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.WardrobeFamily
+import com.lolita.app.ui.screen.item.WardrobeCategorySelector
+import com.lolita.app.ui.screen.item.CategorySemanticPicker
+import com.lolita.app.ui.screen.item.WardrobeSpecificationEditor
+import com.lolita.app.ui.screen.common.StorageLocationPicker
+import com.lolita.app.data.local.entity.Location
+import com.lolita.app.data.local.entity.StorageNode
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.LolitaSection
@@ -248,6 +256,7 @@ private fun ImportCardEditor(index: Int, state: TaobaoImportUiState, viewModel: 
     ImportItemCard(
         item = state.importItems[index], index = index, allItems = state.importItems,
         brands = state.brands, categories = state.categories, floating = floating,
+        locations = state.locations, storageNodes = state.storageNodes,
         onUpdate = { update -> viewModel.updateImportItem(index, update) },
         onPickLocalImage = { onPickLocalImage(index) },
         onManualPair = { target -> viewModel.manualPair(index, target) },
@@ -287,9 +296,10 @@ private fun ImportItemCard(
     onPickLocalImage: () -> Unit,
     onManualPair: (Int) -> Unit,
     onUnpair: () -> Unit,
-    onAddCategory: (String, CategoryGroup) -> Unit = { _, _ -> },
+    onAddCategory: (String, CategoryGroup, CategorySemantic) -> Unit = { _, _, _ -> },
     onSetPaymentRole: (PaymentRole?) -> Unit = {},
-    floating: Boolean = false
+    floating: Boolean = false,
+    locations: List<Location> = emptyList(), storageNodes: List<StorageNode> = emptyList()
 ) {
     val isValid = isImportItemReady(index, allItems)
     val priceText = item.priceInput ?: item.price.takeIf { it.isFinite() }?.toString().orEmpty()
@@ -429,7 +439,7 @@ private fun ImportItemCard(
                 }
             } else {
                 // 普通商品或定金：显示完整字段
-                if (!floating) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, showImage = false)
+                if (!floating) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, showImage = false, locations = locations, storageNodes = storageNodes)
                 // 价格 + 付款日期 (一行两个)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -561,7 +571,7 @@ private fun ImportItemCard(
                 SectionHeader("服饰资料", action = {
                     TextButton(onClick = { identityExpanded = !identityExpanded }) { Text(if (identityExpanded) "收起资料" else "展开资料") }
                 })
-                if (identityExpanded) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage)
+                if (identityExpanded) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, locations = locations, storageNodes = storageNodes)
             }
             Text("邮费包含在应付总额中，实付可小于应付；尾款日期可以待定。默认日期来自订单提交时间，请改为实际付款日期。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -624,9 +634,10 @@ private fun ImportIdentityFields(
     brands: List<Brand>,
     categories: List<Category>,
     onUpdate: ((ImportItemState) -> ImportItemState) -> Unit,
-    onAddCategory: (String, CategoryGroup) -> Unit,
+    onAddCategory: (String, CategoryGroup, CategorySemantic) -> Unit,
     onPickLocalImage: () -> Unit,
-    showImage: Boolean = true
+    showImage: Boolean = true,
+    locations: List<Location> = emptyList(), storageNodes: List<StorageNode> = emptyList()
 ) {
     val skin = LolitaSkin.current
     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
@@ -664,6 +675,12 @@ private fun ImportIdentityFields(
             onSizeSelected = { size -> onUpdate { it.copy(size = size.orEmpty()) } },
             modifier = Modifier.fillMaxWidth())
 
+        WardrobeSpecificationEditor(categories.firstOrNull { it.id == item.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED,
+            item.specifications, item.composition, true,
+            { value -> onUpdate { it.copy(specifications = value) } }, { value -> onUpdate { it.copy(composition = value) } })
+        StorageLocationPicker(item.locationId, item.storageNodeId, locations, storageNodes,
+            { room, node -> onUpdate { it.copy(locationId = room, storageNodeId = node, locationMappingNote = null) } })
+        item.locationMappingNote?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
         if (showImage) ImportImageFields(item, onUpdate, onPickLocalImage)
     }
 }
@@ -785,82 +802,22 @@ private fun ImportCategorySelector(
     selectedCategoryId: Long,
     categories: List<Category>,
     onCategorySelected: (Long) -> Unit,
-    onAddCategory: (String, CategoryGroup) -> Unit = { _, _ -> }
+    onAddCategory: (String, CategoryGroup, CategorySemantic) -> Unit = { _, _, _ -> }
 ) {
-    var expanded by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
-    val isError = selectedCategoryId == 0L
-
-    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        OutlinedTextField(
-            value = categories.find { it.id == selectedCategoryId }?.name ?: "",
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("类型 *") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
-            isError = isError
-        )
-        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            categories.forEach { category ->
-                DropdownMenuItem(
-                    text = { Text(category.name) },
-                    onClick = { onCategorySelected(category.id); expanded = false }
-                )
-            }
-            HorizontalDivider()
-            DropdownMenuItem(
-                text = { Text("+ 新增类型", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium) },
-                onClick = { expanded = false; showAddDialog = true }
-            )
-        }
-    }
-
+    WardrobeCategorySelector(selectedCategoryId, categories, onCategorySelected, isError = selectedCategoryId == 0L)
+    TextButton(onClick = { showAddDialog = true }) { Text("新增类型") }
     if (showAddDialog) {
-        var newName by remember { mutableStateOf("") }
-        var selectedGroup by remember { mutableStateOf(CategoryGroup.CLOTHING) }
-        AlertDialog(
-            onDismissRequest = { showAddDialog = false },
-            title = { Text("新增类型") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
-                        value = newName,
-                        onValueChange = { newName = it },
-                        label = { Text("类型名称") },
-                        placeholder = { Text("如: OP、SK、头饰...") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                    Text("分组", style = MaterialTheme.typography.labelMedium)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilterChip(
-                            selected = selectedGroup == CategoryGroup.CLOTHING,
-                            onClick = { selectedGroup = CategoryGroup.CLOTHING },
-                            label = { Text("服装") }
-                        )
-                        FilterChip(
-                            selected = selectedGroup == CategoryGroup.ACCESSORY,
-                            onClick = { selectedGroup = CategoryGroup.ACCESSORY },
-                            label = { Text("配饰") }
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        if (newName.isNotBlank()) {
-                            onAddCategory(newName.trim(), selectedGroup)
-                            showAddDialog = false
-                        }
-                    },
-                    enabled = newName.isNotBlank()
-                ) { Text("创建") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showAddDialog = false }) { Text("取消") }
+        var name by remember { mutableStateOf("") }
+        var semantic by remember { mutableStateOf(CategorySemantic.UNCONFIRMED) }
+        AlertDialog(onDismissRequest = { showAddDialog = false }, title = { Text("新增类型") }, text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(name, { name = it }, label = { Text("类型名称") }, modifier = Modifier.fillMaxWidth())
+                CategorySemanticPicker(semantic) { semantic = it }
             }
-        )
+        }, confirmButton = { TextButton(enabled = name.isNotBlank() && semantic != CategorySemantic.UNCONFIRMED, onClick = {
+            onAddCategory(name.trim(), if (semantic.family == WardrobeFamily.CLOTHING) CategoryGroup.CLOTHING else CategoryGroup.ACCESSORY, semantic)
+            showAddDialog = false
+        }) { Text("确认创建") } }, dismissButton = { TextButton(onClick = { showAddDialog = false }) { Text("取消") } })
     }
 }

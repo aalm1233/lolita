@@ -100,6 +100,47 @@ class WardrobeRegistrationTest {
         assertEquals(before.imageUrls, after.imageUrls); assertEquals(before.parentItemId, after.parentItemId)
         assertEquals(before.size, after.size); assertEquals(before.importToken, after.importToken)
     }
+    @Test fun storageSelectionMustBelongToItsRoomAndRemovedPicturesPruneOnlyTheirProvenance() = runBlocking {
+        val brand = brands.ensureUnsetBrand()
+        val category = categories.insertCategory(Category(name = "鞋", categorySemantic = CategorySemantic.MARY_JANE))
+        val room = database.locationDao().insertLocation(Location(name = "玄关", description = ""))
+        val otherRoom = database.locationDao().insertLocation(Location(name = "卧室", description = ""))
+        val node = StorageRepository(database).createNode(room, null, "鞋柜")
+        val item = Item(brandId = brand, categoryId = category, name = "鞋", description = "", status = ItemStatus.OWNED,
+            locationId = otherRoom, storageNodeId = node, imageUrls = listOf("/first.png", "/second.png"))
+        assertTrue(runCatching { items.insertItem(item) }.isFailure)
+        val id = items.insertItem(item.copy(locationId = room))
+        val before = items.getItemById(id)!!
+        assertTrue(runCatching { items.updateItem(before.copy(locationId = otherRoom)) }.isFailure)
+        database.imageProvenanceDao().upsert(ImageProvenance(itemId = id, imagePath = "/first.png", sourceType = ImageSourceType.ORIGINAL, mode = "original"))
+        database.imageProvenanceDao().upsert(ImageProvenance(itemId = id, imagePath = "/second.png", sourceType = ImageSourceType.ORIGINAL, mode = "original"))
+        items.updateItem(before.copy(imageUrls = listOf("/second.png")))
+        assertNull(database.imageProvenanceDao().get(id, "/first.png"))
+        assertNotNull(database.imageProvenanceDao().get(id, "/second.png"))
+        assertEquals(listOf("/second.png"), items.getItemById(id)!!.imageUrls)
+    }
+    @Test fun recognitionMergesOnlyConfirmedCurrentDraftAndNeverCreatesBrandOrCategory() = runBlocking {
+        val category = categories.insertCategory(Category(name = "全头假发", categorySemantic = CategorySemantic.FULL_WIG))
+        val vm = editor(); loaded(vm)
+        withContext(Dispatchers.Main) { vm.updateCategory(category); vm.keepDraft() }
+        val id = vm.uiState.value.draftId!!
+        val baseline = vm.currentRecognitionValues()
+        val region = listOf("region-1")
+        val name = RecognitionCandidate("name", RecognitionField.NAME, "AI建议名", RecognitionSource.TEXT, region, "AI建议名")
+        val length = RecognitionCandidate("length", RecognitionField.WIG_LENGTH, "60 cm", RecognitionSource.TEXT, region, "发长60 cm")
+        val brand = RecognitionCandidate("brand", RecognitionField.BRAND, "未存在品牌", RecognitionSource.TEXT, region, "未存在品牌")
+        withContext(Dispatchers.Main) { vm.updateName("识别期间手动改名") }
+        val merge = withContext(Dispatchers.Main) { vm.applyRecognitionSelection(id, baseline, listOf(name, length, brand), setOf("name", "length", "brand")) }
+        assertEquals("识别期间手动改名", vm.uiState.value.name)
+        assertEquals("60 cm", vm.uiState.value.specifications.wig.lengthCm)
+        assertEquals(setOf("length"), merge.acceptedIds)
+        assertTrue(merge.conflicts.containsAll(listOf("name", "brand")))
+        assertNull(brands.getBrandByName("未存在品牌"))
+        assertTrue(database.itemDao().getAllItemsList().isEmpty())
+        assertTrue(runCatching { withContext(Dispatchers.Main) { vm.applyRecognitionSelection("other-draft", baseline, listOf(length), setOf("length")) } }.isFailure)
+        withContext(Dispatchers.Main) { vm.discardDraft() }
+        assertTrue(runCatching { withContext(Dispatchers.Main) { vm.applyRecognitionSelection(id, baseline, listOf(length), setOf("length")) } }.isFailure)
+    }
     @Test fun readingDeletedTargetNeverCreatesReplacementRecord() = runBlocking {
         val vm = editor()
         withContext(Dispatchers.Main) { vm.loadItem(9999) }

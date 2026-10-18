@@ -68,6 +68,7 @@ class BuiltInLibrary(
                     }
                     val brands = database.brandDao()
                     brands.getAllBrandsList().forEach { brand ->
+                        if (brand.systemKey != null) return@forEach
                         val asset = assets[normalizedName(brand.name)]
                         if (brand.logoUrl.isNullOrBlank() && asset != null) {
                             val logo = ImageFileHelper.copyAssetToInternalStorage(context, asset)
@@ -89,7 +90,7 @@ class BuiltInLibrary(
 
     /** Only callers preparing a new record use this; updates never reapply a removed logo. */
     suspend fun withDefaultBrandLogo(brand: Brand): Brand {
-        if (!brand.logoUrl.isNullOrBlank()) return brand
+        if (brand.systemKey != null || !brand.logoUrl.isNullOrBlank()) return brand
         val asset = withContext(Dispatchers.IO) { brandAssets[normalizedName(brand.name)] } ?: return brand
         return brand.copy(logoUrl = ImageFileHelper.copyAssetToInternalStorage(context, asset))
     }

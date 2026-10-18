@@ -9,6 +9,8 @@ import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.repository.ItemRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.di.AppModule
+import kotlinx.coroutines.flow.combine
+import com.lolita.app.domain.model.WardrobeFamily
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,6 +47,11 @@ class FilteredItemListViewModel(
                 return@launch
             }
             val flow = when (filterType) {
+                "family" -> combine(itemRepository.getAllItems(), itemRepository.getCategories()) { items, categories ->
+                    val family = WardrobeFamily.valueOf(filterValue)
+                    val semantics = categories.associate { it.id to it.categorySemantic.family }
+                    items.distinctBy { it.id }.filter { (semantics[it.categoryId] ?: WardrobeFamily.UNCONFIRMED) == family }
+                }
                 "status_owned" -> itemRepository.getItemsByStatus(ItemStatus.OWNED)
                 "status_wished" -> itemRepository.getItemsByStatus(ItemStatus.WISHED)
                 "brand" -> itemRepository.getItemsByBrandName(filterValue)

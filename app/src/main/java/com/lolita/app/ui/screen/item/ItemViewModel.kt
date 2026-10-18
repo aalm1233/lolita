@@ -860,7 +860,7 @@ class ItemEditViewModel(
     private suspend fun restoreDraft(identity: EditorIdentity) {
         if (drafts == null) return
         val restored = if (identity.itemId > 0) drafts.getForItem(identity.itemId)
-            else savedStateHandle.get<String>("itemDraftId")?.let { drafts.get(it) }
+            else savedStateHandle.get<String>("itemDraftId")?.let { drafts.get(it) ?: error("所选物品草稿已不存在") }
                 ?: if (identity.importedDraftJson == null && identity.defaultParentItemId == null) drafts.latestNew() else null
         val id = restored?.id ?: java.util.UUID.randomUUID().toString()
         savedStateHandle["itemDraftId"] = id
@@ -889,7 +889,8 @@ class ItemEditViewModel(
     }
 
     suspend fun keepDraft() {
-        if (hasUnsavedChanges && drafts != null && _uiState.value.draftId != null) draftMutex.withLock { persistDraft() }
+        val state = _uiState.value
+        if (drafts != null && state.draftId != null && !state.isLoading && state.loadError == null && !discardInProgress) draftMutex.withLock { persistDraft() }
         if (drafts == null) cleanupNewImages()
     }
 
@@ -899,6 +900,93 @@ class ItemEditViewModel(
         savedStateHandle.remove<String>("itemDraftId")
         hasUnsavedChanges = false
         cleanupNewImages()
+    }
+
+    private fun recognitionPaths(semantic: CategorySemantic): Map<RecognitionField, Pair<String, String>> = mapOf(
+        RecognitionField.WIG_COLOR to ("wig" to "mainColor"), RecognitionField.WIG_LENGTH to ("wig" to "lengthCm"),
+        RecognitionField.WIG_CURL to ("wig" to "curl"), RecognitionField.WIG_BANGS to ("wig" to "bangs"),
+        RecognitionField.WIG_PARTING to ("wig" to "parting"), RecognitionField.WIG_MATERIAL to ("wig" to "material"),
+        RecognitionField.WIG_HEAT to ("wig" to "heatResistance"), RecognitionField.WIG_HEAD_RANGE to ("wig" to "headCircumference"),
+        RecognitionField.WIG_COMPONENTS to ("wig" to "extraHairPieces"),
+        RecognitionField.HOSIERY_LENGTH to ("hosiery" to "lengthType"), RecognitionField.HOSIERY_PATTERN to ("hosiery" to "pattern"),
+        RecognitionField.HOSIERY_THICKNESS to ("hosiery" to "thickness"), RecognitionField.HOSIERY_DEN to ("hosiery" to "denier"),
+        RecognitionField.HOSIERY_FOOT_RANGE to ("hosiery" to "footLength"), RecognitionField.HOSIERY_MATERIAL to ("hosiery" to "material"),
+        RecognitionField.HOSIERY_TRANSPARENCY to ("hosiery" to "transparency"),
+        RecognitionField.SHOE_SIZE_SYSTEM to ("footwear" to "sizeSystem"), RecognitionField.SHOE_HEEL to ("footwear" to "heelHeightCm"),
+        RecognitionField.SHOE_INNER_LENGTH to ("footwear" to "innerLengthCm"), RecognitionField.SHOE_SHAFT to ("footwear" to "shaftHeightCm"),
+        RecognitionField.SHOE_TOE to ("footwear" to "toeShape"), RecognitionField.SHOE_FASTENING to ("footwear" to "fastening"),
+        RecognitionField.PETTICOAT_LENGTH to ("petticoat" to "lengthCm"), RecognitionField.PETTICOAT_SHAPE to ("petticoat" to "silhouette"),
+        RecognitionField.PETTICOAT_VOLUME to ("petticoat" to "volume"), RecognitionField.PETTICOAT_WAIST to ("petticoat" to "waistCm"),
+        RecognitionField.PETTICOAT_LAYERS to ("petticoat" to "layers"), RecognitionField.PETTICOAT_MATERIAL to ("petticoat" to "material"),
+        RecognitionField.ACCESSORY_POSITION to ("accessory" to "wearPosition"), RecognitionField.ACCESSORY_DIMENSIONS to ("accessory" to "dimensions"),
+        RecognitionField.ACCESSORY_FASTENING to ("accessory" to "fastening"), RecognitionField.ACCESSORY_MATERIAL to ("accessory" to "material"),
+        RecognitionField.CARRY_METHOD to (if (semantic.family == WardrobeFamily.BAG) "bag" to "carryMode" else "handheld" to "usage"),
+        RecognitionField.CARRY_DIMENSIONS to (if (semantic.family == WardrobeFamily.BAG) "bag" to "dimensions" else "handheld" to "dimensions"),
+        RecognitionField.CARRY_CAPACITY to ("bag" to "capacity"), RecognitionField.CARRY_FOLDABLE to ("handheld" to "foldable")
+    )
+
+    fun currentRecognitionValues(): Map<RecognitionField, String> {
+        val state = _uiState.value
+        val semantic = state.categories.firstOrNull { it.id == state.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED
+        val profileJson = com.google.gson.Gson().toJsonTree(state.specifications).asJsonObject
+        val brand = state.brands.firstOrNull { it.id == state.brandId }
+        val base = mutableMapOf(RecognitionField.NAME to state.name,
+            RecognitionField.CATEGORY to state.categories.firstOrNull { it.id == state.categoryId }?.name.orEmpty(),
+            RecognitionField.BRAND to brand?.takeIf { !it.isUnsetBrand }?.name.orEmpty(),
+            RecognitionField.COLOR to state.colors.joinToString("、"), RecognitionField.SIZE to state.size.orEmpty(),
+            RecognitionField.PATTERN to state.specifications.pattern,
+            RecognitionField.STYLE to state.style.orEmpty(), RecognitionField.SEASON to state.seasons.joinToString("、"))
+        recognitionPaths(semantic).forEach { (field, path) -> base[field] = profileJson[path.first].asJsonObject[path.second].asString }
+        return RecognitionField.entries.associateWith { base[it].orEmpty() }
+    }
+
+    suspend fun applyRecognitionSelection(expectedDraftId: String, baseline: Map<RecognitionField, String>,
+        candidates: List<RecognitionCandidate>, selectedIds: Set<String>, variant: String? = null, size: String? = null,
+        resolvedBrandId: Long? = null, resolvedCategoryId: Long? = null): RecognitionMerge = draftMutex.withLock {
+        fun checkedState(): ItemEditUiState = _uiState.value.also { state ->
+            require(state.draftId == expectedDraftId && loadedIdentity == requestedIdentity && loadedIdentity != null &&
+                !state.isLoading && !state.isSaving && !discardInProgress && state.loadError == null) { "草稿已切换或尚未读取完成，请重新核对" }
+        }
+        val before = checkedState()
+        before.item?.let { require(itemRepository.getItemById(it.id) != null) { "物品已删除，无法应用识图资料" } }
+        val current = checkedState()
+        val merge = RecognitionMerge.apply(expectedDraftId, requireNotNull(current.draftId), baseline,
+            currentRecognitionValues(), candidates, selectedIds, variant, size)
+        val rejected = mutableSetOf<RecognitionField>()
+        if (RecognitionField.BRAND in merge.values && current.brands.none { it.id == resolvedBrandId }) rejected += RecognitionField.BRAND
+        if (RecognitionField.CATEGORY in merge.values && current.categories.none { it.id == resolvedCategoryId }) rejected += RecognitionField.CATEGORY
+        val selectedCategory = if (RecognitionField.CATEGORY in merge.values && RecognitionField.CATEGORY !in rejected) resolvedCategoryId else current.categoryId
+        val semantic = current.categories.firstOrNull { it.id == selectedCategory }?.categorySemantic ?: CategorySemantic.UNCONFIRMED
+        val paths = recognitionPaths(semantic)
+        val validProfile = specificationProfile(semantic)
+        paths.forEach { (field, path) -> if (field in merge.values && path.first != validProfile) rejected += field }
+        val values = merge.values.filterKeys { it !in rejected }
+        val rejectedIds = candidates.filter { it.id in merge.acceptedIds && it.field in rejected }.map { it.id }.toSet()
+        val accepted = merge.acceptedIds - rejectedIds
+        val profileJson = com.google.gson.Gson().toJsonTree(current.specifications).asJsonObject
+        values.forEach { (field, value) -> paths[field]?.let { (profile, key) -> profileJson[profile].asJsonObject.addProperty(key, value) } }
+        values[RecognitionField.PATTERN]?.let { profileJson.addProperty("pattern", it) }
+        var newState = current.copy(specifications = WardrobeSpecifications.decode(profileJson.toString()),
+            name = values[RecognitionField.NAME] ?: current.name,
+            categoryId = if (RecognitionField.CATEGORY in values) requireNotNull(resolvedCategoryId) else current.categoryId,
+            brandId = if (RecognitionField.BRAND in values) requireNotNull(resolvedBrandId) else current.brandId,
+            colors = values[RecognitionField.COLOR]?.let(::listOf) ?: current.colors,
+            size = values[RecognitionField.SIZE] ?: current.size,
+            style = values[RecognitionField.STYLE] ?: current.style,
+            seasons = values[RecognitionField.SEASON]?.let(::listOf) ?: current.seasons)
+        if (RecognitionField.SIZE in values) {
+            newState = when (semantic.family) {
+                WardrobeFamily.FOOTWEAR -> newState.copy(specifications = newState.specifications.copy(footwear = newState.specifications.footwear.copy(sizeText = values.getValue(RecognitionField.SIZE))))
+                WardrobeFamily.HOSIERY -> newState.copy(specifications = newState.specifications.copy(hosiery = newState.specifications.hosiery.copy(sizeText = values.getValue(RecognitionField.SIZE))))
+                else -> newState
+            }
+        }
+        if (accepted.isNotEmpty()) {
+            hasUnsavedChanges = true
+            _uiState.value = newState
+            if (drafts != null) persistDraft(newState)
+        }
+        RecognitionMerge(values, accepted, merge.conflicts + rejectedIds)
     }
 
     fun updateSpecifications(value: WardrobeSpecifications) {

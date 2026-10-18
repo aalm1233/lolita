@@ -340,7 +340,9 @@ fun LolitaNavHost(
                     onNavigateToTryOn = { id ->
                         navController.navigate(Screen.TryOn.createRoute(itemId = id))
                     },
-                    onNavigateToMannequin = { id -> navController.navigate(Screen.Mannequin.createRoute(id)) }
+                    onNavigateToMannequin = { id -> navController.navigate(Screen.Mannequin.createRoute(id)) },
+                    onNavigateToLocation = { id -> navController.navigate(Screen.LocationDetail.createRoute(id)) },
+                    onCopyToNew = { id -> navController.navigate(Screen.ItemEdit.createRoute(draftId = id)) }
                 )
                 } // LocalNavAnimatedVisibilityScope
             }
@@ -351,7 +353,8 @@ fun LolitaNavHost(
                 arguments = listOf(
                     navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
                     navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" },
-                    navArgument("parentId") { type = NavType.LongType; defaultValue = 0L }
+                    navArgument("parentId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("draftId") { type = NavType.StringType; nullable = true; defaultValue = null }
                 )
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
@@ -366,8 +369,13 @@ fun LolitaNavHost(
                     }
                     navController.popBackStack()
                 }
+                val itemEditorFactory = remember(backStackEntry) { viewModelFactory {
+                    initializer { com.lolita.app.ui.screen.item.ItemEditViewModel(savedStateHandle = createSavedStateHandle()) }
+                } }
+                val itemEditor: com.lolita.app.ui.screen.item.ItemEditViewModel = viewModel(backStackEntry, factory = itemEditorFactory)
                 ItemEditScreen(
                     itemId = if (itemId == 0L) null else itemId,
+                    draftId = backStackEntry.arguments?.getString("draftId"), viewModel = itemEditor,
                     defaultStatus = defaultStatus,
                     importedDraftJson = productDraft,
                     defaultParentItemId = backStackEntry.arguments?.getLong("parentId")?.takeIf { it != 0L },
@@ -589,7 +597,8 @@ fun LolitaNavHost(
 
             // Location Manage
             composable(Screen.LocationManage.route) {
-                LocationManageScreen(onBack = { navController.popBackStack() })
+                LocationManageScreen(onBack = { navController.popBackStack() },
+                    onLocationClick = { navController.navigate(Screen.LocationDetail.createRoute(it)) })
             }
 
             // Source Manage

@@ -88,6 +88,7 @@ object AppModule {
             deleteImage = { ImageFileHelper.deleteImage(it) },
             validateImage = { ImageFileHelper.isOwnedGeneratedImage(appContext, it) },
             validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) },
+            validateProductImage = { ImageFileHelper.isOwnedReadableProductImage(appContext,it) },
             snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(appContext,it) },
             appendImageProvenance = { itemId,path,mode,taskId -> database.imageProvenanceDao().upsert(
                 com.lolita.app.data.local.entity.ImageProvenance(path,itemId,com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED,mode,taskId)) })

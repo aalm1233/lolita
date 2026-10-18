@@ -52,7 +52,7 @@ data class MannequinUiState(
     val busy get() = isSubmitting || isConfiguring || savingLegacy || isLoadingHead
     val selectionIssue: String? get() = when {
         item == null || item.id <= 0 -> "这件物品已被删除或无法读取"
-        subject == null -> "请先在分类中确认稳定品类；非裙类服装暂不支持展示图"
+        subject == null -> "请先确认物品类型；当前支持裙装、衬衫、全头假发及单品展示"
         presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模候选"
         presentation == MannequinPresentation.WIG_HEAD && !headImageReady -> "所选头模资源缺失或尚未核验，请明确重新选择；不会自动替换"
         presentation == MannequinPresentation.WIG_HEAD && !referenceViewConfirmed -> "请核对原图能看到刘海、头顶、正面轮廓及完整发梢"
@@ -348,7 +348,10 @@ class MannequinViewModel @JvmOverloads constructor(
                 savedStateHandle[LAST_TASK] = id
                 state.update { it.copy(latestTaskId = id, latestTask = observedTasks.firstOrNull { row -> row.id == id }) }
             } catch (failure: CancellationException) { throw failure }
-            catch (_: Exception) { state.update { it.copy(error = "任务提交失败，请检查图片与服务配置后重试") } }
+            catch (failure: com.lolita.app.domain.model.MannequinAdmissionFailure) {
+                state.update { it.copy(error = failure.kind.message) }
+            }
+            catch (_: Exception) { state.update { it.copy(error = "任务未能加入，请重新打开此页核对后重试") } }
             finally { state.update { it.copy(isSubmitting = false) } }
         }
     }

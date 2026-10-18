@@ -272,7 +272,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=115, versionName="2.55.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=117, versionName="2.55.3"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -491,3 +491,12 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 已准备图可事务原位换区，旧图片经引用保护清理；AI来源只收紧，不因复选/换图洗掉。Android JPEG编码产生的颜色配置不得误判为用户元数据；裁切输出显式转sRGB并移除metadata，API仍严格拒绝不合规输入，原图不改。受控验证和本轮真实调用分别记录。
 
 - 2.55.2 /116录入与识图减负：397项JVM、78项最终去重定向设备回归（含修复后重跑）及clean正式构建通过；1项live默认opt-in跳过，另按本轮明确授权执行2次豆包native真实识图均成功、无重试，不冒充普遍准确率。2.55.1同签名覆盖升级及重启保全38表254列、198件物品、172图SHA与3设置文件原字节。GitHub/Gitee正式附件匿名完整下载、SHA及HEAD通过，公开更新与实际签名app手动检查正确显示2.55.2和完整说明；仅按本轮另行授权清理Gitee2.55.1 APK，旧发布/校验/GitHub/本机副本保留。回执`docs/entry-recognition-release-2.55.2-verification.json`。
+
+### 展示图与封面修复（2.55.3）
+
+- 详情调用`ItemEditViewModel.loadDetail`读取持久物品，不恢复、创建或重连编辑草稿；编辑`loadItem`继续恢复原草稿并检查基线，加载身份区分DETAIL/EDITOR。生成图确认后仍追加相册末尾，用户明确“设为封面”只重排相册，保留原图、来源、订单及旧草稿；详情操作后的旧编辑基线继续拒绝覆盖。
+- 衬衫BLOUSE新增独立正面人台策略和提示词，保留领口、袖型、袖口及下摆，下身留空，不补裙裤；两输入仍为固定躯干人台与原图。不改持久品类身份、旧裙装提示词或冻结任务。其他非裙服装本轮不扩展。详情入口和工作页统一要求稳定语义，按实际展示模式给中文标签，不按历史group猜测。
+- 展示任务入队前错误使用`MannequinAdmissionFailure`固定阶段消息，不显示路径、凭据、服务原文或原因链；取消原样传播，已入队后的服务中断不误标为“未发送”。设计与验证见`docs/superpowers/plans/2026-10-18-mannequin-generation-cover-repair.md`。
+
+- 旧商品源可经`isOwnedReadableProductImage`保留旧文件名，但仅当MANNEQUIN当前物品精确引用时启用；私有images直系路径、非软链、完整性、尺寸与解码继续检查。派生裁切、模板、TRY_ON和个人照片保持原严格UUID规则。API26/27的WebP限制本轮未变；不得将Android15受控回归描述为用户手机全部故障已复现。
+- 编辑页须等草稿恢复、冲突检查与识图重连完成后才结束`isLoading`；ViewModel测试清理须等待Job结束再关闭Room，避免后台DAO访问已关闭数据库。

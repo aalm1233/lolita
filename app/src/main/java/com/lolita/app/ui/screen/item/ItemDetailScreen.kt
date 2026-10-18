@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Item
-import com.lolita.app.domain.model.supportsMannequin
+import com.lolita.app.domain.model.mannequinSubject
+import com.lolita.app.domain.model.MannequinPresentation
+import com.lolita.app.domain.model.CategorySemantic
 import com.lolita.app.domain.usecase.OrderAccounting
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.data.local.entity.ItemPriority
@@ -92,7 +94,7 @@ fun ItemDetailScreen(
 
     // Load item data
     LaunchedEffect(itemId) {
-        viewModel.loadItem(itemId)
+        viewModel.loadDetail(itemId)
     }
 
     // Show error dialog
@@ -1111,11 +1113,16 @@ private fun SizeChartGallery(images: List<String>) {
 
 @Composable
 internal fun MannequinDetailEntry(item: Item, category: com.lolita.app.data.local.entity.Category?, onNavigate: (Long) -> Unit) {
-    if (!supportsMannequin(category) || item.imageUrls.none { it.isNotBlank() }) return
+    val subject = mannequinSubject(category, confirmedSemantics = true)
+    if (subject == null || item.imageUrls.none { it.isNotBlank() }) return
     val skin = LolitaSkin.current
     OutlinedButton(onClick = { onNavigate(item.id) }, modifier = Modifier.fillMaxWidth()) {
         SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(skin.spacingMedium))
-        Text(if (category?.group == com.lolita.app.data.local.entity.CategoryGroup.ACCESSORY) "生成小物展示图（实验）" else "生成人台图（实验）")
+        Text(when (subject.presentation) {
+            MannequinPresentation.WIG_HEAD -> "生成假发头模图"
+            MannequinPresentation.ACCESSORY -> "生成单品展示图"
+            MannequinPresentation.DRESS_FORM -> if (subject.semantic == CategorySemantic.BLOUSE) "生成衬衫人台图" else "生成人台图（实验）"
+        })
     }
 }

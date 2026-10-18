@@ -21,7 +21,8 @@ class ImageTaskCoordinator(
     private val validateImage: suspend (String) -> Boolean,
     private val validateSourceImage: suspend (String) -> Boolean = { File(it).let { f -> f.isFile && f.canRead() && f.length() > 0 } },
     private val snapshotBuiltInImage: suspend (String) -> String = { error("固定模板快照尚未接入") },
-    private val appendImageProvenance: suspend (Long, String, String, String?) -> Unit = { _, _, _, _ -> }
+    private val appendImageProvenance: suspend (Long, String, String, String?) -> Unit = { _, _, _, _ -> },
+    private val validateProductImage: suspend (String) -> Boolean = validateSourceImage
 ) {
     private val dao = db.imageTaskDao()
     private val admission = Mutex()
@@ -132,7 +133,7 @@ class ImageTaskCoordinator(
                     return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)
                 }
                 return@accepted if (person != null) enqueueSnapshot(person.imageUrl)
-                else withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MODEL_ASSET, ::enqueueSnapshot)
+                else withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MODEL_ASSET, block = ::enqueueSnapshot)
             }
             enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣",
                 ImageTaskRequest(request.selections.map { ImageTaskGarment(it.itemId, it.name, it.role) }),
@@ -150,26 +151,41 @@ class ImageTaskCoordinator(
         }
     }
 
-    suspend fun submitMannequin(request: MannequinRequest, provider: ImageGenerationProvider): String = accepted {
-        val item = requireNotNull(db.itemDao().getItemById(request.itemId)) { "物品已删除，请重新选择" }
-        val subject = requireNotNull(mannequinSubject(db.categoryDao().getCategoryById(item.categoryId))) { "此分类暂不支持展示图" }
-        require(request.subject?.let { it == subject } ?: (subject.presentation == MannequinPresentation.DRESS_FORM)) {
-            "物品分类已改变，请重新核对展示方式"
+    suspend fun submitMannequin(request: MannequinRequest, provider: ImageGenerationProvider): String {
+        var persisted=false
+        return try { accepted {
+        val currentItem=db.itemDao().getItemById(request.itemId)
+        val item = mannequinAdmission(MannequinAdmissionFailureKind.REFERENCE) {
+            requireNotNull(currentItem) { "物品已删除，请重新选择" }
+        }
+        val category=db.categoryDao().getCategoryById(item.categoryId)
+        val subject = mannequinAdmission(MannequinAdmissionFailureKind.SUBJECT) {
+            requireNotNull(mannequinSubject(category)) { "此分类暂不支持展示图" }.also { subject ->
+                require(request.subject?.let { it == subject } ?: (subject.presentation == MannequinPresentation.DRESS_FORM)) {
+                    "物品分类已改变，请重新核对展示方式"
+                }
+            }
         }
         if (subject.semantic != null) {
             suspend fun enqueueSnapshot(template: String?): String {
                 val sources = listOfNotNull(template) + request.imagePath
                 val metadata = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
                     request.instructions, version = 4, mannequinSubject = subject, promptVersion = 1,
-                    promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.map(::imageSha256), wigHeadTemplate = request.wigHeadTemplate,
+                    promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.mapIndexed { index,path ->
+                        mannequinAdmission(if(template!=null && index==0)MannequinAdmissionFailureKind.TEMPLATE else MannequinAdmissionFailureKind.SOURCE) {imageSha256(path)}
+                    }, wigHeadTemplate = request.wigHeadTemplate,
                     productOriginalImagePath = request.originalImagePath)
-                return enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources)
+                return enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources,
+                    onPersisted={persisted=true})
             }
             return@accepted when (subject.presentation) {
-                MannequinPresentation.DRESS_FORM -> withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET) { enqueueSnapshot(it) }
+                MannequinPresentation.DRESS_FORM -> withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET,
+                    MannequinAdmissionFailureKind.TEMPLATE) { enqueueSnapshot(it) }
                 MannequinPresentation.WIG_HEAD -> {
-                    require(request.referenceViewConfirmed) { "请先核对假发正面视角与发梢完整性" }
-                    val head = requireNotNull(request.wigHeadTemplate) { "请选择本次头模" }.also { it.validateImage() }
+                    mannequinAdmission(MannequinAdmissionFailureKind.REFERENCE) {require(request.referenceViewConfirmed) { "请先核对假发正面视角与发梢完整性" }}
+                    val head = mannequinAdmission(MannequinAdmissionFailureKind.TEMPLATE) {
+                        requireNotNull(request.wigHeadTemplate) { "请选择本次头模" }.also { it.validateImage() }
+                    }
                     enqueueSnapshot(head.imagePath)
                 }
                 MannequinPresentation.ACCESSORY -> enqueueSnapshot(null)
@@ -177,12 +193,24 @@ class ImageTaskCoordinator(
         }
         enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}",
             ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN)), request.instructions,
-                version = 3, mannequinSubject = subject), listOf(request.imagePath))
+                version = 3, mannequinSubject = subject), listOf(request.imagePath),onPersisted={persisted=true})
+        } } catch(failure:CancellationException) {throw failure}
+        catch(failure:MannequinAdmissionFailure) {throw failure}
+        catch(failure:Exception) {
+            // A committed task may already have reached its service. Never label that as unsent.
+            if(persisted)throw failure
+            throw MannequinAdmissionFailure(MannequinAdmissionFailureKind.STORAGE)
+        }
     }
 
+    private suspend fun <T> mannequinAdmission(kind:MannequinAdmissionFailureKind,block:suspend ()->T):T = try {block()}
+        catch(failure:CancellationException) {throw failure}
+        catch(failure:MannequinAdmissionFailure) {throw failure}
+        catch(_:Exception) {throw MannequinAdmissionFailure(kind)}
+
     /** Only copies created for this admission are staged here; existing user/head inputs are never swept. */
-    private suspend fun <T> withStagedBuiltInInput(asset: String, block: suspend (String) -> T): T {
-        val path = snapshotBuiltInImage(asset)
+    private suspend fun <T> withStagedBuiltInInput(asset: String, failureKind:MannequinAdmissionFailureKind?=null, block: suspend (String) -> T): T {
+        val path = if(failureKind==null)snapshotBuiltInImage(asset) else mannequinAdmission(failureKind) {snapshotBuiltInImage(asset)}
         return try {
             currentCoroutineContext().ensureActive()
             block(path)
@@ -194,11 +222,15 @@ class ImageTaskCoordinator(
     }
 
     private suspend fun enqueue(kind: ImageTaskKind, provider: ImageGenerationProvider, title: String,
-        request: ImageTaskRequest, paths: List<String>, personalModelId: Long? = null, expectedModelImagePath: String? = null): String {
-        val task = state.withLock {
+        request: ImageTaskRequest, paths: List<String>, personalModelId: Long? = null, expectedModelImagePath: String? = null,
+        onPersisted:()->Unit={}): String {
+        suspend fun <T> admission(stage:MannequinAdmissionFailureKind,block:suspend ()->T):T =
+            if(kind==ImageTaskKind.MANNEQUIN)mannequinAdmission(stage,block) else block()
+        val task = admission(MannequinAdmissionFailureKind.STORAGE) { state.withLock {
             db.withTransaction {
                 var metadata = request
                 var sources = paths.toList()
+                var referencedProductImages=emptySet<String>()
                 if (personalModelId != null) {
                     val person = requireNotNull(db.personalModelDao().get(personalModelId)) { "所选模特已删除，请重新选择" }
                     require(expectedModelImagePath == null || person.imageUrl == expectedModelImagePath) { "模特图片已更换，请核对后重新选择" }
@@ -210,15 +242,32 @@ class ImageTaskCoordinator(
                     sources.forEach { require(validateSourceImage(it)) { "参考照片已丢失或无法完整读取，请重新选择" } }
                 }
                 if (kind == ImageTaskKind.MANNEQUIN) {
-                    val item = requireNotNull(db.itemDao().getItemById(metadata.garments.single().itemId)) { "物品已删除，请重新选择" }
-                    require((metadata.version == 4 || sources.size == 1) && (metadata.productOriginalImagePath ?: sources.last()) in item.imageUrls) { "参考图片已改变，请重新选择" }
-                    val currentSubject = mannequinSubject(db.categoryDao().getCategoryById(item.categoryId))
-                    require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
+                    val currentItem=db.itemDao().getItemById(metadata.garments.single().itemId)
+                    val item = admission(MannequinAdmissionFailureKind.REFERENCE) {
+                        requireNotNull(currentItem) { "物品已删除，请重新选择" }.also {
+                            require((metadata.version == 4 || sources.size == 1) && (metadata.productOriginalImagePath ?: sources.last()) in it.imageUrls) { "参考图片已改变，请重新选择" }
+                        }
+                    }
+                    referencedProductImages=item.imageUrls.toSet()
+                    val category=db.categoryDao().getCategoryById(item.categoryId)
+                    admission(MannequinAdmissionFailureKind.SUBJECT) {
+                        val currentSubject = mannequinSubject(category)
+                        require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
+                    }
                 }
                 if (metadata.version == 4) {
-                    sources.forEach { require(validateSourceImage(it)) { "任务实际输入不属于本机图片或已无法读取" } }
-                    metadata.productOriginalImagePath?.let { require(validateSourceImage(it)) { "裁切原图已丢失，请重新核对" } }
-                    metadata.validateInputImages(sources)
+                    sources.forEachIndexed { index,path -> admission(if(metadata.mannequinSubject?.presentation?.inputCount==2 && index==0)
+                        MannequinAdmissionFailureKind.TEMPLATE else MannequinAdmissionFailureKind.SOURCE) {
+                        // A derived crop is not an existing Item image and keeps the strict UUID gate.
+                        val existingProduct=kind==ImageTaskKind.MANNEQUIN && index==sources.lastIndex && path in referencedProductImages
+                        val valid=if(existingProduct)validateProductImage(path) else validateSourceImage(path)
+                        require(valid) { "任务实际输入不属于本机图片或已无法读取" }
+                    } }
+                    metadata.productOriginalImagePath?.let { path -> admission(MannequinAdmissionFailureKind.SOURCE) {
+                        val valid=if(kind==ImageTaskKind.MANNEQUIN)validateProductImage(path) else validateSourceImage(path)
+                        require(valid) { "裁切原图已丢失，请重新核对" }
+                    } }
+                    admission(MannequinAdmissionFailureKind.INPUT_CHANGED) {metadata.validateInputImages(sources)}
                 }
                 ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources, keepSourceImages = metadata.version == 4).also {
                     it.validate()
@@ -226,7 +275,8 @@ class ImageTaskCoordinator(
                     synchronized(sessions) { pending += it.id }
                 }
             }
-        }
+        } }
+        onPersisted()
         try { startService(task.id) } catch (_: Exception) {
             // An existing service may have claimed the new row before start rejection.
             val job = state.withLock {

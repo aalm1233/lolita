@@ -1,0 +1,86 @@
+{
+  "version": "2.55.3",
+  "versionCode": 117,
+  "roomVersion": 30,
+  "backupFormat": 10,
+  "unit": {
+    "tests": 400,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android": {
+    "platform": "Android15 API35, independent AVD",
+    "declared": 146,
+    "passed": 144,
+    "defaultOptInSkipped": 2,
+    "batches": [
+      {
+        "name": "blouse-final",
+        "tests": 2,
+        "passed": 2,
+        "skipped": 0,
+        "logSha256": "a6c23a7b8c1472770fa34f24687ba8641e9497e4a1d86b9ffcb9b3a5b889b4a3"
+      },
+      {
+        "name": "backend-final",
+        "tests": 99,
+        "passed": 97,
+        "skipped": 2,
+        "logSha256": "a4a71e453d431219c449d7ca2dede65f3af36f4880261ae2e0f82e04e533ce28"
+      },
+      {
+        "name": "ui-core-final",
+        "tests": 35,
+        "passed": 35,
+        "skipped": 0,
+        "logSha256": "847e6491cded0ef6090c72ea6d063aaa417b322666f8794f76145b308f709d1d"
+      },
+      {
+        "name": "entry-flows-final",
+        "tests": 10,
+        "passed": 10,
+        "skipped": 0,
+        "logSha256": "8f6e60ba14a2bdc3b1df8e2770c3db65f56a71732d0ed3ed2c41a6d884f4dfef"
+      }
+    ],
+    "oneSameProductDebugApkAcrossBatches": true,
+    "productDebugApkSha256": "b77245df99a4ad83887104dcade57a9b1291a4bde548a1ae97a62122a21da17f",
+    "skipped": [
+      "com.lolita.app.data.MannequinNativeAdmissionTest#stagedPrivateHistoricalImagesPassProductionAdmissionWithoutPublishingTheirDetails",
+      "com.lolita.app.data.ImageTaskExecutionTest#controlledSocketResponseCanCompleteThroughTaskPipeline"
+    ]
+  },
+  "privateHistoricalOptIn": {
+    "total": 25,
+    "input_WEBP": 25,
+    "readable": 25,
+    "admitted": 25,
+    "paid_calls": 0,
+    "credential_reads": 0,
+    "remote_requests": 0,
+    "log_sha256": "7a843cf0a5abbccb1a18b65d1dc1d1871b67034ccc3f5f27f2a5055abea45f16",
+    "only_owned_staged_fixture_directory_removed": true
+  },
+  "actualUI": {
+    "skins": 7,
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "nativeWidthDp": 320,
+    "fontScale": 2,
+    "screenshots": 42,
+    "syntheticFixture": true,
+    "submissions": 0,
+    "manifest": "visuals/mannequin-repair-2026-10-18/actual/manifest.json"
+  },
+  "paidRequests": 0,
+  "sourceManifestSha256": "72959536f573f79b35eb8a1893004425c44eb8578ede7a3fe6b57f7226ebe428",
+  "scopeLimits": [
+    "No real Seedream quality test this round.",
+    "The reported phone-wide historical failure was not fully reproduced.",
+    "API26/27 WebP admission restriction is unchanged; JPEG/PNG required there."
+  ],
+  "earlierFailedAndInterruptedRunsRetainedPrivatelyAndExcludedFromFinalCounts": true
+}

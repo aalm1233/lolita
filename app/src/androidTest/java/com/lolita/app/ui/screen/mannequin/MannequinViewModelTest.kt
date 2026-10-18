@@ -95,6 +95,44 @@ class MannequinViewModelTest {
         }
     }
 
+    @Test fun confirmedBlouseSubmitsTwoTorsoInputsInEitherLegacyGroup() = runBlocking {
+        for (group in CategoryGroup.entries) Fixture().use { f ->
+            f.setup()
+            f.db.categoryDao().updateCategory(Category(id = 1, name = "自定义衬衫", group = group, categorySemantic = CategorySemantic.BLOUSE))
+            val (vm, _) = f.model()
+            assertNull(vm.uiState.value.selectionIssue)
+            assertTrue(vm.uiState.value.canGenerate)
+            main { vm.generate() }
+            val final = ready(vm) { !it.isSubmitting && (it.latestTaskId != null || it.error != null) }
+            assertNotNull("A confirmed blouse must enqueue its own torso presentation", final.latestTaskId)
+            val task = f.db.imageTaskDao().get(final.latestTaskId!!)!!
+            val request = ImageTaskRequest.decode(task.requestJson)
+            assertEquals(4, request.version)
+            assertEquals(MannequinSubject(1, "自定义衬衫", MannequinPresentation.DRESS_FORM, CategorySemantic.BLOUSE), request.mannequinSubject)
+            assertEquals(2, task.sourceImagePaths.size)
+            assertEquals(f.item.imageUrls.first(), task.sourceImagePaths.last())
+            assertTrue(File(task.sourceImagePaths.first()).isFile)
+            assertTrue(request.promptSnapshot!!.contains("only the blouse"))
+            assertFalse(task.requestSent)
+            assertEquals(1, f.calls)
+        }
+    }
+
+    @Test fun aBlouseConfirmationCannotSubmitAfterItsStableCategoryChanges() = runBlocking {
+        Fixture().use { f ->
+            f.setup()
+            f.db.categoryDao().updateCategory(Category(id = 1, name = "衬衫", categorySemantic = CategorySemantic.BLOUSE))
+            val (vm, _) = f.model()
+            val confirmed = requireNotNull(vm.uiState.value.generationRequest)
+            f.db.categoryDao().updateCategory(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))
+            ready(vm) { it.subject?.semantic == CategorySemantic.KC }
+            main { vm.generate(confirmedRequest = confirmed, confirmedKeyRevision = vm.uiState.value.keyRevision) }
+            assertEquals(0, f.calls)
+            assertTrue(f.db.imageTaskDao().getAll().isEmpty())
+            assertTrue(vm.uiState.value.error.orEmpty().contains("分类或说明已改变"))
+        }
+    }
+
     @Test fun selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview() = runBlocking {
         Fixture().use { f ->
             f.setup(); val handle = SavedStateHandle(mapOf("itemId" to 11L)); val (vm, store) = f.model(handle)

@@ -810,9 +810,10 @@ class ItemEditViewModel(
         private set
 
     private val importedImages = mutableSetOf<String>()
+    private enum class ItemLoadMode { EDITOR, DETAIL }
     private data class EditorIdentity(val itemId: Long, val defaultStatus: String,
         val defaultParentItemId: Long?, val importedDraftJson: String?, val defaultLocationId: Long?,
-        val defaultStorageNodeId: Long?, val defaultFamily: WardrobeFamily?) {
+        val defaultStorageNodeId: Long?, val defaultFamily: WardrobeFamily?, val mode: ItemLoadMode) {
         val hasEntryDefaults: Boolean get() = defaultStatus.isNotBlank() || defaultParentItemId != null ||
             importedDraftJson != null || defaultLocationId != null || defaultStorageNodeId != null || defaultFamily != null
     }
@@ -1107,11 +1108,22 @@ class ItemEditViewModel(
         defaultLocationId: Long? = savedStateHandle.get<Long>("defaultLocationId")?.takeIf { it > 0 },
         defaultStorageNodeId: Long? = savedStateHandle.get<Long>("defaultStorageNodeId")?.takeIf { it > 0 },
         defaultFamily: WardrobeFamily? = savedStateHandle.get<String>("defaultFamily")?.let { name -> WardrobeFamily.entries.find { it.name == name } }) {
+        loadItemSnapshot(itemId, defaultStatus, defaultParentItemId, importedDraftJson,
+            defaultLocationId, defaultStorageNodeId, defaultFamily, ItemLoadMode.EDITOR)
+    }
+
+    /** A detail observes saved business data; an unfinished editor draft belongs to the editor. */
+    fun loadDetail(itemId: Long) {
+        loadItemSnapshot(itemId, "", null, null, null, null, null, ItemLoadMode.DETAIL)
+    }
+
+    private fun loadItemSnapshot(itemId: Long, defaultStatus: String, defaultParentItemId: Long?, importedDraftJson: String?,
+        defaultLocationId: Long?, defaultStorageNodeId: Long?, defaultFamily: WardrobeFamily?, mode: ItemLoadMode) {
         if (_uiState.value.isSaving) return
         val identity = EditorIdentity(itemId, if (itemId > 0) "" else defaultStatus,
             if (itemId > 0) null else defaultParentItemId, importedDraftJson,
             if (itemId > 0) null else defaultLocationId, if (itemId > 0) null else defaultStorageNodeId,
-            if (itemId > 0) null else defaultFamily)
+            if (itemId > 0) null else defaultFamily, mode)
         if (requestedIdentity == identity && (loadedIdentity == identity || loadJob?.isActive == true)) return
         loadJob?.cancel()
         priceJob?.cancel()
@@ -1139,6 +1151,7 @@ class ItemEditViewModel(
         }
         loadJob = viewModelScope.launch {
             try {
+                require(mode != ItemLoadMode.DETAIL || itemId > 0) { "服饰不存在，请重试" }
                 loadReferenceData()
                 ensureLocationCollection()
                 priceJob?.cancel()
@@ -1153,7 +1166,7 @@ class ItemEditViewModel(
                 if (effectiveItemId > 0) {
                     val item = committedImport ?: itemRepository.getItemById(effectiveItemId)
                     if (item != null) {
-                        draftBaselineUpdatedAt = item.updatedAt
+                        if (mode == ItemLoadMode.EDITOR) draftBaselineUpdatedAt = item.updatedAt
                         val prices = priceRepository.getPricesWithPaymentsByItem(effectiveItemId).first()
                         _uiState.update {
                             it.copy(
@@ -1181,15 +1194,14 @@ class ItemEditViewModel(
                                 locationId = item.locationId,
                                 pricesWithPayments = prices,
                                 recoveredImport = committedImport != null,
-                                isLoading = false
+                                isLoading = true
                             )
                         }
                     } else {
                         error("服饰不存在，请重试")
                     }
-                    restoreDraft(identity)
-                    loadedIdentity = identity
-                    if(drafts?.hasRecognitionForItem(effectiveItemId)==true) draftMutex.withLock {
+                    if (mode == ItemLoadMode.EDITOR) restoreDraft(identity)
+                    if(mode == ItemLoadMode.EDITOR && drafts?.hasRecognitionForItem(effectiveItemId)==true) draftMutex.withLock {
                         persistDraft()
                         drafts.reconnectRecognition(effectiveItemId,requireNotNull(_uiState.value.draftId))
                     }
@@ -1204,6 +1216,9 @@ class ItemEditViewModel(
                             _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
                         }
                     }
+                    // Opening the form is safe only after draft/conflict and recognition recovery finish.
+                    loadedIdentity = identity
+                    _uiState.update { it.copy(isLoading = false) }
                     return@launch
                 }
 

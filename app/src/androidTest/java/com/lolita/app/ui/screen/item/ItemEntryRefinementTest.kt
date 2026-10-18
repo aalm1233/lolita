@@ -66,7 +66,6 @@ class ItemEntryRefinementTest {
             val resources = target.resources
             val oldDensity = resources.displayMetrics.densityDpi
             val oldFont = resources.configuration.fontScale
-            val oldNightMask = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             val oldNight = requireNotNull(Regex("Night mode: (auto|no|yes|custom)").find(shell("cmd uimode night"))).groupValues[1]
             val oldDensityOverride = Regex("Override density: (\\d+)").find(shell("wm density"))?.groupValues?.get(1)
             val oldScale = shell("settings get system font_scale")
@@ -86,7 +85,15 @@ class ItemEntryRefinementTest {
                 }
                 shell(oldDensityOverride?.let { "wm density $it" } ?: "wm density reset")
                 shell("cmd uimode night $oldNight")
-                awaitConfiguration(oldDensity, oldFont, oldNightMask)
+                // Auto/custom may resolve differently while the test runs; restore the saved policy.
+                val restoredNight = when (oldNight) {
+                    "yes" -> Configuration.UI_MODE_NIGHT_YES
+                    "no" -> Configuration.UI_MODE_NIGHT_NO
+                    else -> null
+                }
+                awaitConfiguration(oldDensity, oldFont, restoredNight)
+                assertEquals(oldNight, Regex("Night mode: (auto|no|yes|custom)")
+                    .find(shell("cmd uimode night"))?.groupValues?.get(1))
             }
         }
     } }
@@ -106,14 +113,14 @@ class ItemEntryRefinementTest {
     private fun shell(command: String): String = ParcelFileDescriptor.AutoCloseInputStream(
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand(command)).bufferedReader().use { it.readText().trim() }
 
-    private fun awaitConfiguration(dpi: Int, scale: Float, night: Int) {
+    private fun awaitConfiguration(dpi: Int, scale: Float, night: Int?) {
         val deadline = android.os.SystemClock.uptimeMillis() + 5_000
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         while (android.os.SystemClock.uptimeMillis() < deadline) {
             instrumentation.waitForIdleSync()
             val resources = target.resources
             if (resources.displayMetrics.densityDpi == dpi && kotlin.math.abs(resources.configuration.fontScale - scale) < 0.01f &&
-                (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == night) return
+                (night == null || (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == night)) return
             Thread.sleep(25)
         }
         error("Native entry viewport did not become $dpi dpi / $scale / $night")

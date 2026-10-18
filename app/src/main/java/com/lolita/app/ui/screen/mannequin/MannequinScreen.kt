@@ -13,15 +13,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.domain.model.ImageGenerationProvider
 import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinPresentation
+import com.lolita.app.domain.model.CategorySemantic
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
@@ -52,10 +58,32 @@ fun MannequinScreen(
     var confirmation by remember { mutableStateOf<MannequinConfirmation?>(null) }
     val accessory = state.presentation == MannequinPresentation.ACCESSORY
     val wig = state.presentation == MannequinPresentation.WIG_HEAD
+    val blouse = state.subject?.semantic == CategorySemantic.BLOUSE
+    val modeLabel = if (blouse) "衬衫人台图" else state.presentation.label
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            GradientTopAppBar(title = { Text("AI 展示图 · ${state.presentation.label}", maxLines = 2) }, navigationIcon = {
+            GradientTopAppBar(title = {
+                if (blouse) {
+                    // The compact bar measures this slot before its trailing spacer/decoration.
+                    // Reserve those siblings locally, then wrap at a word boundary at large text sizes.
+                    val measurer = rememberTextMeasurer()
+                    val textStyle = LocalTextStyle.current
+                    val density = LocalDensity.current
+                    val decoration = measurer.measure(AnnotatedString(skin.topBarDecoration),
+                        style = textStyle.copy(fontSize = 12.sp))
+                    val title = "衬衫展示"
+                    val naturalTitle = measurer.measure(AnnotatedString(title), style = textStyle, softWrap = false)
+                    BoxWithConstraints {
+                        val endDecorationWidth = with(density) { (decoration.size.width * 1.1f).toDp() }
+                        val titleWidth = (maxWidth - endDecorationWidth - 6.dp).coerceAtLeast(0.dp)
+                        val wraps = naturalTitle.size.width > with(density) { titleWidth.toPx() }
+                        Text(if (wraps) "衬衫\n展示" else title,
+                            modifier = Modifier.width(titleWidth).testTag("blouseMannequinTitle"),
+                            textAlign = TextAlign.Center, maxLines = 2)
+                    }
+                } else Text("AI 展示图 · $modeLabel", maxLines = 2)
+            }, navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
                 }
@@ -68,13 +96,14 @@ fun MannequinScreen(
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     Text(if (wig) "上传所选头模与假发原图至 ${state.provider.recipient}，共2张图片；API 单独计费。"
                         else if (accessory) "上传所选小物原图及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
+                        else if (blouse) "上传所选衬衫原图、固定人台模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。"
                         else "上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
                     Button(onClick = { if (!state.hasKey) showKey = true else state.generationRequest?.let { confirmation = MannequinConfirmation(state.provider, it, state.keyRevision) } },
                         enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null,
                         modifier = Modifier.fillMaxWidth()) {
                         if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
-                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成${state.presentation.label}")
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成$modeLabel")
                     }
                 }
             }
@@ -109,6 +138,7 @@ fun MannequinScreen(
                 LolitaSection(title = state.item?.name ?: "物品参考图") { row {
                     Text(if (wig) "只将本次假发戴在选定头模上，保留头模脸部、颈部和必要底座，不复制商品图中的真人面孔。头模均为候选，尚未通过长短假发真实评审。"
                         else if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
+                        else if (blouse) "仅将所选衬衫穿到固定无头、无手臂的人台上，保留领口、袖型、袖口、纽扣和完整下摆；下身留空，不补裙装、裤装或配套小物。AI可能改绘细节，请核对后保存。"
                         else "仅生成无杆正面人台图，不保留支撑杆和底座；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                     Text("结果保存在任务中心，核对后可追加到原图片末尾。离开页面不会放弃预览。",
@@ -176,6 +206,7 @@ fun MannequinScreen(
                 LolitaSection(title = "选择一张原图") { row {
                     Text(if (wig) "请选择一张正面轮廓、刘海和发梢完整的假发商品图；多视图请先选定目标视图，不发送拼图或多个头模。"
                         else if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
+                        else if (blouse) "请选择领口、双袖、袖口和下摆完整的衬衫正面原图；只使用选中的这一张，不补看不见的结构。"
                         else "选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                 } }
@@ -197,10 +228,11 @@ fun MannequinScreen(
             item("instructions") {
                 LolitaSection(title = "补充说明") { row {
                     OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
-                        label = { Text("补充说明（可选）") }, placeholder = { Text(if (accessory) "例如：只保留头上的红色KC" else "例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
+                        label = { Text("补充说明（可选）") }, placeholder = { Text(if (accessory) "例如：只保留头上的红色KC" else if (blouse) "例如：保留原袖口与领结" else "例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
                         modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium), minLines = 2, maxLines = 5,
                         supportingText = { Text("${state.instructions.length}/200") }, shape = RoundedCornerShape(skin.cornerRadiusMedium))
                     Text(if (wig) "仅上传本次选定头模与假发图，输出一张戴头模图；保留原图，先确认后添加。"
+                        else if (blouse) "使用固定无杆躯干人台，下身留空，不补裙裤；结果先核对后添加，原图保持。"
                         else if (accessory) "不上传人台模板，按原图角度生成独立物品展示图。" else "使用固定无杆正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
                 } }
             }
@@ -219,7 +251,9 @@ fun MannequinScreen(
         confirmButton = { TextButton(onClick = { discardLegacy = false; viewModel.discardLegacyPreview() }) { Text("确认放弃") } },
         dismissButton = { TextButton(onClick = { discardLegacy = false }) { Text("继续核对") } })
     confirmation?.let { confirmed ->
-        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成${confirmed.request.presentation.label}？") },
+        val confirmedBlouse = confirmed.request.subject?.semantic == CategorySemantic.BLOUSE
+        val confirmedLabel = if (confirmedBlouse) "衬衫人台图" else confirmed.request.presentation.label
+        AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成$confirmedLabel？") },
             text = { Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 confirmed.request.wigHeadTemplate?.let { head ->
                     Text("头模：${head.name} · v${head.version} · 候选待真实评审")
@@ -236,6 +270,8 @@ fun MannequinScreen(
                     "将上传上方选定的头模与假发原图至 ${confirmed.provider.recipient}，共2张图片，API 单独计费。结果须核对颜色、形状、组成数量和发梢；不会替换封面。"
                     else if (confirmed.request.presentation == MannequinPresentation.ACCESSORY)
                     "将上传这张小物原图与补充说明至 ${confirmed.provider.recipient}，不上传人台模板，共1张图片；API 单独计费。结果在任务中心核对后再添加。"
+                    else if (confirmedBlouse)
+                    "将上传这张衬衫原图、固定无头无手臂人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。保留领口、袖口和下摆，下身留空，不补裙裤。结果须在任务中心核对后再添加，不自动替换封面。"
                     else "将上传这张原图、无杆人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。结果在任务中心核对后再添加。")
             } },
             confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(confirmed.provider, confirmed.request, confirmed.keyRevision) }) { Text("确认并加入任务") } },

@@ -16,7 +16,8 @@ data class MannequinSubject(val categoryId: Long, val categoryName: String, val 
         require(semantic == null || semantic != CategorySemantic.UNCONFIRMED) { "请先确认品类语义" }
         require(presentation != MannequinPresentation.WIG_HEAD || semantic == CategorySemantic.FULL_WIG) { "头模模式仅适用全头假发" }
         require(categoryId > 0 && categoryName.isNotBlank()) { "展示图缺少有效分类" }
-        require(presentation != MannequinPresentation.DRESS_FORM || (semantic?.displayMode == WardrobeDisplayMode.DRESS_FORM) || (semantic == null && explicitDressName(categoryName))) { "裙装展示分类无效" }
+        require(presentation != MannequinPresentation.DRESS_FORM || semantic == CategorySemantic.BLOUSE ||
+            (semantic?.displayMode == WardrobeDisplayMode.DRESS_FORM) || (semantic == null && explicitDressName(categoryName))) { "人台展示分类无效" }
     }
 
     companion object {
@@ -48,7 +49,8 @@ fun mannequinSubject(category: Category?, confirmedSemantics: Boolean = false): 
         if (confirmedSemantics) return null
         return presentation(category)?.let { MannequinSubject(category.id, category.name, it) }
     }
-    val mode = when (semantic.displayMode) {
+    // New blouse admission is a presentation policy; persisted display semantics stay unchanged.
+    val mode = if (semantic == CategorySemantic.BLOUSE) MannequinPresentation.DRESS_FORM else when (semantic.displayMode) {
         WardrobeDisplayMode.DRESS_FORM -> MannequinPresentation.DRESS_FORM
         WardrobeDisplayMode.WIG_HEAD -> MannequinPresentation.WIG_HEAD
         WardrobeDisplayMode.STANDALONE -> if (semantic.family != WardrobeFamily.CLOTHING || semantic == CategorySemantic.PETTICOAT)
@@ -59,7 +61,7 @@ fun mannequinSubject(category: Category?, confirmedSemantics: Boolean = false): 
 }
 
 /** Eligibility is based on the explicit category, never a garment's free-form name. */
-fun supportsMannequin(category: Category?): Boolean = if (category?.categorySemantic != null && category.categorySemantic != CategorySemantic.UNCONFIRMED) mannequinSubject(category) != null else presentation(category) != null
+fun supportsMannequin(category: Category?): Boolean = mannequinSubject(category, confirmedSemantics = true) != null
 
 data class MannequinRequest(val itemId: Long, val imagePath: String, val instructions: String = "", val subject: MannequinSubject? = null, val wigHeadTemplate: WigHeadTemplateSnapshot? = null, val referenceViewConfirmed: Boolean = false, val originalImagePath: String? = null) {
     init {
@@ -73,6 +75,7 @@ data class MannequinRequest(val itemId: Long, val imagePath: String, val instruc
     fun prompt(): String {
         val semantic = subject?.semantic
         val base = if (presentation == MannequinPresentation.WIG_HEAD) WIG_HEAD_PROMPT
+        else if (presentation == MannequinPresentation.DRESS_FORM && semantic == CategorySemantic.BLOUSE) BLOUSE_PROMPT
         else if (semantic != null && presentation == MannequinPresentation.ACCESSORY) {
             val removal = if (semantic.family == WardrobeFamily.WIG)
                 "Preserve all target hair fibers, tips, bangs, curl and attachment clips. Remove only the non-target person's face, body and unrelated original hair. Show only this hair component; never complete it into a full-head wig."
@@ -87,6 +90,13 @@ data class MannequinRequest(val itemId: Long, val imagePath: String, val instruc
     }
 
     companion object {
+        private val BLOUSE_PROMPT = """
+            Use case: compositing. Produce ONE frontal catalog image of only the blouse from image 2 on the fixed tailoring torso in image 1.
+            Image 1 is the canonical warm-white headless armless adult torso dress form. Preserve its exact torso proportions, position, silver neck cap, portrait 2:3 frame, pale-gray studio background and diffuse lighting. Use invisible support only: no visible pole, rod, stand, pedestal, hanger or base. Never crop or lengthen the blouse to hide support hardware.
+            Image 2 is the only authority for the blouse. Preserve the collar, neckline, sleeve shape and length, cuffs, buttons, fastenings, lace, print, fabric, silhouette, proportions and complete hem. Sleeves must hang naturally without human arms or hands. Keep the whole blouse with clean margins; do not invent hidden back details or combine multiple views.
+            Leave the lower torso bare wherever the blouse does not cover it, and leave the lower frame empty. Do not add a skirt, trousers, petticoat, coordinated outfit or accessories. Never turn the blouse into a dress, extend its hem, tuck it into invented bottoms or copy unrelated garments from the reference.
+            Remove the source person or mannequin, face, skin, arms, hands, legs, background, captions and watermarks. No extra garment, jewelry, bow, lace, text, collage, side view or back view. Preserve existing asymmetric construction and fine product details without redesigning them. Only one selected blouse on the fixed front torso form.
+        """.trimIndent()
         private val WIG_HEAD_PROMPT = """
             Use case: product-mockup. Produce ONE portrait 2:3 catalog image with one wig on one selected doll head form.
             Image 1 is the selected bald head template. Preserve its exact face sculpt, makeup, porcelain material, neck, necessary base, frontal camera angle, head scale, frame, light and pale-gray background. It is a doll head, never a real person. Never remove its head or base using dress-form hardware rules.

@@ -62,6 +62,46 @@ object ImageFileHelper {
         }
     }
 
+    /**
+     * A product source already checked against Item.imageUrls may retain its historical filename.
+     * Only the filename policy differs: private path, format, completeness and decode gates stay strict.
+     */
+    suspend fun isOwnedReadableProductImage(context: Context, path: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val raw=File(path)
+            val file=raw.canonicalFile
+            val root=File(context.filesDir,IMAGE_DIR).canonicalFile
+            val privateRoot=File(context.filesDir.canonicalFile,IMAGE_DIR).absoluteFile
+            if(root!=privateRoot || java.nio.file.Files.isSymbolicLink(raw.toPath()) ||
+                path!=File(File(context.filesDir,IMAGE_DIR),file.name).absolutePath || file.parentFile!=root ||
+                !file.isFile || !file.canRead() || file.length() !in 1..80L*1024*1024) return@withContext false
+            val bounds=android.graphics.BitmapFactory.Options().apply {inJustDecodeBounds=true}
+            android.graphics.BitmapFactory.decodeFile(path,bounds)
+            if(!PersonalImageIntegrity.supportsDimensions(bounds.outWidth,bounds.outHeight)) return@withContext false
+            val strictFormat=bounds.outMimeType=="image/jpeg" || bounds.outMimeType=="image/png"
+            if(strictFormat) {
+                if(!PersonalImageIntegrity.isComplete(file.readBytes(),bounds.outMimeType)) return@withContext false
+            } else if(android.os.Build.VERSION.SDK_INT<28) return@withContext false
+            val decoded=if(android.os.Build.VERSION.SDK_INT>=28) {
+                android.graphics.ImageDecoder.decodeBitmap(android.graphics.ImageDecoder.createSource(file)) {decoder,info,_ ->
+                    decoder.setTargetSampleSize(maxOf(1,maxOf(info.size.width,info.size.height)/1024))
+                    decoder.setOnPartialImageListener {false}
+                }
+            } else {
+                android.graphics.BitmapFactory.decodeFile(path,android.graphics.BitmapFactory.Options().apply {
+                    var sample=1
+                    while(maxOf(bounds.outWidth,bounds.outHeight)/sample>1024)sample*=2
+                    inSampleSize=sample
+                }) ?: return@withContext false
+            }
+            decoded.recycle()
+            true
+        } catch(failure:Exception) {
+            if(failure is kotlinx.coroutines.CancellationException)throw failure
+            false
+        }
+    }
+
     /** Restore only a complete generated PNG inside this application's image store. No mutation. */
     suspend fun isOwnedGeneratedImage(context: Context, path: String): Boolean = withContext(Dispatchers.IO) {
         try {

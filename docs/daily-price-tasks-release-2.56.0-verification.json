@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-18",
+  "version": "2.56.0",
+  "version_code": 119,
+  "source_commit": "fe225e03dc21e96a8596c616941096877eeae9c9",
+  "apk_sha256": "aeb617739761ffbe57e0c6f07322ada5b5268bf834ec6acc38a7ab06541b455b",
+  "apk_bytes": 77583804,
+  "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "build": {
+    "clean_release": true,
+    "debug": true,
+    "jvm_tests": 412,
+    "jvm_failures": 0,
+    "device_cases_final_unique": 27,
+    "price_cases_rerun_after_final_fix": 8,
+    "paid_calls": 0
+  },
+  "upgrade": {
+    "from": "2.55.4/118",
+    "same_signature": true,
+    "normal_install_r": true,
+    "uninstall": false,
+    "clear_data": false,
+    "typed_tables": 38,
+    "columns": 254,
+    "items": 198,
+    "images_sha256": 172,
+    "settings_files": 3,
+    "all_values_and_bytes_exact": true,
+    "restart_exact": true
+  },
+  "github": {
+    "formal": true,
+    "url": "https://github.com/aalm1233/lolita/releases/tag/v2.56.0",
+    "anonymous_apk_and_checksum_download_verified": true,
+    "apk_head_http": 200,
+    "source_tag_verified": true
+  },
+  "gitee": {
+    "formal": true,
+    "url": "https://gitee.com/aalm1233/lolita/releases/tag/v2.56.0",
+    "apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.56.0/lolita-2.56.0.apk",
+    "anonymous_apk_and_checksum_download_verified_before_formalizing": true,
+    "formal_metadata_and_body_exact": true,
+    "formal_apk_head_http": 200,
+    "public_version_api_http": 403,
+    "public_version_api_recheck_http": 403,
+    "actual_signed_app_manual_update": "检查失败：Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+    "latest_version_and_full_notes_in_app_verified": false,
+    "old_assets_deleted": false
+  },
+  "evidence": {
+    "local_artifacts": "artifacts/releases/2.56.0/",
+    "private_business_snapshots_published": false,
+    "real_phone_verified": false
+  }
+}

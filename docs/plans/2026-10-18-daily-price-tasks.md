@@ -35,3 +35,14 @@
 - 数据结构/备份格式不变，历史只读订单加载不补算、保存前账本不变、保存后原实付与阶段ID保全均有独立Room实证。
 
 完成检查：前置图稿、七皮肤浅暗、小屏大字、真实键盘、图片不变、业务金额和资料保全、无新增隐私出口/付费、真实页面对照已完成。正式发布与覆盖升级的回执在交付后另行记录；本源码提交不将待执行发布标为完成。
+
+
+## 2.56.0 / 119 正式交付
+
+源码 `fe225e03dc21e96a8596c616941096877eeae9c9` 已提交推送，`v2.56.0` 指向该源码。clean Release 与原正式签名通过；2.55.4覆盖升级及重启逐字段保全38表254列、198件物品、172图SHA256及3份设置原字节。没有卸载、清数据、删除旧发布附件或新增付费请求。
+
+[GitHub正式版](https://github.com/aalm1233/lolita/releases/tag/v2.56.0)与[Gitee正式版](https://gitee.com/aalm1233/lolita/releases/tag/v2.56.0)发布同一APK和SHA256SUMS。GitHub匿名完整下载/HEAD/源码标签通过；Gitee按流程在预发布阶段匿名完整下载校验后转正式，正式元数据、正文、稳定链接及HEAD200再次通过。APK SHA256：`aeb617739761ffbe57e0c6f07322ada5b5268bf834ec6acc38a7ab06541b455b`。
+
+已知交付限制：Gitee公开版本API及间隔后复核均HTTP403；实际签名应用手动检查显示“Gitee暂时拒绝访问或请求过于频繁”。本轮没有验证应用内最新版本和完整说明，不能将发布成功描述为检查更新成功。当前可用[直接下载APK](https://gitee.com/aalm1233/lolita/releases/download/v2.56.0/lolita-2.56.0.apk)正常覆盖安装。未用新的网络回退方案扩大本次功能范围。设备验证为独立AVD，不冒充用户手机实测。
+
+完整公开回执：[daily-price-tasks-release-2.56.0-verification.json](../daily-price-tasks-release-2.56.0-verification.json)。

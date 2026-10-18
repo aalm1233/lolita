@@ -1,0 +1,358 @@
+{
+  "version": "2.55.0",
+  "version_code": 114,
+  "status": "github_and_gitee_formal_downloads_and_actual_app_update_verified",
+  "source_provenance": {
+    "complete_source_commit": "feafa0f7880706a634d42fbf57f92806424355db",
+    "original_tag_commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+    "original_tag_unchanged": true,
+    "apk_unchanged": true,
+    "notes_file": "release-body-final.md",
+    "body_sha256": "16a2bd3065a29fc34972fce9d3b3eed470805318f5f97210c1e0a734b82584e2",
+    "github": {
+      "release_id": 416261813,
+      "body_exact": true,
+      "assets_unchanged": true,
+      "prerelease": false
+    },
+    "gitee": {
+      "release_id": 1214989,
+      "body_exact": true,
+      "assets_unchanged": true,
+      "prerelease": false
+    },
+    "gitee_initial_body_only_patch": {
+      "http_status": 400,
+      "mutation_not_applied_verified": true,
+      "resolved_by_required_release_fields": true
+    }
+  },
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 114,
+    "version": "2.55.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "eba92bf6327ae45579bf3f19885dd03b6041ae67d7c4e029dab15c7f3e2859b8",
+    "bytes": 77518268,
+    "source_commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+    "build_log": "logs/wardrobe-release-build.log"
+  },
+  "build": {
+    "command": "JAVA_HOME=<JDK17> ./gradlew clean assembleRelease",
+    "jdk": "17.0.19",
+    "passed": true,
+    "seconds": 121,
+    "tasks_executed": 52
+  },
+  "tests": {
+    "jvm": {
+      "tests": 390,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final_device": {
+      "avd": "Lolita_Wardrobe_Final_35",
+      "version_code": 114,
+      "tests": 53,
+      "counts": {
+        "passed": 53,
+        "failed": 0,
+        "error": 0,
+        "ignored": 0,
+        "skipped": 0
+      },
+      "seconds": 6.505,
+      "real_provider_requests": 0
+    },
+    "earlier_new_feature_batch": {
+      "room": 44,
+      "ui": 3,
+      "passed": 47
+    },
+    "old_ui_followup_passed": 15,
+    "opt_in_local_loopback_passed": 1,
+    "batches_overlap_do_not_sum": true,
+    "historical_127_batch": {
+      "passed": 112,
+      "failed": 14,
+      "skipped": 1,
+      "failures_resolved_in_subsequent_runs": true
+    },
+    "native_recognition_ui_review": {
+      "skins": 7,
+      "modes": 2,
+      "width_dp": 320,
+      "font_scales": [
+        2
+      ],
+      "screenshots": 28,
+      "controlled_fixture": true
+    }
+  },
+  "upgrade": {
+    "avd": "Lolita_Personal_Model_Release_20261016",
+    "from_version": "2.54.0",
+    "from_version_code": 113,
+    "database_versions": [
+      29,
+      30
+    ],
+    "same_certificate": true,
+    "uninstall_or_clear_data": false,
+    "original_tables_checked": 31,
+    "original_columns_checked": 196,
+    "original_items_preserved": 198,
+    "original_images_sha256_checked": 172,
+    "original_settings_byte_exact": [
+      "app_settings.preferences_pb",
+      "builtin_library.xml"
+    ],
+    "integrity_and_foreign_keys_passed": true,
+    "original_row_values_preserved": true,
+    "restart_all_current_tables_exact": true,
+    "launcher_helper_correction_resumed_without_reinstall": true,
+    "user_device_touched": false
+  },
+  "github": {
+    "tag": "v2.55.0",
+    "source_commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+    "release_id": 416261813,
+    "prerelease": false,
+    "files": {
+      "lolita-2.55.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.0/lolita-2.55.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 77518268,
+        "sha256": "eba92bf6327ae45579bf3f19885dd03b6041ae67d7c4e029dab15c7f3e2859b8",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f86afe45fb3fe4658e7c120b11f1a56ec331dd7974a1959287789a8d0f90146a",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 77518268,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.55.0",
+    "source_commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+    "release_id": 1214989,
+    "prerelease": false,
+    "files": {
+      "lolita-2.55.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.0/lolita-2.55.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 77518268,
+        "sha256": "eba92bf6327ae45579bf3f19885dd03b6041ae67d7c4e029dab15c7f3e2859b8",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f86afe45fb3fe4658e7c120b11f1a56ec331dd7974a1959287789a8d0f90146a",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 77518268,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "gitee_quota_cleanup": {
+    "explicit_human_authorization": true,
+    "freed_bytes": 96101090,
+    "removed_only": [
+      {
+        "tag": "v2.44.1",
+        "attachment_id": 3381462,
+        "bytes": 48042353,
+        "sha256": "bbdb38fa10785e89ddcb3dbe84e5c6b699db9eb5c9cb95d20026d96215d2d807",
+        "http_status": 204
+      },
+      {
+        "tag": "v2.45.0",
+        "attachment_id": 3382537,
+        "bytes": 48058737,
+        "sha256": "b09adee79e7a549325059cd76d4c0b5d8ab9df0badc7ef0d57bffd1e4ba6578c",
+        "http_status": 204
+      }
+    ],
+    "old_releases_checksums_and_other_assets_retained": true,
+    "github_and_local_backups_verified": true
+  },
+  "public_update": {
+    "attempts": 1,
+    "exit_code": 0,
+    "http_status": 200,
+    "highest_formal_version_and_notes_verified": true,
+    "retried": false
+  },
+  "actual_app_update": {
+    "avd": "Lolita_Personal_Model_Release_20261016",
+    "serial": "emulator-5584",
+    "installed_version": "2.55.0",
+    "installed_version_code": 114,
+    "manual_check_attempts": 1,
+    "manual_check_success": true,
+    "current_and_latest_version": "2.55.0",
+    "release_notes_five_feature_bullets_present": true,
+    "limitations_and_source_footer_present": true,
+    "dialog_dismissed": true,
+    "official_paid_ai_calls": 0,
+    "screenshots": [
+      "ui/manual-update-result.png",
+      "ui/manual-update-bottom.png",
+      "ui/manual-update-footer.png"
+    ],
+    "notes": "Actual signed release manual update check; scroll captures reuse the same query."
+  },
+  "paid_evaluation": {
+    "authorized_combined_calls": 20,
+    "used": 18,
+    "remaining": 2,
+    "recognition": 8,
+    "generation": 10,
+    "success": 15,
+    "local_response_parse_rejections": 3,
+    "all_requests_terminal": true,
+    "automatic_retry": false,
+    "recognition_providers": [
+      "doubao-seed-2-1-pro-260915",
+      "deepseek-flash"
+    ],
+    "generation_model": "doubao-seedream-5-0-pro-260628",
+    "openai_recognition_used": false,
+    "same_table_numeric_cells_correct_per_provider": 25,
+    "direct_unit_and_basis_adoption_qualified": false,
+    "five_head_short_and_long_outputs": 10,
+    "five_head_quality_qualified": false,
+    "all_five_long_results_shortened_or_cropped": true,
+    "long_straight_reference_available": false,
+    "host_production_api_harness_used": true,
+    "native_android_paid_upload_verified": false,
+    "raw_photos_and_credentials_published": false
+  },
+  "source_catalog_correction": {
+    "missing_from_original_tag": true,
+    "complete_source_commit": "feafa0f7880706a634d42fbf57f92806424355db",
+    "published_apk_exact_assets": [
+      {
+        "asset": "builtin/storage/catalog.json",
+        "bytes": 1173,
+        "sha256": "73928836663bc7fa8e8d3201ce94e2e29c5c0fb7320169d2d5cb84a13d5f8452"
+      },
+      {
+        "asset": "builtin/storage/wig_stand.png",
+        "bytes": 2157497,
+        "sha256": "0122c9dbbe109a46f6d66c70e8c214b4ac3d78bcbf7a4fde4acc0e1047014b24"
+      },
+      {
+        "asset": "builtin/storage/shoe_cabinet.png",
+        "bytes": 2443425,
+        "sha256": "f83520d7e0b80ae23a7c577053e2925181c36160e0fd5100bdbad4d1da1d9903"
+      },
+      {
+        "asset": "builtin/storage/sock_drawer.png",
+        "bytes": 2437930,
+        "sha256": "d173e46075e0750ff1ba8331d895be6237329336f02739af31fc2a33ef0314d9"
+      },
+      {
+        "asset": "builtin/storage/accessory_box.png",
+        "bytes": 2859106,
+        "sha256": "79e597987e2c26ed98fd445ff34df8e6461657367da79648bb13eeb1fdaf5a7c"
+      }
+    ],
+    "apk_replaced": false,
+    "original_tag_rewritten": false
+  },
+  "private_evidence_directory": "artifacts/releases/2.55.0/",
+  "limitations": [
+    "Five wig heads remain candidates; long hair fidelity failed qualitative review.",
+    "Recognition values still require source, unit and measurement basis review.",
+    "No long straight hair reference; host encoding is not Android byte equivalence.",
+    "Visual comparison board was produced after initial implementation, not before it."
+  ]
+}

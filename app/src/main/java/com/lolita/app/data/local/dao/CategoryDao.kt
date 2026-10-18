@@ -23,6 +23,9 @@ interface CategoryDao {
     @Update
     suspend fun updateCategory(category: Category)
 
+    @Update
+    suspend fun updateCategories(categories: List<Category>)
+
     @Delete
     suspend fun deleteCategory(category: Category)
 

@@ -272,7 +272,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=114, versionName="2.55.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=115, versionName="2.55.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -470,9 +470,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 2.54.0 /113 clean正式包原签名核验通过，307项JVM及相关设备回归通过；2.53.0覆盖升级与实际详情/小物页面操作后33表、198件、172图及设置逐字节保全。GitHub/Gitee均已正式发布，同一APK/校验文件匿名完整下载、SHA256及HEAD通过；按2026-10-16 19:21单独授权仅删除Gitee2.44.0 APK（保留旧发布/校验及本机/GitHub副本）。Gitee正式发布后公开API仍HTTP403，正式包本阶段一次真实检查仍显示拒绝访问/频繁请求，不冒充最新版本与完整正文已验证。状态见`docs/mannequin-accessories-release-2.54.0-verification.json`。
 
-## 完整衣橱第一期（2.55.0）
+## 完整衣橱第一期（2.55.0–2.55.1）
 
-- 七类穿戴物品共用Item；`CategorySemantic`固定业务身份，分类名称、默认穿戴位置与购买父子关系独立。旧分类全部`UNCONFIRMED`，不凭可改名称回填。`WardrobeCategoryLibrary`在Room事务后保存一次性初始化标记，编辑/备份恢复先等待初始化，用户删除或改名后不重建分类。
+- 七类穿戴物品共用Item；`CategorySemantic`固定业务身份，分类名称、默认穿戴位置与购买父子关系独立。按用户最新要求，2.55.1以`HistoricalCategoryRecognition`完整名称白名单自动识别历史JSK等12种旧预设及明确别名，NFKC/大小写/空白归一，只补未确认语义，保留已确认类型、角色覆盖及原ID/名称/分组/创建时间；不合并记录，不按子串猜混合类。独立`historical_semantics_v1`标记使已安装2.55.0也可一次刷新，事务提交后落标，后续改名不再推断；旧备份在严格解析后使用同规则。`WardrobeCategoryLibrary`原初始化标记继续独立控制预设追加，删除或改名不重建分类。规则与验证见`docs/historical-category-recognition-2026-10-18.md`。
 - 登记仅要求名称和有效分类；未设置品牌使用受保护的系统键，不假造商标。`ItemSpecifications`保留所有品类原字符串及单位，切类型不清已填值；默认规格与更多规格分开。`ItemDraft`保存图片与基线修改时间，提交事务拒绝覆盖其他页面的新资料；复制剥离订单、实付、导入身份、购买父子关系和待执行任务。
 - `StorageNode`在房间下最多两层，唯一键使用归一化名称与明确父级哨兵；移动/删除/批量迁移事务同步Item与持久编辑草稿的房间/节点，物品修改时间单调增加。新DAO已接数据库、薄Repository和AppModule。四款示意插图仅主动采纳，完整提示词与SHA见`docs/storage-assets-2026-10-18.json`。
 - 共用`ImageCropDialog`提供EXIF、缩放/平移、裁切、旋转/还原和最终预览；只存UUID裁切副本，原图不改。识图至多5区、每区3MiB、合计12MiB，发送前核对精确JPEG bytes/SHA/尺寸；不发送路径或EXIF。

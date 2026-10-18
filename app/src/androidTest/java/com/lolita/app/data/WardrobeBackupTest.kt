@@ -267,7 +267,7 @@ class WardrobeBackupTest {
         val item = f.db.itemDao().getItemById(1)!!
         assertEquals(ItemComposition.UNCONFIRMED, item.composition); assertEquals("", item.specificationsJson); assertNull(item.storageNodeId)
         assertEquals(f.item.imageUrls, item.imageUrls); assertEquals(f.item.size, item.size); assertEquals(f.item.colors, item.colors)
-        assertEquals(CategorySemantic.UNCONFIRMED, f.db.categoryDao().getCategoryById(1)!!.categorySemantic)
+        assertEquals(CategorySemantic.FULL_WIG, f.db.categoryDao().getCategoryById(1)!!.categorySemantic)
         assertEquals(legacy, f.db.imageTaskDao().get(legacy.id))
         assertEquals(f.price, f.db.priceDao().getPriceById(5)); assertEquals(f.payment, f.db.paymentDao().getPaymentById(7))
     } }

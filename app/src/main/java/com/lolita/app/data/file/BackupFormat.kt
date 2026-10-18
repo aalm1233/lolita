@@ -5,6 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.lolita.app.data.local.entity.*
+import com.lolita.app.domain.model.HistoricalCategoryRecognition
 import com.lolita.app.domain.model.ImageTaskKind
 import com.lolita.app.domain.model.ImageTaskStatus
 import java.lang.reflect.Modifier
@@ -152,7 +153,7 @@ internal object BackupFormat {
         root.addProperty("schemaVersion", schema)
         val data = gson.fromJson(root, BackupData::class.java)
         validate(data)
-        return data
+        return data.copy(categories = data.categories.map(HistoricalCategoryRecognition::recognize))
     }
 
     private fun persistOrderPurchaseEvidence(root: JsonObject) {

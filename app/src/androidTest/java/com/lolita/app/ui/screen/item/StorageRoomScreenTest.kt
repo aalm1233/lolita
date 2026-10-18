@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
@@ -42,6 +44,7 @@ class StorageRoomScreenTest {
     private val skin = mutableStateOf(SkinType.DEFAULT)
     private val dark = mutableStateOf(false)
     private val compact = mutableStateOf(false)
+    private val compactFontScale = mutableStateOf(2f)
 
     @Before fun setup() = runBlocking {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -70,7 +73,7 @@ class StorageRoomScreenTest {
                     if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
             }
             CompositionLocalProvider(LocalConfiguration provides configuration,
-                LocalDensity provides Density(density.density, if (compact.value) 2f else density.fontScale)) {
+                LocalDensity provides Density(density.density, if (compact.value) compactFontScale.value else density.fontScale)) {
                 Box(if (compact.value) Modifier.width(320.dp) else Modifier) {
                     LolitaTheme(skinType = skin.value, darkTheme = dark.value) {
                         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -126,6 +129,77 @@ class StorageRoomScreenTest {
         assertNull(db.itemDao().getItemById(accessory)!!.storageNodeId)
         assertEquals(1L, db.itemDao().getItemById(shoe)!!.locationId)
         assertEquals(shoe, db.itemDao().getItemById(accessory)!!.parentItemId)
+    }
+
+    private fun assertSingleLineAction(label: String, expectedFontScale: Float) {
+        compose.onNode(hasText(label) and hasClickAction()).performScrollTo().assertIsDisplayed().assertIsEnabled()
+        val layouts = mutableListOf<TextLayoutResult>()
+        compose.onNodeWithText(label, useUnmergedTree = true)
+            .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }
+        assertEquals("The actual action text must expose its measured layout", 1, layouts.size)
+        val layout = layouts.single()
+        assertEquals(label, layout.layoutInput.text.text)
+        assertEquals(expectedFontScale, layout.layoutInput.density.fontScale, 0.01f)
+        val listWidth = compose.onNodeWithTag("storage-room-list").fetchSemanticsNode().boundsInRoot.width
+        assertEquals("The real screen content must be constrained to 320dp", 320f,
+            listWidth / layout.layoutInput.density.density, 1f)
+        assertEquals("The complete action label must stay on one line: $label", 1, layout.lineCount)
+        assertFalse("The action label must not be ellipsized", layout.isLineEllipsized(0))
+        assertEquals(label.length, layout.getLineEnd(0))
+        assertTrue("The measured text must fit its actual box",
+            layout.getLineLeft(0) >= -1f && layout.getLineRight(0) <= layout.size.width + 1f &&
+                layout.getLineTop(0) >= -1f && layout.getLineBottom(0) <= layout.size.height + 1f)
+    }
+
+    private fun assertRootActions(expectedFontScale: Float) {
+        assertNull(model.uiState.value.currentNodeId)
+        val createLabel = "新增柜架 / 收纳盒"
+        assertSingleLineAction(createLabel, expectedFontScale)
+        assertSingleLineAction("移入物品", expectedFontScale)
+        val create = compose.onNode(hasText(createLabel) and hasClickAction()).assertIsDisplayed()
+            .fetchSemanticsNode().boundsInRoot
+        val move = compose.onNode(hasText("移入物品") and hasClickAction()).assertIsDisplayed()
+            .fetchSemanticsNode().boundsInRoot
+        assertTrue("Create and move must occupy separate vertical rows", create.bottom <= move.top)
+        assertEquals("Both actions must use the same full content width", create.left, move.left, 1f)
+        assertEquals("Both actions must use the same full content width", create.right, move.right, 1f)
+    }
+
+    @Test fun rootActionsStaySingleLineAndCreateRoomNodesAt320dpWithNormalAndLargeText() = runBlocking {
+        listOf(1f, 2f).forEachIndexed { index, scale ->
+            compose.runOnIdle { compact.value = true; compactFontScale.value = scale }
+            assertRootActions(scale)
+            val name = "根级收纳-${index + 1}"
+            compose.onNodeWithText("新增柜架 / 收纳盒").performClick()
+            compose.onNodeWithText("新增柜架或收纳盒").assertIsDisplayed()
+            compose.onNodeWithText("位置名称").performTextInput(name)
+            compose.onNodeWithText("保存").assertIsEnabled().performClick()
+            compose.waitUntil(5_000) { model.uiState.value.nodes.any { it.name == name } && !model.uiState.value.isSaving }
+            val saved = db.storageNodeDao().getAll().single { it.name == name }
+            assertEquals("The actual dialog save must create a node in this room", 1L, saved.locationId)
+            assertNull("A room-level action must create a cabinet, not a compartment", saved.parentNodeId)
+            assertEquals(3 + index, db.storageNodeDao().getAll().size)
+        }
+    }
+
+    @Test fun allSevenSkinsKeepRootActionsSingleLineAndSeparatedAt320dpInBothFontScales() {
+        val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,
+            "storage-root-action-screenshots/${UUID.randomUUID()}").apply { mkdirs() }
+        SkinType.entries.forEach { candidate ->
+            listOf(false, true).forEach { isDark ->
+                listOf(1f, 2f).forEach { scale ->
+                    compose.runOnIdle {
+                        skin.value = candidate; dark.value = isDark; compact.value = true; compactFontScale.value = scale
+                    }
+                    assertRootActions(scale)
+                    val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+                    File(directory, "${candidate.name.lowercase()}-${if (isDark) "dark" else "light"}-320dp-${scale.toInt()}x.png")
+                        .outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                }
+            }
+        }
+        assertEquals("Every skin, theme and font scale must produce an actual screenshot", 28,
+            directory.listFiles { file -> file.extension == "png" }!!.size)
     }
 
     @Test fun allSevenSkinsKeepSelectionAndMoveControlsReachableOnSmallScreensWithLargeText() {

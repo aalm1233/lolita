@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorSpace
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Rect
@@ -137,7 +138,9 @@ object ImageRegionCropper {
             }) ?: throw IllegalArgumentException("读取所选图片区域失败")
         } finally { decoder.recycle() }
         try {
-            val output = Bitmap.createBitmap(outputSize.width, outputSize.height, Bitmap.Config.ARGB_8888)
+            // An explicit sRGB destination converts wide-gamut source pixels before discarding ICC.
+            val output = Bitmap.createBitmap(outputSize.width, outputSize.height, Bitmap.Config.ARGB_8888,
+                true, ColorSpace.get(ColorSpace.Named.SRGB))
             try {
                 val canvas = Canvas(output)
                 canvas.drawColor(Color.WHITE)
@@ -170,6 +173,7 @@ object ImageRegionCropper {
     suspend fun crop(context: Context, sourcePath: String, region: NormalizedCropRect,
         rotationDegrees: Float = 0f): CropOutput {
         var temporary: File? = null
+        var encoded: File? = null
         try {
             val metadata = withContext(Dispatchers.IO) {
                 currentCoroutineContext().ensureActive()
@@ -177,14 +181,21 @@ object ImageRegionCropper {
                 try {
                     val directory = File(context.cacheDir, "region-crops").apply { check(isDirectory || mkdirs()) }
                     val file = File.createTempFile("region-", ".jpg", directory).also { temporary = it }
-                    // Bitmap.compress writes fresh pixel data, never the source's EXIF, GPS or comments.
-                    file.outputStream().use { check(result.bitmap.compress(Bitmap.CompressFormat.JPEG, 95, it)) { "无法保存裁切图片" } }
+                    val encoderFile = File.createTempFile("encoded-", ".jpg", directory).also { encoded = it }
+                    // Android's encoder adds an ICC APP2 even for fresh sRGB bitmaps. Strip metadata
+                    // from its own output without recompressing or touching any entropy-coded pixels.
+                    encoderFile.outputStream().buffered().use {
+                        check(result.bitmap.compress(Bitmap.CompressFormat.JPEG, 95, it)) { "无法保存裁切图片" }
+                    }
+                    encoderFile.inputStream().buffered().use { input -> file.outputStream().buffered().use { output ->
+                        CropJpegMetadata.copyWithoutMetadata(input, output)
+                    } }
                     currentCoroutineContext().ensureActive()
                     CropOutput("", result.bitmap.width, result.bitmap.height, result.sourceWidth, result.sourceHeight, result.sampled)
                 } finally { result.bitmap.recycle() }
             }
             val path = ImageFileHelper.copyToInternalStorage(context, Uri.fromFile(requireNotNull(temporary)))
             return metadata.copy(path = path)
-        } finally { temporary?.delete() }
+        } finally { temporary?.delete(); encoded?.delete() }
     }
 }

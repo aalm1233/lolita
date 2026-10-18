@@ -99,11 +99,11 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                 if (!state.isUnassigned) {
                     item { OutlinedButton(onClick = { onAddItem(locationId, currentNode?.id) }, enabled = !state.isSaving,
                         modifier = Modifier.fillMaxWidth()) { Text("新增物品") } }
-                    item { Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium), modifier = Modifier.fillMaxWidth()) {
-                        if (canCreate) OutlinedButton(onClick = { addNode = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) {
+                    item { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium), modifier = Modifier.fillMaxWidth()) {
+                        if (canCreate) OutlinedButton(onClick = { addNode = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) {
                             Text(if (currentNode == null) "新增柜架 / 收纳盒" else "新增层 / 格")
                         }
-                        OutlinedButton(onClick = { addItems = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) { Text("移入物品") }
+                        OutlinedButton(onClick = { addItems = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { Text("移入物品") }
                     } }
                     if (currentNode == null) item { TextButton(onClick = viewModel::showTemplates, enabled = !state.isSaving) { Text("添加常用收纳") } }
                 }

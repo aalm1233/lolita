@@ -4,9 +4,14 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
@@ -28,14 +33,18 @@ fun WardrobeCategorySelector(selectedCategoryId: Long, categories: List<Category
     if (show) {
         var query by remember { mutableStateOf("") }
         var family by remember { mutableStateOf(selected?.categorySemantic?.family ?: preferredFamily) }
+        val familyScroll = rememberScrollState()
+        val categoriesScroll = rememberLazyListState()
+        ObserveSkinScroll(familyScroll)
+        ObserveSkinScroll(categoriesScroll)
         AlertDialog(onDismissRequest = { show = false }, title = { Text("选择物品类型") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.spacingMedium)) {
                 OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.horizontalScroll(familyScroll), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     FilterChip(selected = family == null, onClick = { family = null }, label = { Text("全部") })
                     WardrobeFamily.entries.forEach { value -> FilterChip(selected = family == value, onClick = { family = value }, label = { Text(value.label) }) }
                 }
-                LazyColumn(Modifier.heightIn(max = 340.dp)) {
+                LazyColumn(Modifier.heightIn(max = 340.dp), state = categoriesScroll) {
                     items(categories.filter { (family == null || it.categorySemantic.family == family) && it.name.contains(query, true) }, key = { it.id }) { category ->
                         TextButton(onClick = { onCategorySelected(category.id); show = false }, modifier = Modifier.fillMaxWidth()) {
                             Text("${if (category.id == selectedCategoryId) "✓ " else ""}${category.name} · ${category.categorySemantic.family.label}")
@@ -74,32 +83,58 @@ fun specificationFields(profile: String): List<SpecificationField> = when (profi
 fun WardrobeSpecificationEditor(semantic: CategorySemantic, specifications: WardrobeSpecifications,
     composition: ItemComposition, enabled: Boolean, onSpecifications: (WardrobeSpecifications) -> Unit, onComposition: (ItemComposition) -> Unit) {
     val profile = specificationProfile(semantic)
-    val skin=LolitaSkin.current
-    var expanded by remember(profile) { mutableStateOf(false) }
-    val fields=profile?.let(::specificationFields).orEmpty()
-    val defaultCount=when(profile) { "wig"->4;"hosiery"->3;"footwear"->3;"petticoat"->3;"accessory","bag","handheld"->1;else->0 }
-    val compositionDefault=profile in setOf("hosiery","accessory")
-    LolitaSection("专属资料（选填）") {
-        if(expanded || profile==null) row {
-            OutlinedTextField(specifications.pattern,{onSpecifications(specifications.copy(pattern=it))},label={Text("图案")},
-                enabled=enabled,modifier=Modifier.fillMaxWidth(),singleLine=true)
+    val skin = LolitaSkin.current
+    var expanded by rememberSaveable(profile) { mutableStateOf(false) }
+    val fields = profile?.let(::specificationFields).orEmpty()
+    val root = Gson().toJsonTree(specifications).asJsonObject
+    val filledByProfile = root.entrySet().filter { it.value.isJsonObject }.associate { (name, values) ->
+        name to values.asJsonObject.entrySet().count { it.value.asString.isNotBlank() }
+    }
+    val count = filledByProfile.values.sum() + (if (specifications.pattern.isNotBlank()) 1 else 0) +
+        (if (composition != ItemComposition.UNCONFIRMED) 1 else 0)
+    val otherCount = filledByProfile.filterKeys { it != profile }.values.sum()
+    val labels = fields.filter { root[profile].asJsonObject[it.key].asString.isNotBlank() }.map { it.label }
+    LolitaSection("规格与备注", action = {
+        TextButton(onClick = { expanded = !expanded }, enabled = enabled,
+            modifier = Modifier.semantics { contentDescription = if (expanded) "收起规格与备注" else "展开规格与备注" }) {
+            Text(if (expanded) "收起" else "展开")
         }
-        if(compositionDefault || expanded || profile==null) row {
-            Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {
-                ItemComposition.entries.forEach { value -> FilterChip(selected=composition==value,enabled=enabled,
-                    onClick={onComposition(value)},label={Text(value.label)}) }
-            }
+    }) {
+        row {
+            Text(if (count == 0) "未填写 · 尺寸、材质和使用备注均可稍后补充"
+                else buildList {
+                    add("已填写 $count 项")
+                    if (labels.isNotEmpty()) add(labels.take(3).joinToString("、"))
+                    if (specifications.pattern.isNotBlank()) add("图案已填写")
+                    if (composition != ItemComposition.UNCONFIRMED) add(composition.label)
+                    if (otherCount > 0) add("保留其他类型 $otherCount 项")
+                }.joinToString(" · "), style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        if(profile!=null) {
-            fields.take(if(expanded) fields.size else defaultCount).forEach { field -> row {
-                val root=Gson().toJsonTree(specifications).asJsonObject
-                OutlinedTextField(value=root[profile].asJsonObject[field.key].asString,onValueChange={raw ->
-                    root[profile].asJsonObject.addProperty(field.key,raw)
-                    onSpecifications(WardrobeSpecifications.decode(root.toString()))
-                },label={Text(field.label)},enabled=enabled,modifier=Modifier.fillMaxWidth(),singleLine=true)
-            } }
+        if (expanded) {
             row {
-                TextButton(onClick={expanded=!expanded},enabled=enabled) { Text(if(expanded) "收起更多规格" else "补充更多规格") }
+                OutlinedTextField(specifications.pattern, { onSpecifications(specifications.copy(pattern = it)) },
+                    label = { Text("图案") }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true)
+            }
+            row {
+                val compositionScroll = rememberScrollState()
+                ObserveSkinScroll(compositionScroll)
+                Text("组成（选填）", style = MaterialTheme.typography.labelMedium)
+                Row(Modifier.horizontalScroll(compositionScroll), horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                    ItemComposition.entries.forEach { value -> FilterChip(selected = composition == value, enabled = enabled,
+                        onClick = { onComposition(value) }, label = { Text(value.label) }) }
+                }
+            }
+            fields.forEach { field -> row {
+                OutlinedTextField(value = root[profile].asJsonObject[field.key].asString, onValueChange = { raw ->
+                    val updated = Gson().toJsonTree(specifications).asJsonObject
+                    updated[profile].asJsonObject.addProperty(field.key, raw)
+                    onSpecifications(WardrobeSpecifications.decode(updated.toString()))
+                }, label = { Text(field.label) }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true)
+            } }
+            if (otherCount > 0) row {
+                Text("其他类型的 $otherCount 项规格继续保留，切换回对应类型即可查看和编辑。",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -128,13 +163,17 @@ fun CategorySemanticPicker(value: CategorySemantic, onSelected: (CategorySemanti
     if (show) {
         var query by remember { mutableStateOf("") }
         var family by remember { mutableStateOf<WardrobeFamily?>(null) }
+        val familyScroll = rememberScrollState()
+        val semanticScroll = rememberLazyListState()
+        ObserveSkinScroll(familyScroll)
+        ObserveSkinScroll(semanticScroll)
         AlertDialog(onDismissRequest = { show = false }, title = { Text("选择稳定类型") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, modifier = Modifier.fillMaxWidth())
-                Row(Modifier.horizontalScroll(rememberScrollState())) { WardrobeFamily.entries.filter { it != WardrobeFamily.UNCONFIRMED }.forEach { entry ->
+                Row(Modifier.horizontalScroll(familyScroll)) { WardrobeFamily.entries.filter { it != WardrobeFamily.UNCONFIRMED }.forEach { entry ->
                     FilterChip(family == entry, { family = entry }, label = { Text(entry.label) })
                 } }
-                LazyColumn(Modifier.heightIn(max = 280.dp)) {
+                LazyColumn(Modifier.heightIn(max = 280.dp), state = semanticScroll) {
                     items(CategorySemantic.entries.filter { it != CategorySemantic.UNCONFIRMED && (family == null || it.family == family) && it.label.contains(query, true) }) { entry ->
                         TextButton(onClick = { onSelected(entry); show = false }, modifier = Modifier.fillMaxWidth()) { Text("${entry.label} · ${entry.defaultWearRole.label}") }
                     }

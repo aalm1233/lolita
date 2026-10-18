@@ -1,0 +1,678 @@
+{
+  "fixtureOnly": true,
+  "userPhotosPublished": false,
+  "screenshots": [
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "default",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/default-light-entry-320dp-2x.png",
+      "sourceSha256": "8a0535de8c64890dbb8d4b929c195a7ed191ec91f1b2628b209e41530455e8fd"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/gothic-light-entry-320dp-2x.png",
+      "sourceSha256": "c80486111ace510b0bd6a63deed416d5e26425ae1af3b422fb6fdef2863d9fcf"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/chinese-light-entry-320dp-2x.png",
+      "sourceSha256": "59343292fd10fc22fe6d7cc07a0a8bb16bfab5836e070d29cd63ff630e7d6a7f"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "classic",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/classic-light-entry-320dp-2x.png",
+      "sourceSha256": "5cc2ab16f42d3033e3a613344d1e1e347b4bb2d6c9fca6a451327061927f6145"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "navy",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/navy-light-entry-320dp-2x.png",
+      "sourceSha256": "9fa3bf11720efa88d7fee679fcda956e1dd9992203c453ffaaa66d4775714a32"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "country",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/country-light-entry-320dp-2x.png",
+      "sourceSha256": "16778c47cb4343520b7a219e609692a81b3522d9d4043e1c5ac075966d6e6e9c"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/victorian-light-entry-320dp-2x.png",
+      "sourceSha256": "0621300d40f0cd98160654b2269f174b0b95ca372e92445037588f62fa3d1f5b"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "default",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/default-light-folded-details-320dp-2x.png",
+      "sourceSha256": "1e3899fcbc821828a0c5887e1dbba9cde32e4ed232bc810d5284631762308113"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/gothic-light-folded-details-320dp-2x.png",
+      "sourceSha256": "3ffeeb8625087d459155ac47ce4798b98f4568a686b362145a5b50f61cec978e"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/chinese-light-folded-details-320dp-2x.png",
+      "sourceSha256": "6535306c612136526614f61043970f2b66e1b7ee5673765aba15bc7b79906391"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "classic",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/classic-light-folded-details-320dp-2x.png",
+      "sourceSha256": "bb9d12155a545ba7c31cc57bf99acaf272dce2232e24bff1037dfb473c44d3ec"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "navy",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/navy-light-folded-details-320dp-2x.png",
+      "sourceSha256": "e2b31c4bd7633dcd4c9f45e6349b5efda90af1444894165fcfd32f666a686949"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "country",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/country-light-folded-details-320dp-2x.png",
+      "sourceSha256": "70f667266d9f32a01cc7b7190d62dddc5c78434f9225669908a1d10f34fcf642"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/victorian-light-folded-details-320dp-2x.png",
+      "sourceSha256": "2d9a737e12b8ac2f9cf1288101dbdc6cfca9cbf09d6cdac450cbb77508da5639"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "default",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/default-light-keyboard-320dp-2x.png",
+      "sourceSha256": "b7baf2e67fe67f77403d40fb43db19e582ff101b3d6b5d0f62da7eec633c7e19"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/gothic-light-keyboard-320dp-2x.png",
+      "sourceSha256": "ed031a11f9e312fc10c9076ac277e34ec2a31c23a4e79be23d797996dc597654"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/chinese-light-keyboard-320dp-2x.png",
+      "sourceSha256": "15fcef743c9ad53ae49a6faaf7eaaa6a765f43dc0a01982c451f49aae163ee2e"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "classic",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/classic-light-keyboard-320dp-2x.png",
+      "sourceSha256": "5448b4e038b3f284e265aa6eacd69619c2cb5ad234f1788423bcbd6d5acc035d"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "navy",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/navy-light-keyboard-320dp-2x.png",
+      "sourceSha256": "ae8c72aa1ff26c8d4b92c5b202b76d9fbc0753e493dcb442047196931b795bae"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "country",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/country-light-keyboard-320dp-2x.png",
+      "sourceSha256": "ee66627cf20d82bd89fb49784216dd4b561df59f3d9419e00de4c563e829eba8"
+    },
+    {
+      "group": "entry",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/2f92f1fd-067a-4374-bd0c-d17075b6ed95/victorian-light-keyboard-320dp-2x.png",
+      "sourceSha256": "a76cf3affafc6440a6b6d33fc2494af6b3826e19e5324200a76e121030d978b0"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "default",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/default-light-review-apply-320dp-2x.png",
+      "sourceSha256": "5f0140fa300d0e588614db08963ee8f38c28ab46b6704ef5ad05347d1e11e71b"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/gothic-light-review-apply-320dp-2x.png",
+      "sourceSha256": "ae79515b9be6ff29ff8474c2179a8452618a0aa6835bc3ddd7af9fd49650bb7d"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/chinese-light-review-apply-320dp-2x.png",
+      "sourceSha256": "d4d329dd2092374ce377239a7f5077324790f73efed0c253dae629ab14f7dc98"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "classic",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/classic-light-review-apply-320dp-2x.png",
+      "sourceSha256": "9d63404e28978a6a7dc640051bfb7bd0267abe6b0a8eb7c7423b4d0f1bbe9033"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "navy",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/navy-light-review-apply-320dp-2x.png",
+      "sourceSha256": "94062e3485e83e62dac0678384834cb0d79c1f7fe86cdaf2791d349cc34af018"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "country",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/country-light-review-apply-320dp-2x.png",
+      "sourceSha256": "1e622e5084f5580fecf0afa38d08c5de2460934aa785f6f6cc7f46cb956b4f7c"
+    },
+    {
+      "group": "recognition",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/865fda85-f76b-4585-9bba-49296d9d5a02/victorian-light-review-apply-320dp-2x.png",
+      "sourceSha256": "5f85b26d070f903a5f9986909a0c7c705573b17566b881d761344f6def898ef3"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "default",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/default-light-320dp-1x.png",
+      "sourceSha256": "8f2f7be78e2bab818e5e14592a904c9cfe0ef1c26e020dfd90a9487ebebff476"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/gothic-light-320dp-1x.png",
+      "sourceSha256": "6830af50967a6c5cb39a1b181e19275da10b135e3655495e1ac9ad8dc9564974"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/chinese-light-320dp-1x.png",
+      "sourceSha256": "98bdffcb6874eaadbc37fda3d76c93c1013742e5a27918e07a37d6d1f96db1ce"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "classic",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/classic-light-320dp-1x.png",
+      "sourceSha256": "ea9c7bee61643253aab02dbea613b89440d8bc36aaf8a15826120098c15b2151"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "navy",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/navy-light-320dp-1x.png",
+      "sourceSha256": "a8ed70e254b78e61fe2c390d0b627fcf620656bd651ed49d0ac93e57f6527e56"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "country",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/country-light-320dp-1x.png",
+      "sourceSha256": "f29f8432e83d5b0a78f976044e4f8c7b84564b9b4219a960649ed54b8e5e02d8"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/victorian-light-320dp-1x.png",
+      "sourceSha256": "a97de7f1b57b4e04e75f0f6f3c2e8e7a57c7a815f581e428214f7d024ed2954c"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "default",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/default-light-320dp-2x.png",
+      "sourceSha256": "c58f0fe7ce71f2a8e0a73dc9acd4ce6b448fedd7d2752fdcd8b10a9a7b386d0c"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "gothic",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/gothic-light-320dp-2x.png",
+      "sourceSha256": "d744deaead7735251df65ab53f3d495e195d0e675fa1f2492129b38e6e6488c4"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "chinese",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/chinese-light-320dp-2x.png",
+      "sourceSha256": "f1f7bf00551bd623c19a0f5814731c8aaf2c87b5d4e0d88ece8b8c73c0e038a8"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "classic",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/classic-light-320dp-2x.png",
+      "sourceSha256": "e8f8d396fecf1551e275d39574623050cb7d39da86507401af295b4f7c5147d2"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "navy",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/navy-light-320dp-2x.png",
+      "sourceSha256": "14486e04ef417d45a4461dd5b10594beaa9f72485dc0a28c8df884a603be608e"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "country",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/country-light-320dp-2x.png",
+      "sourceSha256": "4c2d90741c24433d3bbd44f8f1b9edd1ea774126b36c4ad3997209dc169ce57e"
+    },
+    {
+      "group": "cabinet",
+      "mode": "light",
+      "skin": "victorian",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/victorian-light-320dp-2x.png",
+      "sourceSha256": "ae24f227197345988c040c59146891ef0014039b0feb627faae0b8170ac4d4b4"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "default",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/default-dark-entry-320dp-2x.png",
+      "sourceSha256": "b24ab9d0ccb52b8b37cdbb36bf6e828cfcc055238cac33469e46d8998b05e815"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/gothic-dark-entry-320dp-2x.png",
+      "sourceSha256": "ef741479ceea1ef434e1469eb4d1a4efe037def385c5eabda2e5e610f31cb02e"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/chinese-dark-entry-320dp-2x.png",
+      "sourceSha256": "06903b7ffd5fd361156fc12adc1f14aa1b8a8e393786f0140fdcd0393ec8fdc3"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/classic-dark-entry-320dp-2x.png",
+      "sourceSha256": "301cdc51af59f271af3d48678d4aceeeabcfa3f9b69522b2deb966116e46a36a"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/navy-dark-entry-320dp-2x.png",
+      "sourceSha256": "0124b6f37b110386ab81b42fa6524dfdde223591cdc211d6e241d79f1b457aa7"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "country",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/country-dark-entry-320dp-2x.png",
+      "sourceSha256": "88a85d6c7ed28c0b2c505e0fa582e6df21df55e0cc2ef45caf86d76d64be3bf8"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "entry",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/victorian-dark-entry-320dp-2x.png",
+      "sourceSha256": "23e8cc79d245b0e917bfda02df27e0fa1824d20a06cef263f99549ff3f6f77a9"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "default",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/default-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "dc6d86ce3848dc91f794a5e9333ac00986a5481f8d00df96a72049f52fca0850"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/gothic-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "48617a9d0be689b365c2b8db10d1e9093439c2ae8b65543970ae40d6c86f3cb2"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/chinese-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "82029fc0b9b288f65242798b2b3c7e3d1b880e4d178ab65d5af261674336afad"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/classic-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "8f38eaaef833eb4ee85b362a50f982c5dfdc4ece35611bdbe2b282a54b7a1b27"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/navy-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "c1782bf0c410183c335200c0bdc928cdc08f52cdfa2c0b994626a0110809b7e1"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "country",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/country-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "1d43f713f98439eb6623fa8e815c1d43b90d81633e28c9e74062384612a1ed46"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "folded-details",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/victorian-dark-folded-details-320dp-2x.png",
+      "sourceSha256": "43aefcd221a0394fe1c73c92b0fd8ffc1b174398f0fc60825796c194ad89f69f"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "default",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/default-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "33b7a066553c2a7adb37971615570d28962bc39278aa5beae11b5045802827d8"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/gothic-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "d6473b35037524fbd1942f4a360b1e49ab467558662bc525badc882748346b42"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/chinese-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "6d7db966dde9f9838fbe6e712f26211ea8ff95c3184843445b09e9d2d8553d82"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/classic-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "ee9d3863893a28379fc39ba19c4248df4ffa58b2d50678e98a62da0e88031c55"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/navy-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "3c0476a3a50cf2ddfaae7cf91360b5a80e208bc2ce26b63a8b15ed6b028a7020"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "country",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/country-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "6052e8adef834987e8f67b258bba3d8e68dcef974930dbca217dd0ba6d38cd7a"
+    },
+    {
+      "group": "entry",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "keyboard",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/entry-refinement-screenshots/bfd923f2-519b-4f12-92b5-99fb94d0fda1/victorian-dark-keyboard-320dp-2x.png",
+      "sourceSha256": "c446cb9e93e46e9774073e9acd46ed49660e7caf7be6aeddecdccb5e9046702a"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "default",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/default-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "6dc5c8dacf31d05055704ca8ee96e159cdeb39e9e5a6f5921f1a5428b9eb5d76"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/gothic-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "f6e92de16102fb72bd1851ad33e5373af7fa140fb09df134d2de5cf51822ea8a"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/chinese-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "29b971f2050c17b5daa4e409fab5b51cb1fd8feb17be6ad7facc90101d6c5f50"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/classic-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "144cbd07d0c31d176abe76e74535eca31f020c33f0ca1624981c9a15aca09ad8"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/navy-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "92fad5004a6f109219ebe3ba613cec0a6befa44b90d10ae3039e846ae24f01a4"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "country",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/country-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "369869c9a72a7b75bb72bf336589ffea17b0527834da3165a35be3a349a78fdb"
+    },
+    {
+      "group": "recognition",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "review-apply",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/recognition-flow-screenshots/baca931a-93c4-4a33-b30a-ba2db395dc3b/victorian-dark-review-apply-320dp-2x.png",
+      "sourceSha256": "09c5cf056400396ea7d341f49d40e9399e6dfe618e46afb482836adcdbebab09"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "default",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/default-dark-320dp-1x.png",
+      "sourceSha256": "198c1f4aa57b3c85241996919e9b562dc7996056b595c32b760c1cf83677c354"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/gothic-dark-320dp-1x.png",
+      "sourceSha256": "fc2aa8f95baf0c439e138fb9b5a918ad6a8b163b420d23bbaa05c40dbfeba7f9"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/chinese-dark-320dp-1x.png",
+      "sourceSha256": "5ae8bb9a686790ed0fa73609a3200a74d80ff0b083d041929a3611b825a4f83e"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/classic-dark-320dp-1x.png",
+      "sourceSha256": "ac230a7c73bdd25c78b9a844b86079f92e246e1baee07f3be59aff5b22125b90"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/navy-dark-320dp-1x.png",
+      "sourceSha256": "551d4fcbe769ad60e19cca421781b5cbf859a3f56eb1608a993129cba6c4262a"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "country",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/country-dark-320dp-1x.png",
+      "sourceSha256": "c0d7fab3f67e953a66630db3a6ddda2e89dfce246ff04e18be241de4726d730b"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "1x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/victorian-dark-320dp-1x.png",
+      "sourceSha256": "ee879e7c684ffece330d365fdd0bf5f8d411a4ca542edf8d1bfae89e668889f7"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "default",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/default-dark-320dp-2x.png",
+      "sourceSha256": "f27db3c827de6b1bea2e7f84dcd9206b2f9be5c0242015ef0274682099a4e4d9"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "gothic",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/gothic-dark-320dp-2x.png",
+      "sourceSha256": "90652ec66cda35b924b1efe2bba0631445063686314676edf7b43f97326cec0f"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "chinese",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/chinese-dark-320dp-2x.png",
+      "sourceSha256": "63fa1b2550749a6eb6dd38c24aaf642fe28c31deefb3098747ba4bccd7efa290"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "classic",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/classic-dark-320dp-2x.png",
+      "sourceSha256": "855f56eafe7d6385934d2f3a0036b870a2fff9de1e30d00a9a45c82e9813064b"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "navy",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/navy-dark-320dp-2x.png",
+      "sourceSha256": "7d37fbe55719f88aade22adadb2c2d5bedab4870a1c32799bace96a709340585"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "country",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/country-dark-320dp-2x.png",
+      "sourceSha256": "0c6281db147c68f08fb5294a6be7fa123a9f283516f95acca518e04cb1430da0"
+    },
+    {
+      "group": "cabinet",
+      "mode": "dark",
+      "skin": "victorian",
+      "state": "2x",
+      "source": "artifacts/entry-refinement-2026-10-18/final-screenshots/files/storage-root-action-screenshots/6a733b96-4f2f-48dd-966b-cbde408511ff/victorian-dark-320dp-2x.png",
+      "sourceSha256": "0def87f09044b7ceb13752079e2623d906f06d96940b9eb35cbd565fc2e3798a"
+    }
+  ]
+}

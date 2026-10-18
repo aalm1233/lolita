@@ -20,16 +20,21 @@ class RecognitionRepository(private val database: LolitaDatabase, private val co
     fun observe(draftId: String) = database.recognitionDao().observe(draftId)
     suspend fun get(id: String) = database.recognitionDao().get(id)
 
-    suspend fun addRegion(draftId: String, path: String, baseline: Map<RecognitionField,String>,
-        family: WardrobeFamily, appearanceOnly: Boolean): String = withContext(Dispatchers.IO) {
+    private suspend fun readRegion(path: String, appearanceOnly: Boolean): RecognitionRegion {
         require(ImageFileHelper.isOwnedReadableImage(context,path)) { "请重新选择清楚的图片区域" }
         val file = File(path)
         require(file.length() in 1..(3L*1024*1024)) { "选区文件超过3 MiB，请缩小区域" }
         val bytes = file.readBytes()
+        require(bytes.size in 1..(3*1024*1024)) { "选区文件超过3 MiB，请缩小区域" }
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds=true }
         BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
-        val region = RecognitionRegion(UUID.randomUUID().toString(),
+        return RecognitionRegion(UUID.randomUUID().toString(),
             MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) },bounds.outWidth,bounds.outHeight,appearanceOnly)
+    }
+
+    suspend fun addRegion(draftId: String, path: String, baseline: Map<RecognitionField,String>,
+        family: WardrobeFamily, appearanceOnly: Boolean): String = withContext(Dispatchers.IO) {
+        val region = readRegion(path, appearanceOnly)
         database.withTransaction {
             val draft = database.itemDraftDao().get(draftId) ?: error("编辑草稿已关闭，请重新进入")
             val prepared = database.recognitionDao().getAll().firstOrNull { it.draftId==draftId && it.status==RecognitionStatus.PREPARED }
@@ -44,6 +49,50 @@ class RecognitionRepository(private val database: LolitaDatabase, private val co
             if (prepared==null) database.recognitionDao().insert(task) else database.recognitionDao().update(task)
             task.id
         }
+    }
+
+    /** The caller owns newPath until commit and must clean it through reference protection on failure. */
+    suspend fun replaceRegion(id: String, index: Int, newPath: String): Unit = withContext(NonCancellable+Dispatchers.IO) {
+        val replacement = readRegion(newPath, false)
+        val removed = database.withTransaction {
+            val task = database.recognitionDao().get(id) ?: error("识图草稿已不存在")
+            task.validate()
+            require(task.status == RecognitionStatus.PREPARED && !task.requestSent) { "已提交的区域不能更换" }
+            require(index in task.regionImagePaths.indices) { "所选区域已变化，请重新选择" }
+            val draft = database.itemDraftDao().get(task.draftId) ?: error("编辑草稿已关闭，请重新进入")
+            draft.validate()
+            require(draft.targetItemId == task.targetItemId) { "编辑草稿已变化" }
+            task.targetItemId?.let { require(database.itemDao().getItemById(it) != null) { "物品已删除" } }
+            val request = task.request()
+            val regions = request.regions.toMutableList()
+            val original = regions[index]
+            regions[index] = replacement.copy(id = original.id,
+                appearanceOnly = original.appearanceOnly || isAppearanceOnly(newPath))
+            val updatedRequest = request.copy(regions = regions)
+            updatedRequest.validate()
+            val paths = task.regionImagePaths.toMutableList()
+            val oldPath = paths[index]
+            paths[index] = newPath
+            require(paths.sumOf { File(it).length() } <= 12L*1024*1024) { "选区合计超过12 MiB，请减少区域" }
+            val updated = task.copy(requestJson = updatedRequest.encode(), regionImagePaths = paths,
+                updatedAt = maxOf(task.updatedAt + 1, System.currentTimeMillis()))
+            updated.validate()
+            database.recognitionDao().update(updated)
+            oldPath
+        }
+        if (removed != newPath) deleteImage(removed)
+    }
+
+    /** Source classification may only become more restrictive after a picture is staged. */
+    suspend fun markAppearanceOnly(id: String) = database.withTransaction {
+        val task=database.recognitionDao().get(id) ?: error("识图图片已移除")
+        require(task.status==RecognitionStatus.PREPARED && !task.requestSent) { "已提交的图片来源不能更改" }
+        val draft=database.itemDraftDao().get(task.draftId) ?: error("编辑草稿已关闭")
+        require(draft.targetItemId==task.targetItemId)
+        val request=task.request().copy(regions=task.request().regions.map {it.copy(appearanceOnly=true)})
+        val updated=task.copy(requestJson=request.encode(),updatedAt=maxOf(task.updatedAt+1,System.currentTimeMillis()))
+        updated.validate()
+        database.recognitionDao().update(updated)
     }
 
     suspend fun removeRegion(id: String,index: Int) = withContext(NonCancellable+Dispatchers.IO) {

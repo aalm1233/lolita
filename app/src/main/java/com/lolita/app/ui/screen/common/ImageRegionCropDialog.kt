@@ -43,7 +43,8 @@ import kotlin.math.*
 
 /** The caller owns the source and receives ownership of exactly one confirmed derived JPEG. */
 @Composable
-fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: (String) -> Unit) {
+fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: (String) -> Unit,
+    previewInParent: Boolean = false) {
     val context = LocalContext.current
     val skin = LocalLolitaSkin.current
     val scope = rememberCoroutineScope()
@@ -58,6 +59,7 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
     var pan by remember(sourcePath) { mutableStateOf(Offset.Zero) }
     var rendered by remember(sourcePath) { mutableStateOf<CropOutput?>(null) }
     var cropJob by remember(sourcePath) { mutableStateOf<Job?>(null) }
+    var showAdvanced by remember(sourcePath) { mutableStateOf(false) }
     val owned = remember(sourcePath) { mutableSetOf<String>() }
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
@@ -74,6 +76,25 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
         selection = NormalizedCropRect.FULL
         zoom = 1f
         pan = Offset.Zero
+    }
+    fun generateCrop(returnToParent: Boolean) {
+        val chosen = selection
+        val angle = rotation
+        busy = true
+        error = null
+        cropJob = scope.launch {
+            try {
+                val output = ImageRegionCropper.crop(context, sourcePath, chosen, angle)
+                owned.add(output.path)
+                if (returnToParent) {
+                    onCropped(output.path)
+                    owned.remove(output.path)
+                } else rendered = output
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                error = failure.message ?: "裁切失败，请重新调整"
+            } finally { busy = false }
+        }
     }
     LaunchedEffect(sourcePath) {
         try { source = ImageRegionCropper.preview(sourcePath) }
@@ -95,7 +116,7 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
             Column(Modifier.padding(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("选择图片区域", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
-                    IconButton(onClick = onDismiss, enabled = !busy) { SkinIcon(IconKey.Close) }
+                    IconButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.semantics {contentDescription = "关闭裁切"}) { SkinIcon(IconKey.Close) }
                 }
                 Column(Modifier.weight(1f).verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     Text("只使用确认后的选区像素；原图保持不变。此步骤不会调用识图或生图服务。", style = MaterialTheme.typography.bodySmall)
@@ -105,15 +126,22 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                     source?.let { original ->
                         val dimensions = CropGeometry.rotatedSize(original.sourceWidth, original.sourceHeight, rotation)
                         val pixels = CropGeometry.pixelRect(selection, dimensions.width, dimensions.height)
-                        Text("原图 ${original.sourceWidth} × ${original.sourceHeight} px · 当前选区 ${pixels.width} × ${pixels.height} px",
-                            style = MaterialTheme.typography.bodySmall)
+                        if (!previewInParent || showAdvanced) {
+                            Text("原图 ${original.sourceWidth} × ${original.sourceHeight} px · 当前选区 ${pixels.width} × ${pixels.height} px",
+                                style = MaterialTheme.typography.bodySmall)
+                        }
                         if (rendered == null) {
                             CropSelectionCanvas(original, dimensions, rotation, selection, zoom, pan, !busy,
                                 onSelection = { invalidatePreview(); selection = it },
                                 onViewport = { newZoom, newPan -> zoom = newZoom; pan = newPan })
-                            Text("拖动四角调整矩形，拖动框内移动选区；框外拖动图像，双指缩放与平移。缩放仅用于查看，不会增加像素。",
+                            Text(if (previewInParent) "拖动四角调整范围，双指缩放查看。" else
+                                "拖动四角调整矩形，拖动框内移动选区；框外拖动图像，双指缩放与平移。缩放仅用于查看，不会增加像素。",
                                 style = MaterialTheme.typography.bodySmall)
-                            if (original.bitmap.width != original.sourceWidth || original.bitmap.height != original.sourceHeight) {
+                            if (previewInParent) TextButton(onClick = { showAdvanced = !showAdvanced }, enabled = !busy) {
+                                Text(if (showAdvanced) "收起精细调整" else "精细调整与图片信息")
+                            }
+                            if ((!previewInParent || showAdvanced) &&
+                                (original.bitmap.width != original.sourceWidth || original.bitmap.height != original.sourceHeight)) {
                                 Text("显示预览已降采样为 ${original.bitmap.width} × ${original.bitmap.height} px；最终从原图区域解码，以实际裁切预览尺寸为准。",
                                     style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
@@ -122,25 +150,15 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                                 TextButton(onClick = { invalidatePreview(); selection = NormalizedCropRect.FULL }, enabled = !busy) { Text("整图") }
                                 TextButton(onClick = { rotate(0, 0f) }, enabled = !busy) { Text("重置") }
                             }
-                            Text("微调 ${"%.1f".format(fineRotation)}°（旋转会重置选区）", style = MaterialTheme.typography.bodySmall)
-                            Slider(value = fineRotation, onValueChange = { rotate(fine = it) }, valueRange = -15f..15f, enabled = !busy)
-                            TextButton(onClick = { zoom = 1f; pan = Offset.Zero }, enabled = !busy) { Text("适应屏幕") }
-                            OutlinedButton(onClick = {
-                                val chosen = selection
-                                val angle = rotation
-                                busy = true
-                                error = null
-                                cropJob = scope.launch {
-                                    try {
-                                        val output = ImageRegionCropper.crop(context, sourcePath, chosen, angle)
-                                        owned.add(output.path)
-                                        rendered = output
-                                    } catch (failure: Exception) {
-                                        if (failure is CancellationException) throw failure
-                                        error = failure.message ?: "裁切失败，请重新调整"
-                                    } finally { busy = false }
-                                }
-                            }, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
+                            if (!previewInParent || showAdvanced) {
+                                Text("微调 ${"%.1f".format(fineRotation)}°（旋转会重置选区）", style = MaterialTheme.typography.bodySmall)
+                                Slider(value = fineRotation, onValueChange = { rotate(fine = it) }, valueRange = -15f..15f, enabled = !busy)
+                                TextButton(onClick = { zoom = 1f; pan = Offset.Zero }, enabled = !busy) { Text("适应屏幕") }
+                                if (previewInParent) Text("缩放仅用于查看，不会增加像素；最终以返回后的实际裁切图片为准。",
+                                    style = MaterialTheme.typography.bodySmall)
+                            }
+                            if (!previewInParent) OutlinedButton(onClick = { generateCrop(false) }, enabled = !busy,
+                                modifier = Modifier.fillMaxWidth()) {
                                 Text(if (busy) "正在生成裁切预览…" else "查看实际裁切")
                             }
                         } else {
@@ -160,7 +178,10 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                     }
                     error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 }
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                if (previewInParent) Button(onClick = { generateCrop(true) },
+                    enabled = !busy && !loading && source != null, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (busy) "正在裁切…" else "使用此范围")
+                } else Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     OutlinedButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.weight(1f)) { Text("取消") }
                     Button(onClick = {
                         val result = rendered

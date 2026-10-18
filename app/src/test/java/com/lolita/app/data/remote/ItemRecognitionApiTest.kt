@@ -450,6 +450,38 @@ class ItemRecognitionApiTest {
         assertEquals(0, opened)
     }
 
+    @Test fun fixedFailureStagesDistinguishLocalImageValidationFromRemoteEnvelopeAndSchema() = runBlocking {
+        var opened = 0
+        val noTransport = ItemRecognitionApi({ opened++; error("must not open") })
+        val keyFailure = runCatching { noTransport.recognize("bad\nkey", request(), listOf(jpeg)) }.exceptionOrNull() as RecognitionApiFailure
+        assertEquals(RecognitionApiFailureKind.AUTH, keyFailure.kind)
+        assertEquals(RecognitionApiFailureStage.CONFIGURATION, keyFailure.stage)
+        val wrongHash = request().let { it.copy(regions = listOf(it.regions.single().copy(sha256 = "0".repeat(64)))) }
+        val inputFailure = runCatching { noTransport.recognize("dummy-key", wrongHash, listOf(jpeg)) }.exceptionOrNull() as RecognitionApiFailure
+        assertEquals(RecognitionApiFailureKind.INPUT, inputFailure.kind)
+        assertEquals(RecognitionApiFailureStage.IMAGE, inputFailure.stage)
+        assertTrue(inputFailure.message!!.contains("本次未发送")); assertEquals(0, opened)
+
+        val invalidEnvelope = JsonParser.parseString(response()).asJsonObject.apply { addProperty("unknown_private_value", "sensitive") }
+        val invalidSchema = """{"version":1,"candidates":[{"private":"sensitive"}]}"""
+        for ((body, stage) in listOf("not-json-sensitive" to RecognitionApiFailureStage.RESPONSE_JSON,
+            invalidEnvelope.toString() to RecognitionApiFailureStage.RESPONSE_ENVELOPE,
+            response(text = invalidSchema) to RecognitionApiFailureStage.RESPONSE_SCHEMA)) {
+            Loopback(200, body).use { server ->
+                val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull() as RecognitionApiFailure
+                assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, failure.kind)
+                assertEquals(stage, failure.stage)
+                assertNull(failure.cause); assertFalse(failure.toString().contains("sensitive")); assertEquals(1, server.calls.get())
+            }
+        }
+        Loopback(200, response(status = "incomplete")).use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull() as RecognitionApiFailure
+            assertEquals(RecognitionApiFailureKind.INCOMPLETE_RESPONSE, failure.kind)
+            assertEquals(RecognitionApiFailureStage.RESPONSE_ENVELOPE, failure.stage)
+            assertNull(failure.cause); assertEquals(1, server.calls.get())
+        }
+    }
+
     @Test fun invalidKeysFiveRegionLimitAndCumulativeBudgetNeverConnect() = runBlocking {
         var opened = 0
         val api = ItemRecognitionApi({ opened++; error("must not open") })

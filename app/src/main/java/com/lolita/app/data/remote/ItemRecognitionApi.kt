@@ -22,13 +22,17 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Durable error text comes only from this local allowlist. No key, server body or cause survives. */
 enum class RecognitionApiFailureKind(val message: String) {
-    INPUT("识图输入无法核验，请重新选择裁切区域"), AUTH("识图密钥无效或未获授权，请检查本机配置"),
+    INPUT("识图区域或裁切图片校验失败，请移除该区域后重新裁切；本次未发送识图请求"), AUTH("识图密钥无效或未获授权，请检查本机配置"),
     MODEL_UNAVAILABLE("识图模型尚未开通或密钥无访问权限，请到火山方舟控制台开通豆包 Seed 2.1 Pro，并核对密钥项目权限后主动提交"),
     QUOTA("识图服务额度不足，请检查账户后主动重试"), RATE_LIMIT("识图服务暂时繁忙，请稍后主动重试"),
     NETWORK("识图连接失败，请检查网络后主动重试"), TIMEOUT("识图等待超时，请核对后重新发起；原请求可能已计费"),
-    INVALID_RESPONSE("识图结果无法核验，请重新框选或手工填写"), BUSY("上一次识图请求正在结束，请稍后主动提交")
+    INVALID_RESPONSE("识图服务返回的资料未通过格式校验，请主动重试或手工填写；原请求可能已计费"),
+    INCOMPLETE_RESPONSE("识图服务未完整生成结果，请缩小为单个款式或一段表格后主动提交；原请求可能已计费"),
+    BUSY("上一次识图请求正在结束，请稍后主动提交")
 }
-class RecognitionApiFailure(val kind: RecognitionApiFailureKind) : IllegalStateException(kind.message)
+/** Fixed local stages diagnose a failed boundary without retaining server data or validation causes. */
+enum class RecognitionApiFailureStage { CONFIGURATION, REQUEST, IMAGE, HTTP, RESPONSE_JSON, RESPONSE_ENVELOPE, RESPONSE_CONTENT, RESPONSE_SCHEMA }
+class RecognitionApiFailure(val kind: RecognitionApiFailureKind, val stage: RecognitionApiFailureStage? = null) : IllegalStateException(kind.message)
 data class RecognitionApiResult(val result: RecognitionResult, val provider: RecognitionProvider, val actualModel: String)
 
 /** One explicitly authorized provider request; no paths, baselines or original images are uploaded. */
@@ -44,14 +48,19 @@ class ItemRecognitionApi(
 
     suspend fun recognizeWithMetadata(apiKey: String, request: RecognitionRequest, regions: List<ByteArray>): RecognitionApiResult {
         val snapshot: RecognitionRequest
+        var inputStage = RecognitionApiFailureStage.CONFIGURATION
         val payload = try {
             require(apiKey.isNotBlank() && apiKey.length <= 512 && apiKey.all { it.code in 33..126 })
+            inputStage = RecognitionApiFailureStage.REQUEST
             require(regions.size in 1..5 && regions.all { it.size in 1..MAX_IMAGE } && regions.sumOf { it.size.toLong() } <= MAX_TOTAL)
             snapshot = RecognitionRequest.decode(request.encode())
             val images = regions.map { it.copyOf() }
+            inputStage = RecognitionApiFailureStage.IMAGE
             validateInputs(snapshot, images)
             payload(snapshot, images)
-        } catch (_: Exception) { throw RecognitionApiFailure(RecognitionApiFailureKind.INPUT) }
+        } catch (_: Exception) {
+            throw RecognitionApiFailure(if (inputStage == RecognitionApiFailureStage.CONFIGURATION) RecognitionApiFailureKind.AUTH else RecognitionApiFailureKind.INPUT, inputStage)
+        }
         try {
             return withTimeout(timeoutMillis) {
                 suspendCancellableCoroutine { continuation ->
@@ -112,13 +121,16 @@ class ItemRecognitionApi(
         }
         checkInterrupted()
         val status = conn.responseCode
-        if (status != 200) throw RecognitionApiFailure(httpFailure(conn, status, provider))
+        if (status != 200) throw RecognitionApiFailure(httpFailure(conn, status, provider), RecognitionApiFailureStage.HTTP)
         if (conn.contentLengthLong > MAX_RESPONSE) throw RecognitionApiFailure(RecognitionApiFailureKind.INVALID_RESPONSE)
         val bytes = conn.inputStream.use { readBounded(it) }
+        var responseStage = RecognitionApiFailureStage.RESPONSE_JSON
         return try {
             val decoder = Charsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT)
             val root = strictJson(decoder.decode(ByteBuffer.wrap(bytes)).toString()).asJsonObject
+            responseStage = RecognitionApiFailureStage.RESPONSE_ENVELOPE
             require(root.string("object") == "response")
+            if (root.string("status") == "incomplete") throw RecognitionApiFailure(RecognitionApiFailureKind.INCOMPLETE_RESPONSE, responseStage)
             require(root.string("status") == "completed")
             require(root["error"].absentOrNull() && root["incomplete_details"].absentOrNull())
             root["store"]?.let { require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean && !it.asBoolean) }
@@ -128,6 +140,7 @@ class ItemRecognitionApi(
                 RecognitionProvider.VOLCENGINE_ARK -> parseArkEnvelope(root)
                 RecognitionProvider.DEEPSEEK -> parseDeepSeekEnvelope(root)
             }
+            responseStage = RecognitionApiFailureStage.RESPONSE_CONTENT
             val output = root["output"].asJsonArray
             require(output.size() == 1)
             val message = output.single().asJsonObject
@@ -145,6 +158,7 @@ class ItemRecognitionApi(
             require(text.string("type") == "output_text")
             text["annotations"]?.takeUnless { it.isJsonNull }?.let { require(it.isJsonArray && it.asJsonArray.size() == 0) }
             val structured = strictJson(text.string("text")).asJsonObject
+            responseStage = RecognitionApiFailureStage.RESPONSE_SCHEMA
             // Historical local results may omit this newer field; fresh model output must meet the current schema.
             require(structured["version"].isJsonPrimitive && structured["version"].asJsonPrimitive.isNumber)
             require(structured["candidates"].asJsonArray.all { it.asJsonObject.has("measurement") })
@@ -156,7 +170,8 @@ class ItemRecognitionApi(
                 })
             }
             RecognitionApiResult(result, provider, actualModel)
-        } catch (_: Exception) { throw RecognitionApiFailure(RecognitionApiFailureKind.INVALID_RESPONSE) }
+        } catch (failure: RecognitionApiFailure) { throw failure }
+        catch (_: Exception) { throw RecognitionApiFailure(RecognitionApiFailureKind.INVALID_RESPONSE, responseStage) }
     }
 
     private fun parseArkEnvelope(root: JsonObject): String {

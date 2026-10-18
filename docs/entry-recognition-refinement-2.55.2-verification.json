@@ -1,0 +1,50 @@
+{
+  "version": "2.55.2",
+  "versionCode": 116,
+  "jvm": {
+    "tests": 397,
+    "failures": 0
+  },
+  "live": {
+    "authorization": {
+      "limit": 2,
+      "consumed": 2,
+      "automaticRetries": 0
+    },
+    "provider": "VOLCENGINE_ARK",
+    "model": "doubao-seed-2-1-pro-260915",
+    "runtime": "Android production API + ImageRegionCropper",
+    "calls": [
+      {
+        "sample": "wig-short-ring-curl",
+        "state": "completed",
+        "candidateCount": 6,
+        "width": 900,
+        "height": 1060,
+        "cropSha256": "49039ac1d165a36589c7ca36a8eb8349951072e7396a500d78f0f0d7b5097708"
+      },
+      {
+        "sample": "table-sk",
+        "state": "completed",
+        "candidateCount": 20,
+        "width": 1400,
+        "height": 690,
+        "cropSha256": "b6649472cff1b0dea888495bf60b655ec571407c7157e2b57b4a8a70a6d599c4"
+      }
+    ]
+  },
+  "privacy": {
+    "temporaryDeviceKeyDeleted": true,
+    "originalPhotosShaUnchanged": true,
+    "privatePhotosAndResponsesPublished": false
+  },
+  "databaseSchema": 30,
+  "backupFormat": 10,
+  "device": {
+    "serial": "emulator-5586",
+    "avd": "Lolita_Wardrobe_Final_35",
+    "distinctPassed": 78,
+    "optInLiveSkipped": 1,
+    "testHostFailuresFixed": "Preserved Activity Result owner while overriding file-storage Context; explicit crop close semantics."
+  }
+}

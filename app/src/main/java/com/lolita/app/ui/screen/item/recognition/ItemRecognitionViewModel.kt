@@ -73,11 +73,67 @@ class ItemRecognitionViewModel(private val repository: RecognitionRepository=App
         if(failure is CancellationException) throw failure
         _uiState.update { it.copy(error=failure.message?.take(180) ?: "操作未完成，请重新核对") }
     }
-    fun addRegion(draftId: String,path: String,baseline: Map<RecognitionField,String>,family: WardrobeFamily,appearanceOnly: Boolean) = action {
-        try { repository.addRegion(draftId,path,baseline,family,appearanceOnly) }
+    suspend fun stageRegion(draftId: String,path: String,baseline: Map<RecognitionField,String>,family: WardrobeFamily,appearanceOnly: Boolean): String {
+        try { return repository.addRegion(draftId,path,baseline,family,appearanceOnly) }
         catch(failure: Throwable) { com.lolita.app.data.file.ImageFileHelper.cleanupUnreferencedImages(listOf(path)); throw failure }
     }
+    fun addRegion(draftId: String,path: String,baseline: Map<RecognitionField,String>,family: WardrobeFamily,appearanceOnly: Boolean) = action {
+        stageRegion(draftId,path,baseline,family,appearanceOnly)
+    }
+    fun replaceRegion(id: String,index: Int,path: String)=action {
+        try { repository.replaceRegion(id,index,path) }
+        catch(failure: Throwable) { com.lolita.app.data.file.ImageFileHelper.cleanupUnreferencedImages(listOf(path)); throw failure }
+    }
+    /** Rebuild old crop files locally; the resulting PREPARED card still needs a separate paid send. */
+    fun prepareAgain(task: RecognitionTask, normalize: suspend (String)->String, onPrepared: (String)->Unit)=action {
+        val current=repository.get(task.id) ?: error("识图记录已移除")
+        require(current==task && current.status in setOf(RecognitionStatus.FAILED,RecognitionStatus.INTERRUPTED)) {
+            "识图图片或状态已变化，请重新核对"
+        }
+        var preparedId: String?=null
+        val newImages=mutableListOf<String>()
+        try {
+            // Capture committed identities/files before cancellation can resume the caller.
+            withContext(NonCancellable) { repository.reprepare(task.id).also { preparedId=it } }
+            val id=requireNotNull(preparedId)
+            task.regionImagePaths.forEachIndexed { index,path ->
+                currentCoroutineContext().ensureActive()
+                val normalized=withContext(NonCancellable) { normalize(path).also { newImages.add(it) } }
+                require(normalized !in task.regionImagePaths) { "请为识图区域生成新的裁切副本" }
+                currentCoroutineContext().ensureActive()
+                repository.replaceRegion(id,index,normalized)
+            }
+            currentCoroutineContext().ensureActive()
+            onPrepared(id)
+        } catch(failure: Throwable) {
+            withContext(NonCancellable) {
+                try { preparedId?.let { repository.discard(it) } }
+                finally { com.lolita.app.data.file.ImageFileHelper.cleanupUnreferencedImages(newImages).join() }
+            }
+            throw failure
+        }
+    }
+    /** The visible image/service card is the confirmation. Recheck it at the explicit send click. */
+    fun submitVisible(displayed: RecognitionTask,revision: Int,provider: RecognitionProvider,editor: ItemEditViewModel,
+        family: WardrobeFamily,onPrepared:(String)->Unit)=action {
+        fun checkSettings() {
+            require(settings.changes.value==revision && settings.readProvider()==provider) { "服务或密钥已更改，请重新核对图片与费用" }
+        }
+        checkSettings()
+        require(!editor.uiState.value.isSaving && editor.uiState.value.draftId==displayed.draftId) { "草稿已变化，请重新核对" }
+        editor.keepDraft()
+        val current=repository.get(displayed.id) ?: error("识图记录已移除")
+        require(current==displayed) { "识图图片或状态已变化，请重新核对" }
+        val id=if(displayed.status in setOf(RecognitionStatus.FAILED,RecognitionStatus.INTERRUPTED)) repository.reprepare(displayed.id) else displayed.id
+        val confirmed=repository.confirmation(id,editor.currentRecognitionValues(),family,provider)
+        require(confirmed.draftId==displayed.draftId && confirmed.targetItemId==displayed.targetItemId &&
+            confirmed.regionImagePaths==displayed.regionImagePaths && confirmed.request().regions==displayed.request().regions) { "识图图片已变化，请重新核对" }
+        checkSettings()
+        onPrepared(id)
+        coordinator.submit(confirmed,revision)
+    }
     suspend fun isAppearanceOnly(path: String)=repository.isAppearanceOnly(path)
+    fun markAppearanceOnly(id: String)=action { repository.markAppearanceOnly(id) }
     fun removeRegion(id: String,index: Int)=action { repository.removeRegion(id,index) }
     suspend fun confirmation(id: String,baseline: Map<RecognitionField,String>,family: WardrobeFamily)=repository.confirmation(id,baseline,family,settings.readProvider())
     fun submit(task: RecognitionTask,revision: Int)=action { coordinator.submit(task,revision) }

@@ -17,6 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.platform.LocalDensity
+import java.io.File
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -29,7 +34,13 @@ import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.screen.item.ItemEditViewModel
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
-import kotlinx.coroutines.launch
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.lolita.app.data.file.ImageRegionCropper
+import com.lolita.app.data.file.NormalizedCropRect
 
 @Composable
 fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifier,
@@ -38,196 +49,319 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
     val state by recognitionViewModel.uiState.collectAsState()
     val skin=LolitaSkin.current
     val context=LocalContext.current
-    val scope=rememberCoroutineScope()
     var open by rememberSaveable { mutableStateOf(false) }
-    var settings by remember { mutableStateOf(false) }
-    var existing by remember { mutableStateOf(false) }
+    var settings by rememberSaveable { mutableStateOf(false) }
+    var history by rememberSaveable { mutableStateOf(false) }
     var savedEvidence by remember { mutableStateOf(false) }
-    var cropSource by rememberSaveable { mutableStateOf<String?>(null) }
-    var ownedSource by rememberSaveable { mutableStateOf(false) }
+    var activeId by rememberSaveable { mutableStateOf<String?>(null) }
+    var cropIndex by remember { mutableStateOf<Int?>(null) }
+    var pendingSource by rememberSaveable {mutableStateOf<String?>(null)}
+    var pendingOwned by rememberSaveable {mutableStateOf(false)}
+    var pendingAppearanceOnly by rememberSaveable {mutableStateOf(false)}
+    var pendingDraftId by rememberSaveable {mutableStateOf<String?>(null)}
+    var chooseMore by rememberSaveable {mutableStateOf(false)}
     var appearanceOnly by rememberSaveable { mutableStateOf(false) }
-    var cropAppearanceOnly by rememberSaveable { mutableStateOf(false) }
-    var confirm by remember { mutableStateOf<RecognitionTask?>(null) }
-    var confirmRevision by remember { mutableIntStateOf(0) }
     var notice by remember { mutableStateOf<String?>(null) }
     val family=editor.categories.firstOrNull { it.id==editor.categoryId }?.categorySemantic?.family ?: WardrobeFamily.UNCONFIRMED
     LaunchedEffect(editor.draftId,editor.item?.id) { recognitionViewModel.bind(editor.draftId,editor.item?.id) }
-    LaunchedEffect(state.keyRevision) {
-        if(confirm!=null && confirmRevision!=state.keyRevision) {confirm=null;notice="服务或密钥已更改，请重新核对区域与费用"}
+    val task=state.tasks.firstOrNull { it.id==activeId } ?: state.tasks.firstOrNull()
+    val busy=state.busy || editor.isSaving
+    suspend fun prepareSource(path:String,owned:Boolean) {
+        var retained=false
+        try {
+            viewModel.keepDraft()
+            val identity=requireNotNull(viewModel.uiState.value.draftId) { "请重新进入物品编辑" }
+            val restricted=appearanceOnly || recognitionViewModel.isAppearanceOnly(path)
+            val crop=ImageRegionCropper.crop(context,path,NormalizedCropRect.FULL)
+            if(File(crop.path).length()>3L*1024*1024) {
+                ImageFileHelper.cleanupUnreferencedImages(listOf(crop.path))
+                pendingSource=path;pendingOwned=owned;pendingAppearanceOnly=restricted;pendingDraftId=identity
+                retained=true
+                notice="图片细节较多，请框选要识别的部分"
+            } else {
+                activeId=recognitionViewModel.stageRegion(identity,crop.path,viewModel.currentRecognitionValues(),family,restricted)
+                chooseMore=false;notice=null
+            }
+        } finally {if(owned && !retained) ImageFileHelper.cleanupUnreferencedImages(listOf(path))}
     }
+    fun stage(path:String,owned:Boolean) {recognitionViewModel.action {prepareSource(path,owned)}}
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if(uri!=null) recognitionViewModel.action {
-            cropSource=ImageFileHelper.copyToInternalStorage(context,uri)
-            ownedSource=true;cropAppearanceOnly=appearanceOnly
-        }
+        if(uri!=null) recognitionViewModel.action {prepareSource(ImageFileHelper.copyToInternalStorage(context,uri),true)}
     }
-    fun closeCrop() {
-        if(ownedSource) cropSource?.let { ImageFileHelper.cleanupUnreferencedImages(listOf(it)) }
-        cropSource=null;ownedSource=false
+    fun closePendingCrop() {
+        if(pendingOwned) pendingSource?.let {ImageFileHelper.cleanupUnreferencedImages(listOf(it))}
+        pendingSource=null;pendingOwned=false;pendingDraftId=null
     }
     fun retain(path:String,asChart:Boolean) {
         recognitionViewModel.action {
-            val identity=viewModel.uiState.value.draftId
             require(!viewModel.uiState.value.isSaving) { "正在保存物品，请稍后操作" }
             require(ImageFileHelper.isOwnedReadableImage(context,path)) { "来源图片已不可读" }
-            require(viewModel.uiState.value.draftId==identity && !viewModel.uiState.value.isSaving) { "草稿已切换或正在保存" }
             if(asChart) viewModel.addSizeChartImage(path) else viewModel.addImage(path)
             viewModel.keepDraft()
-            notice=if(asChart) "已保留为资料图，保存物品后生效" else "已保留为商品图，保存物品后生效"
+            notice=if(asChart) "已加入资料图，保存物品后生效" else "已加入商品图，保存物品后生效"
         }
     }
-    LolitaSection("AI 识图补全",modifier) {
-        row {
-            Text("从商品图或参数图框选区域，逐项核对后填入草稿。",style=MaterialTheme.typography.bodySmall)
-            Button(onClick={ recognitionViewModel.action { viewModel.keepDraft();recognitionViewModel.bind(viewModel.uiState.value.draftId,editor.item?.id);open=true } },
-                enabled=!editor.isLoading && !editor.isSaving && editor.loadError==null && !state.busy) { Text("选择图片并补充资料") }
-            if(state.tasks.any { it.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED) }) Text("有可核对的识图建议",color=MaterialTheme.colorScheme.primary)
-            if(state.evidence.isNotEmpty()) TextButton(onClick={savedEvidence=true}) { Text("查看已采纳的识图来源（${state.evidence.size}）") }
+    Column(modifier) {
+        OutlinedButton(onClick={recognitionViewModel.action {
+            viewModel.keepDraft();recognitionViewModel.bind(viewModel.uiState.value.draftId,editor.item?.id);open=true
+        }},enabled=!editor.isLoading && !busy && editor.loadError==null,modifier=Modifier.fillMaxWidth()) {
+            Text(if(state.tasks.any { it.status==RecognitionStatus.AWAITING_REVIEW }) "识图填入 · 有待核对结果" else "识图填入")
         }
+        notice?.let { Text(it,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary) }
+        if(state.evidence.isNotEmpty()) TextButton(onClick={savedEvidence=true}) { Text("查看已采纳的识图来源（${state.evidence.size}）") }
     }
-    if(settings) RecognitionKeyDialog(state.provider,state.hasKey,onProvider=recognitionViewModel::selectProvider,
-        onDismiss={settings=false},onSave={recognitionViewModel.saveKey(it);settings=false},onClear={recognitionViewModel.clearKey();settings=false})
-    if(open) {
-        val scroll=rememberScrollState();ObserveSkinScroll(scroll)
-        AlertDialog(onDismissRequest={if(!state.busy) open=false},title={Text("识图补充物品资料")},text={
-            Column(Modifier.fillMaxWidth().heightIn(max=560.dp).verticalScroll(scroll),verticalArrangement=Arrangement.spacedBy(skin.spacingMedium)) {
-                Text(state.provider?.let { "${it.label} · ${it.model}" } ?: "请明确选择识图服务",style=MaterialTheme.typography.bodySmall)
-                TextButton(onClick={settings=true},enabled=!state.busy) { Text(if(state.hasKey) "管理独立识图密钥与服务" else "配置独立识图密钥与服务") }
-                Text("仅发送最终确认的裁切区域。不要选择支付截图；AI 图片只能提供外观建议。",style=MaterialTheme.typography.bodySmall)
-                TextButton(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!state.busy && !editor.isSaving) { Text("从相册框选") }
-                TextButton(onClick={existing=true},enabled=!state.busy && !editor.isSaving && (editor.imageUrls.isNotEmpty() || editor.sizeChartImageUrl!=null || editor.sizeChartImageUrls.isNotEmpty())) { Text("从现有商品图或资料图框选") }
-                Row { Checkbox(appearanceOnly,{appearanceOnly=it},enabled=!state.busy);Text("相册来源为 AI 图片，仅作外观建议") }
-                state.error?.let { Text(it,color=MaterialTheme.colorScheme.error) }
-                notice?.let { Text(it,color=MaterialTheme.colorScheme.primary) }
-                state.tasks.forEach { task -> key(task.id) {
-                    RecognitionTaskContent(task,state.busy || editor.isSaving,viewModel.currentRecognitionValues(),state.reviews[task.id],
-                        onRemove={recognitionViewModel.removeRegion(task.id,it)},onReview={recognitionViewModel.saveReview(task.id,it)},
-                        onSubmit={ recognitionViewModel.action {
-                            viewModel.keepDraft()
-                            confirm=recognitionViewModel.confirmation(task.id,viewModel.currentRecognitionValues(),family)
-                            confirmRevision=recognitionViewModel.uiState.value.keyRevision
-                        } },onCancel={recognitionViewModel.cancel(task.id)},onDiscard={recognitionViewModel.discard(task.id)},
-                        onReprepare={recognitionViewModel.reprepare(task.id)},
+    if(open) Dialog(onDismissRequest={if(!state.busy) open=false},properties=DialogProperties(usePlatformDefaultWidth=false,decorFitsSystemWindows=false)) {
+        val listState=rememberLazyListState();ObserveSkinScroll(listState)
+        var previewed by remember(task?.id,task?.regionImagePaths) {mutableStateOf(emptySet<Int>())}
+        val density=LocalDensity.current.density
+        val tracker=remember(task?.id,task?.regionImagePaths,density) { RecognitionPreviewTracker(64f*density) { index ->
+            if(index !in previewed) previewed=previewed+index
+        } }
+        LaunchedEffect(task?.id,task?.requestJson,settings,chooseMore) {
+            if(task!=null && !settings && !chooseMore) listState.scrollToItem(1+if(state.error!=null) 1 else 0)
+        }
+        Scaffold(contentWindowInsets=WindowInsets(0,0,0,0),topBar={
+            GradientTopAppBar(title={Text("识图填入")},hazeState=null,
+                navigationIcon={TextButton(onClick={open=false},enabled=!state.busy,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)) {Text("返回")}},
+                actions={TextButton(onClick={settings=!settings},enabled=!busy,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)) {Text(when(state.provider) {RecognitionProvider.VOLCENGINE_ARK->"豆包";RecognitionProvider.DEEPSEEK->"DeepSeek";null->"服务"})}})
+        },bottomBar={
+            Surface { Column(Modifier.fillMaxWidth().navigationBarsPadding().imePadding().padding(skin.spacingLarge)) {
+                if(task!=null && !settings) {
+                    RecognitionPrimaryAction(task,state,busy,previewed.size==task.regionImagePaths.size,viewModel.currentRecognitionValues(),
+                        onSubmit={state.provider?.let { provider -> recognitionViewModel.submitVisible(task,state.keyRevision,provider,viewModel,family) {activeId=it} }},
+                        onPrepare={recognitionViewModel.prepareAgain(task,{path->ImageRegionCropper.crop(context,path,NormalizedCropRect.FULL).path}) {activeId=it;chooseMore=false;notice=null}},
                         onApply={review -> recognitionViewModel.apply(task.id,review,viewModel) { merge ->
-                            notice="已填入 ${merge.acceptedIds.size} 项草稿"+(if(merge.conflicts.isNotEmpty()) "，${merge.conflicts.size} 项已变化或冲突，请核对" else "；保存物品后正式生效")
-                        } },onRetain=::retain,
-                        categories=editor.categories.map { it.id to it.name },brands=editor.brands.filterNot { it.isUnsetBrand }.map { it.id to it.name })
-                } }
-            }
-        },confirmButton={TextButton(onClick={open=false},enabled=!state.busy){Text("回到编辑")}})
-    }
-    if(existing) {
-        val listState=rememberLazyListState();ObserveSkinScroll(listState)
-        val paths=(editor.imageUrls+listOfNotNull(editor.sizeChartImageUrl)+editor.sizeChartImageUrls).distinct()
-        AlertDialog(onDismissRequest={existing=false},title={Text("选择本机图片")},text={
-            LazyColumn(Modifier.heightIn(max=420.dp),state=listState) { itemsIndexed(paths) { index,path ->
-                Row(Modifier.fillMaxWidth().clickable {
-                    recognitionViewModel.action {
-                        cropAppearanceOnly=appearanceOnly || recognitionViewModel.isAppearanceOnly(path)
-                        cropSource=path;ownedSource=false;existing=false
-                    }
-                }.padding(skin.spacingMedium)) {
-                    LolitaShimmerImage(path,"图片 ${index+1}",Modifier.size(72.dp),circularRevealEnabled=false)
-                    Text("图片 ${index+1}",Modifier.padding(skin.spacingMedium))
-                }
+                            notice="已填入 ${merge.acceptedIds.size} 项"+if(merge.conflicts.isNotEmpty()) "，${merge.conflicts.size} 项请继续核对" else "，保存后生效"
+                            if(merge.acceptedIds.isNotEmpty()) open=false
+                        }})
+                } else Text(if(settings) "密钥仅加密保存在本机" else "选图后可先核对，再确认发送",style=MaterialTheme.typography.bodySmall)
             } }
-        },confirmButton={TextButton(onClick={existing=false}){Text("取消")}})
-    }
-    cropSource?.let { path -> ImageRegionCropDialog(path,onDismiss={closeCrop()},onCropped={crop ->
-        val draftId=editor.draftId
-        if(draftId==null || editor.isSaving) ImageFileHelper.cleanupUnreferencedImages(listOf(crop))
-        else recognitionViewModel.addRegion(draftId,crop,viewModel.currentRecognitionValues(),family,cropAppearanceOnly)
-        closeCrop()
-    }) }
-    confirm?.let { task ->
-        val listState=rememberLazyListState();ObserveSkinScroll(listState)
-        AlertDialog(onDismissRequest={confirm=null},title={Text("确认付费识图")},text={
-        Column { Text("将向 ${task.request().provider.label}（${task.request().model}）发送这 ${task.regionImagePaths.size} 个实际区域。服务按账户计费，不会自动重试；结果不会自动保存物品。")
-            LazyRow(state=listState) { items(task.regionImagePaths) { path -> LolitaShimmerImage(path,"将发送的裁切区域",Modifier.size(100.dp),ContentScale.Fit,circularRevealEnabled=false) } }
+        }) { padding ->
+            LazyColumn(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).onGloballyPositioned {tracker.updateViewport(it.boundsInWindow())},state=listState,
+                contentPadding=PaddingValues(skin.spacingLarge),verticalArrangement=Arrangement.spacedBy(skin.spacingMedium)) {
+                item {
+                    if(settings) RecognitionSettingsContent(state,busy,recognitionViewModel::selectProvider,
+                        onSave={recognitionViewModel.saveKey(it);settings=false},onClear=recognitionViewModel::clearKey)
+                    else if(task==null || chooseMore) {
+                        SectionHeader(if(task?.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED)) "核对识别结果" else "选择商品图或参数图")
+                        Text("只发送下方预览图片，识别结果由你确认后填入。",style=MaterialTheme.typography.bodySmall)
+                        if(!state.hasKey) TextButton(onClick={settings=true}) {Text("先设置${state.provider?.label ?: "识图服务"}密钥")}
+                        Button(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!busy,modifier=Modifier.fillMaxWidth()) {Text("从相册选图")}
+                        val paths=(editor.imageUrls+listOfNotNull(editor.sizeChartImageUrl)+editor.sizeChartImageUrls).distinct()
+                        if(paths.isNotEmpty()) {
+                            Text("或使用已有图片",style=MaterialTheme.typography.bodySmall)
+                            val pictures=rememberLazyListState();ObserveSkinScroll(pictures)
+                            LazyRow(state=pictures,horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {
+                                itemsIndexed(paths) { index,path -> LolitaShimmerImage(path,"选择已有图片 ${index+1}",
+                                    Modifier.size(88.dp).clickable(enabled=!busy) {stage(path,false)},ContentScale.Fit,circularRevealEnabled=false) }
+                            }
+                        }
+                        val prepared=task?.takeIf {it.status==RecognitionStatus.PREPARED}
+                        val marked=prepared?.let {runCatching {it.request().regions.all {row->row.appearanceOnly}}.getOrDefault(true)} ?: false
+                        Row(verticalAlignment=Alignment.CenterVertically) {
+                            Checkbox(if(prepared!=null) marked else appearanceOnly,{checked ->
+                                if(prepared!=null && checked) recognitionViewModel.markAppearanceOnly(prepared.id)
+                                else appearanceOnly=checked
+                            },enabled=!busy && !marked)
+                            Text(if(prepared!=null) "这些图片由 AI 生成，仅参考外观" else "接下来选择 AI 图片，仅参考外观",style=MaterialTheme.typography.bodySmall)
+                        }
+                        if(marked) Text("已标记的图片保持外观参考，不作为真实规格。",style=MaterialTheme.typography.bodySmall)
+                    } else TextButton(onClick={chooseMore=true},enabled=!busy) {Text("添加其他图片 / 来源设置")}
+                }
+                state.error?.let { error -> item {Text(error,color=MaterialTheme.colorScheme.error)} }
+                if(!settings) {
+                    task?.let { selected -> item(key=selected.id) {
+                        RecognitionTaskContent(selected,busy,viewModel.currentRecognitionValues(),state.reviews[selected.id],tracker,
+                            onRemove={recognitionViewModel.removeRegion(selected.id,it)},onCrop={cropIndex=it},
+                            onReview={recognitionViewModel.saveReview(selected.id,it)},onCancel={recognitionViewModel.cancel(selected.id)},
+                            onDiscard={recognitionViewModel.discard(selected.id)},onRetain=::retain,
+                            categories=editor.categories.map {it.id to it.name},brands=editor.brands.filterNot {it.isUnsetBrand}.map {it.id to it.name})
+                    } }
+                    if(state.tasks.size>1) item {
+                        TextButton(onClick={history=!history}) {Text("${if(history) "收起" else "查看"}其他识图记录（${state.tasks.size-1}）")}
+                        if(history) state.tasks.filterNot {it.id==task?.id}.forEach { previous ->
+                            TextButton(onClick={activeId=previous.id;history=false}) {Text("${recognitionStatus(previous.status)} · ${previous.regionImagePaths.size} 张图")}
+                        }
+                    }
+                }
+            }
         }
-    },confirmButton={Button(onClick={recognitionViewModel.submit(task,confirmRevision);confirm=null},enabled=state.hasKey && !state.busy){Text("确认发送并识别")}},
-        dismissButton={TextButton(onClick={confirm=null}){Text("返回核对")}}) }
+    }
+    pendingSource?.let { path -> ImageRegionCropDialog(path,onDismiss=::closePendingCrop,onCropped={crop ->
+        val identity=pendingDraftId
+        val restricted=pendingAppearanceOnly
+        recognitionViewModel.action {
+            try {
+                require(identity!=null && viewModel.uiState.value.draftId==identity && !viewModel.uiState.value.isSaving) {"草稿已变化，请重新选择图片"}
+                activeId=recognitionViewModel.stageRegion(identity,crop,viewModel.currentRecognitionValues(),family,restricted)
+                chooseMore=false;notice=null
+            } catch(failure:Throwable) {ImageFileHelper.cleanupUnreferencedImages(listOf(crop));throw failure}
+            finally {closePendingCrop()}
+        }
+    },previewInParent=true) }
+    cropIndex?.let { index -> task?.takeIf {it.status==RecognitionStatus.PREPARED}?.regionImagePaths?.getOrNull(index)?.let { path ->
+        ImageRegionCropDialog(path,onDismiss={cropIndex=null},onCropped={crop ->
+            recognitionViewModel.replaceRegion(task.id,index,crop);cropIndex=null
+        },previewInParent=true)
+    } }
     if(savedEvidence) SavedEvidenceDialog(state.evidence,onDismiss={savedEvidence=false},onRetain=::retain)
 }
 
-@Composable
-private fun RecognitionKeyDialog(provider:RecognitionProvider?,hasKey:Boolean,onProvider:(RecognitionProvider)->Unit,
-    onDismiss:()->Unit,onSave:(String)->Unit,onClear:()->Unit) {
-    var key by remember(provider) { mutableStateOf("") }
-    AlertDialog(onDismissRequest=onDismiss,title={Text("识图服务设置")},text={Column {
-        RecognitionProvider.entries.forEach { option -> Row(Modifier.fillMaxWidth().clickable {onProvider(option)}) {
-            RadioButton(option==provider,{onProvider(option)});Text(option.label,Modifier.padding(top=12.dp))
-        } }
-        Text(provider?.let { "${it.model}。本机加密保存独立密钥，不进入备份。切换服务不会共用密钥。" } ?: "请选择识图服务，再填写独立密钥。")
-        OutlinedTextField(key,{key=it},label={Text("${provider?.label ?: "识图服务"} API Key")},visualTransformation=PasswordVisualTransformation(),singleLine=true,enabled=provider!=null)
-        if(hasKey) TextButton(onClick=onClear){Text("移除此服务的本机密钥")}
-    }},confirmButton={TextButton(onClick={onSave(key);key=""},enabled=provider!=null && key.isNotBlank()){Text("保存密钥")}},dismissButton={TextButton(onClick=onDismiss){Text("取消")}})
+/** Layout measurements must not themselves invalidate Compose and schedule another layout. */
+private class RecognitionPreviewTracker(private val minimum:Float,private val onVisible:(Int)->Unit) {
+    private var viewport=Rect.Zero
+    private val images=mutableMapOf<Int,Rect>()
+    fun updateViewport(bounds:Rect) {viewport=bounds;images.forEach { (index,image)->check(index,image) }}
+    fun updateImage(index:Int,bounds:Rect) {images[index]=bounds;check(index,bounds)}
+    private fun check(index:Int,image:Rect) {
+        val visible=image.intersect(viewport)
+        if(visible.width>=minimum && visible.height>=minimum) onVisible(index)
+    }
 }
 
-@Composable
-private fun RecognitionTaskContent(task:RecognitionTask,busy:Boolean,current:Map<RecognitionField,String>,storedReview:RecognitionReview?,
-    onRemove:(Int)->Unit,onReview:(RecognitionReview)->Unit,onSubmit:()->Unit,onCancel:()->Unit,onDiscard:()->Unit,
-    onReprepare:()->Unit,onApply:(RecognitionReview)->Unit,onRetain:(String,Boolean)->Unit,
+private fun recognitionStatus(status:RecognitionStatus)=when(status) {
+    RecognitionStatus.PREPARED->"确认发送图片";RecognitionStatus.RUNNING->"正在识别";
+    RecognitionStatus.AWAITING_REVIEW->"逐项核对建议";RecognitionStatus.APPLIED->"已填入，可继续核对";
+    RecognitionStatus.INTERRUPTED->"识别已中断";RecognitionStatus.FAILED->"识别未完成";RecognitionStatus.DISCARDED->"已移除"
+}
+
+private fun recognitionReview(task:RecognitionTask,current:Map<RecognitionField,String>,stored:RecognitionReview?):RecognitionReview {
+    val result=runCatching {task.result()}.getOrNull()
+    return stored ?: runCatching {task.reviewJson?.let {RecognitionReview.decode(it,result?.candidates.orEmpty().map {row->row.id}.toSet())}}.getOrNull()
+        ?: RecognitionReview(selectedIds=result?.candidates.orEmpty().filter {it.field in setOf(RecognitionField.NAME,RecognitionField.CATEGORY,RecognitionField.BRAND,RecognitionField.COLOR,RecognitionField.SIZE) && it.preselect(current[it.field].orEmpty())}.map {it.id}.toSet())
+}
+
+@Composable private fun RecognitionPrimaryAction(task:RecognitionTask,state:ItemRecognitionUiState,busy:Boolean,previewed:Boolean,
+    current:Map<RecognitionField,String>,onSubmit:()->Unit,onPrepare:()->Unit,onApply:(RecognitionReview)->Unit) {
+    val valid=remember(task) {runCatching {task.validate()}.isSuccess}
+    when(task.status) {
+        RecognitionStatus.PREPARED -> {
+            Text("${state.provider?.label ?: "未选服务"} · ${task.regionImagePaths.size} 张图 · 按账户计费，不自动重试",style=MaterialTheme.typography.bodySmall)
+            if(!previewed) Text("请先查看每张待发送图片",style=MaterialTheme.typography.bodySmall)
+            Button(onClick=onSubmit,enabled=valid && !busy && previewed && state.hasKey && state.provider!=null,modifier=Modifier.fillMaxWidth()) {
+                Text("确认发送并识别")
+            }
+        }
+        RecognitionStatus.FAILED,RecognitionStatus.INTERRUPTED -> {
+            Text("先重新准备并核对图片，此步不发送请求。",style=MaterialTheme.typography.bodySmall)
+            Button(onClick=onPrepare,enabled=valid && !busy,modifier=Modifier.fillMaxWidth()) {Text("重新准备这些图片")}
+        }
+        RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED -> {
+            val review=recognitionReview(task,current,state.reviews[task.id])
+            Button(onClick={onApply(review)},enabled=valid && !busy && review.selectedIds.isNotEmpty(),modifier=Modifier.fillMaxWidth()) {
+                Text("填入 ${review.selectedIds.size} 项并返回")
+            }
+        }
+        RecognitionStatus.RUNNING -> Text("可返回编辑，结果会保留在这里",style=MaterialTheme.typography.bodySmall)
+        else -> Unit
+    }
+}
+
+@Composable private fun RecognitionSettingsContent(state:ItemRecognitionUiState,busy:Boolean,onProvider:(RecognitionProvider)->Unit,
+    onSave:(String)->Unit,onClear:()->Unit) {
+    var key by remember(state.provider) {mutableStateOf("")}
+    SectionHeader("识图服务")
+    RecognitionProvider.entries.forEach { option -> Row(Modifier.fillMaxWidth().clickable(enabled=!busy) {onProvider(option)},verticalAlignment=Alignment.CenterVertically) {
+        RadioButton(option==state.provider,{onProvider(option)},enabled=!busy);Text(option.label)
+    } }
+    Text(state.provider?.model.orEmpty(),style=MaterialTheme.typography.bodySmall)
+    Text("密钥不回填，不进入备份。每个服务独立配置。",style=MaterialTheme.typography.bodySmall)
+    OutlinedTextField(key,{key=it},Modifier.fillMaxWidth(),label={Text("API Key")},visualTransformation=PasswordVisualTransformation(),singleLine=true,enabled=!busy && state.provider!=null)
+    Button(onClick={onSave(key);key=""},enabled=!busy && key.isNotBlank() && state.provider!=null,modifier=Modifier.fillMaxWidth()) {Text("保存密钥并返回")}
+    if(state.hasKey) TextButton(onClick=onClear,enabled=!busy) {Text("移除此服务的本机密钥")}
+}
+
+@Composable private fun RecognitionTaskContent(task:RecognitionTask,busy:Boolean,current:Map<RecognitionField,String>,storedReview:RecognitionReview?,tracker:RecognitionPreviewTracker,
+    onRemove:(Int)->Unit,onCrop:(Int)->Unit,onReview:(RecognitionReview)->Unit,onCancel:()->Unit,onDiscard:()->Unit,onRetain:(String,Boolean)->Unit,
     categories:List<Pair<Long,String>>,brands:List<Pair<Long,String>>) {
     val skin=LolitaSkin.current
-    val regionsState=rememberLazyListState();ObserveSkinScroll(regionsState)
-    val validation=remember(task.requestJson,task.resultJson,task.reviewJson) { runCatching { task.validate();task.result() } }
+    val validation=remember(task) {runCatching {task.validate();task.result()}}
     val result=validation.getOrNull()
-    val request=remember(task.requestJson) { runCatching { task.request() }.getOrNull() }
-    val initial=remember(task.id,task.resultJson) { runCatching { task.reviewJson?.let { RecognitionReview.decode(it,result?.candidates.orEmpty().map { row -> row.id }.toSet()) } }.getOrNull()
-        ?: RecognitionReview(selectedIds=result?.candidates.orEmpty().filter { it.preselect(current[it.field].orEmpty()) }.map { it.id }.toSet()) }
-    val review=storedReview ?: initial
-    var evidence by remember { mutableStateOf<RecognitionCandidate?>(null) }
-    val status=when(task.status) { RecognitionStatus.PREPARED->"待确认区域";RecognitionStatus.RUNNING->"正在识图";
-        RecognitionStatus.AWAITING_REVIEW->"逐项核对建议";RecognitionStatus.APPLIED->"已采纳，可继续核对";
-        RecognitionStatus.INTERRUPTED->"识图已中断";RecognitionStatus.FAILED->"识图未完成";RecognitionStatus.DISCARDED->"已舍弃" }
+    val request=remember(task.requestJson) {runCatching {task.request()}.getOrNull()}
+    val review=recognitionReview(task,current,storedReview)
+    var details by rememberSaveable(task.id) {mutableStateOf(false)}
+    var preview by remember(task.id) {mutableStateOf<Int?>(null)}
+    val common=setOf(RecognitionField.NAME,RecognitionField.CATEGORY,RecognitionField.BRAND,RecognitionField.COLOR,RecognitionField.SIZE)
     LolitaCard(Modifier.fillMaxWidth()) { Column(verticalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {
-        SectionHeader(status)
-        request?.let { Text("${it.provider.label} · ${it.model}",style=MaterialTheme.typography.bodySmall) }
-        task.actualModel?.let { Text("返回模型：$it",style=MaterialTheme.typography.bodySmall) }
-        LazyRow(state=regionsState) { itemsIndexed(task.regionImagePaths) { index,path -> Column(Modifier.width(104.dp)) {
-            LolitaShimmerImage(path,"实际识别区域 ${index+1}",Modifier.size(100.dp),ContentScale.Fit,circularRevealEnabled=false)
-            if(task.status==RecognitionStatus.PREPARED) TextButton(onClick={onRemove(index)},enabled=!busy){Text("移除此区域")}
-        } } }
-        task.error?.let { Text(it,color=MaterialTheme.colorScheme.error) }
-        if(validation.isFailure) Text("识图记录无法核验，请移除后重新框选。",color=MaterialTheme.colorScheme.error)
-        if(task.status==RecognitionStatus.PREPARED && validation.isSuccess) Button(onClick=onSubmit,enabled=!busy){Text("核对区域与识图费用")}
-        if(task.status in setOf(RecognitionStatus.INTERRUPTED,RecognitionStatus.FAILED) && validation.isSuccess) {
-            Text("不会自动重发。保留的区域可重新核对，确认费用后才再次发送。",style=MaterialTheme.typography.bodySmall)
-            TextButton(onClick=onReprepare,enabled=!busy){Text("重新核对这些区域")}
-        }
-        if(task.status==RecognitionStatus.RUNNING) { Row { CircularProgressIndicator(Modifier.size(20.dp));Text("等待服务返回，不会自动重试") };TextButton(onClick=onCancel,enabled=!busy){Text("取消本地等待") } }
-        if(task.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED) && result!=null && request!=null) {
-            val variants=result.candidates.mapNotNull { it.variant }.distinct()
-            val sizes=result.candidates.mapNotNull { it.sizeRow }.distinct()
-            if(variants.isNotEmpty()) ReviewChoice("正在登记的款式",review.variant,variants,!busy) { onReview(review.copy(variant=it).forSelection(result.candidates)) }
-            if(sizes.isNotEmpty()) ReviewChoice("实际购入尺码行",review.sizeRow,sizes,!busy) { onReview(review.copy(sizeRow=it).forSelection(result.candidates)) }
-            result.candidates.forEach { candidate ->
-                val value=review.edits[candidate.id] ?: candidate.value
-                val sourceRestricted=candidate.regionIds.any { id -> request.regions.first { it.id==id }.appearanceOnly }
-                val edited=candidate.copy(value=value)
-                val eligible=edited.eligible(review.variant,review.sizeRow) && (!sourceRestricted || candidate.source==RecognitionSource.VISUAL && !candidate.field.textOnly)
-                Column(Modifier.fillMaxWidth().padding(vertical=skin.spacingSmall)) {
-                    Row {
-                        Checkbox(candidate.id in review.selectedIds && eligible,onCheckedChange={checked -> onReview(review.copy(selectedIds=if(checked) review.selectedIds+candidate.id else review.selectedIds-candidate.id))},enabled=eligible && !busy)
-                        Column { Text(candidate.field.label,style=MaterialTheme.typography.titleSmall);Text("当前：${current[candidate.field].orEmpty().ifBlank { "未设置" }}",style=MaterialTheme.typography.bodySmall) }
-                    }
-                    OutlinedTextField(value,{onReview(review.copy(edits=review.edits+(candidate.id to it)))},Modifier.fillMaxWidth(),label={Text("识别建议，可修改")},enabled=!busy)
-                    Text(candidate.source.label+(candidate.variant?.let { " · 适用 $it" } ?: "")+(candidate.sizeRow?.let { " · 尺码 $it" } ?: ""),style=MaterialTheme.typography.bodySmall)
-                    if(!eligible) Text(when { sourceRestricted -> "AI 来源只可采纳外观建议";candidate.field==RecognitionField.PRICE_NOTE -> "仅供参考，不进入价格或实付";else -> "需对应款式、尺码及可核对的原文；数值还需明确对象、口径和单位" },style=MaterialTheme.typography.bodySmall)
-                    TextButton(onClick={evidence=candidate}) { Text("查看原文与区域") }
-                    if(candidate.field==RecognitionField.CATEGORY) ReferenceChoice("选择现有类型",review.resolvedCategoryId,categories,!busy) {onReview(review.copy(resolvedCategoryId=it))}
-                    if(candidate.field==RecognitionField.BRAND) ReferenceChoice("选择现有品牌",review.resolvedBrandId,brands,!busy) {onReview(review.copy(resolvedBrandId=it))}
+        SectionHeader(recognitionStatus(task.status))
+        task.error?.let {Text(it,color=MaterialTheme.colorScheme.error)}
+        if(validation.isFailure) Text("这条识图记录无法读取，请移除后重新选图。",color=MaterialTheme.colorScheme.error)
+        if(result==null || task.status in setOf(RecognitionStatus.PREPARED,RecognitionStatus.RUNNING,RecognitionStatus.FAILED,RecognitionStatus.INTERRUPTED)) {
+            task.regionImagePaths.forEachIndexed { index,path ->
+                LolitaShimmerImage(path,"实际识别区域 ${index+1}",Modifier.fillMaxWidth().height(220.dp).clickable {preview=index}.onGloballyPositioned { coordinates ->
+                    tracker.updateImage(index,coordinates.boundsInWindow())
+                },ContentScale.Fit,circularRevealEnabled=false)
+                if(task.status==RecognitionStatus.PREPARED) {
+                    TextButton(onClick={onCrop(index)},enabled=!busy) {Text("框选 / 旋转图片 ${index+1}")}
+                    TextButton(onClick={onRemove(index)},enabled=!busy) {Text("移除图片 ${index+1}")}
                 }
             }
-            Text("已有值与冲突项默认不选；应用时再次核对当前草稿。",style=MaterialTheme.typography.bodySmall)
-            Button(onClick={onApply(review)},enabled=!busy && review.selectedIds.isNotEmpty()) { Text("应用所选资料到草稿") }
         }
-        if(task.status!=RecognitionStatus.RUNNING) TextButton(onClick=onDiscard,enabled=!busy){Text("移除此识图记录")}
+        if(task.status==RecognitionStatus.RUNNING) {
+            Row(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {CircularProgressIndicator(Modifier.size(20.dp));Text("正在等待服务返回")}
+            TextButton(onClick=onCancel,enabled=!busy) {Text("取消本地等待")}
+        }
+        if(task.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED) && result!=null && request!=null) {
+            val variants=result.candidates.mapNotNull {it.variant}.distinct()
+            val sizes=result.candidates.mapNotNull {it.sizeRow}.distinct()
+            if(variants.isNotEmpty()) ReviewChoice("正在登记的款式",review.variant,variants,!busy) {onReview(review.copy(variant=it).forSelection(result.candidates))}
+            if(sizes.isNotEmpty()) ReviewChoice("实际购入尺码行",review.sizeRow,sizes,!busy) {onReview(review.copy(sizeRow=it).forSelection(result.candidates))}
+            if(result.candidates.isEmpty()) Text("没有读到可填写的信息。可换一张清晰图片，或返回手工填写。")
+            result.candidates.filter {it.field in common}.forEach { candidate ->
+                RecognitionCandidateRow(candidate,task,review,current,busy,onReview,onRetain,categories,brands)
+            }
+            val extra=result.candidates.filterNot {it.field in common}
+            if(extra.isNotEmpty()) {
+                TextButton(onClick={details=!details}) {Text("${if(details) "收起" else "展开"}详细规格（${extra.size}）")}
+                if(details) extra.forEach {candidate -> RecognitionCandidateRow(candidate,task,review,current,busy,onReview,onRetain,categories,brands)}
+            }
+            Text("已有资料不会被自动覆盖；填入后仍可修改。",style=MaterialTheme.typography.bodySmall)
+        }
+        if(task.status!=RecognitionStatus.RUNNING) TextButton(onClick=onDiscard,enabled=!busy) {Text("移除此识图记录")}
     } }
-    evidence?.let { candidate -> EvidencePreview(candidate,candidate.regionIds.mapNotNull { region ->
-        task.regionImagePaths.getOrNull(request?.regions?.indexOfFirst { it.id==region } ?: -1)
-    },onDismiss={evidence=null},onRetain=onRetain) }
+    preview?.let { page -> com.lolita.app.ui.component.FullScreenImageViewer(task.regionImagePaths,page) {preview=null} }
+}
+
+@Composable private fun RecognitionCandidateRow(candidate:RecognitionCandidate,task:RecognitionTask,review:RecognitionReview,
+    current:Map<RecognitionField,String>,busy:Boolean,onReview:(RecognitionReview)->Unit,onRetain:(String,Boolean)->Unit,
+    categories:List<Pair<Long,String>>,brands:List<Pair<Long,String>>) {
+    val skin=LolitaSkin.current
+    var edit by rememberSaveable(task.id,candidate.id) {mutableStateOf(false)}
+    var source by rememberSaveable(task.id,candidate.id) {mutableStateOf(false)}
+    val value=review.edits[candidate.id] ?: candidate.value
+    val request=task.request()
+    val restricted=candidate.regionIds.any { id->request.regions.first {it.id==id}.appearanceOnly }
+    val eligible=candidate.copy(value=value).eligible(review.variant,review.sizeRow) && (!restricted || candidate.source==RecognitionSource.VISUAL && !candidate.field.textOnly)
+    Column(Modifier.fillMaxWidth().padding(vertical=skin.spacingSmall)) {
+        Row(verticalAlignment=Alignment.CenterVertically) {
+            Checkbox(candidate.id in review.selectedIds && eligible,{checked ->onReview(review.copy(selectedIds=if(checked) review.selectedIds+candidate.id else review.selectedIds-candidate.id))},modifier=Modifier.semantics {contentDescription="采纳${candidate.field.label}：$value"},enabled=eligible && !busy)
+            Column(Modifier.weight(1f)) {
+                Text(candidate.field.label,style=MaterialTheme.typography.labelMedium)
+                if(edit) OutlinedTextField(value,{onReview(review.copy(edits=review.edits+(candidate.id to it)))},Modifier.fillMaxWidth(),label={Text("识别建议，可修改")},enabled=!busy)
+                else Text(value,Modifier.fillMaxWidth().clickable(enabled=!busy) {edit=true},style=MaterialTheme.typography.bodyLarge)
+                val previous=current[candidate.field].orEmpty()
+                if(previous.isNotBlank()) Text("当前：$previous",style=MaterialTheme.typography.bodySmall)
+            }
+        }
+        if(!eligible) Text(when {
+            restricted->"AI 图片只可参考外观"
+            candidate.field==RecognitionField.PRICE_NOTE->"标价仅供参考"
+            candidate.variant!=null && review.variant!=candidate.variant->"请先选择对应款式"
+            candidate.sizeRow!=null && review.sizeRow!=candidate.sizeRow->"请先选择对应尺码行"
+            else->"此项缺少可靠原文或明确单位，可手工填写"
+        },style=MaterialTheme.typography.bodySmall)
+        if(candidate.field==RecognitionField.CATEGORY) ReferenceChoice("选择现有类型",review.resolvedCategoryId,categories,!busy) {onReview(review.copy(resolvedCategoryId=it))}
+        if(candidate.field==RecognitionField.BRAND) ReferenceChoice("选择现有品牌",review.resolvedBrandId,brands,!busy) {onReview(review.copy(resolvedBrandId=it))}
+        TextButton(onClick={source=!source}) {Text(if(source) "收起原文与区域" else "查看原文与区域")}
+        if(source) {
+            Text(candidate.source.label,style=MaterialTheme.typography.labelMedium)
+            Text(candidate.quote.ifBlank {"没有明文，仅为外观建议"},style=MaterialTheme.typography.bodySmall)
+            candidate.regionIds.forEach { id -> task.regionImagePaths.getOrNull(request.regions.indexOfFirst {it.id==id})?.let { path ->
+                LolitaShimmerImage(path,"证据裁切区域",Modifier.fillMaxWidth().height(180.dp),ContentScale.Fit,circularRevealEnabled=false)
+                TextButton(onClick={onRetain(path,true)}) {Text("保留为资料图")}
+            } }
+        }
+    }
 }
 
 @Composable private fun EvidencePreview(candidate:RecognitionCandidate,paths:List<String>,onDismiss:()->Unit,onRetain:(String,Boolean)->Unit) {

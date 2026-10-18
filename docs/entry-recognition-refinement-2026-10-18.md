@@ -27,14 +27,29 @@ Room30与备份格式10不变，没有结构迁移、批量历史更新或新的
 
 旧失败/中断任务可“重新准备这些图片”：只在本地用原区域生成新的清洁副本及独立PREPARED任务，旧任务/原SHA保留，下一步再显示预览与显式付费确认；准备失败撤回新任务和无引用新图，不发请求。
 
-最终构建、设备、签名升级与发布回执在完成后补入本记录。
+正式构建、设备回归、签名升级与双端发布均已完成，结果见下文。
 
 ## 最终回归
 
 - Debug及测试APK构建通过；397项JVM测试通过。
-- 78项独立AVD常规回归通过；1项真实接口测试默认按opt-in跳过，授权的2次真实HTTP请求已另行单独成功执行，不与常规回归重复累加。保留每项canonical身份和日志，早期测试宿主的Activity Result owner错误及旧取消按钮定位已修正重验。
+- 78项独立AVD最终去重定向回归通过（含修复后重跑）；1项真实接口测试默认按opt-in跳过，授权的2次真实HTTP请求已另行单独成功执行，不与常规回归重复累加。保留每项canonical身份和日志，早期测试宿主的Activity Result owner错误及旧取消按钮定位已修正重验。
 - 320dp、1x/2x柜架文字布局；七皮肤浅暗的入口、折叠资料、真实键盘和保存；识图逐款/逐尺码、部分采纳、保存重入证据、实际预览门槛、AI来源与大图框选回退；旧失败任务本地重准备、陈旧确认拒绝、图片引用、草稿冲突、裁切和完整备份回归均覆盖。
 - 实拍对照图为受控测试资料，图中绿色来源图与“原物品”等均属测试夹具，不是用户库存。[录入浅色](visuals/entry-refinement-2026-10-18/actual-entry-light.png)、[录入暗色](visuals/entry-refinement-2026-10-18/actual-entry-dark.png)、[识图浅色](visuals/entry-refinement-2026-10-18/actual-recognition-light.png)、[识图暗色](visuals/entry-refinement-2026-10-18/actual-recognition-dark.png)、[柜架浅色](visuals/entry-refinement-2026-10-18/actual-cabinet-light.png)、[柜架暗色](visuals/entry-refinement-2026-10-18/actual-cabinet-dark.png)。完整清单附源截图SHA；原始实拍、日志与真实接口返回保留在本机私有归档。
 - 浅色识图顶栏按实拍修正按钮对比度；布局测量用非状态持有器，仅在新图片进入视区时更新确认门槛，避免把滚动布局坐标当成每帧Compose状态。
 
-[验证摘要](entry-recognition-refinement-2.55.2-verification.json)。正式签名升级和发布回执由交付阶段追加。
+[验证摘要](entry-recognition-refinement-2.55.2-verification.json)。
+
+
+## 正式交付
+
+2.55.2 / 116 从源码 b0ec5d514ba011f67559866092e153fe4830ee65 执行 clean Release，原发布证书签名、非调试包。APK 为77,567,420字节，SHA256为`7391d9a64a8df9315a732ffdfae56c594c6f2850edb40291d51e1edcaf524133`；发布标签固定指向该源码，后续回执提交只补文档。
+
+在独立正式包AVD从已发布2.55.1正常覆盖安装，无卸载或清数据。38张表254列的带类型值及schema、198件物品、53分类、172张图片SHA与3个设置文件原字节全部保全；重启后与升级前、升级后分别比较仍完全一致。Room30和备份10不变。
+
+[GitHub正式发布](https://github.com/aalm1233/lolita/releases/tag/v2.55.2)与[Gitee国内正式发布](https://gitee.com/aalm1233/lolita/releases/tag/v2.55.2)使用同一APK与SHA256SUMS，均匿名完整下载核对摘要与HEAD通过，GitHub源码标签已核对。GitHub早期HEAD网络错误保留在本机日志，最终续验通过；Gitee先预发布核验后转正式，再核验正式附件。匿名更新API取最高正式2.55.2，实际签名应用的手动检查正确显示当前/最新2.55.2，完整更新说明和源码页尾可达。
+
+Gitee首次上传因1GB配额失败，本轮另获明确授权后仅删除Gitee的2.55.1 APK，HTTP204；旧发布条目、校验附件、GitHub副本及已核验的本机备份全部保留。未扩大清理范围。
+
+用户升级后，对旧失败/中断记录选择“重新准备这些图片”，本地生成新预览后，再单独确认本次识图。重新准备本身不发请求；已授权的两次实测均已消耗，不自动重试或追加付费调用。
+
+[正式发布与保全回执](entry-recognition-release-2.55.2-verification.json)。公开只保存计数、摘要与结果；原始实测候选、用户图片、业务快照与实际更新界面证据保留于本机私有发布归档。

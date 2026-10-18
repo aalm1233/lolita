@@ -1,0 +1,263 @@
+{
+  "version": "2.55.2",
+  "version_code": 116,
+  "tag": "v2.55.2",
+  "verified_at_utc": "2026-10-18T08:29:50.244568+00:00",
+  "published_source_commit": "b0ec5d514ba011f67559866092e153fe4830ee65",
+  "source_url": "https://github.com/aalm1233/lolita/tree/b0ec5d514ba011f67559866092e153fe4830ee65",
+  "package": "com.lolita.app",
+  "debuggable": false,
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "apk": {
+    "name": "lolita-2.55.2.apk",
+    "bytes": 77567420,
+    "sha256": "7391d9a64a8df9315a732ffdfae56c594c6f2850edb40291d51e1edcaf524133",
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c"
+  },
+  "clean_release_build": {
+    "command": "./gradlew clean assembleRelease",
+    "passed": true,
+    "source_commit": "b0ec5d514ba011f67559866092e153fe4830ee65"
+  },
+  "database_schema": 30,
+  "backup_format": 10,
+  "schema_or_backup_change_this_fix": false,
+  "regression": {
+    "jvm": {
+      "tests": 397,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device": {
+      "ordinary_final_distinct_passed": 78,
+      "live_test_default_opt_in_skipped": 1,
+      "includes_targeted_reruns_after_fixes": true,
+      "single_run_all_green_claimed": false,
+      "independent_avd": true
+    },
+    "detailed_receipt": "entry-recognition-refinement-2.55.2-verification.json",
+    "real_doubao": {
+      "authorization": {
+        "limit": 2,
+        "consumed": 2,
+        "automaticRetries": 0
+      },
+      "provider": "VOLCENGINE_ARK",
+      "model": "doubao-seed-2-1-pro-260915",
+      "runtime": "Android production API + ImageRegionCropper",
+      "calls": [
+        {
+          "sample": "wig-short-ring-curl",
+          "state": "completed",
+          "candidateCount": 6,
+          "width": 900,
+          "height": 1060,
+          "cropSha256": "49039ac1d165a36589c7ca36a8eb8349951072e7396a500d78f0f0d7b5097708"
+        },
+        {
+          "sample": "table-sk",
+          "state": "completed",
+          "candidateCount": 20,
+          "width": 1400,
+          "height": 690,
+          "cropSha256": "b6649472cff1b0dea888495bf60b655ec571407c7157e2b57b4a8a70a6d599c4"
+        }
+      ]
+    },
+    "quality_limitations": [
+      "Two samples validate this native recognition path, not universal recognition accuracy.",
+      "Five table waist candidates used FLAT_WIDTH; domain rules still prevent adopting them as garment circumference."
+    ]
+  },
+  "signed_upgrade": {
+    "from": "2.55.1/115",
+    "to": "2.55.2/116",
+    "same_signature": true,
+    "normal_install_r": true,
+    "uninstall": false,
+    "clear_data": false,
+    "schema_version": 30,
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "items_checked": 198,
+    "categories_checked": 53,
+    "all_typed_values_and_schema_exact": true,
+    "images_sha256_checked": 172,
+    "image_set_and_bytes_exact": true,
+    "settings_files_checked": 3,
+    "all_settings_byte_exact": true,
+    "restart_exact_and_idempotent": true,
+    "no_data_transformations_allowed": true
+  },
+  "releases": {
+    "same_apk_and_checksum_on_both_platforms": true,
+    "github": {
+      "release_page": "https://github.com/aalm1233/lolita/releases/tag/v2.55.2",
+      "tag": "v2.55.2",
+      "source_commit": "b0ec5d514ba011f67559866092e153fe4830ee65",
+      "release_id": 416321066,
+      "prerelease": false,
+      "files": {
+        "lolita-2.55.2.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.2/lolita-2.55.2.apk",
+          "anonymous_full_download": true,
+          "bytes": 77567420,
+          "sha256": "7391d9a64a8df9315a732ffdfae56c594c6f2850edb40291d51e1edcaf524133",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.2/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "70cbf2389a56f5feeb5bc07aa0277f2758db4b5fbdb0c3d184470606ac544016",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 77567420,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "b0ec5d514ba011f67559866092e153fe4830ee65",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "release_page": "https://gitee.com/aalm1233/lolita/releases/tag/v2.55.2",
+      "distribution_tag_is_not_full_application_source": true,
+      "verified_as_prerelease_before_formalization": true,
+      "tag": "v2.55.2",
+      "source_commit": "b0ec5d514ba011f67559866092e153fe4830ee65",
+      "release_id": 1215382,
+      "prerelease": false,
+      "files": {
+        "lolita-2.55.2.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.2/lolita-2.55.2.apk",
+          "anonymous_full_download": true,
+          "bytes": 77567420,
+          "sha256": "7391d9a64a8df9315a732ffdfae56c594c6f2850edb40291d51e1edcaf524133",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.2/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "70cbf2389a56f5feeb5bc07aa0277f2758db4b5fbdb0c3d184470606ac544016",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 77567420,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "transient_network_failures": "Initial GitHub HEAD attempts failed with URLError; final anonymous full APK/checksum downloads, HEAD within the original budget, and source tag verification passed."
+  },
+  "update_entry": {
+    "anonymous_gitee_highest_formal": {
+      "latest_tag": "v2.55.2",
+      "pages": 2,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.2/lolita-2.55.2.apk",
+      "source_commit": "b0ec5d514ba011f67559866092e153fe4830ee65"
+    },
+    "actual_signed_app_manual_check": {
+      "passed": true,
+      "installed_version": "2.55.2/116",
+      "latest_version": "2.55.2",
+      "notes_and_source_footer_reachable": true,
+      "equal_version_download_action_hidden": true
+    }
+  },
+  "authorized_gitee_cleanup": {
+    "explicit_this_turn": true,
+    "only_tag": "v2.55.1",
+    "only_apk": "lolita-2.55.1.apk",
+    "release_id": 1215084,
+    "attachment_id": 3422310,
+    "deleted_bytes": 77518268,
+    "deleted_apk_sha256": "275b664e2a5654e27ba63bda7287901a4ce420e285fac250d432b152cd49567d",
+    "http_status": 204,
+    "other_attachments_unchanged": true,
+    "old_release_and_checksum_retained": true,
+    "github_and_local_backup_verified": true
+  },
+  "privacy": {
+    "configured_keys_absent_from_every_uncompressed_apk_entry": true,
+    "temporary_device_key_deleted": true,
+    "original_test_photos_unchanged": true,
+    "private_photos_raw_candidates_db_images_settings_snapshots_published": false,
+    "release_credentials_published": false,
+    "cdn_temporary_urls_persisted": false
+  }
+}

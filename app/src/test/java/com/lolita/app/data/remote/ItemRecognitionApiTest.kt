@@ -111,6 +111,100 @@ class ItemRecognitionApiTest {
         }) })
     }.toString()
 
+    // Handwritten envelope shape from the 2026-10-18 real 35-field response. No service values or user data.
+    private fun deepSeekFullEnvelope() = JsonParser.parseString(deepSeekResponse()).asJsonObject.apply {
+        addProperty("background", false); addProperty("completed_at", 1792272001)
+        addProperty("frequency_penalty", 0); addProperty("presence_penalty", 0)
+        addProperty("instructions", "controlled instructions"); addProperty("max_output_tokens", 6000)
+        addProperty("service_tier", "default"); addProperty("temperature", 1); addProperty("top_p", 1)
+        addProperty("tool_choice", "auto"); addProperty("top_logprobs", 0); addProperty("truncation", "disabled")
+        for (key in listOf("content_filters", "max_tool_calls", "moderation", "prompt_cache_key", "prompt_cache_retention", "safety_identifier", "user"))
+            add(key, com.google.gson.JsonNull.INSTANCE)
+        add("tools", com.google.gson.JsonArray()); add("metadata", JsonObject()); add("usage", JsonObject())
+        add("reasoning", JsonObject().apply { addProperty("effort", "none"); add("summary", com.google.gson.JsonNull.INSTANCE) })
+        add("text", JsonObject().apply { add("format", JsonObject().apply { addProperty("type", "json_schema") }) })
+    }
+
+    @Test fun deepSeekAcceptsObservedMetadataEnvelopeWithoutRelaxingStructuredOutput() = runBlocking {
+        val envelope = deepSeekFullEnvelope()
+        assertEquals(35, envelope.size())
+        Loopback(200, envelope.toString(), "https://api.deepseek.com/responses").use { server ->
+            assertEquals(result(), ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)))
+            assertEquals(1, server.calls.get())
+        }
+    }
+
+    @Test fun deepSeekAcceptsOnlyFinalAnswerPhaseAndEmptyLogprobMetadata() = runBlocking {
+        val envelope = deepSeekFullEnvelope().apply {
+            this["output"].asJsonArray[0].asJsonObject.apply {
+                addProperty("phase", "final_answer")
+                this["content"].asJsonArray[0].asJsonObject.add("logprobs", com.google.gson.JsonArray())
+            }
+        }
+        Loopback(200, envelope.toString(), "https://api.deepseek.com/responses").use { server ->
+            assertEquals(result(), ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)))
+        }
+        val invalid = listOf(
+            envelope.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject.addProperty("phase", "commentary") },
+            envelope.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject["content"].asJsonArray[0].asJsonObject.addProperty("logprobs", "[]") },
+            envelope.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject["content"].asJsonArray[0].asJsonObject.add("logprobs", com.google.gson.JsonArray().apply { add(JsonObject()) }) })
+        for (body in invalid) Loopback(200, body.toString(), "https://api.deepseek.com/responses").use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)) }.exceptionOrNull()
+            assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, (failure as RecognitionApiFailure).kind)
+            assertNull(failure.cause); assertEquals(1, server.calls.get())
+        }
+        val ark = JsonParser.parseString(response()).asJsonObject.apply {
+            this["output"].asJsonArray[0].asJsonObject["content"].asJsonArray[0].asJsonObject.add("logprobs", com.google.gson.JsonArray())
+        }
+        Loopback(200, ark.toString()).use { server ->
+            assertTrue(runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull() is RecognitionApiFailure)
+        }
+    }
+
+    @Test fun deepSeekMetadataTypesConstantsAndUnknownOutputRemainStrict() = runBlocking {
+        val valid = deepSeekFullEnvelope()
+        val invalid = listOf(
+            valid.deepCopy().apply { addProperty("background", true) },
+            valid.deepCopy().apply { addProperty("parallel_tool_calls", false) },
+            valid.deepCopy().apply { addProperty("frequency_penalty", "0") },
+            valid.deepCopy().apply { addProperty("presence_penalty", 1) },
+            valid.deepCopy().apply { addProperty("content_filters", "disabled") },
+            valid.deepCopy().apply { addProperty("moderation", false) },
+            valid.deepCopy().apply { addProperty("prompt_cache_key", "private-cache") },
+            valid.deepCopy().apply { addProperty("prompt_cache_retention", "24h") },
+            valid.deepCopy().apply { addProperty("safety_identifier", "user") },
+            valid.deepCopy().apply { add("metadata", JsonObject().apply { addProperty("private", "value") }) },
+            valid.deepCopy().apply { addProperty("max_output_tokens", "6000") },
+            valid.deepCopy().apply { addProperty("completed_at", "1792272001") },
+            valid.deepCopy().apply { addProperty("service_tier", "unknown-tier") },
+            valid.deepCopy().apply { addProperty("truncation", "auto") },
+            valid.deepCopy().apply { addProperty("unknown_vendor_field", false) },
+            valid.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject.addProperty("unknown_message_field", "x") },
+            valid.deepCopy().apply {
+                val structured = JsonParser.parseString(resultJson()).asJsonObject
+                structured["candidates"].asJsonArray[0].asJsonObject.addProperty("unknown_candidate_field", "x")
+                this["output"].asJsonArray[0].asJsonObject["content"].asJsonArray[0].asJsonObject.addProperty("text", structured.toString())
+            })
+        for (body in invalid) Loopback(200, body.toString(), "https://api.deepseek.com/responses").use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)) }.exceptionOrNull()
+            assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, (failure as RecognitionApiFailure).kind)
+            assertNull(failure.cause); assertEquals(1, server.calls.get())
+        }
+    }
+
+    @Test fun productionPromptRequiresChineseSuggestionsVisibleOriginalUnitsAndNoHiddenTightsInference() = runBlocking {
+        Loopback(200, response()).use { server ->
+            ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg))
+            val prompt = JsonParser.parseString(server.payload).asJsonObject["instructions"].asString
+            assertTrue(prompt.contains("简体中文"))
+            assertTrue(prompt.contains("原语种"))
+            assertTrue(prompt.contains("腰部或裆部"))
+            assertTrue(prompt.contains("不得推断为连裤袜"))
+            assertTrue(prompt.contains("value 必须包含图上可见的原单位"))
+            assertTrue(prompt.contains("quote 必须忠实包含对应表头和原数值"))
+        }
+    }
+
     @Test fun deepSeekUsesItsOwnPayloadAndReturnsTheActualModelWithoutInventingASnapshot() = runBlocking {
         Loopback(200, deepSeekResponse(), "https://api.deepseek.com/responses").use { server ->
             val result = ItemRecognitionApi(server::connection).recognizeWithMetadata("dummy-deepseek-key", deepSeekRequest(), listOf(jpeg))

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "operation": "gitee_old_apk_batch_cleanup",
+  "cleanup_date": "2026-10-18",
+  "status": "completed",
+  "scope": "Only the 15 frozen old Gitee APK attachments; preserve all releases, non-APK attachments, GitHub and local originals.",
+  "removed_apks": [
+    {
+      "tag": "v2.45.1",
+      "bytes": 48075121,
+      "sha256": "f00cc339bb49479775d134fee85335440c64575c6443ad057091b4c69f653bda",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.45.2",
+      "bytes": 48075121,
+      "sha256": "d2277c80717de8d3802a85c20fa6731e33470f12dfe333973f7491a67267603e",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.46.0",
+      "bytes": 54697625,
+      "sha256": "3e45a490ce73b2d6a2f082c2204d20c4e77678969d2d6b91fb01a9e31c5498de",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.46.1",
+      "bytes": 54697625,
+      "sha256": "6d09531b6f6de90dc524a3e532cf77a3fea99b1232dc0c1fd58084231e2276eb",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.46.2",
+      "bytes": 54714009,
+      "sha256": "4ba572b2b829303116f77f9c0ab961f9801bf50dc57077b1c948e8215a3ed187",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.46.3",
+      "bytes": 54714009,
+      "sha256": "d5844bd56f6065219fce5a5b391ff01302629c8b1e5b6ee76143137136e7a3e1",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.46.4",
+      "bytes": 54714009,
+      "sha256": "ea8b2e00db9f3eb5e680fd613e5f3497d23178fc0ce49b54120d104c1c39a90b",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.47.0",
+      "bytes": 54730393,
+      "sha256": "a1245701d8a4ec9de5dc23c64125b2d2298e392f2fa22a230a3ea55fd8debdfb",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.47.1",
+      "bytes": 54746777,
+      "sha256": "3fc79e439468bb0696cc32f8c7bd57f44eafaf81b63525cae7f68a6d2320e2d7",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.48.0",
+      "bytes": 56677301,
+      "sha256": "d8a6fb3d9609708648df1e128cd09c4e9fbfd6849349cbd1216495a7d6112787",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.49.0",
+      "bytes": 58328378,
+      "sha256": "e037fe62eea0c0ff8df05009e0a4046fca3a76d5b52c9ca31799d5847ce5145e",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.50.0",
+      "bytes": 58344762,
+      "sha256": "8976b8ed6c5cbc9078da2fc2fa083e0190c211160c629d77f98398be66a0482d",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.51.0",
+      "bytes": 58426774,
+      "sha256": "e7e200db850a086d33198f250f3fdd0b2d6e31252beb9262784e722ef83dbd81",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.51.1",
+      "bytes": 58443158,
+      "sha256": "1509c130c45f2caeed060f4cf96b224d022e08a1b55036b5ed583c9c20297e34",
+      "http_status": 204
+    },
+    {
+      "tag": "v2.52.0",
+      "bytes": 58443158,
+      "sha256": "7e164cf5ab63642b98250c65a6658c3871ba8d7e0581844bc6f5773a4a659245",
+      "http_status": 204
+    }
+  ],
+  "removed_count": 15,
+  "removed_bytes": 827828220,
+  "retained_tags_at_execution": [
+    "v2.55.3",
+    "v2.54.0",
+    "v2.53.0"
+  ],
+  "verification": {
+    "backup_proof_sha256": "efc589d7f460386f336f77a8351b5f9105116f806c258a70d2ebabd844d7b15c",
+    "frozen_inventory_sha256": "c2a31607926879b0324f2f5eb7956a247940d1fca738649c5ca7fcb30ab7a6e9",
+    "github_anonymous_full_stream_sha256_verified_count": 15,
+    "github_api_digest_exact_count": 15,
+    "local_original_sha256_verified_count": 15,
+    "github_checksum_bytes_exact_count": 15,
+    "gitee_checksum_bytes_exact_count": 15,
+    "protected_attachment_identity_exact_before_and_after": true
+  },
+  "preservation": {
+    "all_release_entries_retained": true,
+    "all_checksum_attachments_retained": true,
+    "other_gitee_attachments_unchanged": true,
+    "github_originals_retained": true,
+    "local_originals_retained": true
+  },
+  "accounting": {
+    "batch_only": true,
+    "prior_individual_v2_55_2_cleanup_included": false
+  },
+  "post_batch_checks": {
+    "checked_retained_tag": "v2.55.3",
+    "owner_metadata_and_all_attachments_preserved": true,
+    "apk_head": {
+      "http_status": 200,
+      "bytes": 77567420,
+      "eight_second_budget_passed": true
+    },
+    "anonymous_public_update_query": {
+      "verified": false,
+      "http_status": 403,
+      "highest_formal_tag_observed": null
+    }
+  },
+  "automatic_retry": false
+}

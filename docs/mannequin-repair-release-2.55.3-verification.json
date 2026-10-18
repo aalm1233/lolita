@@ -1,0 +1,332 @@
+{
+  "version": "2.55.3",
+  "version_code": 117,
+  "tag": "v2.55.3",
+  "verified_at_utc": "2026-10-18T10:50:58.266369+00:00",
+  "published_source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+  "source_url": "https://github.com/aalm1233/lolita/tree/d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+  "package": "com.lolita.app",
+  "debuggable": false,
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "apk": {
+    "name": "lolita-2.55.3.apk",
+    "bytes": 77567420,
+    "sha256": "16e4344cf98b1378b385aa988f1b6aa2260bc82e945f3979829c8fe6beacb5ec",
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c"
+  },
+  "clean_release_build": {
+    "command": "./gradlew clean assembleRelease",
+    "passed": true,
+    "source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c"
+  },
+  "database_schema": 30,
+  "backup_format": 10,
+  "schema_or_backup_change_this_fix": false,
+  "regression": {
+    "jvm": {
+      "tests": 400,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "device": {
+      "platform": "Android15 API35, independent AVD",
+      "declared": 146,
+      "passed": 144,
+      "defaultOptInSkipped": 2,
+      "batches": [
+        {
+          "name": "blouse-final",
+          "tests": 2,
+          "passed": 2,
+          "skipped": 0,
+          "logSha256": "a6c23a7b8c1472770fa34f24687ba8641e9497e4a1d86b9ffcb9b3a5b889b4a3"
+        },
+        {
+          "name": "backend-final",
+          "tests": 99,
+          "passed": 97,
+          "skipped": 2,
+          "logSha256": "a4a71e453d431219c449d7ca2dede65f3af36f4880261ae2e0f82e04e533ce28"
+        },
+        {
+          "name": "ui-core-final",
+          "tests": 35,
+          "passed": 35,
+          "skipped": 0,
+          "logSha256": "847e6491cded0ef6090c72ea6d063aaa417b322666f8794f76145b308f709d1d"
+        },
+        {
+          "name": "entry-flows-final",
+          "tests": 10,
+          "passed": 10,
+          "skipped": 0,
+          "logSha256": "8f6e60ba14a2bdc3b1df8e2770c3db65f56a71732d0ed3ed2c41a6d884f4dfef"
+        }
+      ],
+      "oneSameProductDebugApkAcrossBatches": true,
+      "productDebugApkSha256": "b77245df99a4ad83887104dcade57a9b1291a4bde548a1ae97a62122a21da17f",
+      "skipped": [
+        "com.lolita.app.data.MannequinNativeAdmissionTest#stagedPrivateHistoricalImagesPassProductionAdmissionWithoutPublishingTheirDetails",
+        "com.lolita.app.data.ImageTaskExecutionTest#controlledSocketResponseCanCompleteThroughTaskPipeline"
+      ]
+    },
+    "private_historical_opt_in": {
+      "total": 25,
+      "input_WEBP": 25,
+      "readable": 25,
+      "admitted": 25,
+      "paid_calls": 0,
+      "credential_reads": 0,
+      "remote_requests": 0,
+      "log_sha256": "7a843cf0a5abbccb1a18b65d1dc1d1871b67034ccc3f5f27f2a5055abea45f16",
+      "only_owned_staged_fixture_directory_removed": true
+    },
+    "paid_requests_this_round": 0,
+    "detailed_receipt": "mannequin-generation-cover-repair-2.55.3-verification.json",
+    "quality_limitations": [
+      "No real Seedream quality test this round.",
+      "The reported phone-wide historical failure was not fully reproduced.",
+      "API26/27 WebP admission restriction is unchanged; JPEG/PNG required there."
+    ]
+  },
+  "signed_upgrade": {
+    "from": "2.55.2/116",
+    "to": "2.55.3/117",
+    "same_signature": true,
+    "normal_install_r": true,
+    "uninstall": false,
+    "clear_data": false,
+    "schema_version": 30,
+    "tables_checked": 38,
+    "columns_checked": 254,
+    "items_checked": 198,
+    "categories_checked": 53,
+    "all_typed_values_and_schema_exact": true,
+    "images_sha256_checked": 172,
+    "image_set_and_bytes_exact": true,
+    "settings_files_checked": 3,
+    "all_settings_byte_exact": true,
+    "no_data_transformations_allowed": true,
+    "restart_exact_and_idempotent": true,
+    "preinstall_baseline_matched_existing_2552_archive": true,
+    "failed_stream_capture_preserved_before_any_install": true,
+    "final_non_pty_shell_v2_capture_verified_by_full_data_and_byte_hashes": true
+  },
+  "releases": {
+    "same_apk_and_checksum_on_both_platforms": true,
+    "github": {
+      "tag": "v2.55.3",
+      "source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+      "release_id": 416374306,
+      "prerelease": false,
+      "files": {
+        "lolita-2.55.3.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.3/lolita-2.55.3.apk",
+          "anonymous_full_download": true,
+          "bytes": 77567420,
+          "sha256": "16e4344cf98b1378b385aa988f1b6aa2260bc82e945f3979829c8fe6beacb5ec",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.3/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "71c4ac507f5f66c99120ffb996b7b65fc60d4cb1445f381bfbdd31039a40608e",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 77567420,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "tag": "v2.55.3",
+      "source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+      "release_id": 1215684,
+      "prerelease": false,
+      "files": {
+        "lolita-2.55.3.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.3/lolita-2.55.3.apk",
+          "anonymous_full_download": true,
+          "bytes": 77567420,
+          "sha256": "16e4344cf98b1378b385aa988f1b6aa2260bc82e945f3979829c8fe6beacb5ec",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.3/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "71c4ac507f5f66c99120ffb996b7b65fc60d4cb1445f381bfbdd31039a40608e",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 77567420,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "distribution_tag_is_not_full_application_source": true,
+      "verified_as_prerelease_before_formalization": true
+    }
+  },
+  "update_entry": {
+    "anonymous_gitee_highest_formal": {
+      "latest_tag": "v2.55.3",
+      "pages": 2,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.55.3/lolita-2.55.3.apk",
+      "source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c"
+    },
+    "actual_signed_app_manual_check": {
+      "passed": true,
+      "installedVersion": "2.55.3/117",
+      "liveGiteeLatest": "2.55.3",
+      "manualCheckActualSignedApp": true,
+      "notesAndFooterReachable": true,
+      "sourceCommit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+      "privateScreenshotsPublished": false
+    }
+  },
+  "authorized_gitee_cleanup": {
+    "tag": "v2.55.2",
+    "release_id": 1215382,
+    "attachment_id": 3423328,
+    "name": "lolita-2.55.2.apk",
+    "bytes": 77567420,
+    "sha256": "7391d9a64a8df9315a732ffdfae56c594c6f2850edb40291d51e1edcaf524133",
+    "new_source_commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+    "delete_attempt_reserved": true,
+    "automatic_retry": false,
+    "authorization_attestation": "Operator supplied --confirm-authorized after separate human approval",
+    "at_utc": "2026-10-18T10:19:18.617295+00:00",
+    "http_status": 204,
+    "only_exact_apk_removed": true,
+    "other_attachments_unchanged": true,
+    "release_and_checksum_retained": true,
+    "github_original_and_local_backup_verified": true,
+    "new_formal_github_and_signed_upgrade_verified": true
+  },
+  "privacy": {
+    "configured_credential_byte_scan": {
+      "apk_sha256": "16e4344cf98b1378b385aa988f1b6aa2260bc82e945f3979829c8fe6beacb5ec",
+      "uncompressed_entries_scanned": 3476,
+      "configured_credential_byte_scan_passed": true,
+      "scope": "Exact configured API key and release token bytes; not a universal secret detector",
+      "credentials_logged_or_copied": false
+    },
+    "private_photos_db_images_settings_snapshots_published": false,
+    "release_credentials_published": false,
+    "cdn_temporary_urls_persisted": false
+  },
+  "authorized_gitee_batch_cleanup": {
+    "receipt": "gitee-apk-cleanup-2026-10-18.json",
+    "removed_count": 15,
+    "removed_bytes": 827828220,
+    "retained_tags_at_execution": [
+      "v2.55.3",
+      "v2.54.0",
+      "v2.53.0"
+    ],
+    "prior_individual_v2_55_2_cleanup_included": false,
+    "post_batch_verification": {
+      "at_utc": "2026-10-18T10:49:03.029374+00:00",
+      "public_update_api_recheck_passed": false,
+      "public_update_api_error": "API HTTP 403; response details suppressed",
+      "exact_owner_metadata_v2_55_3_and_all_attachments_preserved": true,
+      "v2_55_3_apk_head": {
+        "http_status": 200,
+        "bytes": 77567420,
+        "content_type": "application/zip",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ],
+        "eight_second_budget_passed": true
+      }
+    }
+  }
+}

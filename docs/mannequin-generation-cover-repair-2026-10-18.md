@@ -33,3 +33,7 @@ Room30和备份格式10不变，无批量历史更新，不改库存图片路径
 真实页面对照已核对[浅色工作页](visuals/mannequin-repair-2026-10-18/actual/light-workspace-seven-skins.png)、[暗色工作页](visuals/mannequin-repair-2026-10-18/actual/dark-workspace-seven-skins.png)、[浅色确认](visuals/mannequin-repair-2026-10-18/actual/light-confirmation-open-seven-skins.png)、[暗色确认](visuals/mannequin-repair-2026-10-18/actual/dark-confirmation-open-seven-skins.png)及两种模式的费用滚动状态。42张原生截图均为合成商品夹具，0次提交；公开对照板和4张未修改原尺寸重点图的摘要见[截图清单](visuals/mannequin-repair-2026-10-18/actual/manifest.json)，全量原图保存在本机私有归档。
 
 布局检查使用实际逐行左右边界、完整文本、无省略及无高度裁切；Compose的宽松段落宽度可能大于实际Text外框，不能仅凭hasVisualOverflow断言按钮被裁切。旧居中标题的实际右边界470px超过398px外框，修复后两者对齐；按钮字形613px完整处于615px外框。恢复测试环境按夜间策略还原，auto/custom不要求测试前瞬间的浅暗状态；进入浅暗用例仍核对实际系统模式。截图在原生Dialog窗口动画完成后记录，未合成或修补应用内容。
+
+签名正式包与2.55.2同签名覆盖升级和重启逐字段/图片SHA/设置字节核对通过；两平台同一APK、匿名完整下载与HEAD、GitHub源码标签及实际签名app的国内更新入口和完整说明均验证完成。详见[2.55.3发布回执](mannequin-repair-release-2.55.3-verification.json)。
+
+用户另行要求扩大旧APK清理后，本轮额外删除Gitee的15个旧APK，共827828220字节（789.48 MiB），保留执行时的2.55.3、2.54.0、2.53.0及所有发布/校验文件、GitHub和本机原包。每个旧包先核对GitHub匿名完整下载与本机SHA，再按精确附件身份单次删除，原先单独2.55.2清理不重复计入。详见[批量清理回执](gitee-apk-cleanup-2026-10-18.json)。清理后保留版元数据完全一致，2.55.3匿名APK HEAD通过；额外公开更新列表复核返回403，保留该失败记录，不覆盖发布时已通过的更新入口证据。本轮范围不作为未来自动删除授权。

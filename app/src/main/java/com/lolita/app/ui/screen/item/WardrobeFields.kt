@@ -17,16 +17,17 @@ import com.lolita.app.ui.theme.LolitaSkin
 
 @Composable
 fun WardrobeCategorySelector(selectedCategoryId: Long, categories: List<Category>, onCategorySelected: (Long) -> Unit,
-    enabled: Boolean = true, isError: Boolean = false) {
+    enabled: Boolean = true, isError: Boolean = false, preferredFamily: WardrobeFamily? = null) {
     var show by remember { mutableStateOf(false) }
     val selected = categories.firstOrNull { it.id == selectedCategoryId }
     OutlinedButton(onClick = { show = true }, enabled = enabled, modifier = Modifier.fillMaxWidth()) {
-        Text(selected?.let { "${it.categorySemantic.family.label} · ${it.name}" } ?: "选择品类与类型 *",
+        Text(selected?.let { "${it.categorySemantic.family.label} · ${it.name}" }
+            ?: preferredFamily?.let { "${it.label} · 选择类型 *" } ?: "选择品类与类型 *",
             color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
     }
     if (show) {
         var query by remember { mutableStateOf("") }
-        var family by remember { mutableStateOf<WardrobeFamily?>(null) }
+        var family by remember { mutableStateOf(selected?.categorySemantic?.family ?: preferredFamily) }
         AlertDialog(onDismissRequest = { show = false }, title = { Text("选择物品类型") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.spacingMedium)) {
                 OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, singleLine = true, modifier = Modifier.fillMaxWidth())

@@ -57,7 +57,10 @@ fun ItemEditScreen(
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
     draftId: String? = null,
-    viewModel: ItemEditViewModel = viewModel()
+    viewModel: ItemEditViewModel = viewModel(),
+    defaultLocationId: Long? = null,
+    defaultStorageNodeId: Long? = null,
+    defaultFamily: com.lolita.app.domain.model.WardrobeFamily? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -82,13 +85,14 @@ fun ItemEditScreen(
     } }
 
     // Load item data if editing
-    LaunchedEffect(itemId, defaultStatus, defaultParentItemId, importedDraftJson, draftId) {
+    LaunchedEffect(itemId, defaultStatus, defaultParentItemId, importedDraftJson, draftId, defaultLocationId, defaultStorageNodeId, defaultFamily) {
         viewModel.selectDraft(draftId)
         viewModel.loadItem(
             itemId = itemId ?: 0L,
             defaultStatus = defaultStatus,
             importedDraftJson = importedDraftJson,
-            defaultParentItemId = defaultParentItemId
+            defaultParentItemId = defaultParentItemId,
+            defaultLocationId = defaultLocationId, defaultStorageNodeId = defaultStorageNodeId, defaultFamily = defaultFamily
         )
     }
 
@@ -171,7 +175,8 @@ fun ItemEditScreen(
             onDismissRequest = {},
             title = { Text("读取失败") },
             text = { Text(message) },
-            confirmButton = { TextButton(onClick = { viewModel.loadItem(itemId ?: 0L, defaultStatus, defaultParentItemId, importedDraftJson) }) { Text("重试") } },
+            confirmButton = { TextButton(onClick = { viewModel.loadItem(itemId ?: 0L, defaultStatus, defaultParentItemId, importedDraftJson,
+                defaultLocationId, defaultStorageNodeId, defaultFamily) }) { Text("重试") } },
             dismissButton = { TextButton(onClick = exitEditor) { Text("返回") } }
         )
     }
@@ -285,7 +290,8 @@ fun ItemEditScreen(
                     selectedCategoryId = uiState.categoryId,
                     categories = uiState.categories,
                     onCategorySelected = { viewModel.updateCategory(it) },
-                    isError = hasAttemptedSave && uiState.categoryId == 0L
+                    isError = hasAttemptedSave && uiState.categoryId == 0L,
+                    preferredFamily = uiState.preferredFamily
                 )
 
                 WardrobeSpecificationEditor(
@@ -533,9 +539,10 @@ private fun CategorySelector(
     selectedCategoryId: Long,
     categories: List<com.lolita.app.data.local.entity.Category>,
     onCategorySelected: (Long) -> Unit,
-    isError: Boolean = false
+    isError: Boolean = false,
+    preferredFamily: com.lolita.app.domain.model.WardrobeFamily? = null
 ) {
-    WardrobeCategorySelector(selectedCategoryId, categories, onCategorySelected, enabled, isError)
+    WardrobeCategorySelector(selectedCategoryId, categories, onCategorySelected, enabled, isError, preferredFamily)
 }
 
 /**

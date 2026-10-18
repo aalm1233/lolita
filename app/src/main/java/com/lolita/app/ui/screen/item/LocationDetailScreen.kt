@@ -35,7 +35,7 @@ private data class NodeMoveTarget(val node: StorageNode, val roomId: Long, val p
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Long) -> Unit,
-    viewModel: LocationDetailViewModel = viewModel()) {
+    viewModel: LocationDetailViewModel = viewModel(), onAddItem: (roomId: Long, nodeId: Long?) -> Unit = { _, _ -> }) {
     val state by viewModel.uiState.collectAsState()
     val skin = LocalLolitaSkin.current
     val listState = rememberLazyListState()
@@ -97,6 +97,8 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                 item { OutlinedTextField(state.searchQuery, viewModel::updateSearch, modifier = Modifier.fillMaxWidth(),
                     label = { Text("搜索名称、品牌、分类或位置路径") }, leadingIcon = { SkinIcon(IconKey.Search) }, singleLine = true) }
                 if (!state.isUnassigned) {
+                    item { OutlinedButton(onClick = { onAddItem(locationId, currentNode?.id) }, enabled = !state.isSaving,
+                        modifier = Modifier.fillMaxWidth()) { Text("新增物品") } }
                     item { Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium), modifier = Modifier.fillMaxWidth()) {
                         if (canCreate) OutlinedButton(onClick = { addNode = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) {
                             Text(if (currentNode == null) "新增柜架 / 收纳盒" else "新增层 / 格")

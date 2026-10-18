@@ -149,4 +149,60 @@ class WardrobeRegistrationTest {
         assertTrue(withContext(Dispatchers.Main) { vm.saveItem() }.isFailure)
         assertTrue(database.itemDao().getAllItemsList().isEmpty())
     }
+    @Test fun storageEntryPrefillsItsRoomAndNodeWithoutReusingAnotherNewDraft() = runBlocking {
+        val unrelated = editor(); loaded(unrelated)
+        withContext(Dispatchers.Main) { unrelated.updateName("别处未完成"); unrelated.keepDraft() }
+        val unrelatedId = unrelated.uiState.value.draftId!!
+        val room = database.locationDao().insertLocation(Location(name = "玄关", description = ""))
+        val node = StorageRepository(database).createNode(room, null, "鞋柜")
+        val vm = editor(SavedStateHandle(mapOf("defaultLocationId" to room, "defaultStorageNodeId" to node)))
+        loaded(vm)
+        assertEquals(room, vm.uiState.value.locationId)
+        assertEquals(node, vm.uiState.value.storageNodeId)
+        assertEquals("", vm.uiState.value.name)
+        assertNotEquals(unrelatedId, vm.uiState.value.draftId)
+        assertEquals("别处未完成", drafts.get(unrelatedId)!!.data().name)
+        val category = categories.insertCategory(Category(name = "本次登记鞋", categorySemantic = CategorySemantic.MARY_JANE))
+        val itemId = withContext(Dispatchers.Main) { vm.updateName("新鞋"); vm.updateCategory(category); vm.saveItem().getOrThrow() }
+        assertEquals(room, items.getItemById(itemId)!!.locationId)
+        assertEquals(node, items.getItemById(itemId)!!.storageNodeId)
+        assertTrue(database.priceDao().getPricesByItemList(itemId).isEmpty())
+    }
+    @Test fun exactDraftRestorationKeepsUserChangedLocationOverEntryDefaults() = runBlocking {
+        val room = database.locationDao().insertLocation(Location(name = "玄关", description = ""))
+        val otherRoom = database.locationDao().insertLocation(Location(name = "卧室", description = ""))
+        val node = StorageRepository(database).createNode(room, null, "鞋柜")
+        val draftId = java.util.UUID.randomUUID().toString()
+        drafts.save(ItemDraft(id = draftId, dataJson = ItemDraftData(name = "已换位置", locationId = otherRoom).encode()))
+        val vm = editor(SavedStateHandle(mapOf("itemDraftId" to draftId,
+            "defaultLocationId" to room, "defaultStorageNodeId" to node)))
+        loaded(vm)
+        assertEquals(draftId, vm.uiState.value.draftId)
+        assertEquals(otherRoom, vm.uiState.value.locationId)
+        assertNull(vm.uiState.value.storageNodeId)
+        assertEquals("已换位置", vm.uiState.value.name)
+    }
+    @Test fun storageEntryRejectsANodeFromADifferentRoom() = runBlocking {
+        val room = database.locationDao().insertLocation(Location(name = "玄关", description = ""))
+        val otherRoom = database.locationDao().insertLocation(Location(name = "卧室", description = ""))
+        val node = StorageRepository(database).createNode(room, null, "鞋柜")
+        val vm = editor(SavedStateHandle(mapOf("defaultLocationId" to otherRoom, "defaultStorageNodeId" to node)))
+        withContext(Dispatchers.Main) { vm.loadItem(0) }
+        withTimeout(10000) { while (vm.uiState.value.isLoading) delay(20) }
+        assertNotNull(vm.uiState.value.loadError)
+        assertTrue(withContext(Dispatchers.Main) { vm.saveItem() }.isFailure)
+        assertTrue(database.itemDao().getAllItemsList().isEmpty())
+    }
+    @Test fun footwearEntryStartsFreshWhileTheOtherFamilyDraftStaysRecoverable() = runBlocking {
+        val unrelated = editor(); loaded(unrelated)
+        withContext(Dispatchers.Main) { unrelated.updateName("假发未完成"); unrelated.keepDraft() }
+        val unrelatedId = unrelated.uiState.value.draftId!!
+        val vm = editor(SavedStateHandle(mapOf("defaultFamily" to "FOOTWEAR")))
+        loaded(vm)
+        assertEquals(WardrobeFamily.FOOTWEAR, vm.uiState.value.preferredFamily)
+        assertEquals("", vm.uiState.value.name)
+        assertEquals(0L, vm.uiState.value.categoryId)
+        assertNotEquals(unrelatedId, vm.uiState.value.draftId)
+        assertEquals("假发未完成", drafts.get(unrelatedId)!!.data().name)
+    }
 }

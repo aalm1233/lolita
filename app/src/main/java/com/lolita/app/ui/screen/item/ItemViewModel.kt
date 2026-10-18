@@ -123,6 +123,7 @@ data class ItemEditUiState(
     val description: String = "",
     val brandId: Long = 0,
     val categoryId: Long = 0,
+    val preferredFamily: WardrobeFamily? = null,
     val coordinateId: Long? = null,
     val parentItemId: Long? = null,
     val includedInParentPrice: Boolean = false,
@@ -805,7 +806,11 @@ class ItemEditViewModel(
 
     private val importedImages = mutableSetOf<String>()
     private data class EditorIdentity(val itemId: Long, val defaultStatus: String,
-        val defaultParentItemId: Long?, val importedDraftJson: String?)
+        val defaultParentItemId: Long?, val importedDraftJson: String?, val defaultLocationId: Long?,
+        val defaultStorageNodeId: Long?, val defaultFamily: WardrobeFamily?) {
+        val hasEntryDefaults: Boolean get() = defaultStatus.isNotBlank() || defaultParentItemId != null ||
+            importedDraftJson != null || defaultLocationId != null || defaultStorageNodeId != null || defaultFamily != null
+    }
     private var requestedIdentity: EditorIdentity? = null
     private var loadedIdentity: EditorIdentity? = null
     private var loadJob: Job? = null
@@ -857,14 +862,14 @@ class ItemEditViewModel(
         }
     }
 
-    private suspend fun restoreDraft(identity: EditorIdentity) {
-        if (drafts == null) return
+    private suspend fun restoreDraft(identity: EditorIdentity): Boolean {
+        if (drafts == null) return false
         val restored = if (identity.itemId > 0) drafts.getForItem(identity.itemId)
             else savedStateHandle.get<String>("itemDraftId")?.let { drafts.get(it) ?: error("所选物品草稿已不存在") }
-                ?: if (identity.importedDraftJson == null && identity.defaultParentItemId == null) drafts.latestNew() else null
+                ?: if (!identity.hasEntryDefaults) drafts.latestNew() else null
         val id = restored?.id ?: java.util.UUID.randomUUID().toString()
         savedStateHandle["itemDraftId"] = id
-        if (restored == null) { _uiState.update { it.copy(draftId = id) }; return }
+        if (restored == null) { _uiState.update { it.copy(draftId = id) }; return false }
         val data = restored.data()
         require(restored.targetItemId == null || restored.targetItemId == _uiState.value.item?.id) { "草稿对应的物品已删除" }
         currentImportToken = data.importToken
@@ -877,6 +882,7 @@ class ItemEditViewModel(
             composition = data.composition, imageUrls = restored.imagePaths,
             sizeChartImageUrl = restored.sizeChartImagePaths.firstOrNull(), sizeChartImageUrls = restored.sizeChartImagePaths.drop(1)) }
         hasUnsavedChanges = true
+        return true
     }
 
     fun selectDraft(id: String?) {
@@ -1007,16 +1013,22 @@ class ItemEditViewModel(
         _uiState.update { it.copy(locationId = locationId, storageNodeId = nodeId) }
     }
 
-    fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null) {
+    fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null,
+        defaultLocationId: Long? = savedStateHandle.get<Long>("defaultLocationId")?.takeIf { it > 0 },
+        defaultStorageNodeId: Long? = savedStateHandle.get<Long>("defaultStorageNodeId")?.takeIf { it > 0 },
+        defaultFamily: WardrobeFamily? = savedStateHandle.get<String>("defaultFamily")?.let { name -> WardrobeFamily.entries.find { it.name == name } }) {
         if (_uiState.value.isSaving) return
         val identity = EditorIdentity(itemId, if (itemId > 0) "" else defaultStatus,
-            if (itemId > 0) null else defaultParentItemId, importedDraftJson)
+            if (itemId > 0) null else defaultParentItemId, importedDraftJson,
+            if (itemId > 0) null else defaultLocationId, if (itemId > 0) null else defaultStorageNodeId,
+            if (itemId > 0) null else defaultFamily)
         if (requestedIdentity == identity && (loadedIdentity == identity || loadJob?.isActive == true)) return
         loadJob?.cancel()
         priceJob?.cancel()
         hierarchyJob?.cancel()
         if (requestedIdentity != identity) {
             cleanupNewImages()
+            if (requestedIdentity != null) savedStateHandle.remove<String>("itemDraftId")
         }
         discardInProgress = false
         locationJob?.cancel()
@@ -1024,7 +1036,7 @@ class ItemEditViewModel(
         supportingDataLoaded.set(false)
         requestedIdentity = identity
         loadedIdentity = null
-        _uiState.value = ItemEditUiState(isLoading = true)
+        _uiState.value = ItemEditUiState(isLoading = true, preferredFamily = identity.defaultFamily)
         val importDraft = importedDraftJson?.let { json ->
             runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
         }
@@ -1130,7 +1142,7 @@ class ItemEditViewModel(
                         source = null,
                         pricesWithPayments = emptyList(),
                         locationId = null,
-                        isLoading = false,
+                        isLoading = true,
                         isSaving = false,
                         recoveredImport = false
                     )
@@ -1145,9 +1157,24 @@ class ItemEditViewModel(
                             status = ItemStatus.WISHED) }
                         hasUnsavedChanges = true
                 }
-                restoreDraft(identity)
+                val restored = restoreDraft(identity)
+                if (!restored) {
+                    try {
+                        identity.defaultLocationId?.let { require(locationRepository.getLocationByIdSync(it) != null) { "预填的房间已删除，请重新选择位置" } }
+                        identity.defaultStorageNodeId?.let { nodeId ->
+                            val node = storage?.getNodes()?.find { it.id == nodeId }
+                            require(node != null && node.locationId == identity.defaultLocationId) { "预填的收纳位置已删除或不属于该房间" }
+                        }
+                        _uiState.update { it.copy(locationId = identity.defaultLocationId, storageNodeId = identity.defaultStorageNodeId) }
+                    } catch (failure: Exception) {
+                        savedStateHandle.remove<String>("itemDraftId")
+                        _uiState.update { it.copy(draftId = null) }
+                        throw failure
+                    }
+                }
                 observeHierarchy(0L)
                 loadedIdentity = identity
+                _uiState.update { it.copy(isLoading = false) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
                 _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取服饰失败") }

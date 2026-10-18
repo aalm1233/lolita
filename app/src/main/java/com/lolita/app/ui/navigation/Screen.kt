@@ -23,18 +23,24 @@ sealed interface Screen {
     }
 
     data object ItemEdit : Screen {
-        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}&parentId={parentId}&draftId={draftId}"
+        override val route = "item_edit/{itemId}?defaultStatus={defaultStatus}&parentId={parentId}&draftId={draftId}&defaultLocationId={defaultLocationId}&defaultStorageNodeId={defaultStorageNodeId}&defaultFamily={defaultFamily}"
         fun createRoute(
             itemId: Long? = null,
             defaultStatus: String? = null,
             parentId: Long? = null,
-            draftId: String? = null
+            draftId: String? = null,
+            defaultLocationId: Long? = null,
+            defaultStorageNodeId: Long? = null,
+            defaultFamily: com.lolita.app.domain.model.WardrobeFamily? = null
         ): String {
             val id = itemId ?: 0L
             val queryParams = buildList {
                 if (defaultStatus != null) add("defaultStatus=$defaultStatus")
                 if (parentId != null) add("parentId=$parentId")
                 if (draftId != null) add("draftId=${android.net.Uri.encode(draftId)}")
+                if (defaultLocationId != null) add("defaultLocationId=$defaultLocationId")
+                if (defaultStorageNodeId != null) add("defaultStorageNodeId=$defaultStorageNodeId")
+                if (defaultFamily != null) add("defaultFamily=${defaultFamily.name}")
             }.joinToString("&")
             return if (queryParams.isNotEmpty()) "item_edit/$id?$queryParams" else "item_edit/$id"
         }

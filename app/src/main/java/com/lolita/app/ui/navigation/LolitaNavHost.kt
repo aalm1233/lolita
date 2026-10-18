@@ -289,6 +289,7 @@ fun LolitaNavHost(
                     onNavigateToEdit = { itemId ->
                         navController.navigate(Screen.ItemEdit.createRoute(itemId))
                     },
+                    onAddItem = { family -> navController.navigate(Screen.ItemEdit.createRoute(defaultFamily = family)) },
                     onNavigateToCoordinateDetail = { coordinateId ->
                         navController.navigate(Screen.CoordinateDetail.createRoute(coordinateId))
                     },
@@ -354,7 +355,10 @@ fun LolitaNavHost(
                     navArgument("itemId") { type = NavType.LongType; defaultValue = 0L },
                     navArgument("defaultStatus") { type = NavType.StringType; defaultValue = "" },
                     navArgument("parentId") { type = NavType.LongType; defaultValue = 0L },
-                    navArgument("draftId") { type = NavType.StringType; nullable = true; defaultValue = null }
+                    navArgument("draftId") { type = NavType.StringType; nullable = true; defaultValue = null },
+                    navArgument("defaultLocationId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("defaultStorageNodeId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("defaultFamily") { type = NavType.StringType; nullable = true; defaultValue = null }
                 )
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: 0L
@@ -379,6 +383,11 @@ fun LolitaNavHost(
                     defaultStatus = defaultStatus,
                     importedDraftJson = productDraft,
                     defaultParentItemId = backStackEntry.arguments?.getLong("parentId")?.takeIf { it != 0L },
+                    defaultLocationId = backStackEntry.arguments?.getLong("defaultLocationId")?.takeIf { it > 0 },
+                    defaultStorageNodeId = backStackEntry.arguments?.getLong("defaultStorageNodeId")?.takeIf { it > 0 },
+                    defaultFamily = backStackEntry.arguments?.getString("defaultFamily")?.let { name ->
+                        com.lolita.app.domain.model.WardrobeFamily.entries.find { it.name == name }
+                    },
                     onBack = { finishProductEditor(false) },
                     onSaveSuccess = { finishProductEditor(true) }
                 )
@@ -679,7 +688,9 @@ fun LolitaNavHost(
                 LocationDetailScreen(
                     locationId = locationId,
                     onBack = { navController.popBackStack() },
-                    onItemClick = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) }
+                    onItemClick = { itemId -> navController.navigate(Screen.ItemDetail.createRoute(itemId)) },
+                    onAddItem = { roomId, nodeId -> navController.navigate(Screen.ItemEdit.createRoute(
+                        defaultLocationId = roomId, defaultStorageNodeId = nodeId)) }
                 )
                 } // LocalNavAnimatedVisibilityScope
             }
@@ -815,7 +826,8 @@ fun LolitaNavHost(
                     onBack = { navController.popBackStack() },
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
-                    }
+                    },
+                    onAddItem = { family -> navController.navigate(Screen.ItemEdit.createRoute(defaultFamily = family)) }
                 )
                 } // LocalNavAnimatedVisibilityScope
             }

@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,7 @@ import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.entity.ItemStatus
+import com.lolita.app.domain.model.WardrobeFamily
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.ShimmerLine
@@ -47,15 +50,23 @@ fun FilteredItemListScreen(
     onNavigateToDetail: (Long) -> Unit,
     viewModel: FilteredItemListViewModel = viewModel(
         factory = FilteredItemListViewModelFactory(filterType, filterValue)
-    )
+    ),
+    onAddItem: ((WardrobeFamily) -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isReviewList = filterType == "status_review"
     val visibleItems = if (isReviewList) uiState.purchaseReviews.map { it.item } else uiState.items
     val reviewsByItem = uiState.purchaseReviews.associateBy { it.item.id }
+    val family = if (filterType == "family") WardrobeFamily.entries.find { it.name == filterValue } else null
 
     Scaffold(
         containerColor = Color.Transparent,
+        floatingActionButton = {
+            if (family != null && onAddItem != null) FloatingActionButton(onClick = { onAddItem(family) },
+                modifier = Modifier.semantics { contentDescription = "新增物品" }) {
+                SkinIcon(IconKey.Add)
+            }
+        },
         topBar = {
             GradientTopAppBar(
                 title = { Text(title) },

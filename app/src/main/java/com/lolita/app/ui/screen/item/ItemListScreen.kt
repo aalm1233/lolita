@@ -113,7 +113,8 @@ fun ItemListScreen(
     onNavigateToQuickOutfit: () -> Unit = {},
     onNavigateToLocationDetail: (Long) -> Unit = {},
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
-    viewModel: ItemListViewModel = viewModel()
+    viewModel: ItemListViewModel = viewModel(),
+    onAddItem: (WardrobeFamily?) -> Unit = { onNavigateToEdit(null) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -226,6 +227,7 @@ fun ItemListScreen(
             FloatingActionButton(
                 onClick = {
                     when (pagerState.currentPage) {
+                        1 -> onAddItem(uiState.filterFamily)
                         2 -> onNavigateToCoordinateAdd()
                         3 -> onNavigateToEdit(null)
                         else -> onNavigateToEdit(null)

@@ -1,17 +1,12 @@
 package com.lolita.app.ui.screen.settings
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,294 +14,73 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.entity.CategoryGroup
-import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.screen.common.SkinEmptyState
+import com.lolita.app.domain.model.*
+import com.lolita.app.ui.screen.common.*
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryManageScreen(
-    onBack: () -> Unit,
-    viewModel: CategoryManageViewModel = viewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(uiState.errorMessage) {
-        uiState.errorMessage?.let {
-            snackbarHostState.showSnackbar(it)
-            viewModel.clearError()
-        }
-    }
-
-    Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            GradientTopAppBar(
-                title = { Text("类型管理") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        SkinIcon(IconKey.ArrowBack)
+fun CategoryManageScreen(onBack: () -> Unit, viewModel: CategoryManageViewModel = viewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(state.errorMessage) { state.errorMessage?.let { snackbar.showSnackbar(it); viewModel.clearError() } }
+    Scaffold(containerColor = Color.Transparent, topBar = {
+        GradientTopAppBar(title = { Text("类型管理") }, navigationIcon = { IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) } })
+    }, floatingActionButton = { FloatingActionButton(onClick = viewModel::showAddDialog) { SkinIcon(IconKey.Add) } },
+        snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+        LazyColumn(Modifier.fillMaxSize().padding(padding).padding(LolitaSkin.current.spacingLarge), verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.cardGap)) {
+            item { Text("品类独立于名称。旧类型需确认语义后才使用对应生成规则。", style = MaterialTheme.typography.bodyMedium) }
+            items(state.categories, key = { it.id }) { category -> LolitaCard(Modifier.fillMaxWidth()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(category.name, style = MaterialTheme.typography.titleMedium)
+                        Text("${category.categorySemantic.family.label} · ${(category.defaultWearRole ?: category.categorySemantic.defaultWearRole).label}", style = MaterialTheme.typography.bodySmall)
                     }
+                    IconButton(onClick = { viewModel.showEditDialog(category) }) { SkinIcon(IconKey.Edit) }
+                    IconButton(onClick = { viewModel.showDeleteConfirm(category) }) { SkinIcon(IconKey.Delete) }
                 }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.showAddDialog() },
-                containerColor = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                SkinIcon(IconKey.Add, tint = Color.White)
-            }
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Text(
-                    "服饰类型列表",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-
-            item {
-                HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-            }
-
-            if (uiState.categories.isEmpty()) {
-                item { SkinEmptyState(iconKey = IconKey.Category, title = "暂无类型") }
-            } else {
-                items(uiState.categories, key = { it.id }) { category ->
-                    CategoryCard(
-                        category = category,
-                        onEdit = { viewModel.showEditDialog(category) },
-                        onDelete = { viewModel.showDeleteConfirm(category) }
-                    )
-                }
-            }
+            } }
         }
     }
-
-    if (uiState.showAddDialog) {
-        AddCategoryDialog(
-            onDismiss = { viewModel.hideAddDialog() },
-            onConfirm = { name, group ->
-                viewModel.addCategory(name, group)
-            }
-        )
+    if (state.showAddDialog) CategoryDialog(null, viewModel::hideAddDialog) { name, semantic, role ->
+        viewModel.addCategory(name, if (semantic.family == WardrobeFamily.CLOTHING) CategoryGroup.CLOTHING else CategoryGroup.ACCESSORY, semantic, role)
     }
-
-    if (uiState.showDeleteConfirm != null) {
-        DeleteConfirmDialog(
-            categoryName = uiState.showDeleteConfirm?.name ?: "",
-            onDismiss = { viewModel.hideDeleteConfirm() },
-            onConfirm = {
-                uiState.showDeleteConfirm?.let { viewModel.deleteCategory(it) }
-            }
-        )
-    }
-
-    if (uiState.editingCategory != null) {
-        EditCategoryDialog(
-            currentName = uiState.editingCategory!!.name,
-            currentGroup = uiState.editingCategory!!.group,
-            onDismiss = { viewModel.hideEditDialog() },
-            onConfirm = { newName, newGroup ->
-                viewModel.updateCategory(uiState.editingCategory!!, newName, newGroup)
-            }
-        )
-    }
+    state.editingCategory?.let { category -> CategoryDialog(category, viewModel::hideEditDialog) { name, semantic, role ->
+        viewModel.updateCategory(category, name, if (semantic.family == WardrobeFamily.CLOTHING) CategoryGroup.CLOTHING else category.group, semantic, role)
+    } }
+    state.showDeleteConfirm?.let { category -> AlertDialog(onDismissRequest = viewModel::hideDeleteConfirm,
+        title = { Text("删除类型") }, text = { Text("确定删除“${category.name}”？有物品使用时需先迁移，物品不会被删除。") },
+        confirmButton = { TextButton(onClick = { viewModel.deleteCategory(category) }) { Text("删除") } },
+        dismissButton = { TextButton(onClick = viewModel::hideDeleteConfirm) { Text("取消") } }) }
+    state.pendingSemanticChange?.let { category -> AlertDialog(onDismissRequest = viewModel::cancelSemanticChange,
+        title = { Text("确认统一变更") }, text = { Text("${state.affectedItemCount} 件物品将使用“${category.categorySemantic.label}”及对应穿戴位置。原规格、图片和订单完整保留。") },
+        confirmButton = { TextButton(onClick = viewModel::confirmSemanticChange) { Text("确认变更") } },
+        dismissButton = { TextButton(onClick = viewModel::cancelSemanticChange) { Text("取消") } }) }
 }
 
 @Composable
-private fun CategoryCard(
-    category: Category,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit
-) {
-    LolitaCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    category.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    if (category.group == CategoryGroup.CLOTHING) "服装" else "配饰",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            IconButton(onClick = onEdit) {
-                SkinIcon(IconKey.Edit)
-            }
-
-            IconButton(
-                onClick = onDelete,
-                colors = IconButtonDefaults.iconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                SkinIcon(IconKey.Delete)
-            }
+private fun CategoryDialog(category: Category?, onDismiss: () -> Unit, onSave: (String, CategorySemantic, TryOnRole?) -> Unit) {
+    var name by remember { mutableStateOf(category?.name.orEmpty()) }
+    var semantic by remember { mutableStateOf(category?.categorySemantic ?: CategorySemantic.UNCONFIRMED) }
+    var family by remember { mutableStateOf(semantic.family) }
+    var role by remember { mutableStateOf(category?.defaultWearRole) }
+    var query by remember { mutableStateOf("") }
+    AlertDialog(onDismissRequest = onDismiss, title = { Text(if (category == null) "添加类型" else "编辑类型") }, text = {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedTextField(name, { name = it }, label = { Text("类型名称") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            Row(Modifier.horizontalScroll(rememberScrollState())) { WardrobeFamily.entries.forEach { value ->
+                FilterChip(selected = family == value, onClick = { family = value }, label = { Text(value.label) })
+            } }
+            OutlinedTextField(query, { query = it }, label = { Text("搜索语义类型") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            LazyColumn(Modifier.heightIn(max = 150.dp)) { items(CategorySemantic.entries.filter { it.family == family && it.label.contains(query, true) }) { candidate ->
+                TextButton(onClick = { semantic = candidate; role = null }) { Text("${if (semantic == candidate) "✓ " else ""}${candidate.label}") }
+            } }
+            Text("默认穿戴位置：${(role ?: semantic.defaultWearRole).label}")
+            Row(Modifier.horizontalScroll(rememberScrollState())) { TryOnRole.entries.forEach { value ->
+                FilterChip(selected = (role ?: semantic.defaultWearRole) == value, onClick = { role = value }, label = { Text(value.label) })
+            } }
         }
-    }
-}
-
-@Composable
-private fun AddCategoryDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (String, CategoryGroup) -> Unit
-) {
-    var categoryName by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-    var selectedGroup by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(CategoryGroup.CLOTHING) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("添加类型") },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = categoryName,
-                    onValueChange = { categoryName = it },
-                    label = { Text("类型名称") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    FilterChip(
-                        selected = selectedGroup == CategoryGroup.CLOTHING,
-                        onClick = { selectedGroup = CategoryGroup.CLOTHING },
-                        label = { Text("服装") }
-                    )
-                    FilterChip(
-                        selected = selectedGroup == CategoryGroup.ACCESSORY,
-                        onClick = { selectedGroup = CategoryGroup.ACCESSORY },
-                        label = { Text("配饰") }
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    if (categoryName.isNotBlank()) {
-                        onConfirm(categoryName, selectedGroup)
-                    }
-                }
-            ) {
-                SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("添加")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("取消")
-            }
-        }
-    )
-}
-
-@Composable
-private fun DeleteConfirmDialog(
-    categoryName: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("确认删除") },
-        text = { Text("确定要删除类型 \"$categoryName\" 吗？") },
-        confirmButton = {
-            TextButton(
-                onClick = onConfirm,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                SkinIcon(IconKey.Delete, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("删除")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("取消")
-            }
-        }
-    )
-}
-
-@Composable
-private fun EditCategoryDialog(
-    currentName: String,
-    currentGroup: CategoryGroup,
-    onDismiss: () -> Unit,
-    onConfirm: (String, CategoryGroup) -> Unit
-) {
-    var name by remember { mutableStateOf(currentName) }
-    var selectedGroup by remember { mutableStateOf(currentGroup) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("编辑类型") },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("类型名称") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    FilterChip(
-                        selected = selectedGroup == CategoryGroup.CLOTHING,
-                        onClick = { selectedGroup = CategoryGroup.CLOTHING },
-                        label = { Text("服装") }
-                    )
-                    FilterChip(
-                        selected = selectedGroup == CategoryGroup.ACCESSORY,
-                        onClick = { selectedGroup = CategoryGroup.ACCESSORY },
-                        label = { Text("配饰") }
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { if (name.isNotBlank()) onConfirm(name, selectedGroup) }) {
-                SkinIcon(IconKey.Save, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("保存")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("取消") }
-        }
-    )
+    }, confirmButton = { TextButton(enabled = name.isNotBlank() && semantic.family == family && (category != null || semantic != CategorySemantic.UNCONFIRMED), onClick = { onSave(name, semantic, role) }) { Text("保存") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("取消") } })
 }

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "brands",
-    indices = [Index(value = ["name"], unique = true)]
+    indices = [Index(value = ["name"], unique = true), Index(value = ["system_key"], unique = true)]
 )
 data class Brand(
     @ColumnInfo(name = "is_preset", defaultValue = "0")
@@ -24,5 +24,11 @@ data class Brand(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Long = 0
-)
+    val id: Long = 0,
+
+    @ColumnInfo(name = "system_key", defaultValue = "NULL")
+    val systemKey: String? = null
+) {
+    val isUnsetBrand: Boolean get() = systemKey == UNSET_BRAND_KEY
+    companion object { const val UNSET_BRAND_KEY = "unset_brand" }
+}

@@ -6,6 +6,9 @@ import com.lolita.app.data.local.entity.Category
 import com.lolita.app.data.local.LolitaDatabase
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
+import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.WardrobeFamily
+import com.lolita.app.data.local.entity.CategoryGroup
 
 class CategoryRepository(
     private val categoryDao: CategoryDao,
@@ -16,7 +19,14 @@ class CategoryRepository(
 
     suspend fun insertCategory(category: Category): Long = categoryDao.insertCategory(category)
 
-    suspend fun updateCategory(category: Category) = categoryDao.updateCategory(category)
+    suspend fun affectedItemCount(categoryId: Long): Int = itemDao.countItemsByCategory(categoryId)
+
+    suspend fun updateCategory(category: Category, confirmSemanticChange: Boolean = false) = database.withTransaction {
+        val original = categoryDao.getCategoryById(category.id) ?: error("类型不存在")
+        val changesMeaning = original.categorySemantic != category.categorySemantic || original.defaultWearRole != category.defaultWearRole
+        require(!changesMeaning || confirmSemanticChange || itemDao.countItemsByCategory(category.id) == 0) { "请先确认此类型全部物品的品类变更" }
+        categoryDao.updateCategory(category)
+    }
 
     suspend fun deleteCategory(category: Category) {
         database.withTransaction {
@@ -34,33 +44,13 @@ class CategoryRepository(
         return categoryDao.getCategoryByName(name)
     }
 
-    suspend fun ensurePresetCategories() {
-        val clothingNames = listOf("JSK", "OP", "SK")
-        val accessoryNames = listOf(
-            "KC", "斗篷", "披肩", "发带", "Bonnet",
-            "其他头饰", "袜子", "手套", "其他配饰"
-        )
-
-        clothingNames.forEach { name ->
-            if (getCategoryByName(name) == null) {
-                categoryDao.insertCategory(
-                    Category(
-                        name = name,
-                        isPreset = true,
-                        group = com.lolita.app.data.local.entity.CategoryGroup.CLOTHING
-                    )
-                )
-            }
-        }
-        accessoryNames.forEach { name ->
-            if (getCategoryByName(name) == null) {
-                categoryDao.insertCategory(
-                    Category(
-                        name = name,
-                        isPreset = true,
-                        group = com.lolita.app.data.local.entity.CategoryGroup.ACCESSORY
-                    )
-                )
+    suspend fun ensurePresetCategories() = database.withTransaction {
+        // Names are editable and old isPreset flags do not prove identity. Never reclassify old rows.
+        CategorySemantic.entries.filter { it != CategorySemantic.UNCONFIRMED }.forEach { semantic ->
+            if (categoryDao.getCategoryByName(semantic.label) == null) {
+                categoryDao.insertCategory(Category(name = semantic.label, isPreset = true,
+                    group = if (semantic.family == WardrobeFamily.CLOTHING) CategoryGroup.CLOTHING else CategoryGroup.ACCESSORY,
+                    categorySemantic = semantic))
             }
         }
     }

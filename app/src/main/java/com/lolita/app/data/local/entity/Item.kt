@@ -6,10 +6,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.lolita.app.domain.model.ItemComposition
 
 @Entity(
     tableName = "items",
     foreignKeys = [
+        ForeignKey(entity = StorageNode::class, parentColumns = ["id"], childColumns = ["storage_node_id"], onDelete = ForeignKey.RESTRICT),
         ForeignKey(
             entity = Coordinate::class,
             parentColumns = ["id"],
@@ -51,7 +53,8 @@ import androidx.room.PrimaryKey
         Index(value = ["priority"]),
         Index(value = ["location_id"]),
         Index(value = ["parent_item_id"]),
-        Index(value = ["import_token"], unique = true)
+        Index(value = ["import_token"], unique = true),
+        Index(value = ["storage_node_id"])
     ]
 )
 @Immutable
@@ -124,5 +127,14 @@ data class Item(
     val updatedAt: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "import_token", defaultValue = "NULL")
-    val importToken: String? = null
+    val importToken: String? = null,
+
+    @ColumnInfo(name = "specifications_json", defaultValue = "''")
+    val specificationsJson: String = "",
+
+    @ColumnInfo(name = "composition", defaultValue = "UNCONFIRMED")
+    val composition: ItemComposition = ItemComposition.UNCONFIRMED,
+
+    @ColumnInfo(name = "storage_node_id", defaultValue = "NULL")
+    val storageNodeId: Long? = null
 )

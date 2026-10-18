@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.item
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.withTransaction
@@ -10,6 +11,14 @@ import com.lolita.app.data.local.entity.ItemPriority
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.ItemPurchaseReview
 import com.lolita.app.data.local.entity.CategoryGroup
+import com.lolita.app.data.local.entity.ItemDraft
+import com.lolita.app.data.local.entity.ItemDraftData
+import com.lolita.app.data.local.entity.StorageNode
+import com.lolita.app.domain.model.*
+import com.lolita.app.data.repository.ItemDraftRepository
+import com.lolita.app.data.repository.StorageRepository
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import com.lolita.app.data.local.entity.Price
 import com.lolita.app.data.local.entity.Payment
 import com.lolita.app.data.local.dao.PriceWithPayments as DaoPriceWithPayments
@@ -64,6 +73,15 @@ data class ItemListUiState(
     val filterStatuses: Set<ItemStatus>? = null,
     val filterPendingPaymentOnly: Boolean = false,
     val filterGroup: CategoryGroup? = null,
+    val filterFamily: WardrobeFamily? = null,
+    val filterCategoryId: Long? = null,
+    val filterSize: String = "",
+    val filterLocationId: Long? = null,
+    val filterStorageNodeId: Long? = null,
+    val filterSpecification: String = "",
+    val categorySemantics: Map<Long, CategorySemantic> = emptyMap(),
+    val categoryOptions: List<com.lolita.app.data.local.entity.Category> = emptyList(),
+    val storageNodes: List<StorageNode> = emptyList(),
     val filterSeason: String? = null,
     val filterStyle: String? = null,
     val filterColor: String? = null,
@@ -95,6 +113,11 @@ data class ItemListUiState(
  * UI State for Item Edit Screen
  */
 data class ItemEditUiState(
+    val draftId: String? = null,
+    val specifications: WardrobeSpecifications = WardrobeSpecifications(),
+    val composition: ItemComposition = ItemComposition.UNCONFIRMED,
+    val storageNodeId: Long? = null,
+    val storageNodes: List<StorageNode> = emptyList(),
     val item: Item? = null,
     val name: String = "",
     val description: String = "",
@@ -120,6 +143,7 @@ data class ItemEditUiState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val recoveredImport: Boolean = false,
+    val draftError: String? = null,
     val loadError: String? = null,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
@@ -148,7 +172,8 @@ class ItemListViewModel(
     private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository(),
     private val outfitLogRepository: com.lolita.app.data.repository.OutfitLogRepository = com.lolita.app.di.AppModule.outfitLogRepository(),
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
-    private val currentTimeZone: () -> TimeZone = TimeZone::getDefault
+    private val currentTimeZone: () -> TimeZone = TimeZone::getDefault,
+    storageRepository: StorageRepository? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
@@ -173,6 +198,11 @@ class ItemListViewModel(
     val locationItemImages: StateFlow<Map<Long, List<String>>> = _locationItemImages.asStateFlow()
 
     init {
+        (storageRepository ?: runCatching {
+            if (itemRepository === com.lolita.app.di.AppModule.itemRepository()) com.lolita.app.di.AppModule.storageRepository() else null
+        }.getOrNull())?.let { repository -> viewModelScope.launch {
+            repository.observeNodes().collect { nodes -> _uiState.update { it.copy(storageNodes = nodes) }; refreshWardrobeFilters() }
+        } }
         loadItems()
         loadPreferences()
         loadTodayOutfit()
@@ -215,7 +245,7 @@ class ItemListViewModel(
 
     private fun loadLocations() {
         viewModelScope.launch {
-            locationRepository.getAllLocations().collect { _locations.value = it }
+            locationRepository.getAllLocations().collect { _locations.value = it; refreshWardrobeFilters() }
         }
         viewModelScope.launch {
             locationRepository.getItemCountsByLocation().collect { counts ->
@@ -267,14 +297,17 @@ class ItemListViewModel(
                 val brandLogoMap = brands.associate { it.id to it.logoUrl }
                 val categoryMap = categories.associate { it.id to it.name }
                 val groupMap = categories.associate { it.id to it.group }
+                val semanticMap = categories.associate { it.id to it.categorySemantic }
                 val priceMap = priceSums.associate { it.itemId to it.totalPrice }
                 val seasonOpts = items.flatMap { it.season?.split(",")?.map { s -> s.trim() }?.filter { s -> s.isNotBlank() } ?: emptyList() }.distinct().sorted()
                 val styleOpts = items.mapNotNull { it.style?.takeIf { s -> s.isNotBlank() } }.distinct().sorted()
                 val colorOpts = items.flatMap { item ->
                     item.colors
                 }.filter { it.isNotBlank() }.distinct().sorted()
-                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts, reviews)
+                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts, reviews, semanticMap, categories)
             }.collect { data ->
+                _uiState.update { it.copy(categorySemantics = data.semanticMap, categoryOptions = data.categories,
+                    brandNames = data.brandMap, categoryNames = data.categoryMap) }
                 val currentState = _uiState.value
                 val filtered = applyFilters(
                     data.items, currentState.filterStatus, currentState.searchQuery, currentState.filterGroup,
@@ -318,7 +351,9 @@ class ItemListViewModel(
         val seasonOpts: List<String>,
         val styleOpts: List<String>,
         val colorOpts: List<String>,
-        val purchaseReviews: List<ItemPurchaseReview>
+        val purchaseReviews: List<ItemPurchaseReview>,
+        val semanticMap: Map<Long, CategorySemantic>,
+        val categories: List<com.lolita.app.data.local.entity.Category>
     )
 
     private fun updateTotalPrice(filteredItems: List<Item>) {
@@ -349,7 +384,7 @@ class ItemListViewModel(
                 item = item,
                 brandName = brandNames[item.brandId],
                 brandLogoUrl = brandLogoUrls[item.brandId],
-                categoryName = categoryNames[item.categoryId],
+                categoryName = categoryNames[item.categoryId]?.let { if (item.parentItemId != null) "$it · 配套小物" else it },
                 itemPrice = itemPrices[item.id],
                 showPrice = showPrice
             )
@@ -371,7 +406,7 @@ class ItemListViewModel(
                     item = item,
                     brandName = brandNames[item.brandId],
                     brandLogoUrl = brandLogoUrls[item.brandId],
-                    categoryName = categoryNames[item.categoryId],
+                    categoryName = categoryNames[item.categoryId]?.let { if (item.parentItemId != null) "$it · 配套小物" else it },
                     itemPrice = itemPrices[item.id],
                     showPrice = showPrice
                 )
@@ -563,6 +598,27 @@ class ItemListViewModel(
         }
     }
 
+    fun filterByFamily(family: WardrobeFamily?) {
+        _uiState.update { it.copy(filterFamily = family, filterGroup = null, filterCategoryId = null, filterSpecification = "") }
+        refreshWardrobeFilters()
+    }
+    fun filterByCategory(categoryId: Long?) { _uiState.update { it.copy(filterCategoryId = categoryId) }; refreshWardrobeFilters() }
+    fun filterBySize(raw: String) { _uiState.update { it.copy(filterSize = raw) }; refreshWardrobeFilters() }
+    fun filterByStorage(roomId: Long?, nodeId: Long?) {
+        _uiState.update { it.copy(filterLocationId = roomId, filterStorageNodeId = nodeId) }; refreshWardrobeFilters()
+    }
+    fun filterBySpecification(raw: String) { _uiState.update { it.copy(filterSpecification = raw) }; refreshWardrobeFilters() }
+    private fun refreshWardrobeFilters() {
+        val state = _uiState.value
+        val result = applySorting(applyFilters(state.items, state.filterStatus, state.searchQuery, state.filterGroup,
+            state.categoryGroups, state.filterSeason, state.filterStyle, state.filterColor, state.filterBrandId,
+            state.filterStatuses, state.filterPendingPaymentOnly), state.sortOption, state.itemPrices)
+        _uiState.update { it.copy(filteredItems = result,
+            itemCardDataList = buildItemCardDataList(result, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice),
+            galleryCardDataList = if (it.viewMode == ViewMode.GALLERY) buildGalleryCardDataList(result, it.brandNames, it.brandLogoUrls, it.categoryNames, it.itemPrices, it.showTotalPrice) else emptyList()) }
+        updateTotalPrice(result)
+    }
+
     private fun applyFilters(
         items: List<Item>,
         status: ItemStatus?,
@@ -576,8 +632,25 @@ class ItemListViewModel(
         statuses: Set<ItemStatus>? = null,
         pendingPaymentOnly: Boolean = false
     ): List<Item> {
-        // Parts remain searchable but do not crowd the default wardrobe overview.
-        var result = if (query.isBlank() && !pendingPaymentOnly) items.filter { it.parentItemId == null } else items
+        val state = _uiState.value
+        val hasExplicitFilter = group != null || state.filterFamily != null || state.filterCategoryId != null ||
+            state.filterSize.isNotBlank() || state.filterLocationId != null || state.filterStorageNodeId != null ||
+            season != null || style != null || color != null || brandId != null
+        var result = if (query.isBlank() && !pendingPaymentOnly && !hasExplicitFilter) items.filter { it.parentItemId == null } else items
+        state.filterFamily?.let { family -> result = result.filter { state.categorySemantics[it.categoryId]?.family == family } }
+        state.filterCategoryId?.let { category -> result = result.filter { it.categoryId == category } }
+        if (state.filterSize.isNotBlank()) result = result.filter { it.size.orEmpty().contains(state.filterSize, true) }
+        state.filterLocationId?.let { room -> result = result.filter { it.locationId == room } }
+        state.filterStorageNodeId?.let { node -> result = result.filter { it.storageNodeId == node } }
+        if (state.filterSpecification.isNotBlank()) result = result.filter { item ->
+            val specs = WardrobeSpecifications.decode(item.specificationsJson)
+            val values = when (state.filterFamily) {
+                WardrobeFamily.WIG -> listOf(specs.wig.lengthCm, specs.wig.curl)
+                WardrobeFamily.FOOTWEAR -> listOf(specs.footwear.sizeText, specs.footwear.sizeSystem, specs.footwear.heelHeightCm)
+                else -> emptyList()
+            }
+            values.any { it.contains(state.filterSpecification, true) }
+        }
 
         if (pendingPaymentOnly) {
             result = result.filter { it.status == ItemStatus.PENDING_BALANCE || it.status == ItemStatus.PENDING_PAYMENT }
@@ -612,7 +685,11 @@ class ItemListViewModel(
         }
 
         if (query.isNotBlank()) {
-            result = result.filter { it.name.contains(query, ignoreCase = true) }
+            result = result.filter { item ->
+                val path = item.locationId?.let { room -> com.lolita.app.domain.model.StorageTree.pathFor(room, item.storageNodeId, _locations.value, state.storageNodes) }.orEmpty()
+                listOf(item.name, state.brandNames[item.brandId].orEmpty(), state.categoryNames[item.categoryId].orEmpty(), path)
+                    .plus(item.colors).any { it.contains(query, ignoreCase = true) }
+            }
         }
 
         return result
@@ -709,7 +786,10 @@ class ItemEditViewModel(
     private val styleRepository: StyleRepository = com.lolita.app.di.AppModule.styleRepository(),
     private val seasonRepository: SeasonRepository = com.lolita.app.di.AppModule.seasonRepository(),
     private val sourceRepository: SourceRepository = com.lolita.app.di.AppModule.sourceRepository(),
-    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository()
+    private val locationRepository: com.lolita.app.data.repository.LocationRepository = com.lolita.app.di.AppModule.locationRepository(),
+    draftRepository: ItemDraftRepository? = null,
+    storageRepository: StorageRepository? = null,
+    private val savedStateHandle: SavedStateHandle = SavedStateHandle()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemEditUiState())
@@ -731,6 +811,114 @@ class ItemEditViewModel(
     private var loadJob: Job? = null
     private var currentImportToken: String? = null
 
+    private val drafts = draftRepository ?: runCatching {
+        if (itemRepository === com.lolita.app.di.AppModule.itemRepository()) com.lolita.app.di.AppModule.itemDraftRepository() else null
+    }.getOrNull()
+    private val storage = storageRepository ?: runCatching {
+        if (itemRepository === com.lolita.app.di.AppModule.itemRepository()) com.lolita.app.di.AppModule.storageRepository() else null
+    }.getOrNull()
+    private val draftMutex = Mutex()
+    private var discardInProgress = false
+
+    init {
+        viewModelScope.launch {
+            _uiState.collect { state ->
+                if (drafts != null && state.draftId != null && !state.isLoading && !state.isSaving &&
+                    state.loadError == null && hasUnsavedChanges && !discardInProgress) {
+                    runCatching { draftMutex.withLock {
+                        val latest = _uiState.value
+                        if (!latest.isSaving && !discardInProgress && hasUnsavedChanges && latest.draftId == state.draftId) persistDraft(latest)
+                    } }
+                        .onFailure { failure -> _uiState.update { it.copy(draftError = "草稿保存失败：${failure.message}") } }
+                }
+            }
+        }
+        storage?.let { repository -> viewModelScope.launch {
+            repository.observeNodes().collect { nodes -> _uiState.update { it.copy(storageNodes = nodes) } }
+        } }
+    }
+
+    private fun snapshotDraft(state: ItemEditUiState): ItemDraft = ItemDraft(
+        id = requireNotNull(state.draftId), targetItemId = state.item?.id,
+        imagePaths = state.imageUrls, sizeChartImagePaths = listOfNotNull(state.sizeChartImageUrl) + state.sizeChartImageUrls,
+        dataJson = ItemDraftData(name = state.name, description = state.description, brandId = state.brandId,
+            categoryId = state.categoryId, coordinateId = state.coordinateId, parentItemId = state.parentItemId,
+            includedInParentPrice = state.includedInParentPrice, status = state.status, priority = state.priority,
+            colors = state.colors, seasons = state.seasons, style = state.style, size = state.size, source = state.source,
+            locationId = state.locationId, storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(),
+            composition = state.composition, importToken = currentImportToken, baselineUpdatedAt = state.item?.updatedAt).encode())
+
+    private suspend fun persistDraft(state: ItemEditUiState = _uiState.value) {
+        drafts?.let { repository ->
+            val snapshot = snapshotDraft(state)
+            val previous = repository.get(snapshot.id)
+            repository.save(snapshot.copy(evidenceImagePaths = previous?.evidenceImagePaths.orEmpty(),
+                dataJson = snapshot.data().copy(recognitionSessionIds = previous?.data()?.recognitionSessionIds.orEmpty()).encode()))
+        }
+    }
+
+    private suspend fun restoreDraft(identity: EditorIdentity) {
+        if (drafts == null) return
+        val restored = if (identity.itemId > 0) drafts.getForItem(identity.itemId)
+            else savedStateHandle.get<String>("itemDraftId")?.let { drafts.get(it) }
+                ?: if (identity.importedDraftJson == null && identity.defaultParentItemId == null) drafts.latestNew() else null
+        val id = restored?.id ?: java.util.UUID.randomUUID().toString()
+        savedStateHandle["itemDraftId"] = id
+        if (restored == null) { _uiState.update { it.copy(draftId = id) }; return }
+        val data = restored.data()
+        require(restored.targetItemId == null || restored.targetItemId == _uiState.value.item?.id) { "草稿对应的物品已删除" }
+        currentImportToken = data.importToken
+        _uiState.update { it.copy(draftId = id, name = data.name, description = data.description,
+            brandId = data.brandId, categoryId = data.categoryId, coordinateId = data.coordinateId,
+            parentItemId = data.parentItemId, includedInParentPrice = data.includedInParentPrice,
+            status = data.status, priority = data.priority, colors = data.colors, seasons = data.seasons,
+            style = data.style, size = data.size, source = data.source, locationId = data.locationId,
+            storageNodeId = data.storageNodeId, specifications = WardrobeSpecifications.decode(data.specificationsJson),
+            composition = data.composition, imageUrls = restored.imagePaths,
+            sizeChartImageUrl = restored.sizeChartImagePaths.firstOrNull(), sizeChartImageUrls = restored.sizeChartImagePaths.drop(1)) }
+        hasUnsavedChanges = true
+    }
+
+    fun selectDraft(id: String?) {
+        if (id != null && requestedIdentity == null) savedStateHandle["itemDraftId"] = id
+    }
+
+    suspend fun copyToNewDraft(): String {
+        val itemId = _uiState.value.item?.id ?: error("物品尚未读取完成")
+        return checkNotNull(drafts) { "无法创建物品草稿" }.copyFromItem(itemId)
+    }
+
+    suspend fun keepDraft() {
+        if (hasUnsavedChanges && drafts != null && _uiState.value.draftId != null) draftMutex.withLock { persistDraft() }
+        if (drafts == null) cleanupNewImages()
+    }
+
+    suspend fun discardDraft() {
+        discardInProgress = true
+        draftMutex.withLock { _uiState.value.draftId?.let { drafts?.discard(it) } }
+        savedStateHandle.remove<String>("itemDraftId")
+        hasUnsavedChanges = false
+        cleanupNewImages()
+    }
+
+    fun updateSpecifications(value: WardrobeSpecifications) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(specifications = value) }
+    }
+
+    fun updateComposition(value: ItemComposition) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(composition = value) }
+    }
+
+    fun updateStorage(locationId: Long?, nodeId: Long?) {
+        if (_uiState.value.isLoading || _uiState.value.isSaving) return
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(locationId = locationId, storageNodeId = nodeId) }
+    }
+
     fun loadItem(itemId: Long, defaultStatus: String = "", defaultParentItemId: Long? = null, importedDraftJson: String? = null) {
         if (_uiState.value.isSaving) return
         val identity = EditorIdentity(itemId, if (itemId > 0) "" else defaultStatus,
@@ -742,6 +930,7 @@ class ItemEditViewModel(
         if (requestedIdentity != identity) {
             cleanupNewImages()
         }
+        discardInProgress = false
         locationJob?.cancel()
         locationJob = null
         supportingDataLoaded.set(false)
@@ -780,6 +969,8 @@ class ItemEditViewModel(
                                 name = item.name,
                                 description = item.description,
                                 brandId = item.brandId,
+                                specifications = WardrobeSpecifications.decode(item.specificationsJson),
+                                composition = item.composition, storageNodeId = item.storageNodeId,
                                 categoryId = item.categoryId,
                                 coordinateId = item.coordinateId,
                                 parentItemId = item.parentItemId,
@@ -804,6 +995,7 @@ class ItemEditViewModel(
                     } else {
                         error("服饰不存在，请重试")
                     }
+                    restoreDraft(identity)
                     loadedIdentity = identity
                     if (committedImport != null) {
                         ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
@@ -830,7 +1022,7 @@ class ItemEditViewModel(
                         item = null,
                         name = "",
                         description = "",
-                        brandId = defaultParent?.brandId ?: 0L,
+                        brandId = defaultParent?.brandId ?: current.brands.firstOrNull { it.isUnsetBrand }?.id ?: 0L,
                         categoryId = 0L,
                         coordinateId = defaultParent?.coordinateId,
                         parentItemId = defaultParentItemId,
@@ -865,6 +1057,7 @@ class ItemEditViewModel(
                             status = ItemStatus.WISHED) }
                         hasUnsavedChanges = true
                 }
+                restoreDraft(identity)
                 observeHierarchy(0L)
                 loadedIdentity = identity
             } catch (failure: Exception) {
@@ -935,12 +1128,15 @@ class ItemEditViewModel(
     private suspend fun loadReferenceData() {
         if (supportingDataLoaded.get()) return
 
+        brandRepository.ensureUnsetBrand()
+        categoryRepository.ensurePresetCategories()
         val brands = brandRepository.getAllBrands().first()
         val categories = categoryRepository.getAllCategories().first()
         val coordinates = coordinateRepository.getAllCoordinates().first()
         val styles = styleRepository.getAllStyles().first()
         val seasons = seasonRepository.getAllSeasons().first()
         val sources = sourceRepository.getAllSources().first()
+        val storageNodes = storage?.getNodes().orEmpty()
 
         _uiState.update {
             it.copy(
@@ -949,7 +1145,8 @@ class ItemEditViewModel(
                 coordinates = coordinates,
                 styleOptions = styles.map { style -> style.name },
                 seasonOptions = seasons.map { season -> season.name },
-                sourceOptions = sources.map { source -> source.name }
+                sourceOptions = sources.map { source -> source.name },
+                storageNodes = storageNodes
             )
         }
         supportingDataLoaded.set(true)
@@ -1153,7 +1350,7 @@ class ItemEditViewModel(
 
     fun isValid(): Boolean {
         val state = _uiState.value
-        return state.name.isNotBlank() && state.brandId != 0L && state.categoryId != 0L
+        return state.name.isNotBlank() && state.categoryId != 0L
     }
 
     // The VM owns persistence; a recreated screen may cancel its await without cancelling the save.
@@ -1181,10 +1378,6 @@ class ItemEditViewModel(
             return Result.failure(Exception("请输入服饰名称"))
         }
 
-        if (state.brandId == 0L) {
-            return Result.failure(Exception("请选择品牌"))
-        }
-
         if (state.categoryId == 0L) {
             return Result.failure(Exception("请选择类型"))
         }
@@ -1193,13 +1386,14 @@ class ItemEditViewModel(
 
         return try {
             val now = System.currentTimeMillis()
+            val resolvedBrandId = state.brandId.takeIf { it > 0 } ?: brandRepository.ensureUnsetBrand()
             val seasonStr = state.seasons.takeIf { it.isNotEmpty() }?.joinToString(",")
             val item = if (state.item != null) {
                 // Update existing item
                 state.item.copy(
                     name = state.name,
                     description = state.description,
-                    brandId = state.brandId,
+                    brandId = resolvedBrandId,
                     categoryId = state.categoryId,
                     coordinateId = state.coordinateId,
                     parentItemId = state.parentItemId,
@@ -1215,6 +1409,7 @@ class ItemEditViewModel(
                     sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
                     locationId = state.locationId,
+                    storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(), composition = state.composition,
                     updatedAt = now
                 )
             } else {
@@ -1224,7 +1419,7 @@ class ItemEditViewModel(
                     coordinateId = state.coordinateId,
                     parentItemId = state.parentItemId,
                     includedInParentPrice = state.includedInParentPrice,
-                    brandId = state.brandId,
+                    brandId = resolvedBrandId,
                     categoryId = state.categoryId,
                     name = state.name,
                     description = state.description,
@@ -1239,18 +1434,22 @@ class ItemEditViewModel(
                     sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
                     locationId = state.locationId,
+                    storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(), composition = state.composition,
                     createdAt = now,
                     updatedAt = now,
                     importToken = currentImportToken
                 )
             }
 
-            val savedItemId = if (state.item != null) {
-                itemRepository.updateItem(item)
-                item.id
-            } else {
-                itemRepository.insertItem(item)
+            val savedItemId = draftMutex.withLock {
+                if (drafts != null && state.draftId != null) {
+                    persistDraft(state)
+                    drafts.commit(state.draftId, item)
+                } else if (state.item != null) {
+                    itemRepository.updateItem(item); item.id
+                } else itemRepository.insertItem(item)
             }
+            savedStateHandle.remove<String>("itemDraftId")
             // Store the committed identity before any further suspension.
             _uiState.update { it.copy(item = item.copy(id = savedItemId)) }
             ImageFileHelper.cleanupUnreferencedImages(
@@ -1293,7 +1492,8 @@ class ItemEditViewModel(
     }
 
     override fun onCleared() {
-        cleanupNewImages()
+        // Durable draft owns its images until explicit discard or commit.
+        if (drafts == null || _uiState.value.draftId == null) cleanupNewImages()
         super.onCleared()
     }
 

@@ -156,17 +156,18 @@ private fun BrandCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    brand.name,
+                    if (brand.isUnsetBrand) "未设置品牌" else brand.name,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
 
-            IconButton(onClick = onEdit) {
+            IconButton(onClick = onEdit, enabled = brand.systemKey == null) {
                 SkinIcon(IconKey.Edit)
             }
 
             IconButton(
                 onClick = onDelete,
+                enabled = brand.systemKey == null,
                 colors = IconButtonDefaults.iconButtonColors(
                     contentColor = MaterialTheme.colorScheme.error
                 )

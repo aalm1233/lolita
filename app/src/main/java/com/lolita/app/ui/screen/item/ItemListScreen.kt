@@ -3,6 +3,8 @@ package com.lolita.app.ui.screen.item
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -65,6 +67,8 @@ import kotlinx.coroutines.launch
 import com.lolita.app.data.local.entity.Item
 import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.data.local.entity.CategoryGroup
+import com.lolita.app.domain.model.WardrobeFamily
+import com.lolita.app.ui.screen.common.StorageLocationPicker
 import com.lolita.app.ui.screen.common.SkinEmptyState
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SortOption
@@ -157,7 +161,8 @@ fun ItemListScreen(
     val coroutineScope = rememberCoroutineScope()
     val activeFilterCount = listOfNotNull(
         uiState.filterSeason, uiState.filterStyle, uiState.filterColor,
-        uiState.filterBrandId?.let { "" }
+        uiState.filterBrandId?.let { "" }, uiState.filterFamily?.let { "" }, uiState.filterCategoryId?.let { "" },
+        uiState.filterLocationId?.let { "" }, uiState.filterStorageNodeId?.let { "" }, uiState.filterSize.takeIf { it.isNotBlank() }, uiState.filterSpecification.takeIf { it.isNotBlank() }
     ).size
 
     // Auto-focus search field when entering search mode
@@ -364,7 +369,8 @@ fun ItemListScreen(
                     onSeasonSelected = { viewModel.filterBySeason(it) },
                     onStyleSelected = { viewModel.filterByStyle(it) },
                     onColorSelected = { viewModel.filterByColor(it) },
-                    onBrandSelected = { viewModel.filterByBrand(it) }
+                    onBrandSelected = { viewModel.filterByBrand(it) },
+                    viewModel = viewModel, locations = viewModel.locations.collectAsState().value
                 )
             }
 
@@ -385,27 +391,15 @@ fun ItemListScreen(
             if (pagerState.currentPage == 1) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().horizontalScroll(rememberScrollState())
                         .padding(horizontal = 12.dp, vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    val groupOptions = listOf<Pair<String, CategoryGroup?>>(
-                        "全部" to null,
-                        "服装" to CategoryGroup.CLOTHING,
-                        "小物" to CategoryGroup.ACCESSORY
-                    )
-                    groupOptions.forEach { (label, group) ->
-                        FilterChip(
-                            selected = uiState.filterGroup == group,
-                            onClick = { viewModel.filterByGroup(group) },
-                            label = { Text(label, fontSize = 12.sp) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                selectedLabelColor = MaterialTheme.colorScheme.primary
-                            ),
-                            modifier = Modifier.height(24.dp)
-                        )
+                    val familyOptions = listOf<Pair<String, WardrobeFamily?>>("全部" to null) + WardrobeFamily.entries.map { it.label to it }
+                    familyOptions.forEach { (label, family) ->
+                        FilterChip(selected = uiState.filterFamily == family,
+                            onClick = { viewModel.filterByFamily(family) }, label = { Text(label, fontSize = 12.sp) })
                     }
                     FilterChip(
                         selected = uiState.filterPendingPaymentOnly,
@@ -1327,7 +1321,9 @@ private fun FilterPanel(
     onSeasonSelected: (String?) -> Unit,
     onStyleSelected: (String?) -> Unit,
     onColorSelected: (String?) -> Unit,
-    onBrandSelected: (Long?) -> Unit
+    onBrandSelected: (Long?) -> Unit,
+    viewModel: ItemListViewModel,
+    locations: List<com.lolita.app.data.local.entity.Location>
 ) {
     // Collect brand options that items actually use
     val usedBrandIds = uiState.items.map { it.brandId }.toSet()
@@ -1343,6 +1339,16 @@ private fun FilterPanel(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            WardrobeCategorySelector(uiState.filterCategoryId ?: 0L,
+                uiState.categoryOptions.filter { uiState.filterFamily == null || it.categorySemantic.family == uiState.filterFamily },
+                { viewModel.filterByCategory(it) })
+            if (uiState.filterCategoryId != null) TextButton(onClick = { viewModel.filterByCategory(null) }) { Text("清除类型筛选") }
+            OutlinedTextField(uiState.filterSize, viewModel::filterBySize, label = { Text("筛选原始尺码") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            StorageLocationPicker(uiState.filterLocationId, uiState.filterStorageNodeId, locations, uiState.storageNodes, viewModel::filterByStorage)
+            if (uiState.filterFamily == WardrobeFamily.WIG || uiState.filterFamily == WardrobeFamily.FOOTWEAR) {
+                OutlinedTextField(uiState.filterSpecification, viewModel::filterBySpecification,
+                    label = { Text(if (uiState.filterFamily == WardrobeFamily.WIG) "发长或直卷" else "鞋码或跟高") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            }
             // Season
             if (uiState.seasonOptions.isNotEmpty()) {
                 FilterOptionRow(

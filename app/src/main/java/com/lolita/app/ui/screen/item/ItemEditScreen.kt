@@ -25,6 +25,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lolita.app.ui.screen.common.StorageLocationPicker
+import com.lolita.app.domain.model.CategorySemantic
 import com.lolita.app.ui.screen.common.LolitaShimmerImage
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemPriority
@@ -54,34 +56,34 @@ fun ItemEditScreen(
     defaultParentItemId: Long? = null,
     onBack: () -> Unit,
     onSaveSuccess: () -> Unit,
+    draftId: String? = null,
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    var showError by remember { mutableStateOf<String?>(null) }
     val exitEditor: () -> Unit = {
-        if (!viewModel.uiState.value.isSaving) {
-            viewModel.cleanupNewImages()
-            onBack()
+        if (!viewModel.uiState.value.isSaving) coroutineScope.launch {
+            runCatching { viewModel.keepDraft() }.onSuccess { onBack() }.onFailure { showError = it.message }
         }
     }
 
     val canEdit = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null
-    val coroutineScope = rememberCoroutineScope()
-    var showError by remember { mutableStateOf<String?>(null) }
     var hasAttemptedSave by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
 
-    UnsavedChangesHandler(
-        hasUnsavedChanges = !uiState.isSaving && viewModel.hasUnsavedChanges,
-        onBack = { if (!viewModel.uiState.value.isSaving) exitEditor() }
-    )
+    androidx.activity.compose.BackHandler {
+        if (!uiState.isSaving) { if (viewModel.hasUnsavedChanges) showDiscardDialog = true else exitEditor() }
+    }
 
     val importProgress = remember(importedDraftJson) { importedDraftJson?.let { json ->
         runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
     } }
 
     // Load item data if editing
-    LaunchedEffect(itemId, defaultStatus, defaultParentItemId, importedDraftJson) {
+    LaunchedEffect(itemId, defaultStatus, defaultParentItemId, importedDraftJson, draftId) {
+        viewModel.selectDraft(draftId)
         viewModel.loadItem(
             itemId = itemId ?: 0L,
             defaultStatus = defaultStatus,
@@ -93,6 +95,8 @@ fun ItemEditScreen(
     LaunchedEffect(uiState.recoveredImport) {
         if (uiState.recoveredImport) onSaveSuccess()
     }
+
+    LaunchedEffect(uiState.draftError) { uiState.draftError?.let { showError = it } }
 
     // Show error dialog
     if (showError != null) {
@@ -146,16 +150,17 @@ fun ItemEditScreen(
         AlertDialog(
             onDismissRequest = { showDiscardDialog = false },
             title = { Text("确认返回") },
-            text = { Text("有未保存的修改，确定要返回吗？") },
+            text = { Text("可保留草稿，稍后继续编辑；放弃更改只清理本次草稿。") },
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
                     if (!viewModel.uiState.value.isSaving) exitEditor()
-                }, enabled = !uiState.isSaving) { Text("返回") }
+                }, enabled = !uiState.isSaving) { Text("保留草稿并返回") }
             },
             dismissButton = {
-                TextButton(onClick = { showDiscardDialog = false }) {
-                    Text("继续编辑")
+                Column {
+                    TextButton(onClick = { coroutineScope.launch { viewModel.discardDraft(); onBack() } }, enabled = !uiState.isSaving) { Text("放弃更改") }
+                    TextButton(onClick = { showDiscardDialog = false }) { Text("继续编辑") }
                 }
             }
         )
@@ -175,7 +180,7 @@ fun ItemEditScreen(
         containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
-                title = { Text(if (itemId == null) "添加服饰" else "编辑服饰") },
+                title = { Text(if (itemId == null) "添加物品" else "编辑物品") },
                 navigationIcon = {
                     IconButton(enabled = !uiState.isSaving, onClick = {
                         if (viewModel.uiState.value.isSaving) return@IconButton
@@ -199,7 +204,7 @@ fun ItemEditScreen(
                                     .onFailure { showError = it.message }
                             }
                         },
-                        enabled = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null && uiState.name.isNotBlank() && uiState.brandId != 0L && uiState.categoryId != 0L
+                        enabled = !uiState.isLoading && !uiState.isSaving && uiState.loadError == null && uiState.name.isNotBlank() && uiState.categoryId != 0L
                     ) {
                         if (uiState.isSaving) {
                             CircularProgressIndicator(
@@ -243,7 +248,7 @@ fun ItemEditScreen(
                     value = uiState.name,
                     onValueChange = { viewModel.updateName(it) },
                     enabled = canEdit,
-                    label = { Text("服饰名称 *") },
+                    label = { Text("物品名称 *") },
                     placeholder = { Text("例如：梦幻童话JSK") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
@@ -271,7 +276,7 @@ fun ItemEditScreen(
                     selectedBrandId = uiState.brandId,
                     brands = uiState.brands,
                     onBrandSelected = { viewModel.updateBrand(it) },
-                    isError = hasAttemptedSave && uiState.brandId == 0L
+                    isError = false
                 )
 
                 // Category selector
@@ -281,6 +286,12 @@ fun ItemEditScreen(
                     categories = uiState.categories,
                     onCategorySelected = { viewModel.updateCategory(it) },
                     isError = hasAttemptedSave && uiState.categoryId == 0L
+                )
+
+                WardrobeSpecificationEditor(
+                    semantic = uiState.categories.firstOrNull { it.id == uiState.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED,
+                    specifications = uiState.specifications, composition = uiState.composition, enabled = canEdit,
+                    onSpecifications = viewModel::updateSpecifications, onComposition = viewModel::updateComposition
                 )
 
                 // Coordinate selector (optional)
@@ -304,12 +315,9 @@ fun ItemEditScreen(
                 )
 
                 // Location selector (optional)
-                LocationSelector(
-                    enabled = canEdit,
-                    selectedLocationId = uiState.locationId,
-                    locations = uiState.locations,
-                    onLocationSelected = { viewModel.updateLocation(it) }
-                )
+                StorageLocationPicker(selectedLocationId = uiState.locationId, selectedNodeId = uiState.storageNodeId,
+                    locations = uiState.locations, nodes = uiState.storageNodes,
+                    onLocationSelected = viewModel::updateStorage, enabled = canEdit)
 
                 // Status selector
                 if (uiState.includedInParentPrice || uiState.pricesWithPayments.isNotEmpty() || uiState.legacyPriceCount > 0) {
@@ -527,43 +535,7 @@ private fun CategorySelector(
     onCategorySelected: (Long) -> Unit,
     isError: Boolean = false
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded && enabled,
-        onExpandedChange = { if (enabled) expanded = !expanded }
-    ) {
-        OutlinedTextField(
-            value = categories.find { it.id == selectedCategoryId }?.name ?: "",
-            onValueChange = {},
-            readOnly = true,
-            enabled = enabled,
-            label = { Text("类型 *") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled),
-            isError = isError,
-            supportingText = if (isError) {
-                { Text("请选择类型") }
-            } else null
-        )
-
-        ExposedDropdownMenu(
-            expanded = expanded && enabled,
-            onDismissRequest = { expanded = false }
-        ) {
-            categories.forEach { category ->
-                DropdownMenuItem(
-                    text = { Text(category.name) },
-                    onClick = {
-                        onCategorySelected(category.id)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
+    WardrobeCategorySelector(selectedCategoryId, categories, onCategorySelected, enabled, isError)
 }
 
 /**

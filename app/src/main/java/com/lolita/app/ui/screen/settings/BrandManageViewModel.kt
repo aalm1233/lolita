@@ -67,6 +67,7 @@ class BrandManageViewModel(
     }
 
     fun showDeleteConfirm(brand: Brand) {
+        if (brand.systemKey != null) return
         _uiState.value = _uiState.value.copy(showDeleteConfirm = brand)
     }
 
@@ -93,6 +94,7 @@ class BrandManageViewModel(
     }
 
     fun showEditDialog(brand: Brand) {
+        if (brand.systemKey != null) return
         _uiState.value = _uiState.value.copy(editingBrand = brand)
     }
 
@@ -107,7 +109,7 @@ class BrandManageViewModel(
                 hideEditDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "重命名失败：品牌名称已存在"
+                    errorMessage = e.message ?: "修改失败"
                 )
             }
         }

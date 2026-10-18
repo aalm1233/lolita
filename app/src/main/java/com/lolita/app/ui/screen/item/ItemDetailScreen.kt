@@ -68,6 +68,8 @@ fun ItemDetailScreen(
     onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem,
     onNavigateToTryOn: (Long) -> Unit = {},
     onNavigateToMannequin: (Long) -> Unit = {},
+    onNavigateToLocation: (Long) -> Unit = {},
+    onCopyToNew: (String) -> Unit = {},
     viewModel: ItemEditViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -438,7 +440,7 @@ fun ItemDetailScreen(
                                     ) {
                                         BrandLogo(brand = brand, size = 20.dp)
                                         Text(
-                                            text = brand?.name ?: "未知",
+                                            text = if (brand?.isUnsetBrand == true) "未设置品牌" else brand?.name ?: "未知",
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium
                                         )
@@ -477,6 +479,22 @@ fun ItemDetailScreen(
                             }
                             item.source?.let { source ->
                                 if (source.isNotEmpty()) row { DetailRow(label = "来源", value = source) }
+                            }
+                        }
+
+                        TextButton(onClick = { coroutineScope.launch {
+                            runCatching { viewModel.copyToNewDraft() }.onSuccess(onCopyToNew).onFailure { showError = it.message }
+                        } }, modifier = Modifier.fillMaxWidth()) { Text("复制资料为新物品") }
+
+                        WardrobeSpecificationDetails(
+                            uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic ?: com.lolita.app.domain.model.CategorySemantic.UNCONFIRMED,
+                            com.lolita.app.domain.model.WardrobeSpecifications.decode(item.specificationsJson), item.composition)
+
+                        item.locationId?.let { roomId ->
+                            LolitaSection("存放位置") {
+                                row { TextButton(onClick = { onNavigateToLocation(roomId) }, modifier = Modifier.fillMaxWidth()) {
+                                    Text(com.lolita.app.domain.model.StorageTree.pathFor(roomId, item.storageNodeId, uiState.locations, uiState.storageNodes))
+                                } }
                             }
                         }
 

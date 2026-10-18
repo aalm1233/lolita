@@ -16,13 +16,33 @@ class BrandRepository(
 ) {
     fun getAllBrands(): Flow<List<Brand>> = brandDao.getAllBrands()
 
-    suspend fun insertBrand(brand: Brand): Long =
-        builtInLibrary?.insertBrand(brand) ?: brandDao.insertBrand(brand)
+    suspend fun insertBrand(brand: Brand): Long {
+        require(brand.systemKey == null) { "系统品牌不能手动创建" }
+        return builtInLibrary?.insertBrand(brand) ?: brandDao.insertBrand(brand)
+    }
 
-    suspend fun updateBrand(brand: Brand) = brandDao.updateBrand(brand)
+    suspend fun ensureUnsetBrand(): Long = database.withTransaction {
+        val brands = brandDao.getAllBrandsList()
+        brands.firstOrNull { it.systemKey == Brand.UNSET_BRAND_KEY }?.let { return@withTransaction it.id }
+        val names = brands.map { it.name }.toSet()
+        var name = "未设置品牌"
+        var suffix = 0
+        while (name in names) {
+            name = "未设置品牌（系统${if (suffix == 0) "" else suffix.toString()}）"
+            suffix++
+        }
+        brandDao.insertBrand(Brand(name = name, systemKey = Brand.UNSET_BRAND_KEY))
+    }
+
+    suspend fun updateBrand(brand: Brand) = database.withTransaction {
+        val original = brandDao.getAllBrandsList().firstOrNull { it.id == brand.id } ?: error("品牌不存在")
+        require(original.systemKey == null && brand.systemKey == null) { "未设置品牌为系统选项，不能修改" }
+        brandDao.updateBrand(brand)
+    }
 
     suspend fun deleteBrand(brand: Brand) {
         database.withTransaction {
+            require(brandDao.getAllBrandsList().firstOrNull { it.id == brand.id }?.systemKey == null) { "系统品牌不能删除" }
             val itemCount = itemDao.countItemsByBrand(brand.id)
             if (itemCount > 0) throw IllegalStateException("该品牌下有 $itemCount 条记录，无法删除")
             brandDao.deleteBrand(brand)

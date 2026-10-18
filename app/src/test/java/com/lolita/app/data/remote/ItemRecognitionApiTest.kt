@@ -29,17 +29,25 @@ class ItemRecognitionApiTest {
         regions = listOf(RecognitionRegion("region-crop", sha(bytes), 8, 10)), baseline = mapOf(RecognitionField.NAME to "/private/original/full-image.jpg secret-baseline"), family = WardrobeFamily.WIG)
     private fun result() = RecognitionResult(candidates = listOf(RecognitionCandidate("candidate-1", RecognitionField.WIG_COLOR,
         "银灰", RecognitionSource.VISUAL, listOf("region-crop"), "", null, null)))
-    private fun response(text: String = result().encode(), status: String = "completed") = JsonObject().apply {
+    private fun resultJson() = """{"version":1,"candidates":[{"id":"candidate-1","field":"WIG_COLOR","value":"银灰","source":"VISUAL","regionIds":["region-crop"],"quote":"","variant":null,"sizeRow":null,"measurement":null}]}"""
+    private fun response(text: String = resultJson(), status: String = "completed") = JsonObject().apply {
         addProperty("id", "resp-controlled"); addProperty("object", "response"); addProperty("status", status)
+        addProperty("model", "doubao-seed-2-1-pro-260915"); addProperty("store", false)
+        add("thinking", JsonObject().apply { addProperty("type", "disabled") })
+        add("caching", JsonObject().apply { addProperty("type", "disabled") })
+        addProperty("expire_at", 1792272000)
+        add("tools", com.google.gson.JsonNull.INSTANCE)
         add("output", com.google.gson.JsonArray().apply { add(JsonObject().apply {
             addProperty("id", "msg-controlled"); addProperty("type", "message"); addProperty("role", "assistant"); addProperty("status", "completed")
+            addProperty("phase", "final_answer"); addProperty("partial", false)
             add("content", com.google.gson.JsonArray().apply { add(JsonObject().apply {
-                addProperty("type", "output_text"); addProperty("text", text); add("annotations", com.google.gson.JsonArray())
+                addProperty("type", "output_text"); addProperty("text", text); add("annotations", com.google.gson.JsonNull.INSTANCE)
             }) })
         }) })
     }.toString()
 
-    private class Loopback(private val code: Int, private val response: String) : AutoCloseable {
+    private class Loopback(private val code: Int, private val response: String,
+        private val endpoint: String = "https://ark.cn-beijing.volces.com/api/v3/responses") : AutoCloseable {
         val calls = AtomicInteger()
         @Volatile var payload = ""
         @Volatile var authorization = ""
@@ -83,10 +91,114 @@ class ItemRecognitionApiTest {
             }
         }
         fun connection(official: URL): HttpURLConnection {
-            assertEquals("https://api.openai.com/v1/responses", official.toString())
-            return URL("http://127.0.0.1:${server.localPort}/v1/responses").openConnection() as HttpURLConnection
+            assertEquals(endpoint, official.toString())
+            return URL("http://127.0.0.1:${server.localPort}/api/v3/responses").openConnection() as HttpURLConnection
         }
         override fun close() { server.close(); executor.shutdownNow() }
+    }
+
+    private fun deepSeekRequest() = request().copy(provider = RecognitionProvider.valueOf("DEEPSEEK"), model = "deepseek-flash")
+    private fun deepSeekResponse(actualModel: String = "DeepSeek-V4.1-Flash-1017") = JsonObject().apply {
+        addProperty("id", "ds-response"); addProperty("object", "response"); addProperty("created_at", 1792272000)
+        addProperty("status", "completed"); addProperty("model", actualModel); addProperty("store", false)
+        addProperty("parallel_tool_calls", true); add("previous_response_id", com.google.gson.JsonNull.INSTANCE)
+        add("error", com.google.gson.JsonNull.INSTANCE); add("incomplete_details", com.google.gson.JsonNull.INSTANCE)
+        add("output", com.google.gson.JsonArray().apply { add(JsonObject().apply {
+            addProperty("type", "message"); addProperty("id", "ds-message"); addProperty("status", "completed"); addProperty("role", "assistant")
+            add("content", com.google.gson.JsonArray().apply { add(JsonObject().apply {
+                addProperty("type", "output_text"); addProperty("text", resultJson()); add("annotations", com.google.gson.JsonArray())
+            }) })
+        }) })
+    }.toString()
+
+    @Test fun deepSeekUsesItsOwnPayloadAndReturnsTheActualModelWithoutInventingASnapshot() = runBlocking {
+        Loopback(200, deepSeekResponse(), "https://api.deepseek.com/responses").use { server ->
+            val result = ItemRecognitionApi(server::connection).recognizeWithMetadata("dummy-deepseek-key", deepSeekRequest(), listOf(jpeg))
+            assertEquals("DEEPSEEK", result.provider.name)
+            assertEquals("DeepSeek-V4.1-Flash-1017", result.actualModel)
+            assertEquals(this@ItemRecognitionApiTest.result(), result.result)
+            val root = JsonParser.parseString(server.payload).asJsonObject
+            assertEquals(setOf("model", "stream", "max_output_tokens", "instructions", "input", "text", "reasoning"), root.keySet())
+            assertEquals("deepseek-flash", root["model"].asString)
+            assertEquals("none", root["reasoning"].asJsonObject["effort"].asString)
+            assertEquals(setOf("effort"), root["reasoning"].asJsonObject.keySet())
+            assertEquals(6000, root["max_output_tokens"].asInt); assertFalse(root["stream"].asBoolean)
+            assertFalse(root.has("store")); assertFalse(root.has("thinking")); assertFalse(root.has("tools"))
+            val format = root["text"].asJsonObject["format"].asJsonObject
+            assertEquals(setOf("type", "name", "schema"), format.keySet())
+            assertEquals("json_schema", format["type"].asString)
+            val image = root["input"].asJsonArray.single().asJsonObject["content"].asJsonArray.single { it.asJsonObject["type"].asString == "input_image" }.asJsonObject
+            assertEquals("high", image["detail"].asString)
+            assertArrayEquals(jpeg, Base64.getDecoder().decode(image["image_url"].asString.substringAfter(',')))
+            assertFalse(server.payload.contains("/private")); assertFalse(server.payload.contains("secret-baseline"))
+            assertEquals("Bearer dummy-deepseek-key", server.authorization); assertEquals(1, server.calls.get())
+        }
+        Loopback(200, deepSeekResponse(actualModel = "deepseek-flash"), "https://api.deepseek.com/responses").use { server ->
+            assertEquals("deepseek-flash", ItemRecognitionApi(server::connection).recognizeWithMetadata("dummy-key", deepSeekRequest(), listOf(jpeg)).actualModel)
+        }
+    }
+
+    @Test fun deepSeekRejectsArkFieldsToolOutputThinkingAndUnknownResponseFields() = runBlocking {
+        val valid = JsonParser.parseString(deepSeekResponse()).asJsonObject
+        val invalid = listOf(
+            valid.deepCopy().apply { add("thinking", JsonObject().apply { addProperty("type", "disabled") }) },
+            valid.deepCopy().apply { add("caching", JsonObject().apply { addProperty("type", "disabled") }) },
+            valid.deepCopy().apply { addProperty("model", "") },
+            valid.deepCopy().apply { addProperty("model", "x".repeat(161)) },
+            valid.deepCopy().apply { addProperty("store", true) },
+            valid.deepCopy().apply { addProperty("previous_response_id", "previous-private-response") },
+            valid.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject.addProperty("type", "function_call") },
+            valid.deepCopy().apply { this["output"].asJsonArray.add(JsonObject().apply { addProperty("type", "reasoning") }) },
+            valid.deepCopy().apply { add("tools", com.google.gson.JsonArray().apply { add(JsonObject().apply { addProperty("type", "web_search") }) }) })
+        for (body in invalid) Loopback(200, body.toString(), "https://api.deepseek.com/responses").use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)) }.exceptionOrNull()
+            assertTrue(failure is RecognitionApiFailure)
+            assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, (failure as RecognitionApiFailure).kind)
+            assertNull(failure.cause); assertEquals(1, server.calls.get())
+        }
+    }
+
+    @Test fun deepSeekErrorsNeverUseArkActivationCodesAndNeverRetry() = runBlocking {
+        for ((code, expected) in listOf(302 to RecognitionApiFailureKind.INVALID_RESPONSE, 307 to RecognitionApiFailureKind.INVALID_RESPONSE,
+            401 to RecognitionApiFailureKind.AUTH, 402 to RecognitionApiFailureKind.QUOTA, 403 to RecognitionApiFailureKind.AUTH,
+            404 to RecognitionApiFailureKind.INVALID_RESPONSE, 429 to RecognitionApiFailureKind.RATE_LIMIT)) {
+            Loopback(code, """{"error":{"code":"ModelNotOpen","message":"sensitive dummy-key"}}""", "https://api.deepseek.com/responses").use { server ->
+                val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", deepSeekRequest(), listOf(jpeg)) }.exceptionOrNull()
+                assertEquals(expected, (failure as RecognitionApiFailure).kind)
+                assertNull(failure.cause); assertFalse(failure.toString().contains("sensitive")); assertEquals(1, server.calls.get())
+            }
+        }
+    }
+
+    @Test fun deepSeekCancellationDisconnectsItsCapturedProviderWithoutRetry() = runBlocking {
+        val transport = BlockingTransport()
+        var opened = 0
+        val job = async { ItemRecognitionApi({ url ->
+            assertEquals("https://api.deepseek.com/responses", url.toString()); opened++; transport
+        }).recognize("dummy-deepseek-key", deepSeekRequest(), listOf(jpeg)) }
+        withTimeout(2000) { transport.entered.await() }
+        job.cancelAndJoin()
+        assertTrue(transport.closed); assertEquals(1, opened)
+    }
+
+    @Test fun freshOutputRejectsStringVersionAndMissingMeasurementForBothProviders() = runBlocking {
+        for (provider in listOf(RecognitionProvider.VOLCENGINE_ARK, RecognitionProvider.DEEPSEEK)) {
+            val invalidResults = listOf(
+                JsonParser.parseString(resultJson()).asJsonObject.apply { addProperty("version", "1") },
+                JsonParser.parseString(resultJson()).asJsonObject.apply { this["candidates"].asJsonArray[0].asJsonObject.remove("measurement") })
+            for (invalid in invalidResults) {
+                val envelope = JsonParser.parseString(if (provider == RecognitionProvider.VOLCENGINE_ARK) response() else deepSeekResponse()).asJsonObject
+                envelope["output"].asJsonArray[0].asJsonObject["content"].asJsonArray[0].asJsonObject.addProperty("text", invalid.toString())
+                val endpoint = if (provider == RecognitionProvider.VOLCENGINE_ARK) "https://ark.cn-beijing.volces.com/api/v3/responses" else "https://api.deepseek.com/responses"
+                Loopback(200, envelope.toString(), endpoint).use { server ->
+                    val request = if (provider == RecognitionProvider.VOLCENGINE_ARK) request() else deepSeekRequest()
+                    val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request, listOf(jpeg)) }.exceptionOrNull()
+                    assertTrue("$provider must reject fresh output: $invalid", failure is RecognitionApiFailure)
+                    assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, (failure as RecognitionApiFailure).kind)
+                    assertNull(failure.cause); assertEquals(1, server.calls.get())
+                }
+            }
+        }
     }
 
     @Test fun actualHttpPayloadContainsOnlyCropPixelsRegionLabelsAndStrictSchema() = runBlocking {
@@ -95,9 +207,13 @@ class ItemRecognitionApiTest {
         Loopback(200, response()).use { server ->
             assertEquals(result(), ItemRecognitionApi(server::connection).recognize("dummy-recognition-key", request, listOf(bytes)))
             val root = JsonParser.parseString(server.payload).asJsonObject
-            assertEquals("gpt-4.1-mini", root["model"].asString)
+            assertEquals("doubao-seed-2-1-pro-260915", root["model"].asString)
             assertFalse(root["store"].asBoolean)
+            assertFalse(root["stream"].asBoolean)
+            assertEquals(setOf("type"), root["thinking"].asJsonObject.keySet())
+            assertEquals("disabled", root["thinking"].asJsonObject["type"].asString)
             assertEquals(6000, root["max_output_tokens"].asInt)
+            assertEquals(setOf("model", "store", "stream", "max_output_tokens", "instructions", "input", "text", "thinking"), root.keySet())
             assertFalse(root.has("tools")); assertFalse(root.has("previous_response_id")); assertFalse(root.has("conversation"))
             assertFalse(server.payload.contains("dummy-recognition-key"))
             assertFalse(server.payload.contains("secret-baseline")); assertFalse(server.payload.contains("/private"))
@@ -114,6 +230,79 @@ class ItemRecognitionApiTest {
             assertTrue(server.payload.contains("region-crop")); assertTrue(server.payload.contains("appearanceOnly"))
             assertEquals("Bearer dummy-recognition-key", server.authorization)
             assertEquals(1, server.calls.get())
+        }
+    }
+
+    @Test fun modelNotOpenedAndPermissionErrorsUseOnlyAFixedArkActivationMessage() = runBlocking {
+        val bytes = jpeg
+        for ((http, code) in listOf(404 to "ModelNotOpen", 403 to "ModelNotOpen", 404 to "InvalidEndpointOrModel.NotFound",
+            404 to "InvalidEndpointOrModel.ModelIDAccessDisabled", 403 to "OperationDenied.ServiceNotOpen")) {
+            val body = JsonObject().apply { add("error", JsonObject().apply {
+                addProperty("code", code); addProperty("message", "dummy-recognition-key sensitive-account /private/original.jpg")
+            }) }.toString()
+            Loopback(http, body).use { server ->
+                val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-recognition-key", request(bytes), listOf(bytes)) }.exceptionOrNull()
+                assertTrue(failure is RecognitionApiFailure)
+                assertEquals("MODEL_UNAVAILABLE", (failure as RecognitionApiFailure).kind.name)
+                assertTrue(failure.message!!.contains("火山方舟") && failure.message!!.contains("开通"))
+                assertNull(failure.cause)
+                assertFalse(failure.toString().contains("dummy-recognition-key")); assertFalse(failure.toString().contains("sensitive-account")); assertFalse(failure.toString().contains("/private"))
+                assertEquals(1, server.calls.get())
+            }
+        }
+    }
+
+    @Test fun arkBillingAndQuotaErrorsAreSanitizedWithoutRetrying() = runBlocking {
+        for ((http, code) in listOf(403 to "AccountOverdueError", 403 to "OperationDenied.ServiceOverdue",
+            429 to "QuotaExceeded", 429 to "AccountQuotaExceeded", 429 to "SetLimitExceeded")) {
+            val body = JsonObject().apply { add("error", JsonObject().apply {
+                addProperty("code", code); addProperty("message", "sensitive-account dummy-key")
+            }) }.toString()
+            Loopback(http, body).use { server ->
+                val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull()
+                assertTrue(failure is RecognitionApiFailure)
+                assertEquals(RecognitionApiFailureKind.QUOTA, (failure as RecognitionApiFailure).kind)
+                assertNull(failure.cause); assertFalse(failure.toString().contains("sensitive-account"))
+                assertEquals(1, server.calls.get())
+            }
+        }
+    }
+
+    @Test fun unknownErrorCodesCannotSmuggleAnActivationMessageOrServerDetails() = runBlocking {
+        val body = """{"error":{"code":"Sensitive.ModelNotOpen.injected","message":"sensitive-account dummy-key"}}"""
+        Loopback(403, body).use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull()
+            assertTrue(failure is RecognitionApiFailure)
+            assertEquals(RecognitionApiFailureKind.AUTH, (failure as RecognitionApiFailure).kind)
+            assertNull(failure.cause); assertFalse(failure.toString().contains("sensitive"))
+            assertEquals(1, server.calls.get())
+        }
+    }
+
+    @Test fun arkNullOptionalFieldsAreAcceptedButThinkingToolsCacheAndPartialOutputsAreRejected() = runBlocking {
+        val valid = JsonParser.parseString(response()).asJsonObject
+        val nullable = valid.deepCopy().apply {
+            add("thinking", com.google.gson.JsonNull.INSTANCE); add("caching", com.google.gson.JsonNull.INSTANCE)
+            add("parallel_tool_calls", com.google.gson.JsonNull.INSTANCE); add("tool_choice", com.google.gson.JsonNull.INSTANCE)
+        }
+        Loopback(200, nullable.toString()).use { server ->
+            assertEquals(result(), ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)))
+        }
+        val invalid = listOf(
+            valid.deepCopy().apply { addProperty("model", "gpt-4.1-mini") },
+            valid.deepCopy().apply { this["thinking"].asJsonObject.addProperty("type", "enabled") },
+            valid.deepCopy().apply { this["thinking"].asJsonObject.addProperty("unknown", true) },
+            valid.deepCopy().apply { this["caching"].asJsonObject.addProperty("type", "enabled") },
+            valid.deepCopy().apply { add("tools", com.google.gson.JsonArray().apply { add(JsonObject().apply { addProperty("type", "web_search") }) }) },
+            valid.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject.addProperty("phase", "commentary") },
+            valid.deepCopy().apply { this["output"].asJsonArray[0].asJsonObject.addProperty("partial", true) },
+            valid.deepCopy().apply { addProperty("store", true) },
+            valid.deepCopy().apply { addProperty("prompt_cache_key", "openai-only-field") })
+        for (body in invalid) Loopback(200, body.toString()).use { server ->
+            val failure = runCatching { ItemRecognitionApi(server::connection).recognize("dummy-key", request(), listOf(jpeg)) }.exceptionOrNull()
+            assertTrue(failure is RecognitionApiFailure)
+            assertEquals(RecognitionApiFailureKind.INVALID_RESPONSE, (failure as RecognitionApiFailure).kind)
+            assertNull(failure.cause); assertEquals(1, server.calls.get())
         }
     }
 
@@ -203,7 +392,7 @@ class ItemRecognitionApiTest {
         }
     }
 
-    private open class BlockingTransport : HttpURLConnection(URL("https://api.openai.com/v1/responses")) {
+    private open class BlockingTransport : HttpURLConnection(URL("https://ark.cn-beijing.volces.com/api/v3/responses")) {
         val entered = CompletableDeferred<Unit>()
         val released = CountDownLatch(1)
         val sent = ByteArrayOutputStream()

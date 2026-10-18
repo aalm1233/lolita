@@ -272,7 +272,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=117, versionName="2.55.3"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=118, versionName="2.55.4"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -312,6 +312,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
 - 备份格式version10、schemaVersion30，覆盖除本机`RestoreJournal`外34个业务/缓存实体；旧1–9通过`BackupFormat`显式迁移，新字段缺失补空或未确认。未知格式/字段/枚举及损坏数据拒绝，新衣橱引用和证据由`WardrobeBackupValidation`校验。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
+- 草稿相册/尺码图及冻结展示任务的商品原图兼容本机历史文件名，继续校验精确私有路径、非软链与图片完整性；模板、派生裁切、识图证据和个人照片保持UUID规则。导出和JSON资源可用性检查复用`validateFrozenTaskImages`，不因当前相册变化误标历史任务缺图。`LegacyDraftBackupTest`覆盖真实草稿/任务准入后的JSON/ZIP往返与失败保全，说明见`docs/zip-backup-legacy-images-2026-10-18.md`。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
 - 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
 

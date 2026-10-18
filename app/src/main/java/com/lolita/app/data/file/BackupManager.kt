@@ -546,11 +546,17 @@ class BackupManager(
 
     /** New private references are complete, verified files, rather than optional legacy album URLs. */
     private suspend fun validateWardrobeImages(data: BackupData, validationContext: Context, map: (String)->String = { it }) {
-        suspend fun readable(path: String) {
-            require(ImageFileHelper.isOwnedReadableImage(validationContext,map(path))) { "收纳、草稿或识图证据图片缺失、损坏或不属于本机图片目录" }
+        suspend fun readable(path: String, productImage: Boolean = false) {
+            val localPath = map(path)
+            val valid = if (productImage) ImageFileHelper.isOwnedReadableProductImage(validationContext, localPath)
+                else ImageFileHelper.isOwnedReadableImage(validationContext, localPath)
+            require(valid) { "收纳、草稿或识图证据图片缺失、损坏或不属于本机图片目录" }
         }
         data.storageNodes.mapNotNull { it.imageUrl }.forEach { readable(it) }
-        data.itemDrafts.flatMap { it.protectedImagePaths() }.distinct().forEach { readable(it) }
+        // Editors and registration copies reuse historical album/size-chart filenames.
+        // Appearance-only references are validated as a subset of those same product images.
+        data.itemDrafts.flatMap { it.imagePaths + it.sizeChartImagePaths }.distinct().forEach { readable(it, productImage = true) }
+        data.itemDrafts.flatMap { it.evidenceImagePaths }.distinct().forEach { readable(it) }
         data.itemEvidence.flatMap { it.regionImagePaths }.distinct().forEach { readable(it) }
         data.recognitionTasks.forEach { task ->
             if(task.status!=com.lolita.app.domain.model.RecognitionStatus.DISCARDED) {
@@ -566,11 +572,27 @@ class BackupManager(
             }
         }
         data.imageTasks.filter { it.keepSourceImages && !it.sourceResourcesMissing }.forEach { task ->
-            task.sourceImagePaths.forEach { readable(it) }
-            val request=ImageTaskRequest.decode(task.requestJson)
-            request.productOriginalImagePath?.let { readable(it) }
-            request.mapImagePaths(map).validateInputImages(task.sourceImagePaths.map(map))
+            validateFrozenTaskImages(task, validationContext, map)
         }
+    }
+
+    /** Match admission's product compatibility without depending on today's mutable Item album. */
+    private suspend fun validateFrozenTaskImages(task: ImageTask, validationContext: Context, map: (String) -> String = { it }) {
+        val request = ImageTaskRequest.decode(task.requestJson)
+        suspend fun readable(path: String, productImage: Boolean) {
+            val localPath = map(path)
+            val valid = if (productImage) ImageFileHelper.isOwnedReadableProductImage(validationContext, localPath)
+                else ImageFileHelper.isOwnedReadableImage(validationContext, localPath)
+            require(valid) { "展示任务输入图片缺失、损坏或不属于本机图片目录" }
+        }
+        task.sourceImagePaths.forEachIndexed { index, path ->
+            // A different original identifies a derived crop: crops and templates stay UUID-only.
+            val productImage = task.kind == ImageTaskKind.MANNEQUIN && index == task.sourceImagePaths.lastIndex &&
+                (request.productOriginalImagePath == null || request.productOriginalImagePath == path)
+            readable(path, productImage)
+        }
+        request.productOriginalImagePath?.let { readable(it, productImage = task.kind == ImageTaskKind.MANNEQUIN) }
+        request.mapImagePaths(map).validateInputImages(task.sourceImagePaths.map(map))
     }
 
     private suspend fun validatePreparedTaskImages(prepared: PreparedBackup) {
@@ -973,10 +995,7 @@ class BackupManager(
         imageTasks=data.imageTasks.map { task ->
             if(!task.keepSourceImages || task.sourceResourcesMissing) task else {
                 val available=try {
-                    require(task.sourceImagePaths.all { ImageFileHelper.isOwnedReadableImage(context,it) })
-                    val request=ImageTaskRequest.decode(task.requestJson)
-                    request.productOriginalImagePath?.let { require(ImageFileHelper.isOwnedReadableImage(context,it)) }
-                    request.validateInputImages(task.sourceImagePaths)
+                    validateFrozenTaskImages(task, context)
                     true
                 } catch(cancelled: CancellationException) { throw cancelled }
                 catch(_: Exception) { false }

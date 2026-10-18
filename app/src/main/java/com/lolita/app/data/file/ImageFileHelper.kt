@@ -63,7 +63,7 @@ object ImageFileHelper {
     }
 
     /**
-     * A product source already checked against Item.imageUrls may retain its historical filename.
+     * Persisted product albums, size charts and frozen product references may retain historical filenames.
      * Only the filename policy differs: private path, format, completeness and decode gates stay strict.
      */
     suspend fun isOwnedReadableProductImage(context: Context, path: String): Boolean = withContext(Dispatchers.IO) {

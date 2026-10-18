@@ -150,7 +150,7 @@ fun MannequinScreen(
             if (wig) {
                 item("head-choice-title") {
                     LolitaSection(title = "选择头模 · 单选") { row {
-                        Text("五款均为候选，尚未统一构图及验证短发、长直发、长卷发。切换或放大不会调用付费接口。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
+                        Text("以下均为候选，尚未统一构图及验证短发、长直发、长卷发。切换或放大不会调用付费接口。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         state.selectedHeadTemplate?.let { Text("本次：${it.name} · v${it.version} · 待真实评审", style = MaterialTheme.typography.labelMedium) }
                         if (state.isLoadingHead) ShimmerRect(100.dp, 120.dp, modifier = Modifier.fillMaxWidth())
                     } }

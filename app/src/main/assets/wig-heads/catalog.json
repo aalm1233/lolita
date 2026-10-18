@@ -63,5 +63,18 @@
     "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
     "headScale": "候选构图，尚未统一定版",
     "byteSize": 1706902
+  },
+  {
+    "id": "slate-rose",
+    "name": "灰瞳·玫瑰妆",
+    "version": 1,
+    "sha256": "52f79bef59827706a90e69a16d384d28e26c25ffe8caf1c7f1140ace5c7d1cf3",
+    "assetPath": "wig-heads/front-slate-rose-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1729720
   }
 ]

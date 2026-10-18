@@ -1,0 +1,38 @@
+{
+  "request": "按用户提供的68–71四张照片制作一款正面无发头模",
+  "tool": "built-in image_gen",
+  "references": [
+    {
+      "file": "1000034068.jpg",
+      "sha256": "0f482a21fb9a040bc9708ad59106eb09773d788ee7826854ea89be141abb7adc",
+      "bytes": 207812
+    },
+    {
+      "file": "1000034069.jpg",
+      "sha256": "0eb30363782389abda61986de0567d254858c5a6f623e0d2ec542609bf4a7d44",
+      "bytes": 1297161
+    },
+    {
+      "file": "1000034070.jpg",
+      "sha256": "714ec84687a23664c54637075d36a74f6d71c44d633438bd9771a1e959b60da1",
+      "bytes": 4297119
+    },
+    {
+      "file": "1000034071.jpg",
+      "sha256": "e267e7906d180f0794b0d6aac1080879d8328a525139cd7b1c347382263b1a65",
+      "bytes": 1456350
+    }
+  ],
+  "prompt": "prompt.txt",
+  "output": "../../../app/src/main/assets/wig-heads/front-slate-rose-v1.png",
+  "sha256": "52f79bef59827706a90e69a16d384d28e26c25ffe8caf1c7f1140ace5c7d1cf3",
+  "bytes": 1729720,
+  "width": 1024,
+  "height": 1536,
+  "publication": "User explicitly authorized built-in distribution with public source code and APK in this chat on 2026-10-18. Original reference photos remain local and are not included in source or APK.",
+  "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+  "review": "已目视核对正面视角、完整无发头顶、双耳、颈部及底座；脸型和灰色眼睛/玫瑰妆容参考68–71。未执行长短假发真实佩戴测试。",
+  "id": "slate-rose",
+  "name": "灰瞳·玫瑰妆",
+  "version": 1
+}

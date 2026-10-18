@@ -273,7 +273,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=120, versionName="2.56.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=121, versionName="2.56.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -518,3 +518,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 2.56.1 /120仅显示层修复：三列无真实品牌假发/发片省略品牌文字和图标，`unsetBrandId`依赖系统身份；同名真实品牌及其他品类/列数保持原显示，不改Room30/备份10或物品引用。
 - `assembleDebug`与clean正式构建通过；独立5586临时视觉夹具核对无品牌/真实品牌/同名真实品牌及非假发、单列/两列/三列、七皮肤浅暗及320dp两倍字体，原数据库字节已复原。未新增镜像显示逻辑的测试。独立5584从2.56.0同签名覆盖升级与重启，38表254列/198件/172图SHA及3设置原字节保全。源码标签及GitHub/Gitee正式同一APK/校验文件下载核验通过；公开更新接口与复核403、实际app检查亦失败，稳定附件HEAD200可直接下载；未清理旧资产。设计/实拍见`docs/plans/2026-10-18-wig-grid-brand.md`，回执`docs/wig-grid-brand-release-2.56.1-verification.json`。
+
+
+### 追加灰瞳玫瑰头模（2.56.2）
+
+- 经用户明确许可随源码及APK公开，追加第六款`slate-rose` / 灰瞳·玫瑰妆v1；原五款ID、版本、SHA及图片原字节保持。仅新增离线候选，选择/放大不调用付费服务，不替换已有偏好与历史任务快照。原参考照片不入库或APK，提示词与来源摘要归档`docs/visuals/2026-10-18-slate-rose-head/`。
+- 选择页提示改为“以下均为候选”，不硬编码数量；仍须真实短/长假发评审，不能把本轮空白头模及受控UI验证当作佩戴保真通过。Room30/备份10及图像任务协议不变；完整过程见`docs/plans/2026-10-18-slate-rose-head.md`。

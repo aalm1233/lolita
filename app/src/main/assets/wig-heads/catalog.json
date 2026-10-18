@@ -1,0 +1,67 @@
+[
+  {
+    "id": "original-blueviolet",
+    "name": "蓝紫妆·原候选",
+    "version": 1,
+    "sha256": "69a70af2e83c7a3ec63c45be3d1c7a1b902127a3555895f4563dbb55b4e1887e",
+    "assetPath": "wig-heads/front-template-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1756449
+  },
+  {
+    "id": "rose-grayblue",
+    "name": "灰蓝眼·玫瑰",
+    "version": 1,
+    "sha256": "677c3fd0e7464a5fa2e0aef702638d03c69cc3532b50be2447de8f0b25171752",
+    "assetPath": "wig-heads/front-rose-grayblue-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1772508
+  },
+  {
+    "id": "peach-violet",
+    "name": "紫眼·蜜桃",
+    "version": 1,
+    "sha256": "2639426927f4189ba25baf9f0543690e06630d7dd7090a13ae59d2705411fd50",
+    "assetPath": "wig-heads/front-peach-violet-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1696519
+  },
+  {
+    "id": "cerulean-rose",
+    "name": "亮蓝眼·蔷薇",
+    "version": 1,
+    "sha256": "05d93b291ef349b18036486c7c01414b202efd3a36562e2c0be353f149ecc782",
+    "assetPath": "wig-heads/front-cerulean-rose-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1706841
+  },
+  {
+    "id": "sage-softpink",
+    "name": "灰绿眼·柔粉",
+    "version": 1,
+    "sha256": "9ec9631233c789f5e8054836be3203fa6d37ad1996ed922136c6e19aa7f853bb",
+    "assetPath": "wig-heads/front-sage-softpink-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "候选构图，尚未统一定版",
+    "byteSize": 1706902
+  }
+]

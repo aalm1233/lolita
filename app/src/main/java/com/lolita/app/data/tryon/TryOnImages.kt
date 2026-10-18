@@ -14,6 +14,11 @@ import java.io.File
 import java.io.InputStream
 
 class TryOnImages(private val context: Context) {
+    suspend fun prepareSnapshots(paths: List<String>): List<ByteArray> {
+        require(paths.size in 1..9) { "实际输入数量无效" }
+        return prepareWithTemplate(paths, null)
+    }
+
     suspend fun prepare(paths: List<String>): List<ByteArray> {
         require(paths.size in 1..8) { "请选择1至8张服饰参考图" }
         return prepareWithTemplate(paths, MODEL_ASSET)

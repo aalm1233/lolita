@@ -34,7 +34,10 @@ class MannequinGenerator(
         request: MannequinRequest,
         onPhase: (TryOnGenerationPhase) -> Unit = {},
         expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null,
-        beforeRequest: suspend () -> Unit = {}
+        beforeRequest: suspend () -> Unit = {},
+        immutableRequest: com.lolita.app.domain.model.ImageTaskRequest? = null,
+        immutablePaths: List<String>? = null,
+        prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null
     ): String = gate.runExclusive {
         var preview: String? = null
         try {
@@ -45,21 +48,26 @@ class MannequinGenerator(
             require(key.isNotBlank() && key.length <= 512 && key.all { it.code in 33..126 }) {
                 "请先在服务配置中填写有效的 API Key"
             }
-            validateSource(request)
-            val prepare = if (request.presentation == MannequinPresentation.ACCESSORY)
-                requireNotNull(prepareAccessoryImages) { "小物图片准备尚未接入" } else prepareImages
-            val images = prepare(listOf(request.imagePath))
+            if (immutableRequest == null) validateSource(request)
+            else withContext(Dispatchers.IO) { immutableRequest.validateInputImages(requireNotNull(immutablePaths)) }
+            val images = if (immutableRequest != null) requireNotNull(prepareSnapshotImages) { "任务快照图片准备尚未接入" }(requireNotNull(immutablePaths))
+                else {
+                    val prepare = if (request.presentation == MannequinPresentation.ACCESSORY)
+                        requireNotNull(prepareAccessoryImages) { "小物图片准备尚未接入" } else prepareImages
+                    prepare(listOf(request.imagePath))
+                }
             require(images.size == request.presentation.inputCount && images.all { it.isNotEmpty() }) {
                 "参考图片未全部准备完成，请重新选择图片"
             }
             // Preparation may take time; reject an edit/delete that happened while decoding.
-            validateSource(request)
+            if (immutableRequest == null) validateSource(request)
+            else withContext(Dispatchers.IO) { immutableRequest.validateInputImages(requireNotNull(immutablePaths)) }
             currentCoroutineContext().ensureActive()
             onPhase(TryOnGenerationPhase.GENERATING)
             currentCoroutineContext().ensureActive()
             beforeRequest()
             currentCoroutineContext().ensureActive()
-            val bytes = generateImage(credentials, images, request.prompt())
+            val bytes = generateImage(credentials, images, immutableRequest?.promptSnapshot ?: request.prompt())
             currentCoroutineContext().ensureActive()
             onPhase(TryOnGenerationPhase.SAVING)
             currentCoroutineContext().ensureActive()

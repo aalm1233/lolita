@@ -24,12 +24,14 @@ data class ImageTask(
     @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "updated_at") val updatedAt: Long = createdAt,
     val error: String? = null,
-    @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null
+    @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null,
+    @ColumnInfo(name = "keep_source_images", defaultValue = "0") val keepSourceImages: Boolean = false
 ) {
     fun validate() {
         require(id.isNotBlank() && title.isNotBlank()) { "图像任务缺少标识或名称" }
         val request = ImageTaskRequest.decode(requestJson)
         request.validate(kind)
+        require(keepSourceImages == (request.version == 4)) { "任务输入保留策略与协议不匹配" }
         if (retainsSourceImages) {
             if (kind == ImageTaskKind.PERSONAL_MODEL) request.personalModel!!.validatePaths(sourceImagePaths)
             else request.selections(sourceImagePaths)
@@ -40,7 +42,7 @@ data class ImageTask(
     }
 
     /** Personal generation keeps reference photos for confirmation and explicit retries. */
-    val retainsSourceImages: Boolean get() = status.retainsSourceImages ||
+    val retainsSourceImages: Boolean get() = keepSourceImages || status.retainsSourceImages ||
         (kind == ImageTaskKind.PERSONAL_MODEL && status in setOf(ImageTaskStatus.AWAITING_CONFIRMATION,
             ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED))
 

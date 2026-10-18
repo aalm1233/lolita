@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.TryOnResult
 import com.lolita.app.domain.model.ImageGenerationProvider
+import com.lolita.app.domain.model.TryOnSelection
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
@@ -61,12 +62,12 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     if (state.hasKey && !state.isSubmitting) {
-                        Text("上传“${state.modelName}”与服饰共 ${state.selected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
+                        Text("上传“${state.modelName}”与服饰共 ${state.generationSelected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
                     Button(
-                        onClick = { if (!state.hasKey) showKey = true else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName) },
+                        onClick = { if (!state.hasKey) showKey = true else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName, state.generationSelected.toList(), state.keyRevision) },
                         enabled = !state.busy && !state.isLoading && state.keyLoaded && (!state.hasKey || state.canGenerate),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -126,9 +127,9 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 }
             }
             item(key = "selection-header") {
-                LolitaSection(title = "本次搭配（${state.selected.size}/8）") {
+                LolitaSection(title = "搭配共 ${state.selected.size} 件 · 本次试衣 ${state.generationSelected.size} 件") {
                     row {
-                        Text("每件使用一张已有图片；请核对下方穿戴位置。至少选择一件服装，最多8件。",
+                        Text("每件使用一张已有图片；请核对穿戴位置。搭配可超过8件，本次试衣须明确选择1至8件，并包含至少一件基础服装。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         OutlinedButton(onClick = { showPicker = true }, enabled = !state.busy && !state.isLoading && !state.loadFailed,
                             modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium)) {
@@ -152,6 +153,10 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                             IconButton(onClick = { viewModel.toggleItem(row.itemId) }, enabled = !state.busy,
                                 modifier = Modifier.semantics { contentDescription = "移除${row.name}" }) { SkinIcon(IconKey.Close) }
                         }
+                        if (state.requiresExplicitSubset) Row(Modifier.fillMaxWidth().skinClickable(enabled = !state.busy) { viewModel.toggleGenerationItem(row.itemId) }, verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(checked = row.itemId in state.generationItemIds, onCheckedChange = { viewModel.toggleGenerationItem(row.itemId) }, enabled = !state.busy)
+                            Text("用于本次试衣", style = MaterialTheme.typography.bodyMedium)
+                        }
                         TryOnItemImage(row.imagePath, "${row.name}的参考图片", Modifier.fillMaxWidth().height(160.dp))
                         if (item == null) Text("服饰已不在已拥有衣橱，请移除后重新选择", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                         if (row.imagePath.isBlank()) Text("这件服饰没有参考图片，请先到服饰编辑页添加", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
@@ -165,8 +170,9 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             item(key = "disclosure") {
                 LolitaSection(title = "生成前确认") {
                     row {
-                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.selected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.selected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
+                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.generationSelected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.generationSelected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
+                        Text("未选择鞋履时沿用人物底图鞋；未选择袜装时保留底图相应区域，这些默认外观不会登记为已选物品。", style = MaterialTheme.typography.bodySmall)
                         Text("试衣图独立保存，不会改变服饰归属、穿搭次数或账目。取消、超时后服务端仍可能处理；应用不会自动重试。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         state.selectionIssue?.let { Text(it, modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall,
@@ -220,11 +226,24 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         text = { Text("将删除“${result.name}”及对应结果图，衣橱服饰不会改变。") },
         confirmButton = { TextButton(onClick = { viewModel.delete(result.id); delete = null }) { Text("删除") } },
         dismissButton = { TextButton(onClick = { delete = null }) { Text("保留") } }) }
+    state.pendingConflict?.let { pending ->
+        AlertDialog(onDismissRequest = viewModel::cancelConflict, title = { Text("核对穿戴位置") },
+            text = { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                Text(pending.conflict.message)
+                if (pending.conflict.requiresReplacement) pending.conflict.itemIds.forEach { id ->
+                    val old = state.selected.firstOrNull { it.itemId == id }
+                    OutlinedButton(onClick = { viewModel.resolveConflict(id) }, modifier = Modifier.fillMaxWidth()) { Text("替换 ${old?.name.orEmpty()}") }
+                }
+            } },
+            confirmButton = { if (!pending.conflict.requiresReplacement) TextButton(onClick = { viewModel.resolveConflict() }) { Text("确认叠穿并保留") } },
+            dismissButton = { TextButton(onClick = viewModel::cancelConflict) { Text("返回保留原选择") } })
+    }
     confirmation?.let { captured ->
         val provider = captured.provider
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成试衣图？") },
-            text = { Text("将使用“${captured.name}”，上传其底图与已选服饰图片至 ${provider.recipient}，API 单独计费。任务提交后可离开页面，在任务中心查看结果。") },
-            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider, captured.id, captured.path) }) { Text("确认并加入任务") } },
+            text = { Text("将使用“${captured.name}”，上传底图与本次明确选择的${captured.selections.size}件物品至 ${provider.recipient}：\n" +
+                captured.selections.joinToString("\n") { "${it.name} · ${it.role.label}" } + "\n未选鞋袜沿用底图，API 单独计费。任务提交后可在任务中心查看。") },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider, captured.id, captured.path, captured.selections, captured.keyRevision, captured.name) }) { Text("确认并加入任务") } },
             dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
     }
 }
@@ -264,4 +283,4 @@ private fun PersonalModelPicker(state: TryOnUiState, onSelect: (Long?) -> Unit, 
         dismissButton = { TextButton(onClick = onDismiss) { Text("关闭") } })
 }
 
-private data class TryOnConfirmation(val provider: ImageGenerationProvider, val id: Long?, val path: String?, val name: String)
+private data class TryOnConfirmation(val provider: ImageGenerationProvider, val id: Long?, val path: String?, val name: String, val selections: List<TryOnSelection>, val keyRevision: Int)

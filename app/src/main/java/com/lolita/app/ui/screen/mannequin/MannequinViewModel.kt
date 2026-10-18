@@ -15,6 +15,9 @@ import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.MannequinSubject
 import com.lolita.app.domain.model.mannequinSubject
+import com.lolita.app.domain.model.WigHeadTemplateSnapshot
+import com.lolita.app.data.mannequin.WigHeadTemplate
+import com.lolita.app.data.mannequin.WigHeadTemplateCatalog
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -36,20 +39,27 @@ data class MannequinUiState(
     val keyRevision: Int = 0,
     val isConfiguring: Boolean = false,
     val isSubmitting: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val headTemplates: List<WigHeadTemplate> = emptyList(),
+    val selectedHeadTemplate: WigHeadTemplateSnapshot? = null,
+    val isLoadingHead: Boolean = false,
+    val referenceViewConfirmed: Boolean = false
 ) {
-    val subject: MannequinSubject? get() = mannequinSubject(category)
+    val subject: MannequinSubject? get() = mannequinSubject(category, confirmedSemantics = true)
     val presentation: MannequinPresentation get() = subject?.presentation ?: MannequinPresentation.DRESS_FORM
-    val busy get() = isSubmitting || isConfiguring || savingLegacy
+    val busy get() = isSubmitting || isConfiguring || savingLegacy || isLoadingHead
     val selectionIssue: String? get() = when {
         item == null || item.id <= 0 -> "这件物品已被删除或无法读取"
-        subject == null -> "仅支持 JSK、OP、SK、明确裙类和配饰分类"
+        subject == null -> "请先在分类中确认稳定品类；非裙类服装暂不支持展示图"
+        presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模候选"
+        presentation == MannequinPresentation.WIG_HEAD && !referenceViewConfirmed -> "请核对原图能看到刘海、头顶、正面轮廓及完整发梢"
         selectedImage.isBlank() || selectedImage !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
         else -> null
     }
     val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
     val generationRequest: MannequinRequest? get() = if (selectionIssue == null)
-        MannequinRequest(requireNotNull(item).id, selectedImage, instructions, requireNotNull(subject)) else null
+        MannequinRequest(requireNotNull(item).id, selectedImage, instructions, requireNotNull(subject),
+            selectedHeadTemplate.takeIf { presentation == MannequinPresentation.WIG_HEAD }, referenceViewConfirmed) else null
 
 }
 
@@ -70,19 +80,26 @@ class MannequinViewModel @JvmOverloads constructor(
     private val discardLegacy: (String) -> Unit = { ImageFileHelper.cleanupUnreferencedImages(listOf(it)); Unit },
     private val submitTask: suspend (MannequinRequest, ImageGenerationProvider) -> String = { request, provider ->
         AppModule.imageTaskCoordinator().submitMannequin(request, provider)
-    }
+    },
+    private val readHeadTemplates: suspend () -> List<WigHeadTemplate> = { WigHeadTemplateCatalog(AppModule.context()).templates },
+    private val snapshotHead: suspend (String) -> WigHeadTemplateSnapshot = { WigHeadTemplateCatalog(AppModule.context()).snapshot(it) },
+    private val readHeadPreference: suspend () -> WigHeadTemplateSnapshot? = { WigHeadTemplateCatalog.readPreference(AppModule.context()) },
+    private val writeHeadPreference: suspend (WigHeadTemplateSnapshot) -> Unit = { WigHeadTemplateCatalog.writePreference(AppModule.context(), it) }
 ) : ViewModel() {
     private val itemId = savedStateHandle.get<Long>("itemId") ?: 0L
     private val state = MutableStateFlow(MannequinUiState(
         latestTaskId = savedStateHandle[LAST_TASK],
         legacyPreviewAvailable = savedStateHandle.contains(PREVIEW),
         selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty(),
-        instructions = savedStateHandle.get<String>(INSTRUCTIONS).orEmpty().take(200)
+        instructions = savedStateHandle.get<String>(INSTRUCTIONS).orEmpty().take(200),
+        selectedHeadTemplate = savedStateHandle.get<String>(HEAD_TEMPLATE)?.let { runCatching { WigHeadTemplateSnapshot.decode(it) }.getOrNull() },
+        referenceViewConfirmed = savedStateHandle[VIEW_CONFIRMED] ?: false
     ))
     val uiState: StateFlow<MannequinUiState> = state.asStateFlow()
     private var restored = false
     private var retryEntryConsumed = savedStateHandle.get<Boolean>(RETRY_ENTRY_CONSUMED) == true || savedStateHandle.contains(INSTRUCTIONS)
     private var observedTasks = emptyList<ImageTask>()
+    private var headCatalogStarted = false
     private val legacySaveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var cleared = false
 
@@ -104,6 +121,10 @@ class MannequinViewModel @JvmOverloads constructor(
                                 catch (failure: CancellationException) { throw failure }
                                 catch (_: Exception) { null }
                                 if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
+                                    retry.wigHeadTemplate?.let { head ->
+                                        savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(head)
+                                        state.update { it.copy(selectedHeadTemplate = head, referenceViewConfirmed = false) }
+                                    }
                                     savedStateHandle[INSTRUCTIONS] = retry.instructions
                                     state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
                                 }
@@ -119,13 +140,16 @@ class MannequinViewModel @JvmOverloads constructor(
                         // Rejected legacy paths remain untouched and cannot be used or deleted by this page.
                         state.update { it.copy(selectedImage = savedStateHandle.get<String>(SOURCE).orEmpty()) }
                     }
-                    state.update { it.copy(item = row?.takeIf { it.id == itemId }, category = category, isLoading = false) }
+                    val oldCategory = state.value.category
+                    state.update { it.copy(item = row?.takeIf { it.id == itemId }, category = category, isLoading = false,
+                        referenceViewConfirmed = if (oldCategory != null && oldCategory.categorySemantic != category?.categorySemantic) false else it.referenceViewConfirmed) }
+                    if (mannequinSubject(category, confirmedSemantics = true)?.presentation == MannequinPresentation.WIG_HEAD && !headCatalogStarted) loadHeadCatalog()
                 }
         }
         viewModelScope.launch { tasks.collect { rows -> observedTasks = rows; state.update { it.copy(latestTask = rows.firstOrNull { row -> row.id == it.latestTaskId }) } } }
         viewModelScope.launch {
             serviceChanges.collect {
-                state.update { it.copy(keyLoaded = false) }
+                state.update { it.copy(keyLoaded = false, keyRevision = it.keyRevision + 1) }
                 try {
                     val status = withContext(Dispatchers.IO) { readService() }
                     state.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true) }
@@ -137,11 +161,60 @@ class MannequinViewModel @JvmOverloads constructor(
         }
     }
 
+    private fun loadHeadCatalog() {
+        headCatalogStarted = true
+        state.update { it.copy(isLoadingHead = true) }
+        viewModelScope.launch {
+            try {
+                val templates = withContext(Dispatchers.IO) { readHeadTemplates() }
+                state.update { it.copy(headTemplates = templates) }
+                val restoredHead = state.value.selectedHeadTemplate
+                if (restoredHead != null) withContext(Dispatchers.IO) { restoredHead.validateImage() }
+                else {
+                    val preferred = withContext(Dispatchers.IO) { readHeadPreference() }
+                    val candidate = if (preferred == null) templates.firstOrNull() else templates.firstOrNull {
+                        it.id == preferred.id && it.version == preferred.version && it.sha256 == preferred.sha256
+                    }
+                    requireNotNull(candidate) { "原头模偏好已换版或下架，请明确重新选择；不会自动替换" }
+                    val snapshot = withContext(Dispatchers.IO) { snapshotHead(candidate.id).also { writeHeadPreference(it) } }
+                    savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(snapshot)
+                    state.update { it.copy(selectedHeadTemplate = snapshot) }
+                }
+            } catch (failure: CancellationException) { throw failure }
+            catch (_: Exception) { state.update { it.copy(selectedHeadTemplate = null, error = "头模资源缺失、偏好已换版或校验失败，请明确重新选择候选") } }
+            finally { state.update { it.copy(isLoadingHead = false) } }
+        }
+    }
+
+    fun selectHeadTemplate(id: String) {
+        val current = state.value
+        if (current.busy || current.headTemplates.none { it.id == id }) return
+        state.update { it.copy(isLoadingHead = true, referenceViewConfirmed = false, error = null) }
+        savedStateHandle[VIEW_CONFIRMED] = false
+        viewModelScope.launch {
+            try {
+                val snapshot = withContext(Dispatchers.IO) { snapshotHead(id).also { writeHeadPreference(it) } }
+                savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(snapshot)
+                state.update { it.copy(selectedHeadTemplate = snapshot) }
+                current.selectedHeadTemplate?.takeIf { it.imagePath != snapshot.imagePath }?.let { discardLegacy(it.imagePath) }
+            } catch (failure: CancellationException) { throw failure }
+            catch (_: Exception) { state.update { it.copy(selectedHeadTemplate = null, error = "头模读取或校验失败，请重新选择") } }
+            finally { state.update { it.copy(isLoadingHead = false) } }
+        }
+    }
+
+    fun confirmReferenceView(value: Boolean) {
+        if (state.value.busy) return
+        savedStateHandle[VIEW_CONFIRMED] = value
+        state.update { it.copy(referenceViewConfirmed = value) }
+    }
+
     fun selectImage(path: String) {
         val current = state.value
         if (current.busy || path.isBlank() || path !in current.item?.imageUrls.orEmpty()) return
         savedStateHandle[SOURCE] = path
-        state.update { it.copy(selectedImage = path, error = null) }
+        savedStateHandle[VIEW_CONFIRMED] = false
+        state.update { it.copy(selectedImage = path, referenceViewConfirmed = false, error = null) }
     }
     fun updateInstructions(value: String) {
         if (state.value.busy || state.value.isLoading) return
@@ -239,6 +312,8 @@ class MannequinViewModel @JvmOverloads constructor(
         super.onCleared()
     }
     companion object {
+        private const val HEAD_TEMPLATE = "mannequinHeadTemplateSnapshot"
+        private const val VIEW_CONFIRMED = "mannequinReferenceViewConfirmed"
         private const val RETRY_ENTRY_CONSUMED = "mannequinRetryEntryConsumed"
         private const val LAST_TASK = "mannequinLatestTaskId"
         private const val SOURCE = "mannequinSource"

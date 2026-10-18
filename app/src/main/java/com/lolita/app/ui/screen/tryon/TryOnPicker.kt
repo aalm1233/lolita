@@ -60,7 +60,7 @@ internal fun TryOnPicker(
             bottomBar = {
                 Surface(tonalElevation = skin.cardElevation) {
                     Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth().imePadding()
-                        .padding(skin.spacingLarge)) { Text("完成选择（${state.selected.size}/8）") }
+                        .padding(skin.spacingLarge)) { Text("完成搭配选择（${state.selected.size}件）") }
                 }
             },
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
@@ -74,7 +74,7 @@ internal fun TryOnPicker(
             ) {
                 item(key = "controls", span = { GridItemSpan(maxLineSpan) }) {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                        Text("仅显示已拥有服饰；筛选不会清除已选内容。每次最多8件。", style = MaterialTheme.typography.bodySmall)
+                        Text("仅显示已拥有物品，包含挂载小物；筛选保留已选内容。搭配超过8件时，回到试衣页明确选择本次子集。", style = MaterialTheme.typography.bodySmall)
                         OutlinedTextField(value = state.searchQuery, onValueChange = onSearch,
                             modifier = Modifier.fillMaxWidth(), singleLine = true,
                             label = { Text("搜索服饰名称") },

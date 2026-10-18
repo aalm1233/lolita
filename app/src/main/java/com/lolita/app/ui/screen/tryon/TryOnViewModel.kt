@@ -20,6 +20,8 @@ import com.lolita.app.di.AppModule
 import com.lolita.app.domain.model.TryOnRequest
 import com.lolita.app.domain.model.TryOnRole
 import com.lolita.app.domain.model.TryOnSelection
+import com.lolita.app.domain.model.TryOnConflict
+import com.lolita.app.domain.model.tryOnConflict
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +55,10 @@ data class TryOnUiState(
     val error: String? = null,
     val personalModels: List<PersonalModel> = emptyList(),
     val selectedPersonalModelId: Long? = null,
-    val modelsLoaded: Boolean = false
+    val modelsLoaded: Boolean = false,
+    val generationItemIds: Set<Long> = emptySet(),
+    val pendingConflict: PendingTryOnConflict? = null,
+    val requiresExplicitSubset: Boolean = false
 ) {
     val busy: Boolean get() = isSubmitting || isConfiguring
     val visibleItems: List<Item> get() = items.filter { item ->
@@ -61,13 +66,17 @@ data class TryOnUiState(
             (searchQuery.isBlank() || item.name.contains(searchQuery.trim(), ignoreCase = true))
     }
     val availableCategories: List<Category> get() = categories.filter { category -> items.any { it.categoryId == category.id } }
+    val generationSelected: List<TryOnSelection> get() = if (!requiresExplicitSubset) selected else selected.filter { it.itemId in generationItemIds }
     val selectionIssue: String? get() {
+        if (requiresExplicitSubset && generationSelected.isEmpty()) return "搭配共${selected.size}件，请明确勾选本次试衣的1至8件"
+        if (generationSelected.size > 8) return "本次试衣超过8件，请调整勾选；不会自动移除任何物品"
+        if (pendingConflict != null) return "请先处理穿戴位置冲突"
         if (selected.isEmpty()) return "请选择衣橱里的服饰与小物"
-        if (selected.any { row -> items.none { it.id == row.itemId } }) return "已选服饰已不在衣橱，请移除后重新选择"
-        if (selected.any { row -> row.imagePath.isBlank() || items.firstOrNull { it.id == row.itemId }?.imageUrls?.contains(row.imagePath) != true }) {
+        if (generationSelected.any { row -> items.none { it.id == row.itemId } }) return "已选服饰已不在衣橱，请移除后重新选择"
+        if (generationSelected.any { row -> row.imagePath.isBlank() || items.firstOrNull { it.id == row.itemId }?.imageUrls?.contains(row.imagePath) != true }) {
             return "请为每件服饰选择已有参考图片"
         }
-        return runCatching { TryOnRequest(selected) }.exceptionOrNull()?.message
+        return runCatching { TryOnRequest(generationSelected) }.exceptionOrNull()?.message
     }
     val selectedPersonalModel: PersonalModel? get() = personalModels.firstOrNull { it.id == selectedPersonalModelId }
     val modelName: String get() = selectedPersonalModel?.name ?: if (selectedPersonalModelId == null) "内置虚拟模特" else "已删除的个人模特"
@@ -79,6 +88,8 @@ data class TryOnUiState(
     }
     val canGenerate: Boolean get() = modelIssue == null && !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
 }
+
+data class PendingTryOnConflict(val candidate: TryOnSelection, val conflict: TryOnConflict)
 
 /** The function boundaries isolate personal credentials and the paid request from UI/Room tests. */
 class TryOnViewModel @JvmOverloads constructor(
@@ -106,7 +117,7 @@ class TryOnViewModel @JvmOverloads constructor(
 
 ) : ViewModel() {
     private val gson = Gson()
-    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
+    private val _uiState = MutableStateFlow(TryOnUiState(selected = restoreSelection(), generationItemIds = savedStateHandle.get<List<Long>>(GENERATION_IDS).orEmpty().toSet(), requiresExplicitSubset = savedStateHandle[EXPLICIT_SUBSET] ?: (restoreSelection().size > 8), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
     val uiState: StateFlow<TryOnUiState> = _uiState.asStateFlow()
     private var observedTasks = emptyList<ImageTask>()
     private var entryConsumed = savedStateHandle.get<Boolean>(ENTRY_CONSUMED) == true || savedStateHandle.contains(SELECTION)
@@ -150,11 +161,11 @@ class TryOnViewModel @JvmOverloads constructor(
                             coordinateId != null -> rows.filter { it.id in parents || it.parentItemId in parents }
                             else -> emptyList()
                         }
-                        setSelection(initial.take(8).map { item -> selection(item).let { selected ->
+                        setSelection(initial.map { item -> selection(item).let { selected ->
                             retry?.garments?.firstOrNull { it.itemId == item.id }?.let { selected.copy(role = it.role) } ?: selected
                         } })
                         if (retry != null) _uiState.update { it.copy(error = if (initial.size != retry.garments.size) "部分原服饰已删除或不在已拥有衣橱，请重新选择并核对；原任务保留" else "已载入当前服饰图片，请核对后再次确认生成；原任务保留") }
-                        if (initial.size > 8) _uiState.update { it.copy(error = "此套装超过8件，已预选前8件，请核对后生成") }
+                        if (initial.size > 8) _uiState.update { it.copy(error = "此搭配共${initial.size}件，请明确勾选本次试衣的1至8件，不会自动删除其他物品") }
                         if (itemId != null && initial.isEmpty()) _uiState.update { it.copy(error = "这件服饰已不在已拥有衣橱，请重新选择") }
                         _uiState.update { it.copy(isLoading = false) }
                     }
@@ -169,7 +180,7 @@ class TryOnViewModel @JvmOverloads constructor(
         viewModelScope.launch { tasks.collect { rows -> observedTasks = rows; _uiState.update { it.copy(latestTask = rows.firstOrNull { task -> task.id == it.latestTaskId }) } } }
         viewModelScope.launch {
             serviceChanges.collect {
-                _uiState.update { it.copy(keyLoaded = false) }
+                _uiState.update { it.copy(keyLoaded = false, keyRevision = it.keyRevision + 1) }
                 try {
                     val status = withContext(Dispatchers.IO) { readService() }
                     _uiState.update { it.copy(provider = status.provider, hasKey = status.hasKey, keyLoaded = true) }
@@ -186,20 +197,49 @@ class TryOnViewModel @JvmOverloads constructor(
         val type = object : TypeToken<List<TryOnSelection>>() {}.type
         gson.fromJson<List<TryOnSelection>>(json, type).orEmpty().filter {
             it.itemId > 0 && it.name.isNotBlank()
-        }.distinctBy { it.itemId }.take(8)
+        }.distinctBy { it.itemId }
     }.getOrDefault(emptyList())
 
     private fun selection(item: Item): TryOnSelection {
-        val category = _uiState.value.categories.firstOrNull { it.id == item.categoryId }?.name.orEmpty()
-        val categoryRole = TryOnRole.suggest(category)
-        val role = if (categoryRole == TryOnRole.OTHER) TryOnRole.suggest(item.name) else categoryRole
-        return TryOnSelection(item.id, item.name, item.imageUrls.firstOrNull { it.isNotBlank() }.orEmpty(), role)
+        val category = _uiState.value.categories.firstOrNull { it.id == item.categoryId }
+        val role = category?.defaultWearRole ?: category?.categorySemantic?.defaultWearRole ?: TryOnRole.OTHER
+        return TryOnSelection(item.id, item.name, item.imageUrls.firstOrNull { it.isNotBlank() }.orEmpty(), role,
+            category?.categorySemantic, item.composition)
     }
 
     private fun setSelection(rows: List<TryOnSelection>) {
         savedStateHandle[SELECTION] = gson.toJson(rows)
-        _uiState.update { it.copy(selected = rows, error = null) }
+        val before = _uiState.value
+        val explicit = rows.isNotEmpty() && (before.requiresExplicitSubset || rows.size > 8)
+        val ids = if (!explicit) rows.map { it.itemId }.toSet()
+            else if (!before.requiresExplicitSubset) emptySet() else before.generationItemIds.intersect(rows.map { it.itemId }.toSet())
+        savedStateHandle[GENERATION_IDS] = ids.toList()
+        savedStateHandle[EXPLICIT_SUBSET] = explicit
+        _uiState.update { it.copy(selected = rows, generationItemIds = ids, requiresExplicitSubset = explicit, pendingConflict = null, error = null) }
     }
+
+    fun toggleGenerationItem(itemId: Long) {
+        val state = _uiState.value
+        if (state.busy || state.selected.none { it.itemId == itemId } || !state.requiresExplicitSubset) return
+        val ids = if (itemId in state.generationItemIds) state.generationItemIds - itemId else state.generationItemIds + itemId
+        if (ids.size > 8) { _uiState.update { it.copy(error = "本次最多8件，请先取消一项勾选；搭配本身保留") }; return }
+        savedStateHandle[GENERATION_IDS] = ids.toList()
+        _uiState.update { it.copy(generationItemIds = ids, error = null) }
+    }
+
+    private fun propose(candidate: TryOnSelection) {
+        val conflict = tryOnConflict(candidate, _uiState.value.selected)
+        if (conflict != null) _uiState.update { it.copy(pendingConflict = PendingTryOnConflict(candidate, conflict)) }
+        else setSelection(_uiState.value.selected.filterNot { it.itemId == candidate.itemId } + candidate)
+    }
+
+    fun resolveConflict(replaceId: Long? = null) {
+        val state = _uiState.value
+        val pending = state.pendingConflict ?: return
+        if (state.busy || (pending.conflict.requiresReplacement && replaceId !in pending.conflict.itemIds)) return
+        setSelection(state.selected.filterNot { it.itemId == pending.candidate.itemId || it.itemId == replaceId } + pending.candidate)
+    }
+    fun cancelConflict() { _uiState.update { it.copy(pendingConflict = null) } }
 
     fun selectPersonalModel(id: Long?) {
         val state = _uiState.value
@@ -217,8 +257,7 @@ class TryOnViewModel @JvmOverloads constructor(
         if (state.busy || state.isLoading || state.loadFailed) return
         if (state.selected.any { it.itemId == itemId }) return setSelection(state.selected.filterNot { it.itemId == itemId })
         val item = state.items.firstOrNull { it.id == itemId } ?: return
-        if (state.selected.size >= 8) { _uiState.update { it.copy(error = "每次最多选择8件服饰与小物") }; return }
-        setSelection(state.selected + selection(item))
+        propose(selection(item))
     }
 
     fun setImage(itemId: Long, path: String) {
@@ -229,7 +268,10 @@ class TryOnViewModel @JvmOverloads constructor(
 
     fun setRole(itemId: Long, role: TryOnRole) {
         if (_uiState.value.busy) return
-        setSelection(_uiState.value.selected.map { if (it.itemId == itemId) it.copy(role = role) else it })
+        val state = _uiState.value
+        val row = state.selected.firstOrNull { it.itemId == itemId } ?: return
+        val item = state.items.firstOrNull { it.id == itemId }
+        propose(row.copy(role = role, semantic = state.categories.firstOrNull { it.id == item?.categoryId }?.categorySemantic))
     }
 
     fun selectProvider(provider: ImageGenerationProvider) {
@@ -261,7 +303,8 @@ class TryOnViewModel @JvmOverloads constructor(
     }
     fun generate(confirmedProvider: ImageGenerationProvider = _uiState.value.provider,
         confirmedPersonalModelId: Long? = _uiState.value.selectedPersonalModelId,
-        confirmedModelImagePath: String? = _uiState.value.selectedPersonalModel?.imageUrl) {
+        confirmedModelImagePath: String? = _uiState.value.selectedPersonalModel?.imageUrl,
+        confirmedSelection: List<TryOnSelection>? = null, confirmedKeyRevision: Int? = null, confirmedModelName: String? = null) {
         val state = _uiState.value
         if (state.busy || state.isLoading || state.loadFailed || !state.keyLoaded) return
         if (confirmedProvider != state.provider) {
@@ -271,10 +314,15 @@ class TryOnViewModel @JvmOverloads constructor(
             state.selectedPersonalModel?.imageUrl != confirmedModelImagePath) {
             _uiState.update { it.copy(error = "试衣人物或底图已改变，请重新选择并核对后生成") }; return
         }
+        if (confirmedSelection != null && confirmedSelection != state.generationSelected ||
+            confirmedKeyRevision != null && confirmedKeyRevision != state.keyRevision ||
+            confirmedModelName != null && confirmedModelName != state.modelName) {
+            _uiState.update { it.copy(error = "本次图片、物品、位置或服务配置已改变，请重新核对付费内容") }; return
+        }
         if (!state.hasKey) { _uiState.update { it.copy(error = "请先配置个人 API Key") }; return }
         state.modelIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
         state.selectionIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
-        val snapshot = state.selected.toList()
+        val snapshot = state.generationSelected.toList()
         val selectedModelId = state.selectedPersonalModelId
         _uiState.update { it.copy(isSubmitting = true, error = null) }
         viewModelScope.launch {
@@ -312,6 +360,8 @@ class TryOnViewModel @JvmOverloads constructor(
     }
 
     companion object {
+        private const val EXPLICIT_SUBSET = "tryOnRequiresExplicitSubset"
+        private const val GENERATION_IDS = "tryOnGenerationItemIds"
         private const val MODEL_ID = "tryOnPersonalModelId"
         private const val MODEL_CHOSEN = "tryOnPersonalModelChosen"
         private const val LAST_TASK = "tryOnLatestTaskId"

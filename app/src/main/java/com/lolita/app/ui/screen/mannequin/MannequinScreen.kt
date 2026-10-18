@@ -47,12 +47,14 @@ fun MannequinScreen(
     var showKey by remember { mutableStateOf(false) }
     var zoomLegacy by remember { mutableStateOf(false) }
     var discardLegacy by remember { mutableStateOf(false) }
+    var headPreview by remember { mutableStateOf<String?>(null) }
     var confirmation by remember { mutableStateOf<MannequinConfirmation?>(null) }
     val accessory = state.presentation == MannequinPresentation.ACCESSORY
+    val wig = state.presentation == MannequinPresentation.WIG_HEAD
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            GradientTopAppBar(title = { Text("${state.presentation.label}（实验）", maxLines = 2) }, navigationIcon = {
+            GradientTopAppBar(title = { Text("AI 展示图 · ${state.presentation.label}", maxLines = 2) }, navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
                 }
@@ -63,7 +65,8 @@ fun MannequinScreen(
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    Text(if (accessory) "上传所选小物原图及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
+                    Text(if (wig) "上传所选头模与假发原图至 ${state.provider.recipient}，共2张图片；API 单独计费。"
+                        else if (accessory) "上传所选小物原图及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
                         else "上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
                     Button(onClick = { if (!state.hasKey) showKey = true else state.generationRequest?.let { confirmation = MannequinConfirmation(state.provider, it, state.keyRevision) } },
@@ -103,7 +106,8 @@ fun MannequinScreen(
             item("background-advice") { ImageBackgroundAdvice() }
             item("notice") {
                 LolitaSection(title = state.item?.name ?: "物品参考图") { row {
-                    Text(if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
+                    Text(if (wig) "只将本次假发戴在选定头模上，保留头模脸部、颈部和必要底座，不复制商品图中的真人面孔。头模均为候选，尚未通过长短假发真实评审。"
+                        else if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
                         else "仅生成无杆正面人台图，不保留支撑杆和底座；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                     Text("结果保存在任务中心，核对后可追加到原图片末尾。离开页面不会放弃预览。",
@@ -111,6 +115,45 @@ fun MannequinScreen(
                     state.selectionIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall)) }
                     state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall) }
                 } }
+            }
+            if (wig) {
+                item("head-choice-title") {
+                    LolitaSection(title = "选择头模 · 单选") { row {
+                        Text("五款均为候选，尚未统一构图及验证短发、长直发、长卷发。切换或放大不会调用付费接口。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
+                        state.selectedHeadTemplate?.let { Text("本次：${it.name} · v${it.version} · 待真实评审", style = MaterialTheme.typography.labelMedium) }
+                        if (state.isLoadingHead) ShimmerRect(100.dp, 120.dp, modifier = Modifier.fillMaxWidth())
+                    } }
+                }
+                itemsIndexed(state.headTemplates, key = { _, template -> "head-${template.id}-${template.version}" }) { _, template ->
+                    val chosen = state.selectedHeadTemplate?.let { it.id == template.id && it.version == template.version && it.sha256 == template.sha256 } == true
+                    LolitaCard(variant = CardVariant.COMPACT, modifier = Modifier.fillMaxWidth().semantics { selected = chosen }) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                            LolitaShimmerImage(model = template.previewPath, contentDescription = "放大头模候选：${template.name}", contentScale = ContentScale.Fit,
+                                circularRevealEnabled = false, modifier = Modifier.width(84.dp).height(126.dp).skinClickable { headPreview = template.previewPath })
+                            Column(Modifier.weight(1f)) {
+                                Text(template.name, style = MaterialTheme.typography.titleSmall)
+                                Text(template.statusLabel, style = MaterialTheme.typography.bodySmall)
+                                TextButton(onClick = { viewModel.selectHeadTemplate(template.id) }, enabled = !state.busy) { Text(if (chosen) "已选用" else "选用此头模") }
+                            }
+                            RadioButton(selected = chosen, onClick = { viewModel.selectHeadTemplate(template.id) }, enabled = !state.busy)
+                        }
+                    }
+                }
+                item("head-view-confirmation") {
+                    LolitaSection(title = "核对实际两张输入") { row {
+                        state.selectedHeadTemplate?.let { selected ->
+                            LolitaShimmerImage(model = selected.imagePath, contentDescription = "本次实际头模输入", contentScale = ContentScale.Fit,
+                                circularRevealEnabled = false, modifier = Modifier.fillMaxWidth().height(180.dp).skinClickable { headPreview = selected.imagePath })
+                        }
+                        if (state.selectedImage.isNotBlank()) LolitaShimmerImage(model = state.selectedImage, contentDescription = "本次实际假发输入", contentScale = ContentScale.Fit,
+                            circularRevealEnabled = false, modifier = Modifier.fillMaxWidth().height(180.dp).skinClickable { headPreview = state.selectedImage })
+                        Text("正面模板需要看得到刘海、头顶和正面轮廓的参考；只有背面或侧面的图请更换。长发应包含完整发梢，不凭空补出看不见的结构。", style = MaterialTheme.typography.bodySmall)
+                        Row(Modifier.fillMaxWidth().skinClickable(enabled = !state.busy) { viewModel.confirmReferenceView(!state.referenceViewConfirmed) }, verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(checked = state.referenceViewConfirmed, onCheckedChange = viewModel::confirmReferenceView, enabled = !state.busy)
+                            Text("已核对视角与发梢，并知晓头模仍为待评审候选", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                        }
+                    } }
+                }
             }
             item("service") {
                 LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
@@ -125,7 +168,8 @@ fun MannequinScreen(
             }
             item("source") {
                 LolitaSection(title = "选择一张原图") { row {
-                    Text(if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
+                    Text(if (wig) "请选择一张正面轮廓、刘海和发梢完整的假发商品图；多视图请先选定目标视图，不发送拼图或多个头模。"
+                        else if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
                         else "选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = skin.spacingMedium))
                 } }
@@ -150,11 +194,13 @@ fun MannequinScreen(
                         label = { Text("补充说明（可选）") }, placeholder = { Text(if (accessory) "例如：只保留头上的红色KC" else "例如：排除独立手袖") }, enabled = !state.busy && !state.isLoading,
                         modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium), minLines = 2, maxLines = 5,
                         supportingText = { Text("${state.instructions.length}/200") }, shape = RoundedCornerShape(skin.cornerRadiusMedium))
-                    Text(if (accessory) "不上传人台模板，按原图角度生成独立物品展示图。" else "使用固定无杆正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
+                    Text(if (wig) "仅上传本次选定头模与假发图，输出一张戴头模图；保留原图，先确认后添加。"
+                        else if (accessory) "不上传人台模板，按原图角度生成独立物品展示图。" else "使用固定无杆正面人台模板，不生成侧面或背面。", style = MaterialTheme.typography.bodySmall)
                 } }
             }
         }
     }
+    headPreview?.let { FullScreenImageViewer(listOf(it), onDismiss = { headPreview = null }) }
     if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
         viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     if (zoomLegacy && state.legacyPreviewPath != null) FullScreenImageViewer(listOf(state.legacyPreviewPath!!), onDismiss = { zoomLegacy = false })
@@ -165,13 +211,20 @@ fun MannequinScreen(
     confirmation?.let { confirmed ->
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成${confirmed.request.presentation.label}？") },
             text = { Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                confirmed.request.wigHeadTemplate?.let { head ->
+                    Text("头模：${head.name} · v${head.version} · 候选待真实评审")
+                    LolitaShimmerImage(model = head.imagePath, contentDescription = "本次将上传的头模", contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxWidth().height(120.dp), circularRevealEnabled = false)
+                }
                 ImageFrame(Modifier.fillMaxWidth()) {
                     LolitaShimmerImage(model = confirmed.request.imagePath, contentDescription = "本次将上传的原图", contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxWidth().height(120.dp), circularRevealEnabled = false)
                 }
                 Text("分类：${confirmed.request.subject?.categoryName.orEmpty()}")
                 if (confirmed.request.instructions.isNotBlank()) Text("补充说明：${confirmed.request.instructions}")
-                Text(if (confirmed.request.presentation == MannequinPresentation.ACCESSORY)
+                Text(if (confirmed.request.presentation == MannequinPresentation.WIG_HEAD)
+                    "将上传上方选定的头模与假发原图至 ${confirmed.provider.recipient}，共2张图片，API 单独计费。结果须核对颜色、形状、组成数量和发梢；不会替换封面。"
+                    else if (confirmed.request.presentation == MannequinPresentation.ACCESSORY)
                     "将上传这张小物原图与补充说明至 ${confirmed.provider.recipient}，不上传人台模板，共1张图片；API 单独计费。结果在任务中心核对后再添加。"
                     else "将上传这张原图、无杆人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。结果在任务中心核对后再添加。")
             } },

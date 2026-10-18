@@ -40,11 +40,13 @@ class ImageTaskExecutor(
     private val generatePersonalModel: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray = generateImage,
     private val validateSourceImage: suspend (String) -> Boolean = { java.io.File(it).let { f -> f.isFile && f.canRead() && f.length() > 0 } },
     private val prepareAccessory: (suspend (List<String>) -> List<ByteArray>)? = null,
-    private val generateMannequin: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray = generateImage
+    private val generateMannequin: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray = generateImage,
+    private val prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null
 ) {
     suspend fun execute(task: ImageTask) {
         val credentials = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { readCredentials(task.provider) }
         val request = ImageTaskRequest.decode(task.requestJson)
+        if (request.version == 4) require(request.serviceModel == task.provider.model) { "原服务型号已不可用，请核对后为新任务重新选择；原请求未改变" }
         when (task.kind) {
             ImageTaskKind.PERSONAL_MODEL -> PersonalModelGenerator(
                 readCredentials = { credentials }, validateSourceImage = validateSourceImage,
@@ -59,14 +61,18 @@ class ImageTaskExecutor(
                 saveResult = { bytes, rows, model -> coordinator.publishTryOn(task.id, bytes, rows, model) }
             ).generate(request.selections(task.sourceImagePaths), expectedProvider = task.provider,
                 beforeRequest = { coordinator.beforeRequest(task.id) },
-                personalModelImagePath = request.modelImagePath(task.sourceImagePaths))
+                personalModelImagePath = request.modelImagePath(task.sourceImagePaths),
+                immutableRequest = request.takeIf { it.version == 4 }, immutablePaths = task.sourceImagePaths,
+                prepareSnapshotImages = prepareSnapshotImages)
             ImageTaskKind.MANNEQUIN -> MannequinGenerator(
                 findItem = db.itemDao()::getItemById, findCategory = db.categoryDao()::getCategoryById,
                 readCredentials = { credentials }, prepareImages = prepareMannequin, generateImage = generateMannequin,
                 savePreview = { coordinator.publishMannequin(task.id, it) }, discardPreview = coordinator::discardUnownedImage,
                 prepareAccessoryImages = prepareAccessory
-            ).generate(MannequinRequest(request.garments.single().itemId, task.sourceImagePaths.single(), request.instructions, request.mannequinSubject),
-                expectedProvider = task.provider, beforeRequest = { coordinator.beforeRequest(task.id) })
+            ).generate(MannequinRequest(request.garments.single().itemId, task.sourceImagePaths.last(), request.instructions, request.mannequinSubject, request.wigHeadTemplate),
+                expectedProvider = task.provider, beforeRequest = { coordinator.beforeRequest(task.id) },
+                immutableRequest = request.takeIf { it.version == 4 }, immutablePaths = task.sourceImagePaths,
+                prepareSnapshotImages = prepareSnapshotImages)
         }
     }
 }

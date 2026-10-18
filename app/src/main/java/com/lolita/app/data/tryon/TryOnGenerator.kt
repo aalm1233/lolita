@@ -31,10 +31,13 @@ class TryOnGenerator(
         onPhase: (TryOnGenerationPhase) -> Unit = {},
         expectedProvider: com.lolita.app.domain.model.ImageGenerationProvider? = null,
         beforeRequest: suspend () -> Unit = {},
-        personalModelImagePath: String? = null
+        personalModelImagePath: String? = null,
+        immutableRequest: com.lolita.app.domain.model.ImageTaskRequest? = null,
+        immutablePaths: List<String>? = null,
+        prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null
     ): Long = gate.runExclusive {
         currentCoroutineContext().ensureActive()
-        val request = TryOnRequest(selected.toList())
+        val request = TryOnRequest(selected.toList(), protocolVersion = immutableRequest?.version ?: if (selected.any { it.semantic != null || it.role.ordinal >= 8 }) 4 else 1)
         onPhase(TryOnGenerationPhase.PREPARING)
         val credentials = withContext(Dispatchers.IO) { readCredentials() }
         require(expectedProvider == null || credentials.provider == expectedProvider) { "图像服务已更换，请核对服务配置后重新生成" }
@@ -42,7 +45,7 @@ class TryOnGenerator(
         require(key.isNotBlank() && key.length <= 512 && key.all { it.code in 33..126 }) {
             "请先在服务配置中填写有效的 API Key"
         }
-        withContext(Dispatchers.IO) {
+        if (immutableRequest == null) withContext(Dispatchers.IO) {
             for (row in request.selections) {
                 currentCoroutineContext().ensureActive()
                 val item = findItem(row.itemId)
@@ -62,7 +65,13 @@ class TryOnGenerator(
             "模特图片已丢失，请重新选择"
         }
         val garmentPaths = request.selections.map { it.imagePath }
-        val images = if (personalModelImagePath == null) prepareImages(garmentPaths)
+        val images = if (immutableRequest != null) {
+            val paths = requireNotNull(immutablePaths)
+            withContext(Dispatchers.IO) { immutableRequest.validateInputImages(paths) }
+            requireNotNull(prepareSnapshotImages) { "任务快照图片准备尚未接入" }(paths).also {
+                withContext(Dispatchers.IO) { immutableRequest.validateInputImages(paths) }
+            }
+        } else if (personalModelImagePath == null) prepareImages(garmentPaths)
             else requireNotNull(preparePersonalImages) { "专属模特图片准备尚未接入" }(personalModelImagePath, garmentPaths)
         require(images.size == request.selections.size + 1 && images.all { it.isNotEmpty() }) {
             "参考图片未全部准备完成，请重新选择图片"
@@ -72,7 +81,7 @@ class TryOnGenerator(
         currentCoroutineContext().ensureActive()
         beforeRequest()
         currentCoroutineContext().ensureActive()
-        val result = generateImage(credentials, images, request.prompt(personalModel = personalModelImagePath != null))
+        val result = generateImage(credentials, images, immutableRequest?.promptSnapshot ?: request.prompt(personalModel = personalModelImagePath != null))
         currentCoroutineContext().ensureActive()
         onPhase(TryOnGenerationPhase.SAVING)
         currentCoroutineContext().ensureActive()

@@ -45,7 +45,7 @@ abstract class ImageTaskDao {
     }
 
     @Query("""UPDATE image_tasks SET status='INTERRUPTED',
-        source_image_paths=CASE WHEN kind='PERSONAL_MODEL' THEN source_image_paths ELSE '[]' END,
+        source_image_paths=CASE WHEN kind='PERSONAL_MODEL' OR keep_source_images=1 THEN source_image_paths ELSE '[]' END,
         updated_at=:now, error=:error
         WHERE status IN ('QUEUED','PREPARING','GENERATING','SAVING')""")
     abstract suspend fun interruptUnfinished(now: Long, error: String): Int

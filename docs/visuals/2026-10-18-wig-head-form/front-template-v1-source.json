@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-18",
+  "status": "candidate_for_user_review",
+  "tool": "built-in image_gen.imagegen",
+  "purpose": "Empty front-facing mannequin head for the planned wig product image feature",
+  "output": "front-template-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "69a70af2e83c7a3ec63c45be3d1c7a1b902127a3555895f4563dbb55b4e1887e",
+  "prompt": "front-template-v1-prompt.txt",
+  "referenceRole": "User-provided face sculpt, makeup and porcelain doll style references; not the final camera angle or wig",
+  "references": [
+    {
+      "filename": "1000029707.jpg",
+      "sha256": "c5316a762675c1158b529e43daae92ee2637413d5a713750c86e68e4e9a36fa5"
+    },
+    {
+      "filename": "1000029706.jpg",
+      "sha256": "c88df5b8b1e1b434501579795cbaf7260ee9a8ad829da284c7e73396b77d17ee"
+    }
+  ],
+  "validation": {
+    "visuallyReviewed": true,
+    "frontFacing": true,
+    "baldScalp": true,
+    "headAndBaseComplete": true,
+    "noJewelryOrText": true,
+    "actualWigCompositingTested": false,
+    "note": "Candidate is a close product portrait; long-wig clearance must be assessed before fixing the runtime template framing."
+  },
+  "runtimeIntegrated": false
+}

@@ -6,6 +6,7 @@ import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.Location
 import com.lolita.app.data.local.entity.StorageNode
+import com.lolita.app.data.local.entity.ItemDraftData
 import com.lolita.app.domain.model.StorageTree
 import com.lolita.app.domain.model.StorageTemplate
 import com.lolita.app.domain.model.StorageTemplates
@@ -72,6 +73,9 @@ class StorageRepository(private val database: LolitaDatabase, private val contex
         validate(moved)
         moved.filter { it.id in ids }.forEach { nodes.update(it) }
         database.itemDao().moveStorageSubtreeItems(ids.toList(), locationId)
+        updateDraftStorage { data ->
+            if (data.storageNodeId in ids) data.copy(locationId = locationId) else data
+        }
     }
 
     suspend fun deleteNode(nodeId: Long, clearContents: Boolean = false) {
@@ -82,6 +86,11 @@ class StorageRepository(private val database: LolitaDatabase, private val contex
             val count = database.itemDao().countItemsInStorageNodes(ids.toList())
             require(clearContents || ids.size == 1 && count == 0) { "该位置包含 ${ids.size - 1} 个子位置、$count 条记录，请先移动内容或明确全部移至未设置位置" }
             if (clearContents) database.itemDao().clearStorageSubtreeItems(ids.toList())
+            val rooms = database.locationDao().getAllLocationsList().map { it.id }.toSet()
+            updateDraftStorage { data ->
+                if (data.storageNodeId in ids) data.copy(storageNodeId = null,
+                    locationId = data.locationId?.takeIf { it in rooms }) else data
+            }
             val removed = graph.filter { it.id in ids }
             removed.sortedByDescending { it.parentNodeId != null }.forEach { nodes.delete(it) }
             removed.mapNotNull { it.imageUrl }
@@ -97,11 +106,25 @@ class StorageRepository(private val database: LolitaDatabase, private val contex
             val count = database.itemDao().countItemsByLocation(location.id)
             require(clearContents || graph.isEmpty() && count == 0) { "房间包含 ${graph.size} 个收纳位置、$count 条记录，请先移动内容或明确全部移至未设置位置" }
             if (clearContents) database.itemDao().clearRoomStorage(location.id)
+            val ids = graph.map { it.id }.toSet()
+            updateDraftStorage { data ->
+                if (data.locationId == location.id || data.storageNodeId in ids)
+                    data.copy(locationId = null, storageNodeId = null) else data
+            }
             graph.sortedByDescending { it.parentNodeId != null }.forEach { nodes.delete(it) }
             database.locationDao().deleteLocation(latest)
             graph.mapNotNull { it.imageUrl } + listOfNotNull(latest.imageUrl)
         }
         ImageFileHelper.cleanupUnreferencedImages(images)
+    }
+
+    /** Called only inside the graph transaction; every other draft field and file stays owned. */
+    private suspend fun updateDraftStorage(transform: (ItemDraftData) -> ItemDraftData) {
+        database.itemDraftDao().getAll().forEach { draft ->
+            val original = draft.data()
+            val updated = transform(original)
+            if (updated != original) database.itemDraftDao().save(draft.copy(dataJson = updated.encode()))
+        }
     }
 
     suspend fun moveItems(itemIds: Set<Long>, locationId: Long?, nodeId: Long?) = database.withTransaction {

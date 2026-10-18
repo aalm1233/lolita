@@ -69,7 +69,7 @@ class ItemRepository(
         require(itemDao.getItemById(item.id) != null) { "服饰已删除，无法保存修改" }
         val normalized = validateHierarchy(item).copy(updatedAt = System.currentTimeMillis())
         itemDao.updateItem(normalized)
-        database?.imageProvenanceDao()?.getForItem(item.id)?.filter { it.imagePath !in normalized.imageUrls }?.forEach {
+        database?.imageProvenanceDao()?.getForItem(item.id)?.filter { it.imagePath !in (normalized.imageUrls + listOfNotNull(normalized.sizeChartImageUrl) + normalized.sizeChartImageUrls) }?.forEach {
             database.imageProvenanceDao().delete(it.itemId, it.imagePath)
         }
         itemDao.updateSharedChildrenStatus(normalized.id, normalized.status.name)
@@ -92,6 +92,10 @@ class ItemRepository(
                 check(itemDao.updateImages(itemId, item.imageUrls + path, System.currentTimeMillis()) == 1) {
                     "裙子已删除，无法添加人台图"
                 }
+            }
+            if (db.imageProvenanceDao().get(itemId,path)?.sourceType != com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED) {
+                db.imageProvenanceDao().upsert(com.lolita.app.data.local.entity.ImageProvenance(path,itemId,
+                    com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED,"legacy_display"))
             }
         }
     }
@@ -119,6 +123,9 @@ class ItemRepository(
     }
 
     private suspend fun validateHierarchy(item: Item): Item {
+        database?.let { db -> item.locationId?.let { roomId ->
+            require(db.locationDao().getLocationByIdSync(roomId)!=null) { "收纳位置已改变，请重新选择" }
+        } }
         item.storageNodeId?.let { nodeId ->
             val node = database?.storageNodeDao()?.getById(nodeId) ?: error("收纳位置已不存在，请重新选择")
             require(item.locationId != null && node.locationId == item.locationId) { "收纳位置不属于所选房间，请重新选择" }
@@ -175,6 +182,16 @@ class ItemRepository(
                 cleanupPaths.addAll(listOfNotNull(latest.sizeChartImageUrl) + latest.sizeChartImageUrls)
             }
             if (database != null) {
+                val drafts=database.itemDraftDao().getAll().filter { it.targetItemId==item.id }
+                val draftIds=drafts.map { it.id }.toMutableSet()
+                val tasks=database.recognitionDao().getAll().filter { it.targetItemId==item.id || it.draftId in draftIds }
+                draftIds.addAll(tasks.map { it.draftId })
+                cleanupPaths.addAll(drafts.flatMap { it.protectedImagePaths() })
+                cleanupPaths.addAll(tasks.flatMap { it.regionImagePaths })
+                cleanupPaths.addAll(database.recognitionDao().getEvidence().filter { it.itemId==item.id || it.itemId==null && it.draftId in draftIds }.flatMap { it.regionImagePaths })
+                tasks.forEach { database.recognitionDao().delete(it.id) }
+                draftIds.forEach { database.recognitionDao().deleteDraftEvidence(it) }
+                drafts.forEach { database.itemDraftDao().delete(it.id) }
                 val gson = Gson()
                 val affected = database.priceDao().getPricesByItemList(item.id).map { it.id }.toSet()
                 val previous = affected.flatMap { priceId ->

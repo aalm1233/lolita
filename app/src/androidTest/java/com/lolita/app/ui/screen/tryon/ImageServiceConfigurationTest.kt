@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.tryon
 
+import com.lolita.app.domain.model.CategorySemantic
+
 import android.content.ContextWrapper
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
@@ -34,14 +36,14 @@ class ImageServiceConfigurationTest {
         try {
             settings.saveKey("legacy-gpt-key", ImageGenerationProvider.OPENAI)
             val tryOn = withContext(Dispatchers.Main) {
-                TryOnViewModel(items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP"))), results = flowOf(emptyList()),
+                TryOnViewModel(items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))), results = flowOf(emptyList()),
                     readService = settings::readStatus, selectService = settings::selectProvider, serviceChanges = settings.changes,
                     saveApiKey = { provider, value -> settings.saveKey(value, provider) }, clearApiKey = settings::clearKey,
                     tasks = flowOf(emptyList()), submitTask = { _, _ -> error("no paid calls") }, renameResult = { _, _ -> }, deleteResult = {})
                     .also { store.put("tryOn", it) }
             }
             val mannequin = withContext(Dispatchers.Main) {
-                MannequinViewModel(savedStateHandle = SavedStateHandle(mapOf("itemId" to 11L)), item = flowOf(item), categories = flowOf(listOf(Category(id = 1, name = "OP"))),
+                MannequinViewModel(savedStateHandle = SavedStateHandle(mapOf("itemId" to 11L)), item = flowOf(item), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))),
                     readService = settings::readStatus, selectService = settings::selectProvider, serviceChanges = settings.changes,
                     saveApiKey = { provider, value -> settings.saveKey(value, provider) }, clearApiKey = settings::clearKey,
                     tasks = flowOf(emptyList()), submitTask = { _, _ -> "task-id" })

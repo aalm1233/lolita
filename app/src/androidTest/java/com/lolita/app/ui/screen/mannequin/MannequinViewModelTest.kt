@@ -35,7 +35,8 @@ class MannequinViewModelTest {
         val db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
         val repo = ItemRepository(db.itemDao(), database = db, context = context)
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        val coordinator = ImageTaskCoordinator(db, scope, {}, { ImageFileHelper.saveGeneratedImage(context, it) }, {}, { File(it).isFile })
+        val coordinator = ImageTaskCoordinator(db, scope, {}, { ImageFileHelper.saveGeneratedImage(context, it) }, {}, { File(it).isFile },
+            snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(context, it) })
         val stores = mutableListOf<ViewModelStore>()
         var key = true
         var calls = 0
@@ -47,7 +48,7 @@ class MannequinViewModelTest {
             ImageFileHelper.configure(context, db)
             coordinator.awaitStartup()
             db.brandDao().insertBrand(Brand(id = 1, name = "测试品牌"))
-            db.categoryDao().insertCategory(Category(id = 1, name = "OP"))
+            db.categoryDao().insertCategory(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))
             item = Item(id = 11, name = "心愿裙", brandId = 1, categoryId = 1, description = "私人备注", status = ItemStatus.WISHED,
                 imageUrls = listOf(image(), image()))
             db.itemDao().insertItem(item)
@@ -83,13 +84,13 @@ class MannequinViewModelTest {
     @Test fun accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault() = runBlocking {
         Fixture().use { f ->
             f.setup()
-            f.db.categoryDao().updateCategory(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY))
+            f.db.categoryDao().updateCategory(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))
             val (vm, _) = f.model()
             main { vm.generate() }
             val final = ready(vm) { !it.isSubmitting && (it.latestTaskId != null || it.error != null) }
             assertNotNull("Standalone accessory must enqueue with its subject", final.latestTaskId)
             val request = ImageTaskRequest.decode(f.db.imageTaskDao().get(final.latestTaskId!!)!!.requestJson)
-            assertEquals(MannequinSubject(1, "KC", MannequinPresentation.ACCESSORY), request.mannequinSubject)
+            assertEquals(MannequinSubject(1, "KC", MannequinPresentation.ACCESSORY, CategorySemantic.KC), request.mannequinSubject)
             assertEquals(listOf(f.item.imageUrls.first()), f.db.imageTaskDao().get(final.latestTaskId)!!.sourceImagePaths)
         }
     }
@@ -102,7 +103,9 @@ class MannequinViewModelTest {
             assertEquals(1, f.calls)
             val id = submitted.latestTaskId!!
             val task = f.db.imageTaskDao().get(id)!!
-            assertEquals(listOf(f.item.imageUrls[1]), task.sourceImagePaths)
+            assertEquals(2, task.sourceImagePaths.size)
+            assertEquals(f.item.imageUrls[1], task.sourceImagePaths.last())
+            assertTrue(File(task.sourceImagePaths.first()).isFile)
             assertEquals("排除独立手袖", ImageTaskRequest.decode(task.requestJson).instructions)
             main { store.clear() }
             f.coordinator.runNext({ active -> f.coordinator.beforeRequest(active.id); f.coordinator.publishMannequin(active.id, f.bytes()) }, {})

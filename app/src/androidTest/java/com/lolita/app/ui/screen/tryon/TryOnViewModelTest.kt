@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.*
+import com.lolita.app.domain.model.CategorySemantic
 import com.lolita.app.data.repository.TryOnRepository
 import com.lolita.app.data.tryon.TryOnGenerationPhase
 import com.lolita.app.domain.model.TryOnRole
@@ -52,8 +53,8 @@ class TryOnViewModelTest {
         store = ViewModelStore()
         repository = TryOnRepository(instrumentation.targetContext, database)
         database.brandDao().insertBrand(Brand(id = 1, name = "测试品牌"))
-        database.categoryDao().insertCategory(Category(id = 1, name = "JSK"))
-        database.categoryDao().insertCategory(Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY))
+        database.categoryDao().insertCategory(Category(id = 1, name = "JSK", categorySemantic = CategorySemantic.JSK))
+        database.categoryDao().insertCategory(Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))
         database.itemDao().insertItem(item(11, "月光裙", 1, listOf("/first.png", "/second.png")))
         database.itemDao().insertItem(item(12, "蝴蝶结", 2, listOf("/head.png")))
         database.itemDao().insertItem(item(13, "无图裙", 1, emptyList()))
@@ -208,14 +209,14 @@ class TryOnViewModelTest {
         assertEquals(com.lolita.app.domain.model.ImageTaskStatus.FAILED, database.imageTaskDao().get("retry-task")!!.status)
     }
 
-    @Test fun genericAccessoryCategoriesSuggestRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative() = runBlocking {
-        database.categoryDao().insertCategory(Category(id = 3, name = "其他配饰", group = CategoryGroup.ACCESSORY))
+    @Test fun stableAccessorySemanticsDoNotGuessRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative() = runBlocking {
+        database.categoryDao().insertCategory(Category(id = 3, name = "其他配饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.OTHER_ACCESSORY))
         database.itemDao().insertItem(item(21, "蕾丝手袖", 3, listOf("/hand.png")))
         database.itemDao().insertItem(item(22, "链条腰带", 3, listOf("/waist.png")))
         database.itemDao().insertItem(item(23, "手绘花鸟裙", 1, listOf("/dress.png")))
         val vm = model()
         main { vm.toggleItem(21); vm.toggleItem(22); vm.toggleItem(23) }
-        assertEquals(listOf(TryOnRole.HAND, TryOnRole.WAIST, TryOnRole.MAIN), vm.uiState.value.selected.map { it.role })
+        assertEquals(listOf(TryOnRole.OTHER, TryOnRole.OTHER, TryOnRole.MAIN), vm.uiState.value.selected.map { it.role })
     }
 
     @Test fun failedSubmissionKeepsDraftAndNeverAutomaticallyRetries() = runBlocking {

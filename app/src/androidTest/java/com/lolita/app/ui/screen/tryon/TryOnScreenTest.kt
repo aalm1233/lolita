@@ -71,7 +71,7 @@ class TryOnScreenTest {
                     Item(id = 11, brandId = 1, categoryId = 1, name = "月光裙", description = "", imageUrls = photos, status = ItemStatus.OWNED),
                     Item(id = 12, brandId = 1, categoryId = 2, name = "蝴蝶结", description = "", imageUrls = photos.take(1), status = ItemStatus.OWNED)
                 )),
-                categories = flowOf(listOf(Category(id = 1, name = "JSK"), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY))),
+                categories = flowOf(listOf(Category(id = 1, name = "JSK", categorySemantic = CategorySemantic.JSK), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))),
                 results = flowOf(emptyList()), readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
                 tasks = flowOf(emptyList()), submitTask = { _, _ -> error("UI测试不应发出请求") },
                 renameResult = { _, _ -> }, deleteResult = {}, personalModels = acceptedModels, defaultPersonalModelId = defaultModelId)
@@ -231,10 +231,12 @@ class TryOnScreenTest {
 
     @Test fun configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText() {
         compose.runOnIdle {
+            val semantics=listOf(CategorySemantic.JSK,CategorySemantic.KC,CategorySemantic.WRIST_CUFFS,CategorySemantic.MARY_JANE,
+                CategorySemantic.FULL_WIG,CategorySemantic.TIGHTS,CategorySemantic.HANDBAG,CategorySemantic.PARASOL)
             vm = TryOnViewModel(items = flowOf((1L..8L).map { id ->
-                Item(id = id, name = "第${id}件主裙", brandId = 1, categoryId = 1, description = "",
+                Item(id = id, name = "第${id}件物品", brandId = 1, categoryId = id, description = "",
                     status = ItemStatus.OWNED, imageUrls = photos.take(1))
-            }), categories = flowOf(listOf(Category(id = 1, name = "JSK"))), results = flowOf(emptyList()),
+            }), categories = flowOf(semantics.mapIndexed { index,semantic -> Category(id=index+1L,name=semantic.label,categorySemantic=semantic) }), results = flowOf(emptyList()),
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value ->  }, clearApiKey = { _ ->  }, tasks = flowOf(emptyList()),
                 submitTask = { _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
             store.put("eight-pieces", vm)

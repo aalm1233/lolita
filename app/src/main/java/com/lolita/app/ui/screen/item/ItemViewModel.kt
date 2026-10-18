@@ -15,6 +15,7 @@ import com.lolita.app.data.local.entity.ItemDraft
 import com.lolita.app.data.local.entity.ItemDraftData
 import com.lolita.app.data.local.entity.StorageNode
 import com.lolita.app.domain.model.*
+import com.lolita.app.data.repository.ItemDraftConflictException
 import com.lolita.app.data.repository.ItemDraftRepository
 import com.lolita.app.data.repository.StorageRepository
 import kotlinx.coroutines.sync.Mutex
@@ -34,6 +35,8 @@ import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.data.file.ImageFileHelper
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.CancellationException
@@ -146,6 +149,7 @@ data class ItemEditUiState(
     val recoveredImport: Boolean = false,
     val draftError: String? = null,
     val loadError: String? = null,
+    val hasDraftConflict: Boolean = false,
     val brands: List<com.lolita.app.data.local.entity.Brand> = emptyList(),
     val categories: List<com.lolita.app.data.local.entity.Category> = emptyList(),
     val coordinates: List<com.lolita.app.data.local.entity.Coordinate> = emptyList(),
@@ -815,6 +819,8 @@ class ItemEditViewModel(
     private var loadedIdentity: EditorIdentity? = null
     private var loadJob: Job? = null
     private var currentImportToken: String? = null
+    // The baseline belongs to the editable snapshot, never to a live observed Item row.
+    private var draftBaselineUpdatedAt: Long? = null
 
     private val drafts = draftRepository ?: runCatching {
         if (itemRepository === com.lolita.app.di.AppModule.itemRepository()) com.lolita.app.di.AppModule.itemDraftRepository() else null
@@ -851,7 +857,7 @@ class ItemEditViewModel(
             includedInParentPrice = state.includedInParentPrice, status = state.status, priority = state.priority,
             colors = state.colors, seasons = state.seasons, style = state.style, size = state.size, source = state.source,
             locationId = state.locationId, storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(),
-            composition = state.composition, importToken = currentImportToken, baselineUpdatedAt = state.item?.updatedAt).encode())
+            composition = state.composition, importToken = currentImportToken, baselineUpdatedAt = draftBaselineUpdatedAt).encode())
 
     private suspend fun persistDraft(state: ItemEditUiState = _uiState.value) {
         drafts?.let { repository ->
@@ -872,6 +878,12 @@ class ItemEditViewModel(
         if (restored == null) { _uiState.update { it.copy(draftId = id) }; return false }
         val data = restored.data()
         require(restored.targetItemId == null || restored.targetItemId == _uiState.value.item?.id) { "草稿对应的物品已删除" }
+        draftBaselineUpdatedAt = data.baselineUpdatedAt
+        _uiState.update { it.copy(draftId=id) }
+        hasUnsavedChanges = true
+        if(restored.targetItemId!=null && (data.baselineUpdatedAt==null || data.baselineUpdatedAt!=_uiState.value.item?.updatedAt)) {
+            throw ItemDraftConflictException()
+        }
         currentImportToken = data.importToken
         _uiState.update { it.copy(draftId = id, name = data.name, description = data.description,
             brandId = data.brandId, categoryId = data.categoryId, coordinateId = data.coordinateId,
@@ -896,7 +908,13 @@ class ItemEditViewModel(
 
     suspend fun keepDraft() {
         val state = _uiState.value
-        if (drafts != null && state.draftId != null && !state.isLoading && state.loadError == null && !discardInProgress) draftMutex.withLock { persistDraft() }
+        if (drafts != null && state.draftId != null && !state.isLoading && !state.isSaving && state.loadError == null && !discardInProgress) draftMutex.withLock {
+            val latest=_uiState.value
+            if(!latest.isLoading && !latest.isSaving && latest.loadError==null && !discardInProgress && latest.draftId==state.draftId) {
+                persistDraft(latest)
+                latest.item?.id?.let { drafts.reconnectRecognition(it,requireNotNull(latest.draftId)) }
+            }
+        }
         if (drafts == null) cleanupNewImages()
     }
 
@@ -908,7 +926,20 @@ class ItemEditViewModel(
         cleanupNewImages()
     }
 
+    suspend fun discardConflictingDraftAndReload() {
+        val identity=requestedIdentity ?: return
+        require(_uiState.value.hasDraftConflict && !_uiState.value.isSaving) { "草稿状态已变化，请重新核对" }
+        discardDraft()
+        requestedIdentity=null
+        loadedIdentity=null
+        loadItem(identity.itemId,identity.defaultStatus,identity.defaultParentItemId,identity.importedDraftJson,
+            identity.defaultLocationId,identity.defaultStorageNodeId,identity.defaultFamily)
+    }
+
     private fun recognitionPaths(semantic: CategorySemantic): Map<RecognitionField, Pair<String, String>> = mapOf(
+        RecognitionField.CLOTHING_LENGTH to ("clothing" to "lengthCm"), RecognitionField.CLOTHING_BUST to ("clothing" to "bustCm"),
+        RecognitionField.CLOTHING_WAIST to ("clothing" to "waistCm"), RecognitionField.CLOTHING_HIP to ("clothing" to "hipCm"),
+        RecognitionField.CLOTHING_SHOULDER to ("clothing" to "shoulderWidthCm"), RecognitionField.CLOTHING_SLEEVE to ("clothing" to "sleeveLengthCm"),
         RecognitionField.WIG_COLOR to ("wig" to "mainColor"), RecognitionField.WIG_LENGTH to ("wig" to "lengthCm"),
         RecognitionField.WIG_CURL to ("wig" to "curl"), RecognitionField.WIG_BANGS to ("wig" to "bangs"),
         RecognitionField.WIG_PARTING to ("wig" to "parting"), RecognitionField.WIG_MATERIAL to ("wig" to "material"),
@@ -931,8 +962,9 @@ class ItemEditViewModel(
         RecognitionField.CARRY_CAPACITY to ("bag" to "capacity"), RecognitionField.CARRY_FOLDABLE to ("handheld" to "foldable")
     )
 
-    fun currentRecognitionValues(): Map<RecognitionField, String> {
-        val state = _uiState.value
+    fun currentRecognitionValues(): Map<RecognitionField, String> = recognitionValues(_uiState.value)
+
+    private fun recognitionValues(state: ItemEditUiState): Map<RecognitionField, String> {
         val semantic = state.categories.firstOrNull { it.id == state.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED
         val profileJson = com.google.gson.Gson().toJsonTree(state.specifications).asJsonObject
         val brand = state.brands.firstOrNull { it.id == state.brandId }
@@ -946,20 +978,20 @@ class ItemEditViewModel(
         return RecognitionField.entries.associateWith { base[it].orEmpty() }
     }
 
-    suspend fun applyRecognitionSelection(expectedDraftId: String, baseline: Map<RecognitionField, String>,
-        candidates: List<RecognitionCandidate>, selectedIds: Set<String>, variant: String? = null, size: String? = null,
-        resolvedBrandId: Long? = null, resolvedCategoryId: Long? = null): RecognitionMerge = draftMutex.withLock {
-        fun checkedState(): ItemEditUiState = _uiState.value.also { state ->
-            require(state.draftId == expectedDraftId && loadedIdentity == requestedIdentity && loadedIdentity != null &&
-                !state.isLoading && !state.isSaving && !discardInProgress && state.loadError == null) { "草稿已切换或尚未读取完成，请重新核对" }
+    private fun checkedRecognitionState(expectedDraftId: String, operationOwnsSaving: Boolean = false): ItemEditUiState = _uiState.value.also { state ->
+        require(state.draftId == expectedDraftId && loadedIdentity == requestedIdentity && loadedIdentity != null &&
+            !state.isLoading && (!state.isSaving || operationOwnsSaving) && !discardInProgress && state.loadError == null) {
+            "草稿已切换或尚未读取完成，请重新核对"
         }
-        val before = checkedState()
-        before.item?.let { require(itemRepository.getItemById(it.id) != null) { "物品已删除，无法应用识图资料" } }
-        val current = checkedState()
+    }
+
+    private fun recognitionPlan(current: ItemEditUiState, expectedDraftId: String, baseline: Map<RecognitionField,String>,
+        candidates: List<RecognitionCandidate>, selectedIds: Set<String>, variant: String?, size: String?,
+        resolvedBrandId: Long?, resolvedCategoryId: Long?): Pair<ItemEditUiState,RecognitionMerge> {
         val merge = RecognitionMerge.apply(expectedDraftId, requireNotNull(current.draftId), baseline,
-            currentRecognitionValues(), candidates, selectedIds, variant, size)
+            recognitionValues(current), candidates, selectedIds, variant, size)
         val rejected = mutableSetOf<RecognitionField>()
-        if (RecognitionField.BRAND in merge.values && current.brands.none { it.id == resolvedBrandId }) rejected += RecognitionField.BRAND
+        if (RecognitionField.BRAND in merge.values && current.brands.none { it.id == resolvedBrandId && !it.isUnsetBrand }) rejected += RecognitionField.BRAND
         if (RecognitionField.CATEGORY in merge.values && current.categories.none { it.id == resolvedCategoryId }) rejected += RecognitionField.CATEGORY
         val selectedCategory = if (RecognitionField.CATEGORY in merge.values && RecognitionField.CATEGORY !in rejected) resolvedCategoryId else current.categoryId
         val semantic = current.categories.firstOrNull { it.id == selectedCategory }?.categorySemantic ?: CategorySemantic.UNCONFIRMED
@@ -987,12 +1019,52 @@ class ItemEditViewModel(
                 else -> newState
             }
         }
-        if (accepted.isNotEmpty()) {
+        val actualValues = recognitionValues(newState)
+        return newState to RecognitionMerge(values.mapValues { (field, _) -> actualValues[field].orEmpty() }, accepted, merge.conflicts + rejectedIds)
+    }
+
+    private fun publishRecognitionState(next: ItemEditUiState) {
+        _uiState.update { it.copy(specifications=next.specifications,name=next.name,categoryId=next.categoryId,
+            brandId=next.brandId,colors=next.colors,size=next.size,style=next.style,seasons=next.seasons,isSaving=false) }
+    }
+
+    /** Standalone local merge. Recognition task/evidence applies must use applyRecognitionTask. */
+    suspend fun applyRecognitionSelection(expectedDraftId: String, baseline: Map<RecognitionField, String>,
+        candidates: List<RecognitionCandidate>, selectedIds: Set<String>, variant: String? = null, size: String? = null,
+        resolvedBrandId: Long? = null, resolvedCategoryId: Long? = null): RecognitionMerge = draftMutex.withLock {
+        val before = checkedRecognitionState(expectedDraftId)
+        before.item?.let { require(itemRepository.getItemById(it.id) != null) { "物品已删除，无法应用识图资料" } }
+        val (next, merge) = recognitionPlan(checkedRecognitionState(expectedDraftId), expectedDraftId, baseline,
+            candidates, selectedIds, variant, size, resolvedBrandId, resolvedCategoryId)
+        if (merge.acceptedIds.isNotEmpty()) {
+            if (drafts != null) persistDraft(next)
             hasUnsavedChanges = true
-            _uiState.value = newState
-            if (drafts != null) persistDraft(newState)
+            publishRecognitionState(next)
         }
-        RecognitionMerge(values, accepted, merge.conflicts + rejectedIds)
+        merge
+    }
+
+    /** The only task apply entry: editor mutex -> Room transaction -> publish after commit. */
+    suspend fun applyRecognitionTask(repository: com.lolita.app.data.repository.RecognitionRepository,
+        taskId: String, review: com.lolita.app.domain.model.RecognitionReview): RecognitionMerge {
+        val draftId = requireNotNull(_uiState.value.draftId) { "草稿尚未读取完成" }
+        checkedRecognitionState(draftId)
+        _uiState.update { it.copy(isSaving = true) }
+        try {
+            return withContext(NonCancellable) { draftMutex.withLock {
+                checkedRecognitionState(draftId, true)
+                var committedState: ItemEditUiState? = null
+                val merge = repository.apply(taskId,review) { request,candidates,selection ->
+                    require(request.draftId == draftId) { "识图结果属于另一份草稿" }
+                    val (next, merged) = recognitionPlan(checkedRecognitionState(draftId,true),draftId,request.baseline,
+                        candidates,selection.selectedIds,selection.variant,selection.sizeRow,selection.resolvedBrandId,selection.resolvedCategoryId)
+                    if (merged.acceptedIds.isNotEmpty()) { persistDraft(next); committedState=next }
+                    merged
+                }
+                committedState?.let { next -> hasUnsavedChanges=true; publishRecognitionState(next) }
+                merge
+            } }
+        } finally { _uiState.update { if(it.draftId==draftId) it.copy(isSaving=false) else it } }
     }
 
     fun updateSpecifications(value: WardrobeSpecifications) {
@@ -1036,6 +1108,7 @@ class ItemEditViewModel(
         supportingDataLoaded.set(false)
         requestedIdentity = identity
         loadedIdentity = null
+        draftBaselineUpdatedAt = null
         _uiState.value = ItemEditUiState(isLoading = true, preferredFamily = identity.defaultFamily)
         val importDraft = importedDraftJson?.let { json ->
             runCatching { com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java) }.getOrNull()
@@ -1062,6 +1135,7 @@ class ItemEditViewModel(
                 if (effectiveItemId > 0) {
                     val item = committedImport ?: itemRepository.getItemById(effectiveItemId)
                     if (item != null) {
+                        draftBaselineUpdatedAt = item.updatedAt
                         val prices = priceRepository.getPricesWithPaymentsByItem(effectiveItemId).first()
                         _uiState.update {
                             it.copy(
@@ -1097,6 +1171,10 @@ class ItemEditViewModel(
                     }
                     restoreDraft(identity)
                     loadedIdentity = identity
+                    if(drafts?.hasRecognitionForItem(effectiveItemId)==true) draftMutex.withLock {
+                        persistDraft()
+                        drafts.reconnectRecognition(effectiveItemId,requireNotNull(_uiState.value.draftId))
+                    }
                     if (committedImport != null) {
                         ImageFileHelper.cleanupUnreferencedImages(importedImages.toList())
                         importedImages.clear()
@@ -1177,7 +1255,8 @@ class ItemEditViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取服饰失败") }
+                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取服饰失败",
+                    hasDraftConflict = failure is ItemDraftConflictException) }
             }
         }
     }
@@ -1221,6 +1300,7 @@ class ItemEditViewModel(
                 itemRepository.setCoverImage(item.id, path)
                 val latest = itemRepository.getItemById(item.id)
                 if (requestedIdentity == identity && latest != null && !hasUnsavedChanges) {
+                    if(draftBaselineUpdatedAt==item.updatedAt && latest.copy(imageUrls=item.imageUrls,updatedAt=item.updatedAt)==item) draftBaselineUpdatedAt=latest.updatedAt
                     _uiState.update { it.copy(item = latest, imageUrls = latest.imageUrls) }
                 }
             } catch (failure: Exception) {
@@ -1574,6 +1654,7 @@ class ItemEditViewModel(
             _pendingImageDeletions.update { emptySet() }
             hasUnsavedChanges = false
             val savedItem = itemRepository.getItemById(savedItemId) ?: item.copy(id = savedItemId)
+            draftBaselineUpdatedAt=savedItem.updatedAt
             _uiState.update {
                 it.copy(
                     item = savedItem,
@@ -1586,7 +1667,9 @@ class ItemEditViewModel(
             Result.success(savedItemId)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            _uiState.update { it.copy(isSaving = false) }
+            _uiState.update { it.copy(isSaving = false,
+                loadError=if(e is ItemDraftConflictException) e.message else it.loadError,
+                hasDraftConflict=it.hasDraftConflict || e is ItemDraftConflictException) }
             Result.failure(e)
         }
     }

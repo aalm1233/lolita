@@ -127,7 +127,7 @@ class WardrobeRegistrationTest {
         val baseline = vm.currentRecognitionValues()
         val region = listOf("region-1")
         val name = RecognitionCandidate("name", RecognitionField.NAME, "AI建议名", RecognitionSource.TEXT, region, "AI建议名")
-        val length = RecognitionCandidate("length", RecognitionField.WIG_LENGTH, "60 cm", RecognitionSource.TEXT, region, "发长60 cm")
+        val length = RecognitionCandidate("length", RecognitionField.WIG_LENGTH, "60 cm", RecognitionSource.TEXT, region, "发长60 cm", measurement = RecognitionMeasurement(RecognitionMeasurementTarget.HAIR_LENGTH, RecognitionMeasurementBasis.PRODUCT_MEASURED, RecognitionMeasurementUnit.CM))
         val brand = RecognitionCandidate("brand", RecognitionField.BRAND, "未存在品牌", RecognitionSource.TEXT, region, "未存在品牌")
         withContext(Dispatchers.Main) { vm.updateName("识别期间手动改名") }
         val merge = withContext(Dispatchers.Main) { vm.applyRecognitionSelection(id, baseline, listOf(name, length, brand), setOf("name", "length", "brand")) }

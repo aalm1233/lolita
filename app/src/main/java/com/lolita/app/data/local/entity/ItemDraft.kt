@@ -19,13 +19,15 @@ data class ItemDraft(
     @ColumnInfo(name = "image_paths", defaultValue = "'[]'") val imagePaths: List<String> = emptyList(),
     @ColumnInfo(name = "size_chart_image_paths", defaultValue = "'[]'") val sizeChartImagePaths: List<String> = emptyList(),
     @ColumnInfo(name = "evidence_image_paths", defaultValue = "'[]'") val evidenceImagePaths: List<String> = emptyList(),
+    @ColumnInfo(name = "appearance_only_image_paths", defaultValue = "'[]'") val appearanceOnlyImagePaths: List<String> = emptyList(),
     @ColumnInfo(name = "updated_at") val updatedAt: Long = System.currentTimeMillis()
 ) {
     fun data(): ItemDraftData = ItemDraftData.decode(dataJson)
-    fun protectedImagePaths(): List<String> = imagePaths + sizeChartImagePaths + evidenceImagePaths
+    fun protectedImagePaths(): List<String> = imagePaths + sizeChartImagePaths + evidenceImagePaths + appearanceOnlyImagePaths
     fun validate() {
         require(UUID.fromString(id).toString() == id && (targetItemId == null || targetItemId > 0)) { "物品草稿标识无效" }
         require(updatedAt >= 0 && protectedImagePaths().all(String::isNotBlank)) { "物品草稿图片或时间无效" }
+        require(appearanceOnlyImagePaths.all { it in imagePaths || it in sizeChartImagePaths }) { "草稿图片来源引用无效" }
         data()
     }
 }

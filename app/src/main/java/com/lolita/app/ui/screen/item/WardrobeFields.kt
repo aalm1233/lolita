@@ -50,6 +50,7 @@ fun WardrobeCategorySelector(selectedCategoryId: Long, categories: List<Category
 data class SpecificationField(val key: String, val label: String)
 fun specificationProfile(semantic: CategorySemantic): String? = when {
     semantic == CategorySemantic.PETTICOAT -> "petticoat"
+    semantic.family == WardrobeFamily.CLOTHING -> "clothing"
     semantic.family == WardrobeFamily.WIG -> "wig"
     semantic.family == WardrobeFamily.HOSIERY -> "hosiery"
     semantic.family == WardrobeFamily.FOOTWEAR -> "footwear"
@@ -59,10 +60,11 @@ fun specificationProfile(semantic: CategorySemantic): String? = when {
     else -> null
 }
 fun specificationFields(profile: String): List<SpecificationField> = when (profile) {
-    "wig" -> listOf("mainColor" to "主要发色", "lengthCm" to "长度厘米", "curl" to "直卷", "extraHairPieces" to "附加发片", "bangs" to "刘海", "parting" to "分缝", "material" to "材质", "heatResistance" to "耐热说明", "headCircumference" to "头围适配", "stylingNotes" to "修剪造型备注")
+    "clothing" -> listOf("lengthCm" to "衣长（原单位）", "bustCm" to "胸围（成衣围度）", "waistCm" to "腰围（成衣围度）", "hipCm" to "臀围（成衣围度）", "shoulderWidthCm" to "肩宽（原单位）", "sleeveLengthCm" to "袖长（原单位）")
+    "wig" -> listOf("mainColor" to "主要发色", "lengthCm" to "长度（原单位）", "curl" to "直卷", "extraHairPieces" to "附加发片", "bangs" to "刘海", "parting" to "分缝", "material" to "材质", "heatResistance" to "耐热说明", "headCircumference" to "头围适配", "stylingNotes" to "修剪造型备注")
     "hosiery" -> listOf("lengthType" to "袜长类型", "sizeText" to "尺码原文", "pattern" to "颜色或花纹", "thickness" to "厚薄", "denier" to "DEN 原始标识", "footLength" to "足长适配", "material" to "材质", "transparency" to "透肤情况")
-    "footwear" -> listOf("sizeText" to "鞋码原文", "sizeSystem" to "尺码体系", "heelHeightCm" to "跟高厘米", "innerLengthCm" to "内长厘米", "shaftHeightCm" to "筒高厘米", "toeShape" to "鞋头", "fastening" to "扣带", "comfort" to "脚感自评", "walkingNotes" to "步行时长备注")
-    "petticoat" -> listOf("lengthCm" to "长度厘米", "silhouette" to "轮廓", "volume" to "蓬度", "waistCm" to "腰围厘米", "layers" to "层数", "material" to "材质", "notes" to "搭配备注")
+    "footwear" -> listOf("sizeText" to "鞋码原文", "sizeSystem" to "尺码体系", "heelHeightCm" to "跟高（原单位）", "innerLengthCm" to "内长（原单位）", "shaftHeightCm" to "筒高（原单位）", "toeShape" to "鞋头", "fastening" to "扣带", "comfort" to "脚感自评", "walkingNotes" to "步行时长备注")
+    "petticoat" -> listOf("lengthCm" to "长度（原单位）", "silhouette" to "轮廓", "volume" to "蓬度", "waistCm" to "腰围（原单位）", "layers" to "层数", "material" to "材质", "notes" to "搭配备注")
     "accessory" -> listOf("wearPosition" to "穿戴位置", "dimensions" to "尺寸", "fastening" to "固定方式", "material" to "材质")
     "bag" -> listOf("carryMode" to "携带方式", "dimensions" to "尺寸", "capacity" to "容量", "phoneFit" to "手机适配说明", "material" to "材质")
     else -> listOf("usage" to "使用方式", "dimensions" to "尺寸", "foldable" to "可折叠情况", "material" to "材质")
@@ -72,24 +74,33 @@ fun specificationFields(profile: String): List<SpecificationField> = when (profi
 fun WardrobeSpecificationEditor(semantic: CategorySemantic, specifications: WardrobeSpecifications,
     composition: ItemComposition, enabled: Boolean, onSpecifications: (WardrobeSpecifications) -> Unit, onComposition: (ItemComposition) -> Unit) {
     val profile = specificationProfile(semantic)
+    val skin=LolitaSkin.current
+    var expanded by remember(profile) { mutableStateOf(false) }
+    val fields=profile?.let(::specificationFields).orEmpty()
+    val defaultCount=when(profile) { "wig"->4;"hosiery"->3;"footwear"->3;"petticoat"->3;"accessory","bag","handheld"->1;else->0 }
+    val compositionDefault=profile in setOf("hosiery","accessory")
     LolitaSection("专属资料（选填）") {
-        row { OutlinedTextField(specifications.pattern, { onSpecifications(specifications.copy(pattern = it)) },
-            label = { Text("图案") }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true) }
-        row {
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                ItemComposition.entries.forEach { value -> FilterChip(selected = composition == value, enabled = enabled,
-                    onClick = { onComposition(value) }, label = { Text(value.label) }) }
+        if(expanded || profile==null) row {
+            OutlinedTextField(specifications.pattern,{onSpecifications(specifications.copy(pattern=it))},label={Text("图案")},
+                enabled=enabled,modifier=Modifier.fillMaxWidth(),singleLine=true)
+        }
+        if(compositionDefault || expanded || profile==null) row {
+            Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {
+                ItemComposition.entries.forEach { value -> FilterChip(selected=composition==value,enabled=enabled,
+                    onClick={onComposition(value)},label={Text(value.label)}) }
             }
         }
-        if (profile != null) {
-            val fields = specificationFields(profile)
-            fields.forEach { field -> row {
-                val root = Gson().toJsonTree(specifications).asJsonObject
-                OutlinedTextField(value = root[profile].asJsonObject[field.key].asString, onValueChange = { raw ->
-                    root[profile].asJsonObject.addProperty(field.key, raw)
+        if(profile!=null) {
+            fields.take(if(expanded) fields.size else defaultCount).forEach { field -> row {
+                val root=Gson().toJsonTree(specifications).asJsonObject
+                OutlinedTextField(value=root[profile].asJsonObject[field.key].asString,onValueChange={raw ->
+                    root[profile].asJsonObject.addProperty(field.key,raw)
                     onSpecifications(WardrobeSpecifications.decode(root.toString()))
-                }, label = { Text(field.label) }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                },label={Text(field.label)},enabled=enabled,modifier=Modifier.fillMaxWidth(),singleLine=true)
             } }
+            row {
+                TextButton(onClick={expanded=!expanded},enabled=enabled) { Text(if(expanded) "收起更多规格" else "补充更多规格") }
+            }
         }
     }
 }

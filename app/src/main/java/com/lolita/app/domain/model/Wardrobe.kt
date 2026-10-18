@@ -44,6 +44,8 @@ enum class CategorySemantic(val label: String, val family: WardrobeFamily, priva
     val defaultWearRole: TryOnRole get() = TryOnRole.valueOf(role)
 }
 
+data class ClothingSpecifications(val lengthCm: String = "", val bustCm: String = "", val waistCm: String = "",
+    val hipCm: String = "", val shoulderWidthCm: String = "", val sleeveLengthCm: String = "")
 data class WigSpecifications(val mainColor: String = "", val lengthCm: String = "", val curl: String = "", val extraHairPieces: String = "",
     val bangs: String = "", val parting: String = "", val material: String = "", val heatResistance: String = "", val headCircumference: String = "", val stylingNotes: String = "")
 data class HosierySpecifications(val lengthType: String = "", val sizeText: String = "", val pattern: String = "", val thickness: String = "", val denier: String = "",
@@ -56,7 +58,7 @@ data class BagSpecifications(val carryMode: String = "", val dimensions: String 
 data class HandheldSpecifications(val usage: String = "", val dimensions: String = "", val foldable: String = "", val material: String = "")
 
 /** Raw strings preserve units, ranges and incomplete editor input without invented conversions. */
-data class WardrobeSpecifications(val version: Int = 1, val pattern: String = "", val wig: WigSpecifications = WigSpecifications(),
+data class WardrobeSpecifications(val version: Int = 1, val pattern: String = "", val clothing: ClothingSpecifications = ClothingSpecifications(), val wig: WigSpecifications = WigSpecifications(),
     val hosiery: HosierySpecifications = HosierySpecifications(), val footwear: FootwearSpecifications = FootwearSpecifications(),
     val petticoat: PetticoatSpecifications = PetticoatSpecifications(), val accessory: AccessorySpecifications = AccessorySpecifications(),
     val bag: BagSpecifications = BagSpecifications(), val handheld: HandheldSpecifications = HandheldSpecifications()) {

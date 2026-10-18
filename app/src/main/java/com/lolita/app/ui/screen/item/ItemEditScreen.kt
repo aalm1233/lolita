@@ -19,6 +19,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -75,6 +77,7 @@ fun ItemEditScreen(
     var hasAttemptedSave by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
+    var showConflictDiscardDialog by remember { mutableStateOf(false) }
 
     androidx.activity.compose.BackHandler {
         if (!uiState.isSaving) { if (viewModel.hasUnsavedChanges) showDiscardDialog = true else exitEditor() }
@@ -170,16 +173,30 @@ fun ItemEditScreen(
         )
     }
 
-    uiState.loadError?.let { message ->
+    uiState.loadError?.takeUnless { showConflictDiscardDialog }?.let { message ->
         AlertDialog(
             onDismissRequest = {},
-            title = { Text("读取失败") },
+            title = { Text(if(uiState.hasDraftConflict) "草稿与最新资料不同" else "读取失败") },
             text = { Text(message) },
-            confirmButton = { TextButton(onClick = { viewModel.loadItem(itemId ?: 0L, defaultStatus, defaultParentItemId, importedDraftJson,
+            confirmButton = { if(uiState.hasDraftConflict) {
+                TextButton(onClick = exitEditor) { Text("保留草稿并返回") }
+            } else TextButton(onClick = { viewModel.loadItem(itemId ?: 0L, defaultStatus, defaultParentItemId, importedDraftJson,
                 defaultLocationId, defaultStorageNodeId, defaultFamily) }) { Text("重试") } },
-            dismissButton = { TextButton(onClick = exitEditor) { Text("返回") } }
+            dismissButton = { if(uiState.hasDraftConflict) {
+                TextButton(onClick = { showConflictDiscardDialog=true }) { Text("放弃旧草稿并重载") }
+            } else TextButton(onClick = exitEditor) { Text("返回") } }
         )
     }
+    if(showConflictDiscardDialog) AlertDialog(
+        onDismissRequest = { showConflictDiscardDialog=false },
+        title = { Text("放弃旧草稿？") },
+        text = { Text("旧草稿的未保存编辑将被放弃，重新读取已保存物品的最新照片、位置与资料。") },
+        confirmButton = { TextButton(onClick = { coroutineScope.launch {
+            runCatching { viewModel.discardConflictingDraftAndReload() }.onFailure { showError=it.message }
+            showConflictDiscardDialog=false
+        } }) { Text("放弃并重载") } },
+        dismissButton = { TextButton(onClick = { showConflictDiscardDialog=false }) { Text("继续保留草稿") } }
+    )
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -187,7 +204,7 @@ fun ItemEditScreen(
             GradientTopAppBar(
                 title = { Text(if (itemId == null) "添加物品" else "编辑物品") },
                 navigationIcon = {
-                    IconButton(enabled = !uiState.isSaving, onClick = {
+                    IconButton(modifier = Modifier.semantics { contentDescription = "返回" }, enabled = !uiState.isSaving, onClick = {
                         if (viewModel.uiState.value.isSaving) return@IconButton
                         if (viewModel.hasUnsavedChanges) {
                             showDiscardDialog = true
@@ -201,6 +218,7 @@ fun ItemEditScreen(
                 actions = {
                     // Save button
                     IconButton(
+                        modifier = Modifier.semantics { contentDescription = "保存物品" },
                         onClick = {
                             hasAttemptedSave = true
                             coroutineScope.launch {

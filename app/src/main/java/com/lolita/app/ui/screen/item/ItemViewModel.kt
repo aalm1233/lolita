@@ -15,6 +15,7 @@ import com.lolita.app.data.local.entity.ItemDraft
 import com.lolita.app.data.local.entity.ItemDraftData
 import com.lolita.app.data.local.entity.StorageNode
 import com.lolita.app.domain.model.*
+import com.lolita.app.data.repository.ItemDraftTargetDeletedException
 import com.lolita.app.data.repository.ItemDraftConflictException
 import com.lolita.app.data.repository.ItemDraftRepository
 import com.lolita.app.data.repository.StorageRepository
@@ -831,6 +832,15 @@ class ItemEditViewModel(
     private val draftMutex = Mutex()
     private var discardInProgress = false
 
+    private fun closeDeletedEditor() {
+        discardInProgress=true
+        hasUnsavedChanges=false
+        loadedIdentity=null
+        savedStateHandle.remove<String>("itemDraftId")
+        _uiState.update { it.copy(item=null,draftId=null,isLoading=false,isSaving=false,draftError=null,
+            loadError="物品已删除，编辑草稿已关闭",hasDraftConflict=false) }
+    }
+
     init {
         viewModelScope.launch {
             _uiState.collect { state ->
@@ -838,9 +848,13 @@ class ItemEditViewModel(
                     state.loadError == null && hasUnsavedChanges && !discardInProgress) {
                     runCatching { draftMutex.withLock {
                         val latest = _uiState.value
-                        if (!latest.isSaving && !discardInProgress && hasUnsavedChanges && latest.draftId == state.draftId) persistDraft(latest)
+                        if (!latest.isLoading && !latest.isSaving && latest.loadError==null && !discardInProgress && hasUnsavedChanges && latest.draftId == state.draftId) persistDraft(latest)
                     } }
-                        .onFailure { failure -> _uiState.update { it.copy(draftError = "草稿保存失败：${failure.message}") } }
+                        .onFailure { failure ->
+                            if(failure is CancellationException) throw failure
+                            if(failure is ItemDraftTargetDeletedException) closeDeletedEditor()
+                            else _uiState.update { it.copy(draftError = "草稿保存失败：${failure.message}") }
+                        }
                 }
             }
         }
@@ -908,12 +922,16 @@ class ItemEditViewModel(
 
     suspend fun keepDraft() {
         val state = _uiState.value
-        if (drafts != null && state.draftId != null && !state.isLoading && !state.isSaving && state.loadError == null && !discardInProgress) draftMutex.withLock {
-            val latest=_uiState.value
-            if(!latest.isLoading && !latest.isSaving && latest.loadError==null && !discardInProgress && latest.draftId==state.draftId) {
-                persistDraft(latest)
-                latest.item?.id?.let { drafts.reconnectRecognition(it,requireNotNull(latest.draftId)) }
-            }
+        if (drafts != null && state.draftId != null && !state.isLoading && !state.isSaving && state.loadError == null && !discardInProgress) {
+            try {
+                draftMutex.withLock {
+                    val latest=_uiState.value
+                    if(!latest.isLoading && !latest.isSaving && latest.loadError==null && !discardInProgress && latest.draftId==state.draftId) {
+                        persistDraft(latest)
+                        latest.item?.id?.let { drafts.reconnectRecognition(it,requireNotNull(latest.draftId)) }
+                    }
+                }
+            } catch(failure: ItemDraftTargetDeletedException) { closeDeletedEditor() }
         }
         if (drafts == null) cleanupNewImages()
     }
@@ -1266,6 +1284,7 @@ class ItemEditViewModel(
             combine(itemRepository.getAllItems(), itemRepository.getPurchaseReviews()) { items, reviews ->
                 items to reviews
             }.collect { (items, reviews) ->
+                if(itemId>0 && _uiState.value.item?.id==itemId && items.none { it.id==itemId }) closeDeletedEditor()
                 _uiState.update { current ->
                     val persisted = items.find { it.id == itemId }
                     val parent = items.find { it.id == current.parentItemId }
@@ -1667,7 +1686,8 @@ class ItemEditViewModel(
             Result.success(savedItemId)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            _uiState.update { it.copy(isSaving = false,
+            if(e is ItemDraftTargetDeletedException) closeDeletedEditor()
+            else _uiState.update { it.copy(isSaving = false,
                 loadError=if(e is ItemDraftConflictException) e.message else it.loadError,
                 hasDraftConflict=it.hasDraftConflict || e is ItemDraftConflictException) }
             Result.failure(e)
@@ -1696,13 +1716,25 @@ class ItemEditViewModel(
     }
 
     suspend fun deleteItem(): Result<Unit> {
-        val item = _uiState.value.item
-            ?: return Result.failure(Exception("服饰不存在"))
-
+        val state=_uiState.value
+        val item = state.item ?: return Result.failure(Exception("服饰不存在"))
+        if(state.isLoading || state.isSaving || discardInProgress) return Result.failure(Exception("正在处理物品，请稍后再删除"))
+        discardInProgress=true
+        _uiState.update { it.copy(isSaving=true) }
         return try {
-            itemRepository.deleteItem(item)
+            withContext(NonCancellable) {
+                draftMutex.withLock {
+                    itemRepository.deleteItem(item)
+                    closeDeletedEditor()
+                }
+            }
             Result.success(Unit)
         } catch (e: Exception) {
+            if(_uiState.value.item?.id==item.id) {
+                discardInProgress=false
+                _uiState.update { it.copy(isSaving=false) }
+            }
+            if(e is CancellationException) throw e
             Result.failure(e)
         }
     }

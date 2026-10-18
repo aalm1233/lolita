@@ -11,6 +11,8 @@ import kotlinx.coroutines.withContext
 class ItemDraftConflictException : IllegalStateException(
     "原物品已在其他页面更新，旧草稿已保留。请保留退出，或明确放弃旧草稿并重新读取最新照片、位置与资料。")
 
+class ItemDraftTargetDeletedException : IllegalStateException("物品已删除，编辑草稿已关闭")
+
 class ItemDraftRepository(private val database: LolitaDatabase, private val itemRepository: ItemRepository, private val beforeDiscard: suspend (String) -> Unit = {}) {
     fun observeDrafts() = database.itemDraftDao().observeDrafts()
     suspend fun get(id: String) = database.itemDraftDao().get(id)
@@ -27,6 +29,7 @@ class ItemDraftRepository(private val database: LolitaDatabase, private val item
     }
     suspend fun save(draft: ItemDraft) {
         database.withTransaction {
+            requireTargetExists(draft.targetItemId)
             val paths=draft.imagePaths+draft.sizeChartImagePaths
             val known=knownAppearancePaths(paths)+database.itemDraftDao().get(draft.id)?.appearanceOnlyImagePaths.orEmpty()+draft.appearanceOnlyImagePaths
             val data=draft.data()
@@ -73,12 +76,16 @@ class ItemDraftRepository(private val database: LolitaDatabase, private val item
 
     /** Reconnect retained/late results to the new editor without sending or applying anything. */
     suspend fun reconnectRecognition(itemId: Long,draftId: String) = database.withTransaction {
+        requireTargetExists(itemId)
         val draft=database.itemDraftDao().get(draftId) ?: error("物品草稿已关闭")
-        require(draft.targetItemId==itemId && database.itemDao().getItemById(itemId)!=null)
+        require(draft.targetItemId==itemId)
         database.recognitionDao().getAll().filter { it.targetItemId==itemId && it.draftId!=draftId }.forEach { task ->
             database.recognitionDao().update(task.copy(draftId=draftId,
                 requestJson=task.request().copy(draftId=draftId).encode(),updatedAt=System.currentTimeMillis()))
         }
+    }
+    private suspend fun requireTargetExists(targetItemId: Long?) {
+        targetItemId?.let { if(database.itemDao().getItemById(it)==null) throw ItemDraftTargetDeletedException() }
     }
     private suspend fun knownAppearancePaths(paths: List<String>): List<String> {
         val known=database.imageProvenanceDao().getAll().filter { it.sourceType==ImageSourceType.AI_GENERATED }.map { it.imagePath }.toMutableSet()

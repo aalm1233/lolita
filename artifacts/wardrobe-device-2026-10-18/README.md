@@ -51,3 +51,9 @@
 旧Backup5的实际失败由根修正：仅任务独占v4输入与识图region按SHA归并，业务/待确认输出保留身份，不松ownership。随后历史missing资源阻断所有ZIP又以单method1/1真实RED捕获；根修复仅豁免已标记且任务独占缺图，仍保留missing count与业务严格检查。Catalog迟到autosave复活已删物品草稿也以3项目标RED→GREEN捕获关闭。全部原RED、中间fixture诊断和新GREEN分别保留。
 
 最终全量构建12秒成功，390 JVM0失败/错误/跳过，构建前后源码SHA稳定。最终同签Debug113/test install-r，main SHA `03dc649e7d7e7a2c9e394c87b0f60e843d850e32496bc6f46e8cb6a0b120aac1`，test `68dd0e222fc7937184e986666f0da977d9191212824249bca819221009ef628e`；**52/52设备回归通过，6.282秒，0skip**。具体为WardrobeBackup18、旧ImageTaskBackup9、Personal6、草稿删除3、Lifecycle9、Baseline6、Deletion1。证据 `final-5586/legacy-final/`，总索引 `final-5586/legacy-verification-rollup.json`。旧127/新47未在本包整串重复，结果按各自实际APK边界记录。Gradle/5586已还根处理独立版本114cleanRelease，未卸载清数据、未用旧正式设备、未发实际付费请求。
+
+## 最新有效结果：114 / JDK17 / 53项
+
+旧COMPLETED结果仅为informational时，不应让另一个已标记缺失历史输入重新成为ZIP必需文件。第19项先在114包实际1/1 RED（0.372秒），根修复仅将待确认输出计为必需，其余严格边界不变。最终使用本机真实Homebrew JDK17.0.19构建，390 JVM0失败/错误/跳过，双APK33秒成功，所有src和版本文件构建前后SHA稳定。此前AndroidStudio路径实际是JBR21.0.10/编译target17，两者分别记录。
+
+**114设备53/53通过，6.505秒，0skip**，含WardrobeBackup19+oldBackup15+draft/lifecycle19；main SHA `17ba85539edd57085f3744db78b36864621ffd3682d7f63d30c9c341b8caa9a9`，test `15f174e11bcc509da2973e9dd164335c356cfc9ad6f0624efd426d77ad8372af`。最终证据 `final-5586/legacy-final114/`，RED为 `informational-history-red114/`，总索引 `legacy-verification-rollup.json`。同签install-r，保留模拟器数据，实际官方API0；Gradle/5586/index交回根正式发布。

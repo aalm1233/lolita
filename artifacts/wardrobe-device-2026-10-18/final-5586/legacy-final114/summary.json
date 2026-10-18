@@ -1,0 +1,335 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "versionCode": 114,
+  "tests": 53,
+  "counts": {
+    "passed": 53,
+    "failed": 0,
+    "error": 0,
+    "ignored": 0,
+    "skipped": 0
+  },
+  "seconds": 6.505,
+  "realProviderRequests": 0,
+  "results": [
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "missingDraftRegionCannotReplaceTheCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "orphanEvidenceIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonWithMissingCompletedV4HeadKeepsTheFrozenTaskAndMarksItsResourcesMissing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "crossRoomItemNodeIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonRoundTripPreservesNewGraphsOrderFieldsAndActualCompletedV4Inputs",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "oldFormatNineWithMissingWardrobeFieldsDefaultsToUnknownAndKeepsOldOrderAndImageOrder",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "invalidZipGraphIsRejectedBeforeActivatingAnyNewImageOrWritingRows",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "recognitionRegionHashMismatchCannotReplaceTheCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "changedCompletedV4InputCannotBeExportedAsAnUnchangedFrozenRequest",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipRestoresTheHeadPreferenceAndKeepsExistingBusinessImageIdentities",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipDedupKeepsBothRegionIdentitiesAndRemovingOneStillProtectsTheSharedImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "cyclicNodesAreRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "unknownSemanticIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "missingHistoricalInputCanBeReexportedWithoutBlockingAllLaterZipBackups",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonRestoresTheHeadPreferenceAsMetadataWithoutAddingItsImageToTheBackup",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "visualBrandGuessCannotBeRestoredAsAcceptedEvidence",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "immutableV4HeadsShareBytesWhileAnExistingBusinessImageKeepsItsIdentity",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipRoundTripMapsSharedRegionsAndActualTemplatesOnceAndPreservesTheirSha",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "invalidPendingImageFailsBeforePausingAndLeavesCurrentDataAndForeignFileUntouched",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "corruptOwnedPreviewCannotReplaceCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "restoreCancelsOldTransportBeforeReplacingRowsAndNeverResendsImportedTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "jsonRestoreKeepsPersonalSourcesWithoutResumingPaidWork",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "sameFilenameFromDifferentSourcesGetsSeparateArchiveEntriesAndRestoredPaths",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "corruptPersonalSourceFailsBeforeReplacingRowsOrDeletingOldFiles",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftDeletionRaceTest",
+      "test": "externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftDeletionRaceTest",
+      "test": "lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftDeletionRaceTest",
+      "test": "deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "partialAcceptanceLeavesOtherFieldsReviewableAndReapplyingOneOriginIsIdempotent",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "copiedAiImageKeepsItsRestrictionEvenAfterTheOriginalItemIsDeleted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "applyAndAutosaveTakeTheDraftMutexBeforeRoomSoTheyCannotDeadlock",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "appearanceOnlyRegionsNeverBecomeQuotedTextFactsEvenWhenTheProviderMislabelsThem",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "evidenceFailureRollsBackDraftAndUiTogetherWithoutPublishingUncommittedFacts",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "rapidReviewEditsArePersistedInOrderInsteadOfBeingDroppedByGlobalBusy",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "savingTheItemRetargetsAnOutstandingTaskAndItsLateResultStaysReachable",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "applyingReservesTheEditorBeforeWaitingSoTypingAndSaveCannotRaceIt",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionLifecycleTest",
+      "test": "missingNewDraftCannotPassConfirmationOrApplyByNullableIdentityEquality",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "aFreshEditorCanStillSaveWithoutInventingAConflict",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ItemDraftBaselineTest",
+      "test": "aLiveObservedItemAndOwnCoverActionCannotLaunderTheOldEditableBaseline",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.RecognitionDeletionTest",
+      "test": "deletingTheItemAtomicallyRemovesItsDraftTasksAndBothKindsOfEvidence",
+      "code": 0,
+      "status": "passed"
+    }
+  ]
+}

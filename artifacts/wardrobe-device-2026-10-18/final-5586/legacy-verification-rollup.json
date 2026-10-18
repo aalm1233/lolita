@@ -25,30 +25,64 @@
       "network": "Only host127.0.0.1 random-port controlled server, Android alias10.0.2.2; no official API."
     }
   },
+  "notes": [
+    "The entire127 was not repeated; failures were rerun in complete affected classes. All14 original failures and the opt-in skip now have a passing affected-case execution, with package evidence kept separately.",
+    "The new47-case storage/recognition run was not repeated wholesale. Final52 targets subsequent backup and draft changes.",
+    "Initial source observation for correction WardrobeBackup includes newly uncompiled18th case and is explicitly marked. Final52 source hashes were stable before and after build and match all18 compiled cases.",
+    "Standalone old UI matrices use existing fixtures; they are not claimed as new native320dp/2xDialog screenshot evidence. The committed native28 recognition screenshots remain in final47.",
+    "Earlier AndroidStudio JAVA_HOME is JBR21.0.10 with compilation target17; the final114 full build explicitly used existing Homebrew JDK17.0.19, no installation required.",
+    "Final53 has WardrobeBackup19, ImageTaskBackup9, PersonalModelBackup6, DraftDeletion3, RecognitionLifecycle9, Baseline6 and RecognitionDeletion1."
+  ],
+  "priorFinal113": {
+    "build": {
+      "tests": 390,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 12,
+      "evidence": "legacy-final/jvm-results.json",
+      "sourceStableBeforeAfter": true
+    },
+    "device": {
+      "tests": 52,
+      "passed": 52,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 6.282,
+      "evidence": "legacy-final/summary.json",
+      "mainSha256": "03dc649e7d7e7a2c9e394c87b0f60e843d850e32496bc6f46e8cb6a0b120aac1",
+      "testSha256": "68dd0e222fc7937184e986666f0da977d9191212824249bca819221009ef628e",
+      "versionCode": 113
+    }
+  },
   "finalBuild": {
     "tests": 390,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
-    "seconds": 12,
-    "evidence": "legacy-final/jvm-results.json",
+    "seconds": 33,
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "javaVersion": "17.0.19",
+    "evidence": "legacy-final114/jvm-results.json",
     "sourceStableBeforeAfter": true
   },
   "finalDevice": {
-    "tests": 52,
-    "passed": 52,
+    "tests": 53,
+    "passed": 53,
     "failures": 0,
     "skipped": 0,
-    "seconds": 6.282,
-    "evidence": "legacy-final/summary.json",
-    "mainSha256": "03dc649e7d7e7a2c9e394c87b0f60e843d850e32496bc6f46e8cb6a0b120aac1",
-    "testSha256": "68dd0e222fc7937184e986666f0da977d9191212824249bca819221009ef628e",
-    "versionCode": 113
+    "seconds": 6.505,
+    "evidence": "legacy-final114/summary.json",
+    "versionCode": 114,
+    "mainSha256": "17ba85539edd57085f3744db78b36864621ffd3682d7f63d30c9c341b8caa9a9",
+    "testSha256": "15f174e11bcc509da2973e9dd164335c356cfc9ad6f0624efd426d77ad8372af"
   },
-  "notes": [
-    "The entire127 was not repeated; failures were rerun in complete affected classes. All14 original failures and the opt-in skip now have a passing affected-case execution, with package evidence kept separately.",
-    "The new47-case storage/recognition run was not repeated wholesale. Final52 targets subsequent backup and draft changes.",
-    "Initial source observation for correction WardrobeBackup includes newly uncompiled18th case and is explicitly marked. Final52 source hashes were stable before and after build and match all18 compiled cases.",
-    "Standalone old UI matrices use existing fixtures; they are not claimed as new native320dp/2xDialog screenshot evidence. The committed native28 recognition screenshots remain in final47."
-  ]
+  "lastRegression": {
+    "case": "informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain",
+    "redTests": 1,
+    "redFailures": 1,
+    "redSeconds": 0.372,
+    "redEvidence": "informational-history-red114/instrumentation.log",
+    "greenInFinal53": true
+  }
 }

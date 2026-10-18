@@ -1,0 +1,68 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.WardrobeBackupTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.WardrobeBackupTest:
+INSTRUMENTATION_STATUS: test=informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.WardrobeBackupTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Informational completed output must not re-require an explicitly blocked missing input
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.WardrobeBackupTest$informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain$1$1.invokeSuspend(WardrobeBackupTest.kt:419)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.WardrobeBackupTest.informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain(WardrobeBackupTest.kt:404)
+
+INSTRUMENTATION_STATUS: stream=
+Error in informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain(com.lolita.app.data.WardrobeBackupTest):
+java.lang.AssertionError: Informational completed output must not re-require an explicitly blocked missing input
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.WardrobeBackupTest$informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain$1$1.invokeSuspend(WardrobeBackupTest.kt:419)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.WardrobeBackupTest.informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain(WardrobeBackupTest.kt:404)
+
+INSTRUMENTATION_STATUS: test=informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.372
+There was 1 failure:
+1) informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain(com.lolita.app.data.WardrobeBackupTest)
+java.lang.AssertionError: Informational completed output must not re-require an explicitly blocked missing input
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.WardrobeBackupTest$informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain$1$1.invokeSuspend(WardrobeBackupTest.kt:419)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.WardrobeBackupTest.informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain(WardrobeBackupTest.kt:404)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

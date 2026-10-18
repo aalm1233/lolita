@@ -1,0 +1,5 @@
+[
+  "./gradlew",
+  "assembleDebug",
+  "assembleDebugAndroidTest"
+]

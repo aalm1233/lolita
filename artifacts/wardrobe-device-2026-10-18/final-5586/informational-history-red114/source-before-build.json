@@ -1,0 +1,14 @@
+[
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt",
+    "sha256": "cc6c4ca6791a84215f0787f3397df9d08a0e65f12e89647e7614edca961b79af"
+  },
+  {
+    "path": "app/src/main/java/com/lolita/app/data/file/BackupManager.kt",
+    "sha256": "3a1072d3aa43ea4d2662b29bdfe565e5cd0a0dc67ec87b83dd841762bc641a68"
+  },
+  {
+    "path": "app/build.gradle.kts",
+    "sha256": "1ae40576e46931b6018e39a369693b02b47fd55f53280a64f8b3e991f72b3ed3"
+  }
+]

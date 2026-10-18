@@ -123,13 +123,16 @@ class ImageTaskCoordinator(
                 }
                 val person = personalModelId?.let { requireNotNull(db.personalModelDao().get(it)) { "所选人物已删除" } }
                 require(person == null || expectedModelImagePath == null || person.imageUrl == expectedModelImagePath) { "人物底图已改变，请重新确认" }
-                val modelPath = person?.imageUrl ?: snapshotBuiltInImage(com.lolita.app.data.tryon.TryOnImages.MODEL_ASSET)
-                val sources = listOf(modelPath) + snapshot.map { it.imagePath }
-                val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition) },
-                    version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = 1,
-                    promptSnapshot = request.prompt(personalModel = person != null), serviceModel = provider.model,
-                    inputSha256s = sources.map(::imageSha256))
-                return@accepted enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)
+                suspend fun enqueueSnapshot(modelPath: String): String {
+                    val sources = listOf(modelPath) + snapshot.map { it.imagePath }
+                    val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition) },
+                        version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = 1,
+                        promptSnapshot = request.prompt(personalModel = person != null), serviceModel = provider.model,
+                        inputSha256s = sources.map(::imageSha256))
+                    return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)
+                }
+                return@accepted if (person != null) enqueueSnapshot(person.imageUrl)
+                else withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MODEL_ASSET, ::enqueueSnapshot)
             }
             enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣",
                 ImageTaskRequest(request.selections.map { ImageTaskGarment(it.itemId, it.name, it.role) }),
@@ -154,21 +157,40 @@ class ImageTaskCoordinator(
             "物品分类已改变，请重新核对展示方式"
         }
         if (subject.semantic != null) {
-            val template = when (subject.presentation) {
-                MannequinPresentation.DRESS_FORM -> snapshotBuiltInImage(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET)
-                MannequinPresentation.WIG_HEAD -> { require(request.referenceViewConfirmed) { "请先核对假发正面视角与发梢完整性" }; requireNotNull(request.wigHeadTemplate) { "请选择本次头模" }.also { it.validateImage() }.imagePath }
-                MannequinPresentation.ACCESSORY -> null
+            suspend fun enqueueSnapshot(template: String?): String {
+                val sources = listOfNotNull(template) + request.imagePath
+                val metadata = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
+                    request.instructions, version = 4, mannequinSubject = subject, promptVersion = 1,
+                    promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.map(::imageSha256), wigHeadTemplate = request.wigHeadTemplate,
+                    productOriginalImagePath = request.originalImagePath)
+                return enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources)
             }
-            val sources = listOfNotNull(template) + request.imagePath
-            val metadata = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
-                request.instructions, version = 4, mannequinSubject = subject, promptVersion = 1,
-                promptSnapshot = request.prompt(), serviceModel = provider.model, inputSha256s = sources.map(::imageSha256), wigHeadTemplate = request.wigHeadTemplate,
-                productOriginalImagePath = request.originalImagePath)
-            return@accepted enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources)
+            return@accepted when (subject.presentation) {
+                MannequinPresentation.DRESS_FORM -> withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET) { enqueueSnapshot(it) }
+                MannequinPresentation.WIG_HEAD -> {
+                    require(request.referenceViewConfirmed) { "请先核对假发正面视角与发梢完整性" }
+                    val head = requireNotNull(request.wigHeadTemplate) { "请选择本次头模" }.also { it.validateImage() }
+                    enqueueSnapshot(head.imagePath)
+                }
+                MannequinPresentation.ACCESSORY -> enqueueSnapshot(null)
+            }
         }
         enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}",
             ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN)), request.instructions,
                 version = 3, mannequinSubject = subject), listOf(request.imagePath))
+    }
+
+    /** Only copies created for this admission are staged here; existing user/head inputs are never swept. */
+    private suspend fun <T> withStagedBuiltInInput(asset: String, block: suspend (String) -> T): T {
+        val path = snapshotBuiltInImage(asset)
+        return try {
+            currentCoroutineContext().ensureActive()
+            block(path)
+        } catch (failure: Throwable) {
+            // The callback still checks Room and live draft owners if insertion already committed.
+            withContext(NonCancellable) { cleanup(listOf(path)) }
+            throw failure
+        }
     }
 
     private suspend fun enqueue(kind: ImageTaskKind, provider: ImageGenerationProvider, title: String,

@@ -44,7 +44,8 @@ data class MannequinUiState(
     val selectedHeadTemplate: WigHeadTemplateSnapshot? = null,
     val isLoadingHead: Boolean = false,
     val referenceViewConfirmed: Boolean = false,
-    val originalImagePath: String? = null
+    val originalImagePath: String? = null,
+    val headImageReady: Boolean = false
 ) {
     val subject: MannequinSubject? get() = mannequinSubject(category, confirmedSemantics = true)
     val presentation: MannequinPresentation get() = subject?.presentation ?: MannequinPresentation.DRESS_FORM
@@ -53,6 +54,7 @@ data class MannequinUiState(
         item == null || item.id <= 0 -> "这件物品已被删除或无法读取"
         subject == null -> "请先在分类中确认稳定品类；非裙类服装暂不支持展示图"
         presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模候选"
+        presentation == MannequinPresentation.WIG_HEAD && !headImageReady -> "所选头模资源缺失或尚未核验，请明确重新选择；不会自动替换"
         presentation == MannequinPresentation.WIG_HEAD && !referenceViewConfirmed -> "请核对原图能看到刘海、头顶、正面轮廓及完整发梢"
         selectedImage.isBlank() || (originalImagePath ?: selectedImage) !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
         else -> null
@@ -108,6 +110,8 @@ class MannequinViewModel @JvmOverloads constructor(
     private var observedTasks = emptyList<ImageTask>()
     private var headCatalogStarted = false
     private var releaseCropLease: (suspend () -> Unit)? = state.value.originalImagePath?.let { pinCropReferences(listOf(it, state.value.selectedImage)) }
+    // Protect restored snapshots before observers or task-center cleanup can use this draft.
+    private var releaseHeadLease: (suspend () -> Unit)? = state.value.selectedHeadTemplate?.let { pinCropReferences(listOf(it.imagePath)) }
     private val legacySaveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var cleared = false
 
@@ -130,8 +134,7 @@ class MannequinViewModel @JvmOverloads constructor(
                                 catch (_: Exception) { null }
                                 if (retry != null && retry.garments.singleOrNull()?.itemId == itemId) {
                                     retry.wigHeadTemplate?.let { head ->
-                                        savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(head)
-                                        state.update { it.copy(selectedHeadTemplate = head, referenceViewConfirmed = false) }
+                                        adoptHeadSnapshot(head, pinCropReferences(listOf(head.imagePath)), validated = false)
                                     }
                                     savedStateHandle[INSTRUCTIONS] = retry.instructions
                                     state.update { it.copy(instructions = retry.instructions, error = "已载入当前图片，请核对后再次确认费用；原任务保留") }
@@ -177,19 +180,20 @@ class MannequinViewModel @JvmOverloads constructor(
                 val templates = withContext(Dispatchers.IO) { readHeadTemplates() }
                 state.update { it.copy(headTemplates = templates) }
                 val restoredHead = state.value.selectedHeadTemplate
-                if (restoredHead != null) withContext(Dispatchers.IO) { restoredHead.validateImage() }
+                if (restoredHead != null) {
+                    withContext(Dispatchers.IO) { restoredHead.validateImage() }
+                    state.update { it.copy(headImageReady = true) }
+                }
                 else {
                     val preferred = withContext(Dispatchers.IO) { readHeadPreference() }
                     val candidate = if (preferred == null) templates.firstOrNull() else templates.firstOrNull {
                         it.id == preferred.id && it.version == preferred.version && it.sha256 == preferred.sha256
                     }
                     requireNotNull(candidate) { "原头模偏好已换版或下架，请明确重新选择；不会自动替换" }
-                    val snapshot = withContext(Dispatchers.IO) { snapshotHead(candidate.id).also { writeHeadPreference(it) } }
-                    savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(snapshot)
-                    state.update { it.copy(selectedHeadTemplate = snapshot) }
+                    snapshotAndSelectHead(candidate.id)
                 }
             } catch (failure: CancellationException) { throw failure }
-            catch (_: Exception) { state.update { it.copy(selectedHeadTemplate = null, error = "头模资源缺失、偏好已换版或校验失败，请明确重新选择候选") } }
+            catch (_: Exception) { state.update { it.copy(headImageReady = false, error = "头模资源缺失、偏好已换版或校验失败，请明确重新选择候选") } }
             finally { state.update { it.copy(isLoadingHead = false) } }
         }
     }
@@ -201,13 +205,48 @@ class MannequinViewModel @JvmOverloads constructor(
         savedStateHandle[VIEW_CONFIRMED] = false
         viewModelScope.launch {
             try {
-                val snapshot = withContext(Dispatchers.IO) { snapshotHead(id).also { writeHeadPreference(it) } }
-                savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(snapshot)
-                state.update { it.copy(selectedHeadTemplate = snapshot) }
-                current.selectedHeadTemplate?.takeIf { it.imagePath != snapshot.imagePath }?.let { discardLegacy(it.imagePath) }
+                snapshotAndSelectHead(id)
             } catch (failure: CancellationException) { throw failure }
-            catch (_: Exception) { state.update { it.copy(selectedHeadTemplate = null, error = "头模读取或校验失败，请重新选择") } }
+            catch (_: Exception) { state.update { it.copy(error = "头模读取或校验失败，请重新选择") } }
             finally { state.update { it.copy(isLoadingHead = false) } }
+        }
+    }
+
+    private suspend fun snapshotAndSelectHead(id: String) {
+        var prepared: WigHeadTemplateSnapshot? = null
+        var releasePrepared: (suspend () -> Unit)? = null
+        try {
+            withContext(Dispatchers.IO) {
+                val snapshot = snapshotHead(id).also { prepared = it }
+                releasePrepared = pinCropReferences(listOf(snapshot.imagePath))
+                snapshot.validateImage()
+                writeHeadPreference(snapshot)
+            }
+            currentCoroutineContext().ensureActive()
+            adoptHeadSnapshot(requireNotNull(prepared), requireNotNull(releasePrepared), validated = true)
+            prepared = null
+            releasePrepared = null
+        } finally {
+            // Own the lease before crossing back to Main, including prompt cancellation.
+            prepared?.let { abandoned ->
+                withContext(NonCancellable + Dispatchers.IO) {
+                    releasePrepared?.invoke()
+                    discardLegacy(abandoned.imagePath)
+                }
+            }
+        }
+    }
+
+    private fun adoptHeadSnapshot(snapshot: WigHeadTemplateSnapshot, release: suspend () -> Unit, validated: Boolean) {
+        val previous = state.value.selectedHeadTemplate
+        val oldLease = releaseHeadLease
+        releaseHeadLease = release
+        savedStateHandle[HEAD_TEMPLATE] = com.google.gson.Gson().toJson(snapshot)
+        savedStateHandle[VIEW_CONFIRMED] = false
+        state.update { it.copy(selectedHeadTemplate = snapshot, headImageReady = validated, referenceViewConfirmed = false) }
+        draftCleanupScope.launch {
+            oldLease?.invoke()
+            previous?.takeIf { it.imagePath != snapshot.imagePath }?.let { discardLegacy(it.imagePath) }
         }
     }
 
@@ -230,7 +269,7 @@ class MannequinViewModel @JvmOverloads constructor(
         savedStateHandle[CROP_ORIGINAL] = originalPath
         savedStateHandle[VIEW_CONFIRMED] = false
         state.update { it.copy(selectedImage = croppedPath, originalImagePath = originalPath, referenceViewConfirmed = false, error = null) }
-        cropCleanupScope.launch { oldLease?.invoke(); previous?.takeIf { it != croppedPath }?.let(discardLegacy) }
+        draftCleanupScope.launch { oldLease?.invoke(); previous?.takeIf { it != croppedPath }?.let(discardLegacy) }
     }
 
     fun useOriginalImage() { state.value.originalImagePath?.let(::selectImage) }
@@ -245,7 +284,7 @@ class MannequinViewModel @JvmOverloads constructor(
         savedStateHandle[SOURCE] = path
         savedStateHandle[VIEW_CONFIRMED] = false
         state.update { it.copy(selectedImage = path, originalImagePath = null, referenceViewConfirmed = false, error = null) }
-        cropCleanupScope.launch { oldLease?.invoke(); previous?.let(discardLegacy) }
+        draftCleanupScope.launch { oldLease?.invoke(); previous?.let(discardLegacy) }
     }
     fun updateInstructions(value: String) {
         if (state.value.busy || state.value.isLoading) return
@@ -339,14 +378,16 @@ class MannequinViewModel @JvmOverloads constructor(
     override fun onCleared() {
         cleared = true
         val lease = releaseCropLease
+        val headLease = releaseHeadLease
         releaseCropLease = null
-        cropCleanupScope.launch { lease?.invoke() }
+        releaseHeadLease = null
+        draftCleanupScope.launch { try { lease?.invoke() } finally { headLease?.invoke() } }
         if (!state.value.savingLegacy) legacySaveScope.cancel()
         // Legacy preview ownership is deliberately retained across navigation/recreation.
         super.onCleared()
     }
     companion object {
-        private val cropCleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        private val draftCleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         private const val CROP_ORIGINAL = "mannequinCropOriginalImage"
         private const val HEAD_TEMPLATE = "mannequinHeadTemplateSnapshot"
         private const val VIEW_CONFIRMED = "mannequinReferenceViewConfirmed"

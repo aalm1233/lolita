@@ -580,6 +580,9 @@ fun ItemListScreen(
                                 ) { data ->
                                     ItemGridCard(
                                         data = data,
+                                        showBrand = !(uiState.columnsPerRow == 3 &&
+                                            uiState.categorySemantics[data.item.categoryId]?.family == WardrobeFamily.WIG &&
+                                            (data.item.brandId == uiState.unsetBrandId || data.brandName.isNullOrBlank())),
                                         onClick = { onNavigateToDetail(data.item.id) },
                                         onEdit = { onNavigateToEdit(data.item.id) },
                                         onDelete = { itemToDelete = data.item }
@@ -1147,10 +1150,11 @@ private fun ItemGridCard(
     onClick: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showBrand: Boolean = true
 ) {
     val item = data.item
-    val brandName = data.brandName
+    val brandName = data.brandName.takeIf { showBrand }
     val brandLogoUrl = data.brandLogoUrl
     val categoryName = data.categoryName
     val itemPrice = data.itemPrice

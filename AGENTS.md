@@ -68,6 +68,7 @@
 - 完整穿搭编辑的日期、备注和关联服饰通栏，只有照片采用两列；卡片仅一层内边距，照片使用皮肤圆角。底部提供唯一“保存穿搭”按钮，消费 Scaffold Insets 后应用 IME padding，键盘打开时保存仍可达；保存条件和原照片、日期、关联、放弃更改逻辑保持。网格注册 `ObserveSkinScroll`。 完整编辑保留原记录并复制可编辑字段，创建时间不变、修改时间由 Repository 更新；读取原记录期间通过 `isLoading` 禁用保存，ViewModel 同时拒绝原记录未读取完成的提交。回归为 `OutfitLogEditViewModelTest`（独立内存 Room、真实照片，覆盖已有/新建/读取中/已删除）。
 - 淘宝导入指南按“获取订单文件 / 回到应用导入”分组，完整保留七步正文及四项注意事项；使用皮肤卡片与 `SectionHeader`，没有真实截图时不绘制截图占位框。月份的紧凑布局保持既定设计。
 - 服饰详情主图完整 Fit 预览，高度随屏幕受限，标题后优先展示当前订单价格/实付/待付摘要；无小物时显示紧凑新增/挂入操作，已有小物管理完整保留。`ImageGalleryPager` 支持可选 `contentScale`、`imageShape` 与 `imageBackgroundColor`，默认展示保持兼容。
+- 服饰页三列网格中，无真实品牌的假发（稳定品类语义`family=WIG`，包含发片）省略整行品牌文字和图标，不留品牌占位空间。`ItemListUiState.unsetBrandId`来自`Brand.isUnsetBrand`系统身份，不按中文名称判断；同名真实品牌仍显示。其他品类、单列/两列与画廊保持现有显示，不改品牌记录或物品引用。
 - 首页顶栏保留搜索、四个 Tab 和筛选/排序/视图控制的一行布局。本轮列表、详情和穿搭实拍归档：`docs/visuals/2026-10-11-layout-refinement.png`。
 - 选项多时（如品牌 200+）用可搜索对话框，不退回简单下拉框。
 - 服饰编辑和淘宝订单导入的尺码使用共用 `SizeSelector`：内置 XS/S/M/L/XL/XXL/均码，支持“未设置”和旁侧皮肤加号快速添加并选用。`SizeOptionsViewModel` 合并内置、DataStore 自定义项和 `ItemDao.getSizes()` 的历史尺码，去首尾空格并忽略大小写去重，不改写历史 Item.size。自定义项为本机 `AppPreferences.customSizes` 设置，已使用尺码继续随原 Item.size 备份/恢复并自动成为选项；数据库和备份格式不变。导入颜色、尺码各占一行，避免小屏大字挤压加号。`ItemSizeSelectorTest` 与 `OrderImportInteractionTest` 使用独立 Room/DataStore，覆盖选择/清空、添加/取消/去重、持久化、旧资料保全、逐件导入及七皮肤浅暗大字体。
@@ -272,7 +273,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=119, versionName="2.56.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=120, versionName="2.56.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -93,6 +93,7 @@ data class ItemListUiState(
     val searchQuery: String = "",
     val brandNames: Map<Long, String> = emptyMap(),
     val brandLogoUrls: Map<Long, String?> = emptyMap(),
+    val unsetBrandId: Long? = null,
     val categoryNames: Map<Long, String> = emptyMap(),
     val categoryGroups: Map<Long, CategoryGroup> = emptyMap(),
     val seasonOptions: List<String> = emptyList(),
@@ -310,10 +311,11 @@ class ItemListViewModel(
                 val colorOpts = items.flatMap { item ->
                     item.colors
                 }.filter { it.isNotBlank() }.distinct().sorted()
-                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts, reviews, semanticMap, categories)
+                ItemListData(items, brandMap, brandLogoMap, categoryMap, groupMap, priceMap, seasonOpts, styleOpts, colorOpts, reviews, semanticMap, categories,
+                    unsetBrandId = brands.firstOrNull { it.isUnsetBrand }?.id)
             }.collect { data ->
                 _uiState.update { it.copy(categorySemantics = data.semanticMap, categoryOptions = data.categories,
-                    brandNames = data.brandMap, categoryNames = data.categoryMap) }
+                    brandNames = data.brandMap, categoryNames = data.categoryMap, unsetBrandId = data.unsetBrandId) }
                 val currentState = _uiState.value
                 val filtered = applyFilters(
                     data.items, currentState.filterStatus, currentState.searchQuery, currentState.filterGroup,
@@ -359,7 +361,8 @@ class ItemListViewModel(
         val colorOpts: List<String>,
         val purchaseReviews: List<ItemPurchaseReview>,
         val semanticMap: Map<Long, CategorySemantic>,
-        val categories: List<com.lolita.app.data.local.entity.Category>
+        val categories: List<com.lolita.app.data.local.entity.Category>,
+        val unsetBrandId: Long?
     )
 
     private fun updateTotalPrice(filteredItems: List<Item>) {

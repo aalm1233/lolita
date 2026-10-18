@@ -1,0 +1,10 @@
+{
+  "command": [
+    "./gradlew",
+    "testDebugUnitTest",
+    "assembleDebug",
+    "assembleDebugAndroidTest"
+  ],
+  "JAVA_HOME": "/Applications/Android Studio.app/Contents/jbr/Contents/Home",
+  "startedAt": "2026-10-18T05:18:07.957390+00:00"
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt",
+    "sha256": "8677e6fcc22c3f876c01d71adf738c6ae64059ade3dcefee867039d048e54f64"
+  },
+  {
+    "path": "app/src/main/java/com/lolita/app/data/file/BackupManager.kt",
+    "sha256": "dddc55a8ba55bf027d64823e825e1448ff681d75e6b34004429595051adb7a27"
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/data/ItemDraftDeletionRaceTest.kt",
+    "sha256": "3e652346f800d49d384bd312d26487abe5a0ec7951be49b851bee2517b97c57f"
+  },
+  {
+    "path": "app/src/main/java/com/lolita/app/data/repository/ItemDraftRepository.kt",
+    "sha256": "2fd3dc219238c8f3f8b30b3947264a30b33c2ebda3a6d2f3aaa5f0d8c1f61d01"
+  },
+  {
+    "path": "app/src/main/java/com/lolita/app/ui/screen/item/ItemViewModel.kt",
+    "sha256": "c650e911f3165eb0d038a73c3a538ab8a2d853a6494ad125efcac8be92eae98b"
+  }
+]

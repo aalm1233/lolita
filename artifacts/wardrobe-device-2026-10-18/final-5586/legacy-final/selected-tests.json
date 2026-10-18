@@ -1,0 +1,44 @@
+[
+  {
+    "class": "com.lolita.app.data.WardrobeBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt",
+    "sha256": "67dd2a69f9331ee8ea6c1d3e13747477df1a567f6f7fdc0d1b5bbc81a0c7e2d7",
+    "tests": 18
+  },
+  {
+    "class": "com.lolita.app.data.ImageTaskBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ImageTaskBackupTest.kt",
+    "sha256": "65fef92dc2cbbfa9b64de39c755df3b1436833724a3576c7f5d044f840b86221",
+    "tests": 9
+  },
+  {
+    "class": "com.lolita.app.data.PersonalModelBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/PersonalModelBackupTest.kt",
+    "sha256": "17d776ea497b60200fe12d9ac918275f37aebda94636bb38ce5a62f53ced803d",
+    "tests": 6
+  },
+  {
+    "class": "com.lolita.app.data.ItemDraftDeletionRaceTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ItemDraftDeletionRaceTest.kt",
+    "sha256": "3e652346f800d49d384bd312d26487abe5a0ec7951be49b851bee2517b97c57f",
+    "tests": 3
+  },
+  {
+    "class": "com.lolita.app.data.RecognitionLifecycleTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/RecognitionLifecycleTest.kt",
+    "sha256": "7b4cf5c564cb556fba8492fa78dfe0665aafa0e399ef4eaafbd1348c8e443a85",
+    "tests": 9
+  },
+  {
+    "class": "com.lolita.app.data.ItemDraftBaselineTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ItemDraftBaselineTest.kt",
+    "sha256": "846fa61652d12062587d45950248c75d5dd20f0003fdfaecc55d288f99b3369d",
+    "tests": 6
+  },
+  {
+    "class": "com.lolita.app.data.RecognitionDeletionTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/RecognitionDeletionTest.kt",
+    "sha256": "a66994bec725a884c088224bcede7d6d077d009159a7809b0efd3a340c9f0fb3",
+    "tests": 1
+  }
+]

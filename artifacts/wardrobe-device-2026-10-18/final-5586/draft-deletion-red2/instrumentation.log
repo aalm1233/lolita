@@ -1,0 +1,182 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.ItemDraftDeletionRaceTest:
+INSTRUMENTATION_STATUS: test=externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Observed deletion must close the autosave identity
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:89)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity(ItemDraftDeletionRaceTest.kt:83)
+
+INSTRUMENTATION_STATUS: stream=
+Error in externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity(com.lolita.app.data.ItemDraftDeletionRaceTest):
+java.lang.AssertionError: Observed deletion must close the autosave identity
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:89)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity(ItemDraftDeletionRaceTest.kt:83)
+
+INSTRUMENTATION_STATUS: test=externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: A captured late save must reject the missing target inside its transaction
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:75)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks(ItemDraftDeletionRaceTest.kt:71)
+
+INSTRUMENTATION_STATUS: stream=
+Error in lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks(com.lolita.app.data.ItemDraftDeletionRaceTest):
+java.lang.AssertionError: A captured late save must reject the missing target inside its transaction
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:75)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks(ItemDraftDeletionRaceTest.kt:71)
+
+INSTRUMENTATION_STATUS: test=lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ItemDraftDeletionRaceTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Editor deletion must not leave or revive a draft
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:105)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning(ItemDraftDeletionRaceTest.kt:98)
+
+INSTRUMENTATION_STATUS: stream=
+Error in deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning(com.lolita.app.data.ItemDraftDeletionRaceTest):
+java.lang.AssertionError: Editor deletion must not leave or revive a draft
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:105)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning(ItemDraftDeletionRaceTest.kt:98)
+
+INSTRUMENTATION_STATUS: test=deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.272
+There were 3 failures:
+1) externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity(com.lolita.app.data.ItemDraftDeletionRaceTest)
+java.lang.AssertionError: Observed deletion must close the autosave identity
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:89)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity(ItemDraftDeletionRaceTest.kt:83)
+2) lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks(com.lolita.app.data.ItemDraftDeletionRaceTest)
+java.lang.AssertionError: A captured late save must reject the missing target inside its transaction
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:75)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks(ItemDraftDeletionRaceTest.kt:71)
+3) deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning(com.lolita.app.data.ItemDraftDeletionRaceTest)
+java.lang.AssertionError: Editor deletion must not leave or revive a draft
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest$deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning$1$1.invokeSuspend(ItemDraftDeletionRaceTest.kt:105)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ItemDraftDeletionRaceTest.deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning(ItemDraftDeletionRaceTest.kt:98)
+
+FAILURES!!!
+Tests run: 3,  Failures: 3
+
+
+INSTRUMENTATION_CODE: -1

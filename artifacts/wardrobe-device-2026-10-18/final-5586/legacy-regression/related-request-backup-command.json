@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/dengtong/Library/Android/sdk/platform-tools/adb",
+    "-s",
+    "emulator-5586",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-r",
+    "-e",
+    "timeout_msec",
+    "90000",
+    "-e",
+    "class",
+    "com.lolita.app.data.ImageTaskPersistenceTest,com.lolita.app.data.ImageTaskBackupTest,com.lolita.app.data.ImageTaskExecutionTest,com.lolita.app.data.PersonalModelBackupTest,com.lolita.app.data.MannequinPersistenceTest,com.lolita.app.data.MannequinSubjectTaskTest,com.lolita.app.data.TryOnPersistenceTest,com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest,com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest",
+    "com.lolita.app.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "startedAt": "2026-10-18T05:21:17.958101+00:00"
+}

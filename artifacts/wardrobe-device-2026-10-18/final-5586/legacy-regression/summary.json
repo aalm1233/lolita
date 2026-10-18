@@ -1,0 +1,39 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "tests": 127,
+  "counts": {
+    "passed": 112,
+    "failed": 14,
+    "error": 0,
+    "ignored": 0,
+    "skipped": 1
+  },
+  "groups": [
+    {
+      "group": "legacy-navigation10",
+      "tests": 66,
+      "counts": {
+        "passed": 57,
+        "failed": 9,
+        "error": 0,
+        "ignored": 0,
+        "skipped": 0
+      },
+      "seconds": 111.937
+    },
+    {
+      "group": "related-request-backup",
+      "tests": 61,
+      "counts": {
+        "passed": 55,
+        "failed": 5,
+        "error": 0,
+        "ignored": 0,
+        "skipped": 1
+      },
+      "seconds": 33.469
+    }
+  ],
+  "realProviderRequests": 0
+}

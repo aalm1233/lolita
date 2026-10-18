@@ -1,0 +1,37 @@
+[
+  {
+    "class": "com.lolita.app.data.ImageTaskBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ImageTaskBackupTest.kt",
+    "sha256": "65fef92dc2cbbfa9b64de39c755df3b1436833724a3576c7f5d044f840b86221",
+    "tests": 9
+  },
+  {
+    "class": "com.lolita.app.data.PersonalModelBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/PersonalModelBackupTest.kt",
+    "sha256": "17d776ea497b60200fe12d9ac918275f37aebda94636bb38ce5a62f53ced803d",
+    "tests": 6
+  },
+  {
+    "class": "com.lolita.app.data.WardrobeBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/WardrobeBackupTest.kt",
+    "sha256": "219ca9767a50daa821b1064983061b5400d76257dfaf41008d4ba993602b7979",
+    "tests": 18,
+    "compiledTestCount": 17,
+    "observationNote": "Snapshot was read after APK compilation and includes the newly added uncompiled missingHistoricalInput test. This SHA is a source observation, not a claim that the 18th method was in this frozen APK.",
+    "uncompiledMethods": [
+      "missingHistoricalInputCanBeReexportedWithoutBlockingAllLaterZipBackups"
+    ]
+  },
+  {
+    "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/mannequin/MannequinScreenTest.kt",
+    "sha256": "d9c208509af3055c4249839ba26deba188da1ba019984dd95b5858a52a3d6cc2",
+    "tests": 9
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/TryOnScreenTest.kt",
+    "sha256": "32b42747e85595b64534ccac9ff01344f2e1663ea8e57d44300b3ee81a9e1124",
+    "tests": 6
+  }
+]

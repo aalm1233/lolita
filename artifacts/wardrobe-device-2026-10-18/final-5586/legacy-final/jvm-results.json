@@ -1,0 +1,559 @@
+{
+  "summary": {
+    "tests": 390,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.BackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.BackupFormatTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.BackupImportTokenTest.xml",
+      "class": "com.lolita.app.data.file.BackupImportTokenTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.BudgetBackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.BudgetBackupFormatTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.CropGeometryTest.xml",
+      "class": "com.lolita.app.data.file.CropGeometryTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.ImageTaskBackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.ImageTaskBackupFormatTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.PersonalImageIntegrityTest.xml",
+      "class": "com.lolita.app.data.file.PersonalImageIntegrityTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.PersonalModelBackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.PersonalModelBackupFormatTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.TaobaoOrderParserTest.xml",
+      "class": "com.lolita.app.data.file.TaobaoOrderParserTest",
+      "timestamp": "2026-10-18T05:32:58",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.TaobaoProductComponentsTest.xml",
+      "class": "com.lolita.app.data.file.TaobaoProductComponentsTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.TaobaoProductParserTest.xml",
+      "class": "com.lolita.app.data.file.TaobaoProductParserTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.TaobaoProductPriceTest.xml",
+      "class": "com.lolita.app.data.file.TaobaoProductPriceTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.TryOnBackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.TryOnBackupFormatTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.WardrobeBackupFormatTest.xml",
+      "class": "com.lolita.app.data.file.WardrobeBackupFormatTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.file.WardrobeImportCandidatesTest.xml",
+      "class": "com.lolita.app.data.file.WardrobeImportCandidatesTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.generation.CompleteWardrobeExecutionTest.xml",
+      "class": "com.lolita.app.data.generation.CompleteWardrobeExecutionTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.mannequin.MannequinGeneratorTest.xml",
+      "class": "com.lolita.app.data.mannequin.MannequinGeneratorTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.personalmodel.PersonalModelGeneratorTest.xml",
+      "class": "com.lolita.app.data.personalmodel.PersonalModelGeneratorTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.GitHubReleaseApiTest.xml",
+      "class": "com.lolita.app.data.remote.GitHubReleaseApiTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.GiteeReleaseApiTest.xml",
+      "class": "com.lolita.app.data.remote.GiteeReleaseApiTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.ImageTransportFailureTest.xml",
+      "class": "com.lolita.app.data.remote.ImageTransportFailureTest",
+      "timestamp": "2026-10-18T05:32:59",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.ItemRecognitionApiTest.xml",
+      "class": "com.lolita.app.data.remote.ItemRecognitionApiTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.MannequinApiTest.xml",
+      "class": "com.lolita.app.data.remote.MannequinApiTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.PersonalModelApiTest.xml",
+      "class": "com.lolita.app.data.remote.PersonalModelApiTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.ReleaseDownloadProbeTest.xml",
+      "class": "com.lolita.app.data.remote.ReleaseDownloadProbeTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.SeedreamImageApiTest.xml",
+      "class": "com.lolita.app.data.remote.SeedreamImageApiTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.remote.TryOnImageApiTest.xml",
+      "class": "com.lolita.app.data.remote.TryOnImageApiTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.data.tryon.TryOnGeneratorTest.xml",
+      "class": "com.lolita.app.data.tryon.TryOnGeneratorTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.CompleteWardrobeImageTaskTest.xml",
+      "class": "com.lolita.app.domain.model.CompleteWardrobeImageTaskTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.CompleteWardrobeMannequinTest.xml",
+      "class": "com.lolita.app.domain.model.CompleteWardrobeMannequinTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.CompleteWardrobeTryOnTest.xml",
+      "class": "com.lolita.app.domain.model.CompleteWardrobeTryOnTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.ImageGenerationFailureTest.xml",
+      "class": "com.lolita.app.domain.model.ImageGenerationFailureTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.ImageTaskMissingResourcesTest.xml",
+      "class": "com.lolita.app.domain.model.ImageTaskMissingResourcesTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.ImageTaskTest.xml",
+      "class": "com.lolita.app.domain.model.ImageTaskTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.ItemRecognitionTest.xml",
+      "class": "com.lolita.app.domain.model.ItemRecognitionTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.MannequinRequestTest.xml",
+      "class": "com.lolita.app.domain.model.MannequinRequestTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.PersonalModelDraftDataTest.xml",
+      "class": "com.lolita.app.domain.model.PersonalModelDraftDataTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.PersonalModelRequestTest.xml",
+      "class": "com.lolita.app.domain.model.PersonalModelRequestTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.RecognitionProviderRequestTest.xml",
+      "class": "com.lolita.app.domain.model.RecognitionProviderRequestTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.RecognitionReviewSafetyTest.xml",
+      "class": "com.lolita.app.domain.model.RecognitionReviewSafetyTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.RecognitionSharedResourceTest.xml",
+      "class": "com.lolita.app.domain.model.RecognitionSharedResourceTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.StorageTreeTest.xml",
+      "class": "com.lolita.app.domain.model.StorageTreeTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.TryOnFoundationSemanticTest.xml",
+      "class": "com.lolita.app.domain.model.TryOnFoundationSemanticTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.TryOnTest.xml",
+      "class": "com.lolita.app.domain.model.TryOnTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.WardrobeInventoryTest.xml",
+      "class": "com.lolita.app.domain.model.WardrobeInventoryTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.model.WardrobeTest.xml",
+      "class": "com.lolita.app.domain.model.WardrobeTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.time.DatePickerDatesTest.xml",
+      "class": "com.lolita.app.domain.time.DatePickerDatesTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.BudgetAccountingTest.xml",
+      "class": "com.lolita.app.domain.usecase.BudgetAccountingTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.DailyOutfitReminderPolicyTest.xml",
+      "class": "com.lolita.app.domain.usecase.DailyOutfitReminderPolicyTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.FullLookEngineTest.xml",
+      "class": "com.lolita.app.domain.usecase.FullLookEngineTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.PaymentReminderPolicyTest.xml",
+      "class": "com.lolita.app.domain.usecase.PaymentReminderPolicyTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.ReleaseVersionTest.xml",
+      "class": "com.lolita.app.domain.usecase.ReleaseVersionTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.ReminderCleanupTest.xml",
+      "class": "com.lolita.app.domain.usecase.ReminderCleanupTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.ShareCardContentTest.xml",
+      "class": "com.lolita.app.domain.usecase.ShareCardContentTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.SpendingBreakdownTest.xml",
+      "class": "com.lolita.app.domain.usecase.SpendingBreakdownTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.domain.usecase.StageAccountingTest.xml",
+      "class": "com.lolita.app.domain.usecase.StageAccountingTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.navigation.ItemEditRouteTest.xml",
+      "class": "com.lolita.app.ui.navigation.ItemEditRouteTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.screen.import.ImportAccountingTest.xml",
+      "class": "com.lolita.app.ui.screen.import.ImportAccountingTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.screen.import.ImportDisplayOrderTest.xml",
+      "class": "com.lolita.app.ui.screen.import.ImportDisplayOrderTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.screen.import.TaobaoProductBatchTest.xml",
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductBatchTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.screen.outfit.QuickOutfitLogFilterTest.xml",
+      "class": "com.lolita.app.ui.screen.outfit.QuickOutfitLogFilterTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.lolita.app.ui.screen.settings.AppUpdateViewModelTest.xml",
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateViewModelTest",
+      "timestamp": "2026-10-18T05:33:00",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}

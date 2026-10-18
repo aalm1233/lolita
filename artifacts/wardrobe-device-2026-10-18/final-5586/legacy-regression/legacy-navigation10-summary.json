@@ -1,0 +1,418 @@
+{
+  "group": "legacy-navigation10",
+  "tests": 66,
+  "counts": {
+    "passed": 57,
+    "failed": 9,
+    "error": 0,
+    "ignored": 0,
+    "skipped": 0
+  },
+  "results": [
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "rejectedLegacyExternalCorruptAliasesAndWrongOwnerRemainUntouched",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "legacyPreviewRetainsFileAcrossOwnerClearAndExplicitSaveMergesLatestItemOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "retryDraftCannotBeEditedBeforeItsInstructionsFinishLoading",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "providerMismatchRejectsAndSubmissionFailureNeverAutomaticallyRetries",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "retryUsesCurrentPhotoAndRetainsInstructionsWithoutEnqueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "restoredRetryKeepsEditedAndExplicitlyClearedInstructionsWithoutResubmitting",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "acceptedSubmissionSurvivesClearingItsWaiter",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "staleSourceDeletedItemAndMissingKeyRejectSubmissionAndSecretsStayOutOfSavedState",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+      "test": "accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(MannequinScreenTest.kt:157)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(MannequinScreenTest.kt:201)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(MannequinScreenTest.kt:191)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Failed to perform text input.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:109)\n\tat androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:103)\n\tat androidx.compose.ui.test.TextActionsKt.performTextInput(TextActions.kt:41)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(MannequinScreenTest.kt:173)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(MannequinScreenTest.kt:236)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:148)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:138)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)\n\tat com.lolita.app.ui.screen.mannequin.MannequinScreenTest.standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(MannequinScreenTest.kt:111)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest",
+      "test": "explicitDressesAndIndependentOrAttachedAccessoriesWithPicturesExposeEntry",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+      "test": "quickOutfitOpensDuringMannequinWithoutCancellingTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+      "test": "systemBackLeavesGenerationWithoutCancelOrDiscard",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+      "test": "allBottomTabsRemainEnabledDuringMannequinGeneration",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+      "test": "toolbarBackLeavesGenerationWithoutCancelOrDiscard",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "noKeyNoGarmentAndMissingPictureNeverCallPaidOperation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "retryLoadingBlocksEditingUntilCurrentWardrobeSelectionIsResolved",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "filtersKeepHiddenSelectionAndImageRoleCorrectionsSurviveRecreation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "retryLoadsCurrentImagesAndRolesButNeverAutomaticallySubmits",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "modelAndDefaultMustBothLoadBeforeGenerationCanStart",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "backgroundGenerationDoesNotBlockEditingOrAnotherExplicitSubmission",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "stableAccessorySemanticsDoNotGuessRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "duplicateSubmitIsBrieflyBlockedAndAcceptedTaskDoesNotLockDraft",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "historyRenameDeleteDoNotChangeWardrobeOrSelection",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "deletedCapturedPersonalRetryRequiresExplicitReselectionAndNeverFallsBack",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "providerChangedAfterDialogCannotSubmitToAnotherProvider",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "personalChoiceSubmitsCapturedModelAndKeepsGarmentsWhenSwitching",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "failedSubmissionKeepsDraftAndNeverAutomaticallyRetries",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "explicitBuiltinChoiceSurvivesRecreationAndDefaultChanges",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+      "test": "sameIdRestoredWithDifferentImageRejectsStaleConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "personalKeyIsMaskedAndNeverRefilledAndCanBeDeleted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: Failed to inject touch input.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '完成选择（1/8）' (ignoreCase: false))\n\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)\n\tat androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)\n\tat androidx.compose.ui.test.ActionsKt.performTouchInput(Actions.kt:389)\n\tat androidx.compose.ui.test.AndroidActions.performClickImpl(Actions.android.kt:23)\n\tat androidx.compose.ui.test.ActionsKt.performClick(Actions.kt:60)\n\tat com.lolita.app.ui.screen.tryon.TryOnScreenTest.pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(TryOnScreenTest.kt:119)"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "fullScreenResultPreviewActuallyZoomsTheImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+      "test": "allBottomTabsRemainEnabledDuringTryOn",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+      "test": "toolbarBackLeavesTryOnWithoutCancellingItsTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+      "test": "systemBackLeavesTryOnWithoutCancellingItsTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+      "test": "quickOutfitOpensDuringTryOnWithoutCancellingTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+      "test": "notificationEntryWaitsForNavHostThenConsumesExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+      "test": "failedTryOnUsesSeparateRetryRouteWithoutEnqueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+      "test": "failedMannequinUsesSeparateRetryRouteWithOriginalItemWithoutEnqueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+      "test": "personalRetryOpensPersonalEditorWithOriginalIdentityWithoutEnqueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+      "test": "generationTaskEntryOpensItsDetailAndRetryNeverAutomaticallySubmits",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest",
+      "test": "oldTryOnBackStackRestoresItsEditedSelectionAndEntryFlag",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest",
+      "test": "oldMannequinBackStackRestoresSourceInstructionsAndLegacyPreviewKeys",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "filtersShowPendingRunningAndFinishedWithoutChangingRecords",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "sevenSkinsPersonalPreviewActionsFit320dpDoubleFontAndExportActualScreens",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "failedRetryOnlyNavigatesToReviewAndDoesNotEnqueue",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "pendingPreviewSurvivesRestartAndExplicitAppendMergesLatestItemOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "sevenSkinsLightDark320dpDoubleFontKeepDetailActionsAndFiltersReachable",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "deletedOriginalCannotAppendButPreviewCanStillBeViewedAndDiscarded",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "activeCancellationRequiresFeeWarningAndThenShowsCancelled",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "personalPreviewAdjustKeepsOriginalAndCannotAppendToGarment",
+      "code": 0,
+      "status": "passed"
+    }
+  ]
+}

@@ -43,3 +43,11 @@
 在5586同一已安装固定包上实际通过 **44 Room + 3 UI = 47/47**：StorageRepository8、StorageDraft4、Baseline6、NewDraftStorageCommit2、WardrobeBackup16、RecognitionPersistence8；实际Compose3含款式/尺码切换、分次采纳、实际保存重入查看证据、7皮肤浅暗原生320dp/2x。耗时分别3.374秒和21.267秒，精确类串/源SHA/逐项日志/APK证据与解析计数在 `final-5586/final47/`。这47项不声称覆盖尚由根补跑的旧Nav/provider/migration套件。
 
 最终28张实际原生窗口截图与SHA在 `final-5586/final47/recognition-ui-native/`，含两个标注总览。真实配置由外层测试rule在启动Activity前设置，结束还原；已只读核对还原为physical420dpi、font1.0、night=no。仅LocalDensity的早期Dialog图/Compose根截图/paragraph宽度误报日志均保留为诊断，不代作原生大字体证据。所有模型传输为0，无真实凭据、付费请求、卸载或清数据。
+
+## 最后旧回归与新增缺陷收口
+
+完整旧127首次真实结果为112通过、14失败、1显式opt-in跳过，见 `final-5586/legacy-regression/`；不能称127全绿。旧Mannequin/TryOn UI fixture确认稳定品类、同步既有按钮文案后，完整受影响两类15/15通过（75.698秒），没有改生产页面或准入。socket项明确启用后仅host127.0.0.1随机端口受控服务，1/1通过（1.081秒），官方API0。
+
+旧Backup5的实际失败由根修正：仅任务独占v4输入与识图region按SHA归并，业务/待确认输出保留身份，不松ownership。随后历史missing资源阻断所有ZIP又以单method1/1真实RED捕获；根修复仅豁免已标记且任务独占缺图，仍保留missing count与业务严格检查。Catalog迟到autosave复活已删物品草稿也以3项目标RED→GREEN捕获关闭。全部原RED、中间fixture诊断和新GREEN分别保留。
+
+最终全量构建12秒成功，390 JVM0失败/错误/跳过，构建前后源码SHA稳定。最终同签Debug113/test install-r，main SHA `03dc649e7d7e7a2c9e394c87b0f60e843d850e32496bc6f46e8cb6a0b120aac1`，test `68dd0e222fc7937184e986666f0da977d9191212824249bca819221009ef628e`；**52/52设备回归通过，6.282秒，0skip**。具体为WardrobeBackup18、旧ImageTaskBackup9、Personal6、草稿删除3、Lifecycle9、Baseline6、Deletion1。证据 `final-5586/legacy-final/`，总索引 `final-5586/legacy-verification-rollup.json`。旧127/新47未在本包整串重复，结果按各自实际APK边界记录。Gradle/5586已还根处理独立版本114cleanRelease，未卸载清数据、未用旧正式设备、未发实际付费请求。

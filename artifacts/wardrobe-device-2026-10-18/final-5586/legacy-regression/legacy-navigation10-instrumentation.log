@@ -1,0 +1,1226 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.mannequin.MannequinViewModelTest:
+INSTRUMENTATION_STATUS: test=rejectedLegacyExternalCorruptAliasesAndWrongOwnerRemainUntouched
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=rejectedLegacyExternalCorruptAliasesAndWrongOwnerRemainUntouched
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=legacyPreviewRetainsFileAcrossOwnerClearAndExplicitSaveMergesLatestItemOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=legacyPreviewRetainsFileAcrossOwnerClearAndExplicitSaveMergesLatestItemOnce
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=retryDraftCannotBeEditedBeforeItsInstructionsFinishLoading
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=retryDraftCannotBeEditedBeforeItsInstructionsFinishLoading
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=providerMismatchRejectsAndSubmissionFailureNeverAutomaticallyRetries
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=providerMismatchRejectsAndSubmissionFailureNeverAutomaticallyRetries
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=retryUsesCurrentPhotoAndRetainsInstructionsWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=retryUsesCurrentPhotoAndRetainsInstructionsWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=restoredRetryKeepsEditedAndExplicitlyClearedInstructionsWithoutResubmitting
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoredRetryKeepsEditedAndExplicitlyClearedInstructionsWithoutResubmitting
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=acceptedSubmissionSurvivesClearingItsWaiter
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=acceptedSubmissionSurvivesClearingItsWaiter
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=staleSourceDeletedItemAndMissingKeyRejectSubmissionAndSecretsStayOutOfSavedState
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=staleSourceDeletedItemAndMissingKeyRejectSubmissionAndSecretsStayOutOfSavedState
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=9
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=9
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=10
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinViewModelTest
+INSTRUMENTATION_STATUS: current=10
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=11
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.mannequin.MannequinScreenTest:
+INSTRUMENTATION_STATUS: test=instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=11
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(MannequinScreenTest.kt:157)
+
+INSTRUMENTATION_STATUS: stream=
+Error in instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(MannequinScreenTest.kt:157)
+
+INSTRUMENTATION_STATUS: test=instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=12
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=12
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(MannequinScreenTest.kt:201)
+
+INSTRUMENTATION_STATUS: stream=
+Error in selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(MannequinScreenTest.kt:201)
+
+INSTRUMENTATION_STATUS: test=selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=13
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=13
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=14
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=14
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(MannequinScreenTest.kt:191)
+
+INSTRUMENTATION_STATUS: stream=
+Error in sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(MannequinScreenTest.kt:191)
+
+INSTRUMENTATION_STATUS: test=sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=15
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=15
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Failed to perform text input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:109)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:103)
+	at androidx.compose.ui.test.TextActionsKt.performTextInput(TextActions.kt:41)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(MannequinScreenTest.kt:173)
+
+INSTRUMENTATION_STATUS: stream=
+Error in seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Failed to perform text input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:109)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:103)
+	at androidx.compose.ui.test.TextActionsKt.performTextInput(TextActions.kt:41)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(MannequinScreenTest.kt:173)
+
+INSTRUMENTATION_STATUS: test=seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=16
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=16
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(MannequinScreenTest.kt:236)
+
+INSTRUMENTATION_STATUS: stream=
+Error in sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(MannequinScreenTest.kt:236)
+
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=17
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=17
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:148)
+
+INSTRUMENTATION_STATUS: stream=
+Error in selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:148)
+
+INSTRUMENTATION_STATUS: test=selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=18
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=18
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:138)
+
+INSTRUMENTATION_STATUS: stream=
+Error in categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:138)
+
+INSTRUMENTATION_STATUS: test=categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=19
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinScreenTest
+INSTRUMENTATION_STATUS: current=19
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(MannequinScreenTest.kt:111)
+
+INSTRUMENTATION_STATUS: stream=
+Error in standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(com.lolita.app.ui.screen.mannequin.MannequinScreenTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(MannequinScreenTest.kt:111)
+
+INSTRUMENTATION_STATUS: test=standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest
+INSTRUMENTATION_STATUS: current=20
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest:
+INSTRUMENTATION_STATUS: test=explicitDressesAndIndependentOrAttachedAccessoriesWithPicturesExposeEntry
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest
+INSTRUMENTATION_STATUS: current=20
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=explicitDressesAndIndependentOrAttachedAccessoriesWithPicturesExposeEntry
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=21
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.mannequin.MannequinNavigationTest:
+INSTRUMENTATION_STATUS: test=quickOutfitOpensDuringMannequinWithoutCancellingTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=21
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=quickOutfitOpensDuringMannequinWithoutCancellingTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=22
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=systemBackLeavesGenerationWithoutCancelOrDiscard
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=22
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=systemBackLeavesGenerationWithoutCancelOrDiscard
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=23
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=allBottomTabsRemainEnabledDuringMannequinGeneration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=23
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allBottomTabsRemainEnabledDuringMannequinGeneration
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=24
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=toolbarBackLeavesGenerationWithoutCancelOrDiscard
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.mannequin.MannequinNavigationTest
+INSTRUMENTATION_STATUS: current=24
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=toolbarBackLeavesGenerationWithoutCancelOrDiscard
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=25
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tryon.TryOnViewModelTest:
+INSTRUMENTATION_STATUS: test=noKeyNoGarmentAndMissingPictureNeverCallPaidOperation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=25
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=noKeyNoGarmentAndMissingPictureNeverCallPaidOperation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=26
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=retryLoadingBlocksEditingUntilCurrentWardrobeSelectionIsResolved
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=26
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=retryLoadingBlocksEditingUntilCurrentWardrobeSelectionIsResolved
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=27
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=filtersKeepHiddenSelectionAndImageRoleCorrectionsSurviveRecreation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=27
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=filtersKeepHiddenSelectionAndImageRoleCorrectionsSurviveRecreation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=28
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=retryLoadsCurrentImagesAndRolesButNeverAutomaticallySubmits
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=28
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=retryLoadsCurrentImagesAndRolesButNeverAutomaticallySubmits
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=29
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=modelAndDefaultMustBothLoadBeforeGenerationCanStart
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=29
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=modelAndDefaultMustBothLoadBeforeGenerationCanStart
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=30
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=backgroundGenerationDoesNotBlockEditingOrAnotherExplicitSubmission
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=30
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=backgroundGenerationDoesNotBlockEditingOrAnotherExplicitSubmission
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=31
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=stableAccessorySemanticsDoNotGuessRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=31
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=stableAccessorySemanticsDoNotGuessRolesFromNamesAndSpecificGarmentCategoriesRemainAuthoritative
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=32
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=duplicateSubmitIsBrieflyBlockedAndAcceptedTaskDoesNotLockDraft
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=32
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=duplicateSubmitIsBrieflyBlockedAndAcceptedTaskDoesNotLockDraft
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=33
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=historyRenameDeleteDoNotChangeWardrobeOrSelection
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=33
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=historyRenameDeleteDoNotChangeWardrobeOrSelection
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=34
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletedCapturedPersonalRetryRequiresExplicitReselectionAndNeverFallsBack
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=34
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=deletedCapturedPersonalRetryRequiresExplicitReselectionAndNeverFallsBack
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=35
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=providerChangedAfterDialogCannotSubmitToAnotherProvider
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=35
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=providerChangedAfterDialogCannotSubmitToAnotherProvider
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=36
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=personalChoiceSubmitsCapturedModelAndKeepsGarmentsWhenSwitching
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=36
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalChoiceSubmitsCapturedModelAndKeepsGarmentsWhenSwitching
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=37
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=failedSubmissionKeepsDraftAndNeverAutomaticallyRetries
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=37
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=failedSubmissionKeepsDraftAndNeverAutomaticallyRetries
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=38
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=explicitBuiltinChoiceSurvivesRecreationAndDefaultChanges
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=38
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=explicitBuiltinChoiceSurvivesRecreationAndDefaultChanges
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=39
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sameIdRestoredWithDifferentImageRejectsStaleConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnViewModelTest
+INSTRUMENTATION_STATUS: current=39
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sameIdRestoredWithDifferentImageRejectsStaleConfirmation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=40
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tryon.TryOnScreenTest:
+INSTRUMENTATION_STATUS: test=personalKeyIsMaskedAndNeverRefilledAndCanBeDeleted
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=40
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalKeyIsMaskedAndNeverRefilledAndCanBeDeleted
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=41
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=41
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=42
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=42
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Failed to inject touch input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '完成选择（1/8）' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performTouchInput(Actions.kt:389)
+	at androidx.compose.ui.test.AndroidActions.performClickImpl(Actions.android.kt:23)
+	at androidx.compose.ui.test.ActionsKt.performClick(Actions.kt:60)
+	at com.lolita.app.ui.screen.tryon.TryOnScreenTest.pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(TryOnScreenTest.kt:119)
+
+INSTRUMENTATION_STATUS: stream=
+Error in pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(com.lolita.app.ui.screen.tryon.TryOnScreenTest):
+java.lang.AssertionError: Failed to inject touch input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '完成选择（1/8）' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performTouchInput(Actions.kt:389)
+	at androidx.compose.ui.test.AndroidActions.performClickImpl(Actions.android.kt:23)
+	at androidx.compose.ui.test.ActionsKt.performClick(Actions.kt:60)
+	at com.lolita.app.ui.screen.tryon.TryOnScreenTest.pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(TryOnScreenTest.kt:119)
+
+INSTRUMENTATION_STATUS: test=pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=43
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=fullScreenResultPreviewActuallyZoomsTheImage
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=43
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=fullScreenResultPreviewActuallyZoomsTheImage
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=44
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=44
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=45
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnScreenTest
+INSTRUMENTATION_STATUS: current=45
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=46
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tryon.TryOnNavigationTest:
+INSTRUMENTATION_STATUS: test=allBottomTabsRemainEnabledDuringTryOn
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=46
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allBottomTabsRemainEnabledDuringTryOn
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=47
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=toolbarBackLeavesTryOnWithoutCancellingItsTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=47
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=toolbarBackLeavesTryOnWithoutCancellingItsTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=48
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=systemBackLeavesTryOnWithoutCancellingItsTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=48
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=systemBackLeavesTryOnWithoutCancellingItsTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=49
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=quickOutfitOpensDuringTryOnWithoutCancellingTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.TryOnNavigationTest
+INSTRUMENTATION_STATUS: current=49
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=quickOutfitOpensDuringTryOnWithoutCancellingTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=50
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest:
+INSTRUMENTATION_STATUS: test=notificationEntryWaitsForNavHostThenConsumesExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=50
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=notificationEntryWaitsForNavHostThenConsumesExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=51
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=failedTryOnUsesSeparateRetryRouteWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=51
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=failedTryOnUsesSeparateRetryRouteWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=52
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=failedMannequinUsesSeparateRetryRouteWithOriginalItemWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=52
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=failedMannequinUsesSeparateRetryRouteWithOriginalItemWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=53
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=personalRetryOpensPersonalEditorWithOriginalIdentityWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=53
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalRetryOpensPersonalEditorWithOriginalIdentityWithoutEnqueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=54
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=generationTaskEntryOpensItsDetailAndRetryNeverAutomaticallySubmits
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest
+INSTRUMENTATION_STATUS: current=54
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=generationTaskEntryOpensItsDetailAndRetryNeverAutomaticallySubmits
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest
+INSTRUMENTATION_STATUS: current=55
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest:
+INSTRUMENTATION_STATUS: test=oldTryOnBackStackRestoresItsEditedSelectionAndEntryFlag
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest
+INSTRUMENTATION_STATUS: current=55
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=oldTryOnBackStackRestoresItsEditedSelectionAndEntryFlag
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest
+INSTRUMENTATION_STATUS: current=56
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=oldMannequinBackStackRestoresSourceInstructionsAndLegacyPreviewKeys
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest
+INSTRUMENTATION_STATUS: current=56
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=oldMannequinBackStackRestoresSourceInstructionsAndLegacyPreviewKeys
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=57
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tasks.ImageTaskScreenTest:
+INSTRUMENTATION_STATUS: test=filtersShowPendingRunningAndFinishedWithoutChangingRecords
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=57
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=filtersShowPendingRunningAndFinishedWithoutChangingRecords
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=58
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sevenSkinsPersonalPreviewActionsFit320dpDoubleFontAndExportActualScreens
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=58
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sevenSkinsPersonalPreviewActionsFit320dpDoubleFontAndExportActualScreens
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=59
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=failedRetryOnlyNavigatesToReviewAndDoesNotEnqueue
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=59
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=failedRetryOnlyNavigatesToReviewAndDoesNotEnqueue
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=60
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=pendingPreviewSurvivesRestartAndExplicitAppendMergesLatestItemOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=60
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=pendingPreviewSurvivesRestartAndExplicitAppendMergesLatestItemOnce
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=61
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=61
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=62
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDark320dpDoubleFontKeepDetailActionsAndFiltersReachable
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=62
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sevenSkinsLightDark320dpDoubleFontKeepDetailActionsAndFiltersReachable
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=63
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletedOriginalCannotAppendButPreviewCanStillBeViewedAndDiscarded
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=63
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=deletedOriginalCannotAppendButPreviewCanStillBeViewedAndDiscarded
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=64
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=activeCancellationRequiresFeeWarningAndThenShowsCancelled
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=64
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=activeCancellationRequiresFeeWarningAndThenShowsCancelled
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=65
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=65
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=66
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=personalPreviewAdjustKeepsOriginalAndCannotAppendToGarment
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tasks.ImageTaskScreenTest
+INSTRUMENTATION_STATUS: current=66
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=66
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=personalPreviewAdjustKeepsOriginalAndCannotAppendToGarment
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 111.937
+There were 9 failures:
+1) instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation(MannequinScreenTest.kt:157)
+2) selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable(MannequinScreenTest.kt:201)
+3) sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration(MannequinScreenTest.kt:191)
+4) seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Failed to perform text input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:109)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:103)
+	at androidx.compose.ui.test.TextActionsKt.performTextInput(TextActions.kt:41)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls(MannequinScreenTest.kt:173)
+5) sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable(MannequinScreenTest.kt:236)
+6) selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:148)
+7) categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation(MannequinScreenTest.kt:138)
+8) standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(com.lolita.app.ui.screen.mannequin.MannequinScreenTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'API Key' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:82)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.configure(MannequinScreenTest.kt:104)
+	at com.lolita.app.ui.screen.mannequin.MannequinScreenTest.standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory(MannequinScreenTest.kt:111)
+9) pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(com.lolita.app.ui.screen.tryon.TryOnScreenTest)
+java.lang.AssertionError: Failed to inject touch input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '完成选择（1/8）' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performTouchInput(Actions.kt:389)
+	at androidx.compose.ui.test.AndroidActions.performClickImpl(Actions.android.kt:23)
+	at androidx.compose.ui.test.ActionsKt.performClick(Actions.kt:60)
+	at com.lolita.app.ui.screen.tryon.TryOnScreenTest.pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences(TryOnScreenTest.kt:119)
+
+FAILURES!!!
+Tests run: 66,  Failures: 9
+
+
+INSTRUMENTATION_CODE: -1

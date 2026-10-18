@@ -1,0 +1,1157 @@
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.ImageTaskPersistenceTest:
+INSTRUMENTATION_STATUS: test=nextClaimUsesOldestQueuedRecordAndObservationIsNewestFirst
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=nextClaimUsesOldestQueuedRecordAndObservationIsNewestFirst
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=migrationAddsEmptyTaskTableAndPreservesExistingSentinels
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=migrationAddsEmptyTaskTableAndPreservesExistingSentinels
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=taskMetadataAndOrderedReferencesSurviveDatabaseReopen
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=taskMetadataAndOrderedReferencesSurviveDatabaseReopen
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=restartRetainsChargeEvidenceButReleasesSourcesAndPreservesPendingOutput
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restartRetainsChargeEvidenceButReleasesSourcesAndPreservesPendingOutput
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=concurrentClaimHasOneWinnerAndNeverReclaimsStartedOrTerminalTasks
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskPersistenceTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=concurrentClaimHasOneWinnerAndNeverReclaimsStartedOrTerminalTasks
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.ImageTaskBackupTest:
+INSTRUMENTATION_STATUS: test=zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: stream=
+Error in zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults(com.lolita.app.data.ImageTaskBackupTest):
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: test=zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=java.lang.IllegalArgumentException: 待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复
+	at com.lolita.app.data.file.BackupManager.validatePreparedTaskImages(BackupManager.kt:596)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:932)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: stream=
+Error in standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce(com.lolita.app.data.ImageTaskBackupTest):
+java.lang.IllegalArgumentException: 待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复
+	at com.lolita.app.data.file.BackupManager.validatePreparedTaskImages(BackupManager.kt:596)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:932)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: test=standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=8
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=9
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=invalidPendingImageFailsBeforePausingAndLeavesCurrentDataAndForeignFileUntouched
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=9
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=invalidPendingImageFailsBeforePausingAndLeavesCurrentDataAndForeignFileUntouched
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=10
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=corruptOwnedPreviewCannotReplaceCurrentDatabase
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=10
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=corruptOwnedPreviewCannotReplaceCurrentDatabase
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=11
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=11
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=12
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=restoreCancelsOldTransportBeforeReplacingRowsAndNeverResendsImportedTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=12
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoreCancelsOldTransportBeforeReplacingRowsAndNeverResendsImportedTask
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=13
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=13
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+INSTRUMENTATION_STATUS: stream=
+Error in leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes(com.lolita.app.data.ImageTaskBackupTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+INSTRUMENTATION_STATUS: test=leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=14
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskBackupTest
+INSTRUMENTATION_STATUS: current=14
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=15
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.ImageTaskExecutionTest:
+INSTRUMENTATION_STATUS: test=restoreCancelsAndJoinsTransportBeforeItsBlockAndAllowsLaterSubmission
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=15
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoreCancelsAndJoinsTransportBeforeItsBlockAndAllowsLaterSubmission
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=16
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=timeoutInterruptsWithoutRetryAndNextQueuedTaskStillRuns
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=16
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=timeoutInterruptsWithoutRetryAndNextQueuedTaskStillRuns
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=17
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=serviceStartRejectionIsVisibleAndNeverSends
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=17
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=serviceStartRejectionIsVisibleAndNeverSends
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=18
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=promotionFailureBeforeStartCommandOwnsOnlyItsCapturedPendingRows
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=18
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=promotionFailureBeforeStartCommandOwnsOnlyItsCapturedPendingRows
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=19
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=invalidExistingPreviewCannotBeConfirmedAndRemainsPendingForDiscard
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=19
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=invalidExistingPreviewCannotBeConfirmedAndRemainsPendingForDiscard
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=20
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=mannequinConfirmDiscardRaceKeepsExactlyOneOwner
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=20
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=mannequinConfirmDiscardRaceKeepsExactlyOneOwner
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=21
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=foregroundPromotionFailureInterruptsAcceptedQueueWithoutSending
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=21
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=foregroundPromotionFailureInterruptsAcceptedQueueWithoutSending
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=22
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=lateRejectedStartCannotAdoptGenuinelyLaterPendingOrOwnedRows
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=22
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=lateRejectedStartCannotAdoptGenuinelyLaterPendingOrOwnedRows
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=23
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=serviceRejectionAfterExistingRunnerClaimsCancelsReaderBeforeReleasingSources
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=23
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=serviceRejectionAfterExistingRunnerClaimsCancelsReaderBeforeReleasingSources
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=24
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=controlledSocketResponseCanCompleteThroughTaskPipeline
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=24
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=org.junit.AssumptionViolatedException: Opt-in host socket probe; no official API
+	at org.junit.Assume.assumeTrue(Assume.java:68)
+	at com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invokeSuspend(ImageTaskExecutionTest.kt:409)
+	at com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invoke(Unknown Source:8)
+	at com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invoke(Unknown Source:4)
+	at com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invokeSuspend(ImageTaskExecutionTest.kt:58)
+	at com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invoke(Unknown Source:4)
+	at kotlinx.coroutines.intrinsics.UndispatchedKt.startUndispatchedOrReturnIgnoreTimeout(Undispatched.kt:54)
+	at kotlinx.coroutines.TimeoutKt.setupTimeout(Timeout.kt:149)
+	at kotlinx.coroutines.TimeoutKt.withTimeout(Timeout.kt:44)
+	at com.lolita.app.data.ImageTaskExecutionTest.fixture(ImageTaskExecutionTest.kt:58)
+	at com.lolita.app.data.ImageTaskExecutionTest.access$fixture(ImageTaskExecutionTest.kt:17)
+	at com.lolita.app.data.ImageTaskExecutionTest$fixture$1.invokeSuspend(Unknown Source:15)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at com.lolita.app.data.ImageTaskExecutionTest.controlledSocketResponseCanCompleteThroughTaskPipeline(ImageTaskExecutionTest.kt:406)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:299)
+	at org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:293)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.lang.Thread.run(Thread.java:1012)
+
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=controlledSocketResponseCanCompleteThroughTaskPipeline
+INSTRUMENTATION_STATUS_CODE: -4
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=25
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=submissionDuringEmptyQueueCallbackIsDrainedByNextServiceStart
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=25
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=submissionDuringEmptyQueueCallbackIsDrainedByNextServiceStart
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=26
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=cancellationBeforeAndAfterSendingDoesNotRetry
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=26
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=cancellationBeforeAndAfterSendingDoesNotRetry
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=27
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=disposedSubmitCallerDoesNotCancelAcceptedSubmission
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=27
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=disposedSubmitCallerDoesNotCancelAcceptedSubmission
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=28
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletedItemRejectsConfirmationAndKeepsPreviewUntilDiscard
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=28
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=deletedItemRejectsConfirmationAndKeepsPreviewUntilDiscard
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=29
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=safeNetworkReasonSurvivesApiToRoomAndNeverRetriesOrLeaksCredentials
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=29
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=safeNetworkReasonSurvivesApiToRoomAndNeverRetriesOrLeaksCredentials
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=30
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=delayedOldServiceStopCannotInterruptNewServiceOrLaterPendingSubmission
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=30
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=delayedOldServiceStopCannotInterruptNewServiceOrLaterPendingSubmission
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=31
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=serviceStopInterruptsItsQueueAfterReaderExitAndLaterSubmissionRuns
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=31
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=serviceStopInterruptsItsQueueAfterReaderExitAndLaterSubmissionRuns
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=32
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=concurrentRunnersSendOnceAndAtomicallyPublishCapturedProvider
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=32
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=concurrentRunnersSendOnceAndAtomicallyPublishCapturedProvider
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=33
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=startupRecoveryInterruptsPreviouslyAcceptedQueueExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=33
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=startupRecoveryInterruptsPreviouslyAcceptedQueueExactlyOnce
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=34
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=cancellationAtPublicationKeepsCommittedMannequinPreview
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=34
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=cancellationAtPublicationKeepsCommittedMannequinPreview
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=35
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=realFileHelperProtectsQueuedSourcesAndPendingPreviewsThenReleasesThem
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.ImageTaskExecutionTest
+INSTRUMENTATION_STATUS: current=35
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=realFileHelperProtectsQueuedSourcesAndPendingPreviewsThenReleasesThem
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=36
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.PersonalModelBackupTest:
+INSTRUMENTATION_STATUS: test=repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=36
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: stream=
+Error in repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask(com.lolita.app.data.PersonalModelBackupTest):
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: test=repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=37
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=37
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stack=java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: stream=
+Error in zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles(com.lolita.app.data.PersonalModelBackupTest):
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+INSTRUMENTATION_STATUS: test=zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=38
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=38
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=39
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=jsonRestoreKeepsPersonalSourcesWithoutResumingPaidWork
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=39
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=jsonRestoreKeepsPersonalSourcesWithoutResumingPaidWork
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=40
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sameFilenameFromDifferentSourcesGetsSeparateArchiveEntriesAndRestoredPaths
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=40
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sameFilenameFromDifferentSourcesGetsSeparateArchiveEntriesAndRestoredPaths
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=41
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=corruptPersonalSourceFailsBeforeReplacingRowsOrDeletingOldFiles
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.PersonalModelBackupTest
+INSTRUMENTATION_STATUS: current=41
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=corruptPersonalSourceFailsBeforeReplacingRowsOrDeletingOldFiles
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=42
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.MannequinPersistenceTest:
+INSTRUMENTATION_STATUS: test=coverChangeKeepsLatestFieldsAndConcurrentAppendWithoutDroppingRepeatedReferences
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=42
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=coverChangeKeepsLatestFieldsAndConcurrentAppendWithoutDroppingRepeatedReferences
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=43
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=currentCoverIsIdempotentAndRemovedForeignOrDeletedPhotosCannotBecomeCover
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=43
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=currentCoverIsIdempotentAndRemovedForeignOrDeletedPhotosCannotBecomeCover
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=44
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=appendRequiresRealTransactionInsteadOfOptionalRepositoryFallback
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=44
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=appendRequiresRealTransactionInsteadOfOptionalRepositoryFallback
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=45
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=concurrentAppendsKeepBothAndCleanupCannotDeleteCommittedImage
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=45
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=concurrentAppendsKeepBothAndCleanupCannotDeleteCommittedImage
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=46
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=staleSnapshotDeletionCleansLatestGeneratedAndSizeChartFilesButProtectsSharedPhoto
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=46
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=staleSnapshotDeletionCleansLatestGeneratedAndSizeChartFilesButProtectsSharedPhoto
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=47
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=deletedItemAndNonOwnedOrMissingFilesAreRejectedWithoutMutation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=47
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=deletedItemAndNonOwnedOrMissingFilesAreRejectedWithoutMutation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=48
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=queuedAppendReadsLatestItemAndOnlyAddsImageAfterExistingOrder
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=48
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=queuedAppendReadsLatestItemAndOnlyAddsImageAfterExistingOrder
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=49
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=confirmedPreviewSurvivesExistingZipBackupAndRestoreInImageOrder
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinPersistenceTest
+INSTRUMENTATION_STATUS: current=49
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=confirmedPreviewSurvivesExistingZipBackupAndRestoreInImageOrder
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=50
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.MannequinSubjectTaskTest:
+INSTRUMENTATION_STATUS: test=removedImageAfterConfirmationRejectsSubmissionWithoutQueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=50
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=removedImageAfterConfirmationRejectsSubmissionWithoutQueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=51
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=acceptedAccessoryKeepsConfirmedCategoryAndSingleSource
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=51
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=acceptedAccessoryKeepsConfirmedCategoryAndSingleSource
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=52
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=categoryGroupChangeWithSameNameRejectsOldStandaloneConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=52
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=categoryGroupChangeWithSameNameRejectsOldStandaloneConfirmation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=53
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=categoryRenameAfterConfirmationRejectsSubmissionWithoutQueuing
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.MannequinSubjectTaskTest
+INSTRUMENTATION_STATUS: current=53
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=categoryRenameAfterConfirmationRejectsSubmissionWithoutQueuing
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.TryOnPersistenceTest
+INSTRUMENTATION_STATUS: current=54
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.data.TryOnPersistenceTest:
+INSTRUMENTATION_STATUS: test=zipRoundTripIncludesResultAndDeletionProtectsSharedImage
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.TryOnPersistenceTest
+INSTRUMENTATION_STATUS: current=54
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=zipRoundTripIncludesResultAndDeletionProtectsSharedImage
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.TryOnPersistenceTest
+INSTRUMENTATION_STATUS: current=55
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=migrationOnlyAddsHistoryAndPreservesEveryExistingColumn
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.data.TryOnPersistenceTest
+INSTRUMENTATION_STATUS: current=55
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=migrationOnlyAddsHistoryAndPreservesEveryExistingColumn
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=56
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest:
+INSTRUMENTATION_STATUS: test=changingAnImageAfterPaidConfirmationCannotSubmitDifferentContent
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=56
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=changingAnImageAfterPaidConfirmationCannotSubmitDifferentContent
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=57
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=externalKeyRevisionInvalidatesAnOpenPaidConfirmation
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=57
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=externalKeyRevisionInvalidatesAnOpenPaidConfirmation
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=58
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=reducingPlanToEightDoesNotSilentlyEnrollAnExcludedItem
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=58
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=reducingPlanToEightDoesNotSilentlyEnrollAnExcludedItem
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=59
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=elevenItemEntryNeverTruncatesAndRequiresAnExplicitEightItemSubset
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=59
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=elevenItemEntryNeverTruncatesAndRequiresAnExplicitEightItemSubset
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=60
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=secondShoeAsksWhichToReplaceAndFilteringKeepsTheOtherSelections
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest
+INSTRUMENTATION_STATUS: current=60
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=secondShoeAsksWhichToReplaceAndFilteringKeepsTheOtherSelections
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest
+INSTRUMENTATION_STATUS: current=61
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=
+com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest:
+INSTRUMENTATION_STATUS: test=bothRetainedScreensFollowServiceSwitchWithoutMixingOrDeletingKeys
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest
+INSTRUMENTATION_STATUS: current=61
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=61
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=bothRetainedScreensFollowServiceSwitchWithoutMixingOrDeletingKeys
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 33.469
+There were 5 failures:
+1) zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults(com.lolita.app.data.ImageTaskBackupTest)
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+2) standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce(com.lolita.app.data.ImageTaskBackupTest)
+java.lang.IllegalArgumentException: 待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复
+	at com.lolita.app.data.file.BackupManager.validatePreparedTaskImages(BackupManager.kt:596)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:932)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+3) leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes(com.lolita.app.data.ImageTaskBackupTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+4) repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask(com.lolita.app.data.PersonalModelBackupTest)
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+5) zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles(com.lolita.app.data.PersonalModelBackupTest)
+java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片
+	at com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)
+	at com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)
+	at com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)
+	at com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)
+	at com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)
+	at com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)
+	at com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+
+FAILURES!!!
+Tests run: 61,  Failures: 5
+
+
+INSTRUMENTATION_CODE: -1

@@ -1,0 +1,17 @@
+[
+  "/Users/dengtong/Library/Android/sdk/platform-tools/adb",
+  "-s",
+  "emulator-5586",
+  "shell",
+  "am",
+  "instrument",
+  "-w",
+  "-r",
+  "-e",
+  "timeout_msec",
+  "60000",
+  "-e",
+  "class",
+  "com.lolita.app.data.ItemDraftDeletionRaceTest",
+  "com.lolita.app.test/androidx.test.runner.AndroidJUnitRunner"
+]

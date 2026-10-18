@@ -1,0 +1,25 @@
+{
+  "legacy-navigation10": [
+    "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+    "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+    "com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest",
+    "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+    "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+    "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+    "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+    "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+    "com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest",
+    "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest"
+  ],
+  "related-request-backup": [
+    "com.lolita.app.data.ImageTaskPersistenceTest",
+    "com.lolita.app.data.ImageTaskBackupTest",
+    "com.lolita.app.data.ImageTaskExecutionTest",
+    "com.lolita.app.data.PersonalModelBackupTest",
+    "com.lolita.app.data.MannequinPersistenceTest",
+    "com.lolita.app.data.MannequinSubjectTaskTest",
+    "com.lolita.app.data.TryOnPersistenceTest",
+    "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+    "com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest"
+  ]
+}

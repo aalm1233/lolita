@@ -1,0 +1,385 @@
+{
+  "group": "related-request-backup",
+  "tests": 61,
+  "counts": {
+    "passed": 55,
+    "failed": 5,
+    "error": 0,
+    "ignored": 0,
+    "skipped": 1
+  },
+  "results": [
+    {
+      "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+      "test": "nextClaimUsesOldestQueuedRecordAndObservationIsNewestFirst",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+      "test": "migrationAddsEmptyTaskTableAndPreservesExistingSentinels",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+      "test": "taskMetadataAndOrderedReferencesSurviveDatabaseReopen",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+      "test": "restartRetainsChargeEvidenceButReleasesSourcesAndPreservesPendingOutput",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+      "test": "concurrentClaimHasOneWinnerAndNeverReclaimsStartedOrTerminalTasks",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片\n\tat com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)\n\tat com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)\n\tat com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)\n\tat com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)\n\tat com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)\n\tat com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.IllegalArgumentException: 待确认人台图丢失、损坏或已被其他资料使用，无法安全恢复\n\tat com.lolita.app.data.file.BackupManager.validatePreparedTaskImages(BackupManager.kt:596)\n\tat com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:932)\n\tat com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)\n\tat com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "invalidPendingImageFailsBeforePausingAndLeavesCurrentDataAndForeignFileUntouched",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "corruptOwnedPreviewCannotReplaceCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "restoreCancelsOldTransportBeforeReplacingRowsAndNeverResendsImportedTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes",
+      "code": -2,
+      "status": "failed",
+      "stack": "kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms\n\tat kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)\n\tat kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)\n\tat kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)\n\tat kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)\n\tat kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)\n\tat java.lang.Thread.run(Thread.java:1012)"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "restoreCancelsAndJoinsTransportBeforeItsBlockAndAllowsLaterSubmission",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "timeoutInterruptsWithoutRetryAndNextQueuedTaskStillRuns",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "serviceStartRejectionIsVisibleAndNeverSends",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "promotionFailureBeforeStartCommandOwnsOnlyItsCapturedPendingRows",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "invalidExistingPreviewCannotBeConfirmedAndRemainsPendingForDiscard",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "mannequinConfirmDiscardRaceKeepsExactlyOneOwner",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "foregroundPromotionFailureInterruptsAcceptedQueueWithoutSending",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "lateRejectedStartCannotAdoptGenuinelyLaterPendingOrOwnedRows",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "serviceRejectionAfterExistingRunnerClaimsCancelsReaderBeforeReleasingSources",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "controlledSocketResponseCanCompleteThroughTaskPipeline",
+      "code": -4,
+      "status": "skipped",
+      "stack": "org.junit.AssumptionViolatedException: Opt-in host socket probe; no official API\n\tat org.junit.Assume.assumeTrue(Assume.java:68)\n\tat com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invokeSuspend(ImageTaskExecutionTest.kt:409)\n\tat com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invoke(Unknown Source:8)\n\tat com.lolita.app.data.ImageTaskExecutionTest$controlledSocketResponseCanCompleteThroughTaskPipeline$1$1.invoke(Unknown Source:4)\n\tat com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invokeSuspend(ImageTaskExecutionTest.kt:58)\n\tat com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invoke(Unknown Source:8)\n\tat com.lolita.app.data.ImageTaskExecutionTest$fixture$2.invoke(Unknown Source:4)\n\tat kotlinx.coroutines.intrinsics.UndispatchedKt.startUndispatchedOrReturnIgnoreTimeout(Undispatched.kt:54)\n\tat kotlinx.coroutines.TimeoutKt.setupTimeout(Timeout.kt:149)\n\tat kotlinx.coroutines.TimeoutKt.withTimeout(Timeout.kt:44)\n\tat com.lolita.app.data.ImageTaskExecutionTest.fixture(ImageTaskExecutionTest.kt:58)\n\tat com.lolita.app.data.ImageTaskExecutionTest.access$fixture(ImageTaskExecutionTest.kt:17)\n\tat com.lolita.app.data.ImageTaskExecutionTest$fixture$1.invokeSuspend(Unknown Source:15)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)\n\tat kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)\n\tat kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)\n\tat kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)\n\tat kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)\n\tat kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)\n\tat com.lolita.app.data.ImageTaskExecutionTest.controlledSocketResponseCanCompleteThroughTaskPipeline(ImageTaskExecutionTest.kt:406)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:299)\n\tat org.junit.internal.runners.statements.FailOnTimeout$CallableStatement.call(FailOnTimeout.java:293)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.lang.Thread.run(Thread.java:1012)"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "submissionDuringEmptyQueueCallbackIsDrainedByNextServiceStart",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "cancellationBeforeAndAfterSendingDoesNotRetry",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "disposedSubmitCallerDoesNotCancelAcceptedSubmission",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "deletedItemRejectsConfirmationAndKeepsPreviewUntilDiscard",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "safeNetworkReasonSurvivesApiToRoomAndNeverRetriesOrLeaksCredentials",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "delayedOldServiceStopCannotInterruptNewServiceOrLaterPendingSubmission",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "serviceStopInterruptsItsQueueAfterReaderExitAndLaterSubmissionRuns",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "concurrentRunnersSendOnceAndAtomicallyPublishCapturedProvider",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "startupRecoveryInterruptsPreviouslyAcceptedQueueExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "cancellationAtPublicationKeepsCommittedMannequinPreview",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskExecutionTest",
+      "test": "realFileHelperProtectsQueuedSourcesAndPendingPreviewsThenReleasesThem",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片\n\tat com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)\n\tat com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)\n\tat com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)\n\tat com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)\n\tat com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)\n\tat com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.IllegalArgumentException: 待确认图片不能复用任务输入照片\n\tat com.lolita.app.data.file.BackupFormat.validate(BackupFormat.kt:312)\n\tat com.lolita.app.data.file.BackupFormat.parse(BackupFormat.kt:154)\n\tat com.lolita.app.data.file.BackupManager.parseZipBackup(BackupManager.kt:990)\n\tat com.lolita.app.data.file.BackupManager.prepareBackup(BackupManager.kt:926)\n\tat com.lolita.app.data.file.BackupManager.access$prepareBackup(BackupManager.kt:88)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invokeSuspend(BackupManager.kt:743)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:8)\n\tat com.lolita.app.data.file.BackupManager$previewBackup$2.invoke(Unknown Source:2)\n\tat com.lolita.app.data.file.BackupManager$serialized$2.invokeSuspend(BackupManager.kt:101)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:820)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "jsonRestoreKeepsPersonalSourcesWithoutResumingPaidWork",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "sameFilenameFromDifferentSourcesGetsSeparateArchiveEntriesAndRestoredPaths",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "corruptPersonalSourceFailsBeforeReplacingRowsOrDeletingOldFiles",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "coverChangeKeepsLatestFieldsAndConcurrentAppendWithoutDroppingRepeatedReferences",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "currentCoverIsIdempotentAndRemovedForeignOrDeletedPhotosCannotBecomeCover",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "appendRequiresRealTransactionInsteadOfOptionalRepositoryFallback",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "concurrentAppendsKeepBothAndCleanupCannotDeleteCommittedImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "staleSnapshotDeletionCleansLatestGeneratedAndSizeChartFilesButProtectsSharedPhoto",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "deletedItemAndNonOwnedOrMissingFilesAreRejectedWithoutMutation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "queuedAppendReadsLatestItemAndOnlyAddsImageAfterExistingOrder",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinPersistenceTest",
+      "test": "confirmedPreviewSurvivesExistingZipBackupAndRestoreInImageOrder",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinSubjectTaskTest",
+      "test": "removedImageAfterConfirmationRejectsSubmissionWithoutQueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinSubjectTaskTest",
+      "test": "acceptedAccessoryKeepsConfirmedCategoryAndSingleSource",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinSubjectTaskTest",
+      "test": "categoryGroupChangeWithSameNameRejectsOldStandaloneConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.MannequinSubjectTaskTest",
+      "test": "categoryRenameAfterConfirmationRejectsSubmissionWithoutQueuing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.TryOnPersistenceTest",
+      "test": "zipRoundTripIncludesResultAndDeletionProtectsSharedImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.TryOnPersistenceTest",
+      "test": "migrationOnlyAddsHistoryAndPreservesEveryExistingColumn",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+      "test": "changingAnImageAfterPaidConfirmationCannotSubmitDifferentContent",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+      "test": "externalKeyRevisionInvalidatesAnOpenPaidConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+      "test": "reducingPlanToEightDoesNotSilentlyEnrollAnExcludedItem",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+      "test": "elevenItemEntryNeverTruncatesAndRequiresAnExplicitEightItemSubset",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+      "test": "secondShoeAsksWhichToReplaceAndFilteringKeepsTheOtherSelections",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest",
+      "test": "bothRetainedScreensFollowServiceSwitchWithoutMixingOrDeletingKeys",
+      "code": 0,
+      "status": "passed"
+    }
+  ]
+}

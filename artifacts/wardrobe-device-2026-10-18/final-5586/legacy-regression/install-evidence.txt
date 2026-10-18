@@ -1,0 +1,15 @@
+Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+Signer #1 certificate SHA-256 digest: b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2
+Signer #1 certificate SHA-1 digest: 81c29efef3faa00d427227ce7001ec887b372e76
+Signer #1 certificate MD5 digest: a9098ed6d1f8a77d4fe72af5252cd8cd
+
+Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+Signer #1 certificate SHA-256 digest: b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2
+Signer #1 certificate SHA-1 digest: 81c29efef3faa00d427227ce7001ec887b372e76
+Signer #1 certificate MD5 digest: a9098ed6d1f8a77d4fe72af5252cd8cd
+
+Performing Streamed Install
+Success
+
+Performing Streamed Install
+Success

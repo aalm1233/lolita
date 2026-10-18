@@ -1,0 +1,206 @@
+{
+  "tests": 32,
+  "counts": {
+    "passed": 31,
+    "failed": 1,
+    "error": 0,
+    "skipped": 0,
+    "ignored": 0
+  },
+  "seconds": 4.113,
+  "results": [
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipPreservesPendingPreviewAndInterruptsActiveSnapshotWithoutRequiringDeletedResults",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "zipSnapshotKeepsPreviewWhileUserDiscardsItAndReleasesItAfterExport",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "invalidPendingImageFailsBeforePausingAndLeavesCurrentDataAndForeignFileUntouched",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "corruptOwnedPreviewCannotReplaceCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "restoreCancelsOldTransportBeforeReplacingRowsAndNeverResendsImportedTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "leavingImportPageKeepsAcceptedRestoreAndBackupLockUntilItFinishes",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskBackupTest",
+      "test": "jsonRestoreKeepsImageThatIsOnlyRetainedByTheTaskBeingInterrupted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "repeatedZipRestoreMapsSharedOriginalReferenceOnceAcrossProfileDraftAndPendingTask",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "zipRestoresAcceptedDraftAndPendingRetryPhotosToOwnedMappedFiles",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "confirmedPersonalTaskExportsPreviewsAndRestoresJsonAndZipWithoutLosingOwnership",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "jsonRestoreKeepsPersonalSourcesWithoutResumingPaidWork",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "sameFilenameFromDifferentSourcesGetsSeparateArchiveEntriesAndRestoredPaths",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.PersonalModelBackupTest",
+      "test": "corruptPersonalSourceFailsBeforeReplacingRowsOrDeletingOldFiles",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "missingDraftRegionCannotReplaceTheCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "orphanEvidenceIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonWithMissingCompletedV4HeadKeepsTheFrozenTaskAndMarksItsResourcesMissing",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "crossRoomItemNodeIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonRoundTripPreservesNewGraphsOrderFieldsAndActualCompletedV4Inputs",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "oldFormatNineWithMissingWardrobeFieldsDefaultsToUnknownAndKeepsOldOrderAndImageOrder",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "invalidZipGraphIsRejectedBeforeActivatingAnyNewImageOrWritingRows",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "recognitionRegionHashMismatchCannotReplaceTheCurrentDatabase",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "immutableV4InputsDeduplicateAcrossTasksWithoutCollapsingBusinessOrOutputIdentity",
+      "code": -2,
+      "status": "failed",
+      "stack": "java.lang.AssertionError: expected:<[\"zip://images/b2b4a5a3-2fdc-3ffa-9ca0-2982ef2c5ef2.png\",\"zip://images/78c2c7fe-7bbf-3ed9-ba61-ec120dfa0797.png\"]> but was:<[\"zip://images/b2b4a5a3-2fdc-3ffa-9ca0-2982ef2c5ef2.png\",\"zip://images/2f4e07bb-76cd-320e-8d56-6e1cab81c9d6.png\"]>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat org.junit.Assert.assertEquals(Assert.java:146)\n\tat com.lolita.app.data.WardrobeBackupTest$immutableV4InputsDeduplicateAcrossTasksWithoutCollapsingBusinessOrOutputIdentity$1$1.invokeSuspend(WardrobeBackupTest.kt:442)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)\n\tat kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)\n\tat kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)\n\tat kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)\n\tat kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)\n\tat kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)\n\tat kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)\n\tat com.lolita.app.data.WardrobeBackupTest.immutableV4InputsDeduplicateAcrossTasksWithoutCollapsingBusinessOrOutputIdentity(WardrobeBackupTest.kt:428)"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "changedCompletedV4InputCannotBeExportedAsAnUnchangedFrozenRequest",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipRestoresTheHeadPreferenceAndKeepsExistingBusinessImageIdentities",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipDedupKeepsBothRegionIdentitiesAndRemovingOneStillProtectsTheSharedImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "cyclicNodesAreRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "unknownSemanticIsRejectedBeforePausingAndNoRowsOrPhotosChange",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "jsonRestoresTheHeadPreferenceAsMetadataWithoutAddingItsImageToTheBackup",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "visualBrandGuessCannotBeRestoredAsAcceptedEvidence",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.WardrobeBackupTest",
+      "test": "zipRoundTripMapsSharedRegionsAndActualTemplatesOnceAndPreservesTheirSha",
+      "code": 0,
+      "status": "passed"
+    }
+  ]
+}

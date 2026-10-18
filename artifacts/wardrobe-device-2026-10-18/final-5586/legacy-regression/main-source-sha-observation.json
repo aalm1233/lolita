@@ -1,0 +1,1659 @@
+{
+  "capturedAt": "2026-10-18T05:19:43.060089+00:00",
+  "head": "17912a5aab02827a2cf3e5119ecdcfff15dd7f5c",
+  "note": "Read-only source observation after the build; installed immutable APK SHA is the authority. Later catalog draft guard source changes are not in this frozen run.",
+  "files": [
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sha256": "0a597dfd73e057c181b43b638e3c44daa1844798dc1b5cbf04d7b29093a97527"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/bramble_rose.jpg",
+      "sha256": "cc6742f35e00a276d7db6849ec38da9ad00d18a7a8231d15508e6f472704d820"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/cherry_bomb.jpg",
+      "sha256": "4d91e711c9608612d519b965b92ddc45bdd5ef9c244d7ff59065772990e22db6"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/classical_puppets.jpg",
+      "sha256": "d7a801b37991759f2657985ac62c47c17d366d0cae492f9a380a9cfd345c340d"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/elpress_l.jpg",
+      "sha256": "d4658de3a216b7bdfb17a451078f9b2da6450572547a83c611af323608f297c4"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/felinae_cookie.jpg",
+      "sha256": "95e56518764144c451fa02ecd62d34cc886e83d506aa6c8a25c9f23cfc6291dc"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/flower_pearl.jpg",
+      "sha256": "76f3eef6ea0d51247a0bc4c3060c8468d2dd0d4caf03d0d33a5257526f3e6245"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/lilizi.jpg",
+      "sha256": "d0227dcf64300dddc3b055b5f36d5eac8d8ef2d90527bab750c9d129e15d63c7"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/neo_ludwig.jpg",
+      "sha256": "2b43201a01be0366273abcaf61ba37ef1cb7bced1411f1079726c625f3dcf69b"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/ozzon_japan.png",
+      "sha256": "5c409e12652f60b781c3c42fd919c78938fe8a71f3ff6c35a812a3234db31448"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/sheep.jpg",
+      "sha256": "c12e61121a8463329c815942956bef1c18893683d8dbcb4a73a89f6c19a51dd4"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/time_sand.jpg",
+      "sha256": "8a8be46186039f8a45c20881ea23c4aa98a236adb0b945f88a645ef58af92360"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/tonight.jpg",
+      "sha256": "ab19cf6cf089dd0e3e77ec78a9f1d34c649163c2ad9eb3cb1c7179ad6f88210d"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/with_puji.jpg",
+      "sha256": "30c82bb128b207240660c34c09060d152e185d1d4cc0153cb061ab5af4a8af6c"
+    },
+    {
+      "path": "app/src/main/assets/builtin/brands/zjstory.jpg",
+      "sha256": "11f5af8707200098929f52fae625ed804aecb47d3249140c003eb5eadb428361"
+    },
+    {
+      "path": "app/src/main/assets/builtin/catalog.json",
+      "sha256": "de7d3b9836c25b876bd43fedabb609a9b4c69ffebfd792d15f6a4f98617df0e6"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/bedroom.png",
+      "sha256": "6e173c091157003b8f49e3c25ead5a1cfc3a892a75290469ca2062af5665074e"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/dressing_room.png",
+      "sha256": "5dd21e597a67866c5573aa507daab09545ff246e69435c0bb9c58c1d32735f31"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/entryway.png",
+      "sha256": "82510c5e0db17d8280a24570f8d85695cf4961a37d4323e6cd228b5b2bd57250"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/living_room.png",
+      "sha256": "5a5590b7e1ed8c22e4f7679fb02c88526875c560ecec03ff8fe04f4f9ef6fa3c"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/storage_room.png",
+      "sha256": "a075821f47708d8ae62aa7f9a7a2d3af8321208d5e7575726873e464f0d5db43"
+    },
+    {
+      "path": "app/src/main/assets/builtin/rooms/study.png",
+      "sha256": "7a022abe05f9493e5f9cff000963e4fbc709bfbff29763dda26893af0334fd43"
+    },
+    {
+      "path": "app/src/main/assets/builtin/storage/accessory_box.png",
+      "sha256": "79e597987e2c26ed98fd445ff34df8e6461657367da79648bb13eeb1fdaf5a7c"
+    },
+    {
+      "path": "app/src/main/assets/builtin/storage/catalog.json",
+      "sha256": "73928836663bc7fa8e8d3201ce94e2e29c5c0fb7320169d2d5cb84a13d5f8452"
+    },
+    {
+      "path": "app/src/main/assets/builtin/storage/shoe_cabinet.png",
+      "sha256": "f83520d7e0b80ae23a7c577053e2925181c36160e0fd5100bdbad4d1da1d9903"
+    },
+    {
+      "path": "app/src/main/assets/builtin/storage/sock_drawer.png",
+      "sha256": "d173e46075e0750ff1ba8331d895be6237329336f02739af31fc2a33ef0314d9"
+    },
+    {
+      "path": "app/src/main/assets/builtin/storage/wig_stand.png",
+      "sha256": "0122c9dbbe109a46f6d66c70e8c214b4ac3d78bcbf7a4fde4acc0e1047014b24"
+    },
+    {
+      "path": "app/src/main/assets/mannequin/front-template.png",
+      "sha256": "4306a09e047b2749fea98e68bd2a413b52dad904877b37690ecaa9d2020ec2ab"
+    },
+    {
+      "path": "app/src/main/assets/tryon/model.png",
+      "sha256": "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/catalog.json",
+      "sha256": "ab294700a638ef4cf4879512838aa7d63b01cd007b55e3d3d696b6818b350087"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/front-cerulean-rose-v1.png",
+      "sha256": "05d93b291ef349b18036486c7c01414b202efd3a36562e2c0be353f149ecc782"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/front-peach-violet-v1.png",
+      "sha256": "2639426927f4189ba25baf9f0543690e06630d7dd7090a13ae59d2705411fd50"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/front-rose-grayblue-v1.png",
+      "sha256": "677c3fd0e7464a5fa2e0aef702638d03c69cc3532b50be2447de8f0b25171752"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/front-sage-softpink-v1.png",
+      "sha256": "9ec9631233c789f5e8054836be3203fa6d37ad1996ed922136c6e19aa7f853bb"
+    },
+    {
+      "path": "app/src/main/assets/wig-heads/front-template-v1.png",
+      "sha256": "69a70af2e83c7a3ec63c45be3d1c7a1b902127a3555895f4563dbb55b4e1887e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/LolitaApplication.kt",
+      "sha256": "f0d337a7e55e74ad6f0b82ea8a2dea85d1d3ffbf107aa22c47668da5c61ad70b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/BackupFormat.kt",
+      "sha256": "b394ac00b831db36aa7b9cafa2895073ecbbeeb66d0747b29ef83ee65b4e8057"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/BackupManager.kt",
+      "sha256": "f01766bc25b6f0cda1bd144c517601f92ad3c0be83a36c2b3a7715df43f4674d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/BuiltInLibrary.kt",
+      "sha256": "ebdc019d71d606df820c989f81bd28bc4c99c2f3a8b5a6c48c699315fb46785f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/ImageFileHelper.kt",
+      "sha256": "3b225f0ea1da4708fc8d40d86f57bd255166c5119837d7e93e4f65949975705d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/ImageRegionCropper.kt",
+      "sha256": "e00bb53efdcf835cc1afd465a55b7d1ddd034675120b5dfaaa597e1d50986dad"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/PersonalImageIntegrity.kt",
+      "sha256": "b249ec97daf3d25b9162dce91c2ac7226a141f025fa095619d986860ffb545e6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/PersonalJpegIntegrity.kt",
+      "sha256": "061c57029442c984ac0c16167ea26e750fbde030b1d04c72c7e0589decafd9ac"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/PersonalPngIntegrity.kt",
+      "sha256": "6ccdf3da62743b4977e2c3d274b3ac9becd5ed75ef938a9ca88abee9756bf8e1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/TaobaoOrderParser.kt",
+      "sha256": "7e373385059f9a675040bed29c01fef1c432ef9908faf237b0b3e3ed242182f6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/TaobaoProductParser.kt",
+      "sha256": "59d4a804ad5ba726e89329d8b86f23593dd0612fb2482fb27c7d05246fda6375"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/TaobaoProductPieces.kt",
+      "sha256": "f5fe9625e074f1d4342b16103625d2b54c69f2d847c497706887aa4bf089a27c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/TaobaoProductQuote.kt",
+      "sha256": "0422d45430819e5be2a657d0133e37107560c685aff428becf35b7a286d8aa67"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/file/WardrobeBackupValidation.kt",
+      "sha256": "33bd50d5ddc9d38c7afea36a0fe348ab2ae3cf5dc53edc26f8a5764ddde8fd29"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/generation/ImageTaskCoordinator.kt",
+      "sha256": "e61be4a42af90d4e24626e8f4e3fadc43422937138d48a47da2412147d5619fe"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/generation/ImageTaskNotifications.kt",
+      "sha256": "3460d44752487301a7e3dabdd33c7e614f7c501a0779e36b9001df4f911fb3da"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/generation/ImageTaskRunner.kt",
+      "sha256": "bdbb7c7d88c08013d3dc45d02b9388e1f09c3f8ac66692e5dba76c8f08f41593"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/generation/ImageTaskService.kt",
+      "sha256": "48449047f74bf1598e8ed7dcaf6e9d16e58055a4a8fd3c9f31f9360fa129552e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/LegacyCatalogMigration.kt",
+      "sha256": "678d2e3a35e460fb4b0a40fe21c579f94d7e2084b3b44a2fb777cac148148089"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/LolitaDatabase.kt",
+      "sha256": "e4b2393cf771d752ba9c07ca3688a425cb05f71495e3d7295de1e9ac75f76a1a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/MigrationDataGuard.kt",
+      "sha256": "dbc77c12cd1e65a04a7d5d91c52cce9d854f2d48ca1b86de8fed70063f874808"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/MigrationJsonLists.kt",
+      "sha256": "8927a93e0bddaa81f9d3db06a901fa63aade728b8638f1308b12922e1aa1f2bd"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/OrderMigration.kt",
+      "sha256": "ddbcd8c06319d70f97775a6299f729ac6aad7e785ca2b86f2229d433c6dbb43c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/WardrobeMigration.kt",
+      "sha256": "5219018c0c47c40e537311ab3ac144f0899746230ddeba76119bac2de6c0bf07"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/converters/Converters.kt",
+      "sha256": "a57edb4a2a46e3c8e04b3433e46dcec60a8d770432ce2afacb460c476da1571e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/converters/WardrobeConverters.kt",
+      "sha256": "93ad2bd2e52e05b957e47fa9ceddf6b35e7cde0ecc6a1ec941ae8c81829b8ba3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/BrandDao.kt",
+      "sha256": "74622c41f050dc95a19cd54d0ac372ef7d80d3bbba818c7ac64d157cca35c070"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/BudgetDao.kt",
+      "sha256": "3027eb8fafe2c80e0962051e4f4c42008bd17c09de08aa83d7a0270721325f56"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/CategoryDao.kt",
+      "sha256": "4820196b645447713c62f4d792a8d47ccbaa9d8380e3da9335b2af486646cec1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/CoordinateDao.kt",
+      "sha256": "21a4b3ebf7834a217e9484d329e1398a3caf938921ae1c2def6b0e8af2303608"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/ImageProvenanceDao.kt",
+      "sha256": "32c2549b7f178d7ae24ffb10f7f2a2e78b34b0e81fe703e4503ed63f9a673d8f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/ImageTaskDao.kt",
+      "sha256": "3c0d61527670757622072af5789c834754551b26c8d0cf9c927005ccb2d72af4"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/ItemDao.kt",
+      "sha256": "a40b8aea255eaed19024d7497be315b3281dff8302c89bf6132cd2aaa86575d6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/ItemDraftDao.kt",
+      "sha256": "db67d8d2674933d1ad34559f3914d7493f740c4f24f5e6b816514068e17f59e0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/LegacyCatalogArchiveDao.kt",
+      "sha256": "530deaff46d334cebbdcffde89148247044551ee3e0a5a8c3676acd08f111dda"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/LocationDao.kt",
+      "sha256": "e159ac56be7caa02d1d77039c4c0dd1735b70bbe31d7e9dab4ec379a90baef4d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/OrderDao.kt",
+      "sha256": "916d9c0010cb8d7116363b84190ed743d1cce00656478e67fe8beaf26638e958"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/OutfitLogDao.kt",
+      "sha256": "35ce39ae0115e698ecf441db2a2cf9b96585f548b382639ee6b05dfd39c5ef70"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/PaymentDao.kt",
+      "sha256": "20a546b2ed090c72c1efe8e975fe60c7384461622a7aa05e12fa507b4b776778"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/PersonalModelDao.kt",
+      "sha256": "711108517ceefe346feb2209cbd0b387291921b96068a7450b49c925f59dd129"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/PriceDao.kt",
+      "sha256": "b9519eb4ddabc86c2f99cf736c4120895ba6d008ac5c077ac1ad794c2edb6b3b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/RecognitionDao.kt",
+      "sha256": "63211dc69b2c57016f1a0e9fd3d892e0f90053d8be4dd6c92bf15d7603aad73b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/RestoreJournalDao.kt",
+      "sha256": "e951266e922159a5f506907ba1739eed0f45567aee46a6df694ebc661bf4ba3f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/SeasonDao.kt",
+      "sha256": "5d1bf9a1cd6a3b71f0164dfaa606692a8f69a91f5496ab8d8bc38fafc776e7e3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/SharedLibrarySyncDao.kt",
+      "sha256": "bf9fb6f11cd25df75f95f5deea12fecb4fefdef14ef44e4439335a8964e225a6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/SourceDao.kt",
+      "sha256": "b9a73b22f2f7ab1cbb0f1a67999af6b7b9766a934f2b5263ba5a782fbe4353c2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/StorageNodeDao.kt",
+      "sha256": "5273ec07b76b70d2e26a61087f93cb0ac64ce1b1c2fa91eb4c0c8ec738b5c6c4"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/StyleDao.kt",
+      "sha256": "5b6c8dbe47e25e419eb48721aebb6211cec02a79b89cb9e3de272edd2e263bf0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/dao/TryOnDao.kt",
+      "sha256": "69d93541e2099953535986d7041fb4fd2544cd03019b3eeed9bbbc2510b2586f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Brand.kt",
+      "sha256": "f117d94249aae7805cbc1e1309723741f7bb79f488124ea3c7b4e20f51f6b186"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Category.kt",
+      "sha256": "ccf54480e0782a39b0418f97c35d66e52473903f71a8d77c90a56e8862a95ace"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/CategoryGroup.kt",
+      "sha256": "175ce467cd0d572ade25b85c1bcf1b8a2706f8f3e6ae26296a33445f3ec7614d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Coordinate.kt",
+      "sha256": "3ca773bec5e08367daf0cdefcf7868d0bfbc2bfadcf3ee6f1bda5ad1fa110217"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Enums.kt",
+      "sha256": "3f70597235c8835753ab207b6f84c1ab58ac69dee8a0264237953fe0a065b384"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/ImageProvenance.kt",
+      "sha256": "d829ad6a4683641777a2d02a749ccc64910c35e86ea8a5ec23836d504cafe04c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/ImageTask.kt",
+      "sha256": "400ea6aa4b3053fe8b91ff355b0cfa33dacc14602a5c5b6b9b632c75ca1fb8e8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Item.kt",
+      "sha256": "e48f39b84bae4ee185c02c866b7e609e2ac23424090189130f7ba5e8bc22f76b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/ItemDraft.kt",
+      "sha256": "ffe0c12446b73df5d4901d7cce5e3f12191da49668e295e8bfbbbe0eaa8b9081"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/ItemEvidence.kt",
+      "sha256": "a13d70a1e092465a03563ca677fdf964927464c253b0a9414af73d32545a3d4c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/ItemPurchaseReview.kt",
+      "sha256": "87648a606f6560098a436eebcf0c016ba6bd13094823d95a7c3d6cb910b35b69"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/LegacyCatalogArchive.kt",
+      "sha256": "6a3753716d5897619d3177e60327bde62de530333e53ce568c7044b889365e43"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Location.kt",
+      "sha256": "fbfaf052b1d20a3dc01f4a124b1780fe29c4902c50bd078237acd4d5182e0e67"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/MonthlyBudget.kt",
+      "sha256": "d3e5d8880786240266c5035da16bd30199db7dc9a3ebb2a87d523e5d682833b5"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/OrderBinding.kt",
+      "sha256": "500b3d85c82d8b4125774de44f4a92a29d1d823560c18c812040076dac84611b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/OutfitItemCrossRef.kt",
+      "sha256": "a5a7f01a4d6497ce5bcd8fcca718f4ef5221190d048ad072d2d9ebe15ba23647"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/OutfitLog.kt",
+      "sha256": "b6a6745e851dbc5951fac99f5686a32fe787e7245f58514677485d2286976916"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Payment.kt",
+      "sha256": "26fd6c4429759c44edc0096f9d96daa72c341ed73d41bd39be167cda8526ecdf"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/PaymentStage.kt",
+      "sha256": "231a7ed5c7bd405d100fa89498c61af383b2d0ca40f51b9d72457646ea73ee58"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/PaymentWithItemInfo.kt",
+      "sha256": "778472542e7583a1c3f183cbbbe5f3aca3b2344b9b2f578d4ef224cc60f9aead"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/PersonalModel.kt",
+      "sha256": "891a4707f7753da832011a1e139e9713a1268c0bc13fcce4e466a7de6adb0997"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/PersonalModelDraft.kt",
+      "sha256": "690a25b73ff256c190ab789ca7846ad399db04da4d934c1f4fea7ce4876d3be6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Price.kt",
+      "sha256": "0fb9965689050e87d8081f7934658ae60afb0a76ffa7ddf66eeaddee1ac4349c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/PurchaseRecordStatus.kt",
+      "sha256": "16344d29d496c25f2dea5c9d36769fd6ae0ff6c7bd8a9a65a52d8c40a9b1527e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/RecognitionTask.kt",
+      "sha256": "95914cb556829abf649c593724ead5aedc5556d90c1dacaa95b8230f849db3c7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/RestoreJournal.kt",
+      "sha256": "74db16c6d157ebc0aa8b6115bf97f0fb1acb171d6098859af6e48e169a93b8b1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Season.kt",
+      "sha256": "1a87651a330ae66dd050b5de055880b1b7cccf5f855ceba8fe194d0bf42327f5"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/SharedLibrarySyncEntities.kt",
+      "sha256": "9c633f1ac3be7c5276346f222a07bf74955632ea74cb20d8c0c403b4f54c1e0f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Source.kt",
+      "sha256": "03987be6f1cfa5716f973e7a96a61a6d83e69fa93c432c226535431b1912a368"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/StatsData.kt",
+      "sha256": "4eec77050367786687b59d0dc1f3831240cc1582e44291fe58a958c0d49b0007"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/StorageNode.kt",
+      "sha256": "8b30210a9d681bd5bd690966a1bbc5c7a808148df991007ff4c4ecc803fe788e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/Style.kt",
+      "sha256": "5772ec5bbfc0f1113b996845c2b5f708218750b807fe81679b7bf69c3dd4b190"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/local/entity/TryOnResult.kt",
+      "sha256": "c370ab26a6feb2bb356ad95244bb48533fcefff16db7ae119281c9c6f8001a41"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/mannequin/MannequinGenerator.kt",
+      "sha256": "c4fe4ee0a94ceee2db6402d71c18e281917bfec9c3a1af97c314990966121468"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/mannequin/WigHeadTemplateCatalog.kt",
+      "sha256": "f209cefc1d7d05bc2b82f234aaa10f9e7176050fccd4971ee5abbc00f835dabc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/model/TaobaoOrder.kt",
+      "sha256": "f35d6b89e5a1646c9c3acb0d6d4346c4666a023dc6fa7e145154d2de279391a0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/BootCompletedReceiver.kt",
+      "sha256": "8326407668b7bc9fda85447229cc54ea88b3cb2f03160adc0a94ad6040c8ca08"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/CalendarEventHelper.kt",
+      "sha256": "7fe49e5c00624ef223da07d56aa2e07b1379b893501ee7dcef129263803b5364"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/DailyOutfitReminderDeliveryStore.kt",
+      "sha256": "494dc92c436de12453bae449277da5bf486aa88cc9e2834f6813d7d8f3c4c61b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/DailyOutfitReminderReceiver.kt",
+      "sha256": "de56e14c98a1f619e8eb4436fa8feb4c0be1e261842005a6c235655369810448"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/DailyOutfitReminderScheduler.kt",
+      "sha256": "abe8647e8dcf0ce6a8449521266872018d623d8f11af96aedb5ce5443f607d82"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/NotificationChannelSetup.kt",
+      "sha256": "a7174b0bcb950bba5e82a7264eaef8bb2ade8d2ee00dc5bbeec201a9d93de0b9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/PaymentReminderDeliveryStore.kt",
+      "sha256": "2cfb6f938f1b35f91cd9af9d33103e4f74c4300cac6ec342c2aaaa829bfe26d8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/PaymentReminderReceiver.kt",
+      "sha256": "e9d9496b7f7d18a56f9c918b33e8afbe930f4486eeb4c57d856559817ede0a8d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/notification/PaymentReminderScheduler.kt",
+      "sha256": "29d5f2b4efa41d8fea52b1dee6b5482d79574a70226becc00a08deeddd364391"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/personalmodel/PersonalModelGenerator.kt",
+      "sha256": "4591c128ae8243174097f0e2cd961d861e48a0924eadc83bb616e5cf604a04da"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/preferences/AppPreferences.kt",
+      "sha256": "fe8706f9038fcc268b86e30a24df2130b06bf0f8122bd6e0a811f10e49be28b1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/recognition/RecognitionCoordinator.kt",
+      "sha256": "338057978e9aed2b7639ecac8025619ac43f38eddc2630eaa6220a88d4d3fb7f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/recognition/RecognitionSettings.kt",
+      "sha256": "8ba7474c8640a6f18d51e06768bc65f71864e205c2a1ab9e9e55b35841a59ada"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/GitHubReleaseApi.kt",
+      "sha256": "c5de848683a0411f28a09e235228dea04460e59b3cd86800f9bec7260fff5c35"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/GiteeReleaseApi.kt",
+      "sha256": "b162c2247f7701fce4e39131aa71b0948b845778c609035e7a7d680ef5c7d208"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/ImageGenerationApi.kt",
+      "sha256": "390fcf2de653faa68c3c3e545b00c4d9ceca571af1dea6116897b780bdf2b110"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/ItemRecognitionApi.kt",
+      "sha256": "cd5b1e0bd3919699b2bf3e8878626cfe0381e914aa1506e3a0b4688ebc91caff"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/ReleaseDownloadProbe.kt",
+      "sha256": "6bb32e036c48c3eb12b8d54fb60ffabe6a85136151c3b240503a54ed16f64dba"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/SeedreamImageApi.kt",
+      "sha256": "3e4b0c41a2909d94b3a9aad17b78718307ae9b8636f2c2d47f37fd0cd5d891c1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/SharedLibrarySyncApi.kt",
+      "sha256": "d9131224bbd6e1baed69039df140c58d30049a3639e8a9e1678c79b54896c9cd"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/remote/TryOnImageApi.kt",
+      "sha256": "c3222250fd858badc652cf4068b9b2471993595343bc9a4481eecb87dd301a9b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/AppUpdateRepository.kt",
+      "sha256": "26c245ad07f8e48f63059901de8b7fd444b5d12011c538a7aef24b591878006d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/BrandRepository.kt",
+      "sha256": "65da57b578b106bde1094c94de6fd44fbb593569e7145e2cd41c513586ef9604"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/BudgetRepository.kt",
+      "sha256": "5a1e93433e17756d904a9e948c12f3c8f675be0b7fd796e8019b9af5cb6678ed"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/CategoryRepository.kt",
+      "sha256": "a5900fde69ec3b4fb4a6f267172709c11eca63e08fcd8cf1d47ea03e82af0acb"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/CoordinateRepository.kt",
+      "sha256": "b96d867efcdc55145d30a168e90262ad90ea22ca03dd264272be94f708c7794a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/ImageTaskRepository.kt",
+      "sha256": "1c2b29efc080de378bd7bfc0a609656eb85ad70f1edc4b39f06a1e60a9c23ddf"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/ItemDraftRepository.kt",
+      "sha256": "99e852dbe09106f49a6d402ba153c6d0bfec8057a951250a6cc061df74befa24"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/ItemRepository.kt",
+      "sha256": "ff6c0df33e2efb3d0da5ba04e0cc92a6de758da7a24af353151e5c7d10944843"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/LegacyCatalogArchiveRepository.kt",
+      "sha256": "1eed24b1f72db81882fed8a41c263b8d8c14ba9c479a9984e8c6f8a0975fac91"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/LocationRepository.kt",
+      "sha256": "85c62129fd3928fe895e6350932d07db8246d7ac872fc6e401d334535bb46f14"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/LookRepository.kt",
+      "sha256": "efb1eceb1da503dffec7bfcb90f70c8be5087664e7fa8f181b32d0b04048518a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/OrderRepository.kt",
+      "sha256": "aae3fa86596ebf1a33be7a537462ecf4dc31dd72c06db28ccd8977e14c3574ab"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/OutfitLogRepository.kt",
+      "sha256": "a89d55e77afa4834ecd8067fa06a315cfae68604f2e3cbe673d4fd66f7f0bedc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/PaymentRepository.kt",
+      "sha256": "344c33716d845a70117f522cbf5eff83fef78f3a0e372f790e84d05352178b87"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/PersonalModelRepository.kt",
+      "sha256": "ab8dc692850307061a32ac9048274b8c63dc8f7ca54df587605f4fa97d5ff437"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/PriceRepository.kt",
+      "sha256": "2f7b20ef96157d60398590e59207d175b9d92c585e8cfa4d8b82c5e2cd99fa79"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/RecognitionRepository.kt",
+      "sha256": "84bd456877a49483e9ac99a0d8f35a06c749830689ba77ce3cb3116e778b6b89"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/RecommendationRepository.kt",
+      "sha256": "e35efc7412e17698d65a5bd7477b4ce42186ef287442722308c50571347ebafd"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/RestoreJournalRepository.kt",
+      "sha256": "e2ef0a4131af86aeadcb4f4096d0171f00c147223a42ac39a311d65678a9bbd1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/SeasonRepository.kt",
+      "sha256": "a9867ab8ce6135372f21881f5a3d5922e0cab4f670e83ae21eaa2f3e0b587051"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/SharedLibrarySyncRepository.kt",
+      "sha256": "89dc954136b8d9ea65d54ef4c6b813d461002cb1df8356f6372d179d3446d248"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/SourceRepository.kt",
+      "sha256": "c489f1d3faa99fc4774aa4e2883c53a4df67065dc3286c26c1bc3cad540fb64c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/StorageRepository.kt",
+      "sha256": "c1fa930ea3ef4895643e72b6177047f4358e330066d14f6dc06516c9d7a61b0b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/StyleRepository.kt",
+      "sha256": "05cfa68949d06bd2c13f83f28ca4c94872c9ff9b3c0824a6e89b122e82ad19f3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/TryOnRepository.kt",
+      "sha256": "e7e3147ecc87363c00248f890829d9f5c07c3d8afc6baa03ad43c50c0d6c69f7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/repository/WardrobeCategoryLibrary.kt",
+      "sha256": "af75f068e761289f507432f51a972daf605d240ce365c7c5d5267446e23a8ce1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/share/ShareCardRenderer.kt",
+      "sha256": "bf5235005ea71f5963b32b77836cbaeaf4a7dfa82f79048c1b8de8f887402268"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/share/ShareImageIntents.kt",
+      "sha256": "bd65f6e26485c32d064b5ea6582e16d252adb226bc1b57f457e2dd4d4a30cf93"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/tryon/ImageGenerationGate.kt",
+      "sha256": "5e848a6869af4cfe3257ab2b54be3316e5ca0e463986c3addcd35889b952ce91"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/tryon/TryOnGenerator.kt",
+      "sha256": "ba426ed8548cd6685bda335fecc3f3bfdb170b4434a9026352b0c021bdd417db"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/tryon/TryOnImages.kt",
+      "sha256": "dcac9321c217a1b3426a7a75d9f0c407229960a6359076bc4bf1a3c5ffce88ef"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/data/tryon/TryOnSettings.kt",
+      "sha256": "393366a3c0b3c3d27d0e2fbde758b3e24f8467a0e53ab3d4e57e75a309eca911"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/di/AppModule.kt",
+      "sha256": "68c98f5b22a90b1abe6830b13db14a4fd18b233bc1a24e6914917875cb21ea81"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/AppRelease.kt",
+      "sha256": "c5f9a57137aa87c996767f526312c7301be50e1efb600dc47c0fdb7d49661d65"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/ImageGenerationFailure.kt",
+      "sha256": "430c61c37749516259afa4e4944faf25ef2a598fd70a9d58e7b4535c3282fd8c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/ImageGenerationProvider.kt",
+      "sha256": "56f089ef8e0dd6d6f25ba197d0538260203cadf62481ef135684e07695151eab"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/ImageTask.kt",
+      "sha256": "a51b97ee0dfeec8db07b453e9b2e7446cec0a7ac11ed82595f6d6fbbc13bcbb1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/ItemRecognition.kt",
+      "sha256": "240b611afc07ca1fef423a8cae33b03c54f19cc7e3bd64165320357bb6096a27"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/MannequinRequest.kt",
+      "sha256": "29bcfb3e46768b6367cdb883a6ca298685c9f6032595db51b6f7e833665d30d4"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/PersonalModel.kt",
+      "sha256": "42415fd281c7a7c1601b0f771c8550af71ffd58a9b48df32d342010311b4a92d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/PersonalModelDraftData.kt",
+      "sha256": "0cb6735cd92c1f6cdaea7e8425e033d1f38c212491d3d867528d906c867e8ffd"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/RecognitionEvidence.kt",
+      "sha256": "e309e00c568025a270a0d337dd3b7cbb8d15ce27e24d2a3f3f7024ef596a08d8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/RecognitionRequest.kt",
+      "sha256": "c97fe7e76a2e0a789d364698c3c8b441893757632ef1e74fdc2ebdfd61751bef"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/RecognitionReview.kt",
+      "sha256": "ed123530db9939cbde7dfd4614949411e1d4ed1a8fcb4b610f138c49f8754bef"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/SizeOptions.kt",
+      "sha256": "cf58457387ae1e251630901761804f147ae926363635be943c19b9595f765a53"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/StorageTemplates.kt",
+      "sha256": "fff4d79f94569d076f4ea2660b3d075ab0348b462d17e522326717bbc652ca3c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/StorageTree.kt",
+      "sha256": "a2c04db6edf3e5fd567708268729e4f43abe0bebe973c54217b38f702372a5de"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/TryOn.kt",
+      "sha256": "00eb229f1aa8be1d4ceb6ad795b0f2cf2661b358a77f5936e655f4b0626fe92e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/Wardrobe.kt",
+      "sha256": "df9bab6e89670b2110404d4c021982f5e711ab8b117008fb21c2ab06955d2c0f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/WardrobeInventory.kt",
+      "sha256": "a9696e65c165bfa25f5285718b27482a0ab6e62d06a047246ac96d4988f46ce4"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/model/WigHeadTemplate.kt",
+      "sha256": "47a9e29e70827471df7112f9f939947d66536f695c180944f761060c4f62d3a8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/time/DatePickerDates.kt",
+      "sha256": "7b47f73471ef5c5633c6c02c317c6c7317dc14cf7607857a821278d118585863"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/BudgetAccounting.kt",
+      "sha256": "bd8d2525a4a11c1bc3e564f5f3df0c7f899449484f4dd9de0c4c2edc981748af"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/DailyOutfitReminderPolicy.kt",
+      "sha256": "4fd95b29e2f8f294aef373e0069976dcbf5b6f818a6fbc783b68a7db240489ad"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/FullLookEngine.kt",
+      "sha256": "2cd3b47315c96c7c756b67def74ad0b9e877d8842eb7447b8aae7128f69de29f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/MatchingEngine.kt",
+      "sha256": "dd7059382f3b296ab31b88339637d486743670e633856a295cfeaad6b3742613"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/OrderAccounting.kt",
+      "sha256": "39bc8f7d5a37f470c8587d5e92eceb6aa79b254d2f39a3d4e69461df4446d225"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/OrderLedger.kt",
+      "sha256": "6ba1154f23874347717869466ca229e124457c8a9ecbaf63b2c8fd18f339fce7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/PaymentReminderPolicy.kt",
+      "sha256": "1d4854b0e2b074bfb921e53cb7e2d0fa6b325008c421884ea4b4bf482c2f52dc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/ReleaseVersion.kt",
+      "sha256": "f8dd21b8b9d2155a3789e97cd0412deccd7aa00b46576d50917e855d363c2014"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/ReminderCleanup.kt",
+      "sha256": "35bd16491ae262e4a29346e166030f56a416f6eb9dcf3dc9b8807818cab41560"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/ShareCardContent.kt",
+      "sha256": "1c246fc3c8ca28d7272b705815ecb89af6a728963e3950859adb097aa5d73aea"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/SpendingBreakdown.kt",
+      "sha256": "c4157b98c6e20c6f614e2d907ab7934d0b562f2c4baa6edad276a633477fe4e8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/domain/usecase/StageAccounting.kt",
+      "sha256": "be49bc120280d9686f53fd58bbf22a852b8aac51ccfb12f082a2e5613c4785df"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/MainActivity.kt",
+      "sha256": "d72b77c09958e90f0d9d684c450c8e1e310eb53945ea83823e3a12f7c1189132"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/FullScreenImageViewer.kt",
+      "sha256": "349bfc3239232dbc23df862e7f692af56277dfa87c96733705c5300ab69b37ab"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/ImageGalleryPager.kt",
+      "sha256": "7b7a0b3e1c444404439a754fd2140de5e902e19b68bad28b6c5ce38508691650"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/ImagePreviewDialog.kt",
+      "sha256": "caec4a0bfad965371673a20885560efa281c8dabad60d061c2b5167a665491a1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/MultiImageEditor.kt",
+      "sha256": "04433e0252f470b9c9f48048426a6279ea0bb7aab7cf97d3994cbb7597279dc7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/chart/ChartColors.kt",
+      "sha256": "6f4bfb40a412ee86d5925db1e5f4799fd0e6d2676dad539d4692b7719fceb14a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/chart/LineChart.kt",
+      "sha256": "0776519c8b282cd42532c6aa5e1df0d4666ced401ad92c24e76119560daf1ea6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/chart/PieChart.kt",
+      "sha256": "617940ac4534f526f7028b016e2f72cdd4e2b4a82b68e01dcbde3f15c734406d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/component/chart/StatsProgressBar.kt",
+      "sha256": "82775cbc5a6e99a337d1205b9f7e62fd9b9a5dc3ed2f56e36b062729486d4fc8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/navigation/LolitaNavHost.kt",
+      "sha256": "36a46d12bef6be3004ef47ff4c027a27621af7c2832a5c0d234d6a11587563f1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/navigation/Screen.kt",
+      "sha256": "a29b7596e1e935395d5211ca1be67bae9965cd7f8f30b167745623599ac48a5f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/budget/BudgetScreen.kt",
+      "sha256": "7f2f9884c6bdc38ec47dcb68b6cc49f223ec38b0cd1c795a9a1dd4f990d3e323"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/budget/BudgetViewModel.kt",
+      "sha256": "29f58640eab834827d1a129ce8639090c805208e561bafdb2ca2a53d7f73ce65"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/calendar/PaymentCalendarScreen.kt",
+      "sha256": "fc4e4d9579343f64ca7f757d2e7d8a6b000ee4903af4c7d26dee1a79899b2208"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ApiKeyDialog.kt",
+      "sha256": "44da9415009d67b2bbfbf5c7cb2f26437347dfc8f02e191e23bcfa10e3754089"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/BrandLogo.kt",
+      "sha256": "c44a8083b0d4ac31272107f229d61d740791dfa649adc9369b02da6688977f6a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/CardVariant.kt",
+      "sha256": "6006489761c6cbcbb0d73357c4024dff0a6b2d5cb4b29d034181c17e43f0c0c6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ColorSelector.kt",
+      "sha256": "ea0822a6fdf179b11abc059fc1a27872353bfdcb4c2a1807fba37f05a8561094"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/EmptyState.kt",
+      "sha256": "06a1d68d90502c4b09414efaba665d538dfff3a88c5d0ea3d4bfa1ac0f6dbe94"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/GalleryCard.kt",
+      "sha256": "ac336186f6b473f3a02551f8ceb7e1c50aac0fd581e39d1a6a3e012e568b8e8d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/GlassSurface.kt",
+      "sha256": "3ee1f4666291b415860c93890842fce6553119daa2a9f4dc0333ac43000855cd"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/GradientTopAppBar.kt",
+      "sha256": "76fad501ea76b1b607011af6dea54eb68506542e8ddfce027cc56d82abe1d414"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/HeroSharedElement.kt",
+      "sha256": "901dd9344a03e58d0c8adf3012e334fc11b7c4391b672c91be384284b7e2e8f0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ImageBackgroundAdvice.kt",
+      "sha256": "d62f2bbffacad84644e24fdc438e3bb5ffee53a752ba4be984aa104ed009d6e9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ImageFrame.kt",
+      "sha256": "cd7ed9238b77e1fa72a23cbef54aba4548608faa88ac84708ebffbeb6ae167ba"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ImageRegionCropDialog.kt",
+      "sha256": "e1c91f0056a32297cb9f836c406d4f49cbbdacfcb302f48ff276a97803ead0e8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ImageServiceSelector.kt",
+      "sha256": "ba1164df5f079798e5037f33e0a1dc6a646038016a5767b7f1426dc3b59a8645"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/LolitaCard.kt",
+      "sha256": "6bdb0f2771b86bf520eb59bf620f33b479ef01913fd96218a4578e7039746d09"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/LolitaSection.kt",
+      "sha256": "2e2e6dd0eab401aded8ba0e1fa739a142b287b3c0af93ac1bc848c379eed55bc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/LolitaShimmerImage.kt",
+      "sha256": "fedd8672f9eb1bb2bf0dfc84d6893570e6b985c2558f90c956c20737ba4ed919"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SectionHeader.kt",
+      "sha256": "d1396af859ad247261a30b4ba46f7dbbcb26fae9075af9ba12315d9600b4dfab"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SizeOptionsViewModel.kt",
+      "sha256": "8a6981524721ea4e23a071be5e93cdc331b07b4f2bca68c296fa3e4ca38cd144"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SizeSelector.kt",
+      "sha256": "4d1d1d9509614cb1b470acd9eccdd33356edca9ef80ce92e3bb4e31ec643c43d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SkeletonShapes.kt",
+      "sha256": "b72afd0be314882847a3e7b0145e90f8c09dfbf581419774c4f56cf1bc4445de"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SortOption.kt",
+      "sha256": "a5b55f16a7b0da1bb7d03cdb5ef46e68eb02c1a3fdf0736d55080635b2a8ae79"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/StorageDialogs.kt",
+      "sha256": "8112d94952e8d677892f50013129d550b5d5695e867070bcd2cda91adddb1c19"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/StorageLocationPicker.kt",
+      "sha256": "fe3e101e4cdf15feeffcdfed19df9ef13c0691d5c7c8f9a37d1ad3040bdd5289"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/SwipeToDeleteContainer.kt",
+      "sha256": "1c14b669d3564607280003a03fb9754a56ac7c3ba0b5d6abc45cc50e30791761"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/UnsavedChangesHandler.kt",
+      "sha256": "5d0bc6571b537b6da4b82d2513ab2f95434eeb1d3603170754fdcbe05d8f5ec2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/common/ViewMode.kt",
+      "sha256": "82dc2f1d80585ce04d390d08537081102b7f3cb94bafc9928295c95c3f254a07"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/coordinate/CoordinateDetailScreen.kt",
+      "sha256": "cc0d627c8c47cdeb3b6bb947cd4c03ab857e5d3b655d4cba3859190aca3f95a8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/coordinate/CoordinateEditScreen.kt",
+      "sha256": "c60d0327d940ac27bc3dc24463fe9c40cab0cc8aca6b4cdb1ddea2aa125f1ed9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/coordinate/CoordinateListScreen.kt",
+      "sha256": "6c1ee2e9047129e9a35320a6c429a6198de9a8be93e37a504953bf525729dff8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/coordinate/CoordinateViewModel.kt",
+      "sha256": "29c9e1de1dbd7a0c7795f99ffd81d6a997192143e9e63c8ac408e57e0d104503"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/ImportDetailScreen.kt",
+      "sha256": "d6768d8bea6298d1301beaa638b82b089a44147b5e7bd119534cae709637b164"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/ImportDisplayOrder.kt",
+      "sha256": "5c327b529a4df620696f7208a419563fc8fb8ada1c8a088662c2c2e367b42c56"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/ImportFloatingComponents.kt",
+      "sha256": "393ea04edd7c61e486658169edd99fcfe824ad39a2b294043b997b5c1f9e21df"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoImportGuideScreen.kt",
+      "sha256": "55ab0e22f63c9bee27927e4a0c950cfbc7a6c0f58dd92228ad0e0b09435f266d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoImportScreen.kt",
+      "sha256": "a4497625bb9389dfb74b717cbd7c84e674d264a35e0ded735a2c637d88ec5d32"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoImportViewModel.kt",
+      "sha256": "622a1f0de9a38c9aeb24b4bf0b9e6e4d27042ef21b3f4f300b8e0e0645f36f8d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoProductBatch.kt",
+      "sha256": "d1e095852f9e46edde2e27dd4e1ae9989ca36e25de4e57cd20fc21199f7a2871"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoProductScreen.kt",
+      "sha256": "a0f46f201f7aef6cf401d57d703e8d5bcd6ca83463b28008e71fcbae03737804"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoProductViewModel.kt",
+      "sha256": "aef63ca2daa6471a3f402218626f7139b1a6f452874fe57afe0d3dcb0a8b36a3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/import/TaobaoProductWebReader.kt",
+      "sha256": "174987ed033bd70df966bdef7b9a6beccd4c65a423d6357b77e0a089447864cc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/FilteredItemListScreen.kt",
+      "sha256": "dff03e0135ea3a8ea0f677dab8d1eff9b97f8097c34d2ba4ed19daeddc29353b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/FilteredItemListViewModel.kt",
+      "sha256": "39d6fb663c55850ea22ade97ab5b38ecad8bd258a1bd19c7c1d00e63c6466733"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/ItemDetailScreen.kt",
+      "sha256": "4e9827650f9c864605b833fc2733688007c9987fd5991b26adf00a94e0ff0318"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/ItemEditScreen.kt",
+      "sha256": "eb4f26c02ee7ecda88402540f633bfc94ac7c7e9c54d2cf6dcb8553f06d4468a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/ItemListScreen.kt",
+      "sha256": "337be37ee79da4fc96f56dff50b5de82bdac0047310c99978bb8a2940eb35eeb"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/ItemViewModel.kt",
+      "sha256": "0adc17452f9de386e487e424fbcaac67af2de6fe94ae6e92aed9ae78c7e373f2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/LocationDetailScreen.kt",
+      "sha256": "f495d75b4525ffb13f349523311d28e04e0275358e5e8240ae2552b10a088057"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/LocationDetailViewModel.kt",
+      "sha256": "af281b96743bdd3c963eed5b8d64cd97b2d7ab5e8f982b81976463ebafbcd9b6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/LocationListContent.kt",
+      "sha256": "558a770c55409504911f7f56123f5a5de55edcec6ba60ce1af80746e19dfa2fc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/RecommendationScreen.kt",
+      "sha256": "5be0cd971cdfe10079013dec46831e5b675b1f4f3826e07114f177f5e7c4ed11"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/RecommendationViewModel.kt",
+      "sha256": "3c5b51e14adb60247c4b90e1c459b3bb4db95962550ebafd67c99c8f606526b9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/WardrobeFields.kt",
+      "sha256": "5fa5ecdbc4fbf25cb84a7056bd13367ac2afafda3794e1de4a1983f2dc9be311"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/WishlistContent.kt",
+      "sha256": "2cb1b0f629843ab6ce31718f3a3e94e0870995ee7ff0871f6af8cddd94c063f5"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/recognition/ItemRecognitionPanel.kt",
+      "sha256": "86e9a74160b399e871071622ae29758ef390df5d19b70afae37f054ae9820d3d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/item/recognition/ItemRecognitionViewModel.kt",
+      "sha256": "1460af57956653f6d8c59d8bf12521d8a3b25e9d81f6fc6052054a4b2ba2ba33"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/look/LookBuilderScreen.kt",
+      "sha256": "d2e1496461dd5e0d949ecb82a4af0337fa1c5384508ef611b570c8909ff7f2c8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/look/LookBuilderViewModel.kt",
+      "sha256": "cd854f19fe8a0f6b40e54f1250614d44d57e54f6122ce669179a9ae73927f828"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/mannequin/MannequinScreen.kt",
+      "sha256": "dbed9910491a7035eb00285f7b93c72b95bd492f608146ee1ec3fdf1be12f564"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/mannequin/MannequinViewModel.kt",
+      "sha256": "586b14111f21c0ba0d8c9c797b921e90f5162730c8cd1b6520c3bc2032f23f94"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/OutfitLogDetailScreen.kt",
+      "sha256": "3ca5cf2b28c47de73acf245a755b64e684cc85cda930ff4139c18a6e3f2db898"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/OutfitLogEditScreen.kt",
+      "sha256": "dbfea55bb9c6fb935be88b27a595fd0c7915509e3940829fb7d7a5104351ec14"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/OutfitLogListScreen.kt",
+      "sha256": "fc6cfc65331edce99c59fc303d41b957e74a7ca17b28ef1ac22ee32e2d23bf0a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/OutfitLogViewModel.kt",
+      "sha256": "18ef3a0d1fc95992d64d033894ef851a383fa20680af94c885dcc1f16ceba989"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/QuickOutfitLogScreen.kt",
+      "sha256": "c9bfe5ae877cb2ee1b50900698eeed2a2fc61e1c3db635046aae9b39f30ce4cc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/outfit/QuickOutfitLogViewModel.kt",
+      "sha256": "af8d72239a74e8c8fee975578f38de65df0ceb86c31fda4f3d3d06227ecb25bb"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/personalmodel/PersonalModelEditScreen.kt",
+      "sha256": "86c26a94ffe5dd29025af1e0f722d4a1a65770d2351e178444126da741528e03"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/personalmodel/PersonalModelEditViewModel.kt",
+      "sha256": "559c4d6c73ca6f5636b7e9237bbeeef52b1e5b6ac98e0a700e53795bfb14d1cc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/personalmodel/PersonalModelScreen.kt",
+      "sha256": "21f34d681a70054bc0371c6db217fcdab1bfbdddcd5a9f3d17a5561b90678d77"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/personalmodel/PersonalModelViewModel.kt",
+      "sha256": "e22da6a59ef4bd8db4882247431106403ba3f2c86121358770dd1b8ba831fbf8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PaymentEditScreen.kt",
+      "sha256": "283d6f2eee434058a341ecbbd7151c0fcc027706cdc0a90c740d3b2068d84fcc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PaymentManageScreen.kt",
+      "sha256": "b14db75fc736be5edef6df2c8deb2e6f09568fe922f64c6c1b9c7ae0cdd8c3ce"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PriceEditScreen.kt",
+      "sha256": "f6a7e9d0a6d46df36c7d762e225144fce1aa65a110da0becaaf48c6c5b21c4a0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PriceManageScreen.kt",
+      "sha256": "b34f37afc88965256a2ed234f46868c4e8a440a72cd769f4edd2e4e6e7ba5865"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PriceViewModel.kt",
+      "sha256": "9637259fc3f76d0c3cfb43f561de028df8b83cd5774f603331fc34362d4ced49"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/price/PricingComponents.kt",
+      "sha256": "90d3c6a18690186195c2a286acb510d5b45f8a3dd923acd3c7b88750f414531b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/AppUpdateDialog.kt",
+      "sha256": "12f6e84ff2ffba9e97ed8981b70540af5cb5da3ce6ffbc9bf51dd6439fd6bb6e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/AppUpdateHost.kt",
+      "sha256": "b1b76c183ebf09fdb6c87d06a9aa71190db9055a57a592ae0510a1654bb115ad"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/AppUpdateViewModel.kt",
+      "sha256": "ab205088776fe828e4f7ec354b94205f10d6eeb2f6a1f32073f9a7d8d234271d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/AttributeManageScreen.kt",
+      "sha256": "5434bfb46f908bf916a9cf472cd637ad347ad2ee143ddf8a6aed1621c84384c3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/BackupRestoreScreen.kt",
+      "sha256": "8b38a7e22374e1115a89747f6d6132c692f214621b2639e808ff11f63363bf6c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/BrandManageScreen.kt",
+      "sha256": "e4bda461b20c590c7beba9c16acde0a96bfd34ed2449833eedf92ac9c785ed23"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/BrandManageViewModel.kt",
+      "sha256": "ea0c1b139213dfbc6a1e0e7345c00ca480b78385a876d20722ef02dceb35e9a8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/CategoryManageScreen.kt",
+      "sha256": "08969cc8cadad7011d03c147c4b45b8aa5ce03561efc4c06de72bfa49675d81f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/CategoryManageViewModel.kt",
+      "sha256": "10bec4027797e4badb9943ca43900a1ddd31327321eb3fc30d25aa5b1d739888"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/LocationManageScreen.kt",
+      "sha256": "a6927e7ca388356af8f12413612f8327f6b4e05c37610f730d93db6faf7babf1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/LocationManageViewModel.kt",
+      "sha256": "ed593a59c1723b5f7916fef6956f7f0c0e45587ff933228234d41d02a1a7a557"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/SeasonManageScreen.kt",
+      "sha256": "e5c94c93b670b1eb46c26b05569e16b43ce1445842da73e5e718cdeafd0a069e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/SeasonManageViewModel.kt",
+      "sha256": "188c62a2b722593dfc2f52afec45fd4420d75b41efb1a5da2967512a2b87085e"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/SettingsScreen.kt",
+      "sha256": "8c5d983d960b3b97c40f9e3aa9256dcd3c8dd945c7a0ddf266f817e3715c6539"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/SettingsViewModel.kt",
+      "sha256": "d3380d09d6b80d06f085feb72c046186724324b6852ae78304dd1f5c0fe03ef0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/SourceManageScreen.kt",
+      "sha256": "e8461147025421b00ff840b4794c8b10d66a2e534d0c72ca38d4ff77bbde925b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/StyleManageScreen.kt",
+      "sha256": "1c848e1bd5404b6a317ea2c1ab220611cf0ab7c3a1890876d7d411f4675294a6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/StyleManageViewModel.kt",
+      "sha256": "5ff91b303341f62481713a97bb133ca43469add424f3871cf333aa1078a6cc67"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/settings/ThemeSelectScreen.kt",
+      "sha256": "10bdfc46d934e0a86807518020cf85979fe174ad38dd98924041f5b62445ab9a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/share/ShareCardDialog.kt",
+      "sha256": "a5155109de09e0eff365afb41d2be8cf108cb4429f9e81e835e79b52e4709c00"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/stats/SpendingDistributionScreen.kt",
+      "sha256": "cfd0169ae9ddeb27dd1f42eee022f9437fc8889194e7cbcb2b438cb5a331f731"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/stats/SpendingTrendScreen.kt",
+      "sha256": "d1b309bab435de454e1659181cdb11cb2c82df79aeb46eae297d5a7865e3f30d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/stats/StatsPageScreen.kt",
+      "sha256": "c58ef31118daa1e8f4f59e8018a5321f7a683fe8e0e3608448b3a82aeb4883cf"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/stats/StatsScreen.kt",
+      "sha256": "9981f2f3b7ad6c34251288080c6ca88ea717ebbf287ebf848491f4006eafabf3"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/stats/WishlistAnalysisScreen.kt",
+      "sha256": "e5dab34be7b99f1201f85015cb15cabe95a1613e8f31f41672c7a0ffe64216f9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tasks/ImageTaskDetailScreen.kt",
+      "sha256": "697e28d99c019cd7c3afc6db8e32cde8ed587cba197d959c427a4200a1ec8a82"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tasks/ImageTaskScreen.kt",
+      "sha256": "7b7d8a5b8ddcc6112df72abf1eefd6367c3e40a63e243211a588e4d8cf8cf561"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tasks/ImageTaskViewModel.kt",
+      "sha256": "bbd1cf96a4100d611d4e110b2f825f164c7b259f72db9214c213eaa7593e1571"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tryon/TryOnPicker.kt",
+      "sha256": "2f46d531eed356a92fbc4cf8f1a258746a581c007a4de765e7a1904416c1b5c6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tryon/TryOnScreen.kt",
+      "sha256": "fd248b6fbb549159c091c069ad482683fea082af5c53276c7678ed25dbefd335"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/screen/tryon/TryOnViewModel.kt",
+      "sha256": "1f68ee2b4986d15e238cf530d492a69e3e94490301a118ece1ecc6f60924c899"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/Color.kt",
+      "sha256": "a15c6e4bc00167bb7905f03a5021604f73e6b87dc9be0eae0f148093374457a2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/LolitaSkinConfig.kt",
+      "sha256": "c21f398287cd1b684e9daa6e8e2f3956c3dd8f1f45e1052ba0e6d650dfba9009"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/SkinConfigs.kt",
+      "sha256": "44a5d3ca0fc5c6436c54d01828473b9b0d086ee2a98bbd5a25ae1486592fae52"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/SkinType.kt",
+      "sha256": "236a68629cceadb406cd4187e00bd0e8b38909358043fc63a5503306f7d5dbce"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/Theme.kt",
+      "sha256": "3373a94ef3c04bf97c03507c62495d16ee769a9e1c0b376104279ca9718aa342"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/Type.kt",
+      "sha256": "233aa9ebfcc3bc7ff1ce007cd3e87ba3dd92693ed6c8fa59a05c974438be0b3d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/shape/SquircleShape.kt",
+      "sha256": "954750ab3f9a7ca59255a30b9eb57f0f7a0c88aa8e3d2edab8671412fbbb0e4b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/shimmer/ShimmerTheme.kt",
+      "sha256": "197ae9bdd1ad1ea47dd8546538980859b737e4af396d7819033afce5afbc18dc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/ChineseAnimationProvider.kt",
+      "sha256": "0c5cc0cdb2320227337975651c342c97d63249183afc256c7b601adbc00aa5d9"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/ClassicAnimationProvider.kt",
+      "sha256": "3e59f5f26a899a923b815b203dfd81a8124a6c3291794ef006b283b61b7f5b3f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/CountryAnimationProvider.kt",
+      "sha256": "763a718aad9caea01a94e4e6ee2199f6b75ccce07f6b5204f74aac84a0ed00c2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/DefaultAnimationProvider.kt",
+      "sha256": "e21126e1e1b0aa3ccf92af8605372287fa22b6d11c678ea5da7016478ffcf2fb"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/GothicAnimationProvider.kt",
+      "sha256": "0a3f00fc1b17c618aa939b6a5c0115f87dd24e951544d1346f28b99fb8b3bfe0"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/LocalIsListScrolling.kt",
+      "sha256": "7927c18c5e8022ec567b7b9870208ff25e9ebe3ffaa0b64060a00c405ace02d2"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/NavyAnimationProvider.kt",
+      "sha256": "a67701d645407839429efd3c368f8eae8969d48c4c32e16c9442bdd0d1379a17"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinAnimationProvider.kt",
+      "sha256": "bd07f7e7e91c773f6d4162f29dc8433e5a1025b0ffe1cf0a287c9400e37426c1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinBackgroundAnimation.kt",
+      "sha256": "e3e2612cbfc07a9954625358ce13f0924e1c20404fb0db8016bfd94a10573731"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinClickParticles.kt",
+      "sha256": "4836592a10176d807f58b67ee691df29c4f8da31c93648ba0dcdb245e668bc57"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinFlingBehavior.kt",
+      "sha256": "1f81a040b6356b31bc5fc7c446a41f3340ab2883c1b750d75ff30a1c261ae8df"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinItemAppear.kt",
+      "sha256": "c287de2b1ba24960e1cbae58d7a5662536b474f5c46b8f80f76bd2a142c3c1b8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinNavigationOverlay.kt",
+      "sha256": "29b677df7369e147369825bec4e97fbc705a79a4b990c0e85309aeb504aed71c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinNavigationTransitions.kt",
+      "sha256": "ac48d893bd540360e04673dcb3a644b4fa901929eb5be39acf3d2222e785b13f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinRippleEffect.kt",
+      "sha256": "0132cd84c9472bbb380165e040179be0e5168ce21d9514e93081a2a551c8fb5f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinScrollActivity.kt",
+      "sha256": "94dae692b1c75f8a63aeea8b0a8c6ab85673c50e8300e2dbcc5c09153d0ab77a"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SkinTabIndicator.kt",
+      "sha256": "0eba4a430c73a0c881567e575f8b4b5ba8cd4f22be27b026f72f11f530b204d8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/SweetAnimationProvider.kt",
+      "sha256": "e01173ac2408f3e60dbd71aec48b130df0bdefb35211073ac92e781296865b93"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/VictorianAnimationProvider.kt",
+      "sha256": "6d6ffad7b85e57e082f106d076f28683d1a8c87299d0b5d1249d63d83e95a1a7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/ChineseParticles.kt",
+      "sha256": "1863fde38471cb150f4de5d404240cca08436d1dcce950dd24030acf39c869cc"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/ChinesePlumBlossomParticle.kt",
+      "sha256": "73fc16901a8c4c6ca81dedb1373cbb59dc02580535951b7f6c4d41633a4d3224"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/ClassicDiamondParticle.kt",
+      "sha256": "43774be44e9fb63a611589b3cc6cee98700343690ef5789abdf686a9c870b201"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/ClassicParticles.kt",
+      "sha256": "d5de7e0490d7c45359620f0b61ba9f5c2c537dfc2f86656d7e9b9682f9dc3b94"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/CountryParticles.kt",
+      "sha256": "9d79807dd1d6c46926f6787de0d0624f5f535618e595fb0fbf74e4d5d576142d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/GothicEmberParticle.kt",
+      "sha256": "01de4d4619f8ea4dea1658b4c21fb84d46b1984ef5c0177b0ddb902622a6cb4b"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/GothicParticles.kt",
+      "sha256": "60ad04217ca39be7d391b3ca43da2c3c3137cefd5b108d04724cda2baa6938b8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/NavyBubbleParticle.kt",
+      "sha256": "60fd218cc1cb3ed7fab3cb873bdc846eac9d194dd4e0e9c7bd4f48686c7f11d6"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/NavyParticles.kt",
+      "sha256": "3f6935de253e086c2e925f5dc894d6255c9a9fc1edab32c25e4caeb1ef44f35f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/SweetParticles.kt",
+      "sha256": "f8bd73bbd87ee03840f60690aa044e64678bac22c612c07982ccd56fa8075818"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/SweetStarParticle.kt",
+      "sha256": "0a7619a31c777cd39926b9a95eb9277942011db731cd7e17dbe5f2929d7e2193"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/animation/particles/VictorianParticles.kt",
+      "sha256": "bdaa3fad8d15635e3a8e5ab7ef2403d3f07582848db369f606d47759b8b49e28"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/component/SkinArtBackground.kt",
+      "sha256": "037886c723d6ce1fd66f0f4c812011702ccb897c48e895260189fe0eced083b8"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/component/SkinClickable.kt",
+      "sha256": "59c97ab29772e8678dc5459504aec3bf5044205517de258b9c7ed5caab3af472"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/component/SkinTransitionOverlay.kt",
+      "sha256": "9d674efb4afea1acf234742e2f9dd4297d9faa586a63d99381cc25a1ae4fec28"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/BaseSkinIconProvider.kt",
+      "sha256": "f461101c8664d29cf7d54cbd8e73c0c9f1d74f1b9bbddc28c3d6753409047386"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/ChineseIconProvider.kt",
+      "sha256": "f488731195d9dcc179eb00047d0cb8ac6cf9fccdbc27a02fddd72098057cb7d1"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/ClassicIconProvider.kt",
+      "sha256": "f43c32ff1acb4ab8adef8efd78c1d96bd0577cc11fbfefd37e16ad176f6b4b55"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/CountryBottomNavIcon.kt",
+      "sha256": "67447b9b0607a015c49e2fb7b9cd4ed7656c1b225717780eac054622fe82cb8c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/CountryIconProvider.kt",
+      "sha256": "3334b9e0cd103d14834e85a9f103f5da4dcab75f6f2ed646693667a245382617"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/GothicIconProvider.kt",
+      "sha256": "0d81f122f9d36d95db112efb2940a517e70d7e59d20ccdf614b48db4bf5cb07c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/IconKey.kt",
+      "sha256": "91eaf8667b019922ef84231670b197b8ccb0791a1fa8992aa809054a53face83"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/NavyIconProvider.kt",
+      "sha256": "abf03032309fa9982996402a4e85c5a18447fc158f6d83d615d1e416025b60b7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedActionDrawings.kt",
+      "sha256": "9cc868211ace1da2744b0394bf891fdf8728c63a82ad7c3d0c74dfd511cc545d"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedContentIcons.kt",
+      "sha256": "fc008bf616aa841d1af1bb7fb1a4bd841d28eff15908ef5bb1ae969206553dbf"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedControlIcons.kt",
+      "sha256": "03e64d91bd08a22d4732997d886b16b66ccba87d7c05ecbe2098819ce31015c7"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedDirectionStatusDrawings.kt",
+      "sha256": "0952117dc87b00cf978ffa2981e8fce00f83279999c14bc34bea4f56e0b6dc3f"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedNavigationIcons.kt",
+      "sha256": "6b6d5f74877e8d174ffff5ea6172d35fe41fbe29edbe86a1a8d4ece7d90c5b5c"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedSkinIconProvider.kt",
+      "sha256": "e7376e2770148c1d77a1e0c8d8f2e6657b4530aefba94fa1b6aca44e4e7150cf"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/PolishedSkinIcons.kt",
+      "sha256": "5f0544b3f6ff40cc46555fea12834d305ac3a7ceccd21c8a23375b85d61dbf67"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/SkinIcon.kt",
+      "sha256": "812337c82c79295915c0491557cc6f70a351a76a6f6e990e49b9662046a03370"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/SkinIconProvider.kt",
+      "sha256": "c9eec115f7097cccb6e988de5502a95276ed1d67cf21ac3ce4c5e6fe19e26689"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/SweetIconProvider.kt",
+      "sha256": "d1253a8ff1d74d3d5a8eafdbf1ec1e5228cd9d8eeb96cf532c1db0c9045e8738"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/theme/skin/icon/VictorianIconProvider.kt",
+      "sha256": "e4f238fca8d32309d1708d20ee9ddea6c807ffd913ac11875d8ade66121014db"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/widget/OutfitWidget.kt",
+      "sha256": "7aad4e038509e7324fbbfdf1792936b1936ee533df1b6c2deded8e6c531b16e5"
+    },
+    {
+      "path": "app/src/main/java/com/lolita/app/ui/widget/OutfitWidgetReceiver.kt",
+      "sha256": "ce56a888a3cc3b9e86a0119870ec511724f25efaf2a913b4b77cb8bedd659728"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_launcher_foreground.xml",
+      "sha256": "876cf02d5954c191b475b763b634180a8e15ca738f4cb449e4fd6cd9e34fd445"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_launcher_monochrome.xml",
+      "sha256": "11f12394e5715f616677afb584a9d3ad634ed89500c652bf0cc3fcf8030cbcb9"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_notification.xml",
+      "sha256": "fc83eac9969eab8f7b6224be68a65e2a82391d4e48cd0f89f59a02caf02c78b2"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_chinese.png",
+      "sha256": "674f3e855ef2fb41c3de0cc9effc3f16d86b62d0d78ed20c570e45d9a3e29d5f"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_classic.png",
+      "sha256": "f857f10ab35869d44bd3f3c1f4588f57267fb222a39308d7b14e618cd75cb3d2"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_country.png",
+      "sha256": "c0c8ea4ce05bf94d7ea801caa503d0b7c6f5a37b518402c827bbd3f81089ef5c"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_gothic.png",
+      "sha256": "96abdf66a1557780f2e710fa6377baad8c9635f60541fe14d59eb55b35004e07"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_navy.png",
+      "sha256": "65d89475ff49a617d22e4828a7478237922c3fcccdc8c7165692c3e8e3f0b9c0"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_sweet.png",
+      "sha256": "12cc1554b489a5e43f73349326e9517be0e8fa1ddbcdd5a8c685b9a9d26728f3"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_victorian.png",
+      "sha256": "327b2e17df32697b379c54bcbffdcc6e176eb7032def333c958961bea68a5de2"
+    },
+    {
+      "path": "app/src/main/res/font/cinzel_regular.ttf",
+      "sha256": "6e67a440d19a22e7a14631e7fb8efb71cdf43fde8adf040b7935ac2b38519ab0"
+    },
+    {
+      "path": "app/src/main/res/font/cormorant_garamond.ttf",
+      "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0"
+    },
+    {
+      "path": "app/src/main/res/font/noto_serif_sc_regular.ttf",
+      "sha256": "c358a69de3df5f423a8946a7b03e3126fb6ba116f1130a463455b4e39e1f0742"
+    },
+    {
+      "path": "app/src/main/res/font/pacifico_regular.ttf",
+      "sha256": "5b6c0d5334a7bf77dea52b975c5a0c408878c0f7115ed5b6fb151f634b7bf701"
+    },
+    {
+      "path": "app/src/main/res/font/playfair_display_regular.ttf",
+      "sha256": "861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b"
+    },
+    {
+      "path": "app/src/main/res/layout/widget_loading.xml",
+      "sha256": "20d19ddf9b7a5e312d0e6ee1519a8899cac3b0df38ef07293acada6c08f0cd18"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "9ac0e6980be8d7c56aa532a49a21a5f18ab29cafd094f48b3c9482882de748f7"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "9ac0e6980be8d7c56aa532a49a21a5f18ab29cafd094f48b3c9482882de748f7"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v33/ic_launcher.xml",
+      "sha256": "bbaf996b7b1356da55819d20c1920c34e20b1288fe7cec441aefeda5ea53d24a"
+    },
+    {
+      "path": "app/src/main/res/mipmap-anydpi-v33/ic_launcher_round.xml",
+      "sha256": "bbaf996b7b1356da55819d20c1920c34e20b1288fe7cec441aefeda5ea53d24a"
+    },
+    {
+      "path": "app/src/main/res/values/colors.xml",
+      "sha256": "9a4c54b1d54cf47bdd671b5ee7caffae1df7594936712e92668ba1696a35492d"
+    },
+    {
+      "path": "app/src/main/res/values/strings.xml",
+      "sha256": "f66f33d0f40143e5cb01fa555bf9e000c1fdb31c55d13c46dffdc67631fe4441"
+    },
+    {
+      "path": "app/src/main/res/values/themes.xml",
+      "sha256": "7107cd4c954a00735b5ce20a02f7785e75295f324b238aa671f7da977bb4a922"
+    },
+    {
+      "path": "app/src/main/res/xml/file_paths.xml",
+      "sha256": "553aa1eaf1fd9da8f3b0b44264044c9f4ee33921edc10ac935fe20e8294be3cc"
+    },
+    {
+      "path": "app/src/main/res/xml/outfit_widget_info.xml",
+      "sha256": "8629f5348631e5e9b394429af560760854c72c24759935953048163cac76c318"
+    }
+  ]
+}

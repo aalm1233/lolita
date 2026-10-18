@@ -1,0 +1,20 @@
+[
+  "/Users/dengtong/Library/Android/sdk/platform-tools/adb",
+  "-s",
+  "emulator-5586",
+  "shell",
+  "am",
+  "instrument",
+  "-w",
+  "-r",
+  "-e",
+  "timeout_msec",
+  "90000",
+  "-e",
+  "class",
+  "com.lolita.app.data.ImageTaskExecutionTest#controlledSocketResponseCanCompleteThroughTaskPipeline",
+  "-e",
+  "screenOffProbePort",
+  "60826",
+  "com.lolita.app.test/androidx.test.runner.AndroidJUnitRunner"
+]

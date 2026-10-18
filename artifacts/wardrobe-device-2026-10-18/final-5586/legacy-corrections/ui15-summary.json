@@ -1,0 +1,103 @@
+{
+  "tests": 15,
+  "counts": {
+    "passed": 15,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0,
+    "ignored": 0
+  },
+  "seconds": 75.698,
+  "results": [
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "personalKeyIsMaskedAndNeverRefilledAndCanBeDeleted",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "fullScreenResultPreviewActuallyZoomsTheImage",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+      "code": 0,
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText",
+      "code": 0,
+      "status": "passed"
+    }
+  ]
+}

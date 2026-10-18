@@ -1,0 +1,54 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "realProviderRequests": 0,
+  "uninstalled": false,
+  "dataCleared": false,
+  "initialLegacyRun": {
+    "tests": 127,
+    "passed": 112,
+    "failed": 14,
+    "skipped": 1,
+    "evidence": "legacy-regression/summary.json",
+    "note": "Actual complete frozen-package result, not a GREEN claim."
+  },
+  "targetedCorrections": {
+    "ui15": {
+      "passed": 15,
+      "seconds": 75.698,
+      "evidence": "legacy-corrections/ui15-summary.json"
+    },
+    "loopback1": {
+      "passed": 1,
+      "seconds": 1.081,
+      "evidence": "legacy-corrections/loopback-socket1-summary.json",
+      "network": "Only host127.0.0.1 random-port controlled server, Android alias10.0.2.2; no official API."
+    }
+  },
+  "finalBuild": {
+    "tests": 390,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 12,
+    "evidence": "legacy-final/jvm-results.json",
+    "sourceStableBeforeAfter": true
+  },
+  "finalDevice": {
+    "tests": 52,
+    "passed": 52,
+    "failures": 0,
+    "skipped": 0,
+    "seconds": 6.282,
+    "evidence": "legacy-final/summary.json",
+    "mainSha256": "03dc649e7d7e7a2c9e394c87b0f60e843d850e32496bc6f46e8cb6a0b120aac1",
+    "testSha256": "68dd0e222fc7937184e986666f0da977d9191212824249bca819221009ef628e",
+    "versionCode": 113
+  },
+  "notes": [
+    "The entire127 was not repeated; failures were rerun in complete affected classes. All14 original failures and the opt-in skip now have a passing affected-case execution, with package evidence kept separately.",
+    "The new47-case storage/recognition run was not repeated wholesale. Final52 targets subsequent backup and draft changes.",
+    "Initial source observation for correction WardrobeBackup includes newly uncompiled18th case and is explicitly marked. Final52 source hashes were stable before and after build and match all18 compiled cases.",
+    "Standalone old UI matrices use existing fixtures; they are not claimed as new native320dp/2xDialog screenshot evidence. The committed native28 recognition screenshots remain in final47."
+  ]
+}

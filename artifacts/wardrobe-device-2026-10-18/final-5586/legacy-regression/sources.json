@@ -1,0 +1,141 @@
+[
+  {
+    "class": "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/mannequin/MannequinViewModelTest.kt",
+    "sha256": "fcb945fd5b84c86662a8e240b29cf1e65303f99986770624057410f0fe69a427",
+    "tests": 10,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/mannequin/MannequinScreenTest.kt",
+    "sha256": "b36eedb19f9ea7eda814c22647c1a58bf35cd7113f0e77f5c1d1e3369ef4f3d1",
+    "tests": 9,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.mannequin.MannequinDetailEntryTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/mannequin/MannequinDetailEntryTest.kt",
+    "sha256": "4675da1558ef86aecd6f9d0a4b7ea8b7ba7597ffbe3089ee584861be6f6d18d5",
+    "tests": 1,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.mannequin.MannequinNavigationTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/mannequin/MannequinNavigationTest.kt",
+    "sha256": "aa6f74403f3ede206515dc195519263d92d10ad3fe7bc58419b34a856e51f3a9",
+    "tests": 4,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.TryOnViewModelTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/TryOnViewModelTest.kt",
+    "sha256": "cb6ff614d3ff55e7cb22f3a824871bf52c81a9248a3a89406ac9a0a7c595aea0",
+    "tests": 15,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/TryOnScreenTest.kt",
+    "sha256": "03a358f2de377b31e915e6e7d1d27b7f5c40bd3244cac0a41eff31458bf12900",
+    "tests": 6,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.TryOnNavigationTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/TryOnNavigationTest.kt",
+    "sha256": "ffbd83887aa3829f7998257c819ad2a2f756727caf9a1828a61f8ee52b56c88f",
+    "tests": 4,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tasks.ImageTaskNavigationTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tasks/ImageTaskNavigationTest.kt",
+    "sha256": "7f8925ff45a8be8c95d8dc7f1444f13304e28b3477b8fe46ff4e45757005aa94",
+    "tests": 5,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tasks.ImageTaskUpgradeNavigationTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tasks/ImageTaskUpgradeNavigationTest.kt",
+    "sha256": "849ac5c8ac2548b4e4108822b3f5e1b40e88451961dbc1c40bf0e1cc1f18b687",
+    "tests": 2,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tasks/ImageTaskScreenTest.kt",
+    "sha256": "8d34aaa2ef10e4359335991973a39cc0b6fecff72937ccdab798ae5e90618abe",
+    "tests": 10,
+    "group": "legacy-navigation10"
+  },
+  {
+    "class": "com.lolita.app.data.ImageTaskPersistenceTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ImageTaskPersistenceTest.kt",
+    "sha256": "2109476a61da36f2f48ff3adabd33941a727e06493dc92a0d4310628a6eb88bb",
+    "tests": 5,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.ImageTaskBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ImageTaskBackupTest.kt",
+    "sha256": "65fef92dc2cbbfa9b64de39c755df3b1436833724a3576c7f5d044f840b86221",
+    "tests": 9,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.ImageTaskExecutionTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/ImageTaskExecutionTest.kt",
+    "sha256": "5fb1c60b5e197ae780d029121d99ba354fc567bd1e717237850918a36a0f8b25",
+    "tests": 21,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.PersonalModelBackupTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/PersonalModelBackupTest.kt",
+    "sha256": "17d776ea497b60200fe12d9ac918275f37aebda94636bb38ce5a62f53ced803d",
+    "tests": 6,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.MannequinPersistenceTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/MannequinPersistenceTest.kt",
+    "sha256": "4079bb6b4fe3314bb86f64181ba11b76bb75994d6f88d26cb4a1efc7a6fbd9ea",
+    "tests": 8,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.MannequinSubjectTaskTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/MannequinSubjectTaskTest.kt",
+    "sha256": "5406cf7e44dd8e170f693a348776e5a8f2164a34c1008fe5ec094c1a0725de8c",
+    "tests": 4,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.data.TryOnPersistenceTest",
+    "path": "app/src/androidTest/java/com/lolita/app/data/TryOnPersistenceTest.kt",
+    "sha256": "fd4f858978f351d688eb56dea9b26e43de76fd698691d61cfc424f323cf5669d",
+    "tests": 2,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.CompleteWardrobeTryOnViewModelTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/CompleteWardrobeTryOnViewModelTest.kt",
+    "sha256": "c645840c8b28ff733fa6c817f3df8ebd6f260c16204bac14623815501cf9b331",
+    "tests": 5,
+    "group": "related-request-backup"
+  },
+  {
+    "class": "com.lolita.app.ui.screen.tryon.ImageServiceConfigurationTest",
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tryon/ImageServiceConfigurationTest.kt",
+    "sha256": "99aa9a94ffbc977931c57cc54c563b9e05d8b7f4c0ae33a61f3c64c9c01bc5f2",
+    "tests": 1,
+    "group": "related-request-backup"
+  },
+  {
+    "path": "app/src/androidTest/java/com/lolita/app/ui/screen/tasks/ImageTaskNavigationFixture.kt",
+    "sha256": "e479f03cd1a0c71283fde9f492a00addb9a9eb727003832657e7cc82802902f3",
+    "tests": 0,
+    "group": "shared-fake-fixture"
+  }
+]

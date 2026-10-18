@@ -1,0 +1,14 @@
+{
+  "bind": "127.0.0.1",
+  "port": 60826,
+  "androidAlias": "10.0.2.2",
+  "officialApiCalls": 0,
+  "requests": [
+    {
+      "peer": "127.0.0.1",
+      "requestLine": "POST /controlled HTTP/1.1",
+      "bodyBytes": 1413
+    }
+  ],
+  "responseImageSha256": "a626f075bb0a2b70d081661750bc52831a0fc4a91b2a63e658b96cd6f2721afc"
+}

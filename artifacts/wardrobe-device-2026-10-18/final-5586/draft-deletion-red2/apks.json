@@ -1,0 +1,22 @@
+{
+  "serial": "emulator-5586",
+  "avd": "Lolita_Wardrobe_Final_35",
+  "apks": [
+    {
+      "package": "com.lolita.app",
+      "path": "/tmp/lolita-wardrobe-device-20261018/final-draft-deletion-red2/app-debug.apk",
+      "sha256": "daa1986ace5f7172502569f26e1567f5405168d7a0fc83bc3f4d75367ffae9ed",
+      "versionCode": 113,
+      "signerSha256": "b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2",
+      "previousInstalled": true
+    },
+    {
+      "package": "com.lolita.app.test",
+      "path": "/tmp/lolita-wardrobe-device-20261018/final-draft-deletion-red2/app-debug-androidTest.apk",
+      "sha256": "c261c4010373b423894539d0b70aa98099c9df0006502b24e38d0fc07c8925d1",
+      "versionCode": 0,
+      "signerSha256": "b7832feba195d280dfa51957f8f6a38946d82a7d633ef3e2a11b23c04f01a8d2",
+      "previousInstalled": true
+    }
+  ]
+}

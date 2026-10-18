@@ -45,6 +45,12 @@ class StorageRepositoryTest {
         assertTrue("操作必须明确拒绝", rejected)
     }
 
+    private suspend fun assertStorageMutation(original: Item, room: Long?, node: Long?) {
+        val actual = requireNotNull(db.itemDao().getItemById(original.id))
+        assertTrue("储位修改必须递增物品编辑版本", actual.updatedAt > original.updatedAt)
+        assertEquals(original.copy(locationId = room, storageNodeId = node, updatedAt = actual.updatedAt), actual)
+    }
+
     @Test fun rejectsOccupiedDeletionAndExplicitClearKeepsEveryItemAndParentLink() = runBlocking {
         val cabinet = repository.createNode(entrance, null, "鞋柜")
         val shelf = repository.createNode(entrance, cabinet, "第二层")
@@ -56,7 +62,7 @@ class StorageRepositoryTest {
         repository.deleteNode(cabinet, clearContents = true)
         assertTrue(repository.getNodes().isEmpty())
         originals.forEach { original ->
-            assertEquals(original.copy(locationId = null, storageNodeId = null), db.itemDao().getItemById(original.id))
+            assertStorageMutation(original, null, null)
         }
     }
 
@@ -71,7 +77,7 @@ class StorageRepositoryTest {
         assertEquals(2, impact.nodeCount)
         repository.moveNode(cabinet, bedroom, null)
         assertTrue(repository.getNodes().all { it.locationId == bedroom })
-        original.forEach { (id, row) -> assertEquals(row.copy(locationId = bedroom), db.itemDao().getItemById(id)) }
+        original.forEach { (_, row) -> assertStorageMutation(row, bedroom, row.storageNodeId) }
     }
 
     @Test fun failedMoveRollsBackEveryDescendantAndItem() = runBlocking {
@@ -130,7 +136,7 @@ class StorageRepositoryTest {
         rejects { repository.deleteRoom(room) }
         assertNotNull(db.locationDao().getLocationByIdSync(entrance))
         repository.deleteRoom(room, clearContents = true)
-        assertEquals(old.copy(locationId = null, storageNodeId = null), db.itemDao().getItemById(shoe))
+        assertStorageMutation(old, null, null)
         assertNull(db.locationDao().getLocationByIdSync(entrance))
         assertTrue(repository.getNodes().isEmpty())
         assertNotNull(db.locationDao().getLocationByIdSync(bedroom))

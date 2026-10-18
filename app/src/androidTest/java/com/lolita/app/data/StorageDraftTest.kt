@@ -88,6 +88,12 @@ class StorageDraftTest {
             assertEquals(originalImageSha, actual.protectedImagePaths().map(::imageSha256).distinct().single())
         }
 
+        suspend fun assertItemStorage(before: Item, room: Long?, node: Long?) {
+            val actual = db.itemDao().getItemById(before.id)!!
+            assertTrue("A storage mutation advances the Item edit baseline", actual.updatedAt > before.updatedAt)
+            assertEquals(before.copy(locationId = room, storageNodeId = node, updatedAt = actual.updatedAt), actual)
+        }
+
         fun close() {
             exports.forEach { context.contentResolver.delete(it, null, null) }
             db.close(); root.deleteRecursively()
@@ -105,7 +111,7 @@ class StorageDraftTest {
         f.backupMustSucceed()
         f.assertDraft(f.linked, 2, f.shelf); f.assertDraft(f.unsaved, 2, f.shelf)
         f.assertDraft(f.roomOnly, 1, null); f.assertDraft(f.unrelated, 2, null)
-        assertEquals(f.original.copy(locationId = 2), f.db.itemDao().getItemById(1))
+        f.assertItemStorage(f.original, 2, f.shelf)
         f.drafts.save(f.unsaved)
         f.assertDraft(f.unsaved, 2, f.shelf)
         f.backupMustSucceed()
@@ -120,7 +126,7 @@ class StorageDraftTest {
         f.backupMustSucceed()
         f.assertDraft(f.linked, 1, null); f.assertDraft(f.unsaved, 1, null); f.assertDraft(draftOnly, 1, null)
         f.assertDraft(f.roomOnly, 1, null); f.assertDraft(f.unrelated, 2, null)
-        assertEquals(f.original.copy(locationId = null, storageNodeId = null), f.db.itemDao().getItemById(1))
+        f.assertItemStorage(f.original, null, null)
         f.drafts.save(f.unsaved); f.drafts.save(draftOnly)
         f.assertDraft(f.unsaved, 1, null); f.assertDraft(draftOnly, 1, null)
         f.backupMustSucceed()
@@ -132,10 +138,28 @@ class StorageDraftTest {
         f.backupMustSucceed()
         f.assertDraft(f.linked, null, null); f.assertDraft(f.unsaved, null, null); f.assertDraft(f.roomOnly, null, null)
         f.assertDraft(f.unrelated, 2, null)
-        assertEquals(f.original.copy(locationId = null, storageNodeId = null), f.db.itemDao().getItemById(1))
+        f.assertItemStorage(f.original, null, null)
         assertNull(f.db.locationDao().getLocationByIdSync(1))
         f.drafts.save(f.unsaved); f.drafts.save(f.roomOnly)
         f.assertDraft(f.unsaved, null, null); f.assertDraft(f.roomOnly, null, null)
+        f.backupMustSucceed()
+    } }
+
+    @Test fun movingAnItemToAnotherValidNodeMakesItsOldDraftBaselineUncommittable() = runBlocking { fixture { f ->
+        // The clock may be behind a previously recorded timestamp; moves must still advance it.
+        val before = f.original.copy(updatedAt = System.currentTimeMillis() + 86_400_000)
+        f.db.itemDao().updateItem(before)
+        val draft = f.linked.copy(dataJson = f.linked.data().copy(baselineUpdatedAt = before.updatedAt).encode())
+        f.db.itemDraftDao().save(draft)
+        val destination = f.storage.createNode(2, null, "仍有效的目标柜")
+        f.storage.moveItems(setOf(1), 2, destination)
+        val moved = f.db.itemDao().getItemById(1)!!
+        assertNotNull(f.db.storageNodeDao().getById(f.shelf))
+        val stale = runCatching { f.drafts.commit(draft.id, before.copy(name = "陈旧编辑不应覆盖")) }
+        assertTrue("A storage move is a real Item edit; its old draft must not restore the still-valid previous node", stale.isFailure)
+        f.assertItemStorage(before, 2, destination)
+        assertEquals(moved, f.db.itemDao().getItemById(1))
+        assertEquals(draft, f.db.itemDraftDao().get(draft.id))
         f.backupMustSucceed()
     } }
 }

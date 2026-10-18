@@ -256,17 +256,17 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE location_id = :locationId AND storage_node_id IS NULL ORDER BY updated_at DESC")
     fun observeRoomItemsWithoutStorage(locationId: Long): Flow<List<Item>>
 
-    @Query("UPDATE items SET location_id = :locationId, storage_node_id = :nodeId WHERE id IN (:itemIds)")
-    suspend fun updateItemsStorage(itemIds: List<Long>, locationId: Long?, nodeId: Long?)
+    @Query("UPDATE items SET location_id = :locationId, storage_node_id = :nodeId, updated_at = MAX(updated_at + 1, :updatedAt) WHERE id IN (:itemIds)")
+    suspend fun updateItemsStorage(itemIds: List<Long>, locationId: Long?, nodeId: Long?, updatedAt: Long = System.currentTimeMillis())
 
-    @Query("UPDATE items SET location_id = :locationId WHERE storage_node_id IN (:nodeIds)")
-    suspend fun moveStorageSubtreeItems(nodeIds: List<Long>, locationId: Long)
+    @Query("UPDATE items SET location_id = :locationId, updated_at = MAX(updated_at + 1, :updatedAt) WHERE storage_node_id IN (:nodeIds)")
+    suspend fun moveStorageSubtreeItems(nodeIds: List<Long>, locationId: Long, updatedAt: Long = System.currentTimeMillis())
 
-    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL WHERE storage_node_id IN (:nodeIds)")
-    suspend fun clearStorageSubtreeItems(nodeIds: List<Long>)
+    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL, updated_at = MAX(updated_at + 1, :updatedAt) WHERE storage_node_id IN (:nodeIds)")
+    suspend fun clearStorageSubtreeItems(nodeIds: List<Long>, updatedAt: Long = System.currentTimeMillis())
 
-    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL WHERE location_id = :locationId")
-    suspend fun clearRoomStorage(locationId: Long)
+    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL, updated_at = MAX(updated_at + 1, :updatedAt) WHERE location_id = :locationId")
+    suspend fun clearRoomStorage(locationId: Long, updatedAt: Long = System.currentTimeMillis())
 }
 
 data class ItemWithFullDetails(

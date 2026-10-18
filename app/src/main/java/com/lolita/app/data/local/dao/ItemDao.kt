@@ -243,6 +243,30 @@ interface ItemDao {
 
     @Query("UPDATE items SET coordinate_order = :order WHERE id = :itemId")
     suspend fun updateCoordinateOrder(itemId: Long, order: Int)
+
+    @Query("SELECT * FROM items WHERE id IN (:itemIds)")
+    suspend fun getItemsForStorageMove(itemIds: List<Long>): List<Item>
+
+    @Query("SELECT COUNT(*) FROM items WHERE storage_node_id IN (:nodeIds)")
+    suspend fun countItemsInStorageNodes(nodeIds: List<Long>): Int
+
+    @Query("SELECT * FROM items WHERE storage_node_id IN (:nodeIds) ORDER BY updated_at DESC")
+    fun observeItemsInStorageNodes(nodeIds: List<Long>): Flow<List<Item>>
+
+    @Query("SELECT * FROM items WHERE location_id = :locationId AND storage_node_id IS NULL ORDER BY updated_at DESC")
+    fun observeRoomItemsWithoutStorage(locationId: Long): Flow<List<Item>>
+
+    @Query("UPDATE items SET location_id = :locationId, storage_node_id = :nodeId WHERE id IN (:itemIds)")
+    suspend fun updateItemsStorage(itemIds: List<Long>, locationId: Long?, nodeId: Long?)
+
+    @Query("UPDATE items SET location_id = :locationId WHERE storage_node_id IN (:nodeIds)")
+    suspend fun moveStorageSubtreeItems(nodeIds: List<Long>, locationId: Long)
+
+    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL WHERE storage_node_id IN (:nodeIds)")
+    suspend fun clearStorageSubtreeItems(nodeIds: List<Long>)
+
+    @Query("UPDATE items SET location_id = NULL, storage_node_id = NULL WHERE location_id = :locationId")
+    suspend fun clearRoomStorage(locationId: Long)
 }
 
 data class ItemWithFullDetails(

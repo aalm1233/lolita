@@ -50,7 +50,7 @@ fun LocationListContent(
                 ) {
                     LocationCardItem(
                         name = "未分配",
-                        description = "未设置位置的服饰",
+                        description = "未设置位置的物品",
                         imageUrl = null,
                         itemCount = unassignedItemCount,
                         itemImages = emptyList(),
@@ -138,7 +138,7 @@ private fun LocationCardItem(
                     shape = RoundedCornerShape(4.dp)
                 ) {
                     Text(
-                        "${itemCount} 件服饰",
+                        "${itemCount} 条记录",
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary
@@ -162,7 +162,7 @@ private fun LocationCardItem(
                     }
                 } else {
                     Text(
-                        "暂无服饰",
+                        "暂无物品",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                     )

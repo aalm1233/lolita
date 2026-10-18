@@ -1,463 +1,250 @@
 package com.lolita.app.ui.screen.item
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.background
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lolita.app.ui.screen.common.LolitaShimmerImage
-import com.lolita.app.ui.screen.common.heroSharedElement
 import com.lolita.app.data.local.entity.Item
-import com.lolita.app.ui.screen.common.GradientTopAppBar
-import com.lolita.app.ui.screen.common.ImageFrame
-import com.lolita.app.ui.screen.common.LolitaCard
-import com.lolita.app.ui.screen.common.SectionHeader
-import com.lolita.app.ui.screen.common.ShimmerLine
-import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.data.local.entity.StorageNode
+import com.lolita.app.domain.model.StorageTree
+import com.lolita.app.ui.screen.common.*
+import com.lolita.app.ui.theme.LocalLolitaSkin
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
+import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
+import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
-import com.lolita.app.ui.theme.skin.animation.skinItemAppear
-import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
-import com.lolita.app.ui.theme.skin.component.SkinClickableBox
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.rememberShimmer
-import com.valentinilk.shimmer.shimmer
+
+private data class NodeMoveTarget(val node: StorageNode, val roomId: Long, val parentId: Long?)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationDetailScreen(
-    locationId: Long,
-    onBack: () -> Unit,
-    onItemClick: (Long) -> Unit,
-    viewModel: LocationDetailViewModel = viewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
-    var showItemPicker by remember { mutableStateOf(false) }
-
-    LaunchedEffect(locationId) {
-        viewModel.loadLocation(locationId)
-    }
-
-    val title = when {
-        uiState.isUnassigned -> "未分配"
-        uiState.location != null -> uiState.location!!.name
-        else -> "位置详情"
-    }
-
-    Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            GradientTopAppBar(
-                title = { Text(title) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        SkinIcon(IconKey.ArrowBack)
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        if (uiState.isLoading) {
-            val shimmer = rememberShimmer(ShimmerBounds.Window)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Hero image skeleton
-                ShimmerRect(
-                    width = 400.dp,
-                    height = 200.dp,
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().shimmer(shimmer)
-                )
-                // Description skeleton
-                ShimmerLine(widthFraction = 0.9f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
-                ShimmerLine(widthFraction = 0.6f, height = 14.dp, modifier = Modifier.shimmer(shimmer))
-                // Item count header
-                ShimmerLine(widthFraction = 0.4f, height = 16.dp, modifier = Modifier.shimmer(shimmer))
-                // Item list skeleton: 3 rows
-                repeat(3) {
-                    LolitaCard(modifier = Modifier.fillMaxWidth().shimmer(shimmer)) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            ShimmerRect(
-                                width = 64.dp,
-                                height = 64.dp,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                ShimmerLine(widthFraction = 0.7f, height = 16.dp)
-                                ShimmerLine(widthFraction = 0.5f, height = 12.dp)
-                            }
-                        }
-                    }
+fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Long) -> Unit,
+    viewModel: LocationDetailViewModel = viewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    val skin = LocalLolitaSkin.current
+    val listState = rememberLazyListState()
+    ObserveSkinScroll(listState)
+    val snackbar = remember { SnackbarHostState() }
+    var addNode by remember { mutableStateOf(false) }
+    var editNode by remember { mutableStateOf<StorageNode?>(null) }
+    var deleteNode by remember { mutableStateOf<StorageNode?>(null) }
+    var moveNode by remember { mutableStateOf<StorageNode?>(null) }
+    var nodeMoveTarget by remember { mutableStateOf<NodeMoveTarget?>(null) }
+    var showBatchDestination by remember { mutableStateOf(false) }
+    var batchTarget by remember { mutableStateOf<Pair<Long?, Long?>?>(null) }
+    var addItems by remember { mutableStateOf(false) }
+    var addingItemIds by remember { mutableStateOf<Set<Long>?>(null) }
+    val currentNode = state.nodes.find { it.id == state.currentNodeId }
+    val canCreate = !state.isUnassigned && (currentNode == null || currentNode.parentNodeId == null)
+    LaunchedEffect(locationId) { viewModel.loadLocation(locationId) }
+    LaunchedEffect(state.currentNodeId) { listState.scrollToItem(0) }
+    LaunchedEffect(state.errorMessage) { state.errorMessage?.let { snackbar.showSnackbar(it); viewModel.clearError() } }
+    val goBack = { if (!state.isSaving && !viewModel.openParent()) onBack() }
+    BackHandler(state.currentNodeId != null || state.isSaving) { goBack() }
+    Scaffold(containerColor = Color.Transparent, snackbarHost = { SnackbarHost(snackbar) }, topBar = {
+        GradientTopAppBar(title = { Text(currentNode?.name ?: state.location?.name ?: if (state.isUnassigned) "未设置位置" else "位置详情") },
+            navigationIcon = { IconButton(onClick = goBack, enabled = !state.isSaving) { SkinIcon(IconKey.ArrowBack) } })
+    }, bottomBar = {
+        if (state.selectedItemIds.isNotEmpty()) Surface(color = MaterialTheme.colorScheme.surface) {
+            Row(Modifier.fillMaxWidth().padding(skin.spacingLarge), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                TextButton(onClick = viewModel::clearSelection, enabled = !state.isSaving) { Text("取消选择") }
+                Button(onClick = { showBatchDestination = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) {
+                    Text("移动 ${state.selectedItemIds.size} 条记录")
                 }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 12.dp),
-                flingBehavior = rememberSkinFlingBehavior()
-            ) {
-                // Location header (image + description)
-                if (!uiState.isUnassigned && uiState.location != null) {
-                    val loc = uiState.location!!
-                    if (loc.imageUrl != null) {
-                        item {
-                            ImageFrame {
-                                LolitaShimmerImage(
-                                    model = loc.imageUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(200.dp)
-                                        .heroSharedElement("locationImage-${loc.id}")
-                                        .clip(RoundedCornerShape(12.dp)),
-                                    contentScale = ContentScale.Crop,
-                                    placeholderInitial = loc.name.firstOrNull()?.toString()
-                                )
-                            }
-                        }
+        }
+    }) { padding ->
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding),
+            contentPadding = PaddingValues(skin.spacingLarge),
+            verticalArrangement = Arrangement.spacedBy(skin.spacingMedium), flingBehavior = rememberSkinFlingBehavior()) {
+            if (state.isLoading) {
+                items(3) { LolitaCard(Modifier.fillMaxWidth()) { ShimmerLine(widthFraction = 0.8f) } }
+            } else if (!state.isUnassigned && state.location == null) {
+                item { SkinEmptyState(iconKey = IconKey.Location, title = "房间已删除") }
+            } else {
+                item { LolitaSection(title = "当前位置") { row {
+                    Text(state.currentPath, style = MaterialTheme.typography.titleMedium)
+                    Text("共 ${state.recordCount} 条记录（含挂载小物）", style = MaterialTheme.typography.bodySmall)
+                    val image = currentNode?.imageUrl ?: if (currentNode == null) state.location?.imageUrl else null
+                    image?.let {
+                        ImageFrame { LolitaShimmerImage(model = it, contentDescription = "位置封面",
+                            modifier = Modifier.fillMaxWidth().heightIn(max = 200.dp).aspectRatio(1.8f)
+                                .then(if (currentNode == null) Modifier.heroSharedElement("locationImage-$locationId") else Modifier)
+                                .clip(RoundedCornerShape(skin.cornerRadiusMedium)), contentScale = ContentScale.Crop) }
                     }
-                    if (loc.description.isNotBlank()) {
-                        item {
-                            Text(
-                                loc.description,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                    val description = currentNode?.description ?: state.location?.description.orEmpty()
+                    if (description.isNotBlank()) Text(description)
+                    if (currentNode != null) NodeActions(currentNode, state.isSaving,
+                        onEdit = { editNode = it }, onMove = { moveNode = it }, onDelete = { deleteNode = it })
+                } } }
+                item { OutlinedTextField(state.searchQuery, viewModel::updateSearch, modifier = Modifier.fillMaxWidth(),
+                    label = { Text("搜索名称、品牌、分类或位置路径") }, leadingIcon = { SkinIcon(IconKey.Search) }, singleLine = true) }
+                if (!state.isUnassigned) {
+                    item { Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium), modifier = Modifier.fillMaxWidth()) {
+                        if (canCreate) OutlinedButton(onClick = { addNode = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) {
+                            Text(if (currentNode == null) "新增柜架 / 收纳盒" else "新增层 / 格")
                         }
-                    }
+                        OutlinedButton(onClick = { addItems = true }, enabled = !state.isSaving, modifier = Modifier.weight(1f)) { Text("移入物品") }
+                    } }
+                    if (currentNode == null) item { TextButton(onClick = viewModel::showTemplates, enabled = !state.isSaving) { Text("添加常用收纳") } }
                 }
-
-                // Item count header
-                item {
-                    SectionHeader(
-                        title = "${uiState.items.size} 件服饰",
-                        action = if (!uiState.isUnassigned) {
-                            {
-                                SkinClickableBox(
-                                    onClick = {
-                                        viewModel.loadAllItemsForPicker()
-                                        showItemPicker = true
-                                    }
-                                ) {
-                                    Surface(
-                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                        shape = MaterialTheme.shapes.small
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            SkinIcon(IconKey.Add, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
-                                            Text(
-                                                "添加服饰",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.primary
-                                            )
-                                        }
-                                    }
+                if (state.childNodes.isNotEmpty()) {
+                    item { SectionHeader(title = if (currentNode == null) "柜架与收纳盒" else "层与格") }
+                    itemsIndexed(state.childNodes, key = { _, node -> "node-${node.id}" }) { index, node ->
+                        LolitaCard(Modifier.fillMaxWidth().skinItemAppear(index)) {
+                            TextButton(onClick = { viewModel.openNode(node.id) }, modifier = Modifier.fillMaxWidth(), enabled = !state.isSaving) {
+                                node.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
+                                    modifier = Modifier.size(52.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
+                                Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
+                                    Text(node.name, style = MaterialTheme.typography.titleMedium)
+                                    Text(StorageTree.pathFor(node.locationId, node.id, state.locations, state.nodes), style = MaterialTheme.typography.bodySmall)
+                                    Text("${state.nodeItemCounts[node.id] ?: 0} 条记录", style = MaterialTheme.typography.labelMedium)
                                 }
+                                SkinIcon(IconKey.KeyboardArrowRight)
                             }
-                        } else null
-                    )
-                }
-
-                // Item list
-                itemsIndexed(uiState.items, key = { _, item -> item.id }) { index, item ->
-                    SkinClickableBox(
-                        onClick = { onItemClick(item.id) },
-                        modifier = Modifier.skinItemAppear(index)
-                    ) {
-                        LocationItemCard(
-                            item = item,
-                            brandName = uiState.brandNames[item.brandId] ?: "",
-                            categoryName = uiState.categoryNames[item.categoryId] ?: ""
-                        )
+                            NodeActions(node, state.isSaving, { editNode = it }, { moveNode = it }, { deleteNode = it })
+                        }
                     }
                 }
+                item { SectionHeader(title = if (currentNode == null && !state.isUnassigned && state.searchQuery.isBlank())
+                    "房间内未细分位置 · ${state.items.size} 条记录" else "物品 · ${state.items.size} 条记录") }
+                itemsIndexed(state.items, key = { _, item -> "item-${item.id}" }) { index, item ->
+                    StorageItemRow(item, state, item.id in state.selectedItemIds,
+                        onToggle = { viewModel.toggleSelection(item.id) }, onClick = { onItemClick(item.id) }, modifier = Modifier.skinItemAppear(index))
+                }
+                if (state.items.isEmpty()) item { Text(if (state.searchQuery.isBlank()) "此处暂无直接存放的物品" else "没有匹配的记录",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = skin.spacingLarge)) }
+            }
+        }
+    }
+    if (addNode) StorageEditDialog(title = if (currentNode == null) "新增柜架或收纳盒" else "新增层或格", busy = state.isSaving,
+        onDismiss = { addNode = false }, onConfirm = { name, description, image -> viewModel.createNode(name, description, image) { addNode = false } })
+    editNode?.let { node -> StorageEditDialog("编辑收纳位置", node.name, node.description, node.imageUrl, state.isSaving,
+        onDismiss = { editNode = null }, onConfirm = { name, description, image -> viewModel.updateNode(node, name, description, image) { editNode = null } }) }
+    deleteNode?.let { node ->
+        val descendants = StorageTree.descendantIds(node.id, state.nodes)
+        val count = state.allItems.count { it.storageNodeId in descendants }
+        val occupied = descendants.size > 1 || count > 0
+        var clearContents by remember(node.id) { mutableStateOf(false) }
+        AlertDialog(onDismissRequest = { if (!state.isSaving) deleteNode = null }, title = { Text("删除「${node.name}」？") }, text = {
+            Column { Text("包含 ${descendants.size - 1} 个子位置、$count 条记录。物品资料会保留。")
+                if (occupied) Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(clearContents, { clearContents = it }, enabled = !state.isSaving)
+                    Text("全部移至未设置位置，并删除这些收纳位置")
+                }
+            }
+        }, confirmButton = { TextButton(onClick = { viewModel.deleteNode(node, clearContents) { deleteNode = null } },
+            enabled = !state.isSaving && (!occupied || clearContents)) { Text("确认删除", color = MaterialTheme.colorScheme.error) } },
+            dismissButton = { TextButton(onClick = { deleteNode = null }, enabled = !state.isSaving) { Text("取消") } })
+    }
+    moveNode?.let { node ->
+        val descendants = StorageTree.descendantIds(node.id, state.nodes)
+        val excluded = if (descendants.size > 1) state.nodes.map { it.id }.toSet() else descendants + state.nodes.filter { it.parentNodeId != null }.map { it.id }
+        StorageDestinationDialog(state.locations, state.nodes, { moveNode = null }, { room, parent ->
+            if (room != null) { nodeMoveTarget = NodeMoveTarget(node, room, parent); moveNode = null }
+        }, excludedNodeIds = excluded, allowUnassigned = false, title = "移动收纳位置至")
+    }
+    nodeMoveTarget?.let { target ->
+        val descendants = StorageTree.descendantIds(target.node.id, state.nodes)
+        val count = state.allItems.count { it.storageNodeId in descendants }
+        ConfirmStorageMove("将移动 ${descendants.size} 个收纳位置及 $count 条记录",
+            StorageTree.pathFor(target.roomId, target.parentId, state.locations, state.nodes), state.isSaving,
+            { nodeMoveTarget = null }) { viewModel.moveNode(target.node, target.roomId, target.parentId) { nodeMoveTarget = null } }
+    }
+    if (showBatchDestination) StorageDestinationDialog(state.locations, state.nodes, { showBatchDestination = false }, { room, node ->
+        batchTarget = room to node; showBatchDestination = false
+    })
+    batchTarget?.let { target -> ConfirmStorageMove("将移动 ${state.selectedItemIds.size} 条记录",
+        StorageTree.pathFor(target.first, target.second, state.locations, state.nodes), state.isSaving, { batchTarget = null }) {
+        viewModel.moveSelected(target.first, target.second) { batchTarget = null }
+    } }
+    if (addItems) StorageItemPickerDialog(state, { addItems = false }, { addingItemIds = it; addItems = false })
+    addingItemIds?.let { ids -> ConfirmStorageMove("将移入 ${ids.size} 条记录", state.currentPath, state.isSaving,
+        { addingItemIds = null }) { viewModel.addItems(ids) { addingItemIds = null } } }
+    if (state.showTemplates) StorageTemplateDialog(state.locations, state.templates, locationId, state.isSaving,
+        viewModel::hideTemplates, viewModel::adoptTemplates)
+}
 
-                if (uiState.items.isEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "暂无服饰",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+@Composable
+private fun NodeActions(node: StorageNode, busy: Boolean, onEdit: (StorageNode) -> Unit,
+    onMove: (StorageNode) -> Unit, onDelete: (StorageNode) -> Unit) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        TextButton(onClick = { onEdit(node) }, enabled = !busy) { Text("编辑") }
+        TextButton(onClick = { onMove(node) }, enabled = !busy) { Text("移动") }
+        TextButton(onClick = { onDelete(node) }, enabled = !busy) { Text("删除", color = MaterialTheme.colorScheme.error) }
+    }
+}
+
+@Composable
+private fun StorageItemRow(item: Item, state: LocationDetailUiState, checked: Boolean, onToggle: () -> Unit, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val skin = LocalLolitaSkin.current
+    LolitaCard(modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+            Checkbox(checked, { onToggle() }, enabled = !state.isSaving,
+                modifier = Modifier.semantics { contentDescription = "选择${item.name}" })
+            item.imageUrls.firstOrNull()?.let { LolitaShimmerImage(model = it, contentDescription = null,
+                modifier = Modifier.size(48.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
+            TextButton(onClick = onClick, modifier = Modifier.weight(1f), enabled = !state.isSaving) {
+                Column(Modifier.fillMaxWidth()) {
+                    Text(item.name, style = MaterialTheme.typography.titleSmall)
+                    val details = listOfNotNull(state.brandNames[item.brandId], state.categoryNames[item.categoryId]).filter { it.isNotBlank() }
+                    if (details.isNotEmpty()) Text(details.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
+                    Text(StorageTree.pathFor(item.locationId, item.storageNodeId, state.locations, state.nodes), style = MaterialTheme.typography.labelSmall)
+                    if (item.parentItemId != null) Text("挂载小物", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConfirmStorageMove(title: String, destination: String, busy: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(onDismissRequest = { if (!busy) onDismiss() }, title = { Text(title) }, text = { Text("目标：$destination。确认后更新实际位置。") },
+        confirmButton = { TextButton(onClick = onConfirm, enabled = !busy) { Text(if (busy) "移动中…" else "确认移动") } },
+        dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text("取消") } })
+}
+
+@Composable
+private fun StorageItemPickerDialog(state: LocationDetailUiState, onDismiss: () -> Unit, onConfirm: (Set<Long>) -> Unit) {
+    var query by remember { mutableStateOf("") }
+    var selected by remember { mutableStateOf(emptySet<Long>()) }
+    val listState = rememberLazyListState()
+    ObserveSkinScroll(listState)
+    val filtered = state.allItems.filter { item -> query.isBlank() || listOf(item.name, state.brandNames[item.brandId].orEmpty(),
+        StorageTree.pathFor(item.locationId, item.storageNodeId, state.locations, state.nodes)).any { it.contains(query.trim(), true) } }
+    AlertDialog(onDismissRequest = onDismiss, title = { Text("选择移入物品") }, text = {
+        Column {
+            OutlinedTextField(query, { query = it }, label = { Text("搜索物品或路径") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+            LazyColumn(state = listState, modifier = Modifier.heightIn(max = 340.dp)) {
+                items(filtered, key = { it.id }) { item ->
+                    Surface(onClick = { selected = if (item.id in selected) selected - item.id else selected + item.id }) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(item.id in selected, null)
+                            Column(Modifier.weight(1f).padding(vertical = 8.dp)) {
+                                Text(item.name)
+                                Text(StorageTree.pathFor(item.locationId, item.storageNodeId, state.locations, state.nodes), style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
             }
-
-            if (showItemPicker) {
-                ModalBottomSheet(
-                    onDismissRequest = { showItemPicker = false },
-                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-                ) {
-                    LocationItemPickerContent(
-                        allItems = uiState.allItems,
-                        selectedItemIds = uiState.pickerSelectedItemIds,
-                        locationNames = uiState.locationNames,
-                        currentLocationId = locationId,
-                        searchQuery = uiState.pickerSearchQuery,
-                        onSearchQueryChange = { viewModel.updatePickerSearchQuery(it) },
-                        onToggleItem = { viewModel.togglePickerItemSelection(it) },
-                        onConfirm = {
-                            viewModel.confirmPickerSelection(locationId) {
-                                showItemPicker = false
-                            }
-                        }
-                    )
-                }
-            }
         }
-    }
-}
-
-@Composable
-private fun LocationItemPickerContent(
-    allItems: List<Item>,
-    selectedItemIds: Set<Long>,
-    locationNames: Map<Long, String>,
-    currentLocationId: Long,
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit,
-    onToggleItem: (Long) -> Unit,
-    onConfirm: () -> Unit
-) {
-    val filteredItems = remember(allItems, searchQuery) {
-        if (searchQuery.isBlank()) allItems
-        else allItems.filter { it.name.contains(searchQuery, ignoreCase = true) }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.7f)
-            .padding(bottom = 16.dp)
-    ) {
-        // Header
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("选择服饰", style = MaterialTheme.typography.titleMedium)
-            SkinClickableBox(onClick = onConfirm) {
-                Surface(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(
-                        "确认 (${selectedItemIds.size})",
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
-            }
-        }
-
-        // Search
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = onSearchQueryChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
-            placeholder = { Text("搜索服饰...") },
-            leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) },
-            singleLine = true
-        )
-
-        // Item list
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            if (filteredItems.isEmpty()) {
-                item {
-                    Text(
-                        if (searchQuery.isBlank()) "暂无服饰" else "未找到匹配的服饰",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
-                items(filteredItems, key = { it.id }) { item ->
-                    val isSelected = item.id in selectedItemIds
-                    val belongsToOther = item.locationId != null
-                        && item.locationId != currentLocationId
-                    val otherLocName = if (belongsToOther) {
-                        locationNames[item.locationId]
-                    } else null
-
-                    LocationPickerItemRow(
-                        item = item,
-                        isSelected = isSelected,
-                        otherLocationName = otherLocName,
-                        onToggle = { onToggleItem(item.id) }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LocationPickerItemRow(
-    item: Item,
-    isSelected: Boolean,
-    otherLocationName: String?,
-    onToggle: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                else MaterialTheme.colorScheme.surface,
-        onClick = onToggle
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = isSelected,
-                onCheckedChange = { onToggle() },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.primary
-                )
-            )
-
-            if (item.imageUrls.isNotEmpty()) {
-                LolitaShimmerImage(
-                    model = item.imageUrls.first(),
-                    contentDescription = item.name,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(6.dp)),
-                    contentScale = ContentScale.Crop,
-                    placeholderInitial = item.name.firstOrNull()?.toString()
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f),
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                                )
-                            ),
-                            RoundedCornerShape(6.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = item.name.firstOrNull()?.toString() ?: "?",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    item.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
-                )
-                if (otherLocationName != null) {
-                    Text(
-                        "已属于位置「$otherLocationName」",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LocationItemCard(
-    item: Item,
-    brandName: String,
-    categoryName: String
-) {
-    LolitaCard(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp), // intentional override of cardInnerPadding
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (item.imageUrls.isNotEmpty()) {
-                LolitaShimmerImage(
-                    model = item.imageUrls.first(),
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop,
-                    placeholderInitial = item.name.firstOrNull()?.toString()
-                )
-            } else {
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    modifier = Modifier.size(64.dp).clip(RoundedCornerShape(8.dp))
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        SkinIcon(IconKey.Image, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
-            }
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(item.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                if (brandName.isNotBlank()) {
-                    Text(brandName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                if (categoryName.isNotBlank()) {
-                    Text(categoryName, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                }
-            }
-            SkinIcon(IconKey.KeyboardArrowRight, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-    }
+    }, confirmButton = { TextButton(onClick = { onConfirm(selected) }, enabled = selected.isNotEmpty()) { Text("核对 ${selected.size} 条记录") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("取消") } })
 }

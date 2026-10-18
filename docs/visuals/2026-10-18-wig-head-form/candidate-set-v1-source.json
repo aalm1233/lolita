@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-18",
+  "tool": "built-in image_gen.imagegen",
+  "purpose": "Four additional selectable wig display head candidates",
+  "status": "candidates_not_runtime_templates",
+  "existingCandidate": {
+    "displayName": "蓝紫妆·原候选",
+    "output": "front-template-v1.png",
+    "sha256": "69a70af2e83c7a3ec63c45be3d1c7a1b902127a3555895f4563dbb55b4e1887e",
+    "source": "front-template-v1-source.json"
+  },
+  "newCandidates": [
+    {
+      "id": "rose-grayblue",
+      "displayName": "灰蓝眼·玫瑰",
+      "resourceVersion": 1,
+      "status": "candidate_for_user_review",
+      "output": "front-rose-grayblue-v1.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "677c3fd0e7464a5fa2e0aef702638d03c69cc3532b50be2447de8f0b25171752",
+      "prompt": "front-rose-grayblue-v1-prompt.txt",
+      "reference": {
+        "filename": "1000033925.jpg",
+        "sha256": "4504d2ff591e3f99ca584f2b103edeae1b4e15d675420cda09dbbfea43ff4295",
+        "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+      },
+      "validation": {
+        "visuallyReviewed": true,
+        "frontFacing": true,
+        "baldScalp": true,
+        "headAndBaseComplete": true,
+        "noJewelryOrText": true,
+        "actualWigCompositingTested": false,
+        "framingStandardizedForRuntime": false
+      },
+      "runtimeIntegrated": false
+    },
+    {
+      "id": "peach-violet",
+      "displayName": "紫眼·蜜桃",
+      "resourceVersion": 1,
+      "status": "candidate_for_user_review",
+      "output": "front-peach-violet-v1.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "2639426927f4189ba25baf9f0543690e06630d7dd7090a13ae59d2705411fd50",
+      "prompt": "front-peach-violet-v1-prompt.txt",
+      "reference": {
+        "filename": "1000033924.jpg",
+        "sha256": "d8c274a4a47811946e80e489b7cb20908e58c3fcd2b70cf5db15c277a5b2c23d",
+        "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+      },
+      "validation": {
+        "visuallyReviewed": true,
+        "frontFacing": true,
+        "baldScalp": true,
+        "headAndBaseComplete": true,
+        "noJewelryOrText": true,
+        "actualWigCompositingTested": false,
+        "framingStandardizedForRuntime": false
+      },
+      "runtimeIntegrated": false
+    },
+    {
+      "id": "cerulean-rose",
+      "displayName": "亮蓝眼·蔷薇",
+      "resourceVersion": 1,
+      "status": "candidate_for_user_review",
+      "output": "front-cerulean-rose-v1.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "05d93b291ef349b18036486c7c01414b202efd3a36562e2c0be353f149ecc782",
+      "prompt": "front-cerulean-rose-v1-prompt.txt",
+      "reference": {
+        "filename": "1000033923.jpg",
+        "sha256": "3bbea4b32564ce579659cc7ac515a1789a410d97d320c7f91caadf338bf33cc6",
+        "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+      },
+      "validation": {
+        "visuallyReviewed": true,
+        "frontFacing": true,
+        "baldScalp": true,
+        "headAndBaseComplete": true,
+        "noJewelryOrText": true,
+        "actualWigCompositingTested": false,
+        "framingStandardizedForRuntime": false
+      },
+      "runtimeIntegrated": false
+    },
+    {
+      "id": "sage-softpink",
+      "displayName": "灰绿眼·柔粉",
+      "resourceVersion": 1,
+      "status": "candidate_for_user_review",
+      "output": "front-sage-softpink-v1.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "9ec9631233c789f5e8054836be3203fa6d37ad1996ed922136c6e19aa7f853bb",
+      "prompt": "front-sage-softpink-v1-prompt.txt",
+      "reference": {
+        "filename": "1000033921.jpg",
+        "sha256": "bea5db99e8dd13ab2d8146585dad5dc274743b407dd5bc480a7717ec4d67c33f",
+        "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+      },
+      "validation": {
+        "visuallyReviewed": true,
+        "frontFacing": true,
+        "baldScalp": true,
+        "headAndBaseComplete": true,
+        "noJewelryOrText": true,
+        "actualWigCompositingTested": false,
+        "framingStandardizedForRuntime": false
+      },
+      "runtimeIntegrated": false
+    }
+  ],
+  "notes": [
+    "One independently generated asset per supplied reference; no user paid API keys used.",
+    "All candidates remain outside runtime assets.",
+    "Runtime head selection is documented, not implemented.",
+    "Long/short wig compositing and final framing need per-template validation."
+  ]
+}

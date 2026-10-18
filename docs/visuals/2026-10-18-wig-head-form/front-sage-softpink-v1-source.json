@@ -1,0 +1,26 @@
+{
+  "id": "sage-softpink",
+  "displayName": "灰绿眼·柔粉",
+  "resourceVersion": 1,
+  "status": "candidate_for_user_review",
+  "output": "front-sage-softpink-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "9ec9631233c789f5e8054836be3203fa6d37ad1996ed922136c6e19aa7f853bb",
+  "prompt": "front-sage-softpink-v1-prompt.txt",
+  "reference": {
+    "filename": "1000033921.jpg",
+    "sha256": "bea5db99e8dd13ab2d8146585dad5dc274743b407dd5bc480a7717ec4d67c33f",
+    "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+  },
+  "validation": {
+    "visuallyReviewed": true,
+    "frontFacing": true,
+    "baldScalp": true,
+    "headAndBaseComplete": true,
+    "noJewelryOrText": true,
+    "actualWigCompositingTested": false,
+    "framingStandardizedForRuntime": false
+  },
+  "runtimeIntegrated": false
+}

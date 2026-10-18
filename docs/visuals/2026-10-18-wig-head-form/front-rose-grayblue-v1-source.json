@@ -1,0 +1,26 @@
+{
+  "id": "rose-grayblue",
+  "displayName": "灰蓝眼·玫瑰",
+  "resourceVersion": 1,
+  "status": "candidate_for_user_review",
+  "output": "front-rose-grayblue-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "677c3fd0e7464a5fa2e0aef702638d03c69cc3532b50be2447de8f0b25171752",
+  "prompt": "front-rose-grayblue-v1-prompt.txt",
+  "reference": {
+    "filename": "1000033925.jpg",
+    "sha256": "4504d2ff591e3f99ca584f2b103edeae1b4e15d675420cda09dbbfea43ff4295",
+    "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+  },
+  "validation": {
+    "visuallyReviewed": true,
+    "frontFacing": true,
+    "baldScalp": true,
+    "headAndBaseComplete": true,
+    "noJewelryOrText": true,
+    "actualWigCompositingTested": false,
+    "framingStandardizedForRuntime": false
+  },
+  "runtimeIntegrated": false
+}

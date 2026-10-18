@@ -1,0 +1,26 @@
+{
+  "id": "cerulean-rose",
+  "displayName": "亮蓝眼·蔷薇",
+  "resourceVersion": 1,
+  "status": "candidate_for_user_review",
+  "output": "front-cerulean-rose-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "05d93b291ef349b18036486c7c01414b202efd3a36562e2c0be353f149ecc782",
+  "prompt": "front-cerulean-rose-v1-prompt.txt",
+  "reference": {
+    "filename": "1000033923.jpg",
+    "sha256": "3bbea4b32564ce579659cc7ac515a1789a410d97d320c7f91caadf338bf33cc6",
+    "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+  },
+  "validation": {
+    "visuallyReviewed": true,
+    "frontFacing": true,
+    "baldScalp": true,
+    "headAndBaseComplete": true,
+    "noJewelryOrText": true,
+    "actualWigCompositingTested": false,
+    "framingStandardizedForRuntime": false
+  },
+  "runtimeIntegrated": false
+}

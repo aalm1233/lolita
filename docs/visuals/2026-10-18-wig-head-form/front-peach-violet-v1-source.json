@@ -1,0 +1,26 @@
+{
+  "id": "peach-violet",
+  "displayName": "紫眼·蜜桃",
+  "resourceVersion": 1,
+  "status": "candidate_for_user_review",
+  "output": "front-peach-violet-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "2639426927f4189ba25baf9f0543690e06630d7dd7090a13ae59d2705411fd50",
+  "prompt": "front-peach-violet-v1-prompt.txt",
+  "reference": {
+    "filename": "1000033924.jpg",
+    "sha256": "d8c274a4a47811946e80e489b7cb20908e58c3fcd2b70cf5db15c277a5b2c23d",
+    "role": "Face sculpt, doll makeup and porcelain/resin aesthetic only"
+  },
+  "validation": {
+    "visuallyReviewed": true,
+    "frontFacing": true,
+    "baldScalp": true,
+    "headAndBaseComplete": true,
+    "noJewelryOrText": true,
+    "actualWigCompositingTested": false,
+    "framingStandardizedForRuntime": false
+  },
+  "runtimeIntegrated": false
+}

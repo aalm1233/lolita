@@ -84,19 +84,21 @@ private fun RoomCard(room: Location, count: Int, nodeCount: Int, busy: Boolean,
     onOpen: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit) {
     val skin = LocalLolitaSkin.current
     LolitaCard(Modifier.fillMaxWidth()) {
-        TextButton(onClick = onOpen, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
-            room.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
-                modifier = Modifier.size(60.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
-            Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
-                Text(room.name, style = MaterialTheme.typography.titleMedium)
-                if (room.description.isNotBlank()) Text(room.description, style = MaterialTheme.typography.bodySmall)
-                Text("$nodeCount 个收纳位置 · $count 条记录", style = MaterialTheme.typography.labelMedium)
+        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+            TextButton(onClick = onOpen, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
+                room.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
+                    modifier = Modifier.size(60.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
+                Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
+                    Text(room.name, style = MaterialTheme.typography.titleMedium)
+                    if (room.description.isNotBlank()) Text(room.description, style = MaterialTheme.typography.bodySmall)
+                    Text("$nodeCount 个收纳位置 · $count 条记录", style = MaterialTheme.typography.labelMedium)
+                }
+                SkinIcon(IconKey.KeyboardArrowRight)
             }
-            SkinIcon(IconKey.KeyboardArrowRight)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            TextButton(onClick = onEdit, enabled = !busy) { Text("编辑房间") }
-            TextButton(onClick = onDelete, enabled = !busy) { Text("删除", color = MaterialTheme.colorScheme.error) }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = onEdit, enabled = !busy) { Text("编辑房间") }
+                TextButton(onClick = onDelete, enabled = !busy) { Text("删除", color = MaterialTheme.colorScheme.error) }
+            }
         }
     }
 }

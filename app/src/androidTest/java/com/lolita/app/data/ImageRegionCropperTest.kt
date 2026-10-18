@@ -77,7 +77,14 @@ class ImageRegionCropperTest {
         val exif = ExifInterface(result.path)
         listOf(ExifInterface.TAG_MAKE, ExifInterface.TAG_USER_COMMENT, ExifInterface.TAG_GPS_LATITUDE,
             ExifInterface.TAG_GPS_LATITUDE_REF).forEach { assertNull(exif.getAttribute(it)) }
-        assertEquals(ExifInterface.ORIENTATION_NORMAL, exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL))
+        // Platform ExifInterface supplies an UNDEFINED compatibility value even for bare JPEGs.
+        assertTrue(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL) in
+            setOf(ExifInterface.ORIENTATION_UNDEFINED, ExifInterface.ORIENTATION_NORMAL))
+        val bytes = File(result.path).readBytes()
+        val marker = byteArrayOf(69, 120, 105, 102, 0, 0)
+        assertFalse("实际 JPEG 不得保留 EXIF 数据段", (0..bytes.size - marker.size).any { start ->
+            marker.indices.all { offset -> bytes[start + offset] == marker[offset] }
+        })
         assertEquals(before, sha(original))
     }
 

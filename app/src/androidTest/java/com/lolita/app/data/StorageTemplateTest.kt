@@ -39,10 +39,11 @@ class StorageTemplateTest {
             assertEquals(chosen.name, node.name)
             val image = File(requireNotNull(node.imageUrl))
             UUID.fromString(image.nameWithoutExtension)
-            assertEquals(File(context.filesDir, "images").canonicalFile, image.parentFile.canonicalFile)
+            val imageDirectory = requireNotNull(image.parentFile)
+            assertEquals(File(context.filesDir, "images").canonicalFile, imageDirectory.canonicalFile)
             assertEquals(chosen.sha256, MessageDigest.getInstance("SHA-256").digest(image.readBytes()).joinToString("") { "%02x".format(it) })
             try { repository.adoptTemplates(room, setOf(chosen.id)); fail("重复采纳应拒绝") } catch (_: IllegalArgumentException) { }
-            withTimeout(5_000) { while (image.parentFile.listFiles().orEmpty().size != 1) delay(25) }
+            withTimeout(5_000) { while (imageDirectory.listFiles().orEmpty().size != 1) delay(25) }
             assertTrue(image.exists())
             repository.deleteNode(node.id)
             withTimeout(5_000) { while (image.exists()) delay(25) }

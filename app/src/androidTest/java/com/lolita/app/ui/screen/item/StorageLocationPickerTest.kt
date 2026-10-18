@@ -28,12 +28,12 @@ class StorageLocationPickerTest {
         }
         compose.onNodeWithText("玄关 → 鞋柜 → 第二层").performClick()
         compose.onNodeWithText("搜索位置路径").performTextInput("卧室")
-        compose.onNodeWithText("卧室", substring = false).performClick()
+        compose.onNode(hasText("卧室") and hasClickAction() and !hasSetTextAction()).performClick()
         compose.onNodeWithText("更换房间并清除原收纳位置？").assertIsDisplayed()
         compose.runOnIdle { assertEquals(1L, room); assertEquals(2L, node) }
         compose.onNodeWithText("取消").performClick()
         compose.runOnIdle { assertEquals(1L, room); assertEquals(2L, node) }
-        compose.onNodeWithText("卧室", substring = false).performClick()
+        compose.onNode(hasText("卧室") and hasClickAction() and !hasSetTextAction()).performClick()
         compose.onNodeWithText("清除并更换").performClick()
         compose.runOnIdle { assertEquals(2L, room); assertNull(node) }
     }

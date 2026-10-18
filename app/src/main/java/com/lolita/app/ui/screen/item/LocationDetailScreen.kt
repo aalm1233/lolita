@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -70,7 +71,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
             }
         }
     }) { padding ->
-        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding),
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding).testTag("storage-room-list"),
             contentPadding = PaddingValues(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.spacingMedium), flingBehavior = rememberSkinFlingBehavior()) {
             if (state.isLoading) {
@@ -108,17 +109,19 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                     item { SectionHeader(title = if (currentNode == null) "柜架与收纳盒" else "层与格") }
                     itemsIndexed(state.childNodes, key = { _, node -> "node-${node.id}" }) { index, node ->
                         LolitaCard(Modifier.fillMaxWidth().skinItemAppear(index)) {
-                            TextButton(onClick = { viewModel.openNode(node.id) }, modifier = Modifier.fillMaxWidth(), enabled = !state.isSaving) {
-                                node.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
-                                    modifier = Modifier.size(52.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
-                                Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
-                                    Text(node.name, style = MaterialTheme.typography.titleMedium)
-                                    Text(StorageTree.pathFor(node.locationId, node.id, state.locations, state.nodes), style = MaterialTheme.typography.bodySmall)
-                                    Text("${state.nodeItemCounts[node.id] ?: 0} 条记录", style = MaterialTheme.typography.labelMedium)
+                            Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                                TextButton(onClick = { viewModel.openNode(node.id) }, modifier = Modifier.fillMaxWidth(), enabled = !state.isSaving) {
+                                    node.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
+                                        modifier = Modifier.size(52.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
+                                    Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
+                                        Text(node.name, style = MaterialTheme.typography.titleMedium)
+                                        Text(StorageTree.pathFor(node.locationId, node.id, state.locations, state.nodes), style = MaterialTheme.typography.bodySmall)
+                                        Text("${state.nodeItemCounts[node.id] ?: 0} 条记录", style = MaterialTheme.typography.labelMedium)
+                                    }
+                                    SkinIcon(IconKey.KeyboardArrowRight)
                                 }
-                                SkinIcon(IconKey.KeyboardArrowRight)
+                                NodeActions(node, state.isSaving, { editNode = it }, { moveNode = it }, { deleteNode = it })
                             }
-                            NodeActions(node, state.isSaving, { editNode = it }, { moveNode = it }, { deleteNode = it })
                         }
                     }
                 }

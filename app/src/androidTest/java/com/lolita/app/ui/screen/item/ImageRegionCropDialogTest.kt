@@ -6,8 +6,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -55,10 +59,26 @@ class ImageRegionCropDialogTest {
         originalHash = MessageDigest.getInstance("SHA-256").digest(original.readBytes()).toList()
         compose.setContent { LolitaTheme {
             CompositionLocalProvider(LocalContext provides context) {
-                if (open) ImageRegionCropDialog(original.path, onDismiss = { open = false }, onCropped = { result = it; open = false })
+                Box(Modifier.fillMaxSize()) {
+                    if (open) ImageRegionCropDialog(original.path, onDismiss = { open = false }, onCropped = { result = it; open = false })
+                }
             }
         } }
-        compose.waitUntil(10_000) { compose.onAllNodesWithContentDescription("矩形选区，可拖动四角与双指缩放").fetchSemanticsNodes().isNotEmpty() }
+        try {
+            compose.waitUntil(10_000) { compose.onAllNodesWithContentDescription("矩形选区，可拖动四角与双指缩放").fetchSemanticsNodes().isNotEmpty() }
+        } catch (failure: Throwable) {
+            val diagnostic = File(target.filesDir, "crop-diagnostics/${UUID.randomUUID()}").apply { mkdirs() }
+            File(diagnostic, "source.txt").writeText("${original.path}: exists=${original.exists()}, bytes=${original.length()}")
+            compose.onAllNodes(isRoot(), useUnmergedTree = true).fetchSemanticsNodes().indices.forEach { index ->
+                val root = compose.onAllNodes(isRoot(), useUnmergedTree = true)[index]
+                File(diagnostic, "root-$index.txt").writeText(root.printToString())
+            }
+            InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()?.let { screen ->
+                try { File(diagnostic, "window.png").outputStream().use { screen.compress(Bitmap.CompressFormat.PNG, 100, it) } }
+                finally { screen.recycle() }
+            }
+            throw failure
+        }
     }
     @After fun cleanup() {
         compose.runOnIdle { open = false }
@@ -66,12 +86,22 @@ class ImageRegionCropDialogTest {
         db.close(); directory.deleteRecursively()
     }
     private fun images() = File(context.filesDir, "images").listFiles().orEmpty().toList()
+    private fun screenshot(name: String) {
+        val output = File(target.filesDir, "crop-screenshots/${UUID.randomUUID()}-$name.png")
+        check(output.parentFile!!.isDirectory || output.parentFile!!.mkdirs())
+        // Dialog uses another Android window; a root Compose capture can return the empty host.
+        val screen = requireNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        try { output.outputStream().use { screen.compress(Bitmap.CompressFormat.PNG, 100, it) } }
+        finally { screen.recycle() }
+    }
 
     @Test fun cancellationDeletesTheActualPreviewAndKeepsSourceBytesUntouched() = runBlocking {
         compose.onNodeWithText("确认使用选区").assertIsNotEnabled()
         compose.onNodeWithText("查看实际裁切").performScrollTo().performClick()
         compose.waitUntil(10_000) { images().size == 1 && compose.onAllNodesWithText("实际裁切 300 × 200 px", substring = true).fetchSemanticsNodes().isNotEmpty() }
+        screenshot("actual-full-preview")
         compose.onNodeWithText("取消", substring = false).performClick()
+        compose.waitForIdle()
         withTimeout(5_000) { while (images().isNotEmpty()) delay(25) }
         assertNull(result)
         assertEquals(originalHash, MessageDigest.getInstance("SHA-256").digest(original.readBytes()).toList())
@@ -91,8 +121,20 @@ class ImageRegionCropDialogTest {
             val left = (width - w) / 2f; val top = (height - h) / 2f
             swipe(Offset(left + w, top + h), Offset(left + w * 2f / 3f, top + h * 3f / 4f), 300)
         }
+        screenshot("green-selection")
         compose.onNodeWithText("查看实际裁切").performScrollTo().performClick()
         compose.waitUntil(10_000) { images().size == 1 && compose.onAllNodesWithText("实际裁切 100 × 100 px", substring = true).fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(5_000) { compose.onAllNodesWithContentDescription("实际裁切图片").fetchSemanticsNodes().isNotEmpty() }
+        // Coil exposes both an image wrapper and its rendered image with the same description.
+        // Select the outer image and wait for its actual loaded pixels, rather than its placeholder.
+        val actualImage = compose.onAllNodesWithContentDescription("实际裁切图片").onFirst()
+        actualImage.performScrollTo()
+        compose.waitUntil(5_000) {
+            val preview = actualImage.captureToImage().asAndroidBitmap()
+            val pixel = preview.getPixel(preview.width / 2, preview.height / 2)
+            Color.green(pixel) > 200 && Color.red(pixel) < 40 && Color.blue(pixel) < 40
+        }
+        screenshot("actual-green-preview")
         compose.onNodeWithText("确认使用选区").assertIsEnabled().performClick()
         compose.waitUntil(5_000) { result != null }
         val output = BitmapFactory.decodeFile(result)

@@ -3,7 +3,10 @@ package com.lolita.app.ui.screen.item
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -69,7 +72,11 @@ class StorageRoomScreenTest {
             CompositionLocalProvider(LocalConfiguration provides configuration,
                 LocalDensity provides Density(density.density, if (compact.value) 2f else density.fontScale)) {
                 Box(if (compact.value) Modifier.width(320.dp) else Modifier) {
-                    LolitaTheme(skinType = skin.value, darkTheme = dark.value) { LocationDetailScreen(1, {}, {}, model) }
+                    LolitaTheme(skinType = skin.value, darkTheme = dark.value) {
+                        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                            LocationDetailScreen(1, {}, {}, model)
+                        }
+                    }
                 }
             }
         }
@@ -77,10 +84,26 @@ class StorageRoomScreenTest {
     }
     @After fun teardown() { compose.runOnIdle { store.clear() }; db.close() }
 
+    private fun openCabinet() {
+        val button = compose.onNodeWithText("鞋柜", substring = false)
+        button.performScrollTo()
+        compose.waitForIdle()
+        button.performClick()
+        try {
+            compose.waitUntil(5_000) { model.uiState.value.currentNodeId == cabinet }
+        } catch (failure: Throwable) {
+            val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,
+                "storage-diagnostics/${UUID.randomUUID()}").apply { mkdirs() }
+            File(directory, "after-touch-state.txt").writeText(model.uiState.value.toString())
+            File(directory, "semantics.txt").writeText(compose.onRoot().printToString())
+            File(directory, "after-touch.png").outputStream().use { compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it) }
+            throw failure
+        }
+    }
+
     @Test fun roomShowsCabinetsAndCabinetFindsAttachmentsAndNestedItemsWithoutDuplicates() {
         assertTrue(model.uiState.value.items.isEmpty())
-        compose.onNodeWithText("鞋柜", substring = false).performScrollTo().performClick()
-        compose.waitUntil(5_000) { model.uiState.value.currentNodeId == cabinet }
+        openCabinet()
         assertEquals(2, model.uiState.value.recordCount)
         assertEquals(setOf(shoe, accessory), model.uiState.value.items.map { it.id }.toSet())
         compose.onNodeWithText("搜索名称、品牌、分类或位置路径").performTextInput("第二层")
@@ -89,14 +112,13 @@ class StorageRoomScreenTest {
     }
 
     @Test fun selectionSurvivesFilteringAndOnlyMovesAfterAffectedCountConfirmation() = runBlocking {
-        compose.onNodeWithText("鞋柜", substring = false).performScrollTo().performClick()
-        compose.waitUntil(5_000) { model.uiState.value.currentNodeId == cabinet }
+        openCabinet()
         compose.onNodeWithContentDescription("选择配套鞋扣").performScrollTo().performClick()
         compose.onNodeWithText("搜索名称、品牌、分类或位置路径").performScrollTo().performTextInput("玛丽珍鞋")
         assertEquals(setOf(accessory), model.uiState.value.selectedItemIds)
         compose.onNodeWithText("移动 1 条记录").performClick()
         compose.onNodeWithText("搜索位置路径").performTextInput("卧室")
-        compose.onNodeWithText("卧室", substring = false).performClick()
+        compose.onNode(hasText("卧室") and hasClickAction() and !hasSetTextAction()).performClick()
         compose.onNodeWithText("将移动 1 条记录").assertIsDisplayed()
         assertEquals(1L, db.itemDao().getItemById(accessory)!!.locationId)
         compose.onNodeWithText("确认移动").performClick()
@@ -107,8 +129,7 @@ class StorageRoomScreenTest {
     }
 
     @Test fun allSevenSkinsKeepSelectionAndMoveControlsReachableOnSmallScreensWithLargeText() {
-        compose.onNodeWithText("鞋柜", substring = false).performScrollTo().performClick()
-        compose.waitUntil(5_000) { model.uiState.value.currentNodeId == cabinet }
+        openCabinet()
         compose.onNodeWithContentDescription("选择配套鞋扣").performScrollTo().performClick()
         val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,
             "storage-screenshots/${UUID.randomUUID()}").apply { mkdirs() }
@@ -117,7 +138,8 @@ class StorageRoomScreenTest {
                 compose.runOnIdle { skin.value = candidate; dark.value = isDark; compact.value = true }
                 compose.onNodeWithText("移动 1 条记录").assertIsDisplayed().assertIsEnabled()
                 assertEquals(setOf(accessory), model.uiState.value.selectedItemIds)
-                compose.onNodeWithContentDescription("选择配套鞋扣").performScrollTo().assertIsDisplayed()
+                compose.onNodeWithTag("storage-room-list").performScrollToNode(hasContentDescription("选择配套鞋扣"))
+                compose.onNodeWithContentDescription("选择配套鞋扣").assertIsDisplayed()
                 val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
                 File(directory, "${candidate.name.lowercase()}-${if (isDark) "dark" else "light"}-320dp-2x.png")
                     .outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }

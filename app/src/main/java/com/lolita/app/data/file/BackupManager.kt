@@ -373,7 +373,9 @@ class BackupManager(
         withPinnedSnapshot { backupData ->
         try {
 
-            val (imageArchiveNamesByPath, missingImageCount) = buildImageArchiveNames(collectImagePaths(backupData))
+            val absentHistoricalInputs = historicalInputPaths(backupData).filter { !File(it).isFile }.toSet()
+            val (imageArchiveNamesByPath, missingImageCount) = buildImageArchiveNames(
+                collectImagePaths(backupData) - absentHistoricalInputs, deduplicatedInputPaths(backupData))
             require(missingImageCount == 0) { "有 $missingImageCount 张本地图片缺失，无法创建完整备份" }
             val zipBackupData = rewriteImagePathsForZip(backupData, imageArchiveNamesByPath)
             val jsonBytes = gson.toJson(zipBackupData).toByteArray()
@@ -827,12 +829,36 @@ class BackupManager(
 
     private fun isRemoteImage(path: String) = path.startsWith("https://") || path.startsWith("http://")
 
-    private fun buildImageArchiveNames(imagePaths: Set<String>): Pair<Map<String, String>, Int> {
+    /** Only explicitly blocked task inputs can stay absent; albums and pending outputs remain required. */
+    private fun historicalInputPaths(data: BackupData): Set<String> {
+        val inputs = data.imageTasks.filter { it.sourceResourcesMissing }.flatMap { task ->
+            task.sourceImagePaths + listOfNotNull(ImageTaskRequest.decode(task.requestJson).productOriginalImagePath)
+        }.toSet()
+        val business = collectImagePaths(data.copy(imageTasks = emptyList()))
+        val requiredTaskPaths = data.imageTasks.filterNot { it.sourceResourcesMissing }.flatMap { it.protectedImagePaths() } +
+            data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.mapNotNull { it.resultImagePath }
+        return inputs - business - requiredTaskPaths.toSet()
+    }
+
+    /** Input resources may share bytes; existing business and pending-output identities may not. */
+    private fun deduplicatedInputPaths(data: BackupData): Set<String> {
+        val inputs = data.imageTasks.filter { it.keepSourceImages }.flatMap { it.sourceImagePaths } +
+            data.recognitionTasks.flatMap { it.regionImagePaths } + data.itemEvidence.flatMap { it.regionImagePaths }
+        val business = collectImagePaths(data.copy(imageTasks = emptyList(), recognitionTasks = emptyList(), itemEvidence = emptyList()))
+        val exclusive = data.imageTasks.mapNotNull { it.resultImagePath } +
+            data.imageTasks.filterNot { it.keepSourceImages }.flatMap { it.sourceImagePaths }
+        return inputs.toSet() - business - exclusive.toSet()
+    }
+
+    private fun buildImageArchiveNames(imagePaths: Set<String>, deduplicated: Set<String>): Pair<Map<String, String>, Int> {
         val local = imagePaths.filterNot(::isRemoteImage)
         val existing = local.filter { path -> File(path).isFile }
         val missingCount = local.size - existing.size
         val namesByDigest=mutableMapOf<String,String>()
-        return existing.associateWith { path -> namesByDigest.getOrPut(sha256(File(path))) { buildArchiveImageName(path) } } to missingCount
+        return existing.associateWith { path ->
+            if (path in deduplicated) namesByDigest.getOrPut(sha256(File(path))) { buildArchiveImageName(path) }
+            else buildArchiveImageName(path)
+        } to missingCount
     }
 
     private fun buildArchiveImageName(path: String): String {
@@ -993,7 +1019,9 @@ class BackupManager(
                 require(hashes.keySet() == names) { "图片清单与 ZIP 内容不一致" }
                 names.forEach { require(hashes[it].asString == sha256(File(imagesDir, it))) { "图片校验失败：$it" } }
             }
-            return PreparedBackup(rewriteImagePathsFromZipEntries(data, names), names.size, true, stagingDir)
+            val rewritten = rewriteImagePathsFromZipEntries(data, names)
+            val missingHistoricalInputs = historicalInputPaths(rewritten).count { !it.startsWith(ZIP_IMAGE_PREFIX) }
+            return PreparedBackup(rewritten, names.size, true, stagingDir, missingImageCount = missingHistoricalInputs)
         } catch (e: Exception) {
             deleteRecursivelyQuietly(stagingDir)
             throw e
@@ -1001,8 +1029,7 @@ class BackupManager(
     }
 
     private fun rewriteImagePathsFromZipEntries(data: BackupData, names: Set<String>): BackupData {
-        val businessPaths=collectImagePaths(data.copy(imageTasks=emptyList()))
-        val knownMissing=data.imageTasks.filter { it.sourceResourcesMissing }.flatMap { it.protectedImagePaths() }.toSet()-businessPaths
+        val knownMissing=historicalInputPaths(data)
         return mapImagePaths(data) { path ->
             if (isRemoteImage(path) || path.isBlank()) path
             else {

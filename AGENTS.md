@@ -32,7 +32,7 @@
 
 ## 数据库
 
-- Room 数据库版本 29，30 个实体（新增个人模特 `PersonalModel`、持久草稿 `PersonalModelDraft`，含本机图像任务 `ImageTask`，含当前订单绑定 `OrderBinding`、付款阶段 `PaymentStage`、历史图鉴归档 `LegacyCatalogArchive`、恢复提醒日志 `RestoreJournal`、`SharedLibrarySyncState` 和 8 个 `Remote*` 实体）。历史图鉴在移除原表前逐字段归档，归档纳入备份。
+- Room 数据库版本30，35个实体；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -272,7 +272,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=113, versionName="2.54.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=114, versionName="2.55.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -310,7 +310,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式 version 8、schemaVersion 28；完整 JSON/ZIP 覆盖 27 个业务/缓存实体，`RestoreJournal` 为本机恢复操作日志不进入备份。未知格式/字段/枚举及损坏数据必须拒绝，旧字段通过 `BackupFormat` 显式迁移。
+- 备份格式version10、schemaVersion30，覆盖除本机`RestoreJournal`外34个业务/缓存实体；旧1–9通过`BackupFormat`显式迁移，新字段缺失补空或未确认。未知格式/字段/枚举及损坏数据拒绝，新衣橱引用和证据由`WardrobeBackupValidation`校验。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
 - 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
@@ -469,3 +469,15 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 回归覆盖`MannequinSubjectTaskTest`、单图基础设施/API、确认变化、JSON/ZIP往返和旧任务；七皮肤浅暗320dp/两倍字体实拍在`docs/visuals/2026-10-16-mannequin-accessories/`。色块是布局夹具，无付费API生成品质试验。
 
 - 2.54.0 /113 clean正式包原签名核验通过，307项JVM及相关设备回归通过；2.53.0覆盖升级与实际详情/小物页面操作后33表、198件、172图及设置逐字节保全。GitHub/Gitee均已正式发布，同一APK/校验文件匿名完整下载、SHA256及HEAD通过；按2026-10-16 19:21单独授权仅删除Gitee2.44.0 APK（保留旧发布/校验及本机/GitHub副本）。Gitee正式发布后公开API仍HTTP403，正式包本阶段一次真实检查仍显示拒绝访问/频繁请求，不冒充最新版本与完整正文已验证。状态见`docs/mannequin-accessories-release-2.54.0-verification.json`。
+
+## 完整衣橱第一期（2.55.0）
+
+- 七类穿戴物品共用Item；`CategorySemantic`固定业务身份，分类名称、默认穿戴位置与购买父子关系独立。旧分类全部`UNCONFIRMED`，不凭可改名称回填。`WardrobeCategoryLibrary`在Room事务后保存一次性初始化标记，编辑/备份恢复先等待初始化，用户删除或改名后不重建分类。
+- 登记仅要求名称和有效分类；未设置品牌使用受保护的系统键，不假造商标。`ItemSpecifications`保留所有品类原字符串及单位，切类型不清已填值；默认规格与更多规格分开。`ItemDraft`保存图片与基线修改时间，提交事务拒绝覆盖其他页面的新资料；复制剥离订单、实付、导入身份、购买父子关系和待执行任务。
+- `StorageNode`在房间下最多两层，唯一键使用归一化名称与明确父级哨兵；移动/删除/批量迁移事务同步Item与持久编辑草稿的房间/节点，物品修改时间单调增加。新DAO已接数据库、薄Repository和AppModule。四款示意插图仅主动采纳，完整提示词与SHA见`docs/storage-assets-2026-10-18.json`。
+- 共用`ImageCropDialog`提供EXIF、缩放/平移、裁切、旋转/还原和最终预览；只存UUID裁切副本，原图不改。识图至多5区、每区3MiB、合计12MiB，发送前核对精确JPEG bytes/SHA/尺寸；不发送路径或EXIF。
+- **识图不使用OpenAI**。`RecognitionSettings`独立选择方舟豆包Seed2.1Pro `doubao-seed-2-1-pro-260915` 或DeepSeek `deepseek-flash`；各自Key通过Keystore AES-GCM存noBackup，不自动读取生图Key、不回填、不进任务/日志/备份/APK。固定本次服务、型号、区域、草稿基线后明确确认，无付费自动重试。
+- 识图只给可核对候选；款式、实际尺码行、明文/外观来源、原文、对象/口径/单位都须匹配。平铺宽不乘二，足长不当内长，图片标价不建账。人工修改优先，采纳只入草稿，最终保存才写物品；已采纳证据和AI图来源独立保留，复制或删任务不能洗掉来源。锁序固定草稿Mutex→Room事务。
+- 试衣新v4冻结实际输入SHA、服务提示词、人物、品类/组成与所选头模；超过8件由用户明确选子集，裙撑及已知非服装语义不能充当基础服装。五款头模仅候选，逐款真实短/长评估不等于定版；无长直发样图时明确保留待验证。
+- 新任务实际输入和原模板纳入图片引用保护与ZIP，任务独占输入按SHA去重；已有业务图片和待确认输出保留独立身份，避免相同字节折叠所有权。外部无图JSON保留历史快照并标`sourceResourcesMissing`，执行前拒绝缺资源任务，不替换当前默认模板；后续ZIP仅允许这类独占历史输入缺失，预览继续报告缺图，业务图和未标记输入仍须完整。旧v1/v2/v3仍读原分支。生成图只在确认后追加末尾并写`ImageProvenance`，原封面不变。
+- Room29→30、备份9→10完整覆盖新资料、预览、适用CSV和图片引用；恢复活动任务转中断，不自动付费发送。实现范围、视觉流程差异、实际测试与付费质量限制见`docs/complete-wardrobe-implementation-2026-10-18.md`；后补98幅视觉方案不冒充初版前置图，真实受控UI截图另归档。

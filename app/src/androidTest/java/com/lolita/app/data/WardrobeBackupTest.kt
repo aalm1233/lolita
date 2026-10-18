@@ -376,11 +376,60 @@ class WardrobeBackupTest {
         assertEquals(startsBeforeRestore, f.serviceStarts)
     } }
 
+    @Test fun missingHistoricalInputCanBeReexportedWithoutBlockingAllLaterZipBackups() = runBlocking { fixture { f ->
+        f.completedV4Task()
+        val task = f.db.imageTaskDao().get(f.generationId!!)!!
+        val request = ImageTaskRequest.decode(task.requestJson)
+        val json = f.export(false)
+        assertTrue(File(request.wigHeadTemplate!!.imagePath).delete())
+        assertTrue("Unmarked missing frozen input must still fail closed", f.manager.exportToZip().isFailure)
+        f.manager.importBackup(json).getOrThrow()
+        assertTrue(f.db.imageTaskDao().get(task.id)!!.sourceResourcesMissing)
+        val zipResult = f.manager.exportToZip()
+        assertTrue("Explicitly blocked historical input must not prevent backing up all other data", zipResult.isSuccess)
+        val zip = zipResult.getOrThrow().also(f.exports::add)
+        assertTrue(f.manager.previewBackup(zip).getOrThrow().missingImageCount >= 1)
+        f.manager.importBackup(zip).getOrThrow()
+        val restored = f.db.imageTaskDao().get(task.id)!!
+        assertTrue(restored.sourceResourcesMissing)
+        assertEquals(request.inputSha256s, ImageTaskRequest.decode(restored.requestJson).inputSha256s)
+        assertEquals(request.wigHeadTemplate, ImageTaskRequest.decode(restored.requestJson).wigHeadTemplate)
+        assertEquals(2, f.db.itemDao().getAllItemsList().size)
+        assertEquals(f.price, f.db.priceDao().getPriceById(5))
+        val album = f.db.itemDao().getItemById(1)!!.imageUrls.first()
+        assertTrue(File(album).delete())
+        assertTrue("A blocked historical task cannot exempt a missing business image", f.manager.exportToZip().isFailure)
+    } }
+
+    @Test fun informationalCompletedResultDoesNotMakeABlockedMissingInputMandatoryAgain() = runBlocking { fixture { f ->
+        f.completedV4Task()
+        val task = f.db.imageTaskDao().get(f.generationId!!)!!
+        val missing = ImageTaskRequest.decode(task.requestJson).wigHeadTemplate!!.imagePath
+        val historical = ImageTask(UUID.randomUUID().toString(), ImageTaskKind.MANNEQUIN,
+            ImageGenerationProvider.SEEDREAM, "旧任务的信息路径",
+            ImageTaskRequest(listOf(ImageTaskGarment(1,"原物品",TryOnRole.MAIN))).encode(), emptyList(),
+            status = ImageTaskStatus.COMPLETED, requestSent = true, resultImagePath = missing)
+        f.db.imageTaskDao().insert(historical)
+        val json = f.export(false)
+        assertTrue(File(missing).delete())
+        f.manager.importBackup(json).getOrThrow()
+        assertTrue(f.db.imageTaskDao().get(task.id)!!.sourceResourcesMissing)
+        assertEquals(missing,f.db.imageTaskDao().get(historical.id)!!.resultImagePath)
+        val zipResult = f.manager.exportToZip()
+        assertTrue("Informational completed output must not re-require an explicitly blocked missing input",zipResult.isSuccess)
+        val zip = zipResult.getOrThrow().also(f.exports::add)
+        assertTrue(f.manager.previewBackup(zip).getOrThrow().missingImageCount > 0)
+        f.manager.importBackup(zip).getOrThrow()
+        assertTrue(f.db.imageTaskDao().get(task.id)!!.sourceResourcesMissing)
+        assertEquals(ImageTaskStatus.COMPLETED,f.db.imageTaskDao().get(historical.id)!!.status)
+        assertEquals(f.price,f.db.priceDao().getPriceById(5))
+    } }
+
     @Test fun jsonRestoresTheHeadPreferenceAsMetadataWithoutAddingItsImageToTheBackup() = runBlocking {
         preferenceRoundTrip(false)
     }
 
-    @Test fun zipRestoresTheHeadPreferenceAndDeduplicatesDistinctSourceFilesBySha() = runBlocking {
+    @Test fun zipRestoresTheHeadPreferenceAndKeepsExistingBusinessImageIdentities() = runBlocking {
         preferenceRoundTrip(true)
     }
 
@@ -404,8 +453,8 @@ class WardrobeBackupTest {
                 .asJsonObject.getAsJsonArray("imageUrls")[0].asString
             val roomPath = json.getAsJsonArray("locations").first { it.asJsonObject["id"].asLong == 2L }
                 .asJsonObject["imageUrl"].asString
-            assertEquals(albumPath, roomPath)
-            assertEquals(1, entries.filterKeys { it.startsWith("images/") }.values.count { bytesSha256(it) == imageSha256(f.original) })
+            assertNotEquals(albumPath, roomPath)
+            assertEquals(2, entries.filterKeys { it.startsWith("images/") }.values.count { bytesSha256(it) == imageSha256(f.original) })
             assertFalse(entries.filterKeys { it.startsWith("images/") }.values.any { bytesSha256(it) == selected.sha256 })
         }
         WigHeadTemplateCatalog.writePreference(f.context, null)
@@ -416,7 +465,7 @@ class WardrobeBackupTest {
         val restoredRoomImage = f.db.locationDao().getLocationByIdSync(2)!!.imageUrl!!
         assertEquals(imageSha256(f.original), imageSha256(restoredRoomImage))
         if (zip) {
-            assertEquals(album, restoredRoomImage)
+            assertNotEquals(album, restoredRoomImage)
             assertTrue(album !in setOf(f.original, duplicate))
             assertEquals(UUID.fromString(File(album).nameWithoutExtension).toString(), File(album).nameWithoutExtension)
         } else {
@@ -424,6 +473,37 @@ class WardrobeBackupTest {
             assertEquals(duplicate, restoredRoomImage)
         }
     }
+
+    @Test fun immutableV4HeadsShareBytesWhileAnExistingBusinessImageKeepsItsIdentity() = runBlocking { fixture { f ->
+        f.completedV4Task()
+        val first = f.db.imageTaskDao().get(f.generationId!!)!!
+        val firstRequest = ImageTaskRequest.decode(first.requestJson)
+        val firstHead = requireNotNull(firstRequest.wigHeadTemplate)
+        val secondInputs = first.sourceImagePaths.map { ImageFileHelper.saveGeneratedImage(f.context, File(it).readBytes()) }
+        assertTrue(first.sourceImagePaths.zip(secondInputs).all { (a,b) -> a != b && imageSha256(a) == imageSha256(b) })
+        val secondRequest = firstRequest.copy(wigHeadTemplate = firstHead.copy(imagePath = secondInputs.first()))
+        val second = first.copy(id = UUID.randomUUID().toString(), requestJson = secondRequest.encode(), sourceImagePaths = secondInputs)
+        f.db.imageTaskDao().insert(second)
+        val zip = f.export(true)
+        val entries = zipEntries(f, zip)
+        val json = JsonParser.parseString(entries.getValue("data.json").toString(Charsets.UTF_8)).asJsonObject
+        val tasks = json.getAsJsonArray("imageTasks").map { it.asJsonObject }.associateBy { it["id"].asString }
+        val firstPaths = tasks.getValue(first.id).getAsJsonArray("sourceImagePaths")
+        val secondPaths = tasks.getValue(second.id).getAsJsonArray("sourceImagePaths")
+        assertEquals(firstPaths[0], secondPaths[0])
+        assertNotEquals("The first task also uses an existing business image; its identity stays distinct", firstPaths[1], secondPaths[1])
+        assertEquals(1, entries.filterKeys { it.startsWith("images/") }.values.count { bytesSha256(it) == firstHead.sha256 })
+        f.manager.importBackup(zip).getOrThrow()
+        val restoredFirst = f.db.imageTaskDao().get(first.id)!!
+        val restoredSecond = f.db.imageTaskDao().get(second.id)!!
+        assertEquals(restoredFirst.sourceImagePaths.first(), restoredSecond.sourceImagePaths.first())
+        assertNotEquals(restoredFirst.sourceImagePaths.last(), restoredSecond.sourceImagePaths.last())
+        assertEquals(firstRequest.inputSha256s, restoredFirst.sourceImagePaths.map(::imageSha256))
+        assertEquals(firstRequest.inputSha256s, restoredSecond.sourceImagePaths.map(::imageSha256))
+        ImageTaskRequest.decode(restoredFirst.requestJson).validateInputImages(restoredFirst.sourceImagePaths)
+        ImageTaskRequest.decode(restoredSecond.requestJson).validateInputImages(restoredSecond.sourceImagePaths)
+        assertFalse(restoredFirst.resultImagePath in restoredFirst.sourceImagePaths)
+    } }
 
     @Test fun zipDedupKeepsBothRegionIdentitiesAndRemovingOneStillProtectsTheSharedImage() = runBlocking { fixture { f ->
         val duplicate = ImageFileHelper.saveGeneratedImage(f.context, File(f.taskRegion).readBytes())

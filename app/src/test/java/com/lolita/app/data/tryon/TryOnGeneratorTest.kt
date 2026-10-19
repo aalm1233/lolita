@@ -19,6 +19,22 @@ import org.junit.Test
 import java.io.File
 
 class TryOnGeneratorTest {
+    @Test fun frozenOldAndNewPromptsAreSentVerbatimDespiteProviderPromptRefinements() = runBlocking {
+        Fixture().use { f ->
+            val model = File(f.folder, "model.jpg").apply { writeBytes(byteArrayOf(3)) }
+            val paths = listOf(model.path) + f.selected.map { it.imagePath }
+            var sent: String? = null
+            f.api = { _, _, prompt -> sent = prompt; byteArrayOf(7) }
+            for (revision in listOf(2, com.lolita.app.domain.model.TryOnRequest.PROMPT_VERSION)) {
+                val request = com.lolita.app.domain.model.ImageTaskRequest(f.selected.map { com.lolita.app.domain.model.ImageTaskGarment(it.itemId, it.name, it.role) },
+                    version = 4, promptVersion = revision, promptSnapshot = "exact-frozen-$revision", serviceModel = com.lolita.app.domain.model.ImageGenerationProvider.OPENAI.model,
+                    inputSha256s = paths.map { com.lolita.app.domain.model.imageSha256(it) })
+                f.generator().generate(f.selected, immutableRequest = request, immutablePaths = paths,
+                    prepareSnapshotImages = { input -> input.map { File(it).readBytes() } })
+                assertEquals("exact-frozen-$revision", sent)
+            }
+        }
+    }
     @Test fun staleDisclosedProviderNeverPreparesImagesOrStartsPaidRequest() = runBlocking {
         Fixture().use { f ->
             expectFailure { f.generator().generate(f.selected, expectedProvider = com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM) }

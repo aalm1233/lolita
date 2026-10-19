@@ -40,11 +40,11 @@ class ImageTaskBackupTest {
         val description = "BNT 戴靠后，露出刘海；衬衫掖进裙腰。"
         val id = coordinator.submitTryOn(listOf(TryOnSelection(f.itemId, item.name, f.source, TryOnRole.MAIN, CategorySemantic.JSK)), ImageGenerationProvider.SEEDREAM, description)
         val frozen = ImageTaskRequest.decode(f.db.imageTaskDao().get(id)!!.requestJson)
-        assertEquals(2, frozen.promptVersion)
+        assertEquals(TryOnRequest.PROMPT_VERSION, frozen.promptVersion)
         assertEquals(description, frozen.instructions)
         val emptyId = coordinator.submitTryOn(listOf(TryOnSelection(f.itemId, item.name, f.source, TryOnRole.MAIN)), ImageGenerationProvider.SEEDREAM, "")
         val empty = ImageTaskRequest.decode(f.db.imageTaskDao().get(emptyId)!!.requestJson)
-        assertEquals(2, empty.promptVersion)
+        assertEquals(TryOnRequest.PROMPT_VERSION, empty.promptVersion)
         assertEquals("", empty.instructions)
         coordinator.cancel(emptyId)
         var calls = 0
@@ -52,7 +52,7 @@ class ImageTaskBackupTest {
         val executor = ImageTaskExecutor(coordinator, f.db, { ImageGenerationCredentials(it, "controlled-key") },
             images::prepare, images::prepareMannequin, { _, refs, prompt ->
                 calls++; assertEquals(2, refs.size); assertEquals(frozen.promptSnapshot, prompt)
-                assertTrue(prompt.contains("PHYSICAL WEARING PLAN")); f.bytes
+                assertTrue(prompt.contains("内部物品可以完全被遮住")); f.bytes
             }, prepareSnapshotImages = images::prepareSnapshots)
         // Editing current inventory cannot rewrite the queued request or its historical labels.
         f.db.itemDao().updateItem(item.copy(name = "后来改名", status = ItemStatus.OWNED))

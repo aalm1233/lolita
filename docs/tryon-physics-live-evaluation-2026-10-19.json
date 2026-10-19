@@ -1,0 +1,1303 @@
+{
+  "date": "2026-10-19",
+  "authorization": {
+    "max_paid_calls": 68,
+    "message": "用户本轮明确回复：最多8次",
+    "source": "2026-10-19 current thread user reply",
+    "additional_authorization": {
+      "additional_calls": 20,
+      "message": "再给你20次 好好干",
+      "total_cap": 28
+    },
+    "waist_additional_authorization": {
+      "additional_calls": 10,
+      "message": "腰封不对 再给你十次，你再调一下腰封",
+      "total_cap": 38
+    },
+    "waist_contact_additional_authorization": {
+      "additional_calls": 10,
+      "message": "感觉腰封还是不太像穿上去的 再给你10次额度调整",
+      "total_cap": 48
+    },
+    "all_waist_additional_authorization": {
+      "additional_calls": 20,
+      "message": "都是，再给你去20次额度",
+      "total_cap": 68
+    }
+  },
+  "paid_calls": 52,
+  "http_successes": 52,
+  "automatic_retries": 0,
+  "final_prompt_revision": 10,
+  "model": "doubao-seedream-5-0-pro-260628",
+  "production_prompt_and_api_bytecode": true,
+  "host_codec_differs_from_android": true,
+  "watermark": true,
+  "width": 1024,
+  "height": 1536,
+  "private_originals_published": false,
+  "private_ledger_sha256": "52b96002c6a0d6f915dca8a0075f88bfd21b894f2a28212219411e926945c2f6",
+  "notes": "Qualitative samples on a fictional adult, not an accuracy or real-body fit measurement. Earlier cincher position improvements did not resolve the user-reported flat decal appearance. Final curved-panel/contact/material instructions improve some samples but do not guarantee fitted appearance, hardware counts or all eight items faithful.",
+  "runs": [
+    {
+      "number": 1,
+      "case": "bonnet-front",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "65a82849de65dd015f9b9af76b83e80df7c6485d0c2fd9ec882e2e977b55371b",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "0daaa80e7182dca0fa760d62fa8668087b5eef131f48839b626d6c52a3c9d5c4",
+      "seconds": 46.913,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 2,
+      "case": "bonnet-back",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "1febaed159498d844aad3666477f651554426ed6918128ddbb38f7dccf8b7063",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "aaf0c0ae29ab80d672afccce71da083545e0e22d1aaeebbc9def1891ab9c7299",
+      "seconds": 49.498,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 3,
+      "case": "layers-witch",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "TOP",
+        "OUTER",
+        "HEAD"
+      ],
+      "image_count": 5,
+      "prompt_sha256": "0083128e171299718d984099ef35144c5a7e049e965dfc82603dc1895304ffbb",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "b39678b032144ffb75b30bb5c3208002447ec19500914ab90de075c29f948f19",
+        "bb9e0ef884553b6d9739be72e51b632134c7b49326d02f820d5be84c976fd338",
+        "674af978e55b3e867b4abc06b8c3a548f6a4ce81e2644e58c4f667700ee4174b",
+        "967c8869f68873693800127f808ac93cff5b86dbf394e223ac9330a6aa68556e"
+      ],
+      "output_sha256": "b710c495062b40c4ccdfcf0a5c9ff89a3549fcdc363e11f1be229b9613c86b76",
+      "seconds": 58.701,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 4,
+      "case": "layers-navy",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "OUTER"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "9c739f225ee9ee73c1dce6adb0b16d3051ecdd02675ffce7d7e9cba38c9f75a1",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "bd8f0a2bde364fc7004a0bf3937fe18c954fa0e0e86a695ed2458b90cb536ced"
+      ],
+      "output_sha256": "dc55d0b039303866c1430f6e39a30703076527c2b18b652a7118453e435cc6bf",
+      "seconds": 53.377,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 5,
+      "case": "footwear-black",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "0cdda65891f3a0a0e9d5ac1c13cf58fa565e469307b52c2fbc59bc829a8595fc",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "35567dc35ba76b6b22a31feec5aad39bd1d2ebabda92a98e88f97dde6191f3f0"
+      ],
+      "output_sha256": "23e972163fb295b03fb0680c8bc0dd1a0f8fd22549242d6422238e84e6c5046b",
+      "seconds": 55.565,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 6,
+      "case": "footwear-white",
+      "prompt_revision": 2,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "83c68fad90e3b18d6b16be40f8d50b0667757ff88c9125c585bb12006285551a",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "b590f2caf7e8e103d8af44f36e47c93943c0749fb725b4c95c9421005f486821"
+      ],
+      "output_sha256": "7cdc59c24b0ca6dd27146ae8e4160acc65845fcabdb586df82ba3b3401b87731",
+      "seconds": 50.461,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 7,
+      "case": "bonnet-back-r3",
+      "prompt_revision": 3,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "132a483ea0703969363b919c90ea24a9e2a850aeea243cdff97e052e1021ea8a",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "f6ee9c3f1eca090d10a36c3a50a2e18200742fd2e5317354d37f11715394dee8",
+      "seconds": 58.755,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 8,
+      "case": "bonnet-front-r3",
+      "prompt_revision": 3,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "74967e455d091b65d0384e6e18e10668c39835269deda6c8a9771d9d74154ef4",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "c6d1fc7a1e349dfe14fd5039db61b626188da9c85038c2e25702a20586f52302",
+      "seconds": 62.51,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 9,
+      "case": "petticoat-without-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN"
+      ],
+      "image_count": 2,
+      "prompt_sha256": "81fcc8cd6887f127252de997867baa1b7bdb1c9ea74020f9d44e6cfdcefe88cf",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427"
+      ],
+      "output_sha256": "5cf1953a7a540badde3f06f50a46fdf5f674b9e92dce385305b380f66eb31b26",
+      "seconds": 27.39,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 10,
+      "case": "petticoat-with-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "810a7682ae322eb79ee302c597c0f1e7d3b0d1ab78b46f1cf19accc2952e5ebe",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f"
+      ],
+      "output_sha256": "7aa2e734960f68b0094160a577e26b6ce225d8a0fb2454690a6b99449922c691",
+      "seconds": 28.324,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 11,
+      "case": "bonnet-front-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "84ffd92a5893e105121a0f2434639372d860963db6f448bd5c699e0d3023b0e6",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "65e9769f2ade7aef1aed82394fc0dc595f417a89948e9e126312d1fc1403dc0d",
+      "seconds": 31.501,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 12,
+      "case": "bonnet-back-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "dc426b57913517fbaccec0abe5364f0eb744842941f12941b1ff76b4a0848375",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "3d27ae4b6c2e137d4d53df300042dde467e090f5b56d48c5117aef1523eb2d8c",
+      "seconds": 36.432,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 13,
+      "case": "stilettos-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "e36c1ef280d926ecc6adf42e3d5df2520b1d9057d0a6d777be4f6136d7a1d6ce",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066"
+      ],
+      "output_sha256": "92e41f77b65666c688220d113a810eac21e5b74f9b1fd7a5b2b1091e5ef43130",
+      "seconds": 32.723,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 14,
+      "case": "pumps-r4",
+      "prompt_revision": 4,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "03c214fb766a23661131102a2d0fb60c9d875041a10330469ef89160949386b4",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "f82fe9ae8174031183b211b2bca564e6099eea6474aeb4b1d564e7386d1595db"
+      ],
+      "output_sha256": "5dce7bd35c00db1d4f19355540f6d6f11dd18f977f1ad56f11424b42ebecd3e6",
+      "seconds": 30.74,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 15,
+      "case": "petticoat-with-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "163e27d0ad3ff664a0eaabf652c07b4775f529a8508b9b25a07af6ee832dd64e",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f"
+      ],
+      "output_sha256": "eb92a6d6191c2db6b9e9ff149bafc2ade1ef5b5f30e10a474f812e8a9d7195eb",
+      "seconds": 30.452,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 16,
+      "case": "bonnet-back-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "25d9e9565cc879937d4c33fecb7723c9c9b08337be75420fcfe2acf68861ddc2",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "27d23eea7040c5179be789804195513c97ea5f6688dc9dad0b349151eabc0425",
+      "seconds": 29.164,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 17,
+      "case": "bonnet-front-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "a3e563e206e247969612ebc5ac0b3f905cd194fdf492711c10f7feb51cf3642b",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "dd26eb3d24dcba526c872861031186effaf676c94990ec38137c46fe739673b6",
+      "seconds": 36.394,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 18,
+      "case": "stilettos-foot-angle-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "a433b984fd5b7729470ee43b0b2ece609beef46a4c1679fbec8786dd480da9a2",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066"
+      ],
+      "output_sha256": "e85ae9b5da61d58517e5271102e0634bc624bf22b877f23a72e60009b931a183",
+      "seconds": 40.399,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 19,
+      "case": "eight-items-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "522509450d180e5d12f47b504cd10d7ac2f08718d234ad819795a75b336d72c2",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "357dd8e328e78b8f5e69ecc67544aed4673562522f914c87fd210cc69e4660f1",
+      "seconds": 54.629,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 20,
+      "case": "petticoat-alternate-r5",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "2e3f7b807362244d7b5793654723d93ec7068b01d43912696562d24b043de8d3",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "dd94f2893122f18008e89d64d24923d28b7c6c923391b9888a01549f0cb69668"
+      ],
+      "output_sha256": "4a0177938b3b705ebfe073bec1f6ad0937884233dd7cf1ea7324481f98e22f96",
+      "seconds": 31.291,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 21,
+      "case": "petticoat-with-r5-explicit",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "793e0be89ddf9f3a9cba8ecdc9695c56496ed66279e1f815486398cb93e4c422",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f"
+      ],
+      "output_sha256": "ce94d25ed58ccde1841401efbe1807e32626e109b9c386320c6604fc1bcb75e6",
+      "seconds": 31.799,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 22,
+      "case": "bonnet-back-r5-explicit",
+      "prompt_revision": 5,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "4c2d5ba74bbbec48f455bb20fc51f49e15dcc2c90c4f52d97eb6c1fa7b163968",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "386a537dfc3b96f2e4c0e521b49deefd4dbd21f7411d998a538449f60b5597cf",
+      "seconds": 39.271,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 23,
+      "case": "stilettos-foot-angle-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "SHOES"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "b02b0575847a536547583e0b19eb4f789b2bcbc84a9a01ad8657665d7c287fe2",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066"
+      ],
+      "output_sha256": "fc2047b04ea0e50de54764cf72d08df1ee9c64c3205021035f6bb39333b8fb5e",
+      "seconds": 25.927,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 24,
+      "case": "bonnet-back-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "a1f6817c5cfd2ced4dc3c2ffa6392d80185fc9f981468a8d2f568730064e1745",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "1676bfdf35171c4af2b7412e79be97d798f01752dc10bd41070dec779c50c3f1",
+      "seconds": 28.05,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 25,
+      "case": "petticoat-alternate-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "cf70671586712eec019c5de6176eab47e496a13a3bdc24dd5facd829cfe21182",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "dd94f2893122f18008e89d64d24923d28b7c6c923391b9888a01549f0cb69668"
+      ],
+      "output_sha256": "d2d3cc29e368b736f3a1a1701b69d560a9d31538bf7eb641e2af9f72c7266e3f",
+      "seconds": 28.365,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 26,
+      "case": "petticoat-with-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "PETTICOAT"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "c2856eceda1170cadb833854aa5fa130d918c5735a71d139cdcc667fef60760f",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f"
+      ],
+      "output_sha256": "a5a4db99be23a06154cc8ea5a8f251e8f6dfb9bd906982ab98108c877b3fa304",
+      "seconds": 30.681,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 27,
+      "case": "bonnet-front-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "HEAD"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "8acb7e77abdf3a8a0f5eed3caab88ecb105cf0115794ffdfcba1b6231b208c97",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959"
+      ],
+      "output_sha256": "414b0a5ef3ca5827a97dcbc8354884386a7b9ecdda25f9d82d9a280792b25a9e",
+      "seconds": 28.819,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 28,
+      "case": "eight-items-r6",
+      "prompt_revision": 6,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "295b97a69987f4413ee8cc78bcf32ebfaf9fa958b62c53fae1a2f16a1fa8cc2d",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "f644ba8e62870e5993d670e39d19450945c9e15352e850c47ac03ac255cb92b3",
+      "seconds": 53.137,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 29,
+      "case": "waist-dress-r7",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "b2c7362fa039a819e1a87c27f15c8b76d3b9bf43cec8a11f30416d981f59ff65",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "4da2b8aec415dd5da9c7274cd169d96ccdef32650b79e5b555d7200e44d88421",
+      "seconds": 29.046,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 30,
+      "case": "waist-eight-r7",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "814ee1a9cf711c7d63c208a0e76690b98539df64de83d91e71f791d2b72cc8b0",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "e8faefceb71791edc7484727abdde8c385e0f339ed7a3c7863b4d7fe756bad91",
+      "seconds": 49.768,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 31,
+      "case": "waist-navy-r7",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "130642b0b70a9a773a691c8a610ee5a0d1d9bc89a40d72be9723bc9cc982c8d0",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "fadd3c27af8ec5fac3dda0a9da7a3a9bacc0ef06e7d8496e51450679d179d3b6",
+      "seconds": 30.16,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 32,
+      "case": "waist-dress-r7-repeat",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "b2c7362fa039a819e1a87c27f15c8b76d3b9bf43cec8a11f30416d981f59ff65",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "f9d26e8744214e5c2f48dae1b93e2d7650e1686bb0f8041ddb34dab95fb6cadb",
+      "seconds": 31.614,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 33,
+      "case": "waist-eight-r7-default",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "4845e3878fa1f95b5834983797af5eadde66d1f7ba19b76c782d899f3b3e8877",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "be9f8222916589d8d163dc44834d16871c59937dbfc303bc5de7cddc28603e40",
+      "seconds": 52.581,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 34,
+      "case": "waist-eight-r7-detail",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "aa51eb77901964e5b88983f4dd55fa7a7de7848a23b0dfc7d0075643b946c170",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "067b1931ad4e1e24a326b28a886165ae3421fbeaac35ea1d0d4a981a6bad1fd3",
+      "seconds": 53.908,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 35,
+      "case": "waist-witch-r7",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "f6fedcb05d876bf6ce45b678aca533b51a9485f9fb0db0e31af95751d21f47d8",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "b39678b032144ffb75b30bb5c3208002447ec19500914ab90de075c29f948f19",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "88f47832f173218732c7bf01266fd94ffd2f735ef1fd2b055f2debe45afd1614",
+      "seconds": 35.709,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 36,
+      "case": "waist-navy-outer-r7",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "OUTER",
+        "WAIST"
+      ],
+      "image_count": 4,
+      "prompt_sha256": "1bdd7b442f99b4eef1a94000a3015cadad62580ccb2dfe0ed49199d138c32787",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "bd8f0a2bde364fc7004a0bf3937fe18c954fa0e0e86a695ed2458b90cb536ced",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "0fd879b8d7ed85c5e8b5b7188878119fd9398b991a2a740107e8a0c87c0bef13",
+      "seconds": 36.501,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 37,
+      "case": "waist-eight-r7-repeat-2",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "4845e3878fa1f95b5834983797af5eadde66d1f7ba19b76c782d899f3b3e8877",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "c1a1d8738125ee6e679e9630c28742cb1eb070ba1a02992998fd07cd0b5c3ca1",
+      "seconds": 53.68,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 38,
+      "case": "waist-eight-r7-repeat-1",
+      "prompt_revision": 7,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "4845e3878fa1f95b5834983797af5eadde66d1f7ba19b76c782d899f3b3e8877",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "a5310e0bd5e19de47b92bd4072378a5e8421c25dcc9acbf260a7e6b4762cd62e",
+      "seconds": 54.285,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 39,
+      "case": "waist-contact-dress-r8",
+      "prompt_revision": 8,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "34a315873c8e091e345c314cd4fe3857686f410a6d49a14c6f8d7e88de5da855",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "cf4a91438d1cc5facb74d3bb2adabd35f0d474580572b08939e4ecb1b1b05707",
+      "seconds": 34.555,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 40,
+      "case": "waist-contact-eight-r8",
+      "prompt_revision": 8,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "c52145d72ec03a7b9252bb78fffca0988fc7b2cd86a622430c35aefb112acd58",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "1cd2ac08d80be0f3f5a52fb1676c9e60794179656ef0c19eeb766c4bbcdd92c4",
+      "seconds": 55.881,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 41,
+      "case": "waist-material-dress-r9",
+      "prompt_revision": 9,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "e16ec07994a20624de528a39ec0cebd66c3417ceeffd22f47ccc61472b13fcff",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "f86ca90c7ac84ecd44d9fb52357f35a808a528df0ab231fdcb33f807057119b2",
+      "seconds": 31.771,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 42,
+      "case": "waist-material-eight-r9",
+      "prompt_revision": 9,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "1b1e0ffd3367f905aadab6be60544a646abdcfe2f4f8618398c7a9960fc1d002",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "b21798f74481e0dd1e2bc513bf1a21ced2446543199b3f603ef15718fa8aff48",
+      "seconds": 56.977,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 43,
+      "case": "waist-material-blouse-r9",
+      "prompt_revision": 9,
+      "input_roles": [
+        "TOP",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "4bfd4b337b0d9ecb3685054a70166d1c088b311d12c989781aa58b2b0531867d",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "bb9e0ef884553b6d9739be72e51b632134c7b49326d02f820d5be84c976fd338",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "9bca8ab8ff3a79be41f5d12c64c58a425f9511e194e876d0140bf7f95223e85d",
+      "seconds": 33.346,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 44,
+      "case": "waist-material-eight-first-r9",
+      "prompt_revision": 9,
+      "input_roles": [
+        "MAIN",
+        "WAIST",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "7f3f77ba211d83ca66515a672ad5f62d9e1ebbcfebcf2b2d09e5593366a0f4fe",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa"
+      ],
+      "output_sha256": "cadab049ed3b58ed41556e68826df06d6a352a1cb0d3c86916324f9cda9de586",
+      "seconds": 55.928,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 45,
+      "case": "waist-closed-dress-r10",
+      "prompt_revision": 10,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "80d9768595014c436bfc7680ad400e7ff8fca96fc0839f3323e617180fb4a499",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "7c4bc0675828980cdd2dd25065926b9a04c2a9715fef5f78caf0ad12a9176d11",
+      "seconds": 29.411,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 46,
+      "case": "waist-closed-eight-r10",
+      "prompt_revision": 10,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "ebec6442fd466899c25e4179f80f587e19f5346701ca589448d35e9f8b926c6e",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "d55160057d8d1531b3d6fdca2bd3b15448c077b46f8f75fc00da994bb25fca9a",
+      "seconds": 56.055,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 47,
+      "case": "waist-closed-blouse-r10",
+      "prompt_revision": 10,
+      "input_roles": [
+        "TOP",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "d2bd82ad5c683b9283569a5c67683a604444cdc232bfc52b462d6fec06b1eb73",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "bb9e0ef884553b6d9739be72e51b632134c7b49326d02f820d5be84c976fd338",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "548aae943f102c52f00ae42d5b146a7e4278cfde74e62c263904d19c54d2802a",
+      "seconds": 42.033,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 48,
+      "case": "waist-closed-eight-r10-repeat",
+      "prompt_revision": 10,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "ebec6442fd466899c25e4179f80f587e19f5346701ca589448d35e9f8b926c6e",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "feb0b0e119221ec196a7a55a1abf73ffff7b457b9fd4c977f49365be5820e9e6",
+      "seconds": 56.464,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 49,
+      "case": "waist-compact-blouse-r11",
+      "prompt_revision": 11,
+      "input_roles": [
+        "TOP",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "57f2e2e34354a8d7fa094436ef55a85ab54bfd42cab637d35349bce55d276f38",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "bb9e0ef884553b6d9739be72e51b632134c7b49326d02f820d5be84c976fd338",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "0fb8e0603a5a68d23f0b5c44c5927a500d271d220b7ca4392bf11b227881695a",
+      "seconds": 29.13,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 50,
+      "case": "waist-compact-dress-r11",
+      "prompt_revision": 11,
+      "input_roles": [
+        "MAIN",
+        "WAIST"
+      ],
+      "image_count": 3,
+      "prompt_sha256": "b0fbecf3ee965936d8c4f0649262135d689fb4cb35a1cb77ab4ababe5cb874e5",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "447496a8b52e4d1eade797df6facb70d54dda496fbf883928a9177d1a93d47e9",
+      "seconds": 31.077,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 51,
+      "case": "waist-compact-outer-r11",
+      "prompt_revision": 11,
+      "input_roles": [
+        "MAIN",
+        "OUTER",
+        "WAIST"
+      ],
+      "image_count": 4,
+      "prompt_sha256": "cdfff3b4eddf4fc947957cdbd7fa0d2dfaedc6452b72b3dd2d238ec5771dd16d",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "9484b1b0840aebc212a8bd9164a38824879f4d8f6b075964c265721af8d27e13",
+        "bd8f0a2bde364fc7004a0bf3937fe18c954fa0e0e86a695ed2458b90cb536ced",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "4cd20b86ba8320747453246525ea8a0a1332199d7197109ff4fa5128ef722891",
+      "seconds": 33.05,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    },
+    {
+      "number": 52,
+      "case": "waist-compact-eight-r11",
+      "prompt_revision": 11,
+      "input_roles": [
+        "MAIN",
+        "HEAD",
+        "PETTICOAT",
+        "SHOES",
+        "HAND",
+        "WIG",
+        "HOSIERY",
+        "WAIST"
+      ],
+      "image_count": 9,
+      "prompt_sha256": "b3c4c3e6c26cf707f79787d7d54460f97e421d4a6890d02029b0ac1b3ac1efe1",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "7d7a09aba2480dc033bfacf0bd712bc835bd6d8d95312e27344d36884f5b1959",
+        "df88c0daf4055b85e37a983acd7cd84d50cd98fb1bac057e5b43ece1e5e2d26f",
+        "19a5ecd473485ed67aaeea3aa69166c2d058b58aeea5f874f7c5e837e2817066",
+        "0fe4c23534821e60ba899ce41f3ab95a369f48ccf23c6f3424e5bf50ea6b90b7",
+        "339826b2fa4f057e49019539096bd157d137a533a7ad1bcee14049fcf3b6351b",
+        "c415b7d11b710a5d2a6ec5e201a24577fdb95660d13d9e0e5e09d342e90173aa",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "212f335fcfaeb703f3ed28b729ac289adb8ecebadfc1213b92c06b090829114e",
+      "seconds": 53.057,
+      "transport_status": "SUCCESS",
+      "automatic_retries": 0,
+      "visual_pass_inferred_from_http": false
+    }
+  ],
+  "unused_calls": 16,
+  "stopped_by_user": true,
+  "unused_allowance_carried_to_future_task": false,
+  "rejected_prompt_revisions": {
+    "11": "Compact variant: one blouse sample removed uncovered base trousers; not shipped."
+  }
+}

@@ -81,7 +81,7 @@ class TryOnGenerator(
         currentCoroutineContext().ensureActive()
         beforeRequest()
         currentCoroutineContext().ensureActive()
-        val result = generateImage(credentials, images, immutableRequest?.promptSnapshot ?: request.prompt(personalModel = personalModelImagePath != null))
+        val result = generateImage(credentials, images, immutableRequest?.promptSnapshot ?: request.prompt(personalModel = personalModelImagePath != null, provider = credentials.provider))
         currentCoroutineContext().ensureActive()
         onPhase(TryOnGenerationPhase.SAVING)
         currentCoroutineContext().ensureActive()

@@ -282,7 +282,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=124, versionName="2.57.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=126, versionName="2.58.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -553,3 +553,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.57.2 /124未付清物品不进入存放位置：13项定向设备回归、Debug与clean正式构建通过，详情/编辑/柜架/导入的七皮肤浅暗、320dp两倍字实拍归档于`docs/visuals/2026-10-19-owned-storage/`。2.57.1同签名覆盖启动及原位置引用三列逐值保全，未重复无关全库/图片/密钥审计；GitHub/Gitee正式附件匿名完整下载、SHA/HEAD与源码标签`4785a51`已核验，源码已推送。本轮按用户确认忽略网络限制，不重复手动检查更新或修网络；公开查询单独记录。回执`docs/owned-storage-release-2.57.2-verification.json`。
 
 - 2.58.0 / 125：试衣穿戴要求和角色物理关系指引；49项JVM、22项设备定向用例及clean正式包覆盖升级通过。七皮肤浅暗、小屏IME与正式包实拍归档在`docs/visuals/2026-10-19-tryon-physics/`，双平台正式发布和匿名下载校验回执为`docs/tryon-physics-release-2.58.0-verification.json`。本轮真实付费生成0次，复杂穿戴视觉质量尚未实测。
+
+- 2.58.1 试衣规则修订：即梦新请求使用按角色条件生成的中文规则，OpenAI保留英文规则；`promptVersion`当前10，v4历史1–10冻结提示词原样执行，旧v1–v3不重建。宽腰封以实际材质和躯干曲面闭合围穿，侧片后绕、允许遮住原裙腰结，强调接触阴影与衣料受力，不以位置正确代替穿戴质感验收。Room30/备份10/图片和UI不变；真实样本及限制见`docs/tryon-physics-live-evaluation-2026-10-19.md`，受控传输不代替真实质量评估。

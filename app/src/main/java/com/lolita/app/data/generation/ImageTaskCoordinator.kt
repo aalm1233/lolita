@@ -133,7 +133,7 @@ class ImageTaskCoordinator(
                     val sources = listOf(modelPath) + snapshot.map { it.imagePath }
                     val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition) },
                         instructions = request.instructions, version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = TryOnRequest.PROMPT_VERSION,
-                        promptSnapshot = request.prompt(personalModel = person != null), serviceModel = provider.model,
+                        promptSnapshot = request.prompt(personalModel = person != null, provider = provider), serviceModel = provider.model,
                         inputSha256s = sources.map(::imageSha256))
                     return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)
                 }

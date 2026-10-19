@@ -178,6 +178,38 @@ class TaobaoProductViewModelTest {
         predicate: (TaobaoProductState) -> Boolean
     ): TaobaoProductState = withTimeout(10_000) { viewModel.state.first(predicate) }
 
+    @Test
+    fun colorStyleOptInKeepsTwoChoicesAndSeparateQuotesAcrossToggleAndSerializedRestore() = runBlocking {
+        val colors = (1..4).map { TaobaoProductVariant("color-$it", "款式$it", "连裤袜") }
+        val draft = TaobaoProductDraft("印花连裤袜", "", "", "", "商品详情",
+            "https://item.taobao.com/item.htm?id=844758918476", emptyList(), colorVariants = colors)
+        val model = newModel(TaobaoProductImportSession(state = TaobaoProductState(
+            url = draft.productUrl, draft = draft)))
+        withContext(Dispatchers.Main) {
+            assertFalse(model.viewModel.state.value.splitColorVariants)
+            model.viewModel.splitColorVariants(true)
+            assertTrue(model.viewModel.state.value.selectedVariantIds.isEmpty())
+            model.viewModel.edit { error("空选择不得打开编辑器") }
+            assertEquals("请至少选择一件物品", model.viewModel.state.value.error)
+            model.viewModel.toggleVariant(colors[0].id)
+            model.viewModel.toggleVariant(colors[2].id)
+            model.viewModel.referencePrice(colors[2].id, "36.50")
+            model.viewModel.splitColorVariants(false)
+            model.viewModel.splitColorVariants(true)
+        }
+        val expected = setOf(colors[0].id, colors[2].id)
+        assertEquals(expected, model.viewModel.state.value.selectedVariantIds)
+        val serialized = withContext(Dispatchers.Main) {
+            requireNotNull(model.handle.get<String>(TaobaoProductViewModel.SESSION_KEY))
+        }
+        val restored = newModel(serialized).viewModel
+        assertTrue(restored.state.value.splitColorVariants)
+        assertEquals(expected, restored.state.value.selectedVariantIds)
+        assertEquals(listOf(null, null, "36.50", null), restored.state.value.draft!!.colorVariants.map { it.referenceQuote?.amount })
+        val items = taobaoProductBatchItems(restored.state.value.draft!!, expected, restored.state.value.splitColorVariants)
+        assertEquals(listOf("印花连裤袜 · 款式1", "印花连裤袜 · 款式3"), items.map { it.name })
+    }
+
     private suspend fun awaitFilesDeleted(paths: Collection<String>) {
         withTimeout(10_000) {
             while (paths.any { File(it).exists() }) delay(10)

@@ -27,7 +27,8 @@ data class TaobaoProductState(
     val batchIndex: Int = 0,
     val savedCount: Int = 0,
     val completed: Boolean = false,
-    val paused: Boolean = false
+    val paused: Boolean = false,
+    val splitColorVariants: Boolean = false
 )
 
 /** One atomic saved-state value keeps result consumption and the next index together. */
@@ -147,9 +148,18 @@ class TaobaoProductViewModel(
 
     fun toggleVariant(id: String) {
         if (state.value.busy || batch != null) return
-        if (state.value.draft?.variants.orEmpty().none { it.id == id }) return
+        val draft = state.value.draft ?: return
+        if (taobaoProductVariants(draft, state.value.splitColorVariants).none { it.id == id }) return
         mutable.update { current -> current.copy(selectedVariantIds =
             if (id in current.selectedVariantIds) current.selectedVariantIds - id else current.selectedVariantIds + id) }
+        persist()
+    }
+
+    fun splitColorVariants(enabled: Boolean) {
+        if (state.value.busy || batch != null) return
+        val draft = state.value.draft ?: return
+        if (draft.variants.orEmpty().isNotEmpty() || draft.colorVariants.orEmpty().size < 2) return
+        mutable.update { it.copy(splitColorVariants = enabled, error = null) }
         persist()
     }
 
@@ -161,7 +171,9 @@ class TaobaoProductViewModel(
                 com.lolita.app.data.file.TaobaoProductQuote(it, spec, "手动核对")
             }
             current.copy(draft = if (variantId == null) draft.copy(referenceQuote = quote(draft.referenceQuote?.specification.orEmpty()))
-                else draft.copy(variants = draft.variants.map { part ->
+                else draft.copy(variants = draft.variants.orEmpty().map { part ->
+                    if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
+                }, colorVariants = draft.colorVariants.orEmpty().map { part ->
                     if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
                 }))
         }
@@ -170,7 +182,8 @@ class TaobaoProductViewModel(
 
     fun edit(onReady: (String) -> Unit) {
         var draft = state.value.draft ?: return
-        val quotes = if (draft.variants.size > 1) draft.variants.filter { it.id in state.value.selectedVariantIds }.mapNotNull { it.referenceQuote }
+        val variants = taobaoProductVariants(draft, state.value.splitColorVariants)
+        val quotes = if (variants.size > 1) variants.filter { it.id in state.value.selectedVariantIds }.mapNotNull { it.referenceQuote }
             else listOfNotNull(draft.referenceQuote)
         if (quotes.any { com.lolita.app.data.file.TaobaoProductQuotes.amount(it.amount) == null }) {
             mutable.update { it.copy(error = "参考金额请输入大于零、最多两位小数的数字，或留空待核对") }
@@ -185,7 +198,7 @@ class TaobaoProductViewModel(
             return
         }
         if (batch == null) {
-            val items = taobaoProductBatchItems(draft, state.value.selectedVariantIds)
+            val items = taobaoProductBatchItems(draft, state.value.selectedVariantIds, state.value.splitColorVariants)
             if (items.isEmpty()) {
                 mutable.update { it.copy(error = "请至少选择一件物品") }
                 persist()

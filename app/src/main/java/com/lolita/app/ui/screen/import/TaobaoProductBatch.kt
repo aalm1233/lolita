@@ -27,11 +27,15 @@ internal data class TaobaoProductBatchProgress(
     }
 }
 
-internal fun taobaoProductBatchItems(draft: TaobaoProductDraft, selectedIds: Set<String>): List<TaobaoProductDraft> {
+internal fun taobaoProductVariants(draft: TaobaoProductDraft, splitColorVariants: Boolean) =
+    draft.variants.orEmpty().ifEmpty { if (splitColorVariants) draft.colorVariants.orEmpty() else emptyList() }
+
+internal fun taobaoProductBatchItems(draft: TaobaoProductDraft, selectedIds: Set<String>,
+    splitColorVariants: Boolean = false): List<TaobaoProductDraft> {
     val original = draft.copy(imagePaths = emptyList(), sizeChartImagePath = null,
         sizeChartImagePaths = emptyList(), variants = emptyList(), importToken = null, editorToken = null,
-        batchIndex = 0, batchTotal = 0)
-    val variants = draft.variants.orEmpty()
+        batchIndex = 0, batchTotal = 0, colorVariants = emptyList())
+    val variants = taobaoProductVariants(draft, splitColorVariants)
     if (variants.size < 2) return listOf(original.copy(importToken = UUID.randomUUID().toString()))
     return variants.distinctBy { it.id }.filter { it.id in selectedIds }.map { variant ->
         original.copy(name = "${draft.name} · ${variant.name}", category = variant.category,
@@ -67,7 +71,7 @@ internal fun taobaoProductRestoreBatch(batch: TaobaoProductBatchProgress,
     original: TaobaoProductDraft): TaobaoProductBatchProgress {
     val shared = original.copy(imagePaths = emptyList(), sizeChartImagePath = null,
         sizeChartImagePaths = emptyList(), variants = emptyList(), importToken = null, editorToken = null,
-        batchIndex = 0, batchTotal = 0)
+        batchIndex = 0, batchTotal = 0, colorVariants = emptyList())
     return batch.copy(items = batch.items.map { item -> shared.copy(name = item.name,
         category = item.category, categoryCandidates = item.categoryCandidates,
         referenceQuote = item.referenceQuote,

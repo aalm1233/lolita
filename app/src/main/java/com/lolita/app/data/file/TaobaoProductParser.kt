@@ -27,7 +27,8 @@ data class TaobaoProductDraft(
     val editorToken: String? = null,
     val batchIndex: Int = 0,
     val batchTotal: Int = 0,
-    val referenceQuote: TaobaoProductQuote? = null
+    val referenceQuote: TaobaoProductQuote? = null,
+    val colorVariants: List<TaobaoProductVariant> = emptyList()
 )
 
 class TaobaoProductDetailsNotReadyException : IllegalArgumentException("详情尚未加载完整，请打开商品详情、等待加载后重新提取，避免漏掉详情图片")
@@ -107,7 +108,25 @@ object TaobaoProductParser {
         return candidates.takeIf { it.size > 1 }.orEmpty()
     }
 
-    private fun selectedQuote(root: JsonObject, data: JsonObject): Pair<TaobaoProductQuote, List<String>>? = runCatching {
+    /** Optional candidates need an explicit user choice; ordinary colors remain one product. */
+    private fun colorVariants(data: JsonObject, category: String): List<TaobaoProductVariant> = runCatching {
+        val raw = data.getAsJsonObject("skuData")?.text("skuV3Data") ?: return@runCatching emptyList()
+        val props = JsonParser.parseString(raw).asJsonObject.getAsJsonObject("global")
+            ?.getAsJsonObject("skuGlobal")?.getAsJsonObject("context")
+            ?.getAsJsonObject("skuBase")?.getAsJsonArray("props") ?: return@runCatching emptyList()
+        val color = props.singleOrNull { it.isJsonObject && it.asJsonObject.text("name") == "颜色分类" }
+            ?.asJsonObject ?: return@runCatching emptyList()
+        color.getAsJsonArray("values")?.mapNotNull { value ->
+            if (!value.isJsonObject) return@mapNotNull null
+            val row = value.asJsonObject
+            val name = row.text("name").takeIf(String::isNotBlank) ?: return@mapNotNull null
+            TaobaoProductVariant("color:${color.text("pid")}:${row.text("vid")}:$name", name, category)
+        }.orEmpty().distinctBy { it.name }.take(30).takeIf { it.size > 1 }.orEmpty()
+    }.getOrDefault(emptyList())
+
+    private data class SelectedQuote(val quote: TaobaoProductQuote, val styleNames: List<String>, val colorNames: List<String>)
+
+    private fun selectedQuote(root: JsonObject, data: JsonObject): SelectedQuote? = runCatching {
         val sku = data.getAsJsonObject("skuData")?.text("skuV3Data")?.takeIf(String::isNotBlank)
             ?.let { JsonParser.parseString(it).asJsonObject }
         val context = sku?.getAsJsonObject("global")?.getAsJsonObject("skuGlobal")?.getAsJsonObject("context")
@@ -157,7 +176,10 @@ object TaobaoProductParser {
         val styleNames = if (style == null) emptyList() else if (live == null)
             listOf(names[props.indexOf(style)]) else listOf(style.getAsJsonArray("values")
                 .map { it.asJsonObject.text("name") }.single { it in names })
-        TaobaoProductQuote(amount, names.joinToString("；"), label) to styleNames
+        val color = props.singleOrNull { it.text("name") == "颜色分类" }
+        val colorNames = color?.getAsJsonArray("values")?.map { it.asJsonObject.text("name") }
+            ?.filter { it in names }.orEmpty().takeIf { it.size == 1 }.orEmpty()
+        SelectedQuote(TaobaoProductQuote(amount, names.joinToString("；"), label), styleNames, colorNames)
     }.getOrNull()
 
     private fun uri(url: String) = runCatching { URI(url) }.getOrNull()
@@ -204,8 +226,8 @@ object TaobaoProductParser {
             val priceTail = price?.get("priceTail")?.asString.orEmpty()
             val selected = selectedQuote(root, data)
             val parts = variants(data, values).map { variant -> variant.copy(
-                referenceQuote = selected?.takeIf { variant.name in it.second }?.first) }
-            val referenceQuote = selected?.takeIf { parts.isEmpty() || it.second.isNotEmpty() }?.first
+                referenceQuote = selected?.takeIf { variant.name in it.styleNames }?.quote) }
+            val referenceQuote = selected?.takeIf { parts.isEmpty() || it.styleNames.isNotEmpty() }?.quote
             val images = data.getAsJsonObject("headPicVO")?.getAsJsonArray("images")?.mapNotNull {
                 it.asJsonObject["url"]?.asString?.let { value -> if (value.startsWith("//")) "https:$value" else value }
                     ?.takeIf(::allowedImage)
@@ -213,6 +235,9 @@ object TaobaoProductParser {
             val brand = values["品牌"].orEmpty().takeUnless { normalizedBrand(it) in setOf("other其他", "other", "其他", "无品牌") }.orEmpty()
             val shopName = data.getAsJsonObject("featureVO")?.getAsJsonObject("seller")?.get("shopName")?.asString.orEmpty()
             val categoryCandidates = explicitCategoryCandidates(title, values)
+            val colors = if (parts.isEmpty()) colorVariants(data, categoryCandidates.firstOrNull().orEmpty()).map { variant ->
+                variant.copy(referenceQuote = selected?.takeIf { variant.name in it.colorNames }?.quote)
+            } else emptyList()
             val detailImages = root.getAsJsonArray("detailImages")?.mapNotNull { image ->
                 val value = image.asJsonObject["url"]?.asString.orEmpty()
                 val url = if (value.startsWith("//")) "https:$value" else value
@@ -225,7 +250,7 @@ object TaobaoProductParser {
             val productUrl = "https://item.taobao.com/item.htm?id=$id"
             return TaobaoProductDraft(title, brand, values["尺码"].orEmpty(), properties,
                 TaobaoProductQuotes.withQuote(listOf("淘宝商品：$productUrl", "${if (priceTail.contains("起")) "页面起价" else "页面报价"}（仅供核对，不代表各款式实付）：$priceLabel $priceText$priceTail", properties, text).filter { it.isNotBlank() }.joinToString("\n"), referenceQuote), productUrl, images, shopName = shopName, brandAliases = listOf(brand).filter { it.isNotBlank() },
-                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = parts, referenceQuote = referenceQuote)
+                category = categoryCandidates.firstOrNull().orEmpty(), categoryCandidates = categoryCandidates, remoteDetailImages = detailImages, variants = parts, referenceQuote = referenceQuote, colorVariants = colors)
         } catch (e: Exception) {
             if (e is TaobaoProductDetailsNotReadyException) throw e
             throw IllegalArgumentException("尚未读取到完整商品资料，请完成登录、等待商品加载后重试", e)

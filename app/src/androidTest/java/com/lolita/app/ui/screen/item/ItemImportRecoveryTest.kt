@@ -3,12 +3,14 @@ package com.lolita.app.ui.screen.item
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.file.TaobaoProductDraft
+import com.lolita.app.data.file.TaobaoProductVariant
 import com.lolita.app.data.local.LolitaDatabase
 import com.lolita.app.data.local.entity.Brand
 import com.lolita.app.data.local.entity.Category
@@ -19,6 +21,9 @@ import com.lolita.app.data.repository.BrandRepository
 import com.lolita.app.data.repository.CategoryRepository
 import com.lolita.app.data.repository.CoordinateRepository
 import com.lolita.app.data.repository.ItemRepository
+import com.lolita.app.data.repository.ItemDraftRepository
+import com.lolita.app.ui.screen.`import`.taobaoProductBatchItems
+import com.lolita.app.ui.screen.`import`.taobaoProductEditorDraft
 import com.lolita.app.data.repository.LocationRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.data.repository.SeasonRepository
@@ -26,6 +31,8 @@ import com.lolita.app.data.repository.SourceRepository
 import com.lolita.app.data.repository.StyleRepository
 import com.lolita.app.di.AppModule
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -52,6 +59,7 @@ class ItemImportRecoveryTest {
     private lateinit var items: ItemRepository
     private lateinit var sourceDirectory: File
     private val stores = mutableListOf<ViewModelStore>()
+    private val jobs = mutableListOf<Job>()
     private val testFiles = mutableSetOf<String>()
     private var helperConfigured = false
 
@@ -73,6 +81,7 @@ class ItemImportRecoveryTest {
     @After
     fun tearDown() {
         instrumentation.runOnMainSync { stores.forEach(ViewModelStore::clear) }
+        runBlocking { jobs.joinAll() }
         instrumentation.waitForIdleSync()
         if (helperConfigured) ImageFileHelper.configure(context, AppModule.database())
         if (::database.isInitialized) database.close()
@@ -151,7 +160,7 @@ class ItemImportRecoveryTest {
             .also { testFiles += it }
     }
 
-    private suspend fun editor(fixture: Fixture): Pair<ItemEditViewModel, ViewModelStore> =
+    private suspend fun editor(fixture: Fixture, durableDraft: Boolean = false): Pair<ItemEditViewModel, ViewModelStore> =
         withContext(Dispatchers.Main) {
             val store = ViewModelStore().also { stores += it }
             val viewModel = ItemEditViewModel(
@@ -163,8 +172,10 @@ class ItemImportRecoveryTest {
                 styleRepository = StyleRepository(database.styleDao(), database.itemDao(), database),
                 seasonRepository = SeasonRepository(database.seasonDao(), database.itemDao(), database),
                 sourceRepository = SourceRepository(database.sourceDao(), database.itemDao(), database),
-                locationRepository = LocationRepository(database.locationDao(), database.itemDao())
+                locationRepository = LocationRepository(database.locationDao(), database.itemDao()),
+                draftRepository = if (durableDraft) ItemDraftRepository(database, items) else null
             )
+            jobs += requireNotNull(viewModel.viewModelScope.coroutineContext[Job])
             store.put("recovered-import", viewModel)
             viewModel.loadItem(0, importedDraftJson = fixture.draftJson)
             viewModel to store
@@ -182,6 +193,48 @@ class ItemImportRecoveryTest {
             assertTrue("committed image must survive editor recovery: $path", File(path).isFile)
             assertArrayEquals("committed image bytes", bytes, File(path).readBytes())
         }
+    }
+
+    @Test
+    fun selectedTwoColorStylesCommitIndependentWishesWithAllOriginalImagesAndNoPayments() = runBlocking {
+        val original = fixture()
+        database.categoryDao().insertCategory(Category(id = 308, name = "连裤袜"))
+        val colors = (1..4).map { TaobaoProductVariant("color-$it", "款式$it", "连裤袜") }
+        val source = gson.fromJson(original.draftJson, TaobaoProductDraft::class.java).copy(
+            name = "摇篮时光印花连裤袜", category = "连裤袜", categoryCandidates = listOf("连裤袜"),
+            colorVariants = colors, importToken = null)
+        val parts = taobaoProductBatchItems(source, setOf(colors[0].id, colors[2].id), true)
+        assertEquals(2, parts.size)
+        val saved = parts.mapIndexed { index, part ->
+            val copies = original.savedBytes.keys.associateWith { path ->
+                ImageFileHelper.copyExistingImageToInternalStorage(context, path).also { testFiles += it }
+            }
+            val draft = taobaoProductEditorDraft(part, source, copies, UUID.randomUUID().toString(), index, parts.size)
+            val (viewModel, _) = editor(original.copy(draftJson = gson.toJson(draft)), durableDraft = true)
+            val state = loaded(viewModel)
+            assertEquals(ItemStatus.WISHED, state.status)
+            val id = withContext(Dispatchers.Main) { viewModel.saveItem().getOrThrow() }
+            requireNotNull(items.getItemById(id)).also { item ->
+                assertEquals(308L, item.categoryId)
+                assertEquals(ItemStatus.WISHED, item.status)
+                assertEquals(2, item.imageUrls.size)
+                assertEquals(28, listOfNotNull(item.sizeChartImageUrl).size + item.sizeChartImageUrls.size)
+                val paths = item.imageUrls + listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls
+                original.savedBytes.values.zip(paths).forEach { (bytes, path) -> assertArrayEquals(bytes, File(path).readBytes()) }
+            }
+        }
+        assertEquals(listOf("摇篮时光印花连裤袜 · 款式1", "摇篮时光印花连裤袜 · 款式3"), saved.map { it.name })
+        assertEquals(2, saved.map { it.importToken }.toSet().size)
+        val first = saved[0].imageUrls + listOfNotNull(saved[0].sizeChartImageUrl) + saved[0].sizeChartImageUrls
+        val second = saved[1].imageUrls + listOfNotNull(saved[1].sizeChartImageUrl) + saved[1].sizeChartImageUrls
+        assertTrue(first.toSet().intersect(second.toSet()).isEmpty())
+        assertEquals(3, database.itemDao().getAllItemsList().size)
+        assertTrue(database.itemDraftDao().getAll().isEmpty())
+        assertTrue(database.priceDao().getAllPricesList().isEmpty())
+        assertTrue(database.paymentDao().getAllPaymentsList().isEmpty())
+        assertTrue(database.orderDao().getAllBindings().isEmpty())
+        assertEquals(original.saved, items.getItemById(original.saved.id))
+        assertSavedImagesIntact(original)
     }
 
     @Test

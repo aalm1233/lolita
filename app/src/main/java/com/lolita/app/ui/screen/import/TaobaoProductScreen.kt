@@ -44,7 +44,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
     Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text("淘宝商品导入（试用）") }, navigationIcon = {
         IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) }
     }) }) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
+        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding()) {
             if (state.url == null) {
                 Column(Modifier.verticalScroll(scroll).padding(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     LolitaSection("分享商品") {
@@ -88,6 +88,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                 }, enabled = !state.busy, modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) { Text("提取商品资料") }
             } else {
                 val draft = state.draft!!
+                val variants = taobaoProductVariants(draft, state.splitColorVariants)
                 Column(Modifier.weight(1f).verticalScroll(scroll).padding(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     LolitaSection("核对商品资料") {
                         row { Text(draft.name, style = MaterialTheme.typography.titleMedium) }
@@ -95,13 +96,26 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                         row { Text("类别：${draft.category.ifBlank { "待填写" }}${if (draft.categoryCandidates.size > 1) "（商品含多种款式，请核对）" else ""}") }
                         row { Text("可导入 ${draft.remoteImages.size} 张主图，${draft.remoteDetailImages.size} 张详情图将按原图放入尺码表；颜色需自行选择。") }
                     }
-                    if (state.batchTotal == 0 && draft.variants.size > 1) {
+                    if (state.batchTotal == 0 && draft.variants.orEmpty().isEmpty() && draft.colorVariants.orEmpty().size > 1) {
+                        LolitaSection("分别导入") {
+                            row {
+                                Row(Modifier.fillMaxWidth().toggleable(state.splitColorVariants,
+                                    enabled = !state.busy, role = Role.Switch,
+                                    onValueChange = vm::splitColorVariants), verticalAlignment = Alignment.CenterVertically) {
+                                    Text("按颜色分类分别导入", Modifier.weight(1f).padding(end = skin.spacingMedium))
+                                    Switch(checked = state.splitColorVariants, onCheckedChange = null, enabled = !state.busy)
+                                }
+                            }
+                            row { Text("颜色分类可能包含不同款式；只勾选需要保存的款式，尺码不拆分。") }
+                        }
+                    }
+                    if (state.batchTotal == 0 && variants.size > 1) {
                         LolitaSection("选择要拆分的物品") {
                             row { Text("每件保留完整详情图。报价只对应已确认规格，未读到的款式请补填或留空，不能沿用页面起价。") }
-                            draft.variants.forEach { part ->
+                            variants.forEach { part ->
                                 row {
                                     val selected = part.id in state.selectedVariantIds
-                                    Row(Modifier.fillMaxWidth().toggleable(selected, role = Role.Checkbox, onValueChange = { vm.toggleVariant(part.id) }),
+                                    Row(Modifier.fillMaxWidth().toggleable(selected, enabled = !state.busy, role = Role.Checkbox, onValueChange = { vm.toggleVariant(part.id) }),
                                         verticalAlignment = Alignment.CenterVertically) {
                                         Checkbox(checked = selected, onCheckedChange = null)
                                         Column(Modifier.weight(1f).padding(start = skin.spacingSmall)) {
@@ -114,7 +128,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                             }
                         }
                     }
-                    if (state.batchTotal == 0 && draft.variants.size <= 1) {
+                    if (state.batchTotal == 0 && variants.size <= 1) {
                         LolitaSection("参考报价") { row { ReferencePriceField(draft.referenceQuote, { vm.referencePrice(null, it) }) } }
                     }
                     if (state.batchTotal > 0) {
@@ -128,13 +142,14 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                     Text("进入编辑后核对品牌、分类和图片。参考报价存入来源说明。保存后到服饰详情的“录入价格”使用报价并确认订单；实付另行记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Button(onClick = { if (state.completed) onBack() else vm.edit(onEdit) },
-                    enabled = !state.busy && (state.batchTotal > 0 || draft.variants.size <= 1 || state.selectedVariantIds.isNotEmpty()), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
+                    enabled = !state.busy && (state.batchTotal > 0 || variants.size <= 1 || state.selectedVariantIds.isNotEmpty()), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
                     if (state.busy) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
                     Text(when {
                         state.busy -> "读取图片中…"
                         state.completed -> "完成并返回"
                         state.batchTotal > 0 -> "继续核对第 ${state.batchIndex + 1} / ${state.batchTotal} 件"
-                        draft.variants.size > 1 -> "核对并逐件编辑（${state.selectedVariantIds.size}件）"
+                        variants.size > 1 && state.selectedVariantIds.isEmpty() -> "请至少选择一款"
+                        variants.size > 1 -> "核对并逐件编辑（${state.selectedVariantIds.size}件）"
                         else -> "核对并进入服饰编辑"
                     })
                 }

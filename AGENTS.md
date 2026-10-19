@@ -79,6 +79,7 @@
 - 详情读取兼容 `#v6_pc_content` 与新版 `.detail-desc`；新版只从详情图片的至多7层组件公开 `imageUrl` 取得懒加载原图，未解析完图片、缺失详情或加载失败时不得接受空/部分详情。仅含明确服饰名及“＋”组合的颜色分类可按单件去重，普通颜色与尺码不展开，不同明确前缀不得按类别合并，套餐价不下放单件。
 
 - 淘宝参考报价读取现代 SKU 的明确规格组合，打开规格时优先实时面板；按套装/款式/类型关联物品，起价、区间价、定金、尾款及未确认款式不冒充全款。预览可逐件补填参考金额，紧凑队列恢复保留各件报价；来源说明的专用报价行可在设置价格页主动采用，仅填商品金额与默认全款阶段，确认保存才建订单、实付另行录入。旧的无款式页面报价不用于录价。
+- 商品款式放在「颜色分类」时，可主动开启「按颜色分类分别导入」并勾选需要的款式；默认关闭、初始不全选，不展开尺码或所有SKU组合。`colorVariants`只保留导入会话候选，现有明确拆分优先；选中项按原顺序逐件编辑、默认心愿，名称包含规格原文，每件独立图片副本且完整保留详情。选择、逐款报价和开关随SavedState恢复，普通颜色不开关仍按单件；已保存记录不迁移。只有完整选中的实际SKU报价关联对应颜色项，其他报价留空。Room30/备份10不变，测试为`TaobaoProductColorStylesTest`、`TaobaoProductColorStylesScreenTest`及扩展的ViewModel/ItemImportRecovery回归。设计见`docs/plans/2026-10-19-taobao-color-styles.md`。
 
 ## 内置店铺图标与默认房间
 
@@ -282,7 +283,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=126, versionName="2.58.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=127, versionName="2.59.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

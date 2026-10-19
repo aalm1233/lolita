@@ -37,4 +37,4 @@
 
 [七皮肤真实页面](../visuals/2026-10-19-tryon-physics/actual-seven-skins.jpg)、[320dp双倍字键盘](../visuals/2026-10-19-tryon-physics/actual-small-large-font-keyboard.jpg)、[滚动费用确认](../visuals/2026-10-19-tryon-physics/actual-small-large-font-confirmation.jpg)已对照图稿检查。键盘状态缩短输入框起始高度并隐藏底部重复摘要，描述与生成操作仍可达；图片是布局色块夹具，不是生图样片。旧原图和完整Fit/放大路径沿用未改。
 
-数据完成检查：Room/备份结构不变，无迁移；原请求及历史JSON不重写；新描述随完整ZIP往返，无新增图片字段或删除行为。费用确认展示全文并校验陈旧输入，密钥没有进入本轮新增字段。账本、统计、位置及穿搭不受影响。发布与覆盖升级记录随后补入。
+数据完成检查：Room/备份结构不变，无迁移；原请求及历史JSON不重写；新描述随完整ZIP往返，无新增图片字段或删除行为。费用确认展示全文并校验陈旧输入，密钥没有进入本轮新增字段。账本、统计、位置及穿搭不受影响。clean Release 2.58.0 / 125构建通过，同签名从2.57.2 / 124正常覆盖升级并冷启动；[正式包页面](../visuals/2026-10-19-tryon-physics/release-description.jpg)已核对。该升级AVD任务/试衣历史各0条，不把空集合比较当作非空旧历史升级证据；旧协议通过领域快照回归，新说明通过隔离Room执行与ZIP验证。GitHub/Gitee正式发布、匿名完整APK与校验文件下载及HEAD核验通过，Gitee公开更新列表HTTP200选中2.58.0。按用户网络限制说明，不重复应用内手动更新检查。源码 6eef1baf24958724f13da64cc92b1b87ebb2418e；完整回执见[发布核验](../tryon-physics-release-2.58.0-verification.json)。

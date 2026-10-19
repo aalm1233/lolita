@@ -551,3 +551,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.57.1 /123购买资料提醒跟随价格显示：6项定向设备回归及Debug、clean正式构建通过；只在同一最终应用代码下修正视觉宿主后重跑受影响的两项。320dp两倍字体下首页/统计七皮肤浅暗确认关闭后整卡及占位隐藏，重开原待办保留。2.57.0同签名覆盖启动及GitHub/Gitee正式附件匿名下载、SHA/HEAD通过，源码标签`4be5d43`已推送；纯显示改动未重复无关全库、图片、密钥或备份审计。电脑公开更新查询200；正式app一次检查仍为通用网络失败，具体原因未确认，直接APK可用。回执`docs/review-price-visibility-release-2.57.1-verification.json`。
 
 - 2.57.2 /124未付清物品不进入存放位置：13项定向设备回归、Debug与clean正式构建通过，详情/编辑/柜架/导入的七皮肤浅暗、320dp两倍字实拍归档于`docs/visuals/2026-10-19-owned-storage/`。2.57.1同签名覆盖启动及原位置引用三列逐值保全，未重复无关全库/图片/密钥审计；GitHub/Gitee正式附件匿名完整下载、SHA/HEAD与源码标签`4785a51`已核验，源码已推送。本轮按用户确认忽略网络限制，不重复手动检查更新或修网络；公开查询单独记录。回执`docs/owned-storage-release-2.57.2-verification.json`。
+
+- 2.58.0 / 125：试衣穿戴要求和角色物理关系指引；49项JVM、22项设备定向用例及clean正式包覆盖升级通过。七皮肤浅暗、小屏IME与正式包实拍归档在`docs/visuals/2026-10-19-tryon-physics/`，双平台正式发布和匿名下载校验回执为`docs/tryon-physics-release-2.58.0-verification.json`。本轮真实付费生成0次，复杂穿戴视觉质量尚未实测。

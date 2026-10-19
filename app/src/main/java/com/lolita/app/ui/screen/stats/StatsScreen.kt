@@ -142,6 +142,7 @@ fun StatsContent(
     ) {
         PurchaseReviewShortcut(
             reviewCount = uiState.purchaseReviews.size,
+            showPrices = uiState.showTotalPrice,
             onClick = { onNavigateToFilteredList("status_review", "", "待核对购买资料") },
             modifier = Modifier.fillMaxWidth()
         )

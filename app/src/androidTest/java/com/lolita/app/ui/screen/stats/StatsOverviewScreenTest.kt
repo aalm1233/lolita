@@ -19,6 +19,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasScrollAction
@@ -188,6 +189,41 @@ class StatsOverviewScreenTest {
             .fetchSemanticsNodes().isNotEmpty())
         compose.onNodeWithText("已拥有").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText(longBrand).performScrollTo().assertIsDisplayed()
+    }
+
+    @Test fun reviewReminderFollowsPricesWithoutClearingThePurchaseReviewQueue() {
+        runBlocking {
+            paidItem("已录金额主裙", 123.45)
+            item("待补资料主裙", ItemStatus.PENDING_REVIEW)
+            preferences.setShowTotalPrice(false)
+        }
+        val original = runBlocking { database.itemDao().getAllItemsList() }
+        presentation.value = Presentation(width = 320, fontScale = 2f)
+        showOverview()
+        awaitState { !it.showTotalPrice && it.purchaseReviews.size == 1 }
+        val reviews = viewModel.uiState.value.purchaseReviews
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        runBlocking { preferences.setShowTotalPrice(true) }
+        awaitState { it.showTotalPrice }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed().performClick()
+        compose.runOnIdle { assertEquals(listOf(Route("status_review", "", "待核对购买资料")), routes) }
+        capture("review-prices-on")
+        runBlocking { preferences.setShowTotalPrice(false) }
+        awaitState { !it.showTotalPrice }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(width = 320, fontScale = 2f, skin = skin, dark = dark) }
+            settleAnimation()
+            compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+            compose.onNodeWithText("衣橱概况").assertIsDisplayed()
+            assertTrue(moneyNodes().isEmpty())
+            capture("review-prices-off-${skin.name}-${if (dark) "dark" else "light"}")
+        }
+        runBlocking { preferences.setShowTotalPrice(true) }
+        awaitState { it.showTotalPrice }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("1 件服饰与小物 · 查看清单")
+        assertEquals(reviews, viewModel.uiState.value.purchaseReviews)
+        runBlocking { assertEquals(original, database.itemDao().getAllItemsList()) }
     }
 
     @Test fun compactCountsBrandAndHighestSpendingKeepTheirOriginalNavigationArguments() {

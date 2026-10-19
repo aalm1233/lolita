@@ -276,7 +276,7 @@ fun SettingsScreen(
 
             SettingsToggleItem(
                 title = "显示总价",
-                description = "在服饰列表右上角显示筛选结果的总价",
+                description = "控制列表价格、消费统计和购买资料提醒",
                 iconKey = IconKey.AttachMoney,
                 iconTint = if (isDark) Color(0xFFFFCC80) else Color(0xFFFFB74D),
                 checked = showTotalPrice,

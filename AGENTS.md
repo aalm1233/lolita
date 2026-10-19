@@ -282,7 +282,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=122, versionName="2.57.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=123, versionName="2.57.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -358,6 +358,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `ItemDao.getPurchaseReviews()` 通过单条 Room SQL 投影 `ItemPurchaseReview`：无当前订单的非愿望服饰、当前订单非 `TRACKED`、当前真实付款日期未知均纳入资料核对。共价小物按主件订单判断，独立小物按自己判断；归档原账本不改写，有完整当前订单时不因归档资料重复纳入。首页、`status_review` 清单、详情与统计统一订阅 `ItemRepository.getPurchaseReviews()`，展示相同件数与核对原因，不受搜索/分类过滤影响。首页及统计的 `PurchaseReviewShortcut` 仅在待核对件数大于 0 时展示；核对完成清空后实时隐藏，新待办出现时恢复。价格页的共价主件核对及无价服饰状态核对也按同源单项投影控制，愿望服饰和完整账本不显示无关核对按钮。
 - 服饰详情顶部 `ItemOrderSummary` 明确提供“核对购买资料”，共用价格的小物直接进入主件价格核对；价格页也提供“前往主件核对”。无绑定旧价格必须先选定当前订单，确认继续复用 `OrderLedger`；完全无价格时提供“核对服饰状态”进入既有编辑页，确认拥有后仍保留价格资料待办，不生成价格或实付。有当前绑定或共价的小物不得手动覆盖订单状态。
 - 入口与购买资料核对回归位于 `PurchaseReviewEntryTest`、`ReviewItemListViewModelTest`、`PurchaseReviewConsistencyTest` 和 `PriceManageScreenReviewTest`，覆盖零待办隐藏、正数与零动态切换、主件跳转、首页/清单/详情/统计一致联动、历史确认及部分/全部补录后待办保留、明确核对账本后移除、未知日期更正与价格/阶段/实付原值保全，使用独立内存 Room及独立设置。
+- 首页与统计的`PurchaseReviewShortcut`同时消费`showTotalPrice`：关闭价格显示时隐藏整张购买资料提醒及占位，重开后按原待办数量显示，零待办继续隐藏；只控制提醒可见性，不改写购买资料或核对状态。显示设置说明同步覆盖列表价格、消费统计及购买资料提醒。
 
 - 拥有状态与资料完整性必须分开：确认历史已购只更新购买证据并保留 `OWNED`，不能将资料待办移除；部分或全部补录都不自动切换 `TRACKED`。用户明确核对付款完整及余额一致后才解除账本待办，日期未知的实付仍单列待补；未知日期不得自动补造，也不影响已明确核对余额的正常付款跟踪。统计按当前订单去重计笔，快捷核对按服饰计件并明确单位。
 - 历史核对入口覆盖仍有余额的正常账本，包括部分实付；“确认历史已购”不生成付款。“核对账本并启用跟踪”展示总价、已录实付与计算待付，要求用户确认真实付款已全部录入且计算余额等于实际待付；`confirmTrackedOrder` 在领域层也拒绝未确认请求。回归位于 `PersistentOrderEvidenceTest`，覆盖归档小物共用价格后重绑、订单切换、22→23 原值保全、归档证据备份恢复及确认失败事务不变。

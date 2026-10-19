@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import com.lolita.app.data.local.dao.PriceWithPayments
 import com.lolita.app.data.local.entity.*
 import com.lolita.app.ui.theme.LolitaTheme
@@ -27,7 +28,7 @@ class PurchaseReviewEntryTest {
 
     @Test fun homeShortcutShowsReviewCountAndOpensTheQueue() {
         var opened = 0
-        compose.setContent { LolitaTheme { PurchaseReviewShortcut(3, onClick = { opened++ }) } }
+        compose.setContent { LolitaTheme { PurchaseReviewShortcut(3, showPrices = true, onClick = { opened++ }) } }
         compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed().assertHasClickAction()
             .assertTextContains("3 件服饰与小物 · 查看清单").performClick()
         compose.runOnIdle { assertEquals(1, opened) }
@@ -35,14 +36,14 @@ class PurchaseReviewEntryTest {
 
     @Test fun homeShortcutIsHiddenWithAnEmptyQueue() {
         var opened = 0
-        compose.setContent { LolitaTheme { PurchaseReviewShortcut(0, onClick = { opened++ }) } }
+        compose.setContent { LolitaTheme { PurchaseReviewShortcut(0, showPrices = true, onClick = { opened++ }) } }
         compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
         compose.runOnIdle { assertEquals(0, opened) }
     }
 
     @Test fun homeShortcutDisappearsWhenReviewsAreCompletedAndReturnsForNewReviews() {
         val count = mutableIntStateOf(2)
-        compose.setContent { LolitaTheme { PurchaseReviewShortcut(count.intValue, onClick = {}) } }
+        compose.setContent { LolitaTheme { PurchaseReviewShortcut(count.intValue, showPrices = true, onClick = {}) } }
         compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
             .assertTextContains("2 件服饰与小物 · 查看清单")
         compose.runOnIdle { count.intValue = 0 }
@@ -50,6 +51,25 @@ class PurchaseReviewEntryTest {
         compose.runOnIdle { count.intValue = 1 }
         compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
             .assertTextContains("1 件服饰与小物 · 查看清单")
+    }
+
+    @Test fun hidingPricesSuppressesPositiveReviewsAndRestoresTheCurrentCountWhenReenabled() {
+        val showPrices = mutableStateOf(false)
+        val count = mutableIntStateOf(3)
+        compose.setContent { LolitaTheme {
+            PurchaseReviewShortcut(count.intValue, showPrices = showPrices.value, onClick = {})
+        } }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        compose.runOnIdle { showPrices.value = true }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("3 件服饰与小物 · 查看清单")
+        compose.runOnIdle { showPrices.value = false; count.intValue = 1 }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        compose.runOnIdle { showPrices.value = true }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("1 件服饰与小物 · 查看清单")
+        compose.runOnIdle { count.intValue = 0 }
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
     }
 
     @Test fun currentReviewOrderHasAnExplicitButtonToItsPurchaseConfirmation() {

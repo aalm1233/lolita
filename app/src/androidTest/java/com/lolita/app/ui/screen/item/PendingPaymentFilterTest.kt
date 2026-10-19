@@ -1,12 +1,21 @@
 package com.lolita.app.ui.screen.item
 
 import android.graphics.Bitmap
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +32,7 @@ import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.ViewMode
 import com.lolita.app.ui.screen.coordinate.CoordinateListViewModel
 import com.lolita.app.ui.theme.LolitaTheme
+import com.lolita.app.ui.theme.SkinType
 import java.io.File
 import java.util.UUID
 import kotlinx.coroutines.*
@@ -184,5 +194,70 @@ class PendingPaymentFilterTest {
         }
         compose.onNode(hasText("位置") and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
         compose.onNodeWithText("今日穿搭").assertIsDisplayed()
+    }
+
+    @Test fun reviewReminderFollowsPricesAcrossHomeTabsWithoutChangingStoredReviews() {
+        val original = runBlocking { database.itemDao().getAllItemsList() }
+        val owner = object : ViewModelStoreOwner { override val viewModelStore = store }
+        val skin = mutableStateOf(SkinType.DEFAULT)
+        val dark = mutableStateOf(false)
+        val routes = mutableListOf<Triple<String, String, String>>()
+        compose.setContent {
+            val configuration = Configuration(LocalConfiguration.current).apply {
+                screenWidthDp = 320
+                uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or
+                    if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+            }
+            val density = LocalDensity.current.density
+            CompositionLocalProvider(LocalViewModelStoreOwner provides owner,
+                LocalConfiguration provides configuration, LocalDensity provides Density(density, 2f)) {
+                LolitaTheme(skinType = skin.value, darkTheme = dark.value) {
+                    Surface { Box(Modifier.size(320.dp, 600.dp)) {
+                        ItemListScreen(onNavigateToDetail = {}, onNavigateToEdit = {}, viewModel = vm,
+                            onNavigateToFilteredList = { type, value, title -> routes += Triple(type, value, title) })
+                    } }
+                }
+            }
+        }
+        fun awaitPrices(show: Boolean) {
+            runBlocking { withTimeout(10_000) {
+                vm.uiState.first { !it.isLoading && it.showTotalPrice == show && it.purchaseReviews.isNotEmpty() }
+            } }
+            compose.waitForIdle()
+        }
+        fun capture(name: String) {
+            val file = File(context.filesDir, "review-price-visibility/home-$name.png").apply { parentFile!!.mkdirs() }
+            compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap ->
+                file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            }
+        }
+        awaitPrices(false)
+        val reviews = vm.uiState.value.purchaseReviews
+        compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        runBlocking { preferences.setShowTotalPrice(true) }
+        awaitPrices(true)
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed().performClick()
+        compose.runOnIdle { assertEquals(listOf(Triple("status_review", "", "待核对购买资料")), routes) }
+        capture("on")
+        runBlocking { preferences.setShowTotalPrice(false) }
+        awaitPrices(false)
+        listOf("位置", "服饰", "套装", "心愿").forEach { tab ->
+            compose.onNode(hasText(tab) and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
+            compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+        }
+        compose.onNode(hasText("位置") and SemanticsMatcher.keyIsDefined(SemanticsProperties.Selected)).performClick()
+        for (type in SkinType.entries) for (isDark in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = isDark }
+            compose.mainClock.advanceTimeBy(1_000)
+            compose.onNodeWithTag("purchaseReviewShortcut").assertDoesNotExist()
+            compose.onNodeWithText("今日穿搭").assertIsDisplayed()
+            capture("off-${type.name}-${if (isDark) "dark" else "light"}")
+        }
+        runBlocking { preferences.setShowTotalPrice(true) }
+        awaitPrices(true)
+        compose.onNodeWithTag("purchaseReviewShortcut").assertIsDisplayed()
+            .assertTextContains("${reviews.size} 件服饰与小物 · 查看清单")
+        assertEquals(reviews, vm.uiState.value.purchaseReviews)
+        runBlocking { assertEquals(original, database.itemDao().getAllItemsList()) }
     }
 }

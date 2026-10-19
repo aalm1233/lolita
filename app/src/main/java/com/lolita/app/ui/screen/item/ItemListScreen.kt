@@ -385,6 +385,7 @@ fun ItemListScreen(
 
             PurchaseReviewShortcut(
                 reviewCount = uiState.purchaseReviews.size,
+                showPrices = uiState.showTotalPrice,
                 onClick = { onNavigateToFilteredList("status_review", "", "待核对购买资料") },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = skin.spacingSmall)
             )
@@ -613,8 +614,8 @@ fun ItemListScreen(
 }
 
 @Composable
-internal fun PurchaseReviewShortcut(reviewCount: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    if (reviewCount <= 0) return
+internal fun PurchaseReviewShortcut(reviewCount: Int, showPrices: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    if (!showPrices || reviewCount <= 0) return
     val skin = LolitaSkin.current
     LolitaCard(
         onClick = onClick,

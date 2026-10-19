@@ -397,7 +397,8 @@ fun LolitaNavHost(
                         com.lolita.app.domain.model.WardrobeFamily.entries.find { it.name == name }
                     },
                     onBack = { finishProductEditor(false) },
-                    onSaveSuccess = { finishProductEditor(true) }
+                    onSaveSuccess = { finishProductEditor(true) },
+                    onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) }
                 )
             }
 
@@ -588,8 +589,13 @@ fun LolitaNavHost(
                     onNavigateToTryOn = { navController.navigate(Screen.TryOn.createRoute()) },
                     onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
                     onNavigateToPersonalModels = { navController.navigate(Screen.PersonalModels.route) },
+                    onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) },
                     appUpdateViewModel = appUpdateViewModel
                 )
+            }
+
+            composable(Screen.AiConfiguration.route) {
+                com.lolita.app.ui.screen.settings.AiConfigurationScreen(onBack = { navController.popBackStack() })
             }
 
             // Brand Manage
@@ -738,7 +744,8 @@ fun LolitaNavHost(
                     },
                         viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
                         onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
-                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) })
+                        onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) },
+                        onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) })
                 }
             }
 
@@ -759,7 +766,8 @@ fun LolitaNavHost(
                         viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
                         onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
                         onTaskSubmitted = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) },
-                        onManagePersonalModels = { navController.navigate(Screen.PersonalModels.route) }
+                        onManagePersonalModels = { navController.navigate(Screen.PersonalModels.route) },
+                        onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) }
                     )
                 }
             }
@@ -780,7 +788,8 @@ fun LolitaNavHost(
                     navController.navigate(Screen.ImageTaskDetail.createRoute(id)) {
                         popUpTo(Screen.PersonalModelEdit.route) { inclusive = true }
                     }
-                }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
+                }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
+                    onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) })
             }
 
             composable(Screen.ImageTasks.route) { entry ->

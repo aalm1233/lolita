@@ -282,7 +282,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=121, versionName="2.56.2"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=122, versionName="2.57.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -534,3 +534,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 经用户明确许可随源码及APK公开，追加第六款`slate-rose` / 灰瞳·玫瑰妆v1；原五款ID、版本、SHA及图片原字节保持。仅新增离线候选，选择/放大不调用付费服务，不替换已有偏好与历史任务快照。原参考照片不入库或APK，提示词与来源摘要归档`docs/visuals/2026-10-18-slate-rose-head/`。
 - 选择页提示改为“以下均为候选”，不硬编码数量；仍须真实短/长假发评审，不能把本轮空白头模及受控UI验证当作佩戴保真通过。Room30/备份10及图像任务协议不变；完整过程见`docs/plans/2026-10-18-slate-rose-head.md`。
 - 2.56.2 /121：Debug与clean正式构建、6项最终去重定向设备回归及七皮肤浅暗/320dp两倍字/完整放大实拍通过；无应用内付费调用。2.56.1同签名覆盖及重启保全38表254列、198件、172图SHA与3设置字节。源码与标签已推送，GitHub/Gitee同一正式APK及校验文件匿名下载、HEAD和源码对应核对通过；公开更新及复核403、实际应用检查失败，稳定附件HEAD200可直接下载。未清理旧资产。回执`docs/slate-rose-head-release-2.56.2-verification.json`。
+
+
+### 统一 API 配置与头模界面（2.57.0）
+
+- 个人页头像后提供“API 配置”；生图、我的模特、识图工作页的配置入口都导航到`Screen.AiConfiguration`。同页管理生图即梦/OpenAI及识图豆包/DeepSeek四项，分别选择两类默认服务；不自动共用或拷贝密钥。`AiConfigurationRepository`复用原`TryOnSettings/RecognitionSettings`加密文件、别名和revision，AppModule提供；`AiConfigurationViewModel`只保留状态，不保存密钥输入。
+- 四项本机旧配置无需迁移或重填。密钥输入仅非Saveable短期内存，掩码且不回填，不进Room、日志、备份、APK；修改只针对明确服务，固定中文错误，保留陈旧确认及已提交任务服务快照。配置不自动付费试连，Room30/备份10及全部原图保持。
+- 头模界面只显示名称、选中状态、完整Fit/放大与实际输入核对；不展示候选、评审、内部版本标记。旧“蓝紫妆·原候选”按稳定ID仅在显示层映射“蓝紫妆”，原目录、偏好与历史快照不改写。质量评估保留在开发记录，不因删除文案宣称评审通过。设计及验证见`docs/plans/2026-10-19-api-configuration.md`。

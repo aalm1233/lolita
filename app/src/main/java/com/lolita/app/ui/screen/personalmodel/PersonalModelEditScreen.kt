@@ -37,7 +37,8 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 fun PersonalModelEditScreen(
     onBack: () -> Unit,
     onTask: (String) -> Unit,
-    viewModel: PersonalModelEditViewModel = viewModel()
+    viewModel: PersonalModelEditViewModel = viewModel(),
+    onConfigureApi: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
@@ -48,7 +49,6 @@ fun PersonalModelEditScreen(
     var preview by rememberSaveable { mutableStateOf<String?>(null) }
     var expanded by rememberSaveable { mutableStateOf(false) }
     var discard by rememberSaveable { mutableStateOf(false) }
-    var showKey by rememberSaveable { mutableStateOf(false) }
     var confirm by remember { mutableStateOf<ImageGenerationProvider?>(null) }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) viewModel.addPhoto(context, uri, PersonalModelPhotoRole.valueOf(pendingRole))
@@ -72,7 +72,7 @@ fun PersonalModelEditScreen(
                     "上传所选${count}张参考照、布局模板与身体参数至 ${state.provider.recipient}；API 单独计费。"
                     else "上传身体参数${if (count > 0) "、已确认的虚拟面容参考" else ""}及布局模板至 ${state.provider.recipient}；不上传保留的本人照片。API 单独计费。",
                     style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("personalModelUploadSummary"))
-                Button(onClick = { if (!state.hasKey) showKey = true else confirm = state.provider }, enabled = state.canGenerate,
+                Button(onClick = { if (!state.hasKey) onConfigureApi() else confirm = state.provider }, enabled = if (state.hasKey) state.canGenerate else !state.isLoading && !state.loadFailed && !state.busy && state.keyLoaded,
                     modifier = Modifier.fillMaxWidth().testTag("generatePersonalModel")) {
                     if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
                     Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成模特")
@@ -191,7 +191,7 @@ fun PersonalModelEditScreen(
                 } }
             }
             item("service") {
-                LolitaSection(title = "图像服务 · ${state.provider.label}", action = { TextButton(onClick = { showKey = true }, enabled = !state.busy && state.keyLoaded) { Text("服务配置") } }) { row {
+                LolitaSection(title = "图像服务 · ${state.provider.label}", action = { TextButton(onClick = { onConfigureApi() }, enabled = !state.busy && state.keyLoaded) { Text("API 配置") } }) { row {
                     ImageServiceSelector(state.provider, enabled = editable && state.keyLoaded, onSelect = viewModel::selectProvider)
                     Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key", style = MaterialTheme.typography.bodySmall)
                     Text("生成结果会保留在任务中心，确认满意后才加入模特库。", style = MaterialTheme.typography.bodySmall)
@@ -208,8 +208,6 @@ fun PersonalModelEditScreen(
         }
     }
     preview?.let { path -> FullScreenImageViewer(listOf(path), onDismiss = { preview = null }) }
-    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
-        viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     if (discard) AlertDialog(onDismissRequest = { discard = false }, title = { Text("放弃本次编辑？") },
         text = { Text("本机草稿及仅由草稿使用的照片会删除，已保存模特和历史任务继续保留。") },
         confirmButton = { TextButton(onClick = { discard = false; viewModel.discard() }, enabled = canExit) { Text("放弃并返回") } },

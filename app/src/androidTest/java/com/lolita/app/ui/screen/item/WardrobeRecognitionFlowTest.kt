@@ -107,6 +107,7 @@ class WardrobeRecognitionFlowTest {
     private val visible = mutableStateOf(true)
     private val skin = mutableStateOf(SkinType.DEFAULT)
     private val dark = mutableStateOf(false)
+    private var configured = 0
     private var saved = 0
 
     private fun shell(command: String): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(
@@ -243,7 +244,7 @@ class WardrobeRecognitionFlowTest {
                     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                         if (current != null && visible.value) key(current.owner) {
                             CompositionLocalProvider(LocalViewModelStoreOwner provides current.owner) {
-                                ItemEditScreen(itemId = 1, onBack = {}, onSaveSuccess = { saved++; visible.value = false }, viewModel = current.editor)
+                                ItemEditScreen(itemId = 1, onBack = {}, onSaveSuccess = { saved++; visible.value = false }, viewModel = current.editor, onConfigureApi = { configured++ })
                             }
                         } else if (current != null) {
                             Button(onClick = { scope.launch { active.value = fixture.session(); visible.value = true } }) { Text("重新编辑已保存物品") }
@@ -347,10 +348,12 @@ class WardrobeRecognitionFlowTest {
             imageNode("实际识别区域 1").assertIsDisplayed()
             waitForActualRegionPixels(output, SkinType.DEFAULT, dark.value)
             waitForSendEnabled()
-            compose.onNode(hasText("豆包") and hasClickAction() and hasAnyAncestor(isDialog())).performClick()
-            workbenchList().performScrollToNode(hasText("API Key"))
-            val keyField = compose.onNode(hasSetTextAction() and hasText("API Key"))
-            assertEquals("The stored key must never be refilled", "", keyField.fetchSemanticsNode().config[SemanticsProperties.EditableText].text)
+            compose.onNode(hasText("API 配置") and hasClickAction() and hasAnyAncestor(isDialog())).performClick()
+            compose.onAllNodes(isDialog()).assertCountEquals(0)
+            assertEquals(1, configured)
+            openWorkbench()
+            workbenchList().performScrollToNode(hasContentDescription("实际识别区域 1"))
+            imageNode("实际识别区域 1").assertIsDisplayed()
             assertEquals("手工原名", fixture.db.itemDao().getItemById(1)!!.name)
             assertEquals(listOf(fixture.album), fixture.db.itemDao().getItemById(1)!!.imageUrls)
             assertTrue(fixture.db.priceDao().getAllPricesList().isEmpty())
@@ -464,7 +467,7 @@ class WardrobeRecognitionFlowTest {
         compose.onAllNodesWithText("查看原文与区域")[0].performScrollTo().performClick()
         SkinType.entries.forEach { candidate ->
             compose.runOnIdle { skin.value = candidate }
-            listOf("返回", "豆包").forEach { label ->
+            listOf("返回", "API 配置").forEach { label ->
                 val topLayouts=mutableListOf<TextLayoutResult>()
                 compose.onNode(hasText(label) and hasAnyAncestor(isDialog()),useUnmergedTree=true)
                     .performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(topLayouts)}

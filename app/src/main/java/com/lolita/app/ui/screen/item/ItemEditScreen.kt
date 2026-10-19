@@ -61,7 +61,8 @@ fun ItemEditScreen(
     viewModel: ItemEditViewModel = viewModel(),
     defaultLocationId: Long? = null,
     defaultStorageNodeId: Long? = null,
-    defaultFamily: com.lolita.app.domain.model.WardrobeFamily? = null
+    defaultFamily: com.lolita.app.domain.model.WardrobeFamily? = null,
+    onConfigureApi: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -297,7 +298,7 @@ fun ItemEditScreen(
                             onAddImage = viewModel::addImage, onRemoveImage = viewModel::removeImage,
                             onImageClick = { photoPreview = it }, enabled = canEdit)
                     }
-                    com.lolita.app.ui.screen.item.recognition.ItemRecognitionPanel(viewModel)
+                    com.lolita.app.ui.screen.item.recognition.ItemRecognitionPanel(viewModel, onConfigureApi = onConfigureApi)
                     OutlinedTextField(
                         value = uiState.name, onValueChange = viewModel::updateName, enabled = canEdit,
                         label = { Text("物品名称 *") }, placeholder = { Text("例如：草莓花园 JSK") },

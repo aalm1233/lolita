@@ -34,14 +34,13 @@ import java.util.Locale
 @Composable
 fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewModel(),
     onNavigateToTasks: () -> Unit = {}, onTaskSubmitted: (String) -> Unit = {},
-    onManagePersonalModels: () -> Unit = {}) {
+    onManagePersonalModels: () -> Unit = {}, onConfigureApi: () -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
     var showModelPicker by remember { mutableStateOf(false) }
     var showPicker by remember { mutableStateOf(false) }
-    var showKey by remember { mutableStateOf(false) }
     var imageItemId by remember { mutableStateOf<Long?>(null) }
     var roleItemId by remember { mutableStateOf<Long?>(null) }
     var preview by remember { mutableStateOf<String?>(null) }
@@ -67,7 +66,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
                     Button(
-                        onClick = { if (!state.hasKey) showKey = true else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName, state.generationSelected.toList(), state.keyRevision) },
+                        onClick = { if (!state.hasKey) onConfigureApi() else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName, state.generationSelected.toList(), state.keyRevision) },
                         enabled = !state.busy && !state.isLoading && state.keyLoaded && (!state.hasKey || state.canGenerate),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -116,7 +115,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             }
             item(key = "service") {
                 LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
-                    TextButton(onClick = { showKey = true }, enabled = !state.busy) { Text("服务配置") }
+                    TextButton(onClick = { onConfigureApi() }, enabled = !state.busy) { Text("API 配置") }
                 }) {
                     row {
                         ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
@@ -219,7 +218,6 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null })
     val role = state.selected.firstOrNull { it.itemId == roleItemId }
     if (role != null) TryOnRolePicker(role.role, onSelect = { viewModel.setRole(role.itemId, it) }, onDismiss = { roleItemId = null })
-    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error, viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     preview?.let { FullScreenImageViewer(listOf(it), onDismiss = { preview = null }) }
     rename?.let { result -> TryOnRenameDialog(result.name, onSave = { viewModel.rename(result.id, it); rename = null }, onDismiss = { rename = null }) }
     delete?.let { result -> AlertDialog(onDismissRequest = { delete = null }, title = { Text("删除试衣图？") },

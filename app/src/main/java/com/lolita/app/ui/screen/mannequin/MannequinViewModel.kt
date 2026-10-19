@@ -53,7 +53,7 @@ data class MannequinUiState(
     val selectionIssue: String? get() = when {
         item == null || item.id <= 0 -> "这件物品已被删除或无法读取"
         subject == null -> "请先确认物品类型；当前支持裙装、衬衫、全头假发及单品展示"
-        presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模候选"
+        presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模"
         presentation == MannequinPresentation.WIG_HEAD && !headImageReady -> "所选头模资源缺失或尚未核验，请明确重新选择；不会自动替换"
         presentation == MannequinPresentation.WIG_HEAD && !referenceViewConfirmed -> "请核对原图能看到刘海、头顶、正面轮廓及完整发梢"
         selectedImage.isBlank() || (originalImagePath ?: selectedImage) !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
@@ -200,7 +200,7 @@ class MannequinViewModel @JvmOverloads constructor(
                     snapshotAndSelectHead(candidate.id)
                 }
             } catch (failure: CancellationException) { throw failure }
-            catch (_: Exception) { state.update { it.copy(headImageReady = false, error = "头模资源缺失、偏好已换版或校验失败，请明确重新选择候选") } }
+            catch (_: Exception) { state.update { it.copy(headImageReady = false, error = "头模图片无法读取，请重新选择") } }
             finally { state.update { it.copy(isLoadingHead = false) } }
         }
     }

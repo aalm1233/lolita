@@ -51,6 +51,10 @@ object AppModule {
     fun tryOnRepository() = _tryOnRepository
     private val _tryOnSettings by lazy { com.lolita.app.data.tryon.TryOnSettings(appContext) }
     fun tryOnSettings() = _tryOnSettings
+    private val _aiConfigurationRepository by lazy {
+        com.lolita.app.data.repository.AiConfigurationRepository(_tryOnSettings, _recognitionSettings)
+    }
+    fun aiConfigurationRepository() = _aiConfigurationRepository
     private val _imageGenerationApi by lazy { com.lolita.app.data.remote.ImageGenerationApi() }
     private val _generationImages by lazy { com.lolita.app.data.tryon.TryOnImages(appContext) }
     private val _tryOnGenerator by lazy {

@@ -44,13 +44,13 @@ fun MannequinScreen(
     onNavigateBack: () -> Unit,
     viewModel: MannequinViewModel = viewModel(),
     onNavigateToTasks: () -> Unit = {},
-    onTaskSubmitted: (String) -> Unit = {}
+    onTaskSubmitted: (String) -> Unit = {},
+    onConfigureApi: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
-    var showKey by remember { mutableStateOf(false) }
     var zoomLegacy by remember { mutableStateOf(false) }
     var discardLegacy by remember { mutableStateOf(false) }
     var cropSource by remember { mutableStateOf<String?>(null) }
@@ -99,8 +99,8 @@ fun MannequinScreen(
                         else if (blouse) "上传所选衬衫原图、固定人台模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。"
                         else "上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
-                    Button(onClick = { if (!state.hasKey) showKey = true else state.generationRequest?.let { confirmation = MannequinConfirmation(state.provider, it, state.keyRevision) } },
-                        enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && state.selectionIssue == null,
+                    Button(onClick = { if (!state.hasKey) onConfigureApi() else state.generationRequest?.let { confirmation = MannequinConfirmation(state.provider, it, state.keyRevision) } },
+                        enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && (!state.hasKey || state.selectionIssue == null),
                         modifier = Modifier.fillMaxWidth()) {
                         if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
                         Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成$modeLabel")
@@ -136,7 +136,7 @@ fun MannequinScreen(
             item("background-advice") { ImageBackgroundAdvice() }
             item("notice") {
                 LolitaSection(title = state.item?.name ?: "物品参考图") { row {
-                    Text(if (wig) "只将本次假发戴在选定头模上，保留头模脸部、颈部和必要底座，不复制商品图中的真人面孔。头模均为候选，尚未通过长短假发真实评审。"
+                    Text(if (wig) "将本次假发戴在选定头模上，保留脸部、颈部和底座。生成后请核对颜色、卷度、刘海和发梢。"
                         else if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
                         else if (blouse) "仅将所选衬衫穿到固定无头、无手臂的人台上，保留领口、袖型、袖口、纽扣和完整下摆；下身留空，不补裙装、裤装或配套小物。AI可能改绘细节，请核对后保存。"
                         else "仅生成无杆正面人台图，不保留支撑杆和底座；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
@@ -150,8 +150,8 @@ fun MannequinScreen(
             if (wig) {
                 item("head-choice-title") {
                     LolitaSection(title = "选择头模 · 单选") { row {
-                        Text("以下均为候选，尚未统一构图及验证短发、长直发、长卷发。切换或放大不会调用付费接口。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
-                        state.selectedHeadTemplate?.let { Text("本次：${it.name} · v${it.version} · 待真实评审", style = MaterialTheme.typography.labelMedium) }
+                        Text("点选一款头模，点击图片可放大查看。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
+                        state.selectedHeadTemplate?.let { Text("本次：${it.displayName}", style = MaterialTheme.typography.labelMedium) }
                         if (state.isLoadingHead) ShimmerRect(100.dp, 120.dp, modifier = Modifier.fillMaxWidth())
                     } }
                 }
@@ -159,11 +159,10 @@ fun MannequinScreen(
                     val chosen = state.selectedHeadTemplate?.let { it.id == template.id && it.version == template.version && it.sha256 == template.sha256 } == true
                     LolitaCard(variant = CardVariant.COMPACT, modifier = Modifier.fillMaxWidth().semantics { selected = chosen }) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                            LolitaShimmerImage(model = template.previewPath, contentDescription = "放大头模候选：${template.name}", contentScale = ContentScale.Fit,
+                            LolitaShimmerImage(model = template.previewPath, contentDescription = "放大头模：${template.displayName}", contentScale = ContentScale.Fit,
                                 circularRevealEnabled = false, modifier = Modifier.width(84.dp).height(126.dp).skinClickable { headPreview = template.previewPath })
                             Column(Modifier.weight(1f)) {
-                                Text(template.name, style = MaterialTheme.typography.titleSmall)
-                                Text(template.statusLabel, style = MaterialTheme.typography.bodySmall)
+                                Text(template.displayName, style = MaterialTheme.typography.titleSmall)
                                 TextButton(onClick = { viewModel.selectHeadTemplate(template.id) }, enabled = !state.busy) { Text(if (chosen) "已选用" else "选用此头模") }
                             }
                             RadioButton(selected = chosen, onClick = { viewModel.selectHeadTemplate(template.id) }, enabled = !state.busy)
@@ -186,14 +185,14 @@ fun MannequinScreen(
                         Text("正面模板需要看得到刘海、头顶和正面轮廓的参考；只有背面或侧面的图请更换。长发应包含完整发梢，不凭空补出看不见的结构。", style = MaterialTheme.typography.bodySmall)
                         Row(Modifier.fillMaxWidth().skinClickable(enabled = !state.busy) { viewModel.confirmReferenceView(!state.referenceViewConfirmed) }, verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = state.referenceViewConfirmed, onCheckedChange = viewModel::confirmReferenceView, enabled = !state.busy)
-                            Text("已核对视角与发梢，并知晓头模仍为待评审候选", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                            Text("已核对假发的正面视角、刘海与完整发梢", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
                         }
                     } }
                 }
             }
             item("service") {
                 LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
-                    TextButton(onClick = { showKey = true }, enabled = !state.busy) { Text("服务配置") }
+                    TextButton(onClick = { onConfigureApi() }, enabled = !state.busy) { Text("API 配置") }
                 }) { row {
                     ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
                     Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
@@ -243,8 +242,6 @@ fun MannequinScreen(
         cropSource = null
     }) }
     headPreview?.let { FullScreenImageViewer(listOf(it), onDismiss = { headPreview = null }) }
-    if (showKey) ApiKeyDialog(state.hasKey, state.keyRevision, state.isConfiguring, state.busy, state.error,
-        viewModel::saveKey, viewModel::clearKey, onDismiss = { showKey = false }, provider = state.provider)
     if (zoomLegacy && state.legacyPreviewPath != null) FullScreenImageViewer(listOf(state.legacyPreviewPath!!), onDismiss = { zoomLegacy = false })
     if (discardLegacy) AlertDialog(onDismissRequest = { discardLegacy = false }, title = { Text("放弃旧版预览？") },
         text = { Text("此预览尚未添加到裙子图片，放弃后将按引用保护清理。") },
@@ -256,7 +253,7 @@ fun MannequinScreen(
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成$confirmedLabel？") },
             text = { Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 confirmed.request.wigHeadTemplate?.let { head ->
-                    Text("头模：${head.name} · v${head.version} · 候选待真实评审")
+                    Text("头模：${head.displayName}")
                     LolitaShimmerImage(model = head.imagePath, contentDescription = "本次将上传的头模", contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxWidth().height(120.dp), circularRevealEnabled = false)
                 }

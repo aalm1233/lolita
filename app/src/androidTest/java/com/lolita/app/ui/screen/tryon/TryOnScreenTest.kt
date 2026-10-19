@@ -50,6 +50,7 @@ class TryOnScreenTest {
     private val presentation = mutableStateOf(Presentation())
     private val acceptedModels = MutableStateFlow<List<PersonalModel>>(emptyList())
     private val defaultModelId = MutableStateFlow<Long?>(null)
+    private var configured = 0
     private var key: String? = null
     private lateinit var photos: List<String>
 
@@ -97,7 +98,7 @@ class TryOnScreenTest {
                 LocalDensity provides Density(LocalDensity.current.density, display.scale)) {
                 LolitaTheme(skinType = display.skin, darkTheme = display.dark) {
                     Surface(color = MaterialTheme.colorScheme.background) {
-                        Box(Modifier.size(display.width.dp, 640.dp)) { TryOnScreen({}, vm) }
+                        Box(Modifier.size(display.width.dp, 640.dp)) { TryOnScreen({}, vm, onConfigureApi = { configured++ }) }
                     }
                 }
             }
@@ -128,19 +129,15 @@ class TryOnScreenTest {
         assertEquals(TryOnRole.OUTER, vm.uiState.value.selected.single().role)
     }
 
-    @Test fun personalKeyIsMaskedAndNeverRefilledAndCanBeDeleted() {
+    @Test fun missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection() {
+        compose.runOnIdle { vm.toggleItem(11) }
         show()
-        workspace("服务配置")
-        compose.onNodeWithText("服务配置").performClick()
-        compose.onNodeWithText("API Key", substring = false).performScrollTo().performTextInput("sk-test-private-value")
-        compose.onNodeWithText("API Key", substring = false).assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Password))
-        compose.onNodeWithText("保存密钥").performClick()
-        compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
-        compose.onNodeWithText("服务配置").performClick()
-        compose.onNodeWithText("API Key", substring = false).performScrollTo().assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
-        compose.onNodeWithText("删除本机密钥").performScrollTo().performClick()
-        compose.waitUntil(10_000) { !vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
+        compose.onNodeWithText("配置 API Key").performClick()
+        workspace("API 配置")
+        compose.onNodeWithText("API 配置").performClick()
+        assertEquals(2, configured)
         assertNull(key)
+        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
     }
 
     @Test fun sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots() {
@@ -158,10 +155,9 @@ class TryOnScreenTest {
             }
             workspace("更换参考图片")
             compose.onNodeWithText("更换参考图片").assertIsDisplayed()
-            workspace("服务配置")
-            compose.onNodeWithText("服务配置").performClick()
-            compose.onNodeWithText("API Key", substring = false).performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("返回", substring = false).performClick()
+            workspace("API 配置")
+            compose.onNodeWithText("API 配置").performClick()
+            assertTrue(configured > 0)
         }
         for ((skin, dark) in listOf(SkinType.DEFAULT to false, SkinType.VICTORIAN to true)) {
             compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }

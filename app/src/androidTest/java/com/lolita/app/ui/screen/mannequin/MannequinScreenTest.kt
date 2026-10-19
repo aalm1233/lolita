@@ -51,6 +51,7 @@ class MannequinScreenTest {
     private var appended: String? = null
     private var discarded: String? = null
     private var navigated = 0
+    private var configured = 0
     private var blocked = false
     private lateinit var categoryRows: MutableStateFlow<List<Category>>
     private var submitted: com.lolita.app.domain.model.MannequinRequest? = null
@@ -88,7 +89,7 @@ class MannequinScreenTest {
                 LolitaTheme(skinType = display.skin, darkTheme = display.dark) {
                     Surface(color = MaterialTheme.colorScheme.background) {
                         Box(Modifier.size(display.width.dp, 640.dp)) {
-                            MannequinScreen(onNavigateBack = { navigated++ }, viewModel = vm)
+                            MannequinScreen(onNavigateBack = { navigated++ }, viewModel = vm, onConfigureApi = { configured++ })
                         }
                     }
                 }
@@ -100,9 +101,7 @@ class MannequinScreenTest {
         compose.onNodeWithText(text).performScrollTo()
     }
     private fun configure() {
-        compose.onNodeWithText("配置 API Key").performClick()
-        compose.onNodeWithText("API Key", substring = false).performScrollTo().performTextInput("sk-ui-private")
-        compose.onNodeWithText("保存密钥").performClick()
+        compose.runOnIdle { vm.saveKey("controlled-ui-private") }
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
     }
     @Test fun standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory() {
@@ -169,10 +168,7 @@ class MannequinScreenTest {
         compose.waitUntil(10_000) { vm.uiState.value.provider == com.lolita.app.domain.model.ImageGenerationProvider.SEEDREAM && !vm.uiState.value.busy }
         compose.onNodeWithTag("imageService-SEEDREAM").assertIsSelected()
         compose.onNodeWithTag("imageService-OPENAI").assertIsNotSelected()
-        compose.onNodeWithText("配置 API Key").performClick()
-        compose.onNodeWithText("API Key", substring = false).performTextInput("private-seed-test")
-        compose.onNodeWithText("API Key", substring = false).assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Password))
-        compose.onNodeWithText("保存密钥").performClick()
+        compose.runOnIdle { vm.saveKey("private-seed-test") }
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.busy }
         compose.onNodeWithText("上传所选原图、固定模板及补充说明至 火山方舟，共2张图片；API 单独计费。").assertIsDisplayed()
         val output = File(instrumentation.targetContext.filesDir, "seedream-service-contact-sheets").apply { mkdirs() }
@@ -185,17 +181,13 @@ class MannequinScreenTest {
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
     }
-    @Test fun sharedKeyDialogMasksInputNeverRefillsAndClearUpdatesConfiguration() {
+    @Test fun missingKeyAndServiceActionBothOpenUnifiedConfigurationWithoutSending() {
         show()
         compose.onNodeWithText("配置 API Key").performClick()
-        compose.onNodeWithText("API Key", substring = false).performScrollTo().performTextInput("sk-secret")
-        compose.onNodeWithText("API Key", substring = false).assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Password))
-        compose.onNodeWithText("保存密钥").performClick()
-        compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
-        scroll("服务配置"); compose.onNodeWithText("服务配置").performClick()
-        compose.onNodeWithText("API Key", substring = false).performScrollTo().assert(SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString("")))
-        compose.onNodeWithText("删除本机密钥").performScrollTo().performClick()
-        compose.waitUntil(10_000) { !vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }; assertNull(key)
+        scroll("API 配置"); compose.onNodeWithText("API 配置").performClick()
+        assertEquals(2, configured)
+        assertNull(key)
+        assertEquals(0, calls)
     }
     @Test fun selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable() {
         show(); configure()

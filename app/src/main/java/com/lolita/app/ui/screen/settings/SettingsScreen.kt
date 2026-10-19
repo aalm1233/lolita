@@ -85,7 +85,8 @@ fun SettingsScreen(
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel(),
     appUpdateViewModel: AppUpdateViewModel = viewModel(),
-    onNavigateToPersonalModels: () -> Unit = {}
+    onNavigateToPersonalModels: () -> Unit = {},
+    onConfigureApi: () -> Unit = {}
 ) {
     val isDark = isSystemInDarkTheme()
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
@@ -165,6 +166,14 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             SettingsMenuItem(
+                title = "API 配置",
+                description = "统一管理生图、识图服务与密钥",
+                iconKey = IconKey.Settings,
+                iconTint = MaterialTheme.colorScheme.primary,
+                onClick = onConfigureApi
+            )
+
+            SettingsMenuItem(
                 title = "属性管理",
                 description = "管理品牌、类型、风格、季节、位置、来源",
                 iconKey = IconKey.Category,
@@ -206,7 +215,7 @@ fun SettingsScreen(
 
             SettingsMenuItem(
                 title = "虚拟试衣（实验）",
-                description = "配置 API Key，将服饰和小物穿到虚拟模特身上",
+                description = "将服饰和小物穿到虚拟模特身上",
                 iconKey = IconKey.Outfit,
                 iconTint = MaterialTheme.colorScheme.primary,
                 onClick = onNavigateToTryOn

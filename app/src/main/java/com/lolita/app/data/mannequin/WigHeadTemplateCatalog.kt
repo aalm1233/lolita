@@ -12,7 +12,7 @@ import java.io.File
 data class WigHeadTemplate(val id: String, val name: String, val version: Int, val sha256: String,
     val assetPath: String, val width: Int, val height: Int, val view: String = "FRONT", val byteSize: Long = 0) {
     val previewPath: String get() = "file:///android_asset/$assetPath"
-    val statusLabel: String get() = "候选 · 待真实假发评审"
+    val displayName: String get() = com.lolita.app.domain.model.wigHeadDisplayName(id, name)
 }
 
 /** Offline only. Selecting or previewing a candidate never starts a paid operation. */
@@ -45,7 +45,7 @@ class WigHeadTemplateCatalog(private val context: Context) {
     }
 
     suspend fun snapshot(id: String): WigHeadTemplateSnapshot = withContext(Dispatchers.IO) {
-        val template = requireNotNull(templates.firstOrNull { it.id == id }) { "头模候选已下架，请重新选择" }
+        val template = requireNotNull(templates.firstOrNull { it.id == id }) { "头模已不可用，请重新选择" }
         // Reuse the verified immutable bytes already owned by this app, including older task inputs.
         val root = File(context.filesDir, "images")
         val existing = root.listFiles()?.firstOrNull { file -> file.isFile && file.extension == "png" && file.length() == template.byteSize &&

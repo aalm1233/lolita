@@ -13,21 +13,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
-import com.lolita.app.domain.model.ImageGenerationProvider
 
 @Composable
-fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy: Boolean, error: String?, onSave: (String) -> Unit, onClear: () -> Unit, onDismiss: () -> Unit, provider: ImageGenerationProvider = ImageGenerationProvider.OPENAI) {
+fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy: Boolean, error: String?, onSave: (String) -> Unit, onClear: () -> Unit, onDismiss: () -> Unit,
+    serviceId: String, serviceLabel: String, keyHelp: String) {
     val skin = LolitaSkin.current
-    var value by remember(provider) { mutableStateOf("") }
-    val initialRevision = remember { keyRevision }
+    var value by remember(serviceId) { mutableStateOf("") }
+    val initialRevision = remember(serviceId) { keyRevision }
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
     LaunchedEffect(keyRevision) { if (keyRevision != initialRevision) { value = ""; onDismiss() } }
-    AlertDialog(onDismissRequest = { if (!isConfiguring) onDismiss() }, title = { Text("个人 API Key") },
+    AlertDialog(onDismissRequest = { if (!isConfiguring) onDismiss() }, modifier = Modifier.imePadding(), title = { Text("配置 API Key") },
         text = {
             Column(Modifier.verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                Text(provider.label, style = MaterialTheme.typography.titleSmall)
-                Text(if (hasKey) "当前服务已配置。输入新密钥可替换，旧密钥不会回填。" else provider.keyHelp, style = MaterialTheme.typography.bodySmall)
+                Text(serviceLabel, style = MaterialTheme.typography.titleSmall)
+                Text(keyHelp, style = MaterialTheme.typography.bodySmall)
+                if (hasKey) Text("输入新密钥可替换本机配置，旧密钥不会回填。", style = MaterialTheme.typography.bodySmall)
                 OutlinedTextField(value = value, onValueChange = { value = it }, enabled = !busy,
                     label = { Text("API Key") }, modifier = Modifier.fillMaxWidth(), singleLine = true,
                     visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

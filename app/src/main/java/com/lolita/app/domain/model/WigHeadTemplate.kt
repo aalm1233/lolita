@@ -10,6 +10,7 @@ data class WigHeadTemplateSnapshot(
     val imagePath: String, val width: Int, val height: Int, val view: String = "FRONT",
     val headScale: String = "候选构图，尚未统一定版"
 ) {
+    val displayName: String get() = wigHeadDisplayName(id, name)
     init {
         require(id.matches(Regex("[a-z0-9-]{1,64}")) && name.isNotBlank() && name.length <= 100 && version > 0)
         require(sha256.matches(Regex("[a-f0-9]{64}")) && imagePath.isNotBlank()) { "头模图片身份无效" }
@@ -30,6 +31,8 @@ data class WigHeadTemplateSnapshot(
         }
     }
 }
+
+fun wigHeadDisplayName(id: String, name: String): String = if (id == "original-blueviolet") "蓝紫妆" else name
 
 fun imageSha256(path: String): String = File(path).inputStream().use { input ->
     val digest = MessageDigest.getInstance("SHA-256")

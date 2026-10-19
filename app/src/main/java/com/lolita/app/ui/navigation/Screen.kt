@@ -98,6 +98,8 @@ sealed interface Screen {
         override val route = "settings"
     }
 
+    data object AiConfiguration : Screen { override val route = "ai_configuration" }
+
     data object BrandManage : Screen {
         override val route = "brand_manage"
     }

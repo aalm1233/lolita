@@ -89,6 +89,11 @@ class WigHeadTemplateVisualTest {
                     }
                 }
             }
+            compose.onNodeWithTag("mannequinWorkspace").performScrollToNode(hasText("选择头模 · 单选"))
+            compose.onAllNodes(hasText("候选", substring = true)).assertCountEquals(0)
+            compose.onAllNodes(hasText("评审", substring = true)).assertCountEquals(0)
+            compose.onNodeWithTag("mannequinWorkspace").performScrollToNode(hasText("蓝紫妆"))
+            compose.onNodeWithText("蓝紫妆").assertIsDisplayed()
             val name = "灰瞳·玫瑰妆"
             fun reveal() {
                 compose.onNodeWithTag("mannequinWorkspace").performScrollToNode(hasText(name))
@@ -124,7 +129,7 @@ class WigHeadTemplateVisualTest {
                 compose.onNodeWithText("已选用").assertIsDisplayed()
                 capture("large-${if (night) "dark" else "light"}.png")
             }
-            compose.onNodeWithContentDescription("放大头模候选：$name").performClick()
+            compose.onNodeWithContentDescription("放大头模：$name").performClick()
             compose.onNodeWithContentDescription("关闭图片预览").assertIsDisplayed()
             compose.onAllNodesWithContentDescription("图片预览 1").onFirst().assertIsDisplayed()
             capture("full-preview.png")

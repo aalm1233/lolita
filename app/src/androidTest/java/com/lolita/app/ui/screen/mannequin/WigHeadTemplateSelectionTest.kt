@@ -59,7 +59,8 @@ class WigHeadTemplateSelectionTest {
                 snapshot.validateImage()
                 assertEquals(candidate.sha256, snapshot.sha256)
             }
-            assertTrue(catalog.templates.all { it.statusLabel.contains("候选") && it.statusLabel.contains("评审") })
+            assertEquals("蓝紫妆", catalog.templates.first().displayName)
+            assertTrue(catalog.templates.none { it.displayName.contains("候选") || it.displayName.contains("评审") })
             val first = create()
             withTimeout(5000) { first.uiState.first { it.selectedHeadTemplate != null && !it.isLoadingHead && it.keyLoaded } }
             val selectedId = catalog.templates.last().id

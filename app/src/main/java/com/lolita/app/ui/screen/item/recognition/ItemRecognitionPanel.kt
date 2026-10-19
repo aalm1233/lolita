@@ -26,6 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.local.entity.ItemEvidence
 import com.lolita.app.data.local.entity.RecognitionTask
@@ -44,13 +47,25 @@ import com.lolita.app.data.file.NormalizedCropRect
 
 @Composable
 fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifier,
-    recognitionViewModel: ItemRecognitionViewModel=viewModel()) {
+    recognitionViewModel: ItemRecognitionViewModel=viewModel(), onConfigureApi: () -> Unit = {}) {
     val editor by viewModel.uiState.collectAsState()
     val state by recognitionViewModel.uiState.collectAsState()
     val skin=LolitaSkin.current
     val context=LocalContext.current
     var open by rememberSaveable { mutableStateOf(false) }
-    var settings by rememberSaveable { mutableStateOf(false) }
+    var returnToWorkbench by rememberSaveable { mutableStateOf(false) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME && returnToWorkbench) {
+                returnToWorkbench = false
+                open = true
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
+    }
+    fun configureApi() { returnToWorkbench = true; open = false; onConfigureApi() }
     var history by rememberSaveable { mutableStateOf(false) }
     var savedEvidence by remember { mutableStateOf(false) }
     var activeId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -103,7 +118,7 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
     }
     Column(modifier) {
         OutlinedButton(onClick={recognitionViewModel.action {
-            viewModel.keepDraft();recognitionViewModel.bind(viewModel.uiState.value.draftId,editor.item?.id);open=true
+            returnToWorkbench=false;viewModel.keepDraft();recognitionViewModel.bind(viewModel.uiState.value.draftId,editor.item?.id);open=true
         }},enabled=!editor.isLoading && !busy && editor.loadError==null,modifier=Modifier.fillMaxWidth()) {
             Text(if(state.tasks.any { it.status==RecognitionStatus.AWAITING_REVIEW }) "识图填入 · 有待核对结果" else "识图填入")
         }
@@ -117,16 +132,16 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
         val tracker=remember(task?.id,task?.regionImagePaths,density) { RecognitionPreviewTracker(64f*density) { index ->
             if(index !in previewed) previewed=previewed+index
         } }
-        LaunchedEffect(task?.id,task?.requestJson,settings,chooseMore) {
-            if(task!=null && !settings && !chooseMore) listState.scrollToItem(1+if(state.error!=null) 1 else 0)
+        LaunchedEffect(task?.id,task?.requestJson,chooseMore) {
+            if(task!=null && !chooseMore) listState.scrollToItem(1+if(state.error!=null) 1 else 0)
         }
         Scaffold(contentWindowInsets=WindowInsets(0,0,0,0),topBar={
             GradientTopAppBar(title={Text("识图填入")},hazeState=null,
                 navigationIcon={TextButton(onClick={open=false},enabled=!state.busy,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)) {Text("返回")}},
-                actions={TextButton(onClick={settings=!settings},enabled=!busy,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)) {Text(when(state.provider) {RecognitionProvider.VOLCENGINE_ARK->"豆包";RecognitionProvider.DEEPSEEK->"DeepSeek";null->"服务"})}})
+                actions={TextButton(onClick={configureApi()},enabled=!busy,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)) {Text("API 配置")}})
         },bottomBar={
             Surface { Column(Modifier.fillMaxWidth().navigationBarsPadding().imePadding().padding(skin.spacingLarge)) {
-                if(task!=null && !settings) {
+                if(task!=null) {
                     RecognitionPrimaryAction(task,state,busy,previewed.size==task.regionImagePaths.size,viewModel.currentRecognitionValues(),
                         onSubmit={state.provider?.let { provider -> recognitionViewModel.submitVisible(task,state.keyRevision,provider,viewModel,family) {activeId=it} }},
                         onPrepare={recognitionViewModel.prepareAgain(task,{path->ImageRegionCropper.crop(context,path,NormalizedCropRect.FULL).path}) {activeId=it;chooseMore=false;notice=null}},
@@ -134,18 +149,17 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
                             notice="已填入 ${merge.acceptedIds.size} 项"+if(merge.conflicts.isNotEmpty()) "，${merge.conflicts.size} 项请继续核对" else "，保存后生效"
                             if(merge.acceptedIds.isNotEmpty()) open=false
                         }})
-                } else Text(if(settings) "密钥仅加密保存在本机" else "选图后可先核对，再确认发送",style=MaterialTheme.typography.bodySmall)
+                } else Text("选图后可先核对，再确认发送",style=MaterialTheme.typography.bodySmall)
             } }
         }) { padding ->
             LazyColumn(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).onGloballyPositioned {tracker.updateViewport(it.boundsInWindow())},state=listState,
                 contentPadding=PaddingValues(skin.spacingLarge),verticalArrangement=Arrangement.spacedBy(skin.spacingMedium)) {
                 item {
-                    if(settings) RecognitionSettingsContent(state,busy,recognitionViewModel::selectProvider,
-                        onSave={recognitionViewModel.saveKey(it);settings=false},onClear=recognitionViewModel::clearKey)
-                    else if(task==null || chooseMore) {
+                    Text("当前识图服务：${state.provider?.label ?: "未选择"}",style=MaterialTheme.typography.bodySmall)
+                    if(task==null || chooseMore) {
                         SectionHeader(if(task?.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED)) "核对识别结果" else "选择商品图或参数图")
                         Text("只发送下方预览图片，识别结果由你确认后填入。",style=MaterialTheme.typography.bodySmall)
-                        if(!state.hasKey) TextButton(onClick={settings=true}) {Text("先设置${state.provider?.label ?: "识图服务"}密钥")}
+                        if(!state.hasKey) TextButton(onClick={configureApi()}) {Text("配置识图 API Key")}
                         Button(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!busy,modifier=Modifier.fillMaxWidth()) {Text("从相册选图")}
                         val paths=(editor.imageUrls+listOfNotNull(editor.sizeChartImageUrl)+editor.sizeChartImageUrls).distinct()
                         if(paths.isNotEmpty()) {
@@ -169,7 +183,7 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
                     } else TextButton(onClick={chooseMore=true},enabled=!busy) {Text("添加其他图片 / 来源设置")}
                 }
                 state.error?.let { error -> item {Text(error,color=MaterialTheme.colorScheme.error)} }
-                if(!settings) {
+                run {
                     task?.let { selected -> item(key=selected.id) {
                         RecognitionTaskContent(selected,busy,viewModel.currentRecognitionValues(),state.reviews[selected.id],tracker,
                             onRemove={recognitionViewModel.removeRegion(selected.id,it)},onCrop={cropIndex=it},
@@ -255,20 +269,6 @@ private fun recognitionReview(task:RecognitionTask,current:Map<RecognitionField,
         RecognitionStatus.RUNNING -> Text("可返回编辑，结果会保留在这里",style=MaterialTheme.typography.bodySmall)
         else -> Unit
     }
-}
-
-@Composable private fun RecognitionSettingsContent(state:ItemRecognitionUiState,busy:Boolean,onProvider:(RecognitionProvider)->Unit,
-    onSave:(String)->Unit,onClear:()->Unit) {
-    var key by remember(state.provider) {mutableStateOf("")}
-    SectionHeader("识图服务")
-    RecognitionProvider.entries.forEach { option -> Row(Modifier.fillMaxWidth().clickable(enabled=!busy) {onProvider(option)},verticalAlignment=Alignment.CenterVertically) {
-        RadioButton(option==state.provider,{onProvider(option)},enabled=!busy);Text(option.label)
-    } }
-    Text(state.provider?.model.orEmpty(),style=MaterialTheme.typography.bodySmall)
-    Text("密钥不回填，不进入备份。每个服务独立配置。",style=MaterialTheme.typography.bodySmall)
-    OutlinedTextField(key,{key=it},Modifier.fillMaxWidth(),label={Text("API Key")},visualTransformation=PasswordVisualTransformation(),singleLine=true,enabled=!busy && state.provider!=null)
-    Button(onClick={onSave(key);key=""},enabled=!busy && key.isNotBlank() && state.provider!=null,modifier=Modifier.fillMaxWidth()) {Text("保存密钥并返回")}
-    if(state.hasKey) TextButton(onClick=onClear,enabled=!busy) {Text("移除此服务的本机密钥")}
 }
 
 @Composable private fun RecognitionTaskContent(task:RecognitionTask,busy:Boolean,current:Map<RecognitionField,String>,storedReview:RecognitionReview?,tracker:RecognitionPreviewTracker,

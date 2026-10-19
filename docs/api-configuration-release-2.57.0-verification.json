@@ -1,0 +1,343 @@
+{
+  "version": "2.57.0",
+  "version_code": 122,
+  "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+  "github_source_branch": "master",
+  "source_and_tag_pushed_verified": true,
+  "implemented": [
+    "头模界面移除候选、评审及内部版本标记，旧名称只在显示层映射",
+    "个人首屏及原生图/识图入口统一到四服务API配置页，沿用原加密设置与默认服务"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 122,
+    "version": "2.57.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "d5c014c0a6d56830066467b0c899b80ae8a5a10fb144b268a8533d2a5a44f218",
+    "bytes": 79330134,
+    "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "verification_scope": {
+    "policy": "AGENTS.md 发布测试按代码影响范围执行",
+    "selected_reason": "统一设置薄适配和共享密钥弹窗影响四项加密配置及生图/识图调用页面；头模只调整显示名称与说明",
+    "device": {
+      "passed_unique": 35,
+      "by_class": {
+        "com.lolita.app.data.AiConfigurationRepositoryTest": 3,
+        "com.lolita.app.ui.screen.settings.AiConfigurationViewModelTest": 2,
+        "com.lolita.app.ui.screen.settings.AiConfigurationScreenTest": 1,
+        "com.lolita.app.ui.screen.mannequin.WigHeadTemplateSelectionTest": 1,
+        "com.lolita.app.ui.screen.mannequin.WigHeadDraftOwnershipTest": 4,
+        "com.lolita.app.ui.screen.mannequin.WigHeadTemplateVisualTest": 1,
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest": 9,
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest": 6,
+        "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest": 3,
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest": 5
+      },
+      "tests": [
+        "com.lolita.app.data.AiConfigurationRepositoryTest#oldFourKeysAndSelectionsSurviveReadsAndEditsOnlyAffectTheExplicitSlot",
+        "com.lolita.app.data.AiConfigurationRepositoryTest#removingLegacyInferredOpenAiKeyDoesNotSilentlyChangeDefaultService",
+        "com.lolita.app.data.AiConfigurationRepositoryTest#unreadableKeyOrSelectionCanBeRepairedWithoutChangingOtherCredentials",
+        "com.lolita.app.ui.screen.settings.AiConfigurationViewModelTest#invalidKeysNeverWriteAndUnexpectedErrorsNeverLeakTheirContents",
+        "com.lolita.app.ui.screen.settings.AiConfigurationViewModelTest#cancellationDoesNotBecomeAnErrorOrReportASuccessfulSave",
+        "com.lolita.app.ui.screen.settings.AiConfigurationScreenTest#allFourConfigurationsSaveMaskNeverRefillAndRemainUsableAcrossSkinsAndLargeText",
+        "com.lolita.app.ui.screen.mannequin.WigHeadTemplateSelectionTest#sixCandidatesCanBePreviewedSelectedAndRestoredWithoutPaidCalls",
+        "com.lolita.app.ui.screen.mannequin.WigHeadDraftOwnershipTest#anotherDraftChangingHeadCannotDeleteSharedHeadDuringRecreation",
+        "com.lolita.app.ui.screen.mannequin.WigHeadDraftOwnershipTest#disposingTheLastDraftReleasesADeferredHeadDeletion",
+        "com.lolita.app.ui.screen.mannequin.WigHeadDraftOwnershipTest#missingRestoredHeadKeepsItsIdentityAndBlocksSubmissionWithoutFallback",
+        "com.lolita.app.ui.screen.mannequin.WigHeadDraftOwnershipTest#deletingPriorTaskCannotDeleteTheHeadSelectedByAnOpenDraft",
+        "com.lolita.app.ui.screen.mannequin.WigHeadTemplateVisualTest#appendedCandidateCanBeChosenAndZoomedAcrossSkinsAndLargeText",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#missingKeyAndServiceActionBothOpenUnifiedConfigurationWithoutSending",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation",
+        "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#fullScreenResultPreviewActuallyZoomsTheImage",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+        "com.lolita.app.ui.screen.tryon.TryOnScreenTest#configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText",
+        "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest#parameterEntryRequiresValidMeasurementsThenConfirmsBeforeSingleTaskSubmission",
+        "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest#libraryKeepsBuiltinChoiceAndCanSelectRenameAndDeleteConfirmedModel",
+        "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest#allSevenSkinsRenderEditorInLightDarkAnd320dpLargeFont",
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest#sevenDarkSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText",
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest#oversizedFullImageOffersCropAndCancelKeepsTheOriginalAndDraftReference",
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest#sevenLightSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText",
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest#preparedPreviewEnablesConfirmationAndAiClassificationPersistsWithoutSending",
+        "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest#realButtonsFilterRowsApplyInPartsSaveAndReopenTheAcceptedEvidence"
+      ],
+      "remote_paid_requests": 0
+    },
+    "jvm_early_run": {
+      "tests": 412,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "note": "本轮早期已执行，保留实际结果；收到按影响范围选例的新约定后未重复，不作为后续发版全量要求"
+    },
+    "native_navhost": {
+      "passed": true,
+      "actual_navhost_personal_entry": true,
+      "actual_navhost_tryon_and_return": true,
+      "actual_navhost_personal_model_and_return": true,
+      "all_four_services_on_one_page": true,
+      "key_field_masked_and_never_refilled": true,
+      "native_ime_320dp_font2_save_action_visible": true,
+      "saved_or_deleted_credentials": false,
+      "all_original_no_backup_files_sha_exact": true,
+      "paid_requests": 0,
+      "private_profile_screens_published": false,
+      "controlled_masked_keyboard_screenshot_exported": true,
+      "initial_readonly_adb_disconnect_recovered_then_full_flow_reran": true
+    },
+    "signed_api_ui": {
+      "passed": true,
+      "installed_version": "2.57.0/122",
+      "actual_signed_navhost_api_page": true,
+      "all_four_service_rows_reachable": true,
+      "unreadable_key_rows": 0,
+      "read_only_no_key_edit": true,
+      "private_screen_published": false
+    },
+    "signed_upgrade": {
+      "passed": true,
+      "from": "2.56.2/121",
+      "to": "2.57.0/122",
+      "same_signature": true,
+      "normal_install_r": true,
+      "cold_start_alive": true,
+      "all_original_no_backup_files_sha_exact": true,
+      "original_no_backup_file_count": 3,
+      "clear_data": false,
+      "uninstall": false,
+      "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "apk_sha256": "d5c014c0a6d56830066467b0c899b80ae8a5a10fb144b268a8533d2a5a44f218",
+      "scope": "credential/configuration persistence, installed identity and startup only; database, migration and image files unchanged by implementation",
+      "full_database_image_upgrade_audit_repeated": false,
+      "private_hashes_published": false
+    },
+    "assets": {
+      "all_six_catalog_metadata_and_png_bytes_exact": true,
+      "no_new_original_photos": true,
+      "database_version": 30,
+      "backup_version": 10
+    },
+    "early_debug_primary_preservation": {
+      "passed": true,
+      "tables": 38,
+      "all_primary_typed_rows_and_schema_exact": true,
+      "original_shared_preferences_bytes_exact": true,
+      "user_device_touched": false,
+      "remote_paid_calls": 0,
+      "fixtures_in_isolated_caches_and_room": true,
+      "sqlite_wal_shm_read_marks_may_change": true,
+      "note": "已在早期测试后实际核对，非本次正式升级全库审计"
+    },
+    "not_repeated": [
+      "数据库迁移、备份往返和全部图片正式升级审计：实现未变更相关逻辑",
+      "无关USB/仪器化全套与已通过的相同最终代码用例"
+    ]
+  },
+  "distribution": {
+    "github": {
+      "tag": "v2.57.0",
+      "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "release_id": 416868614,
+      "prerelease": false,
+      "files": {
+        "lolita-2.57.0.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.57.0/lolita-2.57.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 79330134,
+          "sha256": "d5c014c0a6d56830066467b0c899b80ae8a5a10fb144b268a8533d2a5a44f218",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.57.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "bcea547b877f575d19fb12ec24d0b0268910243406798a687a35a9a8eb126ab3",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 79330134,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee_anonymous_download_before_formal": {
+      "tag": "v2.57.0",
+      "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "release_id": 1217436,
+      "prerelease": true,
+      "files": {
+        "lolita-2.57.0.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/lolita-2.57.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 79330134,
+          "sha256": "d5c014c0a6d56830066467b0c899b80ae8a5a10fb144b268a8533d2a5a44f218",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "bcea547b877f575d19fb12ec24d0b0268910243406798a687a35a9a8eb126ab3",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 79330134,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "gitee_formal_metadata": {
+      "tag": "v2.57.0",
+      "release_id": 1217436,
+      "prerelease": false,
+      "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "assets": {
+        "lolita-2.57.0.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/lolita-2.57.0.apk",
+        "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/SHA256SUMS"
+      },
+      "metadata_source": "owner-authenticated exact release GET; not a public update check"
+    },
+    "gitee_post_formal_head": {
+      "http_status": 200,
+      "bytes": 79330134,
+      "content_type": "application/zip",
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ],
+      "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/lolita-2.57.0.apk"
+    },
+    "host_public_update_query": {
+      "latest_tag": "v2.57.0",
+      "pages": 2,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.0/lolita-2.57.0.apk",
+      "source_commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "http_status": 200
+    },
+    "actual_signed_app_update": {
+      "passed": false,
+      "installed_version": "2.57.0/122",
+      "actual_signed_application_manual_check": true,
+      "displayed_status": "检查失败",
+      "message": "检查更新失败，请检查网络或前往 Gitee 查看",
+      "actual_failure_http_status": null,
+      "specific_failure_cause_verified": false,
+      "host_anonymous_public_query_independently_succeeded": true,
+      "latest_version_and_notes_verified_in_app": false,
+      "private_evidence_published": false
+    },
+    "old_release_assets_removed": false
+  },
+  "limits": [
+    "正式应用一次手动检查更新显示通用网络失败，具体原因未确认；不能以电脑公开查询成功冒充应用更新成功。直接APK下载已核验。",
+    "未发送真实付费AI请求，未声称头模生成质量重新评审通过。"
+  ],
+  "data": {
+    "database_version": 30,
+    "backup_version": 10,
+    "schema_or_image_or_backup_changes": false,
+    "real_keys_in_reports_or_source": false,
+    "original_reference_photos_published": false,
+    "clear_user_data": false,
+    "uninstall_user_app": false
+  },
+  "design": "docs/plans/2026-10-19-api-configuration.md",
+  "visuals": "docs/visuals/2026-10-19-api-configuration/"
+}

@@ -541,3 +541,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 个人页头像后提供“API 配置”；生图、我的模特、识图工作页的配置入口都导航到`Screen.AiConfiguration`。同页管理生图即梦/OpenAI及识图豆包/DeepSeek四项，分别选择两类默认服务；不自动共用或拷贝密钥。`AiConfigurationRepository`复用原`TryOnSettings/RecognitionSettings`加密文件、别名和revision，AppModule提供；`AiConfigurationViewModel`只保留状态，不保存密钥输入。
 - 四项本机旧配置无需迁移或重填。密钥输入仅非Saveable短期内存，掩码且不回填，不进Room、日志、备份、APK；修改只针对明确服务，固定中文错误，保留陈旧确认及已提交任务服务快照。配置不自动付费试连，Room30/备份10及全部原图保持。
 - 头模界面只显示名称、选中状态、完整Fit/放大与实际输入核对；不展示候选、评审、内部版本标记。旧“蓝紫妆·原候选”按稳定ID仅在显示层映射“蓝紫妆”，原目录、偏好与历史快照不改写。质量评估保留在开发记录，不因删除文案宣称评审通过。设计及验证见`docs/plans/2026-10-19-api-configuration.md`。
+
+- 2.57.0 /122统一配置及头模文案：35项定向设备回归、Debug和clean正式构建通过；早期412项JVM实际结果保留，未作为后续全量要求。2.56.2同签名覆盖启动、原noBackup配置摘要及正式配置页通过；未重复无关全库/图片升级审计。GitHub/Gitee正式附件匿名下载、SHA/HEAD通过，源码标签`03403a4`已推送。电脑公开查询200并选中2.57.0，正式app一次检查仍显示通用网络失败，不能宣称应用更新成功，直接APK可用。回执`docs/api-configuration-release-2.57.0-verification.json`。

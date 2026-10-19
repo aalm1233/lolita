@@ -38,6 +38,7 @@ data class TryOnUiState(
     val items: List<Item> = emptyList(),
     val categories: List<Category> = emptyList(),
     val selected: List<TryOnSelection> = emptyList(),
+    val instructions: String = "",
     val results: List<TryOnResult> = emptyList(),
     val searchQuery: String = "",
     val selectedCategoryId: Long? = null,
@@ -104,20 +105,20 @@ class TryOnViewModel @JvmOverloads constructor(
     private val clearApiKey: suspend (ImageGenerationProvider) -> Unit = { AppModule.tryOnSettings().clearKey(it) },
     tasks: Flow<List<ImageTask>> = AppModule.imageTaskRepository().tasks,
     private val readRetryTask: suspend (String) -> ImageTask? = { AppModule.imageTaskRepository().get(it) },
-    private val submitTask: suspend (List<TryOnSelection>, ImageGenerationProvider) -> String = { rows, provider ->
-        AppModule.imageTaskCoordinator().submitTryOn(rows, provider)
+    private val submitTask: suspend (List<TryOnSelection>, ImageGenerationProvider, String) -> String = { rows, provider, instructions ->
+        AppModule.imageTaskCoordinator().submitTryOn(rows, provider, instructions)
     },
     private val renameResult: suspend (Long, String) -> Unit = { id, name -> AppModule.tryOnRepository().rename(id, name) },
     private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) },
     personalModels: Flow<List<PersonalModel>> = flowOf(emptyList()),
     defaultPersonalModelId: Flow<Long?> = flowOf(null),
-    private val submitPersonalTask: suspend (List<TryOnSelection>, ImageGenerationProvider, Long, String) -> String = { rows, provider, id, path ->
-        AppModule.imageTaskCoordinator().submitTryOn(rows, provider, id, path)
+    private val submitPersonalTask: suspend (List<TryOnSelection>, ImageGenerationProvider, Long, String, String) -> String = { rows, provider, id, path, instructions ->
+        AppModule.imageTaskCoordinator().submitTryOn(rows, provider, id, path, instructions)
     }
 
 ) : ViewModel() {
     private val gson = Gson()
-    private val _uiState = MutableStateFlow(TryOnUiState(loadFailed = savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true, error = if (savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else null, selected = restoreSelection(), generationItemIds = savedStateHandle.get<List<Long>>(GENERATION_IDS).orEmpty().toSet(), requiresExplicitSubset = savedStateHandle[EXPLICIT_SUBSET] ?: (restoreSelection().size > 8), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
+    private val _uiState = MutableStateFlow(TryOnUiState(instructions = savedStateHandle.get<String>(INSTRUCTIONS).orEmpty().take(TryOnRequest.MAX_INSTRUCTIONS), loadFailed = savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true, error = if (savedStateHandle.get<Boolean>(MISSING_RETRY_SOURCES) == true) ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE else null, selected = restoreSelection(), generationItemIds = savedStateHandle.get<List<Long>>(GENERATION_IDS).orEmpty().toSet(), requiresExplicitSubset = savedStateHandle[EXPLICIT_SUBSET] ?: (restoreSelection().size > 8), latestTaskId = savedStateHandle[LAST_TASK], selectedPersonalModelId = savedStateHandle[MODEL_ID]))
     val uiState: StateFlow<TryOnUiState> = _uiState.asStateFlow()
     private var observedTasks = emptyList<ImageTask>()
     private var entryConsumed = savedStateHandle.get<Boolean>(ENTRY_CONSUMED) == true || savedStateHandle.contains(SELECTION)
@@ -154,6 +155,10 @@ class TryOnViewModel @JvmOverloads constructor(
                             _uiState.update { it.copy(loadFailed = true, error = ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE) }
                         }
                         val retry = retryTask?.takeUnless { it.sourceResourcesMissing }?.let { runCatching { ImageTaskRequest.decode(it.requestJson) }.getOrNull() }
+                        if (retry != null && !savedStateHandle.contains(INSTRUCTIONS)) {
+                            savedStateHandle[INSTRUCTIONS] = retry.instructions
+                            _uiState.update { it.copy(instructions = retry.instructions) }
+                        }
                         if (retry != null && savedStateHandle.get<Boolean>(MODEL_CHOSEN) != true) {
                             savedStateHandle[MODEL_CHOSEN] = true
                             savedStateHandle[MODEL_ID] = retry.tryOnModel?.personalModelId
@@ -258,6 +263,12 @@ class TryOnViewModel @JvmOverloads constructor(
     }
 
     fun updateSearchQuery(value: String) { _uiState.update { if (it.busy) it else it.copy(searchQuery = value) } }
+    fun updateInstructions(value: String) {
+        val state = _uiState.value
+        if (state.busy || state.isLoading || value.length > TryOnRequest.MAX_INSTRUCTIONS) return
+        savedStateHandle[INSTRUCTIONS] = value
+        _uiState.update { it.copy(instructions = value, error = null) }
+    }
     fun selectCategory(value: Long?) { _uiState.update { if (it.busy) it else it.copy(selectedCategoryId = value) } }
     fun toggleItem(itemId: Long) {
         val state = _uiState.value
@@ -311,7 +322,8 @@ class TryOnViewModel @JvmOverloads constructor(
     fun generate(confirmedProvider: ImageGenerationProvider = _uiState.value.provider,
         confirmedPersonalModelId: Long? = _uiState.value.selectedPersonalModelId,
         confirmedModelImagePath: String? = _uiState.value.selectedPersonalModel?.imageUrl,
-        confirmedSelection: List<TryOnSelection>? = null, confirmedKeyRevision: Int? = null, confirmedModelName: String? = null) {
+        confirmedSelection: List<TryOnSelection>? = null, confirmedKeyRevision: Int? = null, confirmedModelName: String? = null,
+        confirmedInstructions: String = _uiState.value.instructions) {
         val state = _uiState.value
         if (state.busy || state.isLoading || state.loadFailed || !state.keyLoaded) return
         if (confirmedProvider != state.provider) {
@@ -323,8 +335,8 @@ class TryOnViewModel @JvmOverloads constructor(
         }
         if (confirmedSelection != null && confirmedSelection != state.generationSelected ||
             confirmedKeyRevision != null && confirmedKeyRevision != state.keyRevision ||
-            confirmedModelName != null && confirmedModelName != state.modelName) {
-            _uiState.update { it.copy(error = "本次图片、物品、位置或服务配置已改变，请重新核对付费内容") }; return
+            confirmedModelName != null && confirmedModelName != state.modelName || confirmedInstructions != state.instructions) {
+            _uiState.update { it.copy(error = "本次图片、物品、穿戴要求或服务配置已改变，请重新核对付费内容") }; return
         }
         if (!state.hasKey) { _uiState.update { it.copy(error = "请先配置个人 API Key") }; return }
         state.modelIssue?.let { issue -> _uiState.update { it.copy(error = issue) }; return }
@@ -335,8 +347,8 @@ class TryOnViewModel @JvmOverloads constructor(
         viewModelScope.launch {
             try {
                 // Coordinator accepts in application scope before this screen's waiter can disappear.
-                val id = if (selectedModelId == null) submitTask(snapshot, confirmedProvider)
-                    else submitPersonalTask(snapshot, confirmedProvider, selectedModelId, requireNotNull(confirmedModelImagePath))
+                val id = if (selectedModelId == null) submitTask(snapshot, confirmedProvider, confirmedInstructions)
+                    else submitPersonalTask(snapshot, confirmedProvider, selectedModelId, requireNotNull(confirmedModelImagePath), confirmedInstructions)
                 savedStateHandle[LAST_TASK] = id
                 _uiState.update { it.copy(latestTaskId = id, latestTask = observedTasks.firstOrNull { row -> row.id == id }) }
             } catch (failure: CancellationException) { throw failure }
@@ -368,6 +380,7 @@ class TryOnViewModel @JvmOverloads constructor(
 
     companion object {
         private const val EXPLICIT_SUBSET = "tryOnRequiresExplicitSubset"
+        private const val INSTRUCTIONS = "tryOnInstructions"
         private const val GENERATION_IDS = "tryOnGenerationItemIds"
         private const val MODEL_ID = "tryOnPersonalModelId"
         private const val MODEL_CHOSEN = "tryOnPersonalModelChosen"

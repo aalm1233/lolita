@@ -408,6 +408,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 虚拟试衣实验（2.48.0）
 
+- 试衣穿戴改造（2.58.0）：新页面显式传入200字内穿戴要求（含空字符串），v4请求复用instructions、promptSnapshot，promptVersion=2；旧1–3请求及v4修订1原样读取执行。新提示词按已选角色处理裙撑体积、衣层接触、BNT前后位置、鞋袜和承重；保留身份、体型、骨骼长度及整体站姿，只容许实际鞋履和持物需要的最小局部姿态调整。描述随SavedState、确认、任务、历史和重试保全，改动后旧付费确认拒绝；Room30/备份10不变。设计与验证见 `docs/plans/2026-10-19-tryon-physics.md`。不以受控测试宣称真实生图物理准确性已验证。
+
 - 个人页、已拥有服饰及套装详情进入 `Screen.TryOn`，内置成年虚拟模特或已确认个人模特＋1–8件已有服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥。
 - `TryOnGenerator` 用进程共用Mutex防重复调用，上传前校验最新Item仍已拥有且图片归属/本地文件完整。`TryOnImages` 处理EXIF、长边1536及透明底白色合成；`TryOnImageApi` 仅调用官方HTTPS `/v1/images/edits`，型号 `gpt-image-2.5-sunburst`，medium/1024×1536/n=1/PNG；无付费自动重试，取消等待不承诺服务端停止计费。
 - 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。

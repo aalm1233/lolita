@@ -45,7 +45,7 @@ open class ImageTaskNavigationFixture {
                         openImageTasks = openTasks.value, onImageTasksOpened = { opened++; openTasks.value = false },
                         createTryOnViewModel = { handle -> TryOnViewModel(handle, items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))), results = flowOf(emptyList()),
                             readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = tasks,
-                            readRetryTask = { null }, submitTask = { _, provider -> submit(ImageTaskKind.TRY_ON, provider) }, renameResult = { _, _ -> }, deleteResult = {}) },
+                            readRetryTask = { null }, submitTask = { _, provider, _ -> submit(ImageTaskKind.TRY_ON, provider) }, renameResult = { _, _ -> }, deleteResult = {}) },
                         createMannequinViewModel = { handle -> MannequinViewModel(handle, item = flowOf(item), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))),
                             readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = tasks,
                             readRetryTask = { null }, submitTask = { _, provider -> submit(ImageTaskKind.MANNEQUIN, provider) }) },

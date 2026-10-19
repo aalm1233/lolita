@@ -39,7 +39,7 @@ class ImageServiceConfigurationTest {
                 TryOnViewModel(items = flowOf(listOf(item)), categories = flowOf(listOf(Category(id = 1, name = "OP", categorySemantic = CategorySemantic.OP))), results = flowOf(emptyList()),
                     readService = settings::readStatus, selectService = settings::selectProvider, serviceChanges = settings.changes,
                     saveApiKey = { provider, value -> settings.saveKey(value, provider) }, clearApiKey = settings::clearKey,
-                    tasks = flowOf(emptyList()), submitTask = { _, _ -> error("no paid calls") }, renameResult = { _, _ -> }, deleteResult = {})
+                    tasks = flowOf(emptyList()), submitTask = { _, _, _ -> error("no paid calls") }, renameResult = { _, _ -> }, deleteResult = {})
                     .also { store.put("tryOn", it) }
             }
             val mannequin = withContext(Dispatchers.Main) {

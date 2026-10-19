@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.tryon
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -19,6 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.TryOnResult
 import com.lolita.app.domain.model.ImageGenerationProvider
 import com.lolita.app.domain.model.TryOnSelection
+import com.lolita.app.domain.model.TryOnRequest
+import com.lolita.app.domain.model.ImageTaskRequest
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
@@ -37,6 +42,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     onManagePersonalModels: () -> Unit = {}, onConfigureApi: () -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
+    val keyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
     var showModelPicker by remember { mutableStateOf(false) }
@@ -60,13 +66,13 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    if (state.hasKey && !state.isSubmitting) {
-                        Text("上传“${state.modelName}”与服饰共 ${state.generationSelected.size + 1} 张图片及名称、穿戴位置至 ${state.provider.recipient}，可能计费。",
+                    if (state.hasKey && !state.isSubmitting && !keyboardVisible) {
+                        Text("上传“${state.modelName}”与服饰共 ${state.generationSelected.size + 1} 张图片及名称、穿戴位置、穿戴要求至 ${state.provider.recipient}，可能计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
                     Button(
-                        onClick = { if (!state.hasKey) onConfigureApi() else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName, state.generationSelected.toList(), state.keyRevision) },
+                        onClick = { if (!state.hasKey) onConfigureApi() else confirmation = TryOnConfirmation(state.provider, state.selectedPersonalModelId, state.selectedPersonalModel?.imageUrl, state.modelName, state.generationSelected.toList(), state.keyRevision, state.instructions) },
                         enabled = !state.busy && !state.isLoading && state.keyLoaded && (!state.hasKey || state.canGenerate),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -165,11 +171,28 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                     }
                 }
             }
+            item(key = "wearing-instructions") {
+                LolitaSection(title = "穿戴要求（选填）") {
+                    row {
+                        Spacer(Modifier.height(skin.spacingMedium))
+                        Text("可说明 BNT 前后位置、系带、掖入和叠穿方式。裙撑、衣层与鞋履会按结构处理支撑、垂坠和遮挡。",
+                            style = MaterialTheme.typography.bodySmall)
+                        OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
+                            label = { Text("补充穿戴描述") },
+                            placeholder = { Text("例如：BNT 戴靠后，露出刘海；衬衫掖进裙腰。") },
+                            enabled = !state.busy && !state.isLoading, minLines = if (keyboardVisible) 2 else 3, maxLines = 5,
+                            supportingText = { Text("${state.instructions.length} / ${TryOnRequest.MAX_INSTRUCTIONS} · 将发送给所选图像服务") },
+                            modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium).testTag("tryOnInstructions"))
+                        Text("高跟鞋会结合鞋楦与跟高调整足踝和承重姿态，保留人物体型与腿部比例；生成效果仍需核对。",
+                            modifier = Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
             item("background-advice") { ImageBackgroundAdvice() }
             item(key = "disclosure") {
                 LolitaSection(title = "生成前确认") {
                     row {
-                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.generationSelected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.generationSelected.size + 1} 张。仅上传这些图片和服饰名称、穿戴位置；生成可能产生费用。",
+                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.generationSelected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.generationSelected.size + 1} 张，并发送服饰名称、穿戴位置与填写的穿戴要求；生成可能产生费用。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         Text("未选择鞋履时沿用人物底图鞋；未选择袜装时保留底图相应区域，这些默认外观不会登记为已选物品。", style = MaterialTheme.typography.bodySmall)
                         Text("试衣图独立保存，不会改变服饰归属、穿搭次数或账目。取消、超时后服务端仍可能处理；应用不会自动重试。",
@@ -200,6 +223,10 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                         }
                         Text("试衣人物：${result.personalModelName ?: "内置虚拟模特"}", style = MaterialTheme.typography.bodySmall)
                         Text(result.itemNames.joinToString("、"), style = MaterialTheme.typography.bodySmall)
+                        val wearing = remember(result.requestSnapshotJson) {
+                            result.requestSnapshotJson?.let { runCatching { ImageTaskRequest.decode(it).instructions }.getOrNull() }.orEmpty()
+                        }
+                        if (wearing.isNotBlank()) Text("穿戴要求：$wearing", style = MaterialTheme.typography.bodySmall)
                         Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             TextButton(onClick = { rename = result }, modifier = Modifier.weight(1f)) { SkinIcon(IconKey.Edit, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingSmall)); Text("重命名") }
                             TextButton(onClick = { delete = result }, modifier = Modifier.weight(1f)) { SkinIcon(IconKey.Delete, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingSmall)); Text("删除") }
@@ -239,9 +266,13 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     confirmation?.let { captured ->
         val provider = captured.provider
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text("确认生成试衣图？") },
-            text = { Text("将使用“${captured.name}”，上传底图与本次明确选择的${captured.selections.size}件物品至 ${provider.recipient}：\n" +
-                captured.selections.joinToString("\n") { "${it.name} · ${it.role.label}" } + "\n未选鞋袜沿用底图，API 单独计费。任务提交后可在任务中心查看。") },
-            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider, captured.id, captured.path, captured.selections, captured.keyRevision, captured.name) }) { Text("确认并加入任务") } },
+            text = { Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                Text("将使用“${captured.name}”，上传底图与本次明确选择的${captured.selections.size}件物品至 ${provider.recipient}：\n" +
+                    captured.selections.joinToString("\n") { "${it.name} · ${it.role.label}" })
+                Text("穿戴要求：${captured.instructions.ifBlank { "未填写，按物品结构自然穿戴" }}", Modifier.testTag("tryOnConfirmedInstructions"))
+                Text("图片、物品名称、穿戴位置与上述要求将发送给该服务。未选鞋袜沿用底图，API 单独计费。任务提交后可在任务中心查看。")
+            } },
+            confirmButton = { TextButton(onClick = { confirmation = null; viewModel.generate(provider, captured.id, captured.path, captured.selections, captured.keyRevision, captured.name, captured.instructions) }) { Text("确认并加入任务") } },
             dismissButton = { TextButton(onClick = { confirmation = null }) { Text("再核对一下") } })
     }
 }
@@ -281,4 +312,4 @@ private fun PersonalModelPicker(state: TryOnUiState, onSelect: (Long?) -> Unit, 
         dismissButton = { TextButton(onClick = onDismiss) { Text("关闭") } })
 }
 
-private data class TryOnConfirmation(val provider: ImageGenerationProvider, val id: Long?, val path: String?, val name: String, val selections: List<TryOnSelection>, val keyRevision: Int)
+private data class TryOnConfirmation(val provider: ImageGenerationProvider, val id: Long?, val path: String?, val name: String, val selections: List<TryOnSelection>, val keyRevision: Int, val instructions: String)

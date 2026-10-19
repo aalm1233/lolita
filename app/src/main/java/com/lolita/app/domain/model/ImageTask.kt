@@ -53,7 +53,8 @@ data class ImageTaskRequest(
             require(garments.all { it.role.ordinal < 8 && it.semantic == null && it.composition == null }) { "旧任务不能使用新角色或语义" }
         } else {
             require(productOriginalImagePath == null || productOriginalImagePath.isNotBlank() && mannequinSubject != null) { "裁切来源快照无效" }
-            require(personalModel == null && promptVersion == 1 && !promptSnapshot.isNullOrBlank() && promptSnapshot.length <= 30000 && !serviceModel.isNullOrBlank()) { "不可变请求缺少服务或提示词快照" }
+            require(personalModel == null && promptVersion in setOf(1, TryOnRequest.PROMPT_VERSION) && !promptSnapshot.isNullOrBlank() && promptSnapshot.length <= 30000 && !serviceModel.isNullOrBlank()) { "不可变请求缺少服务或提示词快照" }
+            require(promptVersion != TryOnRequest.PROMPT_VERSION || mannequinSubject == null) { "穿戴提示词修订仅用于试衣" }
             require(inputSha256s != null && inputSha256s.size in 1..9 && inputSha256s.all { it.matches(Regex("[a-f0-9]{64}")) }) { "不可变输入校验信息无效" }
             require(mannequinSubject == null || mannequinSubject.semantic != null && mannequinSubject.semantic != CategorySemantic.UNCONFIRMED) { "展示图品类语义未确认" }
             require(wigHeadTemplate == null || mannequinSubject?.presentation == MannequinPresentation.WIG_HEAD)
@@ -69,9 +70,10 @@ data class ImageTaskRequest(
                 require(version != 3 && mannequinSubject == null) { "展示图请求不能用于试衣" }
                 require(personalModel == null) { "试衣任务不能包含模特生成资料" }
                 require(garments.any { it.role.garment }) { "请至少选择一件服装，并核对穿戴位置" }
-                if (version == 4) TryOnRequest(garments.map { TryOnSelection(it.itemId, it.name, "snapshot", it.role, it.semantic, it.composition) })
+                if (version == 4) TryOnRequest(garments.map { TryOnSelection(it.itemId, it.name, "snapshot", it.role, it.semantic, it.composition) }, instructions = instructions)
             }
             ImageTaskKind.MANNEQUIN -> {
+                require(promptVersion != TryOnRequest.PROMPT_VERSION) { "穿戴提示词修订仅用于试衣" }
                 require(personalModel == null && tryOnModel == null) { "人台图不能包含个人模特资料" }
                 require(garments.size == 1 && garments.single().role == TryOnRole.MAIN) { "展示图只能选择一件物品" }
             }

@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
@@ -50,7 +52,9 @@ class TryOnScreenTest {
     private val presentation = mutableStateOf(Presentation())
     private val acceptedModels = MutableStateFlow<List<PersonalModel>>(emptyList())
     private val defaultModelId = MutableStateFlow<Long?>(null)
+    private val history = MutableStateFlow<List<TryOnResult>>(emptyList())
     private var configured = 0
+    private var keyboard: androidx.compose.ui.platform.SoftwareKeyboardController? = null
     private var key: String? = null
     private lateinit var photos: List<String>
 
@@ -73,8 +77,8 @@ class TryOnScreenTest {
                     Item(id = 12, brandId = 1, categoryId = 2, name = "蝴蝶结", description = "", imageUrls = photos.take(1), status = ItemStatus.OWNED)
                 )),
                 categories = flowOf(listOf(Category(id = 1, name = "JSK", categorySemantic = CategorySemantic.JSK), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))),
-                results = flowOf(emptyList()), readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
-                tasks = flowOf(emptyList()), submitTask = { _, _ -> error("UI测试不应发出请求") },
+                results = history, readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
+                tasks = flowOf(emptyList()), submitTask = { _, _, _ -> error("UI测试不应发出请求") },
                 renameResult = { _, _ -> }, deleteResult = {}, personalModels = acceptedModels, defaultPersonalModelId = defaultModelId)
             store.put("ui", vm)
         }
@@ -86,8 +90,9 @@ class TryOnScreenTest {
         directory.deleteRecursively()
     }
 
-    private fun show() {
+    private fun show(fullHeight: Boolean = false) {
         compose.setContent {
+            keyboard = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
             val display = presentation.value
             val config = Configuration(LocalConfiguration.current).apply {
                 screenWidthDp = display.width
@@ -98,7 +103,7 @@ class TryOnScreenTest {
                 LocalDensity provides Density(LocalDensity.current.density, display.scale)) {
                 LolitaTheme(skinType = display.skin, darkTheme = display.dark) {
                     Surface(color = MaterialTheme.colorScheme.background) {
-                        Box(Modifier.size(display.width.dp, 640.dp)) { TryOnScreen({}, vm, onConfigureApi = { configured++ }) }
+                        Box(if (fullHeight) Modifier.width(display.width.dp).fillMaxHeight() else Modifier.size(display.width.dp, 640.dp)) { TryOnScreen({}, vm, onConfigureApi = { configured++ }) }
                     }
                 }
             }
@@ -107,6 +112,46 @@ class TryOnScreenTest {
 
     private fun workspace(text: String) {
         compose.onNodeWithTag("tryOnWorkspace").performScrollToNode(hasText(text))
+    }
+
+    @Test fun wearingDescriptionAcrossSevenSkinsAndKeyboardAndPaidConfirmation() {
+        compose.runOnIdle { vm.toggleItem(11); vm.saveKey("controlled-key") }
+        compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.busy }
+        show(fullHeight = true)
+        val output = File(instrumentation.targetContext.filesDir, "try-on-physics-screens").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
+            workspace("穿戴要求（选填）")
+            compose.onNodeWithTag("tryOnInstructions").performTextClearance()
+            compose.onNodeWithTag("tryOnInstructions").performTextInput("BNT 戴靠后，露出刘海；衬衫掖进裙腰。")
+            compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
+            compose.runOnIdle { keyboard?.hide() }
+            compose.waitForIdle()
+            workspace("穿戴要求（选填）")
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+        compose.runOnIdle { presentation.value = Presentation(width = 320, scale = 2f, skin = SkinType.VICTORIAN, dark = true) }
+        workspace("补充穿戴描述")
+        compose.onNodeWithTag("tryOnInstructions").performClick()
+        compose.onNodeWithTag("tryOnInstructions").performTextInput(" ")
+        compose.waitForIdle()
+        compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
+        val ime = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+        File(output, "small-large-font-keyboard.png").outputStream().use { ime.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        compose.runOnIdle { keyboard?.hide() }
+        compose.onNodeWithText("生成一张试衣图").performClick()
+        compose.onNodeWithTag("tryOnConfirmedInstructions").performScrollTo().assertTextContains("BNT 戴靠后，露出刘海；衬衫掖进裙腰。", substring = true)
+        compose.onNodeWithText("确认并加入任务").assertIsDisplayed().assertHasClickAction()
+        val dialog = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+        File(output, "small-large-font-confirmation.png").outputStream().use { dialog.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        compose.onNodeWithText("再核对一下").performClick()
+        assertEquals("BNT 戴靠后，露出刘海；衬衫掖进裙腰。 ", vm.uiState.value.instructions)
+        history.value = listOf(TryOnResult(id = 1, name = "有穿戴要求的记录", imageUrl = photos.first(), itemIds = listOf("11"), itemNames = listOf("月光裙"), model = "controlled",
+            requestSnapshotJson = ImageTaskRequest(listOf(ImageTaskGarment(11, "月光裙", TryOnRole.MAIN)), instructions = "BNT 戴靠后，露出刘海").encode()))
+        compose.waitUntil { vm.uiState.value.results.isNotEmpty() }
+        workspace("穿戴要求：BNT 戴靠后，露出刘海")
+        compose.onNodeWithText("穿戴要求：BNT 戴靠后，露出刘海").assertIsDisplayed()
     }
 
     @Test fun pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences() {
@@ -234,7 +279,7 @@ class TryOnScreenTest {
                     status = ItemStatus.OWNED, imageUrls = photos.take(1))
             }), categories = flowOf(semantics.mapIndexed { index,semantic -> Category(id=index+1L,name=semantic.label,categorySemantic=semantic) }), results = flowOf(emptyList()),
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value ->  }, clearApiKey = { _ ->  }, tasks = flowOf(emptyList()),
-                submitTask = { _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
+                submitTask = { _, _, _ -> error("不能付费调用") }, renameResult = { _, _ -> }, deleteResult = {})
             store.put("eight-pieces", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading && vm.uiState.value.keyLoaded }

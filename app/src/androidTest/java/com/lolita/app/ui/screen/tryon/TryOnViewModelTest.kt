@@ -40,6 +40,7 @@ class TryOnViewModelTest {
     private val defaultModel = MutableStateFlow<Long?>(null)
     private var personalRequests = 0
     private var submittedModelId: Long? = null
+    private var submittedInstructions: String? = null
     private lateinit var directory: File
     private var configured = true
     private val tasks = MutableStateFlow<List<ImageTask>>(emptyList())
@@ -85,11 +86,11 @@ class TryOnViewModelTest {
                 saveApiKey = { _, value -> configured = true },
                 clearApiKey = { _ -> configured = false },
                 tasks = tasks, readRetryTask = { retryReader(it) },
-                submitTask = { rows, _ -> requests++; operation(rows) },
+                submitTask = { rows, _, instructions -> requests++; submittedInstructions = instructions; operation(rows) },
                 renameResult = repository::rename,
                 deleteResult = repository::delete,
                 personalModels = models, defaultPersonalModelId = defaults,
-                submitPersonalTask = { _, _, id, _ -> personalRequests++; submittedModelId = id; "personal-task" }
+                submitPersonalTask = { _, _, id, _, instructions -> personalRequests++; submittedModelId = id; submittedInstructions = instructions; "personal-task" }
             ).also { store.put("vm-${System.nanoTime()}", it) }
         }
         withTimeout(10_000) { vm.uiState.first { !it.isLoading && it.keyLoaded && (!waitModels || it.modelsLoaded) } }
@@ -97,6 +98,45 @@ class TryOnViewModelTest {
     }
 
     private suspend fun main(action: () -> Unit) = withContext(Dispatchers.Main) { action() }
+
+    @Test fun wearingInstructionsRejectStaleConfirmationAndFreezeAcceptedSubmission() = runBlocking {
+        val pending = CompletableDeferred<String>()
+        operation = { pending.await() }
+        val handle = SavedStateHandle()
+        val vm = model(handle)
+        main { vm.toggleItem(11); vm.updateInstructions("BNT 戴靠前") }
+        val confirmed = vm.uiState.value.instructions
+        main { vm.updateInstructions("BNT 戴靠后，露出刘海"); vm.generate(confirmedInstructions = confirmed) }
+        assertEquals(0, requests)
+        assertTrue(vm.uiState.value.error!!.contains("穿戴要求"))
+        main { vm.generate(); vm.updateInstructions("提交中不能覆盖") }
+        assertEquals("BNT 戴靠后，露出刘海", submittedInstructions)
+        assertEquals(submittedInstructions, vm.uiState.value.instructions)
+        pending.complete("wearing-task")
+        withTimeout(10_000) { vm.uiState.first { !it.isSubmitting } }
+        main { vm.updateInstructions("字".repeat(201)) }
+        assertEquals(submittedInstructions, vm.uiState.value.instructions)
+        val restored = model(handle)
+        assertEquals(submittedInstructions, restored.uiState.value.instructions)
+        main { restored.updateInstructions("") }
+        assertEquals("", model(handle).uiState.value.instructions)
+        assertEquals(1, requests)
+    }
+
+    @Test fun retryDescriptionSeedsOnceAndExplicitClearSurvivesRecreation() = runBlocking {
+        val old = backgroundTask().copy(id = "wearing-retry", status = com.lolita.app.domain.model.ImageTaskStatus.FAILED,
+            requestJson = com.lolita.app.domain.model.ImageTaskRequest(
+                listOf(com.lolita.app.domain.model.ImageTaskGarment(11, "裙子", TryOnRole.MAIN)), instructions = "BNT 戴靠后").encode())
+        database.imageTaskDao().insert(old)
+        val handle = SavedStateHandle(mapOf("retryTaskId" to old.id))
+        val vm = model(handle)
+        assertEquals("BNT 戴靠后", vm.uiState.value.instructions)
+        main { vm.updateInstructions("") }
+        val recreated = model(handle)
+        assertEquals("", recreated.uiState.value.instructions)
+        assertEquals(old.requestJson, database.imageTaskDao().get(old.id)!!.requestJson)
+        assertEquals(0, requests)
+    }
 
     @Test fun backgroundGenerationDoesNotBlockEditingOrAnotherExplicitSubmission() = runBlocking {
         val vm = model()
@@ -185,7 +225,7 @@ class TryOnViewModelTest {
             TryOnViewModel(handle, items = database.itemDao().getAllItems(), categories = database.categoryDao().getAllCategories(),
                 results = repository.results, readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, true) },
                 selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, _ -> }, clearApiKey = {},
-                tasks = tasks, readRetryTask = { retryReader(it) }, submitTask = { _, _ -> error("no paid work") }, renameResult = { _, _ -> }, deleteResult = {})
+                tasks = tasks, readRetryTask = { retryReader(it) }, submitTask = { _, _, _ -> error("no paid work") }, renameResult = { _, _ -> }, deleteResult = {})
                 .also { store.put("loading", it) }
         }
         withTimeout(10_000) { vm.uiState.first { it.items.isNotEmpty() && it.keyLoaded } }
@@ -248,10 +288,11 @@ class TryOnViewModelTest {
         defaultModel.value = null
         val restored = model(handle)
         assertEquals(91L, restored.uiState.value.selectedPersonalModelId)
-        main { restored.generate() }
+        main { restored.updateInstructions("衬衫掖进裙腰"); restored.generate() }
         withTimeout(10_000) { restored.uiState.first { it.latestTaskId != null } }
         assertEquals(91L, submittedModelId)
         assertEquals(1, personalRequests)
+        assertEquals("衬衫掖进裙腰", submittedInstructions)
         assertEquals(0, requests)
         file.delete()
         assertFalse(restored.uiState.value.canGenerate)

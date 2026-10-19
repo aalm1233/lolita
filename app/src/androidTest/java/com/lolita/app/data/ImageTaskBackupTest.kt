@@ -26,6 +26,50 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @RunWith(AndroidJUnit4::class)
 class ImageTaskBackupTest {
+    @Test fun physicalTryOnFrozenDescriptionSurvivesExecutionAndZipRestore() = runBlocking { fixture { f ->
+        val item = f.db.itemDao().getItemById(f.itemId)!!
+        val category = f.db.categoryDao().getCategoryById(item.categoryId)!!.copy(categorySemantic = CategorySemantic.JSK)
+        f.db.categoryDao().updateCategory(category)
+        f.db.itemDao().updateItem(item.copy(status = ItemStatus.OWNED))
+        val coordinator = ImageTaskCoordinator(f.db, f.scope, {},
+            { ImageFileHelper.saveGeneratedImage(f.context, it) }, ImageFileHelper::deleteImage,
+            { ImageFileHelper.isOwnedGeneratedImage(f.context, it) },
+            snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(f.context, it) },
+            validateSourceImage = { File(it).isFile })
+        coordinator.awaitStartup()
+        val description = "BNT 戴靠后，露出刘海；衬衫掖进裙腰。"
+        val id = coordinator.submitTryOn(listOf(TryOnSelection(f.itemId, item.name, f.source, TryOnRole.MAIN, CategorySemantic.JSK)), ImageGenerationProvider.SEEDREAM, description)
+        val frozen = ImageTaskRequest.decode(f.db.imageTaskDao().get(id)!!.requestJson)
+        assertEquals(2, frozen.promptVersion)
+        assertEquals(description, frozen.instructions)
+        val emptyId = coordinator.submitTryOn(listOf(TryOnSelection(f.itemId, item.name, f.source, TryOnRole.MAIN)), ImageGenerationProvider.SEEDREAM, "")
+        val empty = ImageTaskRequest.decode(f.db.imageTaskDao().get(emptyId)!!.requestJson)
+        assertEquals(2, empty.promptVersion)
+        assertEquals("", empty.instructions)
+        coordinator.cancel(emptyId)
+        var calls = 0
+        val images = com.lolita.app.data.tryon.TryOnImages(f.context)
+        val executor = ImageTaskExecutor(coordinator, f.db, { ImageGenerationCredentials(it, "controlled-key") },
+            images::prepare, images::prepareMannequin, { _, refs, prompt ->
+                calls++; assertEquals(2, refs.size); assertEquals(frozen.promptSnapshot, prompt)
+                assertTrue(prompt.contains("PHYSICAL WEARING PLAN")); f.bytes
+            }, prepareSnapshotImages = images::prepareSnapshots)
+        // Editing current inventory cannot rewrite the queued request or its historical labels.
+        f.db.itemDao().updateItem(item.copy(name = "后来改名", status = ItemStatus.OWNED))
+        ImageTaskRunner(coordinator, executor::execute).runQueue()
+        val task = f.db.imageTaskDao().get(id)!!
+        assertEquals(ImageTaskStatus.COMPLETED, task.status)
+        val history = f.db.tryOnDao().get(task.tryOnResultId!!)!!
+        assertEquals(description, ImageTaskRequest.decode(history.requestSnapshotJson!!).instructions)
+        val manager = BackupManager(f.context, f.db, withImageTasksPaused = { action -> coordinator.withRestorePaused(action) })
+        val uri = manager.exportToZip().getOrThrow().also(f.exports::add)
+        manager.importBackup(uri).getOrThrow()
+        val restored = ImageTaskRequest.decode(f.db.imageTaskDao().get(id)!!.requestJson)
+        assertEquals(frozen, restored)
+        assertEquals(history.requestSnapshotJson, f.db.tryOnDao().get(history.id)!!.requestSnapshotJson)
+        assertEquals(1, calls)
+    } }
+
     @Test fun standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(false) }
     @Test fun standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(true) }
 

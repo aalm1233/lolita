@@ -57,6 +57,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                     request?.let {
                         if (it.garments.isNotEmpty()) Text(it.garments.joinToString("、") { row -> row.name }, Modifier.padding(top = skin.spacingSmall))
                         it.tryOnModel?.let { person -> Text("本次试衣人物：${person.name}", Modifier.padding(top = skin.spacingSmall)) }
+                        if (task.kind == ImageTaskKind.TRY_ON && it.instructions.isNotBlank()) Text("穿戴要求：${it.instructions}", Modifier.padding(top = skin.spacingSmall))
                         it.personalModel?.let { person ->
                             Text("${person.name} · ${person.measurements.heightCm} 厘米 · ${person.measurements.weightKg} 公斤", Modifier.padding(top = skin.spacingSmall))
                         }

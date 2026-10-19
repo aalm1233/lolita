@@ -119,6 +119,17 @@ class ImageTaskScreenTest {
         compose.onNodeWithTag(if (detail.value) "imageTaskDetail" else "imageTasks").performScrollToNode(hasText(text))
         compose.onNodeWithText(text).performScrollTo()
     }
+
+    @Test fun tryOnTaskDetailsRetainTheOriginalWearingDescription() = runBlocking {
+        val description = "BNT 戴靠前，系带在下巴下；裙撑留在裙内。"
+        db.imageTaskDao().update(task(failedId, ImageTaskStatus.FAILED).copy(kind = ImageTaskKind.TRY_ON,
+            requestJson = ImageTaskRequest(listOf(ImageTaskGarment(11, "月光裙", TryOnRole.MAIN)), instructions = description).encode()))
+        withTimeout(10_000) { model.uiState.first { it.tasks.any { row -> row.id == failedId && row.kind == ImageTaskKind.TRY_ON } } }
+        show(failedId)
+        scrollTo("穿戴要求：$description")
+        compose.onNodeWithText("穿戴要求：$description").assertIsDisplayed()
+        Unit
+    }
     @Test fun personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried() = runBlocking {
         val request = PersonalModelRequest("我的模特", PersonalModelMode.PARAMETERS, BodyMeasurements(165.0, 52.0))
         db.imageTaskDao().update(task(pendingId, ImageTaskStatus.AWAITING_CONFIRMATION).copy(

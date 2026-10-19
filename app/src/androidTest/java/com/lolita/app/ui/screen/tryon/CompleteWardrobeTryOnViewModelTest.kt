@@ -32,7 +32,7 @@ class CompleteWardrobeTryOnViewModelTest {
                 model = TryOnViewModel(handle, items = items, categories = categories, results = MutableStateFlow(emptyList()),
                     readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, true) }, selectService = {}, serviceChanges = serviceChanges,
                     saveApiKey = { _, _ -> }, clearApiKey = {}, tasks = MutableStateFlow(emptyList()), readRetryTask = { null },
-                    submitTask = { selected, _ -> submitted = selected; "controlled-task" }, renameResult = { _, _ -> }, deleteResult = {})
+                    submitTask = { selected, _, _ -> submitted = selected; "controlled-task" }, renameResult = { _, _ -> }, deleteResult = {})
                 store.put("model", model)
             }
             return model

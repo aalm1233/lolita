@@ -101,33 +101,38 @@ class ImageTaskCoordinator(
     suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider): String =
         submitTryOn(selected, provider, null)
 
+    suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider, instructions: String): String =
+        submitTryOnSnapshot(selected, provider, null, null, instructions, freezeWearing = true)
+
     suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider, personalModelId: Long?): String {
-        return submitTryOnSnapshot(selected, provider, personalModelId, null)
+        return submitTryOnSnapshot(selected, provider, personalModelId, null, "")
     }
 
     suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider,
-        personalModelId: Long, expectedModelImagePath: String): String {
+        personalModelId: Long, expectedModelImagePath: String, instructions: String = ""): String {
         require(expectedModelImagePath.isNotBlank()) { "请重新选择试衣模特" }
-        return submitTryOnSnapshot(selected, provider, personalModelId, expectedModelImagePath)
+        return submitTryOnSnapshot(selected, provider, personalModelId, expectedModelImagePath, instructions, freezeWearing = true)
     }
 
     private suspend fun submitTryOnSnapshot(selected: List<TryOnSelection>, provider: ImageGenerationProvider,
-        personalModelId: Long?, expectedModelImagePath: String?): String {
+        personalModelId: Long?, expectedModelImagePath: String?, instructions: String, freezeWearing: Boolean = false): String {
         val snapshot = selected.toList()
-        val request = TryOnRequest(snapshot)
+        val request = TryOnRequest(snapshot, instructions = instructions.trim())
         return accepted {
-            if (snapshot.any { it.semantic != null }) {
+            // Legacy callers without semantic metadata retain their existing request protocol.
+            // The current editor always explicitly supplies instructions, including an empty string.
+            if (freezeWearing || snapshot.any { it.semantic != null } || request.instructions.isNotEmpty()) {
                 snapshot.forEach { row ->
                     val item = requireNotNull(db.itemDao().getItemById(row.itemId)) { "所选物品已删除" }
                     require(item.status == com.lolita.app.data.local.entity.ItemStatus.OWNED && row.imagePath in item.imageUrls) { "所选物品或图片已改变" }
-                    require(db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == row.semantic) { "分类语义已改变，请重新核对" }
+                    require(row.semantic == null || db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == row.semantic) { "分类语义已改变，请重新核对" }
                 }
                 val person = personalModelId?.let { requireNotNull(db.personalModelDao().get(it)) { "所选人物已删除" } }
                 require(person == null || expectedModelImagePath == null || person.imageUrl == expectedModelImagePath) { "人物底图已改变，请重新确认" }
                 suspend fun enqueueSnapshot(modelPath: String): String {
                     val sources = listOf(modelPath) + snapshot.map { it.imagePath }
                     val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition) },
-                        version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = 1,
+                        instructions = request.instructions, version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = TryOnRequest.PROMPT_VERSION,
                         promptSnapshot = request.prompt(personalModel = person != null), serviceModel = provider.model,
                         inputSha256s = sources.map(::imageSha256))
                     return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)

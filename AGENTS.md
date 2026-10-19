@@ -202,6 +202,15 @@
 - 编译失败先修到通过再给结论。
 - **增量编译缓存陷阱**：Kotlin 增量编译可能未正确重编译跨文件依赖（如 `VictorianIconProvider` 依赖 `VictorianDecorativeIcons`），导致 release 包运行时回退到基类默认行为（图标变成 Material 默认图标）。debug 包因编译路径不同可能不受影响。**出 release 包前必须 `clean`**，遇到"debug 正常但 release 异常"的症状优先尝试 `clean assembleRelease`。
 
+### 发布测试按代码影响范围执行
+
+- 每次发布以“上一已发布版本对应的源码 → 本次待发布源码”的差异为依据，包含本次将发布的未提交改动；沿实际调用和数据流确定受影响功能及必要依赖，只执行这些范围的测试。
+- 默认不跑全量 JVM、全量仪器化或完整 USB 套件；优先按测试类或方法定向执行。各章节列出的回归用例和历史验证记录是选例依据，不是每次发布的必跑清单。
+- 页面改动只验收受影响页面、入口与关键状态；七套皮肤浅暗、小屏、大字及键盘验证仅覆盖本次改变的界面或组件。共用组件、主题、导航或业务底层改变时，按实际调用方扩大覆盖，不自动重测所有页面。
+- 数据库、迁移、备份、持久设置、启动初始化或图片引用/清理逻辑改变时，才补相应升级、备份往返、失败保护及数据/图片保全验证；核对范围按实际影响确定。纯文案或布局改动不重复全库逐字段、全部图片 SHA256 或无关备份回归。
+- 同一最终代码状态下已通过的相关用例不重复执行；后续修改或失败暴露新影响时，只重跑受影响用例并补必要覆盖。发布记录简要说明“改动 → 影响范围 → 所选用例与结果”，未涉及部分注明原因即可。
+- Debug 构建、clean Release 构建、正式签名、覆盖安装启动及分发校验仍遵守既有发布流程；纯文档更新仅核对文档差异，不构建、不跑应用测试、不出包。全量回归仅在用户明确要求，或基础改动确实影响全应用时执行，并说明依据。
+
 ## 本机安卓模拟器调试
 
 - Apple Silicon 本机 AVD：`Lolita_API_35`（Android 15 / API 35，Google APIs ARM64，Pixel 7）。
@@ -288,7 +297,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ### 应用改动默认发布流程
 
-1. 更新 `versionCode` / `versionName` 和 `AGENTS.md`，按改动运行构建及必要回归，先提交正式源码。
+1. 更新 `versionCode` / `versionName` 和 `AGENTS.md`，完成规定构建，并按“发布测试按代码影响范围执行”选择定向回归，先提交正式源码。
 2. 从该源码执行 `clean assembleRelease`，核对包名、版本、非调试属性及原正式签名；正式 APK 必须支持同签名覆盖安装。签名参数沿用本机配置，不进入仓库。
 3. 将正式包命名为 `lolita-<version>.apk`，生成 `SHA256SUMS`。创建指向该源码提交的 GitHub 标签 `v<major>.<minor>.<patch>`，推送源码目标分支及标签；不改写已发布标签。
 4. 在 GitHub 和 Gitee 同步发布同一个已签名 APK 与 `SHA256SUMS`。GitHub 保留旧版应用的检查入口；Gitee 为新版应用的国内检查与下载渠道。只推送 Git 代码或标签不等于发布完成。
@@ -315,7 +324,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 草稿相册/尺码图及冻结展示任务的商品原图兼容本机历史文件名，继续校验精确私有路径、非软链与图片完整性；模板、派生裁切、识图证据和个人照片保持UUID规则。导出和JSON资源可用性检查复用`validateFrozenTaskImages`，不因当前相册变化误标历史任务缺图。`LegacyDraftBackupTest`覆盖真实草稿/任务准入后的JSON/ZIP往返与失败保全，说明见`docs/zip-backup-legacy-images-2026-10-18.md`。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
-- 数据回归：`./gradlew testDebugUnitTest connectedDebugAndroidTest assembleDebug`，仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
+- 数据回归按上述发布影响范围选取测试类或方法，不默认执行全量 `testDebugUnitTest` / `connectedDebugAndroidTest`；仪器化测试资源为 `app/schemas/`；用例定义在 `BackupFormatTest`、`StageAccountingTest`、`ImportAccountingTest`、`DataIntegrityTest` 和 `OrderBusinessTest`；快捷穿搭筛选与已有照片/日期保全回归位于 `QuickOutfitLogFilterTest` 和 `QuickOutfitLogViewModelTest`（独立内存 Room）。
 
 - 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。
 

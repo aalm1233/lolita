@@ -110,6 +110,18 @@ class MannequinGeneratorTest {
         }
     }
 
+    @Test fun legacyAndAdditionalDetailPhotosCanBeSelectedWithoutAddingThemToTheAlbum() = runBlocking {
+        for (legacy in listOf(true, false)) Fixture().use { f ->
+            f.item = f.item!!.copy(imageUrls = emptyList(), sizeChartImageUrl = if (legacy) f.source.absolutePath else null,
+                sizeChartImageUrls = if (legacy) emptyList() else listOf(f.source.absolutePath))
+            val original = f.item
+            assertEquals(f.preview.absolutePath, f.generator().generate(f.request))
+            assertEquals(1, f.apiCalls)
+            assertEquals(original, f.item)
+            assertTrue(f.item!!.imageUrls.isEmpty())
+        }
+    }
+
     @Test fun staleItemCategoryReferenceAndMissingSourceNeverStartPaidRequest() = runBlocking {
         Fixture().use { f ->
             val original = f.item!!

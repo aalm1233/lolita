@@ -59,9 +59,27 @@ class MannequinScreenTest {
 
     @Before fun setup() {
         directory = File(instrumentation.targetContext.cacheDir, "mannequin-ui-${UUID.randomUUID()}").apply { mkdirs() }
-        photos = (1..3).map { index -> File(directory, "$index.png").also { file ->
-            Bitmap.createBitmap(40, 60, Bitmap.Config.ARGB_8888).also { bitmap ->
+        photos = (1..5).map { index -> File(directory, "$index.png").also { file ->
+            Bitmap.createBitmap(if (index >= 4) 240 else 40, if (index >= 4) 640 else 60, Bitmap.Config.ARGB_8888).also { bitmap ->
                 bitmap.eraseColor(if (index == 1) android.graphics.Color.MAGENTA else android.graphics.Color.BLUE)
+                if (index >= 4) {
+                    val canvas = android.graphics.Canvas(bitmap)
+                    canvas.drawColor(android.graphics.Color.WHITE)
+                    val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+                        color = if (index == 4) 0xFFAA4B70.toInt() else 0xFF304A75.toInt()
+                    }
+                    for (shift in listOf(0f, 92f)) {
+                        val path = android.graphics.Path().apply {
+                            moveTo(28f+shift,50f);lineTo(72f+shift,50f);lineTo(72f+shift,460f)
+                            lineTo(118f+shift,535f);lineTo(108f+shift,565f);lineTo(48f+shift,565f)
+                            lineTo(28f+shift,490f);close()
+                        }
+                        canvas.drawPath(path,paint)
+                    }
+                    paint.color = android.graphics.Color.WHITE
+                    for (shift in listOf(0f,92f)) for (y in listOf(115f,175f,235f,295f,355f,415f))
+                        canvas.drawCircle(50f+shift,y,7f,paint)
+                }
                 file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
             }
         }.absolutePath }
@@ -69,7 +87,8 @@ class MannequinScreenTest {
         categoryRows = MutableStateFlow(listOf(Category(id = 1, name = "OP", categorySemantic = com.lolita.app.domain.model.CategorySemantic.OP)))
         instrumentation.runOnMainSync {
             vm = MannequinViewModel(SavedStateHandle(mapOf("itemId" to 11L)),
-                item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED, imageUrls = photos.take(2))),
+                item = flowOf(Item(id = 11, name = "月光心愿裙", brandId = 1, categoryId = 1, description = "", status = ItemStatus.WISHED,
+                    imageUrls = photos.take(2), sizeChartImageUrl = photos[3], sizeChartImageUrls = listOf(photos[4]))),
                 categories = categoryRows,
                 readService = { com.lolita.app.data.tryon.ImageServiceStatus(provider, key != null) }, selectService = { provider = it }, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
                 tasks = flowOf(emptyList()), submitTask = { request, _ -> calls++; submitted = request; generated.await() })
@@ -103,6 +122,46 @@ class MannequinScreenTest {
     private fun configure() {
         compose.runOnIdle { vm.saveKey("controlled-ui-private") }
         compose.waitUntil(10_000) { vm.uiState.value.hasKey && !vm.uiState.value.isConfiguring }
+    }
+
+    @Test fun detailSourceSelectionAcrossSevenSkinsAndSmallTextKeepsActualConfirmedInput() {
+        compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "连裤袜", group = CategoryGroup.ACCESSORY,
+            categorySemantic = com.lolita.app.domain.model.CategorySemantic.KNEE_SOCKS)) }
+        compose.waitUntil(5_000) { vm.uiState.value.presentation == com.lolita.app.domain.model.MannequinPresentation.ACCESSORY }
+        show(); configure()
+        scroll("详情图（2）"); compose.onNodeWithText("详情图（2）").performClick()
+        scroll("详情图 2"); compose.onNodeWithText("详情图 2").performClick()
+        assertEquals(photos[4], vm.uiState.value.selectedImage)
+        scroll("商品图（2）"); compose.onNodeWithText("商品图（2）").performClick()
+        compose.onNodeWithText("当前选择：详情图 2").assertExists()
+        assertEquals(photos[4], vm.uiState.value.selectedImage)
+        scroll("详情图（2）"); compose.onNodeWithText("详情图（2）").performClick().assertIsSelected()
+        val output = File(instrumentation.targetContext.filesDir, "mannequin-detail-source-screens").apply { mkdirs() }
+        for (skin in SkinType.entries) for (dark in listOf(false, true)) {
+            compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
+            scroll("详情图（2）")
+            compose.onNodeWithText("当前选择：详情图 2").assertExists()
+            File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
+                compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+        }
+        compose.runOnIdle { presentation.value = Presentation(width = 320, scale = 2f) }
+        scroll("详情图（2）")
+        compose.onNodeWithText("详情图（2）").assertIsSelected()
+        compose.onNodeWithTag("mannequinWorkspace").performScrollToIndex(0)
+        scroll("详情图 2")
+        compose.onNodeWithText("生成单品展示图").assertIsDisplayed().assertIsEnabled()
+        File(output, "small-320dp-2x.png").outputStream().use {
+            compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+        compose.onNodeWithText("生成单品展示图").performClick()
+        assertEquals(0, calls)
+        compose.onNodeWithText("确认并加入任务").performClick()
+        compose.waitUntil(10_000) { calls == 1 }
+        assertEquals(photos[4], submitted!!.imagePath)
+        assertEquals(com.lolita.app.domain.model.CategorySemantic.KNEE_SOCKS, submitted!!.subject!!.semantic)
+        generated.complete("detail-source-task")
+        compose.waitUntil(10_000) { !vm.uiState.value.isSubmitting }
     }
     @Test fun standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory() {
         compose.runOnIdle { categoryRows.value = listOf(Category(id = 1, name = "KC", group = CategoryGroup.ACCESSORY, categorySemantic = com.lolita.app.domain.model.CategorySemantic.KC)) }

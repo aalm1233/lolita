@@ -22,6 +22,7 @@ import com.lolita.app.domain.model.TryOnRole
 import com.lolita.app.domain.model.TryOnSelection
 import com.lolita.app.domain.model.TryOnConflict
 import com.lolita.app.domain.model.tryOnConflict
+import com.lolita.app.domain.model.supportsVirtualTryOn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,7 @@ data class TryOnUiState(
     val results: List<TryOnResult> = emptyList(),
     val searchQuery: String = "",
     val selectedCategoryId: Long? = null,
+    val statusFilter: ItemStatus? = null,
     val isLoading: Boolean = true,
     val loadFailed: Boolean = false,
     val historyFailed: Boolean = false,
@@ -63,6 +65,7 @@ data class TryOnUiState(
 ) {
     val busy: Boolean get() = isSubmitting || isConfiguring
     val visibleItems: List<Item> get() = items.filter { item ->
+        (statusFilter == null || item.status == statusFilter) &&
         (selectedCategoryId == null || item.categoryId == selectedCategoryId) &&
             (searchQuery.isBlank() || item.name.contains(searchQuery.trim(), ignoreCase = true))
     }
@@ -95,7 +98,7 @@ data class PendingTryOnConflict(val candidate: TryOnSelection, val conflict: Try
 /** The function boundaries isolate personal credentials and the paid request from UI/Room tests. */
 class TryOnViewModel @JvmOverloads constructor(
     private val savedStateHandle: SavedStateHandle = SavedStateHandle(),
-    items: Flow<List<Item>> = AppModule.itemRepository().getItemsByStatus(ItemStatus.OWNED),
+    items: Flow<List<Item>> = AppModule.itemRepository().getAllItems(),
     categories: Flow<List<Category>> = AppModule.categoryRepository().getAllCategories(),
     results: Flow<List<TryOnResult>> = AppModule.tryOnRepository().results,
     private val readService: suspend () -> ImageServiceStatus = { AppModule.tryOnSettings().readStatus() },
@@ -136,7 +139,7 @@ class TryOnViewModel @JvmOverloads constructor(
                 }
         }
         viewModelScope.launch {
-            combine(items, categories) { rows, groups -> rows.filter { it.status == ItemStatus.OWNED } to groups }
+            combine(items, categories) { rows, groups -> rows.filter { it.status.supportsVirtualTryOn } to groups }
                 .catch { failure ->
                     if (failure is CancellationException) throw failure
                     _uiState.update { it.copy(isLoading = false, loadFailed = true, error = "衣橱读取失败，请返回后重试") }
@@ -176,9 +179,9 @@ class TryOnViewModel @JvmOverloads constructor(
                         setSelection(initial.map { item -> selection(item).let { selected ->
                             retry?.garments?.firstOrNull { it.itemId == item.id }?.let { selected.copy(role = it.role) } ?: selected
                         } })
-                        if (retry != null) _uiState.update { it.copy(error = if (initial.size != retry.garments.size) "部分原服饰已删除或不在已拥有衣橱，请重新选择并核对；原任务保留" else "已载入当前服饰图片，请核对后再次确认生成；原任务保留") }
+                        if (retry != null) _uiState.update { it.copy(error = if (initial.size != retry.garments.size) "部分原物品已删除或不在已拥有与心愿列表，请重新选择并核对；原任务保留" else "已载入当前服饰图片，请核对后再次确认生成；原任务保留") }
                         if (initial.size > 8) _uiState.update { it.copy(error = "此搭配共${initial.size}件，请明确勾选本次试衣的1至8件，不会自动删除其他物品") }
-                        if (itemId != null && initial.isEmpty()) _uiState.update { it.copy(error = "这件服饰已不在已拥有衣橱，请重新选择") }
+                        if (itemId != null && initial.isEmpty()) _uiState.update { it.copy(error = "这件物品已不在已拥有与心愿列表，请重新选择") }
                         _uiState.update { it.copy(isLoading = false) }
                     }
                 }
@@ -202,6 +205,11 @@ class TryOnViewModel @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    fun selectStatusFilter(status: ItemStatus?) {
+        if (_uiState.value.busy || status != null && !status.supportsVirtualTryOn) return
+        _uiState.update { it.copy(statusFilter = status) }
     }
 
     private fun restoreSelection(): List<TryOnSelection> = runCatching {

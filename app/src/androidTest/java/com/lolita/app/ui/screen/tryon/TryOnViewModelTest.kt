@@ -2,6 +2,9 @@ package com.lolita.app.ui.screen.tryon
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -65,6 +68,7 @@ class TryOnViewModelTest {
 
     @After fun teardown() {
         instrumentation.runOnMainSync { store.clear() }
+        runBlocking { modelJobs.joinAll() }
         instrumentation.waitForIdleSync()
         database.close()
         directory.deleteRecursively()
@@ -91,13 +95,14 @@ class TryOnViewModelTest {
                 deleteResult = repository::delete,
                 personalModels = models, defaultPersonalModelId = defaults,
                 submitPersonalTask = { _, _, id, _, instructions -> personalRequests++; submittedModelId = id; submittedInstructions = instructions; "personal-task" }
-            ).also { store.put("vm-${System.nanoTime()}", it) }
+            ).also { store.put("vm-${System.nanoTime()}", it); modelJobs += requireNotNull(it.viewModelScope.coroutineContext[Job]) }
         }
         withTimeout(10_000) { vm.uiState.first { !it.isLoading && it.keyLoaded && (!waitModels || it.modelsLoaded) } }
         return vm
     }
 
     private suspend fun main(action: () -> Unit) = withContext(Dispatchers.Main) { action() }
+    private val modelJobs = mutableListOf<Job>()
 
     @Test fun wearingInstructionsRejectStaleConfirmationAndFreezeAcceptedSubmission() = runBlocking {
         val pending = CompletableDeferred<String>()
@@ -160,11 +165,35 @@ class TryOnViewModelTest {
             vm.toggleItem(14)
         }
         assertEquals(listOf(12L), vm.uiState.value.visibleItems.map { it.id })
-        assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
+        assertEquals(listOf(11L, 14L), vm.uiState.value.selected.map { it.itemId })
         val recreated = model(handle)
-        assertEquals("/second.png", recreated.uiState.value.selected.single().imagePath)
-        assertEquals(TryOnRole.OUTER, recreated.uiState.value.selected.single().role)
-        assertFalse(recreated.uiState.value.items.any { it.id == 14L })
+        assertEquals("/second.png", recreated.uiState.value.selected.first { it.itemId == 11L }.imagePath)
+        assertEquals(TryOnRole.OUTER, recreated.uiState.value.selected.first { it.itemId == 11L }.role)
+        assertTrue(recreated.uiState.value.items.any { it.id == 14L })
+    }
+
+    @Test fun wishedShoesAndHosieryKeepRolesAcrossStatusFiltersAndSubmitWithAWishedDress() = runBlocking {
+        database.categoryDao().insertCategory(Category(id = 3, name = "自定义鞋履", categorySemantic = CategorySemantic.MARY_JANE))
+        database.categoryDao().insertCategory(Category(id = 4, name = "自定义袜装", categorySemantic = CategorySemantic.KNEE_SOCKS))
+        database.itemDao().insertItem(item(15, "心愿鞋", 3, listOf("/shoe.png")).copy(status = ItemStatus.WISHED))
+        database.itemDao().insertItem(item(16, "心愿袜", 4, listOf("/sock.png")).copy(status = ItemStatus.WISHED))
+        database.itemDao().insertItem(item(17, "待付款鞋", 3, listOf("/pending.png")).copy(status = ItemStatus.PENDING_PAYMENT))
+        val vm = model()
+        var submitted = emptyList<TryOnSelection>()
+        operation = { submitted = it; "wished-shoes-hosiery" }
+        main {
+            vm.selectStatusFilter(ItemStatus.WISHED)
+            vm.toggleItem(14); vm.toggleItem(15); vm.toggleItem(16)
+            vm.selectStatusFilter(ItemStatus.OWNED)
+        }
+        assertTrue(vm.uiState.value.visibleItems.all { it.status == ItemStatus.OWNED })
+        assertEquals(listOf(TryOnRole.MAIN, TryOnRole.SHOES, TryOnRole.HOSIERY), vm.uiState.value.selected.map { it.role })
+        assertFalse(vm.uiState.value.items.any { it.id == 17L })
+        main { vm.generate() }
+        withTimeout(10_000) { vm.uiState.first { !it.isSubmitting && it.latestTaskId == "wished-shoes-hosiery" } }
+        assertEquals(listOf(14L, 15L, 16L), submitted.map { it.itemId })
+        assertEquals(listOf(ItemStatus.WISHED, ItemStatus.WISHED, ItemStatus.WISHED),
+            submitted.map { requireNotNull(database.itemDao().getItemById(it.itemId)).status })
     }
 
     @Test fun noKeyNoGarmentAndMissingPictureNeverCallPaidOperation() = runBlocking {

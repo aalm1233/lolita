@@ -124,7 +124,7 @@ class ImageTaskCoordinator(
             if (freezeWearing || snapshot.any { it.semantic != null } || request.instructions.isNotEmpty()) {
                 snapshot.forEach { row ->
                     val item = requireNotNull(db.itemDao().getItemById(row.itemId)) { "所选物品已删除" }
-                    require(item.status == com.lolita.app.data.local.entity.ItemStatus.OWNED && row.imagePath in item.imageUrls) { "所选物品或图片已改变" }
+                    require(item.status.supportsVirtualTryOn && row.imagePath in item.imageUrls) { "所选物品或图片已改变" }
                     require(row.semantic == null || db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == row.semantic) { "分类语义已改变，请重新核对" }
                 }
                 val person = personalModelId?.let { requireNotNull(db.personalModelDao().get(it)) { "所选人物已删除" } }
@@ -250,10 +250,10 @@ class ImageTaskCoordinator(
                     val currentItem=db.itemDao().getItemById(metadata.garments.single().itemId)
                     val item = admission(MannequinAdmissionFailureKind.REFERENCE) {
                         requireNotNull(currentItem) { "物品已删除，请重新选择" }.also {
-                            require((metadata.version == 4 || sources.size == 1) && (metadata.productOriginalImagePath ?: sources.last()) in it.imageUrls) { "参考图片已改变，请重新选择" }
+                            require((metadata.version == 4 || sources.size == 1) && (metadata.productOriginalImagePath ?: sources.last()) in it.productReferenceImages) { "参考图片已改变，请重新选择" }
                         }
                     }
-                    referencedProductImages=item.imageUrls.toSet()
+                    referencedProductImages=item.productReferenceImages.toSet()
                     val category=db.categoryDao().getCategoryById(item.categoryId)
                     admission(MannequinAdmissionFailureKind.SUBJECT) {
                         val currentSubject = mannequinSubject(category)

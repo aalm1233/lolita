@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.lolita.app.data.local.entity.Item
+import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.domain.model.TryOnRole
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.theme.LolitaSkin
@@ -36,12 +37,14 @@ import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import java.io.File
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TryOnPicker(
     state: TryOnUiState,
     onSearch: (String) -> Unit,
     onCategory: (Long?) -> Unit,
     onToggle: (Long) -> Unit,
+    onStatus: (ItemStatus?) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     val skin = LolitaSkin.current
@@ -51,10 +54,10 @@ internal fun TryOnPicker(
     ObserveSkinScroll(grid)
     ObserveSkinScroll(filters)
     ObserveSkinScroll(chosen)
-    LaunchedEffect(state.searchQuery, state.selectedCategoryId) { grid.scrollToItem(0) }
+    LaunchedEffect(state.searchQuery, state.selectedCategoryId, state.statusFilter) { grid.scrollToItem(0) }
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Scaffold(
-            topBar = { GradientTopAppBar(title = { Text("选择衣橱服饰") }, navigationIcon = {
+            topBar = { GradientTopAppBar(title = { Text("选择试衣物品") }, navigationIcon = {
                 IconButton(onClick = onDismiss) { SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回试衣" }) }
             }) },
             bottomBar = {
@@ -74,12 +77,18 @@ internal fun TryOnPicker(
             ) {
                 item(key = "controls", span = { GridItemSpan(maxLineSpan) }) {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                        Text("仅显示已拥有物品，包含挂载小物；筛选保留已选内容。搭配超过8件时，回到试衣页明确选择本次子集。", style = MaterialTheme.typography.bodySmall)
+                        Text("可选择已拥有与心愿物品，包含鞋履、袜装和挂载小物；筛选保留已选。搭配超过8件时，回到试衣页明确选择本次子集。", style = MaterialTheme.typography.bodySmall)
                         OutlinedTextField(value = state.searchQuery, onValueChange = onSearch,
                             modifier = Modifier.fillMaxWidth(), singleLine = true,
                             label = { Text("搜索服饰名称") },
                             shape = RoundedCornerShape(skin.cornerRadiusMedium),
                             leadingIcon = { SkinIcon(IconKey.Search) })
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            listOf(null to "全部状态", ItemStatus.OWNED to "已拥有", ItemStatus.WISHED to "心愿").forEach { (status, label) ->
+                                FilterChip(selected = state.statusFilter == status, onClick = { onStatus(status) },
+                                    enabled = !state.busy, label = { Text(label) })
+                            }
+                        }
                         LazyRow(state = filters, horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             item { FilterChip(selected = state.selectedCategoryId == null, onClick = { onCategory(null) }, label = { Text("全部") }) }
                             items(state.availableCategories, key = { it.id }) { category ->
@@ -103,7 +112,7 @@ internal fun TryOnPicker(
                     items(6, key = { "skeleton-$it" }) { ShimmerRect(width = 108.dp, height = 150.dp, modifier = Modifier.fillMaxWidth()) }
                 } else if (state.visibleItems.isEmpty()) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(if (state.loadFailed) "衣橱读取失败，请返回后重试" else if (state.items.isEmpty()) "衣橱里还没有已拥有服饰" else "没有匹配服饰，请调整搜索或分类",
+                        Text(if (state.loadFailed) "衣橱读取失败，请返回后重试" else if (state.items.isEmpty()) "还没有已拥有或心愿物品" else "没有匹配物品，请调整搜索、分类或状态",
                             modifier = Modifier.fillMaxWidth().padding(vertical = skin.spacingExtraLarge))
                     }
                 } else gridItems(state.visibleItems, key = { it.id }) { item ->
@@ -118,7 +127,8 @@ internal fun TryOnPicker(
                                 Modifier.fillMaxWidth().aspectRatio(0.8f))
                             Column(Modifier.padding(skin.spacingMedium), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                                 Text(item.name, maxLines = 2, minLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelMedium)
-                                Text(if (selected) "已选择" else if (item.imageUrls.none { it.isNotBlank() }) "无参考图" else "选择",
+                                val status = if (item.status == ItemStatus.WISHED) "心愿" else "已拥有"
+                                Text("$status · ${if (selected) "已选择" else if (item.imageUrls.none { it.isNotBlank() }) "无参考图" else "选择"}",
                                     style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                             }
                         }

@@ -72,13 +72,18 @@ class ImageTaskBackupTest {
 
     @Test fun standaloneAccessoryJsonRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(false) }
     @Test fun standaloneAccessoryZipRoundTripStillConfirmsExactlyOnce() = runBlocking { standaloneRoundTrip(true) }
+    @Test fun detailReferenceSnapshotAndPendingPreviewSurviveZipAndAppendOnlyAfterConfirmation() = runBlocking { standaloneRoundTrip(true, fromDetail = true) }
 
-    private suspend fun standaloneRoundTrip(zip: Boolean) = fixture { f ->
+    private suspend fun standaloneRoundTrip(zip: Boolean, fromDetail: Boolean = false) = fixture { f ->
         val original = f.db.itemDao().getItemById(f.itemId)!!
-        val category = f.db.categoryDao().getCategoryById(original.categoryId)!!.copy(name = "袜子", group = CategoryGroup.ACCESSORY)
+        val category = f.db.categoryDao().getCategoryById(original.categoryId)!!.copy(name = "袜子", group = CategoryGroup.ACCESSORY,
+            categorySemantic = if (fromDetail) CategorySemantic.KNEE_SOCKS else CategorySemantic.UNCONFIRMED)
         f.db.categoryDao().updateCategory(category)
         val second = ImageFileHelper.saveGeneratedImage(f.context, f.bytes)
-        f.db.itemDao().updateItem(original.copy(name = "配套袜子", imageUrls = listOf(f.source, second, f.source)))
+        val third = if (fromDetail) ImageFileHelper.saveGeneratedImage(f.context, f.bytes) else f.source
+        f.db.itemDao().updateItem(original.copy(name = "配套袜子",
+            imageUrls = if (fromDetail) listOf(second, third, second) else listOf(f.source, second, f.source),
+            sizeChartImageUrl = if (fromDetail) f.source else original.sizeChartImageUrl))
         val coordinator = ImageTaskCoordinator(f.db, f.scope, {},
             { ImageFileHelper.saveGeneratedImage(f.context, it) }, ImageFileHelper::deleteImage,
             { ImageFileHelper.isOwnedGeneratedImage(f.context, it) })
@@ -92,16 +97,16 @@ class ImageTaskBackupTest {
             generateMannequin = { _, references, prompt ->
                 calls++
                 assertEquals(1, references.size)
-                assertTrue(prompt.contains("\"袜子\""))
+                assertTrue(prompt.contains(if (fromDetail) "KNEE_SOCKS" else "\"袜子\""))
                 assertFalse(prompt.contains("Edit image 1, the canonical empty warm-white tailoring mannequin"))
                 f.bytes
-            })
+            }, prepareSnapshotImages = images::prepareSnapshots)
         val id = coordinator.submitMannequin(MannequinRequest(f.itemId, f.source, "保留原来的一双", mannequinSubject(category)), ImageGenerationProvider.SEEDREAM)
         ImageTaskRunner(coordinator, executor::execute).runQueue()
         val pending = f.db.imageTaskDao().get(id)!!
         assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, pending.status)
         assertEquals(1, calls)
-        assertEquals(MannequinSubject(category.id, "袜子", MannequinPresentation.ACCESSORY), ImageTaskRequest.decode(pending.requestJson).mannequinSubject)
+        assertEquals(mannequinSubject(category), ImageTaskRequest.decode(pending.requestJson).mannequinSubject)
         val manager = BackupManager(f.context, f.db, withImageTasksPaused = { action -> coordinator.withRestorePaused(action) })
         val uri = (if (zip) manager.exportToZip() else manager.exportToJson()).getOrThrow().also(f.exports::add)
         assertEquals(1, manager.previewBackup(uri).getOrThrow().imageTaskCount)
@@ -113,6 +118,12 @@ class ImageTaskBackupTest {
         // The paid preview is historical; later category edits cannot prevent attaching it.
         f.db.categoryDao().updateCategory(category.copy(name = "鞋"))
         val originalImages = f.db.itemDao().getItemById(f.itemId)!!.imageUrls
+        if (fromDetail) {
+            val reference = requireNotNull(f.db.itemDao().getItemById(f.itemId)!!.sizeChartImageUrl)
+            assertFalse(reference in originalImages)
+            assertEquals(reference, restored.sourceImagePaths.single())
+            assertArrayEquals(f.bytes, File(reference).readBytes())
+        }
         assertEquals(3, originalImages.size)
         assertEquals(originalImages.first(), originalImages.last())
         assertTrue(originalImages.first() != originalImages[1])

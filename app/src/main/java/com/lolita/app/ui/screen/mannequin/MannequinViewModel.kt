@@ -15,6 +15,7 @@ import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.MannequinSubject
 import com.lolita.app.domain.model.mannequinSubject
+import com.lolita.app.domain.model.productReferenceImages
 import com.lolita.app.domain.model.WigHeadTemplateSnapshot
 import com.lolita.app.data.mannequin.WigHeadTemplate
 import com.lolita.app.data.mannequin.WigHeadTemplateCatalog
@@ -56,7 +57,7 @@ data class MannequinUiState(
         presentation == MannequinPresentation.WIG_HEAD && selectedHeadTemplate == null -> "请选择并核对本次使用的头模"
         presentation == MannequinPresentation.WIG_HEAD && !headImageReady -> "所选头模资源缺失或尚未核验，请明确重新选择；不会自动替换"
         presentation == MannequinPresentation.WIG_HEAD && !referenceViewConfirmed -> "请核对原图能看到刘海、头顶、正面轮廓及完整发梢"
-        selectedImage.isBlank() || (originalImagePath ?: selectedImage) !in item.imageUrls -> "参考图片已改变，请重新选择当前图片"
+        selectedImage.isBlank() || (originalImagePath ?: selectedImage) !in item.productReferenceImages -> "参考图片已改变，请重新选择当前图片"
         else -> null
     }
     val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
@@ -127,7 +128,7 @@ class MannequinViewModel @JvmOverloads constructor(
                     if (!restored) {
                         restored = true
                         if (!savedStateHandle.contains(SOURCE)) {
-                            savedStateHandle[SOURCE] = row?.imageUrls?.firstOrNull { it.isNotBlank() }.orEmpty()
+                            savedStateHandle[SOURCE] = row?.productReferenceImages?.firstOrNull().orEmpty()
                         }
                         if (!retryEntryConsumed) {
                             savedStateHandle.get<String>("retryTaskId")?.takeIf { it.isNotBlank() }?.let { id ->
@@ -265,7 +266,7 @@ class MannequinViewModel @JvmOverloads constructor(
 
     fun acceptCroppedImage(originalPath: String, croppedPath: String) {
         val current = state.value
-        if (current.busy || originalPath !in current.item?.imageUrls.orEmpty() || croppedPath.isBlank() || croppedPath == originalPath) {
+        if (current.busy || originalPath !in current.item?.productReferenceImages.orEmpty() || croppedPath.isBlank() || croppedPath == originalPath) {
             discardLegacy(croppedPath)
             return
         }
@@ -283,7 +284,7 @@ class MannequinViewModel @JvmOverloads constructor(
 
     fun selectImage(path: String) {
         val current = state.value
-        if (current.busy || path.isBlank() || path !in current.item?.imageUrls.orEmpty()) return
+        if (current.busy || path.isBlank() || path !in current.item?.productReferenceImages.orEmpty()) return
         val previous = current.selectedImage.takeIf { current.originalImagePath != null }
         val oldLease = releaseCropLease
         releaseCropLease = null

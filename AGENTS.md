@@ -283,7 +283,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=127, versionName="2.59.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=128, versionName="2.60.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -412,8 +412,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 试衣穿戴改造（2.58.0）：新页面显式传入200字内穿戴要求（含空字符串），v4请求复用instructions、promptSnapshot，promptVersion=2；旧1–3请求及v4修订1原样读取执行。新提示词按已选角色处理裙撑体积、衣层接触、BNT前后位置、鞋袜和承重；保留身份、体型、骨骼长度及整体站姿，只容许实际鞋履和持物需要的最小局部姿态调整。描述随SavedState、确认、任务、历史和重试保全，改动后旧付费确认拒绝；Room30/备份10不变。设计与验证见 `docs/plans/2026-10-19-tryon-physics.md`。不以受控测试宣称真实生图物理准确性已验证。
 
-- 个人页、已拥有服饰及套装详情进入 `Screen.TryOn`，内置成年虚拟模特或已确认个人模特＋1–8件已有服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥。
-- `TryOnGenerator` 用进程共用Mutex防重复调用，上传前校验最新Item仍已拥有且图片归属/本地文件完整。`TryOnImages` 处理EXIF、长边1536及透明底白色合成；`TryOnImageApi` 仅调用官方HTTPS `/v1/images/edits`，型号 `gpt-image-2.5-sunburst`，medium/1024×1536/n=1/PNG；无付费自动重试，取消等待不承诺服务端停止计费。
+- 个人页、已拥有／心愿物品及套装详情进入 `Screen.TryOn`，内置成年虚拟模特或已确认个人模特＋1–8件服饰/小物；支持搜索分类、每件选图与穿戴位置纠正。`ItemStatus.supportsVirtualTryOn`统一ViewModel、Coordinator和普通Generator的已拥有＋心愿准入；选择器支持状态筛选，鞋履、基础袜装与袜套依稳定品类映射原角色，至少一件基础服装和冲突规则保持。筛选保留隐藏选择，SavedStateHandle仅存紧凑选择快照，不存密钥；试衣不改变物品状态、订单或位置。
+- `TryOnGenerator` 用进程共用Mutex防重复调用，上传前校验最新Item仍属于已拥有或心愿且图片归属/本地文件完整。`TryOnImages` 处理EXIF、长边1536及透明底白色合成；`TryOnImageApi` 仅调用官方HTTPS `/v1/images/edits`，型号 `gpt-image-2.5-sunburst`，medium/1024×1536/n=1/PNG；无付费自动重试，取消等待不承诺服务端停止计费。
 - 个人API Key在界面填写、更换或删除；Android Keystore AES-GCM加密，密文AtomicFile存于noBackupFilesDir，不回填、不记录、不进入Room或备份。ChatGPT订阅与普通API余额分别计费；没有真实Key时不宣称付费联调通过。
 - Room26→27仅增加 `TryOnResult`/`TryOnDao`，结果由薄 `TryOnRepository` 独立持久化，原服饰删除后保留名称/ID快照，不改变账本/穿搭/归属。生成PNG需完整尾块、可解码及大小/尺寸校验，取消或失败清理未保存文件；删除复用图片引用保护。
 - 备份格式7/schema27完整支持试衣历史JSON/ZIP/CSV/预览/恢复；旧1–6格式缺失历史数组视为空。新增DAO同步接LolitaDatabase、Repository和AppModule。
@@ -518,6 +518,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 展示任务入队前错误使用`MannequinAdmissionFailure`固定阶段消息，不显示路径、凭据、服务原文或原因链；取消原样传播，已入队后的服务中断不误标为“未发送”。设计与验证见`docs/superpowers/plans/2026-10-18-mannequin-generation-cover-repair.md`。
 
 - 旧商品源可经`isOwnedReadableProductImage`保留旧文件名，但仅当MANNEQUIN当前物品精确引用时启用；私有images直系路径、非软链、完整性、尺寸与解码继续检查。派生裁切、模板、TRY_ON和个人照片保持原严格UUID规则。API26/27的WebP限制本轮未变；不得将Android15受控回归描述为用户手机全部故障已复现。
+- 单品、人台及头模展示的`Item.productReferenceImages`统一商品相册与旧首张／新增详情图列表，按原序去空去重；`productDetailImages`只为来源筛选排除相册重复。页面可切商品图／详情图、完整Fit／放大，并沿用现有裁切，切分组不清选择；详情仅有图片时同样开放入口。ViewModel、普通Generator和Coordinator事务均要求精确引用，裁切副本保持严格路径校验。选择、裁切、服务或密钥变动使旧确认失效；已接受任务继续执行冻结输入，结果确认后追加相册末尾，不设封面、不改详情原图。Room30／备份10不变，设计及回归见`docs/plans/2026-10-20-tryon-wishlist-detail-images.md`。
 - 编辑页须等草稿恢复、冲突检查与识图重连完成后才结束`isLoading`；ViewModel测试清理须等待Job结束再关闭Room，避免后台DAO访问已关闭数据库。
 - 2.55.3 /117展示图与封面修复：400项JVM、144项最终普通设备回归通过，2项默认opt-in跳过；25张私有历史图另行本机显式核对全部可读并入队，0远端/付费请求。clean原签名2.55.2覆盖升级及重启保全38表254列、198件物品、172图SHA和3份设置字节。GitHub/Gitee同一正式APK匿名完整下载、SHA/HEAD与源码标签通过；发布时公开更新及正式app手动检查正确显示2.55.3和完整说明。按本轮明确授权仅移除Gitee2.55.2 APK，旧发布/校验/GH/本机副本保留。回执`docs/mannequin-repair-release-2.55.3-verification.json`。
 - 用户另行要求扩大本轮旧APK清理后，已额外移除Gitee的15个旧APK共827828220字节，执行时保留2.55.3、2.54.0、2.53.0；所有旧发布/校验/GitHub/本机副本保留，独立2.55.2清理不重复计入。清理后保留版精确owner元数据和APK HEAD通过，公开列表额外复核403按失败记录，不能描述为最新查询通过。本次范围不自动授权未来清理。回执`docs/gitee-apk-cleanup-2026-10-18.json`。

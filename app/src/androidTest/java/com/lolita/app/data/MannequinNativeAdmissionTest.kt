@@ -88,12 +88,14 @@ class MannequinNativeAdmissionTest {
         }
         fun source(bytes:ByteArray,extension:String="jpg",baseName:String=UUID.randomUUID().toString()):String =
             File(File(context.filesDir,"images").apply {mkdirs()},"$baseName.$extension").apply {writeBytes(bytes)}.path
-        suspend fun submit(semantic:CategorySemantic,source:String,original:String?=null):String {
+        suspend fun submit(semantic:CategorySemantic,source:String,original:String?=null,detailSlot:Int=0):String {
             val categoryId=db.categoryDao().insertCategory(Category(name="${semantic.label}-${UUID.randomUUID()}",
                 group=if(semantic.family==WardrobeFamily.CLOTHING)CategoryGroup.CLOTHING else CategoryGroup.ACCESSORY,
                 categorySemantic=semantic))
             val itemId=db.itemDao().insertItem(Item(brandId=1,categoryId=categoryId,name="受控商品",description="",
-                imageUrls=listOf(original ?: source),status=ItemStatus.OWNED))
+                imageUrls=if(detailSlot==0)listOf(original ?: source)else emptyList(),
+                sizeChartImageUrl=if(detailSlot==1)original ?: source else null,
+                sizeChartImageUrls=if(detailSlot==2)listOf(original ?: source)else emptyList(),status=ItemStatus.OWNED))
             val subject=requireNotNull(mannequinSubject(db.categoryDao().getCategoryById(categoryId),confirmedSemantics=true))
             val head=if(semantic==CategorySemantic.FULL_WIG)catalog.snapshot(catalog.templates.first().id)else null
             beforeSubmit(requireNotNull(db.itemDao().getItemById(itemId)))
@@ -145,6 +147,58 @@ class MannequinNativeAdmissionTest {
     }
 
     @Test fun pngProductsAcrossSixModesReachTheControlledProductionExecutor()=runBlocking {exercise(Format.PNG)}
+
+    @Test fun detailReferencesAndTheirCropsReachTheProductionExecutorWithoutChangingAlbumOrSource()=runBlocking {
+        val f=Fixture()
+        try {
+            f.setup()
+            val bytes=bitmapBytes(Bitmap.CompressFormat.PNG)
+            val original=f.source(bytes,"png","legacy-detail-reference")
+            val crop=ImageRegionCropper.crop(f.context,original,NormalizedCropRect.FULL).path
+            val first=f.submit(CategorySemantic.KNEE_SOCKS,original,detailSlot=1)
+            val second=f.submit(CategorySemantic.KNEE_SOCKS,crop,original,detailSlot=2)
+            assertEquals(0,f.credentialReads)
+            f.runner.runQueue()
+            for(id in listOf(first,second)) {
+                val task=requireNotNull(f.db.imageTaskDao().get(id))
+                assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION,task.status)
+                val request=ImageTaskRequest.decode(task.requestJson)
+                val item=requireNotNull(f.db.itemDao().getItemById(request.garments.single().itemId))
+                assertTrue(item.imageUrls.isEmpty())
+                assertTrue(original in item.productReferenceImages)
+            }
+            val cropped=ImageTaskRequest.decode(requireNotNull(f.db.imageTaskDao().get(second)).requestJson)
+            assertEquals(original,cropped.productOriginalImagePath)
+            assertEquals(listOf(1,1),f.uploads)
+            assertArrayEquals(bytes,File(original).readBytes())
+        } finally {f.close()}
+    }
+
+    @Test fun wishedDressShoesAndHosieryCanFreezeAndExecuteWithoutChangingTheirPurchaseState()=runBlocking {
+        val f=Fixture()
+        try {
+            f.setup()
+            val rows=listOf(CategorySemantic.JSK,CategorySemantic.MARY_JANE,CategorySemantic.KNEE_SOCKS).map { semantic ->
+                val category=f.db.categoryDao().insertCategory(Category(name=semantic.label,categorySemantic=semantic))
+                val path=f.source(bitmapBytes(Bitmap.CompressFormat.PNG),"png")
+                val id=f.db.itemDao().insertItem(Item(name=semantic.label,brandId=1,categoryId=category,description="",
+                    imageUrls=listOf(path),status=ItemStatus.WISHED))
+                TryOnSelection(id,semantic.label,path,requireNotNull(semantic.defaultWearRole),semantic)
+            }
+            val id=f.coordinator.submitTryOn(rows,ImageGenerationProvider.SEEDREAM,"")
+            assertEquals(listOf(TryOnRole.MAIN,TryOnRole.SHOES,TryOnRole.HOSIERY),rows.map {it.role})
+            var calls=0
+            val executor=ImageTaskExecutor(f.coordinator,f.db,{ImageGenerationCredentials(it,"controlled-no-network-key")},
+                f.images::prepare,f.images::prepareMannequin,{_,inputs,_ ->calls++;assertEquals(4,inputs.size);f.responseBytes},
+                prepareSnapshotImages=f.images::prepareSnapshots)
+            ImageTaskRunner(f.coordinator,executor::execute).runQueue()
+            assertEquals(ImageTaskStatus.COMPLETED,requireNotNull(f.db.imageTaskDao().get(id)).status)
+            assertEquals(1,calls)
+            assertEquals(listOf(ItemStatus.WISHED,ItemStatus.WISHED,ItemStatus.WISHED),rows.map {requireNotNull(f.db.itemDao().getItemById(it.itemId)).status})
+            assertTrue(f.db.priceDao().getAllPricesList().isEmpty())
+            assertTrue(f.db.paymentDao().getAllPaymentsList().isEmpty())
+        } finally {f.close()}
+    }
     @Test fun jpegProductsAcrossSixModesReachTheControlledProductionExecutor()=runBlocking {exercise(Format.JPEG)}
     @Test fun oldWebpBytesWithJpgExtensionAcrossSixModesReachTheControlledProductionExecutor()=runBlocking {exercise(Format.WEBP_WITH_JPG_EXTENSION)}
 

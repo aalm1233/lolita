@@ -38,6 +38,12 @@ class MannequinDetailEntryTest {
         compose.onNodeWithText("生成单品展示图").assertDoesNotExist()
         compose.runOnIdle { category.value = category.value.copy(name = "连衣裙", categorySemantic = CategorySemantic.OP); item.value = item.value.copy(imageUrls = emptyList()) }
         compose.onNodeWithText("生成人台图（实验）").assertDoesNotExist()
+        compose.runOnIdle { item.value = item.value.copy(sizeChartImageUrl = "/legacy-detail.png") }
+        compose.onNodeWithText("生成人台图（实验）").assertIsDisplayed()
+        compose.runOnIdle { item.value = item.value.copy(sizeChartImageUrl = null, sizeChartImageUrls = listOf("/additional-detail.png")) }
+        compose.onNodeWithText("生成人台图（实验）").assertIsDisplayed()
+        compose.runOnIdle { item.value = item.value.copy(sizeChartImageUrls = emptyList()) }
+        compose.onNodeWithText("生成人台图（实验）").assertDoesNotExist()
     }
 
     @Test fun stableBlouseAndOtherModesUseTheirOwnLabelsRegardlessOfLegacyGroup() {

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,7 @@ import com.lolita.app.domain.model.ImageGenerationProvider
 import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.productDetailImages
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
@@ -39,6 +41,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 private data class MannequinConfirmation(val provider: ImageGenerationProvider, val request: MannequinRequest, val keyRevision: Int)
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MannequinScreen(
     onNavigateBack: () -> Unit,
@@ -48,6 +51,18 @@ fun MannequinScreen(
     onConfigureApi: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+    val productImages = state.item?.imageUrls.orEmpty().filter(String::isNotBlank).distinct()
+    val detailImages = state.item?.productDetailImages.orEmpty()
+    var showDetailImages by rememberSaveable(state.item?.id) {
+        mutableStateOf(state.selectedImage in detailImages)
+    }
+    val sourceImages = if (showDetailImages) detailImages else productImages
+    val selectedOriginal = state.originalImagePath ?: state.selectedImage
+    val selectedSourceLabel = when (selectedOriginal) {
+        in productImages -> "商品图 ${productImages.indexOf(selectedOriginal) + 1}"
+        in detailImages -> "详情图 ${detailImages.indexOf(selectedOriginal) + 1}"
+        else -> "待选择"
+    }
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
@@ -203,23 +218,39 @@ fun MannequinScreen(
             }
             item("source") {
                 LolitaSection(title = "选择一张原图") { row {
+                    Text("可从商品图或详情图中选择一张，原图与封面保留。", style = MaterialTheme.typography.bodySmall)
                     Text(if (wig) "请选择一张正面轮廓、刘海和发梢完整的假发商品图；多视图请先选定目标视图，不发送拼图或多个头模。"
                         else if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
                         else if (blouse) "请选择领口、双袖、袖口和下摆完整的衬衫正面原图；只使用选中的这一张，不补看不见的结构。"
                         else "选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = skin.spacingMedium))
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                        FilterChip(selected = !showDetailImages, onClick = { showDetailImages = false },
+                            enabled = !state.busy && productImages.isNotEmpty(), label = { Text("商品图（${productImages.size}）") })
+                        FilterChip(selected = showDetailImages, onClick = { showDetailImages = true },
+                            enabled = !state.busy && detailImages.isNotEmpty(), label = { Text("详情图（${detailImages.size}）") })
+                    }
+                    Text("当前选择：$selectedSourceLabel${if (state.originalImagePath != null) "（已框选）" else ""}", style = MaterialTheme.typography.bodyMedium)
+                    if (!wig && state.originalImagePath != null) TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("改回整张原图") }
                 } }
             }
-            itemsIndexed(state.item?.imageUrls.orEmpty().filter { it.isNotBlank() }.distinct(), key = { _, path -> "source-$path" }) { index, path ->
+            itemsIndexed(sourceImages, key = { _, path -> "source-$path" }) { index, path ->
+                val cropped = state.originalImagePath == path
+                val displayPath = if (cropped) state.selectedImage else path
+                val label = if (showDetailImages) "详情图 ${index + 1}" else "参考图片 ${index + 1}"
                 LolitaCard {
                     Column(Modifier.fillMaxWidth()) {
                         ImageFrame(Modifier.fillMaxWidth()) {
-                            LolitaShimmerImage(model = path, contentDescription = "原图 ${index + 1}", contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxWidth().height(160.dp), circularRevealEnabled = false)
+                            LolitaShimmerImage(model = displayPath, contentDescription = if (cropped) "本次裁切参考" else if (showDetailImages) label else "原图 ${index + 1}", contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxWidth().height(160.dp).skinClickable { headPreview = displayPath }, circularRevealEnabled = false)
                         }
-                        Row(Modifier.fillMaxWidth().semantics { selected = state.selectedImage == path }.skinClickable(enabled = !state.busy) { viewModel.selectImage(path) }, verticalAlignment = Alignment.CenterVertically) {
-                            RadioButton(selected = state.selectedImage == path, onClick = null, enabled = !state.busy)
-                            Text("参考图片 ${index + 1}", modifier = Modifier.weight(1f))
+                        Row(Modifier.fillMaxWidth().semantics { selected = selectedOriginal == path }.skinClickable(enabled = !state.busy) { if (!cropped) viewModel.selectImage(path) }, verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(selected = selectedOriginal == path, onClick = null, enabled = !state.busy)
+                            Text("$label${if (cropped) " · 已框选" else ""}", modifier = Modifier.weight(1f))
+                        }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            TextButton(onClick = { headPreview = path }) { Text("放大查看") }
+                            if (!wig) TextButton(onClick = { cropSource = path }, enabled = !state.busy) { Text("框选要生成的单品") }
                         }
                     }
                 }

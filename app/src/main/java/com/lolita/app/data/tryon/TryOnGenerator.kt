@@ -5,6 +5,7 @@ import com.lolita.app.data.local.entity.ItemStatus
 import com.lolita.app.domain.model.ImageGenerationCredentials
 import com.lolita.app.domain.model.TryOnRequest
 import com.lolita.app.domain.model.TryOnSelection
+import com.lolita.app.domain.model.supportsVirtualTryOn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -52,8 +53,8 @@ class TryOnGenerator(
                 require(item != null && item.id == row.itemId && row.imagePath in item.imageUrls) {
                     "所选服饰或参考图片已变更，请重新选择后生成"
                 }
-                require(item.status == ItemStatus.OWNED) {
-                    "所选服饰已不在拥有的衣橱中，请重新选择后生成"
+                require(item.status.supportsVirtualTryOn) {
+                    "所选物品已不在已拥有与心愿列表，请重新选择后生成"
                 }
                 val source = File(row.imagePath)
                 require(source.isFile && source.canRead() && source.length() > 0) {

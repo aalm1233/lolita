@@ -8,6 +8,7 @@ import com.lolita.app.data.tryon.TryOnGenerationPhase
 import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.mannequinSubject
+import com.lolita.app.domain.model.productReferenceImages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
@@ -91,7 +92,7 @@ class MannequinGenerator(
     private suspend fun validateSource(request: MannequinRequest) = withContext(Dispatchers.IO) {
         currentCoroutineContext().ensureActive()
         val item = findItem(request.itemId)
-        require(item != null && item.id == request.itemId && request.imagePath in item.imageUrls) {
+        require(item != null && item.id == request.itemId && request.imagePath in item.productReferenceImages) {
             "物品或参考图片已变更，请重新选择后生成"
         }
         val category = findCategory(item.categoryId)

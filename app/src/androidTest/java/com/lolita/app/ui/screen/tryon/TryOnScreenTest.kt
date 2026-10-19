@@ -57,6 +57,9 @@ class TryOnScreenTest {
     private var keyboard: androidx.compose.ui.platform.SoftwareKeyboardController? = null
     private var key: String? = null
     private lateinit var photos: List<String>
+    private lateinit var itemRows: MutableStateFlow<List<Item>>
+    private lateinit var categoryRows: MutableStateFlow<List<Category>>
+    private var originalAutomationFlags: Int? = null
 
     @Before fun setup() {
         directory = File(instrumentation.targetContext.cacheDir, "tryon-ui-${UUID.randomUUID()}").apply { mkdirs() }
@@ -70,13 +73,14 @@ class TryOnScreenTest {
             }.absolutePath
         }
         store = ViewModelStore()
+        itemRows = MutableStateFlow(listOf(
+            Item(id = 11, brandId = 1, categoryId = 1, name = "月光裙", description = "", imageUrls = photos, status = ItemStatus.OWNED),
+            Item(id = 12, brandId = 1, categoryId = 2, name = "蝴蝶结", description = "", imageUrls = photos.take(1), status = ItemStatus.OWNED)))
+        categoryRows = MutableStateFlow(listOf(Category(id = 1, name = "JSK", categorySemantic = CategorySemantic.JSK),
+            Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC)))
         instrumentation.runOnMainSync {
             vm = TryOnViewModel(savedStateHandle = SavedStateHandle(),
-                items = flowOf(listOf(
-                    Item(id = 11, brandId = 1, categoryId = 1, name = "月光裙", description = "", imageUrls = photos, status = ItemStatus.OWNED),
-                    Item(id = 12, brandId = 1, categoryId = 2, name = "蝴蝶结", description = "", imageUrls = photos.take(1), status = ItemStatus.OWNED)
-                )),
-                categories = flowOf(listOf(Category(id = 1, name = "JSK", categorySemantic = CategorySemantic.JSK), Category(id = 2, name = "头饰", group = CategoryGroup.ACCESSORY, categorySemantic = CategorySemantic.KC))),
+                items = itemRows, categories = categoryRows,
                 results = history, readService = { com.lolita.app.data.tryon.ImageServiceStatus(com.lolita.app.domain.model.ImageGenerationProvider.OPENAI, key != null) }, selectService = {}, serviceChanges = kotlinx.coroutines.flow.flowOf(0), saveApiKey = { _, value -> key = value }, clearApiKey = { _ -> key = null },
                 tasks = flowOf(emptyList()), submitTask = { _, _, _ -> error("UI测试不应发出请求") },
                 renameResult = { _, _ -> }, deleteResult = {}, personalModels = acceptedModels, defaultPersonalModelId = defaultModelId)
@@ -87,6 +91,11 @@ class TryOnScreenTest {
 
     @After fun teardown() {
         compose.runOnIdle { store.clear() }
+        originalAutomationFlags?.let { flags ->
+            val info = instrumentation.uiAutomation.serviceInfo
+            info.flags = flags
+            instrumentation.uiAutomation.serviceInfo = info
+        }
         directory.deleteRecursively()
     }
 
@@ -112,6 +121,97 @@ class TryOnScreenTest {
 
     private fun workspace(text: String) {
         compose.onNodeWithTag("tryOnWorkspace").performScrollToNode(hasText(text))
+    }
+
+    private fun illustratedProduct(name: String, socks: Boolean): String {
+        val bitmap = Bitmap.createBitmap(240, 320, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(bitmap)
+        canvas.drawColor(android.graphics.Color.WHITE)
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF9C4266.toInt() }
+        val path = android.graphics.Path()
+        if (socks) {
+            for (shift in listOf(0f, 90f)) {
+                path.reset(); path.moveTo(30+shift, 30f); path.lineTo(75+shift, 30f); path.lineTo(75+shift, 215f)
+                path.lineTo(118+shift, 260f); path.lineTo(108+shift, 280f); path.lineTo(50+shift, 280f)
+                path.lineTo(30+shift, 230f); path.close(); canvas.drawPath(path, paint)
+            }
+            paint.color = android.graphics.Color.WHITE
+            for (shift in listOf(0f, 90f)) for (y in listOf(75f, 115f, 155f)) canvas.drawCircle(52+shift,y,7f,paint)
+        } else {
+            path.moveTo(20f,215f); path.lineTo(55f,135f); path.lineTo(93f,155f); path.lineTo(135f,210f)
+            path.lineTo(205f,205f); path.quadTo(230f,220f,218f,250f); path.lineTo(25f,250f); path.close();canvas.drawPath(path,paint)
+            paint.style=android.graphics.Paint.Style.STROKE;paint.strokeWidth=12f
+            canvas.drawArc(55f,120f,135f,230f,0f,180f,false,paint)
+        }
+        return File(directory,name).also { file ->
+            file.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG,100,it)) };bitmap.recycle()
+        }.absolutePath
+    }
+
+    @Test fun wishedShoesAndHosieryAcrossSevenSkinsKeepTheirSelectionWhenStatusIsHidden() {
+        val info = instrumentation.uiAutomation.serviceInfo
+        originalAutomationFlags = info.flags
+        info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        instrumentation.uiAutomation.serviceInfo = info
+        val shoes = illustratedProduct("controlled-shoes.png", false)
+        val socks = illustratedProduct("controlled-hosiery.png", true)
+        compose.runOnIdle {
+            categoryRows.value += listOf(Category(id=3,name="鞋履",categorySemantic=CategorySemantic.MARY_JANE),
+                Category(id=4,name="袜装",categorySemantic=CategorySemantic.KNEE_SOCKS))
+            itemRows.value += listOf(
+                Item(id=13,name="心愿鞋",brandId=1,categoryId=3,description="",imageUrls=listOf(shoes),status=ItemStatus.WISHED),
+                Item(id=14,name="心愿袜",brandId=1,categoryId=4,description="",imageUrls=listOf(socks),status=ItemStatus.WISHED))
+        }
+        compose.waitUntil(5_000) { vm.uiState.value.items.size==4 }
+        show(); workspace("从衣橱选择"); compose.onNodeWithText("从衣橱选择").performClick()
+        compose.onNodeWithText("心愿",substring=false).performClick()
+        fun choose(description:String) {
+            compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasContentDescription(description))
+            compose.onNodeWithContentDescription(description).performClick()
+        }
+        choose("选择服饰：心愿鞋");choose("选择服饰：心愿袜")
+        compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("已拥有",substring=false))
+        compose.onNodeWithText("已拥有",substring=false).performClick()
+        assertEquals(listOf(13L,14L),vm.uiState.value.selected.map {it.itemId})
+        compose.onNodeWithText("全部状态").performClick();choose("选择服饰：月光裙")
+        val output=File(instrumentation.targetContext.filesDir,"tryon-wishlist-shoes-screens").apply {mkdirs()}
+        // Dialog owns an Android window: pair native night mode with the requested
+        // visual pass instead of mixing a light parent theme and a dark window.
+        val darkModes = when (InstrumentationRegistry.getArguments().getString("visualNight")) {
+            "light" -> listOf(false)
+            "dark" -> listOf(true)
+            else -> listOf(false, true)
+        }
+        for(skin in SkinType.entries)for(dark in darkModes) {
+            compose.runOnIdle {presentation.value=Presentation(width=360,scale=1f,skin=skin,dark=dark)}
+            compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed()
+            compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("全部状态"))
+            instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
+                File(output,"${skin.name.lowercase()}-${if(dark)"dark" else "light"}-options.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
+            }
+            compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasContentDescription("已选服饰：心愿鞋"))
+            instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
+                File(output,"${skin.name.lowercase()}-${if(dark)"dark" else "light"}.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
+            }
+        }
+        compose.runOnIdle {presentation.value=Presentation(width=320,scale=2f,dark=darkModes.last())}
+        compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed().assertIsEnabled()
+        instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
+            File(output,"small-320dp-2x.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
+        }
+        compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("搜索服饰名称"))
+        compose.onNodeWithText("搜索服饰名称").performClick().performTextInput("心愿袜")
+        compose.waitUntil(5_000) {
+            instrumentation.uiAutomation.windows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD }
+        }
+        compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed()
+        instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
+            File(output,"small-320dp-2x-keyboard.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
+        }
+        instrumentation.sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK)
+        compose.onNodeWithText("完成搭配选择（3件）").performClick()
+        assertEquals(listOf(TryOnRole.SHOES,TryOnRole.HOSIERY,TryOnRole.MAIN),vm.uiState.value.selected.map {it.role})
+        assertNull(vm.uiState.value.selectionIssue)
     }
 
     @Test fun wearingDescriptionAcrossSevenSkinsAndKeyboardAndPaidConfirmation() {

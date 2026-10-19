@@ -149,16 +149,28 @@ class TryOnGeneratorTest {
         }
     }
 
-    @Test fun itemThatIsNoLongerOwnedRejectsTheWholeSelectionBeforeUpload() = runBlocking {
+    @Test fun itemOutsideOwnedAndWishListsRejectsTheWholeSelectionBeforeUpload() = runBlocking {
         Fixture().use { fixture ->
             val original = fixture.items.getValue(12)
-            for (status in ItemStatus.entries.filter { it != ItemStatus.OWNED }) {
+            for (status in ItemStatus.entries.filter { it !in setOf(ItemStatus.OWNED, ItemStatus.WISHED) }) {
                 fixture.items[12] = original.copy(status = status)
                 expectFailure { fixture.generator().generate(fixture.selected) }
             }
             assertEquals(0, fixture.prepareCalls)
             assertEquals(0, fixture.apiCalls)
             assertTrue(fixture.saved.isEmpty())
+        }
+    }
+
+    @Test fun wishedReferencesCanGenerateWithoutChangingTheirPurchaseState() = runBlocking {
+        Fixture().use { f ->
+            f.items.replaceAll { _, item -> item.copy(status = ItemStatus.WISHED) }
+            val before = f.items.toMap()
+            assertEquals(91L, f.generator().generate(f.selected))
+            assertEquals(1, f.prepareCalls)
+            assertEquals(1, f.apiCalls)
+            assertEquals(before, f.items)
+            assertEquals(f.selected, f.saved.single().second)
         }
     }
 

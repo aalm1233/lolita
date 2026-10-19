@@ -23,6 +23,8 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.domain.model.mannequinSubject
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.supportsVirtualTryOn
+import com.lolita.app.domain.model.productReferenceImages
 import com.lolita.app.domain.usecase.OrderAccounting
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import com.lolita.app.data.local.entity.ItemPriority
@@ -765,6 +767,8 @@ fun ItemDetailScreen(
                                             Text("推荐搭配")
                                         }
                                     }
+                                }
+                                if (item.status.supportsVirtualTryOn) {
                                     OutlinedButton(
                                         onClick = { onNavigateToTryOn(item.id) },
                                         modifier = Modifier.fillMaxWidth()
@@ -1114,7 +1118,7 @@ private fun SizeChartGallery(images: List<String>) {
 @Composable
 internal fun MannequinDetailEntry(item: Item, category: com.lolita.app.data.local.entity.Category?, onNavigate: (Long) -> Unit) {
     val subject = mannequinSubject(category, confirmedSemantics = true)
-    if (subject == null || item.imageUrls.none { it.isNotBlank() }) return
+    if (subject == null || item.productReferenceImages.isEmpty()) return
     val skin = LolitaSkin.current
     OutlinedButton(onClick = { onNavigate(item.id) }, modifier = Modifier.fillMaxWidth()) {
         SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))

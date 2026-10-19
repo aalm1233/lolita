@@ -4,6 +4,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -38,6 +39,7 @@ class MannequinViewModelTest {
         val coordinator = ImageTaskCoordinator(db, scope, {}, { ImageFileHelper.saveGeneratedImage(context, it) }, {}, { File(it).isFile },
             snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(context, it) })
         val stores = mutableListOf<ViewModelStore>()
+        val jobs = mutableListOf<Job>()
         var key = true
         var calls = 0
         var retryReader: suspend (String) -> ImageTask? = db.imageTaskDao()::get
@@ -65,14 +67,19 @@ class MannequinViewModelTest {
                     readService = { ImageServiceStatus(ImageGenerationProvider.OPENAI, key) }, selectService = {}, serviceChanges = flowOf(0),
                     saveApiKey = { _, _ -> key = true }, clearApiKey = { key = false }, tasks = db.imageTaskDao().observe(), readRetryTask = { retryReader(it) },
                     submitTask = { request, provider -> calls++; submit(request, provider) },
-                    appendLegacy = { id, path -> append(id, path) }, validateLegacy = { ImageFileHelper.isOwnedGeneratedImage(context, it) }, discardLegacy = {}).also { store.put("vm", it) }
+                    appendLegacy = { id, path -> append(id, path) }, validateLegacy = { ImageFileHelper.isOwnedGeneratedImage(context, it) }, discardLegacy = {},
+                    pinCropReferences = { paths ->
+                        val lease = ImageFileHelper.pinImageReferences(context, paths)
+                        val release: suspend () -> Unit = { lease.release() }
+                        release
+                    }).also { store.put("vm", it); jobs += requireNotNull(it.viewModelScope.coroutineContext[Job]) }
             }
             if (waitReady) withTimeout(10_000) { vm.uiState.first { !it.isLoading && it.keyLoaded } }
             return vm to store
         }
         override fun close() {
             instrumentation.runOnMainSync { stores.forEach { it.clear() } }
-            scope.cancel()
+            runBlocking { jobs.joinAll(); scope.coroutineContext.job.cancelAndJoin() }
             instrumentation.waitForIdleSync()
             ImageFileHelper.configure(target, AppModule.database())
             db.close(); root.deleteRecursively()
@@ -80,6 +87,47 @@ class MannequinViewModelTest {
     }
     private suspend fun main(action: () -> Unit) = withContext(Dispatchers.Main) { action() }
     private suspend fun ready(vm: MannequinViewModel, condition: (MannequinUiState) -> Boolean) = withTimeout(10_000) { vm.uiState.first(condition) }
+
+    @Test fun detailSelectionRestoresAndRemovedReferenceOrStaleConfirmationCannotSubmit() = runBlocking {
+        Fixture().use { f ->
+            f.setup()
+            val legacy = f.image(); val detail = f.image()
+            f.item = f.item.copy(sizeChartImageUrl = legacy, sizeChartImageUrls = listOf(detail))
+            f.db.itemDao().updateItem(f.item)
+            val handle = SavedStateHandle(mapOf("itemId" to 11L))
+            val (vm, _) = f.model(handle)
+            main { vm.selectImage(detail) }
+            assertNull(vm.uiState.value.selectionIssue)
+            val confirmed = requireNotNull(vm.uiState.value.generationRequest)
+            main { vm.generate(confirmedRequest = confirmed) }
+            val accepted = ready(vm) { !it.isSubmitting && it.latestTaskId != null }
+            assertEquals(detail, requireNotNull(f.db.imageTaskDao().get(accepted.latestTaskId!!)).sourceImagePaths.last())
+            main { vm.selectImage(legacy); vm.generate(confirmedRequest = confirmed) }
+            assertEquals(1, f.calls)
+            val restored = f.model(handle).first
+            assertEquals(legacy, restored.uiState.value.selectedImage)
+            f.db.itemDao().updateItem(f.item.copy(sizeChartImageUrl = null))
+            ready(restored) { it.selectionIssue != null }
+            assertFalse(restored.uiState.value.canGenerate)
+            assertEquals(f.item.imageUrls, requireNotNull(f.db.itemDao().getItemById(11)).imageUrls)
+        }
+    }
+
+    @Test fun detailCropUsesItsExactReferencedOriginalAndKeepsTheAlbumUnchanged() = runBlocking {
+        Fixture().use { f ->
+            f.setup()
+            val detail = f.image(); val crop = f.image()
+            f.item = f.item.copy(sizeChartImageUrls = listOf(detail))
+            f.db.itemDao().updateItem(f.item)
+            val (vm, _) = f.model()
+            main { vm.acceptCroppedImage(detail, crop); vm.generate() }
+            val accepted = ready(vm) { !it.isSubmitting && it.latestTaskId != null }
+            val task = requireNotNull(f.db.imageTaskDao().get(accepted.latestTaskId!!))
+            assertEquals(detail, ImageTaskRequest.decode(task.requestJson).productOriginalImagePath)
+            assertEquals(crop, task.sourceImagePaths.last())
+            assertEquals(f.item, f.db.itemDao().getItemById(11))
+        }
+    }
 
     @Test fun accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault() = runBlocking {
         Fixture().use { f ->

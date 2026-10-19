@@ -239,7 +239,8 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
 
     if (showModelPicker) PersonalModelPicker(state, onSelect = { viewModel.selectPersonalModel(it); showModelPicker = false },
         onManage = { showModelPicker = false; onManagePersonalModels() }, onDismiss = { showModelPicker = false })
-    if (showPicker) TryOnPicker(state, viewModel::updateSearchQuery, viewModel::selectCategory, viewModel::toggleItem) { showPicker = false }
+    if (showPicker) TryOnPicker(state, viewModel::updateSearchQuery, viewModel::selectCategory, viewModel::toggleItem,
+        onStatus = viewModel::selectStatusFilter) { showPicker = false }
     val imageItem = state.items.firstOrNull { it.id == imageItemId }
     if (imageItem != null) TryOnImagePicker(imageItem, state.selected.firstOrNull { it.itemId == imageItem.id }?.imagePath.orEmpty(),
         onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null })

@@ -123,6 +123,19 @@ class ItemRepository(
     }
 
     private suspend fun validateHierarchy(item: Item): Item {
+        val normalized = normalizeHierarchy(item)
+        if (!normalized.status.supportsStorage) {
+            val original = itemDao.getItemById(item.id)
+            val unchanged = original != null && normalized.locationId == original.locationId &&
+                normalized.storageNodeId == original.storageNodeId
+            require(unchanged || normalized.locationId == null && normalized.storageNodeId == null) {
+                "仅已拥有的物品可以设置存放位置，请先完成付款或核对拥有状态"
+            }
+        }
+        return normalized
+    }
+
+    private suspend fun normalizeHierarchy(item: Item): Item {
         database?.let { db -> item.locationId?.let { roomId ->
             require(db.locationDao().getLocationByIdSync(roomId)!=null) { "收纳位置已改变，请重新选择" }
         } }

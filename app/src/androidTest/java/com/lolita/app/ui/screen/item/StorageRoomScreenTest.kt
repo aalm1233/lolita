@@ -131,6 +131,35 @@ class StorageRoomScreenTest {
         assertEquals(shoe, db.itemDao().getItemById(accessory)!!.parentItemId)
     }
 
+    @Test fun unpaidItemsAreAbsentFromRoomCountsAndPickerAndLostOwnershipClearsSelection() = runBlocking {
+        val unpaid = db.itemDao().insertItem(Item(brandId=1,categoryId=1,name="未付尾款物品",description="旧位置保留",
+            status=ItemStatus.PENDING_BALANCE,locationId=1,storageNodeId=shelf))
+        compose.waitUntil(10_000) { model.uiState.value.allItems.size==3 && model.uiState.value.nodeItemCounts[cabinet]==2 }
+        compose.onNodeWithText("移入物品").performScrollTo().performClick()
+        compose.onNodeWithText("选择移入物品").assertIsDisplayed()
+        compose.onNodeWithText("未付尾款物品").assertDoesNotExist()
+        compose.onNodeWithText("取消").performClick()
+        openCabinet()
+        compose.onNodeWithContentDescription("选择玛丽珍鞋").performScrollTo().performClick()
+        db.itemDao().updateItemStatus(shoe,"PENDING_PAYMENT")
+        compose.waitUntil(10_000) { model.uiState.value.items.map {it.id}==listOf(accessory) && model.uiState.value.selectedItemIds.isEmpty() }
+        assertEquals(1,model.uiState.value.nodeItemCounts[cabinet])
+        val directory=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"owned-storage").apply{mkdirs()}
+        for(type in SkinType.entries) for(isDark in listOf(false,true)) {
+            compose.runOnIdle{skin.value=type;dark.value=isDark;compact.value=true}
+            compose.onNodeWithTag("storage-room-list").performScrollToNode(hasContentDescription("选择配套鞋扣"))
+            compose.onNodeWithText("未付尾款物品").assertDoesNotExist()
+            compose.onNodeWithContentDescription("选择玛丽珍鞋").assertDoesNotExist()
+            File(directory,"room-${type.name}-${if(isDark) "dark" else "light"}.png").outputStream().use {
+                compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG,100,it)
+            }
+        }
+        db.itemDao().updateItemStatus(shoe,"OWNED")
+        compose.waitUntil(10_000){model.uiState.value.items.size==2}
+        assertEquals(shelf,db.itemDao().getItemById(shoe)!!.storageNodeId)
+        assertEquals(shelf,db.itemDao().getItemById(unpaid)!!.storageNodeId)
+    }
+
     private fun assertSingleLineAction(label: String, expectedFontScale: Float) {
         compose.onNode(hasText(label) and hasClickAction()).performScrollTo().assertIsDisplayed().assertIsEnabled()
         val layouts = mutableListOf<TextLayoutResult>()

@@ -317,7 +317,7 @@ fun ItemEditScreen(
                                 Text("颜色：${uiState.colors.takeIf { it.isNotEmpty() }?.joinToString("、") ?: "未设置"}")
                             }
                         }
-                        row {
+                        if (uiState.status.supportsStorage) row {
                             StorageLocationPicker(selectedLocationId = uiState.locationId, selectedNodeId = uiState.storageNodeId,
                                 locations = uiState.locations, nodes = uiState.storageNodes,
                                 onLocationSelected = viewModel::updateStorage, enabled = canEdit)

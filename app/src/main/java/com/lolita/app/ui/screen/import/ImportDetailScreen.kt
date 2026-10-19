@@ -439,7 +439,7 @@ private fun ImportItemCard(
                 }
             } else {
                 // 普通商品或定金：显示完整字段
-                if (!floating) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, showImage = false, locations = locations, storageNodes = storageNodes)
+                if (!floating) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, showImage = false, locations = locations, storageNodes = storageNodes, allowStorage = isImportStorageAvailable(index, allItems))
                 // 价格 + 付款日期 (一行两个)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -571,7 +571,7 @@ private fun ImportItemCard(
                 SectionHeader("服饰资料", action = {
                     TextButton(onClick = { identityExpanded = !identityExpanded }) { Text(if (identityExpanded) "收起资料" else "展开资料") }
                 })
-                if (identityExpanded) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, locations = locations, storageNodes = storageNodes)
+                if (identityExpanded) ImportIdentityFields(item, brands, categories, onUpdate, onAddCategory, onPickLocalImage, locations = locations, storageNodes = storageNodes, allowStorage = isImportStorageAvailable(index, allItems))
             }
             Text("邮费包含在应付总额中，实付可小于应付；尾款日期可以待定。默认日期来自订单提交时间，请改为实际付款日期。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -637,7 +637,8 @@ private fun ImportIdentityFields(
     onAddCategory: (String, CategoryGroup, CategorySemantic) -> Unit,
     onPickLocalImage: () -> Unit,
     showImage: Boolean = true,
-    locations: List<Location> = emptyList(), storageNodes: List<StorageNode> = emptyList()
+    locations: List<Location> = emptyList(), storageNodes: List<StorageNode> = emptyList(),
+    allowStorage: Boolean = false
 ) {
     val skin = LolitaSkin.current
     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
@@ -678,9 +679,11 @@ private fun ImportIdentityFields(
         WardrobeSpecificationEditor(categories.firstOrNull { it.id == item.categoryId }?.categorySemantic ?: CategorySemantic.UNCONFIRMED,
             item.specifications, item.composition, true,
             { value -> onUpdate { it.copy(specifications = value) } }, { value -> onUpdate { it.copy(composition = value) } })
-        StorageLocationPicker(item.locationId, item.storageNodeId, locations, storageNodes,
-            { room, node -> onUpdate { it.copy(locationId = room, storageNodeId = node, locationMappingNote = null) } })
-        item.locationMappingNote?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+        if (allowStorage) {
+            StorageLocationPicker(item.locationId, item.storageNodeId, locations, storageNodes,
+                { room, node -> onUpdate { it.copy(locationId = room, storageNodeId = node, locationMappingNote = null) } })
+            item.locationMappingNote?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+        }
         if (showImage) ImportImageFields(item, onUpdate, onPickLocalImage)
     }
 }

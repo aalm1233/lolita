@@ -649,8 +649,8 @@ class ItemListViewModel(
         state.filterFamily?.let { family -> result = result.filter { state.categorySemantics[it.categoryId]?.family == family } }
         state.filterCategoryId?.let { category -> result = result.filter { it.categoryId == category } }
         if (state.filterSize.isNotBlank()) result = result.filter { it.size.orEmpty().contains(state.filterSize, true) }
-        state.filterLocationId?.let { room -> result = result.filter { it.locationId == room } }
-        state.filterStorageNodeId?.let { node -> result = result.filter { it.storageNodeId == node } }
+        state.filterLocationId?.let { room -> result = result.filter { it.status.supportsStorage && it.locationId == room } }
+        state.filterStorageNodeId?.let { node -> result = result.filter { it.status.supportsStorage && it.storageNodeId == node } }
         if (state.filterSpecification.isNotBlank()) result = result.filter { item ->
             val specs = WardrobeSpecifications.decode(item.specificationsJson)
             val values = when (state.filterFamily) {
@@ -695,7 +695,7 @@ class ItemListViewModel(
 
         if (query.isNotBlank()) {
             result = result.filter { item ->
-                val path = item.locationId?.let { room -> com.lolita.app.domain.model.StorageTree.pathFor(room, item.storageNodeId, _locations.value, state.storageNodes) }.orEmpty()
+                val path = item.locationId?.takeIf { item.status.supportsStorage }?.let { room -> com.lolita.app.domain.model.StorageTree.pathFor(room, item.storageNodeId, _locations.value, state.storageNodes) }.orEmpty()
                 listOf(item.name, state.brandNames[item.brandId].orEmpty(), state.categoryNames[item.categoryId].orEmpty(), path)
                     .plus(item.colors).any { it.contains(query, ignoreCase = true) }
             }
@@ -1102,7 +1102,7 @@ class ItemEditViewModel(
     }
 
     fun updateStorage(locationId: Long?, nodeId: Long?) {
-        if (_uiState.value.isLoading || _uiState.value.isSaving) return
+        if (_uiState.value.isLoading || _uiState.value.isSaving || !_uiState.value.status.supportsStorage) return
         hasUnsavedChanges = true
         _uiState.update { it.copy(locationId = locationId, storageNodeId = nodeId) }
     }
@@ -1575,7 +1575,7 @@ class ItemEditViewModel(
     }
 
     fun updateLocation(locationId: Long?) {
-        if (_uiState.value.isLoading || _uiState.value.isSaving) return
+        if (_uiState.value.isLoading || _uiState.value.isSaving || !_uiState.value.status.supportsStorage) return
         _uiState.update { it.copy(locationId = locationId) }
         hasUnsavedChanges = true
     }
@@ -1640,8 +1640,8 @@ class ItemEditViewModel(
                     sizeChartImageUrl = state.sizeChartImageUrl,
                     sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
-                    locationId = state.locationId,
-                    storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(), composition = state.composition,
+                    locationId = if (state.status.supportsStorage) state.locationId else state.item.locationId,
+                    storageNodeId = if (state.status.supportsStorage) state.storageNodeId else state.item.storageNodeId, specificationsJson = state.specifications.encode(), composition = state.composition,
                     updatedAt = now
                 )
             } else {
@@ -1665,8 +1665,8 @@ class ItemEditViewModel(
                     sizeChartImageUrl = state.sizeChartImageUrl,
                     sizeChartImageUrls = state.sizeChartImageUrls,
                     source = state.source,
-                    locationId = state.locationId,
-                    storageNodeId = state.storageNodeId, specificationsJson = state.specifications.encode(), composition = state.composition,
+                    locationId = state.locationId.takeIf { state.status.supportsStorage },
+                    storageNodeId = state.storageNodeId.takeIf { state.status.supportsStorage }, specificationsJson = state.specifications.encode(), composition = state.composition,
                     createdAt = now,
                     updatedAt = now,
                     importToken = currentImportToken

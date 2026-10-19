@@ -132,7 +132,11 @@ class StorageRepository(private val database: LolitaDatabase, private val contex
         if (locationId != null) require(database.locationDao().getLocationByIdSync(locationId) != null) { "房间已删除" }
         if (nodeId != null) require(nodes.getById(nodeId)?.locationId == locationId) { "收纳位置已删除或不属于所选房间" }
         if (itemIds.isNotEmpty()) {
-            require(database.itemDao().getItemsForStorageMove(itemIds.toList()).size == itemIds.size) { "部分物品已删除，请重新选择" }
+            val items = database.itemDao().getItemsForStorageMove(itemIds.toList())
+            require(items.size == itemIds.size) { "部分物品已删除，请重新选择" }
+            require(locationId == null || items.all { it.status.supportsStorage }) {
+                "部分物品尚未拥有，无法设置存放位置，请重新选择"
+            }
             database.itemDao().updateItemsStorage(itemIds.toList(), locationId, nodeId)
         }
     }

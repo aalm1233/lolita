@@ -5,7 +5,10 @@ enum class ItemStatus {
     WISHED,
     PENDING_BALANCE,
     PENDING_PAYMENT,
-    PENDING_REVIEW
+    PENDING_REVIEW;
+
+    /** Physical storage is available only after ownership has been established. */
+    val supportsStorage: Boolean get() = this == OWNED
 }
 
 enum class ItemPriority {

@@ -188,6 +188,29 @@ class OrderImportInteractionTest {
         // Locate a long lazy item, then scroll its actual descendant into the viewport.
         compose.onNodeWithText(text).performScrollTo()
     }
+
+    @Test fun storageControlsFollowConfirmedFullPaymentAndHideAcrossSkinsForPartialPayment() {
+        val row=vm.uiState.value.importItems.first().copy(paymentRole=null,pairedWith=null,price=100.0,
+            shipping=10.0,paidAmount=110.0,financialConfirmed=true,purchaseDate="2026-10-14",locationId=1)
+        replaceState { it.copy(importItems=listOf(row),locations=listOf(com.lolita.app.data.local.entity.Location(id=1,name="导入房间"))) }
+        reveal("展开资料");compose.onNodeWithText("展开资料").performClick()
+        reveal("存放位置（可选）")
+        compose.onNodeWithText("存放位置（可选）").assertExists()
+        replaceState { it.copy(importItems=listOf(row.copy(paidAmount=20.0))) }
+        val folder=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"owned-storage").apply{mkdirs()}
+        for(skin in SkinType.entries) for(isDark in listOf(false,true)) {
+            compose.runOnIdle {skinType.value=skin;dark.value=isDark;compact.value=true}
+            reveal("尺码 (可选)")
+            compose.onNodeWithText("存放位置（可选）").assertDoesNotExist()
+            compose.onNodeWithText("导入房间").assertDoesNotExist()
+            File(folder,"import-${skin.name}-${if(isDark) "dark" else "light"}.png").outputStream().use {
+                compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG,100,it)
+            }
+        }
+        replaceState {it.copy(importItems=listOf(row))}
+        reveal("存放位置（可选）")
+        compose.onNodeWithText("存放位置（可选）").assertExists()
+    }
     @Suppress("UNCHECKED_CAST")
     private fun replaceState(update: (TaobaoImportUiState) -> TaobaoImportUiState) {
         compose.runOnIdle {

@@ -199,24 +199,24 @@ interface ItemDao {
     """)
     fun getItemsByCategoryName(categoryName: String): Flow<List<Item>>
 
-    @Query("SELECT * FROM items WHERE location_id = :locationId ORDER BY updated_at DESC")
+    @Query("SELECT * FROM items WHERE location_id = :locationId AND status = 'OWNED' ORDER BY updated_at DESC")
     fun getItemsByLocationId(locationId: Long): Flow<List<Item>>
 
-    @Query("SELECT * FROM items WHERE location_id IS NULL ORDER BY updated_at DESC")
+    @Query("SELECT * FROM items WHERE location_id IS NULL AND status = 'OWNED' ORDER BY updated_at DESC")
     fun getItemsWithNoLocation(): Flow<List<Item>>
 
     @Query("SELECT COUNT(*) FROM items WHERE location_id = :locationId")
     suspend fun countItemsByLocation(locationId: Long): Int
 
-    @Query("SELECT COUNT(*) FROM items WHERE location_id IS NULL")
+    @Query("SELECT COUNT(*) FROM items WHERE location_id IS NULL AND status = 'OWNED'")
     fun countItemsWithNoLocation(): Flow<Int>
 
-    @Query("SELECT location_id, COUNT(*) as count FROM items WHERE location_id IS NOT NULL GROUP BY location_id")
+    @Query("SELECT location_id, COUNT(*) as count FROM items WHERE location_id IS NOT NULL AND status = 'OWNED' GROUP BY location_id")
     fun getItemCountsByLocation(): Flow<List<LocationItemCount>>
 
     @Query("""
         SELECT location_id, image_urls FROM items
-        WHERE location_id IS NOT NULL AND image_urls != '[]'
+        WHERE location_id IS NOT NULL AND status = 'OWNED' AND image_urls != '[]'
         ORDER BY updated_at DESC
     """)
     fun getLocationItemImages(): Flow<List<LocationItemImage>>
@@ -250,10 +250,10 @@ interface ItemDao {
     @Query("SELECT COUNT(*) FROM items WHERE storage_node_id IN (:nodeIds)")
     suspend fun countItemsInStorageNodes(nodeIds: List<Long>): Int
 
-    @Query("SELECT * FROM items WHERE storage_node_id IN (:nodeIds) ORDER BY updated_at DESC")
+    @Query("SELECT * FROM items WHERE storage_node_id IN (:nodeIds) AND status = 'OWNED' ORDER BY updated_at DESC")
     fun observeItemsInStorageNodes(nodeIds: List<Long>): Flow<List<Item>>
 
-    @Query("SELECT * FROM items WHERE location_id = :locationId AND storage_node_id IS NULL ORDER BY updated_at DESC")
+    @Query("SELECT * FROM items WHERE location_id = :locationId AND storage_node_id IS NULL AND status = 'OWNED' ORDER BY updated_at DESC")
     fun observeRoomItemsWithoutStorage(locationId: Long): Flow<List<Item>>
 
     @Query("UPDATE items SET location_id = :locationId, storage_node_id = :nodeId, updated_at = MAX(updated_at + 1, :updatedAt) WHERE id IN (:itemIds)")

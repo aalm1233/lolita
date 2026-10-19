@@ -518,6 +518,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                 var importedCount = 0
                 var mergedCount = 0
                 database.withTransaction {
+                    val storageTargets = mutableMapOf<Long, Pair<Long, Long?>>()
                     for (index in allItems.indices) {
                         if (index !in validIndices || index in processed) continue
                         val row = allItems[index]
@@ -561,8 +562,8 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                             colors = main.color.takeIf { it.isNotBlank() }?.let(::listOf) ?: emptyList(),
                             size = main.size.ifBlank { null }, imageUrls = sourceRows.mapNotNull { it.imageUrl }.distinct(),
                             status = ItemStatus.PENDING_PAYMENT, description = metadata,
-                            locationId = main.locationId, storageNodeId = main.storageNodeId,
                             specificationsJson = specifications.encode(), composition = main.composition))
+                        main.locationId?.let { storageTargets[itemId] = it to main.storageNodeId }
                         val priceId = priceRepository.insertPrice(Price(itemId = itemId, type = type, totalPrice = total, shipping = shipping,
                             deposit = if (type == PriceType.DEPOSIT_BALANCE) stages[0].second else null,
                             balance = if (type == PriceType.DEPOSIT_BALANCE) stages[1].second else null))
@@ -580,6 +581,11 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                         importedCount++
                     }
                     database.orderDao().refreshStatuses()
+                    database.itemDao().getItemsForStorageMove(storageTargets.keys.toList())
+                        .filter { it.status.supportsStorage }.forEach { item ->
+                            val (room, node) = storageTargets.getValue(item.id)
+                            itemRepository.updateItem(item.copy(locationId = room, storageNodeId = node))
+                        }
                 }
                 withContext(Dispatchers.Main.immediate) { releaseDraftImages() }
                 // All external reminders are reconciled only after the complete import commits.
@@ -964,4 +970,17 @@ internal fun isImportItemReady(index: Int, items: List<ImportItemState>): Boolea
     if (item.paymentRole == PaymentRole.DEPOSIT) return try { item.manualBalance != null && importCents(item.manualBalance) > 0 } catch (_: Exception) { false }
     // A lone balance cannot establish the original full price: it must be paired or explicitly reclassified.
     return item.paymentRole != PaymentRole.BALANCE
+}
+
+/** Import drafts gain physical storage controls only for a confirmed, fully paid final order. */
+internal fun isImportStorageAvailable(index: Int, items: List<ImportItemState>): Boolean {
+    if (!isImportItemReady(index, items)) return false
+    val item = items[index]
+    val partner = item.pairedWith?.let { items[it] }
+    if (partner == null && item.paymentRole == PaymentRole.DEPOSIT) return false
+    val rows = listOfNotNull(item, partner)
+    return runCatching {
+        importCents(importSum(rows.map { it.paidAmount })) ==
+            importCents(importSum(rows.flatMap { listOf(it.price, it.shipping) }))
+    }.getOrDefault(false)
 }

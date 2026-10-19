@@ -64,7 +64,8 @@ class LocationDetailViewModel(
     private fun derive(state: LocationDetailUiState): LocationDetailUiState {
         val nodeId = state.currentNodeId?.takeIf { id -> state.nodes.any { it.id == id && it.locationId == roomId } }
         val ids = nodeId?.let { StorageTree.descendantIds(it, state.nodes) }
-        val roomItems = state.allItems.filter { if (state.isUnassigned) it.locationId == null else it.locationId == roomId }
+        val ownedItems = state.allItems.filter { it.status.supportsStorage }
+        val roomItems = ownedItems.filter { if (state.isUnassigned) it.locationId == null else it.locationId == roomId }
         val contained = if (ids == null) roomItems else roomItems.filter { it.storageNodeId in ids }
         val query = state.searchQuery.trim()
         val displayed = contained.filter { item ->
@@ -77,14 +78,14 @@ class LocationDetailViewModel(
         }
         val counts = state.nodes.associate { node ->
             val descendants = StorageTree.descendantIds(node.id, state.nodes)
-            node.id to state.allItems.count { it.storageNodeId in descendants }
+            node.id to ownedItems.count { it.storageNodeId in descendants }
         }
         return state.copy(currentNodeId = nodeId, items = displayed,
             childNodes = state.nodes.filter { it.locationId == roomId && it.parentNodeId == nodeId &&
                 (query.isBlank() || StorageTree.pathFor(roomId, it.id, state.locations, state.nodes).contains(query, true)) },
             currentPath = StorageTree.pathFor(if (state.isUnassigned) null else roomId, nodeId, state.locations, state.nodes),
             recordCount = contained.size, nodeItemCounts = counts,
-            selectedItemIds = state.selectedItemIds.intersect(state.allItems.map { it.id }.toSet()))
+            selectedItemIds = state.selectedItemIds.intersect(ownedItems.map { it.id }.toSet()))
     }
 
     fun openNode(id: Long?) { _uiState.update { derive(it.copy(currentNodeId = id, searchQuery = "", selectedItemIds = emptySet())) } }

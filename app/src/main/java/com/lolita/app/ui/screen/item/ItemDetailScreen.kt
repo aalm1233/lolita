@@ -492,7 +492,7 @@ fun ItemDetailScreen(
                             uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic ?: com.lolita.app.domain.model.CategorySemantic.UNCONFIRMED,
                             com.lolita.app.domain.model.WardrobeSpecifications.decode(item.specificationsJson), item.composition)
 
-                        item.locationId?.let { roomId ->
+                        item.locationId?.takeIf { item.status.supportsStorage }?.let { roomId ->
                             LolitaSection("存放位置") {
                                 row { TextButton(onClick = { onNavigateToLocation(roomId) }, modifier = Modifier.fillMaxWidth()) {
                                     Text(com.lolita.app.domain.model.StorageTree.pathFor(roomId, item.storageNodeId, uiState.locations, uiState.storageNodes))

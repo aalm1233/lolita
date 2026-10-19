@@ -231,7 +231,9 @@ private fun StorageItemPickerDialog(state: LocationDetailUiState, onDismiss: () 
     var selected by remember { mutableStateOf(emptySet<Long>()) }
     val listState = rememberLazyListState()
     ObserveSkinScroll(listState)
-    val filtered = state.allItems.filter { item -> query.isBlank() || listOf(item.name, state.brandNames[item.brandId].orEmpty(),
+    val available = state.allItems.filter { it.status.supportsStorage }
+    LaunchedEffect(available.map { it.id }) { selected = selected.intersect(available.map { it.id }.toSet()) }
+    val filtered = available.filter { item -> query.isBlank() || listOf(item.name, state.brandNames[item.brandId].orEmpty(),
         StorageTree.pathFor(item.locationId, item.storageNodeId, state.locations, state.nodes)).any { it.contains(query.trim(), true) } }
     AlertDialog(onDismissRequest = onDismiss, title = { Text("选择移入物品") }, text = {
         Column {

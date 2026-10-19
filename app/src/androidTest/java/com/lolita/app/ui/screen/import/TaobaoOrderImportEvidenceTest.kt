@@ -45,7 +45,7 @@ class TaobaoOrderImportEvidenceTest {
                 OrderRepository(db, context), db)
             store.put("import", vm)
         }
-        await { vm.uiState.value.categories.size == 2 }
+        await { vm.uiState.value.categories.map { it.id }.containsAll(listOf(1L,2L)) }
     }
 
     @After fun close() = runBlocking {
@@ -85,6 +85,55 @@ class TaobaoOrderImportEvidenceTest {
             assertFalse(row.financialConfirmed)
             assertFalse(isImportItemReady(0, vm.uiState.value.importItems))
         }
+    }
+
+    @Test fun fullyPaidImportAppliesItsRequestedStorageAfterLedgerStatusIsKnown() = runBlocking {
+        db.locationDao().insertLocation(Location(id=1,name="导入房间"))
+        val node=StorageRepository(db).createNode(1,null,"导入衣柜")
+        prepare()
+        assertFalse(isImportStorageAvailable(0,vm.uiState.value.importItems))
+        instrumentation.runOnMainSync {
+            vm.updateImportItem(0){it.copy(financialConfirmed=true,locationId=1,storageNodeId=node)}
+        }
+        assertTrue(isImportStorageAvailable(0,vm.uiState.value.importItems))
+        instrumentation.runOnMainSync {vm.executeImport()}
+        await {vm.uiState.value.currentStep==ImportStep.RESULT||vm.uiState.value.errorMessage!=null}
+        assertNull(vm.uiState.value.errorMessage)
+        val item=db.itemDao().getAllItemsList().single()
+        assertEquals(ItemStatus.OWNED,item.status)
+        assertEquals(1L,item.locationId);assertEquals(node,item.storageNodeId)
+        assertEquals(110.0,db.paymentDao().getAllPaymentsList().single().amount,0.0)
+    }
+
+    @Test fun depositOnlyImportCommitsWithoutAssigningItsRequestedStorage() = runBlocking {
+        db.locationDao().insertLocation(Location(id=1,name="导入房间"))
+        val node=StorageRepository(db).createNode(1,null,"导入衣柜")
+        prepare()
+        instrumentation.runOnMainSync {
+            vm.updateImportItem(0){it.copy(financialConfirmed=true,locationId=1,storageNodeId=node,
+                paymentRole=PaymentRole.DEPOSIT,price=20.0,shipping=0.0,paidAmount=20.0,manualBalance=80.0)}
+            vm.updateImportItem(0){it.copy(financialConfirmed=true)}
+        }
+        assertFalse(isImportStorageAvailable(0,vm.uiState.value.importItems))
+        instrumentation.runOnMainSync {vm.executeImport()}
+        await {vm.uiState.value.currentStep==ImportStep.RESULT||vm.uiState.value.errorMessage!=null}
+        assertNull(vm.uiState.value.errorMessage)
+        val item=db.itemDao().getAllItemsList().single()
+        assertEquals(ItemStatus.PENDING_BALANCE,item.status)
+        assertNull(item.locationId);assertNull(item.storageNodeId)
+        assertEquals(100.0,db.priceDao().getAllPricesList().single().totalPrice,0.0)
+        assertEquals(20.0,db.paymentDao().getAllPaymentsList().single().amount,0.0)
+    }
+
+    @Test fun pairedImportStorageNeedsBothPaymentsAndConfirmationAndHandlesInvalidTotals() {
+        prepare()
+        val row=vm.uiState.value.importItems.single()
+        val rows=listOf(row.copy(paymentRole=PaymentRole.DEPOSIT,pairedWith=1,price=20.0,shipping=0.0,paidAmount=20.0,financialConfirmed=true),
+            row.copy(paymentRole=PaymentRole.BALANCE,pairedWith=0,price=80.0,shipping=0.0,paidAmount=80.0,financialConfirmed=true))
+        assertTrue(isImportStorageAvailable(0,rows));assertTrue(isImportStorageAvailable(1,rows))
+        assertFalse(isImportStorageAvailable(0,listOf(rows[0],rows[1].copy(paidAmount=0.0))))
+        assertFalse(isImportStorageAvailable(0,listOf(rows[0],rows[1].copy(financialConfirmed=false))))
+        assertFalse(isImportStorageAvailable(0,rows.map{it.copy(price=999999999.99,paidAmount=999999999.99)}))
     }
 
     @Test fun joinedTypeMatchesJskBeforeSkCategory() {

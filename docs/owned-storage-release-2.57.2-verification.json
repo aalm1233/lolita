@@ -1,0 +1,286 @@
+{
+  "version": "2.57.2",
+  "version_code": 124,
+  "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+  "tag": "v2.57.2",
+  "source_and_tag_pushed_verified": true,
+  "behavior": [
+    "仅OWNED物品进入位置、未分配、柜架、数量、缩略图、移入选择及位置路径搜索筛选",
+    "未拥有详情/编辑隐藏位置；原引用保留，付清或撤销付款实时联动",
+    "共价小物继承主件状态，独立计价按自身；历史确认拥有不冒充明确欠款",
+    "新建和批量分配校验最新拥有状态，混合或陈旧提交原子拒绝；完整性计数仍保护全部原引用",
+    "淘宝导入同事务先建无位置物品并完成账本，刷新状态后只为OWNED应用位置，资料区只向已确认且付清的订单开放位置选择"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 124,
+    "version": "2.57.2",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "db5a5e9b2456da9a893e2f9b6ff39f136c1b2d31f1c39429710421d60154ce1e",
+    "bytes": 79330134,
+    "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "final_dex_code": {
+    "ownership_guard_present_in_final_dex": true,
+    "import_storage_eligibility_helper_present_in_final_dex": true
+  },
+  "verification": {
+    "debug_build": true,
+    "clean_release_build": true,
+    "device": {
+      "passed_unique": 13,
+      "tests": [
+        "com.lolita.app.data.NewDraftStorageCommitTest#newDraftCommitRejectsItsDeletedRoomWithAnActionableStorageMessage",
+        "com.lolita.app.data.NewDraftStorageCommitTest#newDraftCommitRejectsItsOldRoomAfterTheNodeMovesEvenThoughAutosaveWasNormalized",
+        "com.lolita.app.data.OwnedStorageTest#allVisibleQueriesExcludeUnownedButIntegrityCountsRetainEveryReference",
+        "com.lolita.app.data.OwnedStorageTest#assignmentsRejectUnownedAndStaleOrMixedSubmissionsAtomicallyButKeepLegacyEdits",
+        "com.lolita.app.data.OwnedStorageTest#paymentCompletionAndUndoRefreshSharedAccessoriesWithoutTouchingStoredLocations",
+        "com.lolita.app.data.StorageRepositoryTest#bulkMoveValidatesDestinationAndPreservesUnselectedRecords",
+        "com.lolita.app.ui.screen.import.OrderImportInteractionTest#storageControlsFollowConfirmedFullPaymentAndHideAcrossSkinsForPartialPayment",
+        "com.lolita.app.ui.screen.import.TaobaoOrderImportEvidenceTest#depositOnlyImportCommitsWithoutAssigningItsRequestedStorage",
+        "com.lolita.app.ui.screen.import.TaobaoOrderImportEvidenceTest#fullyPaidImportAppliesItsRequestedStorageAfterLedgerStatusIsKnown",
+        "com.lolita.app.ui.screen.import.TaobaoOrderImportEvidenceTest#pairedImportStorageNeedsBothPaymentsAndConfirmationAndHandlesInvalidTotals",
+        "com.lolita.app.ui.screen.item.OwnedStorageScreenTest#newUnpaidSaveDropsEntryDefaultsAndExistingUnpaidEditRetainsLegacyReferences",
+        "com.lolita.app.ui.screen.item.OwnedStorageScreenTest#unpaidDetailAndEditorHidePathsAcrossSkinsWhileOwnedDetailsKeepNavigation",
+        "com.lolita.app.ui.screen.item.StorageRoomScreenTest#unpaidItemsAreAbsentFromRoomCountsAndPickerAndLostOwnershipClearsSelection"
+      ],
+      "final_visible_area_case_passed": 1,
+      "scope": "Owned storage queries, ledger transitions, transaction/draft guards and actual room/detail/editor/import UI; only affected cases rerun.",
+      "harness_repairs": "Canonical specification fixture, preset-category readiness and Compose load scheduling; screenshots use visible actions rather than the squeezed compact-row label at double font.",
+      "paid_requests": 0,
+      "user_device_touched": false,
+      "uninstall": false,
+      "clear_data": false
+    },
+    "signed_upgrade": {
+      "original_location_references_exact": true,
+      "reference_columns_checked": [
+        "id",
+        "location_id",
+        "storage_node_id"
+      ],
+      "private_values_published": false,
+      "passed": true,
+      "from": "2.57.1/123",
+      "to": "2.57.2/124",
+      "same_signature": true,
+      "normal_install_r": true,
+      "cold_start_alive": true,
+      "clear_data": false,
+      "uninstall": false,
+      "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "apk_sha256": "db5a5e9b2456da9a893e2f9b6ff39f136c1b2d31f1c39429710421d60154ce1e",
+      "scope": "APK identity, same signature, normal overwrite install/cold startup and original id/location_id/storage_node_id projection; transaction and draft failure protection separately verified on isolated data",
+      "full_database_image_or_credential_upgrade_audit_repeated": false,
+      "user_device_touched": false
+    },
+    "selected_reason": "位置读模型、付款联动、保存/草稿/批量准入和淘宝导入调用链及对应真实页面",
+    "unrelated_full_jvm_device_usb_runs": false,
+    "full_database_image_credential_audit_repeated": false,
+    "backup_roundtrip_repeated": false,
+    "omitted_reason": "无schema、迁移、备份、图片引用、密钥持久化或启动初始化变更，升级仅核对本次相关位置引用及包身份/启动。"
+  },
+  "visuals": {
+    "directory": "docs/visuals/2026-10-19-owned-storage/",
+    "actual_pages": [
+      "detail",
+      "edit",
+      "room",
+      "import"
+    ],
+    "actual_screens": 56,
+    "seven_skins_light_dark": true,
+    "viewport": "320dp / fontScale2",
+    "fixtures_only": true
+  },
+  "data": {
+    "room_version": 30,
+    "backup_version": 10,
+    "new_fields_or_migration": false,
+    "original_location_references_retained": true,
+    "images_or_task_protocol_or_credentials_changed": false,
+    "paid_requests": 0,
+    "user_device_touched": false,
+    "uninstall": false,
+    "clear_data": false
+  },
+  "distribution": {
+    "github": {
+      "tag": "v2.57.2",
+      "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "release_id": 416927283,
+      "prerelease": false,
+      "files": {
+        "lolita-2.57.2.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.57.2/lolita-2.57.2.apk",
+          "anonymous_full_download": true,
+          "bytes": 79330134,
+          "sha256": "db5a5e9b2456da9a893e2f9b6ff39f136c1b2d31f1c39429710421d60154ce1e",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.57.2/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "3f9ee6abc4dbca8f0fe4e34c07d23e47631f15414b3fa17d68c8cf6f1e53b95a",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 79330134,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee_download_before_formal": {
+      "tag": "v2.57.2",
+      "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "release_id": 1217721,
+      "prerelease": true,
+      "files": {
+        "lolita-2.57.2.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/lolita-2.57.2.apk",
+          "anonymous_full_download": true,
+          "bytes": 79330134,
+          "sha256": "db5a5e9b2456da9a893e2f9b6ff39f136c1b2d31f1c39429710421d60154ce1e",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "3f9ee6abc4dbca8f0fe4e34c07d23e47631f15414b3fa17d68c8cf6f1e53b95a",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 79330134,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "gitee_formal_metadata": {
+      "tag": "v2.57.2",
+      "release_id": 1217721,
+      "prerelease": false,
+      "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "assets": {
+        "lolita-2.57.2.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/lolita-2.57.2.apk",
+        "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/SHA256SUMS"
+      },
+      "metadata_source": "owner-authenticated exact release GET; not a public update check"
+    },
+    "gitee_formal_head": {
+      "http_status": 200,
+      "bytes": 79330134,
+      "content_type": "application/zip",
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ],
+      "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/lolita-2.57.2.apk"
+    },
+    "public_update": {
+      "latest_tag": "v2.57.2",
+      "pages": 2,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.57.2/lolita-2.57.2.apk",
+      "source_commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "passed": true,
+      "http_status": 200
+    },
+    "app_update": {
+      "status": "not_retried",
+      "user_confirmed_network_restriction_can_be_ignored": true,
+      "manual_app_update_retry_performed": false,
+      "network_fix_attempted": false,
+      "reason": "本轮用户明确说明网络限制可忽略，直接安装包与发布附件仍单独核验。"
+    },
+    "old_assets_removed": false
+  },
+  "design": "docs/plans/2026-10-19-owned-storage.md"
+}

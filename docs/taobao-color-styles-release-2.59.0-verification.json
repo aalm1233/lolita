@@ -1,0 +1,255 @@
+{
+  "version": "2.59.0",
+  "version_code": 127,
+  "recorded_on": "2026-10-20",
+  "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+  "tag": "v2.59.0",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 127,
+    "version": "2.59.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "099d95bb2fb08fb2965782b645354d7ae06137ca0d7184cd6aba92eb2eedca6a",
+    "bytes": 79346518,
+    "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+    "build_log": "logs/clean-tracked-release-build.log"
+  },
+  "validation": {
+    "jvm_passed": 48,
+    "classes": {
+      "com.lolita.app.data.file.TaobaoProductComponentsTest": 5,
+      "com.lolita.app.data.file.TaobaoProductColorStylesTest": 5,
+      "com.lolita.app.data.file.TaobaoProductParserTest": 12,
+      "com.lolita.app.data.file.TaobaoProductPriceTest": 10,
+      "com.lolita.app.ui.screen.import.TaobaoProductBatchTest": 16
+    },
+    "device_passed": 14,
+    "device_serial": "emulator-5586",
+    "device_avd": "Lolita_Wardrobe_Final_35",
+    "real_remote_product_page_reproduced": false,
+    "device_scope": "Real Compose choices, seven skins light/dark, 320dp 2x font and system keyboard; serialized state, queue recovery, isolated Room durable drafts save exactly two WISHED items with independent 2+28 image files and no orders/payments.",
+    "paid_calls": 0
+  },
+  "packaging": {
+    "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+    "build_directory": "git archive of exact source commit",
+    "build_log": "logs/clean-tracked-release-build.log",
+    "packaged_source_assets": 35,
+    "all_project_asset_paths_tracked": true,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified_against_commons_math3_jar": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "untracked_local_assets_included": false,
+    "user_files_modified": false
+  },
+  "packaging_correction": {
+    "only_current_task_release": "v2.59.0",
+    "tag_or_source_commit_changed": false,
+    "intermediate_publication_temporarily_returned_to_prerelease": true,
+    "intermediate_local_copy_retained": true,
+    "replaced_current_task_attachments": [
+      {
+        "name": "lolita-2.59.0.apk",
+        "id": 3437220
+      },
+      {
+        "name": "SHA256SUMS",
+        "id": 3437221
+      }
+    ],
+    "old_releases_or_assets_modified": false,
+    "user_untracked_file_preserved": true
+  },
+  "upgrade": {
+    "avd": "Lolita_Color_Style_Release_35",
+    "serial": "emulator-5588",
+    "from": "2.58.1/126",
+    "to": "2.59.0/127",
+    "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+    "apk_sha256": "099d95bb2fb08fb2965782b645354d7ae06137ca0d7184cd6aba92eb2eedca6a",
+    "passed": true,
+    "same_signature": true,
+    "normal_install_r": true,
+    "cold_start_alive": true,
+    "clear_data": false,
+    "uninstall": false,
+    "user_device_touched": false,
+    "fresh_isolated_avd_with_previous_release_initialized": true,
+    "full_database_image_or_credential_audit_repeated": false,
+    "scope": "Final tracked-source APK identity, same-signature overwrite and cold startup. Import choices/durable saves/image preservation verified separately in isolated Room."
+  },
+  "platforms": {
+    "github": {
+      "tag": "v2.59.0",
+      "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+      "release_id": 417483791,
+      "prerelease": false,
+      "files": {
+        "lolita-2.59.0.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.59.0/lolita-2.59.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 79346518,
+          "sha256": "099d95bb2fb08fb2965782b645354d7ae06137ca0d7184cd6aba92eb2eedca6a",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.59.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "be039277782f0b984ee631eb23ec51699d84312d9f4b83b21a50cae45b7ea5a5",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 79346518,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "formal": {
+        "tag": "v2.59.0",
+        "release_id": 1219939,
+        "prerelease": false,
+        "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+        "assets": {
+          "lolita-2.59.0.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.59.0/lolita-2.59.0.apk",
+          "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.59.0/SHA256SUMS"
+        },
+        "metadata_source": "owner-authenticated exact release GET; not a public update check"
+      },
+      "anonymous_download": {
+        "tag": "v2.59.0",
+        "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+        "release_id": 1219939,
+        "prerelease": true,
+        "files": {
+          "lolita-2.59.0.apk": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.59.0/lolita-2.59.0.apk",
+            "anonymous_full_download": true,
+            "bytes": 79346518,
+            "sha256": "099d95bb2fb08fb2965782b645354d7ae06137ca0d7184cd6aba92eb2eedca6a",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.59.0/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "be039277782f0b984ee631eb23ec51699d84312d9f4b83b21a50cae45b7ea5a5",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/zip",
+          "bytes": 79346518,
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "public_update": {
+        "latest_tag": "v2.59.0",
+        "pages": 2,
+        "formal_only": true,
+        "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.59.0/lolita-2.59.0.apk",
+        "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba"
+      }
+    }
+  },
+  "actual_app_update": {
+    "source_commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+    "manual_check_once": true,
+    "device": "emulator-5584",
+    "message": "检查更新失败，请检查网络或前往 Gitee 查看",
+    "succeeded": false,
+    "checked_on_intermediate_package_before_tracked_asset_repack": true,
+    "application_code_unchanged_by_repack": true,
+    "final_package_manual_network_check_repeated": false,
+    "public_api_result_recorded_separately": true
+  },
+  "delivery": {
+    "github_formal": true,
+    "gitee_formal": true,
+    "same_final_signed_apk": true,
+    "source_and_tag_pushed": true,
+    "old_releases_deleted": false
+  },
+  "scope_limits": [
+    "Online Taobao product page was blocked by browser site policy. User confirmed styles are under the color dimension; controlled four-style fixtures verify two selected imports.",
+    "No schema/backup changes or historical data rewrite; no unrelated full-database/image/credential audit repeated.",
+    "Actual app manual update check on identical source before asset-only repack failed with generic network message. Final public API and anonymous stable asset downloads succeeded; final app network check was not repeated."
+  ]
+}

@@ -435,7 +435,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 虚拟试衣及正面人台图共用服务切换：`ImageGenerationProvider` 保留 GPT，新增即梦 5.0 Pro（火山方舟 `doubao-seedream-5-0-pro-260628`）。新安装默认即梦；存在旧 OpenAI 密文而无选择记录时保留 GPT。两家密钥分别 Keystore AES-GCM 加密存放于 noBackupFilesDir，切换或删除一家的 Key 不影响另一家；不回填、不进备份或 APK。
 - `TryOnSettings.readCredentials()` 原子读取服务与密钥，生成器全程使用该快照，并在上传前校验页面确认的服务；试衣历史写入实际模型型号。`changes` 通知两个保留的 ViewModel 同步状态。生成中、保存中及人台待处理预览禁止改服务或密钥。
-- `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 JPEG Data URL、1024×1536、PNG、b64_json、stream=false。2.60.2起按用户已在方舟开启隐式水印的配置统一发送watermark=false，关闭右下角显式标识；隐式水印由服务端控制，不虚构请求字段，返回PNG原字节保存。试衣、单品展示和专属模特共用该设置，历史图片不回写。复用各入口原图片数量及总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。适配记录见 `docs/plans/2026-10-20-seedream-implicit-watermark.md`，三类入口的受控请求回归为 `SeedreamImageApiTest`、`MannequinApiTest`、`PersonalModelApiTest`。
+- `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 PNG/JPEG Data URL、1024×1536、PNG、b64_json、stream=false。2.60.2起按用户已在方舟开启隐式水印的配置统一发送watermark=false，关闭右下角显式标识；隐式水印由服务端控制，不虚构请求字段，返回PNG原字节保存。试衣、单品展示和专属模特共用该设置，历史图片不回写。复用各入口原图片数量及总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。适配记录见 `docs/plans/2026-10-20-seedream-implicit-watermark.md`，三类入口的受控请求回归为 `SeedreamImageApiTest`、`MannequinApiTest`、`PersonalModelApiTest`。
 - Room27／备份7及图片归属不变。实际付费联调在用量限制调整后成功返回1张图（76.29秒，2张输入）；不能推论所有印花准确。验证、来源与样片见 `docs/seedream-provider-2026-10-16.md`，回归包含 API／不可变快照 JVM、独立AVD真实Keystore双Key保全、双VM同步及七皮肤浅暗服务选择、原生成与导航测试。
 
 ## 后台图像任务与版本说明（2.51.0）
@@ -580,3 +580,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.61.0 /131：淘宝链接支持主动按颜色／款式＋尺码组合多选，每件保存独立size和精确报价；60项定向JVM、19项去重设备回归及七皮肤浅暗／真实320dp两倍字／金额键盘通过。源码`822519aa`归档clean原签名正式构建，36份项目素材及依赖／生成profile核验，从2.60.2覆盖安装与两次启动通过。GitHub／Gitee同一正式APK匿名完整下载、SHA／HEAD、源码标签及清理后公开最高正式版本查询通过，未重复应用内网络检查。无付费调用、Room30／备份10或历史记录变化；回执`docs/taobao-size-combinations-release-2.61.0-verification.json`。用户本轮先批准2.56.0、随后扩大为仅保留最近两份，已清理13份Gitee旧APK共987915300字节，保留2.61.0和2.60.2及全部发布页／校验、GitHub／本机副本；不自动授权未来清理，详见`docs/gitee-apk-cleanup-2026-10-20.json`。
 
 - 2026-10-20腰封部件原型：三组局部草图各用builtin image_gen与当前Seedream共享API对照，共新增6次，累计38／100、余62次，无自动重试。手工网格、独立双扣取样、原部件保护及受限低频光照已跑通；750个映射采样与12份最终RGBA保护检查通过，但接缝、真实贴合和自动标注未达通用接入标准，未改App或隐藏新增付费步骤。2倍示例明确放大人物底图，最终检查相对放大基线；源码照片及派生图保持私有。方法、原输入版本与后续本地修正分别见`docs/plans/2026-10-20-controlled-waist-parts.md`和`docs/controlled-waist-parts-evaluation-2026-10-20.json`。本轮仅提交研究文档，不构建或出包。
+
+## 参考图细节保真（2.61.1）
+
+- `TryOnImages` 在既有EXIF校正、最长边1536及透明白底后优先无损PNG，单张PNG超过4MiB退回原JPEG90，仍校验单张10MiB／总40MiB和输入数量。原文件不变、元数据不上传；三类生图共用，无新增请求、提示词或任务协议变化。
+- `ReferenceImageEncoding` 按完整PNG签名选择两家传输的MIME／后缀，混合上传保留顺序与字节。`TryOnInfrastructureTest` 覆盖细柄逐像素、九图、高熵回退、EXIF和既有缩放白底；两家API回归覆盖混合封装。设计和边界见`docs/plans/2026-10-20-reference-detail-preservation.md`。手工腰封网格／保护合成仍为研究原型，不能宣称自动贴合已合入。

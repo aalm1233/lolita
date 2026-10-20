@@ -90,6 +90,23 @@ class SeedreamImageApiTest {
         assertTrue(transport.closed)
     }
 
+    @Test fun mixedLosslessAndFallbackReferencesUseMatchingDataUrlsWithoutReencoding() = runBlocking {
+        val png = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jgXcAAAAASUVORK5CYII=")
+        val jpeg = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xd9.toByte())
+        val transport = Transport()
+        SeedreamImageApi { transport }.generate("test-key", listOf(png, jpeg), "keep details")
+        val body = JsonParser.parseString(transport.uploaded.toString("UTF-8")).asJsonObject
+        val refs = body["image"].asJsonArray
+        assertEquals(2, refs.size())
+        for ((index, bytes) in listOf(png, jpeg).withIndex()) {
+            val mime = if (index == 0) "image/png" else "image/jpeg"
+            assertTrue(refs[index].asString.startsWith("data:$mime;base64,"))
+            assertArrayEquals(bytes, Base64.getDecoder().decode(refs[index].asString.substringAfter(',')))
+        }
+        assertFalse(body["watermark"].asBoolean)
+        assertEquals("1024x1536", body["size"].asString)
+    }
+
     @Test fun neverRetriesAndReportsAccountUsageLimitWithoutEchoingServerSecrets() = runBlocking {
         var calls = 0
         val raw = """{"error":{"code":"SetLimitExceeded","message":"secret-key private-account"}}"""

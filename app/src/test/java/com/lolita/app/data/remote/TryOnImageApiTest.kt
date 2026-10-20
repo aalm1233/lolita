@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Base64
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -46,6 +47,17 @@ class TryOnImageApiTest {
         assertArrayEquals("image".toByteArray(), result)
         assertTrue(transport.closed)
     }
+    @Test fun mixedPngAndJpegReferencesKeepTheirBytesAndMatchingMultipartTypes() = runBlocking {
+        val png = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jgXcAAAAASUVORK5CYII=")
+        val jpeg = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xd9.toByte())
+        val transport = Transport()
+        TryOnImageApi { transport }.generate("test-key", listOf(png, jpeg), "keep details")
+        val body = transport.uploaded.toByteArray().toString(Charsets.ISO_8859_1)
+        assertTrue(body.contains("filename=\"reference-0.png\"\r\nContent-Type: image/png\r\n\r\n${png.toString(Charsets.ISO_8859_1)}\r\n"))
+        assertTrue(body.contains("filename=\"reference-1.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n${jpeg.toString(Charsets.ISO_8859_1)}\r\n"))
+        assertEquals(2, Regex("name=\"image\\[\\]\"").findAll(body).count())
+    }
+
     @Test fun accountModelAndMalformedFailuresAreTypedWithoutRawResponseText() = runBlocking {
         for ((status, kind) in listOf(401 to "AUTH", 403 to "AUTH", 402 to "QUOTA", 429 to "RATE_LIMIT", 500 to "MODEL", 302 to "MODEL", 200 to "INVALID_IMAGE")) {
             val failure = runCatching { TryOnImageApi { Transport(status, "Bearer private https://secret.invalid") }.generate("controlled-key", listOf(byteArrayOf(1), byteArrayOf(2)), "p") }.exceptionOrNull()

@@ -106,13 +106,20 @@ class TryOnImages(private val context: Context) {
                 bitmap = opaque
             }
             return ByteArrayOutputStream().use { out ->
-                require(bitmap.compress(Bitmap.CompressFormat.JPEG,90,out)) { "无法准备参考图片" }
+                // Avoid another lossy pass over buckles, lace and fine print. The per-image
+                // PNG budget leaves room for all nine inputs under the existing 40 MiB cap.
+                require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) { "无法准备参考图片" }
+                if (out.size() > LOSSLESS_IMAGE_BUDGET) {
+                    out.reset()
+                    require(bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)) { "无法准备参考图片" }
+                }
                 out.toByteArray().also { require(it.size <= 10*1024*1024) { "参考图片过大" } }
             }
         } finally { bitmap.recycle() }
     }
 
     companion object {
+        private const val LOSSLESS_IMAGE_BUDGET = 4 * 1024 * 1024
         const val MODEL_ASSET = "tryon/model.png"
         const val MANNEQUIN_ASSET = "mannequin/front-template.png"
     }

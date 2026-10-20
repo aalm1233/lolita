@@ -73,7 +73,7 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
             images.forEachIndexed { index, bytes ->
                 check(!Thread.currentThread().isInterrupted) { "已取消等待" }
                 if (index > 0) output.write(",")
-                output.write("\"data:image/jpeg;base64,")
+                output.write("\"data:${ReferenceImageEncoding.of(bytes).mimeType};base64,")
                 output.write(Base64.getEncoder().encodeToString(bytes))
                 output.write("\"")
             }

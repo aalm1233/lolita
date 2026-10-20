@@ -75,7 +75,8 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
             }
             images.forEachIndexed { index, bytes ->
                 check(!Thread.currentThread().isInterrupted) { "已取消等待" }
-                text("--$boundary\r\nContent-Disposition: form-data; name=\"image[]\"; filename=\"reference-$index.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n")
+                val encoding = ReferenceImageEncoding.of(bytes)
+                text("--$boundary\r\nContent-Disposition: form-data; name=\"image[]\"; filename=\"reference-$index.${encoding.extension}\"\r\nContent-Type: ${encoding.mimeType}\r\n\r\n")
                 output.write(bytes)
                 text("\r\n")
             }

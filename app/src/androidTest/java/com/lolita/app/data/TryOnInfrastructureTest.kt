@@ -99,6 +99,84 @@ class TryOnInfrastructureTest {
         } finally { context.filesDir.parentFile!!.deleteRecursively() }
     }
 
+    @Test fun boundedReferencesPreserveEveryDecodedPixelAndOriginalFile() = runBlocking {
+        val context = fixture()
+        try {
+            val source = File(context.filesDir, "fine-detail.jpg") // Deliberately trust bytes, not extension.
+            val bitmap = Bitmap.createBitmap(257, 129, Bitmap.Config.ARGB_8888)
+            val pixels = IntArray(bitmap.width * bitmap.height) { i ->
+                android.graphics.Color.rgb((i * 37) % 256, (i * 73) % 256, (i * 131) % 256)
+            }
+            bitmap.setPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+            source.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+            val original = source.readBytes()
+            val images = TryOnImages(context).prepareSnapshots(List(9) { source.absolutePath })
+            assertEquals(9, images.size)
+            assertTrue(images.sumOf { it.size.toLong() } <= 40L * 1024 * 1024)
+            for (bytes in images) {
+                assertTrue(bytes.take(8).toByteArray().contentEquals(byteArrayOf(0x89.toByte(), 0x50, 0x4e, 0x47, 13, 10, 26, 10)))
+                val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                val actual = IntArray(decoded.width * decoded.height)
+                decoded.getPixels(actual, 0, decoded.width, 0, 0, decoded.width, decoded.height)
+                decoded.recycle()
+                assertArrayEquals("柄图细节不应被二次有损压缩", pixels, actual)
+            }
+            assertArrayEquals(original, source.readBytes())
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
+
+    @Test fun noisyPhotosFallBackToBoundedJpegAtTheSameDimensions() = runBlocking {
+        val context = fixture()
+        try {
+            val source = File(context.filesDir, "noisy.png")
+            val bitmap = Bitmap.createBitmap(1536, 1536, Bitmap.Config.ARGB_8888)
+            val random = java.util.Random(1482)
+            val pixels = IntArray(1536 * 1536) { android.graphics.Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)) }
+            bitmap.setPixels(pixels, 0, 1536, 0, 0, 1536, 1536)
+            source.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+            assertTrue(source.length() > 4 * 1024 * 1024)
+            val bytes = TryOnImages(context).prepareSnapshots(listOf(source.absolutePath)).single()
+            assertEquals(0xff, bytes[0].toInt() and 255); assertEquals(0xd8, bytes[1].toInt() and 255)
+            assertTrue(bytes.size <= 10 * 1024 * 1024)
+            val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            assertEquals(1536, decoded.width); assertEquals(1536, decoded.height); decoded.recycle()
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
+
+    @Test fun orientedJpegKeepsDecodedDetailWhileRemovingPrivateExif() = runBlocking {
+        val context = fixture()
+        try {
+            val source = File(context.filesDir, "oriented.jpg")
+            val bitmap = Bitmap.createBitmap(96, 64, Bitmap.Config.ARGB_8888)
+            android.graphics.Canvas(bitmap).apply {
+                drawColor(android.graphics.Color.RED)
+                drawRect(0f, 32f, 96f, 64f, android.graphics.Paint().apply { color = android.graphics.Color.BLUE })
+            }
+            source.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 95, it) }
+            bitmap.recycle()
+            android.media.ExifInterface(source.absolutePath).apply {
+                setAttribute(android.media.ExifInterface.TAG_ORIENTATION, "6")
+                setAttribute(android.media.ExifInterface.TAG_ARTIST, "private-photo-owner")
+                saveAttributes()
+            }
+            val original = source.readBytes()
+            val bytes = TryOnImages(context).prepareSnapshots(listOf(source.absolutePath)).single()
+            val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            try {
+                assertEquals(64, decoded.width); assertEquals(96, decoded.height)
+                assertTrue(android.graphics.Color.blue(decoded.getPixel(8, 48)) > 230)
+                assertTrue(android.graphics.Color.red(decoded.getPixel(56, 48)) > 230)
+                val exif = android.media.ExifInterface(bytes.inputStream())
+                assertNull(exif.getAttribute(android.media.ExifInterface.TAG_ARTIST))
+                // Android reports absent PNG orientation as UNDEFINED (0) or NORMAL (1).
+                assertTrue(exif.getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 0) in 0..1)
+            } finally { decoded.recycle() }
+            assertArrayEquals(original, source.readBytes())
+        } finally { context.filesDir.parentFile!!.deleteRecursively() }
+    }
+
     @Test fun pngHeaderWithoutCompletePixelsIsRejectedBeforeSaving() = runBlocking {
         val context = fixture()
         try {

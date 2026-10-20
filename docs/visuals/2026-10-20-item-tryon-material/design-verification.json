@@ -1,0 +1,173 @@
+{
+  "kind": "HTML concept design only, not Android or real-service verification",
+  "date": "2026-10-20",
+  "browserVersion": "155.0.8059.85",
+  "sources": {
+    "prototype.html": "fe840717130a884965f541452ccb97e1f702b4c4ee2fa976b8e98bb5ed4ef955",
+    "render-design.cjs": "79617a5b1b0d3cdeacc2fdce9d42cf30ccafce9bb0e79a780f7374425700f801"
+  },
+  "images": [
+    {
+      "file": "flow-light.png",
+      "width": 2106,
+      "height": 1100,
+      "sha256": "c9d668278556d9fd9b998b76fdd7c2a5211c6a1945a63b42743864661f9e9a25"
+    },
+    {
+      "file": "saved-and-picker.png",
+      "width": 864,
+      "height": 1100,
+      "sha256": "453e1aa0a7d4d7f606d6c0b6aa7aadec13a070ad93905597d408a7b673e5e2b3"
+    },
+    {
+      "file": "skins-light.png",
+      "width": 2934,
+      "height": 1100,
+      "sha256": "3acabff6a37cd77f939b22072decd93a488f2789ec5e92d53d886c5305234dff"
+    },
+    {
+      "file": "skins-dark.png",
+      "width": 2934,
+      "height": 1100,
+      "sha256": "6a35e439aed9545a800279d7a6ebc4e04b74ea0814cf7ffc2978998a1ffbcf6b"
+    },
+    {
+      "file": "states-light.png",
+      "width": 1278,
+      "height": 1980,
+      "sha256": "0cf94a2668cef7767f9d89aa62a87e311314f7b75af62f3c93971e493c9af58c"
+    },
+    {
+      "file": "small-large-keyboard.png",
+      "width": 748,
+      "height": 1128,
+      "sha256": "c2c3881006458563a3281a003837af51251ed2fd323ca4ceee687dd572dcf000"
+    }
+  ],
+  "checks": {
+    "reviewConfirmation": true,
+    "dressedBaseConfirmation": true,
+    "separatePreparationAndFusionFeeDialogs": true,
+    "flowNavigation": true,
+    "narrow": {
+      "pageOverflow": false,
+      "contentOverflow": false,
+      "savePresent": true
+    },
+    "layout": [
+      {
+        "skin": "default",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "default",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "gothic",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "gothic",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "chinese",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "chinese",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "classic",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "classic",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "navy",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "navy",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "country",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "country",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "victorian",
+        "dark": 0,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      },
+      {
+        "skin": "victorian",
+        "dark": 1,
+        "horizontalOverflow": false,
+        "offscreen": [],
+        "footerHeight": 111,
+        "contentScroll": true
+      }
+    ]
+  },
+  "browserErrors": []
+}

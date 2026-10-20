@@ -288,5 +288,6 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 - [七套皮肤图标个性](superpowers/specs/2026-10-12-icon-personality-design.md)与[非导航图标个性](superpowers/specs/2026-10-12-icon-details-design.md)：各皮肤造型与功能辨认。
 - [页面视觉优化](superpowers/specs/2026-10-12-visual-first-pass-design.md)与[背景及应用图标](superpowers/specs/2026-10-14-skin-art-polish-design.md)：信息层级、认可布局与素材方向。
 - [后台图像任务](superpowers/specs/2026-10-16-image-tasks-design.md)：离页、任务状态、恢复与费用边界。
+- [主视单品素材与加配饰接入设计](plans/2026-10-20-item-tryon-material-app-design.md)：图稿、七皮肤浅暗、确认素材复用、已有穿搭加腰饰与拟议数据／备份方案；目前为设计，尚未实现或验证正式服务透明输出。
 - [专属模特](superpowers/specs/2026-10-16-personal-model-design.md)：照片与参数语义、人物保真及资料保护。
 - [完整衣橱与物品登记](superpowers/specs/2026-10-18-complete-wardrobe-design.md)：品类、收纳、识图、头模及分期方案；具体能力以相应任务实现和验证记录为准。

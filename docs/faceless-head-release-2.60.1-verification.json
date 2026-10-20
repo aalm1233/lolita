@@ -1,0 +1,216 @@
+{
+  "version": "2.60.1",
+  "version_code": 129,
+  "recorded_on": "2026-10-20",
+  "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+  "tag": "v2.60.1",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 129,
+    "version": "2.60.1",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+    "bytes": 80947492,
+    "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "validation": {
+    "debug_build": true,
+    "clean_release_build": true,
+    "device_passed_unique": 6,
+    "device_classes": [
+      "WigHeadTemplateSelectionTest",
+      "WigHeadDraftOwnershipTest",
+      "WigHeadTemplateVisualTest"
+    ],
+    "device_avd": "Lolita_Faceless_UI_20261020",
+    "device_serial": "emulator-5590",
+    "visual_scope": "Seven skins light/dark, native320dp/font2x, selected/restored seventh template and actual full image preview",
+    "initial_preview_capture_failure_retained_in_private_evidence": true,
+    "final_preview_check": "Advance Compose test frames and wait for actual reference image pixels; production viewer unchanged",
+    "retest_counted_only_once": true,
+    "paid_requests_in_device_tests": 0
+  },
+  "upgrade": {
+    "passed": true,
+    "avd": "Lolita_Faceless_Release_20261020",
+    "serial": "emulator-5590",
+    "fresh_dedicated_avd": true,
+    "baseline": {
+      "version": "2.60.0",
+      "version_code": 128,
+      "sha256": "4f084420a934bbf6e0b6b00d5fb234d03f12cf6a5e345d17d613782e96c676bb",
+      "bytes": 79346518
+    },
+    "installed": {
+      "version": "2.60.1",
+      "version_code": 129,
+      "sha256": "75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+      "bytes": 80947492
+    },
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "upgrade_without_uninstall_or_clear": true,
+    "starts": [
+      {
+        "activity_status": "ok",
+        "process_alive_seconds": 12,
+        "preference_bytes_preserved": true
+      },
+      {
+        "activity_status": "ok",
+        "process_alive_seconds": 12,
+        "preference_bytes_preserved": true
+      }
+    ],
+    "synthetic_old_preference": {
+      "id": "slate-rose",
+      "sha256": "28de09e973332e07081bfcda5e0bc1e2b87e31f5b04f6da4a1159f3f306879b7",
+      "bytes": 254,
+      "preserved": true,
+      "scope": "Explicit synthetic nonempty old selection on a newly created owned AVD; no user device or historical private data used"
+    },
+    "catalog": {
+      "old_rows": 6,
+      "new_rows": 7,
+      "old_rows_and_images_byte_identical": true,
+      "new_asset_sha256": "196e42e10fa6e16480b46321dad3826c2e7e2dc03d765d1c2d7ef7c7596fc4fc"
+    },
+    "source_assets": {
+      "tracked_count": 36,
+      "all_apk_bytes_match_git_head": true,
+      "unchanged_dependency_assets": [
+        "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+        "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+      ],
+      "generated_profiles_match_clean_build_intermediates": {
+        "assets/dexopt/baseline.prof": "binary_art_profile/release/compileReleaseArtProfile/baseline.prof",
+        "assets/dexopt/baseline.profm": "binary_art_profile_metadata/release/compileReleaseArtProfile/baseline.profm"
+      }
+    },
+    "paid_requests": 0,
+    "scope": "Offline asset append and selection persistence only; no unrelated full database or backup audit"
+  },
+  "packaging": {
+    "tracked_count": 36,
+    "all_apk_bytes_match_git_head": true,
+    "unchanged_dependency_assets": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_match_clean_build_intermediates": {
+      "assets/dexopt/baseline.prof": "binary_art_profile/release/compileReleaseArtProfile/baseline.prof",
+      "assets/dexopt/baseline.profm": "binary_art_profile_metadata/release/compileReleaseArtProfile/baseline.profm"
+    }
+  },
+  "generation_evaluation": {
+    "calls_used": 17,
+    "cap": 100,
+    "unused": 83,
+    "builtin_image_gen": 2,
+    "seedream": 15,
+    "six_wig_samples_preserved_blank_face": true,
+    "all_wig_product_fidelity_passed": false,
+    "three_view_and_sequential_waist_prototypes_stably_improved": false,
+    "production_generation_flow_changed": false,
+    "private_product_and_tryon_images_published": false,
+    "details": "docs/faceless-structured-evaluation-2026-10-20.json"
+  },
+  "platforms": {
+    "github": {
+      "tag": "v2.60.1",
+      "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+      "release_id": 417897684,
+      "prerelease": false,
+      "files": {
+        "lolita-2.60.1.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.60.1/lolita-2.60.1.apk",
+          "anonymous_full_download": true,
+          "bytes": 80947492,
+          "sha256": "75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.60.1/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "ebbe4f14c804480a06e62f7f9da2ccc111a762a04d2499063af4b4ddde124605",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 80947492,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "formal": false,
+      "prerelease": true,
+      "release_id": 1220469,
+      "tag": "v2.60.1",
+      "apk_uploaded": false,
+      "blocked_by": "Gitee HTTP400: repository attachments exceed 1 GB",
+      "old_apk_cleanup_authorization": "pending current user reply; historical permission not reused",
+      "new_formal_public_update_check_performed": false
+    }
+  },
+  "authorized_cleanup": [],
+  "actual_app_update": {
+    "manual_network_check_repeated": false,
+    "network_restriction_accepted_by_user": true,
+    "public_api_or_asset_success_does_not_establish_app_update_success": true
+  },
+  "delivery": {
+    "github_formal": true,
+    "gitee_formal": false,
+    "source_and_tag_pushed": true,
+    "same_final_signed_apk": false,
+    "old_apk_deleted_count": 0
+  },
+  "scope_limits": [
+    "Only offline catalog, one generic faceless asset, existing test expectations and version changed.",
+    "Original six rows and image bytes retained; no automatic replacement of existing selection or task snapshots.",
+    "Room30, backup10 and production request/prompt versions unchanged; no migration or unrelated full database audit.",
+    "Nonempty upgrade preference is a declared synthetic old choice on a fresh owned AVD; no user device was used.",
+    "Blank face preservation does not establish general wig fidelity, exact measurements or realistic waist fitting."
+  ],
+  "hygiene": {
+    "temporary_signing_and_local_config_copies_removed": true,
+    "original_signing_files_preserved": true,
+    "credentials_not_copied_to_source_or_apk": true,
+    "only_owned_followup_avds_stopped_data_retained": true
+  }
+}

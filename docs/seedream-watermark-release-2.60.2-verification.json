@@ -1,0 +1,396 @@
+{
+  "version": "2.60.2",
+  "version_code": 130,
+  "recorded_on": "2026-10-20",
+  "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+  "tag": "v2.60.2",
+  "change": "Seedream common transport sends watermark=false for try-on, mannequin and personal-model image generation; implicit watermarking relies on user-enabled Ark configuration",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 130,
+    "version": "2.60.2",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+    "bytes": 80947492,
+    "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "validation": {
+    "debug_build": true,
+    "clean_release_build": true,
+    "targeted_jvm": [
+      {
+        "class": "SeedreamImageApiTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "MannequinApiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "PersonalModelApiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "paid_calls": 0,
+    "server_implicit_watermark_detection_tested": false,
+    "ui_changed": false,
+    "room_version": 30,
+    "backup_version": 10,
+    "migration_required": false,
+    "scope": "Wire parameter only; no data, settings, image processing, cleanup, prompt or task protocol changes. No unrelated UI, database or backup regression."
+  },
+  "packaging": {
+    "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+    "build_directory": "git archive of exact source commit",
+    "build_log": "logs/clean-release-build.log",
+    "packaged_source_assets": 36,
+    "all_project_asset_paths_tracked": true,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified_against_commons_math3_jar": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified_against_clean_build_intermediates": {
+      "assets/dexopt/baseline.prof": "binary_art_profile/release/compileReleaseArtProfile/baseline.prof",
+      "assets/dexopt/baseline.profm": "binary_art_profile_metadata/release/compileReleaseArtProfile/baseline.profm"
+    },
+    "untracked_local_assets_included": false,
+    "user_files_modified_by_packaging": false,
+    "drawable_pngs": [
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_chinese.png",
+        "apk_path": "res/L5.png",
+        "source_sha256": "674f3e855ef2fb41c3de0cc9effc3f16d86b62d0d78ed20c570e45d9a3e29d5f",
+        "apk_sha256": "80a865bd063553764a188b7a3225ed3ae971da45a24be710921ccbcab95c6e9c",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_classic.png",
+        "apk_path": "res/0L.png",
+        "source_sha256": "f857f10ab35869d44bd3f3c1f4588f57267fb222a39308d7b14e618cd75cb3d2",
+        "apk_sha256": "b7a9fb0ce706cc6ea5b300cb48aaa008038b24495914a889e1625cd49e315379",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_country.png",
+        "apk_path": "res/CN.png",
+        "source_sha256": "c0c8ea4ce05bf94d7ea801caa503d0b7c6f5a37b518402c827bbd3f81089ef5c",
+        "apk_sha256": "4d6cd21dcb1b433d0781083a79de011b6a05178e44cf484fc170e7493cee3293",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_gothic.png",
+        "apk_path": "res/iT.png",
+        "source_sha256": "96abdf66a1557780f2e710fa6377baad8c9635f60541fe14d59eb55b35004e07",
+        "apk_sha256": "d7114f286894f3756ba6fad1427073243f08e0fdc276b2c8c2d73338b454d4d3",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_navy.png",
+        "apk_path": "res/RF.png",
+        "source_sha256": "65d89475ff49a617d22e4828a7478237922c3fcccdc8c7165692c3e8e3f0b9c0",
+        "apk_sha256": "9db5f57f68fde9794fbea85497034ed03bae625434c9e5d474b224ef319f7807",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_sweet.png",
+        "apk_path": "res/l0.png",
+        "source_sha256": "12cc1554b489a5e43f73349326e9517be0e8fa1ddbcdd5a8c685b9a9d26728f3",
+        "apk_sha256": "6be2c64910c027791b5520f513e6b3bfa75da5dad13dbc9bb3b61b32b89fd84e",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      },
+      {
+        "source_path": "app/src/main/res/drawable-nodpi/bg_art_victorian.png",
+        "apk_path": "res/nm.png",
+        "source_sha256": "327b2e17df32697b379c54bcbffdcc6e176eb7032def333c958961bea68a5de2",
+        "apk_sha256": "521ede1e2b4b663f833c6204b989c5cc399a6b2b83d1cf4a9c762cf2450fce5f",
+        "alpha_and_nontransparent_rgb_identical": true,
+        "source_archive_bytes_match_git": true,
+        "compiler_png_optimization": true,
+        "compiler_change_scope": "PNG encoding and fully transparent RGB only"
+      }
+    ],
+    "compiled_dex_has_watermark_false": true,
+    "compiled_dex_has_no_watermark_true": true
+  },
+  "upgrade": {
+    "passed": true,
+    "serial": "emulator-5592",
+    "avd": "Lolita_Watermark_Release_20261020",
+    "fresh_dedicated_avd": true,
+    "baseline": "2.60.1/129",
+    "target": "2.60.2/130",
+    "baseline_sha256": "75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+    "installed_sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "same_signature": true,
+    "install_r": true,
+    "uninstall_or_clear_data": false,
+    "baseline_start": {
+      "activity_status": "ok",
+      "process_alive_seconds": 10
+    },
+    "starts": [
+      {
+        "activity_status": "ok",
+        "process_alive_seconds": 10
+      },
+      {
+        "activity_status": "ok",
+        "process_alive_seconds": 10
+      }
+    ],
+    "starts_rechecked_after_adb_disconnect": true,
+    "installed_digest_verified_on_device": true,
+    "app_crashes": false,
+    "paid_requests": 0,
+    "optional_screenshot": {
+      "captured_on_device": true,
+      "pull_succeeded": false,
+      "reason": "ADB transport disconnect during data transfer; core upgrade, starts, crash check and APK digest passed before optional screenshot pull",
+      "logs_retained": true
+    },
+    "scope": "Common HTTP request parameter only. No UI change, migration, backup or settings changes; no unrelated preservation audit.",
+    "owned_avd_stopped_data_retained": true
+  },
+  "platforms": {
+    "github": {
+      "tag": "v2.60.2",
+      "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+      "release_id": 417981340,
+      "prerelease": false,
+      "files": {
+        "lolita-2.60.2.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.60.2/lolita-2.60.2.apk",
+          "anonymous_full_download": true,
+          "bytes": 80947492,
+          "sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.60.2/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "c4bbbac6c3aeaa93ac8c72536a19cbc74f182f6081f01c9b9b210f7ce6a9fce9",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 80947492,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "formal": {
+        "tag": "v2.60.2",
+        "release_id": 1221116,
+        "prerelease": false,
+        "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+        "assets": {
+          "lolita-2.60.2.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/lolita-2.60.2.apk",
+          "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/SHA256SUMS"
+        },
+        "metadata_source": "owner-authenticated exact release GET; not a public update check"
+      },
+      "anonymous_download_before_formalization": {
+        "tag": "v2.60.2",
+        "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+        "release_id": 1221116,
+        "prerelease": true,
+        "files": {
+          "lolita-2.60.2.apk": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/lolita-2.60.2.apk",
+            "anonymous_full_download": true,
+            "bytes": 80947492,
+            "sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "c4bbbac6c3aeaa93ac8c72536a19cbc74f182f6081f01c9b9b210f7ce6a9fce9",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/zip",
+          "bytes": 80947492,
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "formal_head": {
+        "http_status": 200,
+        "bytes": 80947492,
+        "content_type": "application/zip",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ],
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/lolita-2.60.2.apk"
+      },
+      "public_update": {
+        "latest_tag": "v2.60.2",
+        "pages": 3,
+        "formal_only": true,
+        "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.2/lolita-2.60.2.apk",
+        "source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6"
+      },
+      "initial_quota_failure_resolved": true
+    }
+  },
+  "actual_app_update": {
+    "manual_check_run": false,
+    "public_api_success_does_not_establish_app_update_success": true
+  },
+  "hygiene": {
+    "temporary_signing_links_removed": true,
+    "original_signing_configuration_retained": true,
+    "user_untracked_files_untouched": true
+  },
+  "authorized_cleanup": [
+    {
+      "tag": "v2.55.4",
+      "release_id": 1215794,
+      "attachment_id": 3424476,
+      "name": "lolita-2.55.4.apk",
+      "bytes": 77567420,
+      "sha256": "bec268dd6f5656d22438f58ab939e2d9213053c05875b30e214e3fd4ee92eae2",
+      "authorization": "Direct human reply in the current chat; operator supplied explicit attestation",
+      "new_source_commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+      "at_utc": "2026-10-20T04:01:34.680946+00:00",
+      "http_status": 204,
+      "old_release_and_other_attachments_retained": true,
+      "github_and_local_backups_verified": true,
+      "old_github_head": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "delivery": {
+    "github_formal": true,
+    "gitee_formal": true,
+    "source_and_tag_pushed": true,
+    "same_signed_apk": true,
+    "old_gitee_apks_removed": 1
+  }
+}

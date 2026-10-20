@@ -1,0 +1,342 @@
+{
+  "date_started": "2026-10-19",
+  "date_recorded": "2026-10-20",
+  "authorization": {
+    "max_calls": 100,
+    "message": "发完之后，我再给你100次额度，除了之前的内容，你再给我生成一个没有脸的头模",
+    "source": "current thread user, after release2.58.1",
+    "unused_previous_allowance_included": false
+  },
+  "release_prerequisite": {
+    "version": "2.58.1",
+    "source_commit": "2d0884fe79d49704b5a9b8ba10cabf1a3a24ef9f",
+    "published_and_verified": true
+  },
+  "calls_used": 17,
+  "calls_cap": 100,
+  "unused": 83,
+  "builtin_image_gen_calls": 2,
+  "seedream_calls": 15,
+  "automatic_retries": 0,
+  "blank_face_preserved_in_wig_samples": 6,
+  "all_wig_product_fidelity_passed": false,
+  "three_view_or_sequential_pipeline_adopted": false,
+  "production_generation_flow_changed": false,
+  "private_products_or_generated_tryon_images_published": false,
+  "host_codec_not_android_codec": true,
+  "rows": [
+    {
+      "number": 1,
+      "id": "faceless-head-asset-v1",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "status": "SUCCESS",
+      "outputSha256": "b9b8a66e1159c0f80ee1c5d960fc1b2a262ea11f26ea4d133564722f9de3b4f5",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 2,
+      "case": "faceless-v1-short-baseline",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "cf7cd90af3624947bd530f77eace4c724753910fa47504475ac2b3441a51be98",
+      "uploaded_image_sha256s": [
+        "29f2c8245d7dc2ed2cf4e787073b326fc3026d341e4bb480229ac32e874878c1",
+        "c69b2e2ccebdc46b510d17ab6a434918bafe4d818b3c50ff52af90d785de2a04"
+      ],
+      "output_sha256": "55b76da66a02b9303a2733bfbc81436e40ae6dd5cc661d856d1b268edbe6014d",
+      "automatic_retries": 0,
+      "seconds": 77.336,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 3,
+      "case": "faceless-v1-long-baseline",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "cf7cd90af3624947bd530f77eace4c724753910fa47504475ac2b3441a51be98",
+      "uploaded_image_sha256s": [
+        "29f2c8245d7dc2ed2cf4e787073b326fc3026d341e4bb480229ac32e874878c1",
+        "2aa047fea5e47f979ad309f733492663c547113085d87bdc564f7732c609aa8b"
+      ],
+      "output_sha256": "21d6baa72a4212e17152b1a2d02e1b5907cf1c847a4e637e6908efb770d89f53",
+      "automatic_retries": 0,
+      "seconds": 100.964,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 4,
+      "id": "faceless-head-asset-v2",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "status": "SUCCESS",
+      "outputSha256": "196e42e10fa6e16480b46321dad3826c2e7e2dc03d765d1c2d7ef7c7596fc4fc",
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 5,
+      "case": "faceless-v2-short-baseline",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "cf7cd90af3624947bd530f77eace4c724753910fa47504475ac2b3441a51be98",
+      "uploaded_image_sha256s": [
+        "166d2e38739aca3ba39d72f963324d2a1ae11801f054b3f9839b235cacc13d82",
+        "c69b2e2ccebdc46b510d17ab6a434918bafe4d818b3c50ff52af90d785de2a04"
+      ],
+      "output_sha256": "91721702abc746c34644a666d94856c6ea128299892c96bd449909863b7eec47",
+      "automatic_retries": 0,
+      "seconds": 86.961,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 6,
+      "case": "faceless-v2-long-baseline",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "cf7cd90af3624947bd530f77eace4c724753910fa47504475ac2b3441a51be98",
+      "uploaded_image_sha256s": [
+        "166d2e38739aca3ba39d72f963324d2a1ae11801f054b3f9839b235cacc13d82",
+        "2aa047fea5e47f979ad309f733492663c547113085d87bdc564f7732c609aa8b"
+      ],
+      "output_sha256": "7ff0a8d446545dda1dfd1b433a8280d170929250d671804f290b6228b227ab71",
+      "automatic_retries": 0,
+      "seconds": 100.592,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 7,
+      "case": "prototype-waist-views",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 1,
+      "prompt_sha256": "6f3a8425b5055a9c7dbeb4c27f4d2b53c66f2213db76a75299d1188b727d77ac",
+      "uploaded_image_sha256s": [
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "479524eae63611038790371b2bd22d23d5d5b89c928a6e1eb11e493a255661ac",
+      "automatic_retries": 0,
+      "seconds": 85.775,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 8,
+      "case": "prototype-dress-views",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 1,
+      "prompt_sha256": "299c548efbaa4b5919b8d29b3c4d4cb1ddbcb9f80d9427e62d379200fd7b9f9a",
+      "uploaded_image_sha256s": [
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427"
+      ],
+      "output_sha256": "0fd195a23b84b6bbda4b17467a2a4c57fc268bb78877441d41db9ee379c09687",
+      "automatic_retries": 0,
+      "seconds": 82.366,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 9,
+      "case": "assembly-production-baseline",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "TRY_ON",
+      "production_prompt_used": true,
+      "prompt_revision": 10,
+      "image_count": 3,
+      "prompt_sha256": "80d9768595014c436bfc7680ad400e7ff8fca96fc0839f3323e617180fb4a499",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "cc7c09fbe761370820feb840193dbaa0937a0e95c04ecaa4e9efb6d46a8dd13b",
+      "automatic_retries": 0,
+      "seconds": 29.179,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 10,
+      "case": "assembly-structured-text",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 3,
+      "prompt_sha256": "4ae679d9ace1471cfae688d3d252f5565527131375d4d5a93495a40eb79c98a4",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "0277e732a71c72e8837340baac6cf58f8b4f9b835853ccd48cb744dd92ceab24",
+      "automatic_retries": 0,
+      "seconds": 28.937,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 11,
+      "case": "assembly-waist-views",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 4,
+      "prompt_sha256": "82288a6596edd09553d04a23436494c4612ab08ec36835c0c64d10d9c2cefb01",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66",
+        "37fdcc7d2415b4a31a89a2df3d1e976a64ea98ea1475bc2085643a821d90b4be"
+      ],
+      "output_sha256": "a552e075f8ee05131ca60798c623bcf589b5b6e8f4530bbd5d1095e3aeef650b",
+      "automatic_retries": 0,
+      "seconds": 30.795,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 12,
+      "case": "assembly-both-views",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 5,
+      "prompt_sha256": "82288a6596edd09553d04a23436494c4612ab08ec36835c0c64d10d9c2cefb01",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66",
+        "37fdcc7d2415b4a31a89a2df3d1e976a64ea98ea1475bc2085643a821d90b4be",
+        "1a7ddce5631017eaedb778e7c3b48ea678d876311efff28a096942760974115d"
+      ],
+      "output_sha256": "3c4bae1ca56284ef782b4b6a44de13ade9a94afb2591162a38d57be045fd17b2",
+      "automatic_retries": 0,
+      "seconds": 30.077,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 13,
+      "case": "faceless-v2-short-repeat",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "cf7cd90af3624947bd530f77eace4c724753910fa47504475ac2b3441a51be98",
+      "uploaded_image_sha256s": [
+        "166d2e38739aca3ba39d72f963324d2a1ae11801f054b3f9839b235cacc13d82",
+        "c69b2e2ccebdc46b510d17ab6a434918bafe4d818b3c50ff52af90d785de2a04"
+      ],
+      "output_sha256": "d77cd1e697e938371b6f1659c310bb274a453df8101595d7bcb40a7f52ebe5db",
+      "automatic_retries": 0,
+      "seconds": 69.308,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 14,
+      "case": "faceless-v2-long-no-pair",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "WIG",
+      "production_prompt_used": true,
+      "prompt_revision": 1,
+      "image_count": 2,
+      "prompt_sha256": "4aca40ead1476f5324030084d90d3d7e46962e0b96d1177e307aa22896ff22f8",
+      "uploaded_image_sha256s": [
+        "166d2e38739aca3ba39d72f963324d2a1ae11801f054b3f9839b235cacc13d82",
+        "2aa047fea5e47f979ad309f733492663c547113085d87bdc564f7732c609aa8b"
+      ],
+      "output_sha256": "b1119e8ff832c4a510692691f4c1b391fb1fa283f839de3843638aeb7cda93a1",
+      "automatic_retries": 0,
+      "seconds": 80.246,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 15,
+      "case": "sequence-base-dress",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "TRY_ON",
+      "production_prompt_used": true,
+      "prompt_revision": 10,
+      "image_count": 2,
+      "prompt_sha256": "90be8ed0991c2b5bbcff07bd644fb348c6c134f493e10e2066ec0ac2a52fceda",
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427"
+      ],
+      "output_sha256": "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+      "automatic_retries": 0,
+      "seconds": 27.205,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 16,
+      "case": "sequence-waist-local",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 2,
+      "prompt_sha256": "05c4b3d1c26f326302ba1a27912067fa25e15543d2d49893515a4a6184a40f82",
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "output_sha256": "e2ad8bbc40a65a0b27f3199b1f9eaeb248993edf9127327d83ea809137518100",
+      "automatic_retries": 0,
+      "seconds": 79.419,
+      "http_success_does_not_imply_visual_pass": true
+    },
+    {
+      "number": 17,
+      "case": "sequence-waist-local-views",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "prompt_revision": 0,
+      "image_count": 3,
+      "prompt_sha256": "ff162399e26ebbc87af3ec2ac9e62c83158346f190ff76b6e438df06289d5103",
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66",
+        "37fdcc7d2415b4a31a89a2df3d1e976a64ea98ea1475bc2085643a821d90b4be"
+      ],
+      "output_sha256": "4605d7e296fdf67e57c3f98009a49a6a867d666d0b81bab1cfaba8f13e1a4a1f",
+      "automatic_retries": 0,
+      "seconds": 72.951,
+      "http_success_does_not_imply_visual_pass": true
+    }
+  ]
+}

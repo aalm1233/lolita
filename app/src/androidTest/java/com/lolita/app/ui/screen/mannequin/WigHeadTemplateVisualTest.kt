@@ -94,24 +94,36 @@ class WigHeadTemplateVisualTest {
             compose.onAllNodes(hasText("评审", substring = true)).assertCountEquals(0)
             compose.onNodeWithTag("mannequinWorkspace").performScrollToNode(hasText("蓝紫妆"))
             compose.onNodeWithText("蓝紫妆").assertIsDisplayed()
-            val name = "灰瞳·玫瑰妆"
+            val name = "素面·无五官"
             fun reveal() {
                 compose.onNodeWithTag("mannequinWorkspace").performScrollToNode(hasText(name))
                 compose.onNodeWithText(name).performScrollTo().assertIsDisplayed()
             }
             reveal()
             compose.onNodeWithText(name).onParent().onChildren().filterToOne(hasText("选用此头模")).performClick()
-            compose.waitUntil(10_000) { vm.uiState.value.selectedHeadTemplate?.id == "slate-rose" && !vm.uiState.value.isLoadingHead }
-            assertEquals("slate-rose", WigHeadTemplateCatalog.readPreference(context)!!.id)
-            val output = File(app.filesDir, "slate-rose-head-visuals").apply { mkdirs() }
+            compose.waitUntil(10_000) { vm.uiState.value.selectedHeadTemplate?.id == "faceless-ivory" && !vm.uiState.value.isLoadingHead }
+            assertEquals("faceless-ivory", WigHeadTemplateCatalog.readPreference(context)!!.id)
+            val output = File(app.filesDir, "faceless-head-visuals").apply { mkdirs() }
             fun capture(file: String) {
                 // Dialog uses a separate Android window; root capture can read the activity below it.
                 val bitmap = if (file == "full-preview.png") {
                     compose.waitForIdle()
                     instrumentation.waitForIdleSync()
-                    // Compose idleness does not await the platform Dialog window entrance animation.
-                    android.os.SystemClock.sleep(750)
-                    instrumentation.uiAutomation.takeScreenshot()
+                    // Semantics may exist before Coil draws in the separate Dialog window.
+                    // The light-gray reference must be visibly rendered, not a black viewer.
+                    val deadline = android.os.SystemClock.uptimeMillis() + 10_000
+                    var visible: Bitmap? = null
+                    while (visible == null && android.os.SystemClock.uptimeMillis() < deadline) {
+                        compose.mainClock.advanceTimeByFrame()
+                        compose.waitForIdle()
+                        val frame = instrumentation.uiAutomation.takeScreenshot()
+                        val center = frame.getPixel(frame.width / 2, frame.height / 2)
+                        if (android.graphics.Color.red(center) > 90 &&
+                            android.graphics.Color.green(center) > 90 &&
+                            android.graphics.Color.blue(center) > 90) visible = frame
+                        else { frame.recycle(); android.os.SystemClock.sleep(100) }
+                    }
+                    requireNotNull(visible) { "Full head preview never rendered the actual image" }
                 } else compose.onRoot().captureToImage().asAndroidBitmap()
                 bitmap.also {
                     File(output, file).outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
@@ -135,7 +147,7 @@ class WigHeadTemplateVisualTest {
             capture("full-preview.png")
             compose.onNodeWithContentDescription("关闭图片预览").performClick()
             assertEquals(0, paid)
-            assertEquals("slate-rose", vm.uiState.value.selectedHeadTemplate!!.id)
+            assertEquals("faceless-ivory", vm.uiState.value.selectedHeadTemplate!!.id)
         } finally {
             instrumentation.runOnMainSync { store.clear() }
             root.deleteRecursively()

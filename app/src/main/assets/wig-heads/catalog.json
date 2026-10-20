@@ -76,5 +76,18 @@
     "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
     "headScale": "候选构图，尚未统一定版",
     "byteSize": 1729720
+  },
+  {
+    "id": "faceless-ivory",
+    "name": "素面·无五官",
+    "version": 1,
+    "sha256": "196e42e10fa6e16480b46321dad3826c2e7e2dc03d765d1c2d7ef7c7596fc4fc",
+    "assetPath": "wig-heads/front-faceless-ivory-v1.png",
+    "width": 1024,
+    "height": 1536,
+    "view": "FRONT",
+    "status": "CANDIDATE_PENDING_REAL_WIG_REVIEW",
+    "headScale": "正面无五官，留出长发空间；无真实尺寸承诺",
+    "byteSize": 1600664
   }
 ]

@@ -24,7 +24,7 @@ import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class WigHeadTemplateSelectionTest {
-    @Test fun sixCandidatesCanBePreviewedSelectedAndRestoredWithoutPaidCalls() = runBlocking {
+    @Test fun sevenTemplatesCanBePreviewedSelectedAndRestoredWithoutPaidCalls() = runBlocking {
         val app = ApplicationProvider.getApplicationContext<Context>()
         val root = File(app.cacheDir, "head-selection-${UUID.randomUUID()}").apply { mkdirs() }
         val context = object : ContextWrapper(app) {
@@ -52,8 +52,8 @@ class WigHeadTemplateSelectionTest {
             return vm
         }
         try {
-            assertEquals(6, catalog.templates.size)
-            assertEquals(listOf("original-blueviolet", "rose-grayblue", "peach-violet", "cerulean-rose", "sage-softpink", "slate-rose"), catalog.templates.map { it.id })
+            assertEquals(7, catalog.templates.size)
+            assertEquals(listOf("original-blueviolet", "rose-grayblue", "peach-violet", "cerulean-rose", "sage-softpink", "slate-rose", "faceless-ivory"), catalog.templates.map { it.id })
             catalog.templates.forEach { candidate ->
                 val snapshot = catalog.snapshot(candidate.id)
                 snapshot.validateImage()

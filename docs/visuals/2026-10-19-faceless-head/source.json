@@ -1,0 +1,24 @@
+{
+  "kind": "new generated generic faceless adult mannequin, not a real person",
+  "tool": "builtin image_gen",
+  "asset_id": "faceless-ivory",
+  "asset_version": 1,
+  "asset_path": "app/src/main/assets/wig-heads/front-faceless-ivory-v1.png",
+  "width": 1024,
+  "height": 1536,
+  "sha256": "196e42e10fa6e16480b46321dad3826c2e7e2dc03d765d1c2d7ef7c7596fc4fc",
+  "bytes": 1600664,
+  "initial_generation": {
+    "prompt_file": "initial-prompt.txt",
+    "output_sha256": "b9b8a66e1159c0f80ee1c5d960fc1b2a262ea11f26ea4d133564722f9de3b4f5",
+    "real_person_reference_used": false
+  },
+  "selected_reframing": {
+    "prompt_file": "final-prompt.txt",
+    "reference_image_sha256": "b9b8a66e1159c0f80ee1c5d960fc1b2a262ea11f26ea4d133564722f9de3b4f5",
+    "output_sha256": "196e42e10fa6e16480b46321dad3826c2e7e2dc03d765d1c2d7ef7c7596fc4fc",
+    "non_destructive_original_retained": true
+  },
+  "public_builtin_distribution": "User requested new built-in head; repository/APK distribution uses existing project policy. No source portrait or private product photo included.",
+  "quality_note": "Blank face preserved in six actual wig requests; selected framing gives two complete short-wig samples. Long braid source is incomplete/oblique and generated details still fail fidelity; head scale can drift."
+}

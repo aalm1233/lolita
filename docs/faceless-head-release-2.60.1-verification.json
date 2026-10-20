@@ -174,20 +174,189 @@
         ]
       },
       "source_tag_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
-      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously",
+      "post_gitee_finalization_metadata": {
+        "assets": [
+          {
+            "digest": "sha256:75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+            "name": "lolita-2.60.1.apk",
+            "size": 80947492,
+            "state": "uploaded"
+          },
+          {
+            "digest": "sha256:ebbe4f14c804480a06e62f7f9da2ccc111a762a04d2499063af4b4ddde124605",
+            "name": "SHA256SUMS",
+            "size": 84,
+            "state": "uploaded"
+          }
+        ],
+        "isDraft": false,
+        "isPrerelease": false,
+        "tagName": "v2.60.1",
+        "url": "https://github.com/aalm1233/lolita/releases/tag/v2.60.1"
+      }
     },
     "gitee": {
-      "formal": false,
-      "prerelease": true,
-      "release_id": 1220469,
-      "tag": "v2.60.1",
-      "apk_uploaded": false,
-      "blocked_by": "Gitee HTTP400: repository attachments exceed 1 GB",
-      "old_apk_cleanup_authorization": "pending current user reply; historical permission not reused",
-      "new_formal_public_update_check_performed": false
+      "formal": {
+        "tag": "v2.60.1",
+        "release_id": 1220469,
+        "prerelease": false,
+        "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+        "assets": {
+          "lolita-2.60.1.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/lolita-2.60.1.apk",
+          "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/SHA256SUMS"
+        },
+        "metadata_source": "owner-authenticated exact release GET; not a public update check"
+      },
+      "anonymous_download_before_formalization": {
+        "tag": "v2.60.1",
+        "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+        "release_id": 1220469,
+        "prerelease": true,
+        "files": {
+          "lolita-2.60.1.apk": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/lolita-2.60.1.apk",
+            "anonymous_full_download": true,
+            "bytes": 80947492,
+            "sha256": "75d123cc9fd946fca45087bd41fc2795b97807df72075bb201387be81053915c",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          },
+          "SHA256SUMS": {
+            "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/SHA256SUMS",
+            "anonymous_full_download": true,
+            "bytes": 84,
+            "sha256": "ebbe4f14c804480a06e62f7f9da2ccc111a762a04d2499063af4b4ddde124605",
+            "redirect_chain": [
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "gitee.com",
+                "status": 302
+              },
+              {
+                "host": "foruda.gitee.com",
+                "status": 200
+              }
+            ]
+          }
+        },
+        "apk_head": {
+          "http_status": 200,
+          "content_type": "application/zip",
+          "bytes": 80947492,
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "formal_head": {
+        "http_status": 200,
+        "bytes": 80947492,
+        "content_type": "application/zip",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ],
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/lolita-2.60.1.apk"
+      },
+      "public_update": {
+        "latest_tag": "v2.60.1",
+        "pages": 2,
+        "formal_only": true,
+        "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.60.1/lolita-2.60.1.apk",
+        "source_commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+        "passed": true,
+        "http_status": 200
+      },
+      "initial_quota_failure_resolved": true,
+      "quota_cleanup_final_check": {
+        "removed_versions": [
+          "2.55.3"
+        ],
+        "bytes_freed": 77567420,
+        "retained_authorized_alternative": "2.55.4",
+        "stopped_when_space_sufficient": true,
+        "new_apk_and_checksum_uploaded": true,
+        "checks": [
+          {
+            "tag": "v2.55.3",
+            "apk_retained": false,
+            "checksum_retained": true,
+            "attachment_metadata_checked": true
+          },
+          {
+            "tag": "v2.55.4",
+            "apk_retained": true,
+            "checksum_retained": true,
+            "attachment_metadata_checked": true
+          }
+        ],
+        "github_and_local_old_copies_preserved": true
+      }
     }
   },
-  "authorized_cleanup": [],
+  "authorized_cleanup": [
+    {
+      "tag": "v2.55.3",
+      "release_id": 1215684,
+      "attachment_id": 3424249,
+      "name": "lolita-2.55.3.apk",
+      "bytes": 77567420,
+      "sha256": "16e4344cf98b1378b385aa988f1b6aa2260bc82e945f3979829c8fe6beacb5ec",
+      "github_url": "https://github.com/aalm1233/lolita/releases/download/v2.55.3/lolita-2.55.3.apk",
+      "http_status": 204,
+      "old_release_body_retained": true,
+      "checksum_and_other_attachments_unchanged": true,
+      "local_and_github_copies_verified": true,
+      "human_authorized_this_round": true,
+      "at_utc": "2026-10-20T02:17:27.828038+00:00"
+    }
+  ],
+  "cleanup_authorization": {
+    "source": "Direct human reply in current thread on2026-10-20",
+    "allowed_versions": [
+      "2.55.3",
+      "2.55.4"
+    ],
+    "answer": "允许，空间够就停",
+    "stop_when_space_sufficient": true
+  },
   "actual_app_update": {
     "manual_network_check_repeated": false,
     "network_restriction_accepted_by_user": true,
@@ -195,10 +364,10 @@
   },
   "delivery": {
     "github_formal": true,
-    "gitee_formal": false,
+    "gitee_formal": true,
     "source_and_tag_pushed": true,
-    "same_final_signed_apk": false,
-    "old_apk_deleted_count": 0
+    "same_final_signed_apk": true,
+    "old_apk_deleted_count": 1
   },
   "scope_limits": [
     "Only offline catalog, one generic faceless asset, existing test expectations and version changed.",

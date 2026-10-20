@@ -55,3 +55,10 @@
 - 已覆盖本次迁移／旧备份／新ZIP／引用与失败边界。
 - 已分开受控运输、真实接口、人工质量和未实测服务。
 - 已同步AGENTS与产品规范；源码、正式签名和渠道交付另记发布回执。
+
+
+## 正式交付
+
+源码`be57547d`及标签`v2.62.0`已推送。提交源码归档执行`clean assembleRelease`通过，原正式签名可覆盖2.61.1；专用AVD两次启动、35张旧表全部原字段、11张原图片SHA保全，正式依赖接线可从既有心愿腰饰详情进入素材页。APK中36份项目assets逐字节匹配Git、7张背景插图alpha及可见RGB保全，测试素材和私有照片未进入主包。
+
+[GitHub发布](https://github.com/aalm1233/lolita/releases/tag/v2.62.0)与[Gitee发布](https://gitee.com/aalm1233/lolita/releases/tag/v2.62.0)提供同一正式APK及校验文件；匿名完整下载、SHA256和稳定HEAD通过，Gitee公开更新查询已选2.62.0。未重跑此前用户接受的应用内网络检查，不将公开查询当作应用内成功；未删除任何旧发布附件。完整[发布回执](item-material-release-2.62.0-verification.json)另存。

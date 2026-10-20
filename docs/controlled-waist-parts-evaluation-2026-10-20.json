@@ -1,0 +1,389 @@
+{
+  "date": "2026-10-20",
+  "scope": "Controlled waist parts prototype, one product photo and one fictional adult model/dress base, fixed front view",
+  "authorization": {
+    "maxCalls": 100,
+    "before": 32,
+    "newCalls": 6,
+    "after": 38,
+    "remaining": 62,
+    "previousUnusedAllowanceIncluded": false,
+    "newProvidersPurchased": false
+  },
+  "prototype": {
+    "productSourceSha256": "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d",
+    "personBaseSha256": "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+    "imageGeometryManuallyAnnotated": true,
+    "realCentimetersKnown": false,
+    "materialParametersMeasured": false,
+    "realAdditionalViewsAvailable": false,
+    "appIntegrated": false,
+    "canonicalFinalMesh": "mesh-v7",
+    "postGenerationCorrections": [
+      "Manually removed background display-torso ink curve from the matte while retaining dark tassel intersections",
+      "Upper and lower buckles separately sampled using independent uniform-scale transforms of their source mounting areas; soft panels use piecewise bilinear maps"
+    ],
+    "finalHighResolutionGenerationInputMesh": "mesh-v5",
+    "postCorrectionsRequestedNewGeneration": false,
+    "highResolutionWorkingCanvas": [
+      2048,
+      3072
+    ],
+    "baseResizing": "Explicit Lanczos3 upscale of 1024x1536 person base; no claim of new physical or facial detail",
+    "productSampling": "Original 1032x1032 product RGB sampled at final canvas resolution",
+    "sourceCodeSha256": {
+      "render.cjs": "59587a9e0d3c82f913c384ee91b283e96c1603977a8ce2b30607164764e951b1",
+      "fuse.cjs": "1ce081eec6a867f9564c10f623b7f915b548680f9b383e04b921257e7bee483b",
+      "verify.cjs": "45388c2b8faef480e483f1fc28800720c0928f2df75741b34d17e52259b3ce5b",
+      "review-board.cjs": "bcc29f3dedf22db3b24e7376ce17466e331b747783af4da08c567271512342ea",
+      "PhysicsEvaluation.kt": "aef31e4625482b3463cccf894a274b2b2f75958a8109d64ceb4d9d7a4f45fb5f",
+      "ledger.py": "275fad0c2d4f78678bc3bfd18a438e7f2d626b5c65cc77b5cbcbfb6b59ced8e0"
+    },
+    "seedreamApiImplementation": {
+      "sourceCommit": "9c90b008a9fd93d5b0730b6fcf568de2995b2c2e",
+      "sourceSha256": "737d09f78d163571fafbc638a88bd199d8f822e884268fef7efdc32abf91ba51",
+      "visibleWatermark": false
+    }
+  },
+  "runs": [
+    {
+      "callNumber": 33,
+      "run": "controlled-parts-builtin-fusion-r1",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "model": null,
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "builtin image_gen tool, not app OpenAI API",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "45415190ac2c90c6fd249eb28a53a6ba8b67373cbae530d332e2dacbd373e750"
+      ],
+      "promptSha256": "b4ae358b89ab11f8710e8af53ca237a022161fe2c8a236d36eac0a7f6ba9500c",
+      "outputSha256": "656727578d9eb89d5f09d8eaf19cc9fca6d7fc9429bfcae479105dbcd14dd80c",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "局部接触和光照较草图柔和；灰色饰边、左侧系带细节及裙面被重画。"
+    },
+    {
+      "callNumber": 34,
+      "run": "controlled-parts-seedream-fusion-r1",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "Current SeedreamImageApi shared execute via generateMannequin, one cropped image; host ImageIO codec",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "67bfef2ef74a901d57cc998c075dd09d97db806e10a309885c655db28d8e02f1"
+      ],
+      "promptSha256": "5fb15bdca7af3f263b3e783a1bfee01f01929f179c3e1110dfff409d121810fc",
+      "outputSha256": "0c626c582d736bf5f22b4b8c2b62f08e20e727a0e8dad95153ef43c832d71e86",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "两枚主扣仍在，但扣形和比例变化，侧弹力布偏宽，裙面细节重画。"
+    },
+    {
+      "callNumber": 35,
+      "run": "controlled-parts-seedream-curved-r1",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "Current SeedreamImageApi shared execute via generateMannequin, one cropped image; host ImageIO codec",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "62573274950c93ca6ba56ebb5762f7709a7490eb2c2af379c60607a10bdd7ef4"
+      ],
+      "promptSha256": "5fb15bdca7af3f263b3e783a1bfee01f01929f179c3e1110dfff409d121810fc",
+      "outputSha256": "d3f4b85bf77df9f2df053c72e18c7bf577131ad52aee7ea9e5be69419d68cfc0",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "能生成更收束的腰部轮廓，仍重新解释扣具、饰边与悬挂结构。"
+    },
+    {
+      "callNumber": 36,
+      "run": "controlled-parts-builtin-curved-r1",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "model": null,
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "builtin image_gen tool, not app OpenAI API",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "41f76b4efb6b41f2e462d37a44f58629175d083013b674786538fc8ab6be84a1"
+      ],
+      "promptSha256": "b4ae358b89ab11f8710e8af53ca237a022161fe2c8a236d36eac0a7f6ba9500c",
+      "outputSha256": "db02e759ce5b1c44b5b53446abb4122094a8041ae7d467037dfca08e610a2844",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "侧面接触较自然；扣具、系带和纹样仍经过重画，不能直接采用。"
+    },
+    {
+      "callNumber": 37,
+      "run": "controlled-parts-seedream-detailed-r1",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "Current SeedreamImageApi shared execute via generateMannequin, one cropped image; host ImageIO codec",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "c5e70bff77b15970c5fac48265a36faa5c12404620d35a096aba3803aec38bd3"
+      ],
+      "promptSha256": "5fb15bdca7af3f263b3e783a1bfee01f01929f179c3e1110dfff409d121810fc",
+      "outputSha256": "51e57c8fc94a402bc1b97c6c444d3d728105e53d3de9b064855830f7fb5f1598",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "局部画幅清楚，但一部分黑色侧片变成米白／半透明外观，材质保真失败。"
+    },
+    {
+      "callNumber": 38,
+      "run": "controlled-parts-builtin-detailed-r1",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "model": null,
+      "productionTryOnWorkflowUsed": false,
+      "apiPath": "builtin image_gen tool, not app OpenAI API",
+      "imageCount": 1,
+      "actualInputSha256s": [
+        "1cba68a388186a9584f410d1c3f50e7421fd4b64aa67abadaf92c260b6602dd6"
+      ],
+      "promptSha256": "b4ae358b89ab11f8710e8af53ca237a022161fe2c8a236d36eac0a7f6ba9500c",
+      "outputSha256": "d92b12dba6ee0fc51ac1fe37a83fd14d809cfd4511ac3140d31262da34d4be60",
+      "generatedDimensions": [
+        1024,
+        1536
+      ],
+      "automaticRetries": 0,
+      "transportStatus": "SUCCESS",
+      "rawImageAccepted": false,
+      "manualReview": "整体佩戴感较草图柔和，仍重画扣形、链条和局部裙面，最终只借用光照。"
+    }
+  ],
+  "verification": {
+    "roundTripSamples": 750,
+    "maximumRoundTripError": 1.0729827733032455e-14,
+    "compositeChecks": 12,
+    "checks": "Independent decoded RGBA comparisons against the declared baseline and the transformed draft; no image-generation calls",
+    "records": [
+      {
+        "mesh": "mesh-v2",
+        "run": "controlled-parts-builtin-fusion-r1",
+        "mode": "strict",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "14e7fff21e8fccecdb6caba96faa7ad04af4923d5bc9d90379438bc771ffd4cc",
+        "protectedPixels": 20582,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v2",
+        "run": "controlled-parts-builtin-fusion-r1",
+        "mode": "shade",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "c2ba56e94c0eaba29cd63f8cc9f1ca826114db4689a288e5831d6fca66fc840b",
+        "protectedPixels": 8731,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v2",
+        "run": "controlled-parts-seedream-fusion-r1",
+        "mode": "strict",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "40b2ced47683859fd81297b8335a30844b081b8c36feca04a86d12c639bf68b0",
+        "protectedPixels": 20582,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v2",
+        "run": "controlled-parts-seedream-fusion-r1",
+        "mode": "shade",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "ffc185a237b162743f01e6b81da0a3ad962dc38fe85c1a580371bb2bb5412543",
+        "protectedPixels": 8731,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v4",
+        "run": "controlled-parts-builtin-curved-r1",
+        "mode": "strict",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "184b96c157675e99444c9769237e4354cc06eed17ae30b0f27d20bc80cb69ee5",
+        "protectedPixels": 19802,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v4",
+        "run": "controlled-parts-builtin-curved-r1",
+        "mode": "shade",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "6ef5bff4778c071e4f12bc72cea0002dcd3aff83b02d033a9115e2dff9d550c8",
+        "protectedPixels": 8651,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v4",
+        "run": "controlled-parts-seedream-curved-r1",
+        "mode": "strict",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "3bdafd1ef31ab1c8b6440d8ce6b6090b414d95e87796ac85beacc73640069bdc",
+        "protectedPixels": 19802,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v4",
+        "run": "controlled-parts-seedream-curved-r1",
+        "mode": "shade",
+        "workingScale": 1,
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "outputSha256": "534c72165447731c977d9ee009f38bbdf0a6671b3f9fed5ad4719a081cd77103",
+        "protectedPixels": 8651,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v7",
+        "run": "controlled-parts-builtin-detailed-r1",
+        "mode": "strict",
+        "workingScale": 2,
+        "dimensions": [
+          2048,
+          3072
+        ],
+        "outputSha256": "83f72f15ff9fa209e388e9ab50a702e74623d70956baa545d8a75011481a81af",
+        "protectedPixels": 80840,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v7",
+        "run": "controlled-parts-builtin-detailed-r1",
+        "mode": "shade",
+        "workingScale": 2,
+        "dimensions": [
+          2048,
+          3072
+        ],
+        "outputSha256": "8c74b346ef340b20ad155b4e373d2f5b0b243c725f9e2fba7ccba39124f65e28",
+        "protectedPixels": 36832,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v7",
+        "run": "controlled-parts-seedream-detailed-r1",
+        "mode": "strict",
+        "workingScale": 2,
+        "dimensions": [
+          2048,
+          3072
+        ],
+        "outputSha256": "505857e04f7b03f3562f8e6705a44ace69c969f577ecf7f20848f5b0f316f4b0",
+        "protectedPixels": 80840,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      },
+      {
+        "mesh": "mesh-v7",
+        "run": "controlled-parts-seedream-detailed-r1",
+        "mode": "shade",
+        "workingScale": 2,
+        "dimensions": [
+          2048,
+          3072
+        ],
+        "outputSha256": "5d37e67269d3e183ba167aadd88c30f0a19162ba75325fe59de724f63bb16ba6",
+        "protectedPixels": 36832,
+        "outsideMaskChangedPixels": 0,
+        "protectedChangedPixels": 0
+      }
+    ]
+  },
+  "conclusion": {
+    "controlledPartPreservation": "Demonstrated within the manually selected sampling, masks and transforms; this is not automatic item recognition or measured 3D geometry",
+    "strictComposition": "Protected pixels unchanged, but raw generated context can retain extra chains or shifted borders; pixel invariants alone do not pass visual review",
+    "boundedLightingComposition": "Keep source hardware and hanging parts; use bounded low-frequency illumination for source fabric and original surrounding dress, avoiding direct copies of generated extra parts",
+    "wearingQualityGate": "NOT_PASSED_FOR_GENERAL_APP_INTEGRATION",
+    "limitations": [
+      "Manual masks and image-coordinate geometry for one item/person only",
+      "No real dimensions, stiffness, unseen back construction or fit ground truth",
+      "Original perspective, lighting and edge quality remain visible; rigid patch boundaries can create seams",
+      "Higher working resolution and moderate curve changed together, so their effect was not isolated",
+      "No new garment, different body, bonnet, high heel or multi-item holdout validation"
+    ],
+    "appCodeChanged": false,
+    "databaseChanged": false,
+    "backupChanged": false,
+    "releaseCreated": false,
+    "fullImagesPublished": false
+  },
+  "artifacts": {
+    "localOnly": [
+      "controlled-parts/comparison.png",
+      "controlled-parts/preview-full.png",
+      "controlled-parts/preview-detail.png",
+      "runs/<run>/prompt.txt",
+      "runs/<run>/manifest.json",
+      "controlled-parts/<mesh>/<run>-<mode>/verification.json"
+    ],
+    "comparisonSha256": "6a132403198429558f8bd7a8fe8b437ba702902d38bd3f4ed467d4185080b0be",
+    "previewFullSha256": "8c74b346ef340b20ad155b4e373d2f5b0b243c725f9e2fba7ccba39124f65e28",
+    "previewDetailSha256": "c0f53e370b91168def2b3fc776e4c7be907122ea8dd0df7b781f633717a1a49e"
+  }
+}

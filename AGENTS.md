@@ -283,7 +283,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=129, versionName="2.60.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=130, versionName="2.60.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -433,7 +433,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 虚拟试衣及正面人台图共用服务切换：`ImageGenerationProvider` 保留 GPT，新增即梦 5.0 Pro（火山方舟 `doubao-seedream-5-0-pro-260628`）。新安装默认即梦；存在旧 OpenAI 密文而无选择记录时保留 GPT。两家密钥分别 Keystore AES-GCM 加密存放于 noBackupFilesDir，切换或删除一家的 Key 不影响另一家；不回填、不进备份或 APK。
 - `TryOnSettings.readCredentials()` 原子读取服务与密钥，生成器全程使用该快照，并在上传前校验页面确认的服务；试衣历史写入实际模型型号。`changes` 通知两个保留的 ViewModel 同步状态。生成中、保存中及人台待处理预览禁止改服务或密钥。
-- `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 JPEG Data URL、1024×1536、PNG、b64_json、stream=false、watermark=true，复用2–9张及原图片总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。
+- `ImageGenerationApi` 路由到各官方接口。`SeedreamImageApi` 仅 POST 官方 HTTPS `/api/v3/images/generations`，有序 JPEG Data URL、1024×1536、PNG、b64_json、stream=false。2.60.2起按用户已在方舟开启隐式水印的配置统一发送watermark=false，关闭右下角显式标识；隐式水印由服务端控制，不虚构请求字段，返回PNG原字节保存。试衣、单品展示和专属模特共用该设置，历史图片不回写。复用各入口原图片数量及总量限制；无自动付费重试、重定向或结果URL抓取，完整PNG校验和确认追加流程不变。SetLimitExceeded 明确提示安全体验模式／用量上限。适配记录见 `docs/plans/2026-10-20-seedream-implicit-watermark.md`，三类入口的受控请求回归为 `SeedreamImageApiTest`、`MannequinApiTest`、`PersonalModelApiTest`。
 - Room27／备份7及图片归属不变。实际付费联调在用量限制调整后成功返回1张图（76.29秒，2张输入）；不能推论所有印花准确。验证、来源与样片见 `docs/seedream-provider-2026-10-16.md`，回归包含 API／不可变快照 JVM、独立AVD真实Keystore双Key保全、双VM同步及七皮肤浅暗服务选择、原生成与导航测试。
 
 ## 后台图像任务与版本说明（2.51.0）

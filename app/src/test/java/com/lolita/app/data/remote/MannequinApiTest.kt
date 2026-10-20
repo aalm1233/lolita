@@ -39,6 +39,7 @@ class MannequinApiTest {
             if (provider == ImageGenerationProvider.SEEDREAM) {
                 assertEquals("https://ark.cn-beijing.volces.com/api/v3/images/generations", endpoint)
                 assertEquals(count, JsonParser.parseString(body).asJsonObject.getAsJsonArray("image").size())
+                assertFalse(JsonParser.parseString(body).asJsonObject["watermark"].asBoolean)
             } else {
                 assertEquals("https://api.openai.com/v1/images/edits", endpoint)
                 assertEquals(count, Regex("name=\"image\\[\\]\"").findAll(body).count())

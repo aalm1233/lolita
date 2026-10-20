@@ -81,7 +81,7 @@ class SeedreamImageApiTest {
         assertEquals("1024x1536", body["size"].asString)
         assertEquals("b64_json", body["response_format"].asString)
         assertEquals("png", body["output_format"].asString)
-        assertFalse(body["stream"].asBoolean); assertTrue(body["watermark"].asBoolean)
+        assertFalse(body["stream"].asBoolean); assertFalse(body["watermark"].asBoolean)
         assertEquals("原样保留\n\"花纹\"", body["prompt"].asString)
         assertFalse(body.has("n")); assertFalse(body.has("quality"))
         val refs = body["image"].asJsonArray

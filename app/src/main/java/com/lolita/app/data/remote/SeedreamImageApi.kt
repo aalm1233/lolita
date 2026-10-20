@@ -68,7 +68,8 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
         conn.outputStream.bufferedWriter(Charsets.UTF_8).use { output ->
             val gson = com.google.gson.Gson()
-            output.write("{\"model\":${gson.toJson(MODEL)},\"prompt\":${gson.toJson(prompt)},\"size\":\"1024x1536\",\"output_format\":\"png\",\"response_format\":\"b64_json\",\"stream\":false,\"watermark\":true,\"image\":[")
+            // Implicit watermarking is enabled in Ark; this flag controls the visible corner label.
+            output.write("{\"model\":${gson.toJson(MODEL)},\"prompt\":${gson.toJson(prompt)},\"size\":\"1024x1536\",\"output_format\":\"png\",\"response_format\":\"b64_json\",\"stream\":false,\"watermark\":false,\"image\":[")
             images.forEachIndexed { index, bytes ->
                 check(!Thread.currentThread().isInterrupted) { "已取消等待" }
                 if (index > 0) output.write(",")

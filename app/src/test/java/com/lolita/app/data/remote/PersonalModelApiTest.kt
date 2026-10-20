@@ -34,6 +34,10 @@ class PersonalModelApiTest {
             assertArrayEquals("image".toByteArray(), api.generatePersonalModel(credentials, template, "personal"))
             assertEquals(1, calls)
             assertTrue(transport.uploaded.toString("UTF-8").contains("personal"))
+            if (provider == ImageGenerationProvider.SEEDREAM) {
+                assertFalse(com.google.gson.JsonParser.parseString(transport.uploaded.toString("UTF-8"))
+                    .asJsonObject["watermark"].asBoolean)
+            }
         }
     }
 

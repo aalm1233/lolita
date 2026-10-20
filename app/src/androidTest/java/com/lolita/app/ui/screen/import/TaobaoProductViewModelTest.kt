@@ -179,6 +179,74 @@ class TaobaoProductViewModelTest {
     ): TaobaoProductState = withTimeout(10_000) { viewModel.state.first(predicate) }
 
     @Test
+    fun sizedChoicesAndQuotesSurviveSelectionRestoreAndBothSequentialEditorHandoffs() = runBlocking {
+        val fixture = fixture()
+        val choices = listOf(
+            TaobaoProductVariant("sku-black-S", "黑色 · S", "OP", size = "S", specificationGroup = "黑色"),
+            TaobaoProductVariant("sku-white-M", "白色 · M", "OP", size = "M", specificationGroup = "白色"))
+        val draft = fixture.original.copy(variants = emptyList(), size = "商品参数全部尺码", skuVariants = choices)
+        val choosing = newModel(TaobaoProductImportSession(state = TaobaoProductState(url = draft.productUrl, draft = draft)))
+        withContext(Dispatchers.Main) {
+            choosing.viewModel.splitSkuVariants(true)
+            choices.forEach { choosing.viewModel.toggleVariant(it.id) }
+            choosing.viewModel.referencePrice(choices[1].id, "36.50")
+            choosing.viewModel.splitSkuVariants(false)
+            choosing.viewModel.splitSkuVariants(true)
+        }
+        val restored = newModel(requireNotNull(choosing.handle.get<String>(TaobaoProductViewModel.SESSION_KEY)))
+        assertTrue(restored.viewModel.state.value.splitSkuVariants)
+        assertEquals(choices.map { it.id }.toSet(), restored.viewModel.state.value.selectedVariantIds)
+        val restoredDraft = restored.viewModel.state.value.draft!!
+        assertEquals(listOf(null, "36.50"), restoredDraft.skuVariants.orEmpty().map { it.referenceQuote?.amount })
+        val items = taobaoProductBatchItems(restoredDraft, restored.viewModel.state.value.selectedVariantIds, splitSkuVariants = true)
+        val queued = newModel(TaobaoProductImportSession(state = restored.viewModel.state.value,
+            batch = TaobaoProductBatchProgress(items), masterDraft = fixture.master,
+            ownedMasterPaths = fixture.masterBytes.keys.toList()))
+        val results = EditorResults()
+        withContext(Dispatchers.Main) { queued.viewModel.edit(results.onReady) }
+        val first = results.next(queued.viewModel)
+        assertEquals("S", first.size); assertEquals(choices[0].id, first.selectedSkuId)
+        assertNull(first.referenceQuote)
+        withContext(Dispatchers.Main) { queued.viewModel.editorReturned("${first.editorToken}:saved", results.onReady) }
+        val second = results.next(queued.viewModel)
+        assertEquals("M", second.size); assertEquals(choices[1].id, second.selectedSkuId)
+        assertEquals("36.50", second.referenceQuote?.amount)
+        assertTrue(imagePaths(first).toSet().intersect(imagePaths(second).toSet()).isEmpty())
+        fixture.masterBytes.values.zip(imagePaths(first)).forEach { (bytes, path) -> assertArrayEquals(bytes, File(path).readBytes()) }
+        val resumed = newModel(requireNotNull(queued.handle.get<String>(TaobaoProductViewModel.SESSION_KEY)))
+        withContext(Dispatchers.Main) {
+            resumed.viewModel.editorReturned("${first.editorToken}:saved", results.onReady)
+            resumed.viewModel.editorReturned("${second.editorToken}:saved", results.onReady)
+        }
+        assertEquals(2, resumed.viewModel.state.value.savedCount)
+        assertTrue(resumed.viewModel.state.value.completed)
+        results.assertNoPendingEditor()
+    }
+
+    @Test
+    fun skuSelectionLimitAndInvalidPricePreventExtraItemsOrDownloads() = runBlocking {
+        val choices = (1..31).map { TaobaoProductVariant("sku-$it", "黑色 · $it", "连裤袜", size = "$it", specificationGroup = "黑色") }
+        val draft = TaobaoProductDraft("袜子", "", "", "", "", "https://item.taobao.com/item.htm?id=123456", emptyList(), skuVariants = choices)
+        val model = newModel(TaobaoProductImportSession(state = TaobaoProductState(url = draft.productUrl, draft = draft)))
+        withContext(Dispatchers.Main) {
+            model.viewModel.splitSkuVariants(true)
+            choices.forEach { model.viewModel.toggleVariant(it.id) }
+        }
+        assertEquals(30, model.viewModel.state.value.selectedVariantIds.size)
+        assertTrue(model.viewModel.state.value.error!!.contains("最多导入30件"))
+        withContext(Dispatchers.Main) {
+            model.viewModel.toggleVariant(choices[0].id); model.viewModel.toggleVariant(choices[30].id)
+            model.viewModel.referencePrice(choices[1].id, "-1")
+            model.viewModel.edit { error("Invalid price must not open editor") }
+        }
+        assertEquals(30, model.viewModel.state.value.selectedVariantIds.size)
+        assertTrue(choices[30].id in model.viewModel.state.value.selectedVariantIds)
+        assertTrue(model.viewModel.state.value.error!!.contains("参考金额"))
+        assertEquals(0, model.viewModel.state.value.batchTotal)
+        assertFalse(model.viewModel.state.value.busy)
+    }
+
+    @Test
     fun colorStyleOptInKeepsTwoChoicesAndSeparateQuotesAcrossToggleAndSerializedRestore() = runBlocking {
         val colors = (1..4).map { TaobaoProductVariant("color-$it", "款式$it", "连裤袜") }
         val draft = TaobaoProductDraft("印花连裤袜", "", "", "", "商品详情",

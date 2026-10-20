@@ -197,13 +197,25 @@ class ItemImportRecoveryTest {
 
     @Test
     fun selectedTwoColorStylesCommitIndependentWishesWithAllOriginalImagesAndNoPayments() = runBlocking {
+        commitTwoVariants(sized = false)
+    }
+
+    @Test
+    fun selectedTwoSkuCombinationsPersistChosenSizesAndIndependentImagesWithoutPayments() = runBlocking {
+        commitTwoVariants(sized = true)
+    }
+
+    private suspend fun commitTwoVariants(sized: Boolean) {
         val original = fixture()
         database.categoryDao().insertCategory(Category(id = 308, name = "连裤袜"))
         val colors = (1..4).map { TaobaoProductVariant("color-$it", "款式$it", "连裤袜") }
+        val combinations = listOf(TaobaoProductVariant("sku-black-S", "黑色 · S", "连裤袜", size = "S", specificationGroup = "黑色"),
+            TaobaoProductVariant("sku-white-M", "白色 · M", "连裤袜", size = "M", specificationGroup = "白色"))
         val source = gson.fromJson(original.draftJson, TaobaoProductDraft::class.java).copy(
             name = "摇篮时光印花连裤袜", category = "连裤袜", categoryCandidates = listOf("连裤袜"),
-            colorVariants = colors, importToken = null)
-        val parts = taobaoProductBatchItems(source, setOf(colors[0].id, colors[2].id), true)
+            colorVariants = colors, importToken = null, skuVariants = combinations)
+        val selected = if (sized) combinations.map { it.id }.toSet() else setOf(colors[0].id, colors[2].id)
+        val parts = taobaoProductBatchItems(source, selected, splitColorVariants = !sized, splitSkuVariants = sized)
         assertEquals(2, parts.size)
         val saved = parts.mapIndexed { index, part ->
             val copies = original.savedBytes.keys.associateWith { path ->
@@ -213,17 +225,20 @@ class ItemImportRecoveryTest {
             val (viewModel, _) = editor(original.copy(draftJson = gson.toJson(draft)), durableDraft = true)
             val state = loaded(viewModel)
             assertEquals(ItemStatus.WISHED, state.status)
+            if (sized) assertEquals(listOf("S", "M")[index], state.size)
             val id = withContext(Dispatchers.Main) { viewModel.saveItem().getOrThrow() }
             requireNotNull(items.getItemById(id)).also { item ->
                 assertEquals(308L, item.categoryId)
                 assertEquals(ItemStatus.WISHED, item.status)
+                if (sized) assertEquals(listOf("S", "M")[index], item.size)
                 assertEquals(2, item.imageUrls.size)
                 assertEquals(28, listOfNotNull(item.sizeChartImageUrl).size + item.sizeChartImageUrls.size)
                 val paths = item.imageUrls + listOfNotNull(item.sizeChartImageUrl) + item.sizeChartImageUrls
                 original.savedBytes.values.zip(paths).forEach { (bytes, path) -> assertArrayEquals(bytes, File(path).readBytes()) }
             }
         }
-        assertEquals(listOf("摇篮时光印花连裤袜 · 款式1", "摇篮时光印花连裤袜 · 款式3"), saved.map { it.name })
+        assertEquals(if (sized) listOf("摇篮时光印花连裤袜 · 黑色 · S", "摇篮时光印花连裤袜 · 白色 · M")
+            else listOf("摇篮时光印花连裤袜 · 款式1", "摇篮时光印花连裤袜 · 款式3"), saved.map { it.name })
         assertEquals(2, saved.map { it.importToken }.toSet().size)
         val first = saved[0].imageUrls + listOfNotNull(saved[0].sizeChartImageUrl) + saved[0].sizeChartImageUrls
         val second = saved[1].imageUrls + listOfNotNull(saved[1].sizeChartImageUrl) + saved[1].sizeChartImageUrls

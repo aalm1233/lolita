@@ -28,7 +28,8 @@ data class TaobaoProductState(
     val savedCount: Int = 0,
     val completed: Boolean = false,
     val paused: Boolean = false,
-    val splitColorVariants: Boolean = false
+    val splitColorVariants: Boolean = false,
+    val splitSkuVariants: Boolean = false
 )
 
 /** One atomic saved-state value keeps result consumption and the next index together. */
@@ -149,9 +150,16 @@ class TaobaoProductViewModel(
     fun toggleVariant(id: String) {
         if (state.value.busy || batch != null) return
         val draft = state.value.draft ?: return
-        if (taobaoProductVariants(draft, state.value.splitColorVariants).none { it.id == id }) return
+        val variants = taobaoProductVariants(draft, state.value.splitColorVariants, state.value.splitSkuVariants)
+        if (variants.none { it.id == id }) return
+        if (id !in state.value.selectedVariantIds && variants.count { it.id in state.value.selectedVariantIds } >= 30) {
+            mutable.update { it.copy(error = "本次最多导入30件，请先保存所选物品，再继续导入。") }
+            persist()
+            return
+        }
         mutable.update { current -> current.copy(selectedVariantIds =
-            if (id in current.selectedVariantIds) current.selectedVariantIds - id else current.selectedVariantIds + id) }
+            if (id in current.selectedVariantIds) current.selectedVariantIds - id else current.selectedVariantIds + id,
+            error = null) }
         persist()
     }
 
@@ -159,7 +167,13 @@ class TaobaoProductViewModel(
         if (state.value.busy || batch != null) return
         val draft = state.value.draft ?: return
         if (draft.variants.orEmpty().isNotEmpty() || draft.colorVariants.orEmpty().size < 2) return
-        mutable.update { it.copy(splitColorVariants = enabled, error = null) }
+        mutable.update { it.copy(splitColorVariants = enabled, splitSkuVariants = false, error = null) }
+        persist()
+    }
+
+    fun splitSkuVariants(enabled: Boolean) {
+        if (state.value.busy || batch != null || state.value.draft?.skuVariants.orEmpty().isEmpty()) return
+        mutable.update { it.copy(splitSkuVariants = enabled, splitColorVariants = false, error = null) }
         persist()
     }
 
@@ -175,6 +189,8 @@ class TaobaoProductViewModel(
                     if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
                 }, colorVariants = draft.colorVariants.orEmpty().map { part ->
                     if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
+                }, skuVariants = draft.skuVariants.orEmpty().map { part ->
+                    if (part.id == variantId) part.copy(referenceQuote = quote(part.name)) else part
                 }))
         }
         persist()
@@ -182,8 +198,8 @@ class TaobaoProductViewModel(
 
     fun edit(onReady: (String) -> Unit) {
         var draft = state.value.draft ?: return
-        val variants = taobaoProductVariants(draft, state.value.splitColorVariants)
-        val quotes = if (variants.size > 1) variants.filter { it.id in state.value.selectedVariantIds }.mapNotNull { it.referenceQuote }
+        val variants = taobaoProductVariants(draft, state.value.splitColorVariants, state.value.splitSkuVariants)
+        val quotes = if (taobaoProductRequiresSelection(draft, state.value.splitColorVariants, state.value.splitSkuVariants)) variants.filter { it.id in state.value.selectedVariantIds }.mapNotNull { it.referenceQuote }
             else listOfNotNull(draft.referenceQuote)
         if (quotes.any { com.lolita.app.data.file.TaobaoProductQuotes.amount(it.amount) == null }) {
             mutable.update { it.copy(error = "参考金额请输入大于零、最多两位小数的数字，或留空待核对") }
@@ -198,7 +214,7 @@ class TaobaoProductViewModel(
             return
         }
         if (batch == null) {
-            val items = taobaoProductBatchItems(draft, state.value.selectedVariantIds, state.value.splitColorVariants)
+            val items = taobaoProductBatchItems(draft, state.value.selectedVariantIds, state.value.splitColorVariants, state.value.splitSkuVariants)
             if (items.isEmpty()) {
                 mutable.update { it.copy(error = "请至少选择一件物品") }
                 persist()

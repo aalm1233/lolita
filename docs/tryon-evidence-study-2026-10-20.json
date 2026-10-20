@@ -1,0 +1,530 @@
+{
+  "date": "2026-10-20",
+  "authorization": {
+    "max_calls": 100,
+    "human_continuation": "好，按你思路来 额度你用",
+    "used_before_continuation": 17,
+    "additional_allowance": 0,
+    "previous_round_unused16_included": false
+  },
+  "phase_calls": 15,
+  "phase_provider_counts": {
+    "SEEDREAM": 14,
+    "BUILTIN_IMAGE_GEN": 1
+  },
+  "cumulative_calls_used": 32,
+  "remaining_calls": 68,
+  "cumulative_provider_counts": {
+    "BUILTIN_IMAGE_GEN": 3,
+    "SEEDREAM": 29
+  },
+  "all_reserved_requests_have_terminal_outcomes": true,
+  "automatic_retries": 0,
+  "quality_assessment": "Qualitative manual review, not a general accuracy estimate",
+  "unknown_parameters": [
+    "real cincher height/circumference",
+    "actual thickness and stiffness",
+    "unseen back closure",
+    "true waist measurements of the fixed fictional base image"
+  ],
+  "source_other_colorway_excluded": true,
+  "production_changes_adopted": false,
+  "app_version_unchanged": "2.60.1/129",
+  "official_coordinate_reference": "https://docs.volcengine.com/docs/ark/seedream-5-0-pro-editing-guide?lang=en",
+  "api_size_reference": "https://docs.volcengine.com/docs/ark/image-generation-api?lang=en",
+  "scope_limits": [
+    "Host JPEG preprocessing is not Android codec validation.",
+    "Builtin image_gen comparison is not an app OpenAI API integration test.",
+    "Camera/framing studies do not establish unchanged frontal full-body quality.",
+    "Gray surface proxies are generated hypotheses, not measured geometry or cloth simulation.",
+    "No app request, schema, backup or UI code changed; no app rebuild or new release is warranted for this documentation-only result.",
+    "Private product and derived try-on images remain outside public source."
+  ],
+  "rows": [
+    {
+      "number": 18,
+      "id": "evidence-local-control-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "05c4b3d1c26f326302ba1a27912067fa25e15543d2d49893515a4a6184a40f82",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "8dae1da788d5effdb4f73d044d4fe9439eefe80a9422d97ac862216056ee51fe",
+      "review": {
+        "front_hardware": "two primary fasteners roughly retained but shapes redrawn",
+        "contact": "still broad flat front, side wings remain",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 83.34,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 19,
+      "id": "evidence-local-bbox-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "55d678c5a2dfe8683313ea57131e3a091ecee0473e19f4448c2eaa323305a139",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "a571948392d11f238d361c79d2efdc5b3d1f9a97ed85855c0f3f6ab7529e2d36",
+      "review": {
+        "front_hardware": "redrawn",
+        "contact": "placed lower/wider; explicit box did not remove side wings",
+        "unaffected_regions": "mostly preserved visually, no pixel-lock guarantee",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 26.967,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 20,
+      "id": "evidence-narrow-front-text-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "4b0807d7a8ddf803f80c458ead95441ac71c071b726e230eea5365f93166bf4f",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "f252834d18ca49b6c4b23982d3a710edfa2907a95895625ecc06e01e1ea91eff",
+      "review": {
+        "contact": "Side wings persist, front is still nearly a flat plate",
+        "hardware": "looks like two main fasteners, small details redrawn",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 58.533,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 21,
+      "id": "evidence-parts-bbox-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "4a2a88b0b2fd0c9b9d8feaa90c6f4a0a978d65747dc80853483fa31d0140625a",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "8f07e18619e1305670be5dbebe11f8628a118c52cde9179eb7b9d7159863dc4b",
+      "review": {
+        "contact": "Targeted correspondence did not reliably wrap the sides",
+        "hardware": "no exact rigid transfer guarantee",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 28.934,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 22,
+      "id": "evidence-side-only-edit-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "4bc4e38118ab5e45222882a2ff141f8aac42fb99f67465a5cee2d97d6a22f3c0",
+      "source_image_sha256s": [
+        "8dae1da788d5effdb4f73d044d4fe9439eefe80a9422d97ac862216056ee51fe",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "cfce198b4331e33ea6e80ade879c629114f43f242ec3342f294e4c3cdfc993c1",
+      "review": {
+        "contact": "Side wings remain despite focused correction",
+        "unaffected_regions": "visible slight global re-render; not a hard mask",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "507fe0eeb5f481ef2d85054c88dcee659271a82964ea6214b3fbdaa491e13ad6",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 24.708,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 23,
+      "id": "evidence-production-proportions-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "TRY_ON",
+      "production_prompt_used": true,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 3,
+      "prompt_sha256": "775e5b18e655f65268b28f326fca52d3ad02a13653a1e909935bd18f4ae3754c",
+      "source_image_sha256s": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "df9610560d963443acfe55e0b37c8e74f7b01a4f4461278fb0316c9cd1fab30a",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "8b857fcca6b76f9f321389fa02651a6191547c8fd9b9310116141db31f17c0ea",
+      "review": {
+        "contact": "Slight variation in curve, not a stable win over baseline",
+        "hardware": "redrawn with compressed/repeated small components",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 34.155,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 24,
+      "id": "evidence-cross-model-local-r1",
+      "provider": "BUILTIN_IMAGE_GEN",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": false,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "e8ba1506ad1f5a4b0a5f947f25d332a1102cf3261b7e2a6c31aeaaa3abe6749e",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "2ec98a0ee32161ed272d55263cbdeb3bdd2076c1e2bdc02d161c7324a5e805a9",
+      "review": {
+        "contact": "Softer continuous side contact than current Seedream samples",
+        "hardware": "three primary buckles instead of original two",
+        "other": "Face/dress also redrawn; builtin tool diagnostic, not actual app OpenAI API",
+        "adopt": false
+      },
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 25,
+      "id": "evidence-threequarter-diagnostic-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "bd59cd3bbd35d4aeffd586f906c3781b59f217fe30ad9b9e6485a4e3a03c2c60",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "8e4722259ec0b9c4274769e1c43dd918ebebf266ede393ce913c36f81812591d",
+      "review": {
+        "hardware": "two primary buckles, loose strands/anchors differ",
+        "contact": "perspective makes wrapping more legible; elastic top edge and panel still flare away",
+        "adopt": false,
+        "scope": "Diagnostic different camera/framing, not evidence for unchanged frontal full-body output"
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 28.64,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 26,
+      "id": "evidence-waist-closeup-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "67903bc9dc2425264fa46e996568156a9e502eb390ed73012d7558b7b75fc498",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "dee754963856000d5b7157a7fd6b2e56db1118c45bf9d596dded3cdf248f86c8",
+      "review": {
+        "hardware": "two main buckles preserved more clearly than full body, still redrawn",
+        "contact": "near image makes contours easier to inspect; display wings still protrude",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 30.791,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 27,
+      "id": "evidence-proxy-closed-gray-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 1,
+      "prompt_sha256": "df1caaa477e26d33a4126a6ae8b815dcf9c8fd8f8a4f3d72615b4704e26b4a1c",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313"
+      ],
+      "output_sha256": "5efa05c4acf8ecb2dd389cbaf55c6d70824f5b59e4b4a14e34c494e835f501ca",
+      "review": {
+        "shape": "No detail distractors, but lower contour flares into a new peplum shape",
+        "adopt": false,
+        "prototype_only": true
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69"
+      ],
+      "seconds": 57.381,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 28,
+      "id": "evidence-proxy-original-shape-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "693bfd1b6fd5e3835c79fe792c8e4c52fc8190dd6a244d8e4a07ab76f1e3907c",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "c81c66ae66cfd5869613f29b8c76fbd0cf43ca28e142762d2726bc86edbfea8e",
+      "review": {
+        "shape": "Original central down-pointing outline more recognizable; occupies too much bodice, no actual height truth",
+        "use": "Diagnostic surface prior for transfer, not confirmed product geometry or fit",
+        "adopt": false,
+        "prototype_only": true
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 75.913,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 29,
+      "id": "evidence-proxy-texture-transfer-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 2,
+      "prompt_sha256": "228966b350804af4a3c1bd3ff9f6d9f73f0bfaf719e5828069f2a4f1f1263a2d",
+      "source_image_sha256s": [
+        "c81c66ae66cfd5869613f29b8c76fbd0cf43ca28e142762d2726bc86edbfea8e",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "098db1eac1bfc1c8609753f11d93e395388ef632745e2e1267078923ec1522c7",
+      "review": {
+        "contact": "Original details returned with nearly the same flat front and visible side flare; gray contact contour was not held",
+        "hardware": "small geometry redrawn",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "815618569962b8d4097e3a8aca34c34bfb202bd717efd18980c52ce065f23098",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 69.892,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 30,
+      "id": "evidence-proxy-geometry-guide-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": true,
+      "request_size": "1024x1536",
+      "image_count": 3,
+      "prompt_sha256": "c2a9b96d392aa8454928f3c8a6f48c53850f522b3f208aedc6d5f9ef072641b1",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d",
+        "c81c66ae66cfd5869613f29b8c76fbd0cf43ca28e142762d2726bc86edbfea8e"
+      ],
+      "output_sha256": "d25083571284d2b5cab2124bc0a022829b442fc19b5deb29bfa993e0188eef6f",
+      "review": {
+        "contact": "Adding a separate gray contact guide still gave a broad flat front and side flare",
+        "hardware": "no rigid transfer guarantee",
+        "adopt": false
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66",
+        "815618569962b8d4097e3a8aca34c34bfb202bd717efd18980c52ce065f23098"
+      ],
+      "seconds": 32.147,
+      "dimensions": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "number": 31,
+      "id": "evidence-higher-resolution-control-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "PROTOTYPE",
+      "production_prompt_used": false,
+      "production_api_used": false,
+      "request_size": "1536x2304",
+      "image_count": 2,
+      "prompt_sha256": "05c4b3d1c26f326302ba1a27912067fa25e15543d2d49893515a4a6184a40f82",
+      "source_image_sha256s": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "aa5b5a81161a33e63b11dca28f96f17ea3fc07174383e5acb3829fc917c8b9d0",
+      "review": {
+        "detail": "More pixels for small hardware",
+        "contact": "Flat front and side flare remain at1536x2304",
+        "adopt": false,
+        "prototype_api_variant": true
+      },
+      "uploaded_image_sha256s": [
+        "03e128956cbd4c3e13c42e813e0259760bff548ac60a87e8118764d185efcf69",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 81.674,
+      "dimensions": [
+        1536,
+        2304
+      ]
+    },
+    {
+      "number": 32,
+      "id": "evidence-higher-resolution-production-r1",
+      "provider": "SEEDREAM",
+      "status": "SUCCESS",
+      "automatic_retries": 0,
+      "kind": "TRY_ON",
+      "production_prompt_used": true,
+      "production_api_used": false,
+      "request_size": "1536x2304",
+      "image_count": 3,
+      "prompt_sha256": "775e5b18e655f65268b28f326fca52d3ad02a13653a1e909935bd18f4ae3754c",
+      "source_image_sha256s": [
+        "56876b8207cd90616c35a29d30f655f8f5f7cac52ee1eb81c47197acd2b8414a",
+        "df9610560d963443acfe55e0b37c8e74f7b01a4f4461278fb0316c9cd1fab30a",
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "output_sha256": "c4291966cd7849fc5bd177feea28441562db485693319682a18bb095a7e17840",
+      "review": {
+        "detail": "Higher-resolution full-body result",
+        "contact": "No convincing gain in side wrapping/contact; individual elements redrawn",
+        "adopt": false,
+        "prototype_api_variant": true
+      },
+      "uploaded_image_sha256s": [
+        "59b5d383890ad1d4ca4ca59eb4af1c7b4835b2e2e1c9e994f12d528f4457be29",
+        "762a989a7e532131a74c792ec7e153b188f4ba4739828f75df788010d67d1427",
+        "c95652af98914acc4163886ed29b725f0a88982b1be93168fa73a8328d24db66"
+      ],
+      "seconds": 49.788,
+      "dimensions": [
+        1536,
+        2304
+      ]
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-20",
+  "scope": "One grey-black waist belt and an existing fictional adult portrait, frontal single-item preparation and fusion",
+  "authorization": {
+    "maxCalls": 20,
+    "userInstruction": "给你20次 你自己看着办",
+    "usedCalls": 5,
+    "remainingCalls": 15,
+    "oldAllowanceReused": false,
+    "automaticRetries": 0
+  },
+  "inputSha256": {
+    "product": "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d",
+    "person": "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313"
+  },
+  "calls": [
+    {
+      "number": 1,
+      "stage": "rectify-and-isolate",
+      "provider": "builtin_image_gen",
+      "status": "RETURNED",
+      "inputSha256": [
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "archivedPromptSha256": "1c5c06ecb75ab277de26b8f73107895ce6e48f13e983a62edb4eb232040da7d4",
+      "outputSha256": "ccff92b43fd807a9a21b05a5cbccb679616cd2b20bb307195a481e90c43e3b33",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min_max": [
+          0,
+          254
+        ],
+        "transparent_pixels": 792420,
+        "pixels_with_alpha": 780444
+      },
+      "qa": {
+        "size": [
+          1536,
+          1024
+        ],
+        "mode": "RGBA",
+        "transparent_pixels": 792420,
+        "opaque_pixels": 0,
+        "partially_transparent_pixels": 780444,
+        "visual": {
+          "single_semantic_item": true,
+          "main_buckle_count": 2,
+          "pose": "Near frontal",
+          "fidelity": "Major construction and two-buckle identity suitable for a diagnostic fusion; perspective change is intentional. Exact brocade pixels, hidden structure and original hardware geometry are not independently established.",
+          "background": "Real alpha is present; the dark preview is not proof of an opaque background."
+        },
+        "gate": "ACCEPTED_FOR_DIAGNOSTIC_FRONT_VIEW_FUSION",
+        "review_history": [
+          {
+            "prior_gate": "REJECTED_FOR_FUSION",
+            "prior_fidelity": "FAIL: strongly symmetrized elastic side panels, changed buckle proportions and chain layout; not a faithful extracted layer",
+            "superseded_because": "User clarified that frontal normalization should produce symmetry; the original image is not frontal. Symmetry alone is not a redesign failure."
+          }
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "stage": "02-source-cutout",
+      "provider": "builtin_image_gen",
+      "status": "RETURNED",
+      "inputSha256": [
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "archivedPromptSha256": "735a721a6cf60ec45e5d4aca32f49cfeef6f3fa24b6b3268059b09fa32307285",
+      "outputSha256": "3ca2dafdd5c5fe48994588b55f9143a2610a11a5bb868f2700c3d8df67fa9b73",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min_max": [
+          0,
+          255
+        ],
+        "transparent_pixels": 989280,
+        "pixels_with_alpha": 583236
+      },
+      "qa": {
+        "size": [
+          1254,
+          1254
+        ],
+        "mode": "RGBA",
+        "alpha_min_max": [
+          0,
+          255
+        ],
+        "transparent_pixels": 989280,
+        "visual": {
+          "single_semantic_item": true,
+          "main_buckle_count": 2,
+          "pose": "Original oblique view retained as extraction-only control",
+          "display_torso_or_printed_frame_present": false,
+          "details": "Lacing, chains and four metal-ended cords are present; no pixel identity claim"
+        },
+        "gate": "CONTROL_ONLY_NOT_FRONT_NORMALIZED"
+      }
+    },
+    {
+      "number": 3,
+      "stage": "03-front-layer-fusion",
+      "provider": "builtin_image_gen",
+      "status": "RETURNED",
+      "inputSha256": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "ccff92b43fd807a9a21b05a5cbccb679616cd2b20bb307195a481e90c43e3b33"
+      ],
+      "archivedPromptSha256": "da8b41989516298bdcc165ae7aa0c7802edb72e3819a3dbbbe42fc26f302c13b",
+      "outputSha256": "c724b51365e19ab7cd6f5d3c1c989e9877205fbd9ca9256c5ca2433fbc58c39a",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "qa": {
+        "visual": {
+          "main_buckles": 2,
+          "single_belt": true,
+          "front_view": "Centred and level",
+          "fit": "Side panels visually recede at the waist; no wide flat wings",
+          "retained": "Side lacing, chain swags and four dangling cord tips visible",
+          "base_identity_and_dress": "Broad identity, pose and dress retained; face, chest embroidery and lace were also re-rendered, so not source-pixel preservation"
+        },
+        "gate": "PROMISING_SINGLE_SAMPLE_NOT_PRODUCTION_ACCEPTED",
+        "pixel_comparison": {
+          "same_dimensions": true,
+          "measurement_region": "All pixels outside x320..719,y420..659; no alignment correction",
+          "outside_region_mean_absolute_rgb_difference": 7.302367494005316,
+          "outside_region_changed_pixels": 1475428,
+          "outside_region_pixels": 1476864,
+          "interpretation": "Descriptive only; confirms the full-image generator is not a deterministic local overlay"
+        }
+      }
+    },
+    {
+      "number": 4,
+      "stage": "04-oblique-layer-control",
+      "provider": "builtin_image_gen",
+      "status": "RETURNED",
+      "inputSha256": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "3ca2dafdd5c5fe48994588b55f9143a2610a11a5bb868f2700c3d8df67fa9b73"
+      ],
+      "archivedPromptSha256": "3c84dfd8b419d571769b1517e57c1f83c36b5712c480d0b95d5cb24a3193e3c6",
+      "outputSha256": "b94061a2b4dedb0bf20b6499db2a81566b8b7b7072611703d734b13642af368c",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "qa": {
+        "visual": {
+          "main_buckles": 2,
+          "single_belt": true,
+          "fit": "Frontal belt fitted at waist; some lateral flattening remains",
+          "hang": "Larger, scattered cord loops and chain swags crossing the underlying ruffle",
+          "identity": "Broad model and dress retained with visible re-rendering"
+        },
+        "comparison": "One oblique-layer fusion control; prompt differs from front condition only in the input description frontal vs isolated, and random generation is uncontrolled. Not a causal or statistical result."
+      }
+    },
+    {
+      "number": 5,
+      "stage": "05-front-layer-repeat",
+      "provider": "builtin_image_gen",
+      "status": "RETURNED",
+      "inputSha256": [
+        "c5009323bae69e4cc00b08f3d9b564d635854544f0c4e91aee46bad19185c313",
+        "ccff92b43fd807a9a21b05a5cbccb679616cd2b20bb307195a481e90c43e3b33"
+      ],
+      "archivedPromptSha256": "da8b41989516298bdcc165ae7aa0c7802edb72e3819a3dbbbe42fc26f302c13b",
+      "outputSha256": "0350c725dbf80dc3d379dec366cb926c3d40d8d9d64a6a8ec21fee5fed11de39",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "qa": {
+        "visual": {
+          "main_buckles": 2,
+          "single_belt": true,
+          "side_lacing_present": true,
+          "metal_ended_cords": 4,
+          "chain_swags_present": true,
+          "fit": "Centred, shallow curved waist wrap with receding side panels; physically unmeasured",
+          "base": "Same broad portrait and dress composition, with generative re-rendering of fine details"
+        },
+        "gate": "PROMISING_REPEAT_FOR_REVIEW_NOT_PRODUCTION_ACCEPTED"
+      }
+    }
+  ],
+  "userClarification": "对称是对的啊 原图视角不是主视图",
+  "selectedLayerOutputSha256": "ccff92b43fd807a9a21b05a5cbccb679616cd2b20bb307195a481e90c43e3b33",
+  "selectedCompositeOutputSha256": "0350c725dbf80dc3d379dec366cb926c3d40d8d9d64a6a8ec21fee5fed11de39",
+  "limitations": [
+    "One item and one fictional adult only",
+    "Frontal normalization intentionally changes perspective and apparent symmetry",
+    "AI-generated isolated layer is not an invariant source-pixel cutout",
+    "Full-image fusion re-renders person and garment details",
+    "No production API or app integration tested",
+    "Control and repeat have uncontrolled stochastic generation; no statistical or causal claim"
+  ],
+  "privateArtifacts": "artifacts/image-evaluation/2026-10-20-rectify-isolate-fuse/",
+  "productionAppChanged": false
+}

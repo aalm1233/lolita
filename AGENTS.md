@@ -587,3 +587,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - `TryOnImages` 在既有EXIF校正、最长边1536及透明白底后优先无损PNG，单张PNG超过4MiB退回原JPEG90，仍校验单张10MiB／总40MiB和输入数量。原文件不变、元数据不上传；三类生图共用，无新增请求、提示词或任务协议变化。
 - `ReferenceImageEncoding` 按完整PNG签名选择两家传输的MIME／后缀，混合上传保留顺序与字节。`TryOnInfrastructureTest` 覆盖细柄逐像素、九图、高熵回退、EXIF和既有缩放白底；两家API回归覆盖混合封装。设计和边界见`docs/plans/2026-10-20-reference-detail-preservation.md`。手工腰封网格／保护合成仍为研究原型，不能宣称自动贴合已合入。
+
+- 2.61.1 /132：参考图在既有缩放／方向／白底后优先无损PNG，超4MiB回退JPEG90，两家生图按实际内容封装。21项JVM、16项去重设备回归、Debug及提交源码归档clean原签名Release通过，2.61.0覆盖安装与两次启动通过；36份项目素材、依赖和生成profile核验。源码`c4ac3c62`及标签已推送，GitHub／Gitee同一正式APK和校验文件匿名下载、SHA／HEAD及公开更新状态分别记录；未重复应用内网络检查，未删除旧附件。本轮0次付费调用，累计研究38/100、余62；只证明输入保真，不宣称腰封自动贴合已解决或真实生成质量已提升。Room30／备份10、UI、任务提示词与协议不变，回执`docs/reference-detail-release-2.61.1-verification.json`。

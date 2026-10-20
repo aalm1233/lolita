@@ -14,6 +14,7 @@ let browser;
   const images=[];
   for (const [name,query,width] of [
     ['flow-light','board=flow',2106],
+    ['seedream-layer-flow','board=seedream',2106],
     ['saved-and-picker','board=reuse',864],
     ['skins-light','board=skins',2934],
     ['skins-dark','board=skins&dark=1',2934],

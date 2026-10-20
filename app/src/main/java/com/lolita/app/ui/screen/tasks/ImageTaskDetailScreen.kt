@@ -26,7 +26,7 @@ import java.io.File
 
 @Composable
 fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (ImageTask) -> Unit,
-    viewModel: ImageTaskViewModel = viewModel(), onOpenPersonalModels: () -> Unit = {}) {
+    viewModel: ImageTaskViewModel = viewModel(), onOpenPersonalModels: () -> Unit = {}, onOpenMaterial: (ImageTask) -> Unit = onRetry) {
     val state by viewModel.uiState.collectAsState()
     val task = state.tasks.firstOrNull { it.id == taskId }
     val skin = LolitaSkin.current
@@ -76,7 +76,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                     Text("点击图片放大核对", Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
                 } } }
                 else if (task.status in setOf(ImageTaskStatus.COMPLETED, ImageTaskStatus.AWAITING_CONFIRMATION)) item("missing-result") {
-                    Text(if (task.status == ImageTaskStatus.COMPLETED && task.kind == ImageTaskKind.PERSONAL_MODEL) "已保存的个人模特已删除或底图已丢失。任务记录仍保留。" else if (task.status == ImageTaskStatus.COMPLETED) "原结果已删除或图片已丢失。任务记录仍保留。" else "预览图片已丢失，可舍弃后重新发起。")
+                    Text(if (task.status == ImageTaskStatus.COMPLETED && task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && task.materialId == null) "主视图已用于后续分层，请在任务中心查看分层任务。" else if (task.status == ImageTaskStatus.COMPLETED && task.kind == ImageTaskKind.PERSONAL_MODEL) "已保存的个人模特已删除或底图已丢失。任务记录仍保留。" else if (task.status == ImageTaskStatus.COMPLETED) "原结果已删除或图片已丢失。任务记录仍保留。" else "预览图片已丢失，可舍弃后重新发起。")
                 }
                 item("actions") { LolitaSection(title = "任务操作") { row {
                     Spacer(Modifier.height(skin.spacingMedium))
@@ -96,9 +96,16 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                                 if (!state.canAppend(task)) Text("原物品已删除，可查看或舍弃预览。", color = MaterialTheme.colorScheme.error)
                                 Button(onClick = { confirmation = "append" }, enabled = !busy && path != null && state.canAppend(task), modifier = Modifier.fillMaxWidth()) { Text("添加到原物品图片") }
                             }
+                            ImageTaskKind.SINGLE_ITEM_MATERIAL -> {
+                                Text("请进入核对页检查主视角或透明单品；保存不会追加到商品相册。", style = MaterialTheme.typography.bodySmall)
+                                Button(onClick = { onOpenMaterial(task) }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("核对试衣素材") }
+                            }
                             ImageTaskKind.TRY_ON -> Unit
                         }
                         OutlinedButton(onClick = { confirmation = "discard" }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("舍弃预览") }
+                    }
+                    if (task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && task.status == ImageTaskStatus.COMPLETED) {
+                        TextButton(onClick = { onOpenMaterial(task) }, modifier = Modifier.fillMaxWidth()) { Text("查看当前试衣素材") }
                     }
                     if (task.kind == ImageTaskKind.PERSONAL_MODEL && task.status == ImageTaskStatus.COMPLETED) {
                         val acceptedId = task.personalModelId ?: state.savedPersonalIds[taskId]

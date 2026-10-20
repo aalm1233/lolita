@@ -140,13 +140,18 @@ internal fun TryOnPicker(
 }
 
 @Composable
-internal fun TryOnImagePicker(item: Item, selectedPath: String, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
+internal fun TryOnImagePicker(item: Item, selectedPath: String, onSelect: (String) -> Unit, onDismiss: () -> Unit, material: com.lolita.app.data.local.entity.ItemTryOnMaterial? = null) {
     val skin = LolitaSkin.current
     val list = rememberLazyListState()
     ObserveSkinScroll(list)
     AlertDialog(onDismissRequest = onDismiss, title = { Text("选择一张参考图片") },
         text = {
             LazyColumn(state = list, verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                material?.let { asset -> item("confirmed-material") {
+                    LolitaCard(variant = CardVariant.COMPACT, modifier = Modifier.fillMaxWidth().skinClickable { onSelect(asset.imagePath); onDismiss() }) {
+                        Column { TryOnItemImage(asset.imagePath, "已确认试衣素材", Modifier.fillMaxWidth().height(160.dp)); Text("已确认主视素材${if (selectedPath == asset.imagePath) " · 已选" else ""}") }
+                    }
+                } }
                 itemsIndexed(item.imageUrls.filter { it.isNotBlank() }.distinct()) { imageIndex, path ->
                     val index = imageIndex + 1
                     LolitaCard(variant = CardVariant.COMPACT, modifier = Modifier.fillMaxWidth()

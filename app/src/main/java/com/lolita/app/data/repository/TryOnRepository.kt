@@ -35,8 +35,8 @@ class TryOnRepository(private val context: Context,private val database: LolitaD
 
     suspend fun delete(id: Long) = withContext(NonCancellable + Dispatchers.IO) {
         val path = database.withTransaction {
-            database.tryOnDao().get(id)?.imageUrl.also { database.tryOnDao().delete(id) }
+            database.tryOnDao().get(id)?.let { listOfNotNull(it.imageUrl, it.baseSnapshotImagePath) }.orEmpty().also { database.tryOnDao().delete(id) }
         }
-        path?.let { ImageFileHelper.deleteImage(it) }
+        path.forEach { ImageFileHelper.deleteImage(it) }
     }
 }

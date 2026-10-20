@@ -28,7 +28,10 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
     suspend fun generateMannequin(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
         generateChecked(apiKey, images, prompt, 1..2)
 
-    private suspend fun generateChecked(apiKey: String, images: List<ByteArray>, prompt: String, imageCount: IntRange): ByteArray {
+    suspend fun generateMaterialFront(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
+        generateChecked(apiKey, images, prompt, 1..1, materialFront = true)
+
+    private suspend fun generateChecked(apiKey: String, images: List<ByteArray>, prompt: String, imageCount: IntRange, materialFront: Boolean = false): ByteArray {
         require(apiKey.isNotBlank() && apiKey.length <= 512 && apiKey.all { it.code in 33..126 }) { "请填写有效的 API Key" }
         require(images.size in imageCount && images.all { it.isNotEmpty() && it.size <= 10 * 1024 * 1024 } && images.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片数量或大小超出限制" }
         return suspendCancellableCoroutine { continuation ->
@@ -40,7 +43,7 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
                     try {
                         check(activeConnection.compareAndSet(null, conn)) { "已有试衣任务正在结束，请稍后重试" }
                         check(continuation.isActive) { "已取消等待" }
-                        execute(conn, apiKey, images, prompt)
+                        execute(conn, apiKey, images, prompt, materialFront)
                     } catch (error: SocketTimeoutException) {
                         throw ImageGenerationFailure(ImageGenerationFailureKind.TIMEOUT)
                     } catch (error: IOException) {
@@ -57,7 +60,7 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
         }
     }
 
-    private fun execute(conn: HttpURLConnection, key: String, images: List<ByteArray>, prompt: String): ByteArray {
+    private fun execute(conn: HttpURLConnection, key: String, images: List<ByteArray>, prompt: String, materialFront: Boolean): ByteArray {
         conn.requestMethod = "POST"
         conn.connectTimeout = 20_000
         conn.readTimeout = 300_000
@@ -68,8 +71,9 @@ class SeedreamImageApi(private val connectionFactory: (URL) -> HttpURLConnection
         conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
         conn.outputStream.bufferedWriter(Charsets.UTF_8).use { output ->
             val gson = com.google.gson.Gson()
+            val outputSize = if (materialFront) "1536x1024" else "1024x1536"
             // Implicit watermarking is enabled in Ark; this flag controls the visible corner label.
-            output.write("{\"model\":${gson.toJson(MODEL)},\"prompt\":${gson.toJson(prompt)},\"size\":\"1024x1536\",\"output_format\":\"png\",\"response_format\":\"b64_json\",\"stream\":false,\"watermark\":false,\"image\":[")
+            output.write("{\"model\":${gson.toJson(MODEL)},\"prompt\":${gson.toJson(prompt)},\"size\":${gson.toJson(outputSize)},\"output_format\":\"png\",\"response_format\":\"b64_json\",\"stream\":false,\"watermark\":false,\"image\":[")
             images.forEachIndexed { index, bytes ->
                 check(!Thread.currentThread().isInterrupted) { "已取消等待" }
                 if (index > 0) output.write(",")

@@ -74,7 +74,8 @@ data class BackupData(
     val recognitionTasks: List<RecognitionTask> = emptyList(),
     val itemEvidence: List<ItemEvidence> = emptyList(),
     val imageProvenance: List<ImageProvenance> = emptyList(),
-    val wigHeadTemplatePreferenceJson: String? = null
+    val wigHeadTemplatePreferenceJson: String? = null,
+    val itemTryOnMaterials: List<ItemTryOnMaterial> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -119,6 +120,7 @@ class BackupManager(
             recognitionTasks = database.recognitionDao().getAll(),
             itemEvidence = database.recognitionDao().getEvidence(),
             imageProvenance = database.imageProvenanceDao().getAll(),
+            itemTryOnMaterials = database.itemTryOnMaterialDao().getAll(),
             personalModels = database.personalModelDao().getAll(),
             personalModelDrafts = database.personalModelDao().getDrafts(),
             imageTasks = database.imageTaskDao().getAll(),
@@ -281,6 +283,10 @@ class BackupManager(
             backupData.storageNodes.forEach { n -> sb.appendLine("${n.id},${n.locationId},${n.parentNodeId ?: ""},${escapeCsv(n.name)},${escapeCsv(n.description)},${escapeCsv(n.imageUrl)},${n.sortOrder},${escapeCsv(com.lolita.app.domain.model.StorageTree.pathFor(n.locationId,n.id,backupData.locations,backupData.storageNodes))},${n.createdAt},${n.updatedAt}") }
             sb.appendLine("\n=== IMAGE SOURCES ===")
             sb.appendLine("item_id,image_path,source_type,mode")
+            sb.appendLine("试衣素材")
+            sb.appendLine("物品ID,素材图片文件,确认时间")
+            backupData.itemTryOnMaterials.forEach { material -> sb.appendLine("${material.itemId},${escapeCsv(File(material.imagePath).name)},${material.confirmedAt}") }
+            sb.appendLine()
             backupData.imageProvenance.forEach { image -> sb.appendLine("${image.itemId},${escapeCsv(image.imagePath)},${image.sourceType},${escapeCsv(image.mode)}") }
 
             // Sources
@@ -484,6 +490,7 @@ class BackupManager(
                     importedData.items.sortedBy { it.parentItemId != null }.forEach { database.itemDao().insertItem(it) }
                     importedData.itemEvidence.forEach { database.recognitionDao().insertEvidence(it) }
                     importedData.imageProvenance.forEach { database.imageProvenanceDao().upsert(it) }
+                    importedData.itemTryOnMaterials.forEach { database.itemTryOnMaterialDao().insert(it) }
                     importedData.prices.forEach { database.priceDao().insertPrice(it) }
                     importedData.orderBindings.forEach { database.orderDao().insertBinding(it) }
                     importedData.paymentStages.forEach { database.orderDao().insertStage(it.copy(calendarEventId = null)) }
@@ -552,6 +559,23 @@ class BackupManager(
                 else ImageFileHelper.isOwnedReadableImage(validationContext, localPath)
             require(valid) { "收纳、草稿或识图证据图片缺失、损坏或不属于本机图片目录" }
         }
+        data.itemTryOnMaterials.forEach { material ->
+            material.protectedImagePaths().forEach { readable(it) }
+            val local = map(material.imagePath)
+            val sourceRequest = ImageTaskRequest.decode(material.requestJson)
+            require(com.lolita.app.domain.model.imageSha256(map(material.sourceImagePath)) == sourceRequest.materialSpec?.originalInputSha256 &&
+                com.lolita.app.domain.model.imageSha256(map(material.inputImagePath)) == sourceRequest.inputSha256s?.single()) { "确认素材的原始输入已改变" }
+            require(com.lolita.app.domain.model.imageSha256(local) == material.resultSha256 &&
+                com.lolita.app.data.tryon.MaterialImageValidation.hasTransparentForeground(local)) { "确认素材图片损坏或透明内容已改变" }
+        }
+        data.tryOnResults.mapNotNull { it.baseSnapshotImagePath }.forEach { readable(it) }
+        data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.forEach { task ->
+            com.lolita.app.domain.model.MaterialLayers.decode(task.layersJson).forEach { layer ->
+                readable(layer.imagePath)
+                require(com.lolita.app.domain.model.imageSha256(map(layer.imagePath)) == layer.sha256 &&
+                    com.lolita.app.data.tryon.MaterialImageValidation.hasTransparentForeground(map(layer.imagePath))) { "待核对图层损坏或内容已改变" }
+            }
+        }
         data.storageNodes.mapNotNull { it.imageUrl }.forEach { readable(it) }
         // Editors and registration copies reuse historical album/size-chart filenames.
         // Appearance-only references are validated as a subset of those same product images.
@@ -591,7 +615,8 @@ class BackupManager(
                 (request.productOriginalImagePath == null || request.productOriginalImagePath == path)
             readable(path, productImage)
         }
-        request.productOriginalImagePath?.let { readable(it, productImage = task.kind == ImageTaskKind.MANNEQUIN) }
+        request.productOriginalImagePath?.let { readable(it, productImage = task.kind in setOf(ImageTaskKind.MANNEQUIN, ImageTaskKind.SINGLE_ITEM_MATERIAL)) }
+        request.materialSpec?.originalInputPath?.let { readable(it, productImage = false) }
         request.mapImagePaths(map).validateInputImages(task.sourceImagePaths.map(map))
     }
 
@@ -633,7 +658,7 @@ class BackupManager(
     }
 
     private fun recordCount(data: BackupData): Int = listOf(
-        data.storageNodes, data.itemDrafts, data.recognitionTasks, data.itemEvidence, data.imageProvenance,
+        data.itemTryOnMaterials, data.storageNodes, data.itemDrafts, data.recognitionTasks, data.itemEvidence, data.imageProvenance,
         data.brands, data.categories, data.coordinates, data.items, data.prices, data.payments,
         data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
         data.legacyCatalogArchives, data.syncStates, data.remoteBrands, data.remoteCategories,
@@ -645,7 +670,7 @@ class BackupManager(
         val actual = snapshot()
         // Sort by stable keys; compare every business field, including image order and timestamps.
         fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
-        check(equal(actual.storageNodes, expected.storageNodes) { it.id.toString() } &&
+        check(equal(actual.itemTryOnMaterials, expected.itemTryOnMaterials) { it.id } && equal(actual.storageNodes, expected.storageNodes) { it.id.toString() } &&
             equal(actual.itemDrafts, expected.itemDrafts) { it.id } &&
             equal(actual.recognitionTasks, expected.recognitionTasks) { it.id } &&
             equal(actual.itemEvidence, expected.itemEvidence) { it.id } &&
@@ -797,8 +822,8 @@ class BackupManager(
                 personalModelCount = backupData.personalModels.size,
                 personalModelDraftCount = backupData.personalModelDrafts.size,
                 storageNodeCount = backupData.storageNodes.size,itemDraftCount = backupData.itemDrafts.size,
-                recognitionTaskCount = backupData.recognitionTasks.size,itemEvidenceCount = backupData.itemEvidence.size,imageProvenanceCount = backupData.imageProvenance.size,
-                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size + backupData.tryOnResults.size + backupData.imageTasks.size + backupData.personalModels.size + backupData.personalModelDrafts.size + backupData.storageNodes.size + backupData.itemDrafts.size + backupData.recognitionTasks.size + backupData.itemEvidence.size + backupData.imageProvenance.size),
+                recognitionTaskCount = backupData.recognitionTasks.size,itemEvidenceCount = backupData.itemEvidence.size,imageProvenanceCount = backupData.imageProvenance.size, itemTryOnMaterialCount = backupData.itemTryOnMaterials.size,
+                additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size + backupData.tryOnResults.size + backupData.imageTasks.size + backupData.personalModels.size + backupData.personalModelDrafts.size + backupData.storageNodes.size + backupData.itemDrafts.size + backupData.recognitionTasks.size + backupData.itemEvidence.size + backupData.imageProvenance.size + backupData.itemTryOnMaterials.size),
                 backupDate = backupData.backupDate,
                 backupVersion = backupData.appVersion
             ))
@@ -812,6 +837,7 @@ class BackupManager(
         database.recognitionDao().deleteAllEvidence()
         database.recognitionDao().deleteAll()
         database.itemDraftDao().deleteAll()
+        database.itemTryOnMaterialDao().deleteAll()
         database.imageProvenanceDao().deleteAll()
         database.imageTaskDao().deleteAll()
         database.personalModelDao().deleteAllDrafts()
@@ -854,7 +880,7 @@ class BackupManager(
     /** Only explicitly blocked task inputs can stay absent; albums and pending outputs remain required. */
     private fun historicalInputPaths(data: BackupData): Set<String> {
         val inputs = data.imageTasks.filter { it.sourceResourcesMissing }.flatMap { task ->
-            task.sourceImagePaths + listOfNotNull(ImageTaskRequest.decode(task.requestJson).productOriginalImagePath)
+            task.sourceImagePaths + ImageTaskRequest.decode(task.requestJson).let { listOfNotNull(it.productOriginalImagePath, it.materialSpec?.originalInputPath) }
         }.toSet()
         val business = collectImagePaths(data.copy(imageTasks = emptyList()))
         val requiredTaskPaths = data.imageTasks.filterNot { it.sourceResourcesMissing }.flatMap { it.protectedImagePaths() } +
@@ -900,6 +926,7 @@ class BackupManager(
         fun business(path: String): String = businessPaths.getOrPut(path) { map(path) }
         fun nullable(path: String?) = path?.let(::business)
         val mapped = data.copy(
+            itemTryOnMaterials = data.itemTryOnMaterials.map { it.copy(imagePath=business(it.imagePath), sourceImagePath=business(it.sourceImagePath), inputImagePath=business(it.inputImagePath)) },
             storageNodes = data.storageNodes.map { it.copy(imageUrl=nullable(it.imageUrl)) },
             itemDrafts = data.itemDrafts.map { it.copy(imagePaths=it.imagePaths.map(::business),sizeChartImagePaths=it.sizeChartImagePaths.map(::business),evidenceImagePaths=it.evidenceImagePaths.map(::business),appearanceOnlyImagePaths=it.appearanceOnlyImagePaths.map(::business)) },
             recognitionTasks = data.recognitionTasks.map { it.copy(regionImagePaths=it.regionImagePaths.map(::business)) },
@@ -907,7 +934,7 @@ class BackupManager(
             imageProvenance = data.imageProvenance.map { it.copy(imagePath=business(it.imagePath)) },
             personalModels = data.personalModels.map { it.copy(imageUrl = business(it.imageUrl), sourceImagePaths = it.sourceImagePaths.map(::business)) },
             personalModelDrafts = data.personalModelDrafts.map { it.copy(sourceImagePaths = it.sourceImagePaths.map(::business)) },
-            tryOnResults = data.tryOnResults.map { it.copy(imageUrl = business(it.imageUrl)) },
+            tryOnResults = data.tryOnResults.map { it.copy(imageUrl = business(it.imageUrl), baseSnapshotImagePath = nullable(it.baseSnapshotImagePath)) },
             brands = data.brands.map { it.copy(logoUrl = nullable(it.logoUrl)) },
             items = data.items.map { it.copy(imageUrls = it.imageUrls.map(::business), sizeChartImageUrl = nullable(it.sizeChartImageUrl), sizeChartImageUrls = it.sizeChartImageUrls.map(::business)) },
             coordinates = data.coordinates.map { it.copy(imageUrls = it.imageUrls.map(::business)) },
@@ -930,10 +957,14 @@ class BackupManager(
         return mapped.copy(imageTasks = data.imageTasks.map { task ->
             task.copy(
                 requestJson = ImageTaskRequest.decode(task.requestJson).mapImagePaths(::business).encode(),
+                layersJson = com.lolita.app.domain.model.MaterialLayers.encode(com.lolita.app.domain.model.MaterialLayers.decode(task.layersJson).mapNotNull { layer ->
+                    if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) layer.copy(imagePath=business(layer.imagePath))
+                    else businessPaths[layer.imagePath]?.let { layer.copy(imagePath=it) }
+                }),
                 sourceImagePaths = if (task.retainsSourceImages) task.sourceImagePaths.map(::business) else emptyList(),
                 // Completed paths are informational. Missing/deleted business images do not
                 // become mandatory ZIP entries or retain old-device absolute paths.
-                resultImagePath = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) task.resultImagePath?.let(map)
+                resultImagePath = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) task.resultImagePath?.let(::business)
                     else task.resultImagePath?.let(businessPaths::get)
             )
         })
@@ -1190,7 +1221,7 @@ data class BackupPreview(
     val imageTaskCount: Int = 0,
     val personalModelCount: Int = 0,
     val personalModelDraftCount: Int = 0,
-    val storageNodeCount:Int=0,val itemDraftCount:Int=0,val recognitionTaskCount:Int=0,val itemEvidenceCount:Int=0,val imageProvenanceCount:Int=0,
+    val storageNodeCount:Int=0,val itemDraftCount:Int=0,val recognitionTaskCount:Int=0,val itemEvidenceCount:Int=0,val imageProvenanceCount:Int=0,val itemTryOnMaterialCount:Int=0,
     val additionalRecordCount: Int = 0,
     val orderBindingCount: Int = 0,
     val historicalOwnedCount: Int = 0,
@@ -1205,5 +1236,5 @@ data class BackupPreview(
     val backupVersion: String
 ) {
     val totalCount: Int
-        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount + monthlyBudgetCount + tryOnResultCount + imageTaskCount + personalModelCount + personalModelDraftCount + storageNodeCount + itemDraftCount + recognitionTaskCount + itemEvidenceCount + imageProvenanceCount
+        get() = brandCount + categoryCount + coordinateCount + itemCount + priceCount + paymentCount + outfitLogCount + styleCount + seasonCount + locationCount + sourceCount + archiveCount + additionalRecordCount + orderBindingCount + paymentStageCount + monthlyBudgetCount + tryOnResultCount + imageTaskCount + personalModelCount + personalModelDraftCount + storageNodeCount + itemDraftCount + recognitionTaskCount + itemEvidenceCount + imageProvenanceCount + itemTryOnMaterialCount
 }

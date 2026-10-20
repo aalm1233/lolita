@@ -36,7 +36,7 @@ enum class TryOnRole(val label: String, val instruction: String, val garment: Bo
 }
 
 data class TryOnSelection(val itemId: Long, val name: String, val imagePath: String, val role: TryOnRole,
-    val semantic: CategorySemantic? = null, val composition: ItemComposition? = null)
+    val semantic: CategorySemantic? = null, val composition: ItemComposition? = null, val materialId: String? = null)
 
 /** This check is also used before role edits, so conflicts never silently remove a selection. */
 data class TryOnConflict(val itemIds: List<Long>, val message: String, val requiresReplacement: Boolean)

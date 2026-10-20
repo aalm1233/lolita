@@ -29,7 +29,10 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
     suspend fun generateMannequin(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
         generateChecked(apiKey, images, prompt, 1..2)
 
-    private suspend fun generateChecked(apiKey: String, images: List<ByteArray>, prompt: String, imageCount: IntRange): ByteArray {
+    suspend fun generateTransparentMaterial(apiKey: String, images: List<ByteArray>, prompt: String): ByteArray =
+        generateChecked(apiKey, images, prompt, 1..1, transparent = true)
+
+    private suspend fun generateChecked(apiKey: String, images: List<ByteArray>, prompt: String, imageCount: IntRange, transparent: Boolean = false): ByteArray {
         require(apiKey.isNotBlank() && apiKey.length <= 512 && apiKey.all { it.code in 33..126 }) { "请填写有效的 API Key" }
         require(images.size in imageCount && images.all { it.isNotEmpty() && it.size <= 10 * 1024 * 1024 } && images.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片数量或大小超出限制" }
         return suspendCancellableCoroutine { continuation ->
@@ -41,7 +44,7 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
                     try {
                         check(activeConnection.compareAndSet(null, conn)) { "已有试衣任务正在结束，请稍后重试" }
                         check(continuation.isActive) { "已取消等待" }
-                        execute(conn, apiKey, images, prompt)
+                        execute(conn, apiKey, images, prompt, transparent)
                     } catch (error: SocketTimeoutException) {
                         throw ImageGenerationFailure(ImageGenerationFailureKind.TIMEOUT)
                     } catch (error: IOException) {
@@ -58,7 +61,7 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
         }
     }
 
-    private fun execute(conn: HttpURLConnection, key: String, images: List<ByteArray>, prompt: String): ByteArray {
+    private fun execute(conn: HttpURLConnection, key: String, images: List<ByteArray>, prompt: String, transparent: Boolean): ByteArray {
         val boundary = "LolitaTryOn${UUID.randomUUID()}"
         conn.requestMethod = "POST"
         conn.connectTimeout = 20_000
@@ -70,9 +73,10 @@ class TryOnImageApi(private val connectionFactory: (URL) -> HttpURLConnection = 
         conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
         conn.outputStream.use { output ->
             fun text(value: String) { output.write(value.toByteArray(Charsets.UTF_8)) }
-            for ((name, value) in listOf("model" to MODEL, "prompt" to prompt, "n" to "1", "quality" to "medium", "size" to "1024x1536", "output_format" to "png")) {
+            for ((name, value) in listOf("model" to MODEL, "prompt" to prompt, "n" to "1", "quality" to "medium", "size" to if (transparent) "1536x1024" else "1024x1536", "output_format" to "png")) {
                 text("--$boundary\r\nContent-Disposition: form-data; name=\"$name\"\r\n\r\n$value\r\n")
             }
+            if (transparent) text("--$boundary\r\nContent-Disposition: form-data; name=\"background\"\r\n\r\ntransparent\r\n")
             images.forEachIndexed { index, bytes ->
                 check(!Thread.currentThread().isInterrupted) { "已取消等待" }
                 val encoding = ReferenceImageEncoding.of(bytes)

@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-21",
+  "budget": 100,
+  "new_independent_allowance": true,
+  "requests": 4,
+  "successful_output_units": 6,
+  "remaining_output_units": 94,
+  "accounting": "Conservative image-output count including decomposition background, distinct from HTTP requests; no billed currency claimed",
+  "automatic_retries": 0,
+  "real_adapter": "Production SeedreamImageApi and SeedreamLayersApi compiled with host driver; fusion preprocessing uses documented host equivalent, native Android preparation verified separately under controlled transport",
+  "privacy": "Reference photos and generated media remain local/private; not shipped as app assets or public docs",
+  "findings": {
+    "alpha": "Real transparent PNG foreground plus visible item pixels",
+    "structure": "Front view preserves two principal buckles, hanging chains and four tips in this sample; frontal symmetry accepted despite oblique source",
+    "fusion": "Waist accessory wraps the model waist in this sample; body, dress and fine texture are redrawn. A faint lower-corner text artifact remains, so quality still requires review",
+    "scope": "Single gray-black waist-accessory sample, no general accuracy or pixel preservation claim",
+    "openai": "No real OpenAI credential available. Material creation is gated to verified Seedream; existing fusion service selection retained"
+  },
+  "attempts": [
+    {
+      "id": "01-original-layer-check",
+      "mode": "layers",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reservedAt": "2026-10-20T14:44:05.088165Z",
+      "chargedUnits": 2,
+      "outcome": "SUCCESS",
+      "promptSha256": "fe579a18559374c7b1105ebb437ae40c10ae93afd38478705c9f11276300c880",
+      "inputSha256s": [
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "automaticRetries": 0,
+      "outputs": [
+        {
+          "name": "layer-1.png",
+          "sha256": "affdcd356deb7ba1d2d7e3b51f816e8f78e500253c5d52a0b3baaa0aabdb8f45"
+        }
+      ]
+    },
+    {
+      "id": "02-front-view",
+      "mode": "image",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reservedAt": "2026-10-20T14:51:50.941154Z",
+      "chargedUnits": 1,
+      "outcome": "SUCCESS",
+      "promptSha256": "67f5275eae09078388726326ea8502302fec08b0712f339713775cf35bccd923",
+      "inputSha256s": [
+        "8c1072c15a8b17631ef1bd38f527123ba69badc3bfcb772910281fe916041f7d"
+      ],
+      "automaticRetries": 0,
+      "outputs": [
+        {
+          "name": "output.png",
+          "sha256": "ad74f4c6a8045764932267c3d3aa7bf56b1c8703edad6d45d8752ff3a0224724"
+        }
+      ]
+    },
+    {
+      "id": "03-front-layer",
+      "mode": "layers",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reservedAt": "2026-10-20T15:14:14.682061Z",
+      "chargedUnits": 2,
+      "outcome": "SUCCESS",
+      "promptSha256": "fe579a18559374c7b1105ebb437ae40c10ae93afd38478705c9f11276300c880",
+      "inputSha256s": [
+        "ad74f4c6a8045764932267c3d3aa7bf56b1c8703edad6d45d8752ff3a0224724"
+      ],
+      "automaticRetries": 0,
+      "outputs": [
+        {
+          "name": "layer-1.png",
+          "sha256": "7a051abf1b111edb1b8a190d45bc83926e28068b38389153e1a9dc069906306b"
+        }
+      ]
+    },
+    {
+      "id": "04-frontal-fusion",
+      "mode": "image",
+      "provider": "SEEDREAM",
+      "model": "doubao-seedream-5-0-pro-260628",
+      "reservedAt": "2026-10-20T15:34:43.879613Z",
+      "chargedUnits": 1,
+      "outcome": "SUCCESS",
+      "promptSha256": "d0b53ec5a6b6bcffd3f6ea0fe403ef622f9b4ea7ec337dd2ce1fdd167c033f6e",
+      "inputSha256s": [
+        "97e819a772463003d7727a1de76df40d0e0dc6a38eed9b8471d7b5b6f808e853",
+        "bfa70741e8876df645f24d063bf93ca8626b6ef44f77ad9c1b096136ed4cb9e5"
+      ],
+      "automaticRetries": 0,
+      "outputs": [
+        {
+          "name": "output.png",
+          "sha256": "1f2093394e6bbe96265c513b9edb96f063dcaa5c5a6b1fb0723c6f8d3d36f323"
+        }
+      ]
+    }
+  ]
+}

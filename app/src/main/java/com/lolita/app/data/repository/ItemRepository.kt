@@ -195,6 +195,7 @@ class ItemRepository(
                 cleanupPaths.addAll(listOfNotNull(latest.sizeChartImageUrl) + latest.sizeChartImageUrls)
             }
             if (database != null) {
+                database.itemTryOnMaterialDao().getForItem(item.id)?.let { cleanupPaths.addAll(it.protectedImagePaths()) }
                 val drafts=database.itemDraftDao().getAll().filter { it.targetItemId==item.id }
                 val draftIds=drafts.map { it.id }.toMutableSet()
                 val tasks=database.recognitionDao().getAll().filter { it.targetItemId==item.id || it.draftId in draftIds }

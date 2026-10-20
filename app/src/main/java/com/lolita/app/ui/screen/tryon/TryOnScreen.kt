@@ -39,12 +39,13 @@ import java.util.Locale
 @Composable
 fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewModel(),
     onNavigateToTasks: () -> Unit = {}, onTaskSubmitted: (String) -> Unit = {},
-    onManagePersonalModels: () -> Unit = {}, onConfigureApi: () -> Unit = {}) {
+    onManagePersonalModels: () -> Unit = {}, onConfigureApi: () -> Unit = {}, onAddAccessory: (Long, Long) -> Unit = { _, _ -> }) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val keyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
+    var accessoryBaseResultId by remember { mutableStateOf<Long?>(null) }
     var showModelPicker by remember { mutableStateOf(false) }
     var showPicker by remember { mutableStateOf(false) }
     var imageItemId by remember { mutableStateOf<Long?>(null) }
@@ -221,12 +222,15 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                                     .then(Modifier.semantics { contentDescription = "放大试衣图：${result.name}" })
                                     .skinClickable { preview = result.imageUrl }, circularRevealEnabled = false)
                         }
-                        Text("试衣人物：${result.personalModelName ?: "内置虚拟模特"}", style = MaterialTheme.typography.bodySmall)
+                        result.baseSnapshotImagePath?.let { basePath -> TextButton(onClick = { preview = basePath }) { Text("对比本次底图") } }
+                        val accessoryBase = remember(result.requestSnapshotJson) { result.requestSnapshotJson?.let { runCatching { ImageTaskRequest.decode(it).accessoryBase }.getOrNull() } }
+                        Text(if (accessoryBase != null) "本次底图：${accessoryBase.name}" else "试衣人物：${result.personalModelName ?: "内置虚拟模特"}", style = MaterialTheme.typography.bodySmall)
                         Text(result.itemNames.joinToString("、"), style = MaterialTheme.typography.bodySmall)
                         val wearing = remember(result.requestSnapshotJson) {
                             result.requestSnapshotJson?.let { runCatching { ImageTaskRequest.decode(it).instructions }.getOrNull() }.orEmpty()
                         }
                         if (wearing.isNotBlank()) Text("穿戴要求：$wearing", style = MaterialTheme.typography.bodySmall)
+                        OutlinedButton(onClick = { accessoryBaseResultId = result.id }, modifier = Modifier.fillMaxWidth()) { Text("在此图上加腰饰") }
                         Row(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             TextButton(onClick = { rename = result }, modifier = Modifier.weight(1f)) { SkinIcon(IconKey.Edit, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingSmall)); Text("重命名") }
                             TextButton(onClick = { delete = result }, modifier = Modifier.weight(1f)) { SkinIcon(IconKey.Delete, Modifier.size(18.dp)); Spacer(Modifier.width(skin.spacingSmall)); Text("删除") }
@@ -243,7 +247,19 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
         onStatus = viewModel::selectStatusFilter) { showPicker = false }
     val imageItem = state.items.firstOrNull { it.id == imageItemId }
     if (imageItem != null) TryOnImagePicker(imageItem, state.selected.firstOrNull { it.itemId == imageItem.id }?.imagePath.orEmpty(),
-        onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null })
+        onSelect = { viewModel.setImage(imageItem.id, it) }, onDismiss = { imageItemId = null }, material = state.materials.firstOrNull { it.itemId == imageItem.id })
+    accessoryBaseResultId?.let { baseId ->
+        AlertDialog(onDismissRequest = { accessoryBaseResultId = null }, title = { Text("选择已确认腰饰素材") }, text = {
+            Column {
+                Text("首版一次增加一件腰饰；底图已有冲突腰饰时，请先核对或换底图。", style = MaterialTheme.typography.bodySmall)
+                LazyColumn(Modifier.heightIn(max = 420.dp)) {
+                    val available = state.materials.filter { asset -> state.items.any { it.id == asset.itemId && state.categories.firstOrNull { category -> category.id == it.categoryId }?.categorySemantic == com.lolita.app.domain.model.CategorySemantic.WAIST_ACCESSORY } }
+                    if (available.isEmpty()) item { Text("暂无已确认腰饰素材，请先在腰饰详情中整理并核对。") }
+                    items(available, key = { it.id }) { asset -> TextButton(onClick = { accessoryBaseResultId = null; onAddAccessory(asset.itemId, baseId) }, modifier = Modifier.fillMaxWidth()) { Text(state.items.firstOrNull { it.id == asset.itemId }?.name.orEmpty()) } }
+                }
+            }
+        }, confirmButton = { TextButton(onClick = { accessoryBaseResultId = null }) { Text("返回") } })
+    }
     val role = state.selected.firstOrNull { it.itemId == roleItemId }
     if (role != null) TryOnRolePicker(role.role, onSelect = { viewModel.setRole(role.itemId, it) }, onDismiss = { roleItemId = null })
     preview?.let { FullScreenImageViewer(listOf(it), onDismiss = { preview = null }) }

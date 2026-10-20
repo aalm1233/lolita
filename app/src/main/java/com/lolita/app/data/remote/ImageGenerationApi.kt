@@ -7,6 +7,17 @@ class ImageGenerationApi(
     private val openAi: TryOnImageApi = TryOnImageApi(),
     private val seedream: SeedreamImageApi = SeedreamImageApi()
 ) {
+    private val layers = SeedreamLayersApi()
+    suspend fun decomposeMaterial(credentials: ImageGenerationCredentials, images: List<ByteArray>, prompt: String): GeneratedImageLayers {
+        require(credentials.provider == ImageGenerationProvider.SEEDREAM && images.size == 1)
+        return layers.decompose(credentials.apiKey, images.single(), prompt)
+    }
+    suspend fun generateMaterial(credentials: ImageGenerationCredentials, images: List<ByteArray>, prompt: String): ByteArray =
+        when (credentials.provider) {
+            ImageGenerationProvider.SEEDREAM -> seedream.generateMaterialFront(credentials.apiKey, images, prompt)
+            ImageGenerationProvider.OPENAI -> openAi.generateTransparentMaterial(credentials.apiKey, images, prompt)
+        }
+
     suspend fun generateMannequin(credentials: ImageGenerationCredentials, images: List<ByteArray>, prompt: String): ByteArray =
         when (credentials.provider) {
             ImageGenerationProvider.OPENAI -> openAi.generateMannequin(credentials.apiKey, images, prompt)

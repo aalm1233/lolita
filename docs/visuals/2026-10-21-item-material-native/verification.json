@@ -1,0 +1,688 @@
+{
+  "avd": "Lolita_Material_Test_20261021",
+  "serial": "emulator-5596",
+  "main_configuration": "390dp × 844dp / density480 / font1.0",
+  "small_configuration": "320dp × 720dp / density480 / font2.0",
+  "rendering": "Actual Compose screens, native Android PNG preparation, controlled image transports; no paid calls",
+  "privacy": "Original concept belt test fixture and tracked fictional model only; private reference photos absent",
+  "originals": [
+    {
+      "name": "accessory-chinese-dark.png",
+      "sha256": "30c5e2f2e9ba6ff6ae0dc5252614b2045da2b0775653b91f994b6e639e24547d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-chinese-light.png",
+      "sha256": "2e36cb9708f3f704e7632e543dd5d7c9afe32a97079fef66c57866d35f7808a1",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-classic-dark.png",
+      "sha256": "e1304ae8af45aa66c2389e1ea5afa65c829b35426efccee33cdb6dd1121e46fe",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-classic-light.png",
+      "sha256": "23ea46750763d35bd9fe6d0f84ee521aa3be818845587de555d479e1a954462d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-country-dark.png",
+      "sha256": "ef1e0db82357edf4d87641a4245c5f6897e057fd4efcbf60ab164f0f5f9c51a7",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-country-light.png",
+      "sha256": "7e14bcc15e751e2cdb85a56e043250804dc746a8ce1bd3327d49cce87c6ab960",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-default-dark.png",
+      "sha256": "9d9d848aa9a0f5fdb8c3b1b2cab5340484c322031542ff9b9d195f840add1e4d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-default-light.png",
+      "sha256": "09b465a4d66eecc43b9416ddf22be5b610dcbca7ff5a72837e054405812c2102",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-gothic-dark.png",
+      "sha256": "46dc8174612f7ee44a6258f1b5726d9e053a69aea5e1dff65d551dd3fc389e17",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-gothic-light.png",
+      "sha256": "854a59981856b2e39b6d6b30b1acecbb5327ca5323c870e6776298d2961cf88b",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-navy-dark.png",
+      "sha256": "495616468a43581935f2059139a09785a60bf1ad9224cf73768548060ef42bd5",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-navy-light.png",
+      "sha256": "ece75ce44972979d8d614649f948697644c43cd361483571d67a88d3280d26ca",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-victorian-dark.png",
+      "sha256": "e2c14712c05aa95ecdfee2cbcbd722b4bf3d2e480340770e264bea34114f3009",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "accessory-victorian-light.png",
+      "sha256": "5cf10551e28f8fa9c1b39625f7a4395d64b79aff65dc29e23153d8e80f3b6323",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "fee-accessory-default-light.png",
+      "sha256": "848635c4a674ffe079d3395c4a160522f0c48c43bd1caac605addad893507293",
+      "pixels": [
+        1170,
+        2388
+      ]
+    },
+    {
+      "name": "fee-layer-default-light.png",
+      "sha256": "12b87d204215e979dc3289ca0e41902cadcbae7b7f2b7bad3d71f2390ebde5bc",
+      "pixels": [
+        1170,
+        2388
+      ]
+    },
+    {
+      "name": "fee-prepare-default-light.png",
+      "sha256": "21356f25acb8be7ca2cc0e9f97adc1fc21fed143ee0d2513cc90fbcc14e0990d",
+      "pixels": [
+        1170,
+        2388
+      ]
+    },
+    {
+      "name": "front-chinese-dark.png",
+      "sha256": "65874f4b76977d2090ce557c86dc27fd0dc506b9f6f8354820fd5d9ee7fc8052",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-chinese-light.png",
+      "sha256": "fe3bbe63c91104adc22e9979e56a6db63c5116e2792d5f573ae3c55c2ac04813",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-classic-dark.png",
+      "sha256": "fb082db6267ff98c9ba70e78d359ea3416985269a4958dcc2baec29bd30f193d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-classic-light.png",
+      "sha256": "d318bf63cee351f5e579d0f48a9bd3af96076672e7e7c39e3522f07cd966a033",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-country-dark.png",
+      "sha256": "f6127b8d9f4b2accf3a2081ee53523cba5445380e7dac939b3793dd2ff343eaa",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-country-light.png",
+      "sha256": "eff6fc7ece6dcf796b2b770c9489c25888afadd31b33f5319394499c80e01ab4",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-default-dark.png",
+      "sha256": "8f14ba403fb7faaa8e1a70cc120b4cb60f27b8e9b512f4a5b8580d46874d1331",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-default-light.png",
+      "sha256": "ce98efec5a216a322282f2b177c1797b1b43aadc8e325584a473437df39befcf",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-gothic-dark.png",
+      "sha256": "c5e5a01cc4845511dfc9b676aff89ab1ad5e7f3aaf6fb4f613dc1d889f2f6444",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-gothic-light.png",
+      "sha256": "347f3cd1a148e599f9ce8ba64df58ffeeef7df1aaf18cc81d9c9082e42b1a79e",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-navy-dark.png",
+      "sha256": "fb88044f48f66204636a65dba36da1f9d861ee462242162345dae0b3d52a7b08",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-navy-light.png",
+      "sha256": "07af9bad448aece10e904698439d9532536f051281a2daf46bdcd4b9f16cc977",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-victorian-dark.png",
+      "sha256": "0577abd9e8d82575ef711b61332e642e57bd5b348f71ccf25b900489468c5906",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "front-victorian-light.png",
+      "sha256": "8b864afc35a444a5726b7ca2619428b0bbfa67f9ddb0021445b59b6699848faa",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-chinese-dark.png",
+      "sha256": "dc2197b4ff23c62feeb279aa451b4acd440457c9582cd19cf7d3b83bff78451d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-chinese-light.png",
+      "sha256": "b9def3796fa619a980400217b3dc76b5df4aa16d5cc0687b8218a23523a4269a",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-classic-dark.png",
+      "sha256": "e4d6abe1fb3d352c37464746433da7a8fd971be7ad33b1883fe547a4b7dbf1a4",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-classic-light.png",
+      "sha256": "75e8ab8067cb66a43564ccf3241e9635df346ccf3724505d690e2c47dc590924",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-country-dark.png",
+      "sha256": "1b91ca043a617a4f974310fa4e5e0662b583a190ceae3f279776e4fc0fb108ab",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-country-light.png",
+      "sha256": "8711031dc08934b7ef6b5c3185b0479a31515bf9fc8c8f33157dea356096c031",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-default-dark.png",
+      "sha256": "6e8305aa67149b6bb99721cfb7a253821714834a3e906de96377091b460bf472",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-default-light.png",
+      "sha256": "e25b931862191e34dadd4ce6e2b3a74c687b0045c0800d94812814d37da533f1",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-gothic-dark.png",
+      "sha256": "19a118a5182938d1f3289d03755180dc49eb3204859b2659396867881892a696",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-gothic-light.png",
+      "sha256": "e6b0c6bc7c2163e32df7bdbe62b62ac5b14f30d9fcc8c380d05e0d673ade6486",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-navy-dark.png",
+      "sha256": "26a66bf6374e6b111741e10bbcd435e91764e867695662a907736c7b44756440",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-navy-light.png",
+      "sha256": "fcc68ae89f8e74a415ee8f8dc063b81ebba492537e8506a723a4abbef7fb92ca",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-victorian-dark.png",
+      "sha256": "a89d1435b7695df2b55b173946a1fa973b28b265abd4f01b4c9000a6ad34e7c3",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "layers-victorian-light.png",
+      "sha256": "54b1ef6073b26cf12a8388066588d2fbd58060de3281f0d608f143e6dc4bcf0a",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "material-review-nav.png",
+      "sha256": "441c2a89e89ae8d514c4f2117de0c2eedbf1dadd1af5758b6c80395322c9518c",
+      "pixels": [
+        960,
+        2160
+      ]
+    },
+    {
+      "name": "prepare-chinese-dark.png",
+      "sha256": "f50f7a820b74464818b127eb8454c2622940556f7c17dbefc8bf2a7a77b35797",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-chinese-light.png",
+      "sha256": "7571561a057414a3b017d5c1bbd4ec6012084473205274bc29b8b33a999ffcd1",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-classic-dark.png",
+      "sha256": "9a9227068b1307c674434a0d20609d5a4d9f3e8346549ce1f661858354b2fbb6",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-classic-light.png",
+      "sha256": "a19d6a8780137e14b5dc3a9f00e2f870925dc91332b6e35b67c6088b907003ba",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-country-dark.png",
+      "sha256": "78c6811437d83b96ab8a440b012e8f1a58ae3da27525a1bd94e91206e53760d6",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-country-light.png",
+      "sha256": "85d614a3d917c9f457111fa00812b0a6d8825173a99febb1247a5162b819b0ad",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-default-dark.png",
+      "sha256": "24f980e8e607ffc4378f9a2de2ae40ee6fd994535c55b8700944d3d61d50fbe9",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-default-light.png",
+      "sha256": "5f1287aae49630df0465c5198cc90f15c6350ac7a2365c977e0e8d3a1c2a10d7",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-gothic-dark.png",
+      "sha256": "30eea35dc87d4aa5ca3d63cb507105184f398b3944f0888d25b41264c2db507c",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-gothic-light.png",
+      "sha256": "d39cdce8a9cde9ad03e3be3ac85f7b579be049bad0b0aa2e28504ef95573c268",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-navy-dark.png",
+      "sha256": "1cec8b91a6e8b1b106753ab88db34de34f7a9aaa5b83e06d3070af2e4075977a",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-navy-light.png",
+      "sha256": "f8bdf848ce7c6766a62b53445d4bafe9880aac2dbc2dd0d6e0f00b5301c69f8b",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-victorian-dark.png",
+      "sha256": "ece183ba499aeb1a2e98e3ac8f1d344f273d832e9281fbecc6efab3c04a18146",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "prepare-victorian-light.png",
+      "sha256": "928f57e1cf3d3b784ca0aeda495418be0193619ac02829c17f6e2044a6bb1842",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-chinese-dark.png",
+      "sha256": "9bfd856a18d9c0dfeabcbf568444eb5299a5282d7d86e80e11d8412a6b1ad47c",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-chinese-light.png",
+      "sha256": "a063f8d36992e3fee68d3b8617af0e1fa3e36f2d1b4e1baa47afc68c5c0898d8",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-classic-dark.png",
+      "sha256": "38149c57f8adc7e852e5e1cb32afeaa8e438e38d2a9508a1718c26f7d4d80784",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-classic-light.png",
+      "sha256": "4ca0dcf1015cb177a53b9e6a261708a967b8a5e28bc3246b838f3a97ae7fc8e1",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-country-dark.png",
+      "sha256": "151b8dd619e20acc2f40d72e220d6d2ba6522576c6acd714c4d5b4be528c0e4f",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-country-light.png",
+      "sha256": "9e0f0f58f13b1184cfb0334ef3a529a7dec6ece207514c0b07175f6737483fcb",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-default-dark.png",
+      "sha256": "beaeab3e9ec982afdcd4f8817346c7f801da20b9b347b35c5ebb5c5dff6fafb1",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-default-light.png",
+      "sha256": "de67f9cd83fd455e2fb676e153d9e2926eb5082d042073e3a4eacb08b1b4e42d",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-gothic-dark.png",
+      "sha256": "c052f9e6e471b5d68986194ad32ce1b68e54c03b42b97ead46a8e1faed8c4468",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-gothic-light.png",
+      "sha256": "cd25fc520b7eca03b4205be5e7db95d836565d5d83f0c36392e758c013f242ab",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-navy-dark.png",
+      "sha256": "ea1ece65538b232a9286dd06f5222761bdc00d1a03d2f44aca9d59f02453adc7",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-navy-light.png",
+      "sha256": "471a00ef180d9b9a03261ff4fcc364fc77ffa8682f7217cbde1f1484503d01ca",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-victorian-dark.png",
+      "sha256": "5f77924c3e673a37918f2d69513ec34386042c6d471c4bcadf5e2b220cdbd1f5",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "saved-victorian-light.png",
+      "sha256": "923cecb84f058c42037e4d902369ed72f84033c326e3e4857098aa29db3bf1d7",
+      "pixels": [
+        1170,
+        2532
+      ]
+    },
+    {
+      "name": "small-fee.png",
+      "sha256": "77a05c665941a18639de4f928974364eddd6153197b7f097fc20f12d83d5cbd0",
+      "pixels": [
+        960,
+        2016
+      ]
+    },
+    {
+      "name": "small-ime-full-device.png",
+      "sha256": "6a5d77103ca34371759ffdccd011fd60248fc66090ea07d067890f902d244886",
+      "pixels": [
+        960,
+        2160
+      ]
+    },
+    {
+      "name": "small-prepare-ime.png",
+      "sha256": "84dfbffa25547a233d40ff556577fe79bfb2ec36223d2616abd025b9e186761f",
+      "pixels": [
+        960,
+        2160
+      ]
+    },
+    {
+      "name": "small-prepare.png",
+      "sha256": "7bc9befefd9ad0d56f6ffc575afe7b4f6c2a41609520c995a66eaafd0809cdc9",
+      "pixels": [
+        960,
+        2160
+      ]
+    }
+  ],
+  "public_boards": [
+    {
+      "name": "accessory-dark.png",
+      "sha256": "a585a463544b3fe4ecfd9d3cc0755ee5971f6f8468ae08617069e6069599d44e"
+    },
+    {
+      "name": "accessory-light.png",
+      "sha256": "5f71507bf3b246e03f85130a969c51bcb8475fcd68309fff552b8cf4e7f45422"
+    },
+    {
+      "name": "front-dark.png",
+      "sha256": "a919ffc23a791a5ec9a8d07bc6423f6c27306ee1a5a96e85a8387c08775dfd63"
+    },
+    {
+      "name": "front-light.png",
+      "sha256": "7f2037a596dd5e17d8701d54571888e5e4b290d369f8b0740235056fd25089ef"
+    },
+    {
+      "name": "layers-dark.png",
+      "sha256": "c3e2dc137eb9f6943439ca9df76820f082eb32b4b0f0729bfc9880ca5acb1849"
+    },
+    {
+      "name": "layers-light.png",
+      "sha256": "21dd1ed2246f7ae9a0a8897c0753aced25cbe5639ab62a19784f727d0b0ed30a"
+    },
+    {
+      "name": "native-fees.png",
+      "sha256": "b97d25098e47b2d596df7659a6335273e56805dee25e5fa49a554c8f87728a6e"
+    },
+    {
+      "name": "native-flow.png",
+      "sha256": "e481f35c51b5c22ef1fc58b0d21bc53a08987c1bc72587f0d545887760fdf5e4"
+    },
+    {
+      "name": "native-small-ime.png",
+      "sha256": "c2347a462e830e09d9aab66bc7eeb7020f0732366a3e4b694ee7f314bd28e8ef"
+    },
+    {
+      "name": "prepare-dark.png",
+      "sha256": "964c4572eed3df658261001e2e1e2a2bdbf5c0e1aac714cd7bbba865bec57756"
+    },
+    {
+      "name": "prepare-light.png",
+      "sha256": "c4d1db9307dbd4f42a7c3105f9c19d7884afada33651e1a2a4ea1d91402ea990"
+    },
+    {
+      "name": "saved-dark.png",
+      "sha256": "dbe133ae610fdb07f1a4eabafa037a8adf6686998e9c8bedbfcf675cfa62ecfe"
+    },
+    {
+      "name": "saved-light.png",
+      "sha256": "194af810d8ba11d4af9eb01acd0b185456004ddce27cb4f7ae58fe6ea728e6e8"
+    }
+  ]
+}

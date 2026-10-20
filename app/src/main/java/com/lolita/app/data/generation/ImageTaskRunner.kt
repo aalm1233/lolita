@@ -41,14 +41,39 @@ class ImageTaskExecutor(
     private val validateSourceImage: suspend (String) -> Boolean = { java.io.File(it).let { f -> f.isFile && f.canRead() && f.length() > 0 } },
     private val prepareAccessory: (suspend (List<String>) -> List<ByteArray>)? = null,
     private val generateMannequin: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray = generateImage,
-    private val prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null
+    private val prepareSnapshotImages: (suspend (List<String>) -> List<ByteArray>)? = null,
+    private val generateMaterial: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> ByteArray = generateMannequin,
+    private val decomposeMaterial: suspend (ImageGenerationCredentials, List<ByteArray>, String) -> com.lolita.app.data.remote.GeneratedImageLayers = { _, _, _ -> error("图层拆分尚未接入") }
 ) {
     suspend fun execute(task: ImageTask) {
         require(!task.sourceResourcesMissing) { ImageTask.SOURCE_RESOURCES_MISSING_MESSAGE }
         val credentials = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { readCredentials(task.provider) }
         val request = ImageTaskRequest.decode(task.requestJson)
         if (request.version == 4) require(request.serviceModel == task.provider.model) { "原服务型号已不可用，请核对后为新任务重新选择；原请求未改变" }
+        if (request.version == 5) {
+            request.validate(task.kind)
+            require(request.serviceModel == task.provider.model) { "原服务型号已改变" }
+            com.lolita.app.data.tryon.ImageGenerationGate.process.runExclusive {
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { request.validateInputImages(task.sourceImagePaths) }
+                val images = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { task.sourceImagePaths.map { java.io.File(it).readBytes() } }
+                require(images.all { it.size in 1..4 * 1024 * 1024 } && images.sumOf { it.size.toLong() } <= 40L * 1024 * 1024)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { request.validateInputImages(task.sourceImagePaths) }
+                coordinator.beforeRequest(task.id)
+                if (task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL) {
+                    when (requireNotNull(request.materialSpec).stage) {
+                        MaterialStage.EXTRACT_LAYER -> coordinator.publishMaterialLayers(task.id, decomposeMaterial(credentials, images, requireNotNull(request.promptSnapshot)))
+                        MaterialStage.FRONT_VIEW -> coordinator.publishMannequin(task.id, generateMaterial(credentials, images, requireNotNull(request.promptSnapshot)))
+                        MaterialStage.TRANSPARENT -> coordinator.publishTransparentMaterial(task.id, generateMaterial(credentials, images, requireNotNull(request.promptSnapshot)))
+                    }
+                } else {
+                    val bytes = generateImage(credentials, images, requireNotNull(request.promptSnapshot))
+                    coordinator.publishTryOn(task.id, bytes, request.selections(task.sourceImagePaths), task.provider.model)
+                }
+            }
+            return
+        }
         when (task.kind) {
+            ImageTaskKind.SINGLE_ITEM_MATERIAL -> error("素材任务必须使用新协议")
             ImageTaskKind.PERSONAL_MODEL -> PersonalModelGenerator(
                 readCredentials = { credentials }, validateSourceImage = validateSourceImage,
                 prepareImages = preparePersonalModel, generateImage = generatePersonalModel,

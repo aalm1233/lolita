@@ -46,7 +46,7 @@ class TryOnImages(private val context: Context) {
             currentCoroutineContext().ensureActive()
             val file = File(path)
             require(file.isFile && file.canRead() && file.length() in 1..80L * 1024 * 1024) { "模特或服饰图片已丢失，请重新选择" }
-            result += normalize { file.inputStream() }
+            result += normalize({ file.inputStream() })
             require(result.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片总大小超出限制" }
         }
         result
@@ -55,18 +55,24 @@ class TryOnImages(private val context: Context) {
     private suspend fun prepareWithTemplate(paths: List<String>, template: String?): List<ByteArray> = withContext(Dispatchers.IO) {
         currentCoroutineContext().ensureActive()
         val result = mutableListOf<ByteArray>()
-        if (template != null) result += normalize { context.assets.open(template) }
+        if (template != null) result += normalize({ context.assets.open(template) })
         for (path in paths) {
             currentCoroutineContext().ensureActive()
             val file = File(path)
             require(file.isFile && file.length() in 1..80L * 1024 * 1024) { "参考图片已丢失或过大，请重新选择图片" }
-            result.add(normalize { file.inputStream() })
+            result.add(normalize({ file.inputStream() }))
             require(result.sumOf { it.size.toLong() } <= 40L * 1024 * 1024) { "参考图片总大小超出限制" }
         }
         result
     }
 
-    private fun normalize(open: () -> InputStream): ByteArray {
+    suspend fun prepareMaterialSnapshot(path: String, preserveAlpha: Boolean): ByteArray = withContext(Dispatchers.IO) {
+        val file = File(path)
+        require(file.isFile && file.canRead() && file.length() in 1..80L * 1024 * 1024) { "参考图片已丢失" }
+        normalize({ file.inputStream() }, preserveAlpha, pngOnly = true)
+    }
+
+    private fun normalize(open: () -> InputStream, preserveAlpha: Boolean = false, pngOnly: Boolean = false): ByteArray {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         open().use { BitmapFactory.decodeStream(it,null,bounds) }
         require(bounds.outWidth in 1..30000 && bounds.outHeight in 1..30000) { "无法读取参考图片" }
@@ -96,7 +102,7 @@ class TryOnImages(private val context: Context) {
                 val scaled = Bitmap.createScaledBitmap(bitmap,maxOf(1,(bitmap.width*ratio).toInt()),maxOf(1,(bitmap.height*ratio).toInt()),true)
                 if (scaled !== bitmap) { bitmap.recycle(); bitmap = scaled }
             }
-            if (bitmap.hasAlpha()) {
+            if (bitmap.hasAlpha() && !preserveAlpha) {
                 val opaque = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
                 android.graphics.Canvas(opaque).apply {
                     drawColor(android.graphics.Color.WHITE)
@@ -109,7 +115,15 @@ class TryOnImages(private val context: Context) {
                 // Avoid another lossy pass over buckles, lace and fine print. The per-image
                 // PNG budget leaves room for all nine inputs under the existing 40 MiB cap.
                 require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) { "无法准备参考图片" }
-                if (out.size() > LOSSLESS_IMAGE_BUDGET) {
+                if (pngOnly) {
+                    while (out.size() > LOSSLESS_IMAGE_BUDGET && maxOf(bitmap.width, bitmap.height) > 256) {
+                        val scaled = Bitmap.createScaledBitmap(bitmap, (bitmap.width * 0.8f).toInt().coerceAtLeast(1), (bitmap.height * 0.8f).toInt().coerceAtLeast(1), true)
+                        if (scaled !== bitmap) { bitmap.recycle(); bitmap = scaled }
+                        out.reset()
+                        require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out))
+                    }
+                    require(out.size() <= LOSSLESS_IMAGE_BUDGET) { "透明参考图超出上限，请重新选择" }
+                } else if (out.size() > LOSSLESS_IMAGE_BUDGET) {
                     out.reset()
                     require(bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)) { "无法准备参考图片" }
                 }

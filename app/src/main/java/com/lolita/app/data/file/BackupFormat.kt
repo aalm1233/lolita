@@ -12,11 +12,12 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 10
-    const val SCHEMA_VERSION = 30
+    const val VERSION = 11
+    const val SCHEMA_VERSION = 31
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
+        "itemTryOnMaterials" to ItemTryOnMaterial::class.java,
         "storageNodes" to StorageNode::class.java, "itemDrafts" to ItemDraft::class.java,
         "recognitionTasks" to RecognitionTask::class.java, "itemEvidence" to ItemEvidence::class.java,
         "imageProvenance" to ImageProvenance::class.java,
@@ -47,7 +48,7 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion", "wigHeadTemplatePreferenceJson")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 11 || it != "itemTryOnMaterials") && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
@@ -77,6 +78,10 @@ internal object BackupFormat {
                     if (name != "outfitLogs") default(row, "description", "")
                     else default(row, "note", "")
                     default(row, "updatedAt", row.get("createdAt") ?: error("缺少 createdAt"))
+                }
+                if (version < 11 && name == "imageTasks") {
+                    BackupFormat.default(row, "layersJson", "[]")
+                    BackupFormat.default(row, "generatedImageCount", 1)
                 }
                 if (version < 10) {
                     if (name == "items") { BackupFormat.default(row,"specificationsJson",""); BackupFormat.default(row,"composition","UNCONFIRMED") }
@@ -125,6 +130,7 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "itemTryOnMaterials" -> setOf("id","itemId","imagePath","sourceImagePath","inputImagePath","resultSha256","sourceTaskId","requestJson","createdAt","confirmedAt")
                     "storageNodes" -> setOf("id","locationId","name","normalizedName","siblingScopeId","description","sortOrder","createdAt","updatedAt")
                     "itemDrafts" -> setOf("id","dataJson","imagePaths","sizeChartImagePaths","evidenceImagePaths","appearanceOnlyImagePaths","updatedAt")
                     "recognitionTasks" -> setOf("id","draftId","requestJson","regionImagePaths","status","requestSent","createdAt","updatedAt")
@@ -132,7 +138,7 @@ internal object BackupFormat {
                     "imageProvenance" -> setOf("imagePath","itemId","sourceType","mode","createdAt")
                     "personalModels" -> setOf("id","name","requestJson","sourceImagePaths","imageUrl","provider","model","createdAt","updatedAt")
                     "personalModelDrafts" -> setOf("id","dataJson","sourceImagePaths","updatedAt")
-                    "imageTasks" -> setOf("id","kind","provider","title","requestJson","sourceImagePaths","status","requestSent","createdAt","updatedAt") + if(version>=10) setOf("keepSourceImages","sourceResourcesMissing") else emptySet()
+                    "imageTasks" -> setOf("id","kind","provider","title","requestJson","sourceImagePaths","status","requestSent","createdAt","updatedAt") + (if(version>=10) setOf("keepSourceImages","sourceResourcesMissing") else emptySet()) + (if(version>=11) setOf("layersJson","generatedImageCount") else emptySet())
                     "tryOnResults" -> setOf("id","name","imageUrl","itemIds","itemNames","model","createdAt")
                     "monthlyBudgets" -> setOf("month", "amountCents")
                     "outfitItemCrossRefs" -> setOf("outfitLogId", "itemId")
@@ -343,9 +349,11 @@ internal object BackupFormat {
             }
             task.tryOnResultId?.let(results::get)?.let { result ->
                 val request = com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson)
+                val accessoryPerson = request.accessoryBase?.takeIf { it.type == com.lolita.app.domain.model.AccessoryBaseType.PERSONAL_MODEL }
                 require(task.status == ImageTaskStatus.COMPLETED && task.resultImagePath == result.imageUrl &&
                     request.garments.map { it.itemId.toString() } == result.itemIds && request.garments.map { it.name } == result.itemNames &&
-                    request.tryOnModel?.personalModelId == result.personalModelId && request.tryOnModel?.name == result.personalModelName) { "图像任务与试衣历史不匹配" }
+                    (request.tryOnModel?.personalModelId ?: accessoryPerson?.id) == result.personalModelId &&
+                    (request.tryOnModel?.name ?: accessoryPerson?.name) == result.personalModelName) { "图像任务与试衣历史不匹配" }
             }
         }
         val brands = ids(data.brands.map { it.id }, "品牌")

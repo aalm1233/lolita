@@ -74,7 +74,9 @@ fun ItemDetailScreen(
     onNavigateToMannequin: (Long) -> Unit = {},
     onNavigateToLocation: (Long) -> Unit = {},
     onCopyToNew: (String) -> Unit = {},
-    viewModel: ItemEditViewModel = viewModel()
+    viewModel: ItemEditViewModel = viewModel(),
+    currentMaterial: com.lolita.app.data.local.entity.ItemTryOnMaterial? = null,
+    onNavigateToMaterial: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
@@ -779,6 +781,18 @@ fun ItemDetailScreen(
                                     }
                                 }
                             }
+                        }
+
+                        if (uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic == CategorySemantic.WAIST_ACCESSORY && item.status.supportsVirtualTryOn) {
+                            LolitaSection(title = "试衣素材") { row {
+                                currentMaterial?.let { material ->
+                                    com.lolita.app.ui.screen.material.MaterialPhoto(material.imagePath, "查看已确认主视素材", onClick = { onNavigateToMaterial(item.id) }, height = 150, checker = true)
+                                    Text("主视单品 · 已确认 · 可重复用于试衣", style = MaterialTheme.typography.bodySmall)
+                                } ?: Text("将商品照片整理成主视单品，核对后反复用于试衣。", style = MaterialTheme.typography.bodyMedium)
+                                OutlinedButton(onClick = { onNavigateToMaterial(item.id) }, modifier = Modifier.fillMaxWidth()) {
+                                    Text(if (currentMaterial == null) "整理试衣素材" else "查看与使用素材")
+                                }
+                            } }
                         }
 
                         LolitaSection(title = "记录信息") {

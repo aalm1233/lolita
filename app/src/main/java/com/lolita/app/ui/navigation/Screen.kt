@@ -138,10 +138,19 @@ sealed interface Screen {
         fun createRoute(itemId: Long) = "recommendation/$itemId"
     }
 
+    data object TryOnMaterial : Screen {
+        override val route = "try_on_material/{itemId}?taskId={taskId}"
+        fun createRoute(itemId: Long, taskId: String? = null) = "try_on_material/$itemId?taskId=${android.net.Uri.encode(taskId.orEmpty())}"
+    }
+    data object AddAccessory : Screen {
+        override val route = "add_accessory/{itemId}?baseResultId={baseResultId}&taskId={taskId}"
+        fun createRoute(itemId: Long, baseResultId: Long? = null, taskId: String? = null) = "add_accessory/$itemId?baseResultId=${baseResultId ?: 0L}&taskId=${android.net.Uri.encode(taskId.orEmpty())}"
+    }
+
     data object TryOn : Screen {
-        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}"
-        fun createRoute(itemId: Long? = null, coordinateId: Long? = null): String =
-            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}"
+        override val route = "virtual_try_on?itemId={itemId}&coordinateId={coordinateId}&useMaterial={useMaterial}"
+        fun createRoute(itemId: Long? = null, coordinateId: Long? = null, useMaterial: Boolean = false): String =
+            "virtual_try_on?itemId=${itemId ?: 0L}&coordinateId=${coordinateId ?: 0L}" + if (useMaterial) "&useMaterial=true" else ""
     }
 
     data object TryOnRetry : Screen {

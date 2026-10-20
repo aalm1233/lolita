@@ -278,6 +278,8 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 - [ ] 已用真实页面对照设计，区分受控测试、真实接口、质量评审及尚未验证的部分。
 - [ ] 已维护设计文档，并按 AGENTS.md 的维护约定同步相关章节，完成本次提交、推送及适用发布验证。
 
+已确认试衣素材与商品相册独立；主视、图层拆分和试衣各次付费分别核对实际输入与服务，多图返回按输出张数说明。真实透明通道校验只拦截明显格式错误，单物品及附属结构仍需人工核对。已有穿搭加配饰采用明确入口，不放宽完整换装的基础服装校验。
+
 ## 相关设计依据
 
 以下文档保留具体方案及阶段记录。已被后续要求替代的实现方式不覆盖本规范，例如早期生成期间锁住页面的方案已由后台任务设计取代。
@@ -288,6 +290,6 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 - [七套皮肤图标个性](superpowers/specs/2026-10-12-icon-personality-design.md)与[非导航图标个性](superpowers/specs/2026-10-12-icon-details-design.md)：各皮肤造型与功能辨认。
 - [页面视觉优化](superpowers/specs/2026-10-12-visual-first-pass-design.md)与[背景及应用图标](superpowers/specs/2026-10-14-skin-art-polish-design.md)：信息层级、认可布局与素材方向。
 - [后台图像任务](superpowers/specs/2026-10-16-image-tasks-design.md)：离页、任务状态、恢复与费用边界。
-- [主视单品素材与加配饰接入设计](plans/2026-10-20-item-tryon-material-app-design.md)：图稿、七皮肤浅暗、确认素材复用、已有穿搭加腰饰与拟议数据／备份方案；目前为设计，尚未实现或验证正式服务透明输出。
+- [主视单品素材与加配饰接入设计](plans/2026-10-20-item-tryon-material-app-design.md)：先行图稿、七皮肤浅暗、确认素材复用与已有穿搭加腰饰；实施与验收见[实施记录](item-material-implementation-2026-10-21.md)。
 - [专属模特](superpowers/specs/2026-10-16-personal-model-design.md)：照片与参数语义、人物保真及资料保护。
 - [完整衣橱与物品登记](superpowers/specs/2026-10-18-complete-wardrobe-design.md)：品类、收纳、识图、头模及分期方案；具体能力以相应任务实现和验证记录为准。

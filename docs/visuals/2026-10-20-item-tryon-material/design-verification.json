@@ -3,15 +3,21 @@
   "date": "2026-10-20",
   "browserVersion": "155.0.8059.85",
   "sources": {
-    "prototype.html": "fe840717130a884965f541452ccb97e1f702b4c4ee2fa976b8e98bb5ed4ef955",
-    "render-design.cjs": "79617a5b1b0d3cdeacc2fdce9d42cf30ccafce9bb0e79a780f7374425700f801"
+    "prototype.html": "095fefceb8d0d689a9fbef3be316e89ab43ecfa80f28e36e06abe672fd6dcb98",
+    "render-design.cjs": "70c7cb0d4271304d4f49e527425fbf2c7c3016d8f443a564dbc16a4efa52c6a1"
   },
   "images": [
     {
       "file": "flow-light.png",
       "width": 2106,
       "height": 1100,
-      "sha256": "c9d668278556d9fd9b998b76fdd7c2a5211c6a1945a63b42743864661f9e9a25"
+      "sha256": "bad8cc33f28a1a0c3b617b27339c55f81e5154b8319b2cd0c67cc9fe3bfdbe23"
+    },
+    {
+      "file": "seedream-layer-flow.png",
+      "width": 2106,
+      "height": 1100,
+      "sha256": "cc2811d11ac5d272dd728ca55c26f7f0f7099a76b8de315eec1aa1b4964fcdfc"
     },
     {
       "file": "saved-and-picker.png",
@@ -23,7 +29,7 @@
       "file": "skins-light.png",
       "width": 2934,
       "height": 1100,
-      "sha256": "3acabff6a37cd77f939b22072decd93a488f2789ec5e92d53d886c5305234dff"
+      "sha256": "fcbc9023b15c3e865043f310b906efc056349c9c3568113fba0e6047dc7fdabf"
     },
     {
       "file": "skins-dark.png",

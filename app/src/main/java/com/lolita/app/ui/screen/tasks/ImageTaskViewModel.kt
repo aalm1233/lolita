@@ -25,7 +25,8 @@ data class ImageTaskUiState(
     val error: String? = null,
     val personalModels: List<PersonalModel> = emptyList(),
     val defaultSaveFailed: Set<String> = emptySet(),
-    val savedPersonalIds: Map<String, Long> = emptyMap()
+    val savedPersonalIds: Map<String, Long> = emptyMap(),
+    val materials: List<com.lolita.app.data.local.entity.ItemTryOnMaterial> = emptyList()
 ) {
     val visibleTasks get() = tasks.filter {
         when (filter) {
@@ -41,6 +42,7 @@ data class ImageTaskUiState(
     fun resultPath(task: ImageTask): String? = when {
         task.status == ImageTaskStatus.AWAITING_CONFIRMATION -> task.resultImagePath
         task.status != ImageTaskStatus.COMPLETED -> null
+        task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL -> materials.firstOrNull { it.id == task.materialId }?.imagePath
         task.kind == ImageTaskKind.TRY_ON -> results.firstOrNull { it.id == task.tryOnResultId }?.imageUrl
         task.kind == ImageTaskKind.PERSONAL_MODEL -> personalModels.firstOrNull { it.id == (task.personalModelId ?: savedPersonalIds[task.id]) }?.imageUrl
         else -> task.resultImagePath?.takeIf { path -> items.any { item -> item.id == task.garmentId && path in item.imageUrls } }
@@ -49,6 +51,7 @@ data class ImageTaskUiState(
 }
 
 val ImageTaskKind.label: String get() = when (this) {
+    ImageTaskKind.SINGLE_ITEM_MATERIAL -> "试衣素材"
     ImageTaskKind.TRY_ON -> "虚拟试衣"
     ImageTaskKind.MANNEQUIN -> "正面人台图"
     ImageTaskKind.PERSONAL_MODEL -> "个人模特"
@@ -83,16 +86,17 @@ class ImageTaskViewModel @JvmOverloads constructor(
     private val deleteTask: suspend (String) -> Unit = { AppModule.imageTaskCoordinator().delete(it) },
     personalModels: Flow<List<PersonalModel>> = flowOf(emptyList()),
     private val setDefaultPersonalModel: suspend (Long?) -> Unit = { AppModule.appPreferences().setDefaultPersonalModelId(it) },
-    private val confirmPersonalTask: suspend (String) -> Long = { AppModule.imageTaskCoordinator().confirmPersonalModel(it) }
+    private val confirmPersonalTask: suspend (String) -> Long = { AppModule.imageTaskCoordinator().confirmPersonalModel(it) },
+    materials: Flow<List<com.lolita.app.data.local.entity.ItemTryOnMaterial>> = flowOf(emptyList())
 
 ) : ViewModel() {
     private val state = MutableStateFlow(ImageTaskUiState())
     val uiState = state.asStateFlow()
     init {
         viewModelScope.launch {
-            combine(tasks, items, results, personalModels) { jobs, wardrobe, history, models -> ImageTaskUiState(tasks = jobs, items = wardrobe, results = history, personalModels = models) }
+            combine(tasks, items, results, personalModels, materials) { jobs, wardrobe, history, models, assets -> ImageTaskUiState(tasks = jobs, items = wardrobe, results = history, personalModels = models, materials = assets) }
                 .catch { e -> if (e is CancellationException) throw e; state.update { it.copy(isLoading = false, error = "任务读取失败，请返回后重试") } }
-                .collect { data -> state.update { it.copy(tasks = data.tasks, items = data.items, results = data.results, personalModels = data.personalModels, isLoading = false) } }
+                .collect { data -> state.update { it.copy(tasks = data.tasks, items = data.items, results = data.results, personalModels = data.personalModels, materials = data.materials, isLoading = false) } }
         }
     }
     fun filter(value: ImageTaskFilter) { state.update { it.copy(filter = value) } }

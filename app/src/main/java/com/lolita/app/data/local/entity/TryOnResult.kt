@@ -16,5 +16,6 @@ data class TryOnResult(
     @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "personal_model_id", defaultValue = "NULL") val personalModelId: Long? = null,
     @ColumnInfo(name = "personal_model_name", defaultValue = "NULL") val personalModelName: String? = null,
-    @ColumnInfo(name = "request_snapshot_json", defaultValue = "NULL") val requestSnapshotJson: String? = null
+    @ColumnInfo(name = "request_snapshot_json", defaultValue = "NULL") val requestSnapshotJson: String? = null,
+    @ColumnInfo(name = "base_snapshot_image_path", defaultValue = "NULL") val baseSnapshotImagePath: String? = null
 )

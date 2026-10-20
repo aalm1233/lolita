@@ -50,6 +50,10 @@ internal object WardrobeBackupValidation {
         data.imageProvenance.forEach {
             require(it.itemId in itemIds && it.imagePath in (items[it.itemId]!!.imageUrls + listOfNotNull(items[it.itemId]!!.sizeChartImageUrl) + items[it.itemId]!!.sizeChartImageUrls) && it.mode.isNotBlank() && it.mode.length <= 80) { "图片来源不属于物品相册" }
         }
+        require(data.itemTryOnMaterials.map { it.itemId }.distinct().size == data.itemTryOnMaterials.size &&
+            data.itemTryOnMaterials.map { it.id }.distinct().size == data.itemTryOnMaterials.size &&
+            data.itemTryOnMaterials.map { it.sourceTaskId }.distinct().size == data.itemTryOnMaterials.size) { "确认素材身份或物品归属重复" }
+        data.itemTryOnMaterials.forEach { it.validate(); require(it.itemId in itemIds) { "确认素材对应物品不存在" } }
         data.tryOnResults.mapNotNull { it.requestSnapshotJson }.forEach { ImageTaskRequest.decode(it) }
     }
 }

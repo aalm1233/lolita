@@ -61,7 +61,8 @@ data class TryOnUiState(
     val modelsLoaded: Boolean = false,
     val generationItemIds: Set<Long> = emptySet(),
     val pendingConflict: PendingTryOnConflict? = null,
-    val requiresExplicitSubset: Boolean = false
+    val requiresExplicitSubset: Boolean = false,
+    val materials: List<com.lolita.app.data.local.entity.ItemTryOnMaterial> = emptyList()
 ) {
     val busy: Boolean get() = isSubmitting || isConfiguring
     val visibleItems: List<Item> get() = items.filter { item ->
@@ -77,7 +78,7 @@ data class TryOnUiState(
         if (pendingConflict != null) return "请先处理穿戴位置冲突"
         if (selected.isEmpty()) return "请选择衣橱里的服饰与小物"
         if (generationSelected.any { row -> items.none { it.id == row.itemId } }) return "已选服饰已不在衣橱，请移除后重新选择"
-        if (generationSelected.any { row -> row.imagePath.isBlank() || items.firstOrNull { it.id == row.itemId }?.imageUrls?.contains(row.imagePath) != true }) {
+        if (generationSelected.any { row -> row.imagePath.isBlank() || if (row.materialId != null) materials.none { it.id == row.materialId && it.itemId == row.itemId && it.imagePath == row.imagePath } else items.firstOrNull { it.id == row.itemId }?.imageUrls?.contains(row.imagePath) != true }) {
             return "请为每件服饰选择已有参考图片"
         }
         return runCatching { TryOnRequest(generationSelected) }.exceptionOrNull()?.message
@@ -115,6 +116,7 @@ class TryOnViewModel @JvmOverloads constructor(
     private val deleteResult: suspend (Long) -> Unit = { AppModule.tryOnRepository().delete(it) },
     personalModels: Flow<List<PersonalModel>> = flowOf(emptyList()),
     defaultPersonalModelId: Flow<Long?> = flowOf(null),
+    materials: Flow<List<com.lolita.app.data.local.entity.ItemTryOnMaterial>> = flowOf(emptyList()),
     private val submitPersonalTask: suspend (List<TryOnSelection>, ImageGenerationProvider, Long, String, String) -> String = { rows, provider, id, path, instructions ->
         AppModule.imageTaskCoordinator().submitTryOn(rows, provider, id, path, instructions)
     }
@@ -139,12 +141,17 @@ class TryOnViewModel @JvmOverloads constructor(
                 }
         }
         viewModelScope.launch {
-            combine(items, categories) { rows, groups -> rows.filter { it.status.supportsVirtualTryOn } to groups }
+            combine(items, categories, materials) { rows, groups, assets ->
+                Triple(rows.filter { it.status.supportsVirtualTryOn }, groups, assets.filter { asset ->
+                    val current = rows.firstOrNull { it.id == asset.itemId }?.let { item -> groups.firstOrNull { it.id == item.categoryId }?.categorySemantic }
+                    current != null && runCatching { ImageTaskRequest.decode(asset.requestJson).garments.single().semantic }.getOrNull() == current
+                })
+            }
                 .catch { failure ->
                     if (failure is CancellationException) throw failure
                     _uiState.update { it.copy(isLoading = false, loadFailed = true, error = "衣橱读取失败，请返回后重试") }
-                }.collect { (rows, groups) ->
-                    _uiState.update { it.copy(items = rows, categories = groups, isLoading = !entryConsumed) }
+                }.collect { (rows, groups, assets) ->
+                    _uiState.update { it.copy(items = rows, categories = groups, materials = assets, isLoading = !entryConsumed) }
                     if (!entryConsumed) {
                         val itemId = savedStateHandle.get<Long>("itemId")?.takeIf { it > 0 }
                         val coordinateId = savedStateHandle.get<Long>("coordinateId")?.takeIf { it > 0 }
@@ -176,7 +183,10 @@ class TryOnViewModel @JvmOverloads constructor(
                             coordinateId != null -> rows.filter { it.id in parents || it.parentItemId in parents }
                             else -> emptyList()
                         }
-                        setSelection(initial.map { item -> selection(item).let { selected ->
+                        setSelection(initial.map { item -> selection(item).let { initialSelection ->
+                            val requestedMaterial = savedStateHandle.get<Boolean>("useMaterial") == true || retry?.garments?.firstOrNull { it.itemId == item.id }?.materialId != null
+                            val asset = assets.firstOrNull { it.itemId == item.id }
+                            val selected = if (requestedMaterial) initialSelection.copy(imagePath = asset?.imagePath.orEmpty(), materialId = asset?.id) else initialSelection
                             retry?.garments?.firstOrNull { it.itemId == item.id }?.let { selected.copy(role = it.role) } ?: selected
                         } })
                         if (retry != null) _uiState.update { it.copy(error = if (initial.size != retry.garments.size) "部分原物品已删除或不在已拥有与心愿列表，请重新选择并核对；原任务保留" else "已载入当前服饰图片，请核对后再次确认生成；原任务保留") }
@@ -288,8 +298,9 @@ class TryOnViewModel @JvmOverloads constructor(
 
     fun setImage(itemId: Long, path: String) {
         val state = _uiState.value
-        if (state.busy || state.items.firstOrNull { it.id == itemId }?.imageUrls?.contains(path) != true || path.isBlank()) return
-        setSelection(state.selected.map { if (it.itemId == itemId) it.copy(imagePath = path) else it })
+        val material = state.materials.firstOrNull { it.itemId == itemId && it.imagePath == path }
+        if (state.busy || path.isBlank() || (material == null && state.items.firstOrNull { it.id == itemId }?.imageUrls?.contains(path) != true)) return
+        setSelection(state.selected.map { if (it.itemId == itemId) it.copy(imagePath = path, materialId = material?.id) else it })
     }
 
     fun setRole(itemId: Long, role: TryOnRole) {

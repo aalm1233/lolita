@@ -23,6 +23,9 @@ object AppModule {
 
     fun database() = database
 
+    private val _itemTryOnMaterialRepository by lazy { ItemTryOnMaterialRepository(database.itemTryOnMaterialDao()) }
+    fun itemTryOnMaterialRepository() = _itemTryOnMaterialRepository
+
     private val _imageTaskRepository by lazy { ImageTaskRepository(database.imageTaskDao()) }
     fun imageTaskRepository() = _imageTaskRepository
 
@@ -94,6 +97,12 @@ object AppModule {
             validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) },
             validateProductImage = { ImageFileHelper.isOwnedReadableProductImage(appContext,it) },
             snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(appContext,it) },
+            snapshotMaterialInput = { path, alpha -> ImageFileHelper.saveGeneratedImage(appContext, _generationImages.prepareMaterialSnapshot(path, alpha)) },
+            pinMaterialInputs = { paths ->
+                val lease = ImageFileHelper.pinImageReferences(appContext, paths)
+                val release: suspend () -> Unit = { lease.release() }; release
+            },
+            validateMaterialImage = { path -> ImageFileHelper.isOwnedGeneratedImage(appContext, path) && com.lolita.app.data.tryon.MaterialImageValidation.hasTransparentForeground(path) },
             appendImageProvenance = { itemId,path,mode,taskId -> database.imageProvenanceDao().upsert(
                 com.lolita.app.data.local.entity.ImageProvenance(path,itemId,com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED,mode,taskId)) })
     }
@@ -108,7 +117,9 @@ object AppModule {
             validateSourceImage = { ImageFileHelper.isOwnedReadableImage(appContext, it) },
             prepareAccessory = _generationImages::prepareAccessory,
             generateMannequin = _imageGenerationApi::generateMannequin,
-            prepareSnapshotImages = _generationImages::prepareSnapshots)
+            prepareSnapshotImages = _generationImages::prepareSnapshots,
+            generateMaterial = _imageGenerationApi::generateMaterial,
+            decomposeMaterial = _imageGenerationApi::decomposeMaterial)
         com.lolita.app.data.generation.ImageTaskRunner(_imageTaskCoordinator, executor::execute)
     }
     fun imageTaskRunner() = _imageTaskRunner

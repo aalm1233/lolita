@@ -22,7 +22,10 @@ class ImageTaskCoordinator(
     private val validateSourceImage: suspend (String) -> Boolean = { File(it).let { f -> f.isFile && f.canRead() && f.length() > 0 } },
     private val snapshotBuiltInImage: suspend (String) -> String = { error("固定模板快照尚未接入") },
     private val appendImageProvenance: suspend (Long, String, String, String?) -> Unit = { _, _, _, _ -> },
-    private val validateProductImage: suspend (String) -> Boolean = validateSourceImage
+    private val validateProductImage: suspend (String) -> Boolean = validateSourceImage,
+    private val snapshotMaterialInput: suspend (String, Boolean) -> String = { _, _ -> error("素材输入准备尚未接入") },
+    private val validateMaterialImage: suspend (String) -> Boolean = { false },
+    private val pinMaterialInputs: (List<String>) -> (suspend () -> Unit) = { { } }
 ) {
     private val dao = db.imageTaskDao()
     private val admission = Mutex()
@@ -101,6 +104,141 @@ class ImageTaskCoordinator(
     suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider): String =
         submitTryOn(selected, provider, null)
 
+    private suspend fun <T> acceptedMaterial(paths: List<String>, block: suspend () -> T): T {
+        val release = pinMaterialInputs(paths)
+        return applicationScope.async {
+            try { awaitStartup(); admission.withLock { block() } }
+            finally { withContext(NonCancellable) { release() } }
+        }.await()
+    }
+
+    suspend fun prepareMaterialInput(path: String, preserveAlpha: Boolean): PreparedMaterialInput {
+        require(validateProductImage(path)) { "图片已丢失或无法读取" }
+        val sourceHash = imageSha256(path)
+        val copy = snapshotMaterialInput(path, preserveAlpha)
+        return try {
+            require(validateSourceImage(copy) && imageSha256(path) == sourceHash) { "准备期间原图片已改变" }
+            PreparedMaterialInput(copy, imageSha256(copy), path, sourceHash)
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) { cleanup(listOf(copy)) }
+            throw failure
+        }
+    }
+
+    private suspend fun validatePrepared(input: PreparedMaterialInput, source: String) {
+        require(input.sourcePath == source && validateProductImage(source) && imageSha256(source) == input.sourceSha256 &&
+            validateSourceImage(input.imagePath) && imageSha256(input.imagePath) == input.sha256) { "实际输入已改变，请重新预览并确认费用" }
+    }
+
+    suspend fun submitMaterial(itemId: Long, input: PreparedMaterialInput, originalPath: String,
+        instructions: String, provider: ImageGenerationProvider, expectedMaterialId: String?): String = acceptedMaterial(listOf(input.imagePath, input.sourcePath, originalPath)) {
+        require(provider == ImageGenerationProvider.SEEDREAM) { "首版素材整理请使用已验证的即梦服务" }
+        val item = requireNotNull(db.itemDao().getItemById(itemId)) { "物品已删除" }
+        require(item.status.supportsVirtualTryOn && originalPath in item.productReferenceImages) { "原参考图片或物品状态已改变" }
+        val semantic = db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic
+        require(semantic == CategorySemantic.WAIST_ACCESSORY) { "首版请先选择已确认类型的腰饰" }
+        require(instructions.length <= 200)
+        validatePrepared(input, input.sourcePath)
+        require(db.itemTryOnMaterialDao().getForItem(itemId)?.id == expectedMaterialId) { "当前素材已改变，请重新核对" }
+        val stage = if (provider == ImageGenerationProvider.SEEDREAM) MaterialStage.FRONT_VIEW else MaterialStage.TRANSPARENT
+        val spec = MaterialTaskSpec(stage, expectedMaterialId, input.imagePath, originalInputSha256 = input.sha256)
+        val prompt = if (stage == MaterialStage.FRONT_VIEW) TryOnMaterialPrompts.front(instructions) else TryOnMaterialPrompts.transparent(instructions)
+        val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.WAIST, semantic, item.composition)),
+            instructions, version = 5, promptVersion = 1, promptSnapshot = prompt, serviceModel = provider.model,
+            inputSha256s = listOf(input.sha256), productOriginalImagePath = originalPath, materialSpec = spec)
+        enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, provider, "${item.name} · ${if (stage == MaterialStage.FRONT_VIEW) "整理主视图" else "整理试衣素材"}", request, listOf(input.imagePath))
+    }
+
+    suspend fun submitMaterialLayers(parentTaskId: String, input: PreparedMaterialInput): String = acceptedMaterial(listOf(input.imagePath, input.sourcePath)) {
+        val parent = requireNotNull(dao.get(parentTaskId)) { "主视图任务已删除" }
+        val old = ImageTaskRequest.decode(parent.requestJson)
+        val firstDecomposition = old.materialSpec?.stage == MaterialStage.FRONT_VIEW && parent.status == ImageTaskStatus.AWAITING_CONFIRMATION
+        val retryDecomposition = old.materialSpec?.stage == MaterialStage.EXTRACT_LAYER &&
+            parent.status in setOf(ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED) && !parent.sourceResourcesMissing
+        require(parent.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && (firstDecomposition || retryDecomposition) &&
+            parent.provider == ImageGenerationProvider.SEEDREAM) { "请重新查看待分层的主视图" }
+        val source = if (firstDecomposition) requireNotNull(parent.resultImagePath) else parent.sourceImagePaths.single()
+        require(validateImage(source)) { "主视图已丢失" }
+        validatePrepared(input, source)
+        val item = requireNotNull(db.itemDao().getItemById(old.garments.single().itemId)) { "原物品已删除" }
+        require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY)
+        val request = old.copy(promptSnapshot = TryOnMaterialPrompts.extract(old.instructions), inputSha256s = listOf(input.sha256),
+            materialSpec = requireNotNull(old.materialSpec).copy(stage = MaterialStage.EXTRACT_LAYER, parentTaskId = parent.id))
+        val id = enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, parent.provider, "${item.name} · 分离单品图层", request, listOf(input.imagePath))
+        state.withLock { dao.get(parent.id)?.takeIf { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }?.let {
+            dao.update(it.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis()))
+        } }
+        id
+    }
+
+    suspend fun submitAddAccessory(itemId: Long, materialId: String, base: AccessoryBaseSnapshot,
+        baseInput: PreparedMaterialInput, itemInput: PreparedMaterialInput, instructions: String,
+        provider: ImageGenerationProvider): String = acceptedMaterial(listOf(baseInput.imagePath, baseInput.sourcePath, itemInput.imagePath, itemInput.sourcePath)) {
+        base.validate()
+        require(instructions.length <= 200)
+        val item = requireNotNull(db.itemDao().getItemById(itemId)) { "所选物品已删除" }
+        require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY)
+        val material = requireNotNull(db.itemTryOnMaterialDao().getForItem(itemId)) { "请先确认试衣素材" }
+        require(material.id == materialId && validateMaterialImage(material.imagePath) && imageSha256(material.imagePath) == material.resultSha256) { "当前素材已改变或丢失" }
+        val basePath = when (base.type) {
+            AccessoryBaseType.TRY_ON_RESULT -> requireNotNull(db.tryOnDao().getAll().firstOrNull { it.id == base.id && it.name == base.name }).imageUrl
+            AccessoryBaseType.PERSONAL_MODEL -> requireNotNull(db.personalModelDao().get(base.id)?.takeIf { it.name == base.name }).imageUrl
+        }
+        validatePrepared(baseInput, basePath)
+        validatePrepared(itemInput, material.imagePath)
+        val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.WAIST, CategorySemantic.WAIST_ACCESSORY, item.composition, materialId)),
+            instructions, version = 5, promptVersion = 1, promptSnapshot = TryOnMaterialPrompts.add(item.name, instructions), serviceModel = provider.model,
+            inputSha256s = listOf(baseInput.sha256, itemInput.sha256), accessoryBase = base)
+        enqueue(ImageTaskKind.TRY_ON, provider, "${base.name.take(80)} · 加腰饰", request, listOf(baseInput.imagePath, itemInput.imagePath))
+    }
+
+    suspend fun confirmMaterial(id: String, selectedPath: String, expectedCurrentId: String?, checked: Boolean): String = accepted {
+        require(checked) { "请完成三项单品核对" }
+        val released = mutableListOf<String>()
+        val materialId = state.withLock { db.withTransaction {
+            val task = requireNotNull(dao.get(id)) { "任务已删除" }
+            require(task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL)
+            if (task.status == ImageTaskStatus.COMPLETED) return@withTransaction requireNotNull(task.materialId)
+            require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION)
+            val request = ImageTaskRequest.decode(task.requestJson)
+            require(request.materialSpec?.stage != MaterialStage.FRONT_VIEW) { "请先分离主视图中的单品" }
+            val itemId = request.garments.single().itemId
+            val item = requireNotNull(db.itemDao().getItemById(itemId)) { "原物品已删除，无法保存素材" }
+            require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic) { "原物品类型或状态已改变，请重新核对" }
+            val candidates = MaterialLayers.decode(task.layersJson)
+            require(selectedPath == task.resultImagePath || candidates.any { it.imagePath == selectedPath }) { "所选图层不属于本任务" }
+            require(validateImage(selectedPath) && validateMaterialImage(selectedPath)) { "这次未得到有效透明单品，请核对结果" }
+            candidates.firstOrNull { it.imagePath == selectedPath }?.let { require(imageSha256(selectedPath) == it.sha256) }
+            val previous = db.itemTryOnMaterialDao().getForItem(itemId)
+            require(previous?.id == expectedCurrentId) { "当前素材已更新，请查看后明确替换" }
+            previous?.let { released += it.protectedImagePaths() }
+            val original = request.materialSpec?.originalInputPath ?: task.sourceImagePaths.single()
+            require(validateSourceImage(original)) { "原输入已丢失，请重新核对" }
+            val row = com.lolita.app.data.local.entity.ItemTryOnMaterial(UUID.randomUUID().toString(), itemId, selectedPath,
+                original, task.sourceImagePaths.single(), imageSha256(selectedPath), task.id, request.historySnapshot())
+            row.validate()
+            db.itemTryOnMaterialDao().deleteForItem(itemId)
+            db.itemTryOnMaterialDao().insert(row)
+            dao.update(task.copy(status = ImageTaskStatus.COMPLETED, materialId = row.id, resultImagePath = selectedPath,
+                layersJson = MaterialLayers.encode(candidates.filter { it.imagePath == selectedPath }),
+                updatedAt = System.currentTimeMillis(), error = null))
+            released += candidates.map { it.imagePath }
+            row.id
+        } }
+        cleanup(released)
+        materialId
+    }
+
+    suspend fun removeMaterial(itemId: Long, expectedId: String) = accepted {
+        val paths = state.withLock { db.withTransaction {
+            val row = db.itemTryOnMaterialDao().getForItem(itemId) ?: return@withTransaction emptyList<String>()
+            require(row.id == expectedId) { "当前素材已改变，请重新查看" }
+            db.itemTryOnMaterialDao().deleteForItem(itemId)
+            row.protectedImagePaths().toList()
+        } }
+        cleanup(paths)
+    }
+
     suspend fun submitTryOn(selected: List<TryOnSelection>, provider: ImageGenerationProvider, instructions: String): String =
         submitTryOnSnapshot(selected, provider, null, null, instructions, freezeWearing = true)
 
@@ -124,18 +262,27 @@ class ImageTaskCoordinator(
             if (freezeWearing || snapshot.any { it.semantic != null } || request.instructions.isNotEmpty()) {
                 snapshot.forEach { row ->
                     val item = requireNotNull(db.itemDao().getItemById(row.itemId)) { "所选物品已删除" }
-                    require(item.status.supportsVirtualTryOn && row.imagePath in item.imageUrls) { "所选物品或图片已改变" }
+                    val material = row.materialId?.let { db.itemTryOnMaterialDao().getForItem(row.itemId) }
+                    require(item.status.supportsVirtualTryOn && if (row.materialId == null) row.imagePath in item.imageUrls
+                        else material?.id == row.materialId && material.imagePath == row.imagePath &&
+                            validateMaterialImage(row.imagePath) && imageSha256(row.imagePath) == material.resultSha256 &&
+                            ImageTaskRequest.decode(material.requestJson).garments.single().semantic == db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic) { "所选物品或图片已改变" }
                     require(row.semantic == null || db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == row.semantic) { "分类语义已改变，请重新核对" }
                 }
                 val person = personalModelId?.let { requireNotNull(db.personalModelDao().get(it)) { "所选人物已删除" } }
                 require(person == null || expectedModelImagePath == null || person.imageUrl == expectedModelImagePath) { "人物底图已改变，请重新确认" }
                 suspend fun enqueueSnapshot(modelPath: String): String {
                     val sources = listOf(modelPath) + snapshot.map { it.imagePath }
-                    val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition) },
-                        instructions = request.instructions, version = 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = TryOnRequest.PROMPT_VERSION,
+                    val usesMaterials = snapshot.any { it.materialId != null }
+                    val staged = mutableListOf<String>()
+                    try {
+                    val inputs = if (usesMaterials) sources.map { snapshotMaterialInput(it, provider == ImageGenerationProvider.OPENAI).also(staged::add) } else sources
+                    val metadata = ImageTaskRequest(snapshot.map { ImageTaskGarment(it.itemId, it.name, it.role, it.semantic, it.composition, it.materialId) },
+                        instructions = request.instructions, version = if (usesMaterials) 5 else 4, tryOnModel = person?.let { TryOnModelSnapshot(it.id, it.name) }, promptVersion = TryOnRequest.PROMPT_VERSION,
                         promptSnapshot = request.prompt(personalModel = person != null, provider = provider), serviceModel = provider.model,
-                        inputSha256s = sources.map(::imageSha256))
-                    return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, sources)
+                        inputSha256s = inputs.map(::imageSha256))
+                    return enqueue(ImageTaskKind.TRY_ON, provider, "虚拟试衣", metadata, inputs)
+                    } finally { if (usesMaterials) withContext(NonCancellable) { cleanup(staged + sources) } }
                 }
                 return@accepted if (person != null) enqueueSnapshot(person.imageUrl)
                 else withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MODEL_ASSET, block = ::enqueueSnapshot)
@@ -260,7 +407,7 @@ class ImageTaskCoordinator(
                         require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
                     }
                 }
-                if (metadata.version == 4) {
+                if (metadata.version >= 4) {
                     sources.forEachIndexed { index,path -> admission(if(metadata.mannequinSubject?.presentation?.inputCount==2 && index==0)
                         MannequinAdmissionFailureKind.TEMPLATE else MannequinAdmissionFailureKind.SOURCE) {
                         // A derived crop is not an existing Item image and keeps the strict UUID gate.
@@ -269,12 +416,12 @@ class ImageTaskCoordinator(
                         require(valid) { "任务实际输入不属于本机图片或已无法读取" }
                     } }
                     metadata.productOriginalImagePath?.let { path -> admission(MannequinAdmissionFailureKind.SOURCE) {
-                        val valid=if(kind==ImageTaskKind.MANNEQUIN)validateProductImage(path) else validateSourceImage(path)
+                        val valid=if(kind==ImageTaskKind.MANNEQUIN || kind==ImageTaskKind.SINGLE_ITEM_MATERIAL)validateProductImage(path) else validateSourceImage(path)
                         require(valid) { "裁切原图已丢失，请重新核对" }
                     } }
                     admission(MannequinAdmissionFailureKind.INPUT_CHANGED) {metadata.validateInputImages(sources)}
                 }
-                ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources, keepSourceImages = metadata.version == 4).also {
+                ImageTask(UUID.randomUUID().toString(), kind, provider, title, metadata.encode(), sources, keepSourceImages = metadata.version >= 4).also {
                     it.validate()
                     dao.insert(it)
                     synchronized(sessions) { pending += it.id }
@@ -312,6 +459,7 @@ class ImageTaskCoordinator(
         state.withLock {
             db.withTransaction {
                 val task = requireNotNull(dao.get(id)) { "任务已删除" }
+                require(task.kind == ImageTaskKind.MANNEQUIN) { "此任务不是展示图" }
                 if (task.status == ImageTaskStatus.COMPLETED) return@withTransaction
                 require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION) { "此任务没有待确认的图片" }
                 val request = ImageTaskRequest.decode(task.requestJson)
@@ -351,9 +499,9 @@ class ImageTaskCoordinator(
         val paths = state.withLock {
             val task = dao.get(id) ?: return@withLock emptyList()
             if (task.status != ImageTaskStatus.AWAITING_CONFIRMATION) return@withLock emptyList()
-            dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null,
+            dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null, layersJson = "[]",
                 sourceImagePaths = if (task.keepSourceImages) task.sourceImagePaths else emptyList(), updatedAt = System.currentTimeMillis()))
-            (if (task.keepSourceImages) emptyList() else task.sourceImagePaths) + listOfNotNull(task.resultImagePath)
+            (if (task.keepSourceImages) emptyList() else task.sourceImagePaths) + listOfNotNull(task.resultImagePath) + MaterialLayers.decode(task.layersJson).map { it.imagePath }
         }
         cleanup(paths)
     }
@@ -363,7 +511,7 @@ class ImageTaskCoordinator(
             val task = dao.get(id) ?: return@withLock emptyList()
             require(!task.status.retainsSourceImages) { "请先取消正在执行的任务" }
             dao.delete(id)
-            task.protectedImagePaths().toList() + task.sourceImagePaths + listOfNotNull(task.resultImagePath)
+            task.protectedImagePaths().toList() + task.sourceImagePaths + listOfNotNull(task.resultImagePath) + MaterialLayers.decode(task.layersJson).map { it.imagePath }
         }
         cleanup(paths)
     }
@@ -448,17 +596,57 @@ class ImageTaskCoordinator(
         dao.update(task.copy(status = ImageTaskStatus.GENERATING, requestSent = true, updatedAt = System.currentTimeMillis()))
     }
 
-    suspend fun publishTryOn(id: String, bytes: ByteArray, selected: List<TryOnSelection>, model: String): Long =
-        publish(id, bytes) { task, path ->
-            val person = ImageTaskRequest.decode(task.requestJson).tryOnModel
+    suspend fun publishTryOn(id: String, bytes: ByteArray, selected: List<TryOnSelection>, model: String): Long {
+        var baseCopy: String? = null
+        return try { publish(id, bytes) { task, path ->
+            val request = ImageTaskRequest.decode(task.requestJson)
+            val person = request.tryOnModel
+            if (request.accessoryBase != null) baseCopy = saveImage(File(task.sourceImagePaths.first()).readBytes())
             val result = db.tryOnDao().insert(TryOnResult(name = task.title, imageUrl = path,
                 itemIds = selected.map { it.itemId.toString() }, itemNames = selected.map { it.name }, model = model,
-                personalModelId = person?.personalModelId, personalModelName = person?.name,
-                requestSnapshotJson = ImageTaskRequest.decode(task.requestJson).takeIf { it.version == 4 }?.historySnapshot()))
+                personalModelId = person?.personalModelId ?: request.accessoryBase?.takeIf { it.type == AccessoryBaseType.PERSONAL_MODEL }?.id,
+                personalModelName = person?.name ?: request.accessoryBase?.takeIf { it.type == AccessoryBaseType.PERSONAL_MODEL }?.name,
+                requestSnapshotJson = request.takeIf { it.version >= 4 }?.historySnapshot(), baseSnapshotImagePath = baseCopy))
             dao.update(task.copy(status = ImageTaskStatus.COMPLETED, sourceImagePaths = if (task.keepSourceImages) task.sourceImagePaths else emptyList(), resultImagePath = path,
                 tryOnResultId = result, updatedAt = System.currentTimeMillis(), error = null))
             result
+        } } catch (failure: Throwable) {
+            withContext(NonCancellable) { cleanup(listOfNotNull(baseCopy)) }
+            throw failure
         }
+    }
+
+    suspend fun publishTransparentMaterial(id: String, bytes: ByteArray): String = publish(id, bytes) { task, path ->
+        require(task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && validateMaterialImage(path)) { "未返回有效透明单品" }
+        dao.update(task.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION, resultImagePath = path,
+            updatedAt = System.currentTimeMillis(), error = null))
+        path
+    }
+
+    suspend fun publishMaterialLayers(id: String, response: com.lolita.app.data.remote.GeneratedImageLayers) {
+        state.withLock {
+            val task = requireActive(id)
+            require(task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && task.status == ImageTaskStatus.GENERATING)
+            dao.update(task.copy(status = ImageTaskStatus.SAVING, updatedAt = System.currentTimeMillis()))
+        }
+        withContext(NonCancellable) {
+            val staged = mutableListOf<String>()
+            try {
+                require(response.layers.size in 1..16 && response.generatedImages in 2..17)
+                val candidates = response.layers.map { layer ->
+                    val path = saveImage(layer.bytes).also(staged::add)
+                    if (!validateMaterialImage(path)) throw ImageGenerationFailure(ImageGenerationFailureKind.INVALID_IMAGE)
+                    MaterialLayerCandidate(path, imageSha256(path), layer.zIndex, layer.name, layer.description, layer.normalizedBounds)
+                }
+                state.withLock { db.withTransaction {
+                    val task = requireActive(id)
+                    dao.update(task.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION, resultImagePath = candidates.first().imagePath,
+                        layersJson = MaterialLayers.encode(candidates), generatedImageCount = response.generatedImages,
+                        updatedAt = System.currentTimeMillis(), error = null))
+                } }
+            } finally { cleanup(staged) }
+        }
+    }
 
     suspend fun publishMannequin(id: String, bytes: ByteArray): String = publish(id, bytes) { task, path ->
         dao.update(task.copy(status = ImageTaskStatus.AWAITING_CONFIRMATION, sourceImagePaths = if (task.keepSourceImages) task.sourceImagePaths else emptyList(), resultImagePath = path,

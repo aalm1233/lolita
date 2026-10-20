@@ -32,7 +32,7 @@
 
 ## 数据库
 
-- Room 数据库版本30，35个实体；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
+- Room 数据库版本31，36个实体；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -285,7 +285,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=131, versionName="2.61.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=133, versionName="2.62.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -595,3 +595,13 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `ReferenceImageEncoding` 按完整PNG签名选择两家传输的MIME／后缀，混合上传保留顺序与字节。`TryOnInfrastructureTest` 覆盖细柄逐像素、九图、高熵回退、EXIF和既有缩放白底；两家API回归覆盖混合封装。设计和边界见`docs/plans/2026-10-20-reference-detail-preservation.md`。手工腰封网格／保护合成仍为研究原型，不能宣称自动贴合已合入。
 
 - 2.61.1 /132：参考图在既有缩放／方向／白底后优先无损PNG，超4MiB回退JPEG90，两家生图按实际内容封装。21项JVM、16项去重设备回归、Debug及提交源码归档clean原签名Release通过，2.61.0覆盖安装与两次启动通过；36份项目素材、依赖和生成profile核验。源码`c4ac3c62`及标签已推送，GitHub／Gitee同一正式APK和校验文件匿名下载、SHA／HEAD及公开更新状态分别记录；未重复应用内网络检查，未删除旧附件。本轮0次付费调用，累计研究38/100、余62；只证明输入保真，不宣称腰封自动贴合已解决或真实生成质量已提升。Room30／备份10、UI、任务提示词与协议不变，回执`docs/reference-detail-release-2.61.1-verification.json`。
+
+
+### 主视单品素材与加配饰（2.62.0）
+
+- 详情独立“试衣素材”区仅对稳定类型`WAIST_ACCESSORY`开放，已拥有／心愿可用；相册、封面、账本与位置不变。即梦先生成主视图，用户核对后另行确认图层拆分费用，选透明单品层并完成三项人工核对才成为当前素材。原透视摆正后主体对称可以合理，链条、系带、绳端按同一语义商品保留，不按连通块计件。七套皮肤复用标准分区、图片和图标；完整Fit、缩放及浅深检查底不写入图片。
+- 首版素材创建限定真实验证过的Seedream 5.0 Pro；`layer_decomposition=true`返回底图及最多16个透明层，按实际输出张数计费，费用页最多17张与请求次数分开说明。失败／取消／中断不自动重试，可重新确认费用复用冻结主视图。切换服务使旧确认失效，不允许把即梦分层伪装成发送给其他服务。OpenAI透明编辑适配器只有协议层实现，缺少真实密钥验证，素材创建入口未开放它。
+- 当前确认素材可用于完整换装或“加配饰”；完整试衣仍要求基础服装，加配饰明确选择一张已穿衣的历史图／个人模特和一件确认腰饰。人物／原裙纹可能重画，不宣称物理合身、像素保护或普遍保真。融合结果自动进入试衣历史，保存独立底图副本供对照；底图名称在v5快照中，不混作个人模特身份。
+- 新请求v5冻结实际PNG、哈希、用途、服务型号、提示词和底图来源；旧v1～4不改语义。Seedream多图融合从透明素材生成铺白发送副本，费用页预览并发送同一字节，原透明文件不变。新输入超4MiB仅等比缩小PNG；素材、待确认层、冻结输入和对照图接入统一引用保护。替换采用当前素材身份核对，旧任务继续使用自己的输入；删除原物品不改绑／新建，接受后的试衣不依赖原实体仍存在。
+- Room31与备份11包含素材实体、任务层清单／成功输出张数和结果底图；旧1～10补默认，ZIP恢复保留透明字节／底图并映射路径，CSV和预览同步新增素材。`ImageProvenance`继续仅用于原商品相册来源。
+- 设计与概念图先归档于`docs/plans/2026-10-20-item-tryon-material-app-design.md`，实施／受控设备与真实服务分开记录于`docs/item-material-implementation-2026-10-21.md`。真实Compose七皮肤浅暗、320dp两倍字、真实键盘及NavHost底栏图见`docs/visuals/2026-10-21-item-material-native/`。新100张额度仅用4次请求／6张成功输出（含分层底图）、余94，无自动重试，私有照片与派生图不入公开包。

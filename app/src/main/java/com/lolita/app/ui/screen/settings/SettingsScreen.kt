@@ -80,13 +80,10 @@ fun SettingsScreen(
 
 
     onNavigateToThemeSelect: () -> Unit = {},
-    onNavigateToTryOn: () -> Unit = {},
-    onNavigateToTasks: () -> Unit = {},
+    onNavigateToLaboratory: () -> Unit = {},
     appPreferences: AppPreferences = com.lolita.app.di.AppModule.appPreferences(),
     settingsViewModel: SettingsViewModel = viewModel(),
-    appUpdateViewModel: AppUpdateViewModel = viewModel(),
-    onNavigateToPersonalModels: () -> Unit = {},
-    onConfigureApi: () -> Unit = {}
+    appUpdateViewModel: AppUpdateViewModel = viewModel()
 ) {
     val isDark = isSystemInDarkTheme()
     val showTotalPrice by appPreferences.showTotalPrice.collectAsState(initial = false)
@@ -140,6 +137,8 @@ fun SettingsScreen(
         }
     }
 
+    val scroll = rememberScrollState()
+    com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll(scroll)
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
@@ -154,7 +153,7 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(scroll),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ProfileSection(
@@ -165,13 +164,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            SettingsMenuItem(
-                title = "API 配置",
-                description = "统一管理生图、识图服务与密钥",
-                iconKey = IconKey.Settings,
-                iconTint = MaterialTheme.colorScheme.primary,
-                onClick = onConfigureApi
-            )
+            LaboratoryEntry(onNavigateToLaboratory)
 
             SettingsMenuItem(
                 title = "属性管理",
@@ -196,31 +189,6 @@ fun SettingsScreen(
                 iconTint = if (isDark) Color(0xFFFFAB91) else Color(0xFFFF8A65),
                 onClick = onNavigateToTaobaoImport
             )
-
-            SettingsMenuItem(
-                title = "任务中心",
-                description = "查看图像生成进度、确认人台图与历史任务",
-                iconKey = IconKey.ViewAgenda,
-                iconTint = MaterialTheme.colorScheme.primary,
-                onClick = onNavigateToTasks
-            )
-
-            SettingsMenuItem(
-                title = "我的模特",
-                description = "根据照片或身体参数捏模特，用自己的模特试衣",
-                iconKey = IconKey.Outfit,
-                iconTint = MaterialTheme.colorScheme.primary,
-                onClick = onNavigateToPersonalModels
-            )
-
-            SettingsMenuItem(
-                title = "虚拟试衣（实验）",
-                description = "将服饰和小物穿到虚拟模特身上",
-                iconKey = IconKey.Outfit,
-                iconTint = MaterialTheme.colorScheme.primary,
-                onClick = onNavigateToTryOn
-            )
-
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(

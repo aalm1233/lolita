@@ -49,7 +49,9 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
     var replaceId by rememberSaveable { mutableStateOf<String?>(null) }
     var darkCheck by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(state.submittedTaskId) { state.submittedTaskId?.let { viewModel.consumeSubmission(); onTask(it) } }
+    val managing = !addAccessory && state.task == null && state.material != null
     val primary: String = when {
+        managing -> "重新生成展示图"
         addAccessory -> if (state.hasKey) "核对输入与试衣费用" else "配置图像服务"
         (!state.pending || state.front) && state.provider != ImageGenerationProvider.SEEDREAM -> "切换到即梦服务"
         state.pending && state.front || state.retryLayers -> "核对分层输入与费用"
@@ -59,6 +61,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
         else -> "核对输入与整理费用"
     }
     val canSubmit = !state.busy && !state.loading && when {
+        managing -> state.eligible
         addAccessory -> state.accessoryEligible && state.keyLoaded && (!state.hasKey || state.material != null && state.selectedBase != null && state.clothingConfirmed)
         (!state.pending || state.front) && state.provider != ImageGenerationProvider.SEEDREAM -> state.eligible && state.keyLoaded
         state.pending && state.front || state.retryLayers -> state.eligible && state.frontConfirmed && state.keyLoaded && state.hasKey
@@ -71,7 +74,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
             addAccessory -> "加配饰 · 实验"
             state.pending && state.front -> "核对主视图"
             state.pending -> "核对试衣素材"
-            else -> "试衣素材"
+            else -> "展示图"
         }, maxLines = 2) }, navigationIcon = {
             IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack, Modifier.semantics { contentDescription = "返回" }) }
         }, actions = { IconButton(onClick = onTasks) { SkinIcon(IconKey.ViewAgenda, Modifier.semantics { contentDescription = "任务中心" }) } }) },
@@ -85,6 +88,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                 }, style = MaterialTheme.typography.bodySmall)
                 Button(onClick = {
                     when {
+                        managing -> state.item?.id?.let(onNewMaterial)
                         addAccessory -> if (state.hasKey) viewModel.prepareFee(MaterialFeeAction.ADD_ACCESSORY) else onConfigure()
                         (!state.pending || state.front) && state.provider != ImageGenerationProvider.SEEDREAM -> onConfigure()
                         state.pending && state.front || state.retryLayers -> viewModel.prepareFee(MaterialFeeAction.DECOMPOSE)
@@ -176,15 +180,20 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                 } }
             } else {
                 state.task?.let { task -> item("task") { LatestImageTask(task, onOpen = { onTask(task.id) }) } }
-                if (state.saved || state.material != null) item("current") { LolitaSection(title = if (state.saved) "素材已保存" else "当前试衣素材") { row {
+                if (state.saved || state.material != null) item("current") { LolitaSection(title = if (state.saved) "素材已保存" else "已确认展示图") { row {
                     state.material?.let { material ->
                         MaterialPhoto(material.imagePath, "放大当前确认素材", onClick = { zoom = material.imagePath }, height = 200, checker = true)
                         Text("主视单品 · 已确认 · AI 整理", style = MaterialTheme.typography.bodySmall)
+                        val isCover = state.item?.imageUrls?.firstOrNull() == material.imagePath
+                        OutlinedButton(onClick = { viewModel.setCover(material.id) }, enabled = !state.busy && !isCover && material.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED), modifier = Modifier.fillMaxWidth().testTag("materialSetCover")) {
+                            Text(if (isCover) "当前封面" else "设为封面")
+                        }
+                        state.message?.let { Text(it, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall) }
                         OutlinedButton(onClick = { if(state.accessoryEligible) modePicker = true else state.item?.id?.let(onFullTryOn) }, enabled = state.material?.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED) == true, modifier = Modifier.fillMaxWidth()) { Text("用这份素材试衣") }
                         TextButton(onClick = { removeId = material.id }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("移除当前素材") }
                     }
                 } } }
-                if (state.task == null) {
+                if (state.task == null && !managing) {
                     item("source") { LolitaSection(title = "选择参考图", action = { TextButton(onClick = { sourcePicker = true }, enabled = !state.busy) { Text("换图") } }) { row {
                         if (state.source.isNotBlank()) MaterialPhoto(state.source, "放大所选商品图", onClick = { zoom = state.source }, height = 230)
                         else Text("这件物品还没有参考图片，请先在服饰编辑中添加。")

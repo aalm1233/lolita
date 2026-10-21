@@ -1,0 +1,322 @@
+{
+  "kind": "Actual Compose screens; original vector fixtures and controlled transport, no model-quality claim",
+  "normal_viewport": "390dp / fontScale 1",
+  "small_viewport": "320dp / fontScale 2 with real IME",
+  "seven_skins_light_dark_pages": [
+    "personal",
+    "lab",
+    "detail component",
+    "confirmed image manager",
+    "saved batch"
+  ],
+  "images": [
+    {
+      "file": "batch-chinese-dark.png",
+      "sha256": "65576cfd9a723a850a17c23fee72ec2caef86a2f819ad3e00ee5f180219c40d1"
+    },
+    {
+      "file": "batch-chinese-light.png",
+      "sha256": "b2e0b023e79b259f2d4721a749a5e3bc30bb3dc530802488434a31cec3383d76"
+    },
+    {
+      "file": "batch-classic-dark.png",
+      "sha256": "3a2aca8af6165629904b8b5f4ec7fec30f1712a5be15d46f60efada376c39a87"
+    },
+    {
+      "file": "batch-classic-light.png",
+      "sha256": "0bd38d799a5c6540fbd045cbe712cb101285e89534ab60db91db2bc940bad400"
+    },
+    {
+      "file": "batch-country-dark.png",
+      "sha256": "38e45d5dedc91973be817412aaa3dcfe1400994e9487b4f67058f6f1c23e1289"
+    },
+    {
+      "file": "batch-country-light.png",
+      "sha256": "bff571ef309e38927ed21fdd8f4afc2955b5c3fce503e7f658de502781790921"
+    },
+    {
+      "file": "batch-default-dark.png",
+      "sha256": "80f1d93a3601439d57b50168aa8d3dd3406d2577d237c31ef08a8029cf0fdd92"
+    },
+    {
+      "file": "batch-default-light.png",
+      "sha256": "604122da0dd9faaa841282db35a63c84aaacf8ed19f8561f12dc43cf65471ab8"
+    },
+    {
+      "file": "batch-gothic-dark.png",
+      "sha256": "46ae6e231636e2a46823266418a63b8442177e04eb141c9cf14116e2b98e5a3c"
+    },
+    {
+      "file": "batch-gothic-light.png",
+      "sha256": "b8a7d1b5998e9ef392f4b48320fc8a530dd9ee0c8d611ff6a961a2f62d9c4c04"
+    },
+    {
+      "file": "batch-navy-dark.png",
+      "sha256": "7a9c27a32e59bba5e0b5a23b4f60425dcbaff75a7d3dbc6f7c044c26ca947d97"
+    },
+    {
+      "file": "batch-navy-light.png",
+      "sha256": "cb998160bc69e02ce48a3a0b366015bceac1fb014b15efae48e9147fd68e533d"
+    },
+    {
+      "file": "batch-victorian-dark.png",
+      "sha256": "7ec5fccd9ff0288f54243702731e91cc557369c406a7a3c30a14eeaa23e854d5"
+    },
+    {
+      "file": "batch-victorian-light.png",
+      "sha256": "4969d2ede047cf8e7f366b5e721837b22fd9708a007061731700d0f70246403b"
+    },
+    {
+      "file": "cover-selected.png",
+      "sha256": "eda3166ac8614e914a476e49431b7d4f36152b350fd01554d29273a587c1e681"
+    },
+    {
+      "file": "detail-chinese-dark.png",
+      "sha256": "cf41e3c9aec8d4eb8c4f4a24bcdbb1073997f63c317aba125b78426f088f2c54"
+    },
+    {
+      "file": "detail-chinese-light.png",
+      "sha256": "d3eb368a1ebdde9c1187731766bb704e221eeb2825c89321e3883bdec27b5f44"
+    },
+    {
+      "file": "detail-classic-dark.png",
+      "sha256": "ae2254c8e7d84179bb4e00c0b29eaa028bed30deef5d4307d0b5c5ee33eef6c6"
+    },
+    {
+      "file": "detail-classic-light.png",
+      "sha256": "f50301911225841d3a8fc4642aa7643694e7ca0eef3c0eee1468835205098325"
+    },
+    {
+      "file": "detail-country-dark.png",
+      "sha256": "95ffbf7ce1d6ddaad0ee8be7d4c33d31aac5abf10b79852806c35f65fca0153c"
+    },
+    {
+      "file": "detail-country-light.png",
+      "sha256": "f6b5d83511ef01c54b42876b720635bd4665920a8ebfdbb098635a1bf3f27855"
+    },
+    {
+      "file": "detail-default-dark.png",
+      "sha256": "38df1999ef55c3ce47c63f6c2b828c105e10941cdf257943a77a9171dd62a862"
+    },
+    {
+      "file": "detail-default-light.png",
+      "sha256": "0da6dca8a8d3304119bcc6e0ab61f04b049369430049634714e74ef90628ef7b"
+    },
+    {
+      "file": "detail-gothic-dark.png",
+      "sha256": "5178a7f795a4c544dc6f81c5b3bcdffad2744ccd64359142e8aab3e29d054609"
+    },
+    {
+      "file": "detail-gothic-light.png",
+      "sha256": "b0544689f3259d1e2d749545ba182b97f6088c0a45edc1033f6b00684cba0104"
+    },
+    {
+      "file": "detail-navy-dark.png",
+      "sha256": "4b2f796aec8321db376238917cd9a4365c0fd045836e0062c8166817e4c8f818"
+    },
+    {
+      "file": "detail-navy-light.png",
+      "sha256": "661cf83380fef91faa4f071769bd4a2145cc62b3adbc63bcd26706054e2c8aad"
+    },
+    {
+      "file": "detail-victorian-dark.png",
+      "sha256": "40f34578abb8b09ef9f8f15b8b09570ed8b989ad875d1a468d89c17960e22b8d"
+    },
+    {
+      "file": "detail-victorian-light.png",
+      "sha256": "abab4eef5082eda33656412e26f13377c4c81573adb9e9680ffd99409a435bcd"
+    },
+    {
+      "file": "lab-chinese-dark.png",
+      "sha256": "0f43dfefefad3be48f0a78f78d0f30747e98fb84c0e7d5c44646b3e065678f0d"
+    },
+    {
+      "file": "lab-chinese-light.png",
+      "sha256": "d5eb59768f61224f3464fe8ee52552e8e0155d0ab6574348564c2cca49e84bb1"
+    },
+    {
+      "file": "lab-classic-dark.png",
+      "sha256": "bcca5c93651d3662ae66b7af2fc735854f744613af99e1377abb464a424e9b6f"
+    },
+    {
+      "file": "lab-classic-light.png",
+      "sha256": "abeebec8ec4665504d5c43768bc57bb2e45f12c3b3e33acbf552fb88fd17fead"
+    },
+    {
+      "file": "lab-country-dark.png",
+      "sha256": "9267068135f7c1c17e9f27e2f4f2728ffa4b6268852fd8bcf70780785fe8fcec"
+    },
+    {
+      "file": "lab-country-light.png",
+      "sha256": "f6606c8914a567eeb641f7a64df44744b7b5f7148ef535b88fa441b3ac657abd"
+    },
+    {
+      "file": "lab-default-dark.png",
+      "sha256": "ab946793549431ade835ad91992e7f4da775a78a56aef166353d5c5c207c2ba7"
+    },
+    {
+      "file": "lab-default-light.png",
+      "sha256": "1bb8ab5c1811b66826c8b280621cf7e6db17a86fb95ad924058550a12ebc519a"
+    },
+    {
+      "file": "lab-gothic-dark.png",
+      "sha256": "c329494f47e98e06e6c4056f382839e018030230c063430f73fadea93e21f6df"
+    },
+    {
+      "file": "lab-gothic-light.png",
+      "sha256": "b5e1aebe9bac9e73cd8d1a8e9610917c55e17e35c4cee8a78a6de3ef7d91b1e0"
+    },
+    {
+      "file": "lab-navy-dark.png",
+      "sha256": "92d5284eeb19290ef89ccffbf4d0eaca9d94fe15f71e98b82db51766197572a1"
+    },
+    {
+      "file": "lab-navy-light.png",
+      "sha256": "c53d1dfe8ab8630fab8c96adab397c6154b17626e0bb35d4994abe20766cd65a"
+    },
+    {
+      "file": "lab-victorian-dark.png",
+      "sha256": "b64faba06be0eafea75d233d2ed4b2398c32a0a451b343c5d17dafc569234b07"
+    },
+    {
+      "file": "lab-victorian-light.png",
+      "sha256": "694c1a0c1ce0b345640d4e2d8b69edbfcf599dd6ac7dddc043414dde7c6ae7d9"
+    },
+    {
+      "file": "personal-chinese-dark.png",
+      "sha256": "5d951acf4fc5596f2a745450142a2663905d436c8dd86061c2c773b036e8388d"
+    },
+    {
+      "file": "personal-chinese-light.png",
+      "sha256": "b33ca836de23f119273d3afea7f2ddbfdcb04ed06f44b56c8294fd9c50583d0e"
+    },
+    {
+      "file": "personal-classic-dark.png",
+      "sha256": "ad45865ac7bf0fd86522241e9acb28876200c5bb8060b74262c1e5cc13b5d6af"
+    },
+    {
+      "file": "personal-classic-light.png",
+      "sha256": "e0ecdb079242a74f8b593bcfd1a3362303e723b5a9c02cd480836ec782296b9f"
+    },
+    {
+      "file": "personal-country-dark.png",
+      "sha256": "15fc368155522423b961b2782c51e7c256601adc970573d1c6006ace4a7b13cb"
+    },
+    {
+      "file": "personal-country-light.png",
+      "sha256": "d70794ab934efe94f520346a5ca10edd198be22e15c0a20c8923ff9fb6d6f984"
+    },
+    {
+      "file": "personal-default-dark.png",
+      "sha256": "06f8de7d52814874419df3151bb3cf34c7bc6ab2bac3db38a24994808b8bdda9"
+    },
+    {
+      "file": "personal-default-light.png",
+      "sha256": "abacacbabd5ed85b61b38f0c51511a8596dcde753bbc36f8a02056b4d8d247c1"
+    },
+    {
+      "file": "personal-gothic-dark.png",
+      "sha256": "8c9401878d527265903963ee3774e2161c382768d4336cba3ba111a14471bf7f"
+    },
+    {
+      "file": "personal-gothic-light.png",
+      "sha256": "676e76ae605fc7c588c11978ced8e3bdd072520e6037f17427b62d6ef4061fd7"
+    },
+    {
+      "file": "personal-navy-dark.png",
+      "sha256": "1cceb2732f05fac74eef48385d64a3a310f991966f72b5be789e3e2e351b39a1"
+    },
+    {
+      "file": "personal-navy-light.png",
+      "sha256": "d460e8c9cad746c54f3e7ec69cccd45c724b46dde9fc2996167340404032f3b5"
+    },
+    {
+      "file": "personal-victorian-dark.png",
+      "sha256": "20493cf44ac7f9a95e3b4bc6eae4a67aa39f870e355bd5ff78b7d3b27853530d"
+    },
+    {
+      "file": "personal-victorian-light.png",
+      "sha256": "83c7bfea5156b3536d89009b7215943a22cb099c7906c7c7e384c2dc7a61b919"
+    },
+    {
+      "file": "small-batch-cover.png",
+      "sha256": "26ced1989881d4a8c759da72186341f9db2afc7f4194a394cb3c99311ff39b7a"
+    },
+    {
+      "file": "small-cover.png",
+      "sha256": "eaf3127df342d84792323650abf5da7043eb1d3bcfa835e1cb31532b503b2a85"
+    },
+    {
+      "file": "small-detail.png",
+      "sha256": "ff2fd5908311b8f9a8bba8ec264709e9075670167fd6da7c91628bf8dec372f7"
+    },
+    {
+      "file": "small-lab.png",
+      "sha256": "74d0be1cc4d94738e5d21737b7d38f688e57fe0f8f3279cb07395c6aaf4639b2"
+    },
+    {
+      "file": "small-services.png",
+      "sha256": "3b384ebc6c2fc40eb22955cc149e05e38f6a26435102e24a2e8f517ca04dbb2d"
+    },
+    {
+      "file": "small-wig-ime.png",
+      "sha256": "d751e3e5a5fe5e156de69b97efb1b632bfc67c31f62102d574ebdce7bd7d77f5"
+    },
+    {
+      "file": "workspace-chinese-dark.png",
+      "sha256": "503f944a0d85fc2570135ec310de33dc033a9697032ddd8b48eedc935684a917"
+    },
+    {
+      "file": "workspace-chinese-light.png",
+      "sha256": "d134886744c5ea2bf2ce842bf13c1c136e88ef13371aa93dedfc392ecc27b464"
+    },
+    {
+      "file": "workspace-classic-dark.png",
+      "sha256": "d32eb470d0b94cd2524a990bda5b31e88aa9148d00c1afc59466d693781c5a97"
+    },
+    {
+      "file": "workspace-classic-light.png",
+      "sha256": "fe2f7d72ac0659ccb002531298a88d9e835b97b7b8e88112694c2e01090abb82"
+    },
+    {
+      "file": "workspace-country-dark.png",
+      "sha256": "3a9acf3f2740105e6f60457c09adc78f2a9455da4dc7eb141959b418a5dd6972"
+    },
+    {
+      "file": "workspace-country-light.png",
+      "sha256": "7b3dcabb1728bb43dcde7242bc02ea5cbaa6736523a07bbe8708d2db90f42be6"
+    },
+    {
+      "file": "workspace-default-dark.png",
+      "sha256": "c8dd6b4f82adcf771923ae9630fa535cf617c335984750150a385d5aba4b311c"
+    },
+    {
+      "file": "workspace-default-light.png",
+      "sha256": "95e5930038cdf5876f6faad08164a39961ce569a34f70c2b6bc9cb9ebedcb8fa"
+    },
+    {
+      "file": "workspace-gothic-dark.png",
+      "sha256": "e350e0901bad16e7082d6e137dcf71780d495d88fcf5fa76431140a310405bb3"
+    },
+    {
+      "file": "workspace-gothic-light.png",
+      "sha256": "f5a8647d6448bd81ea7b87c95bf98a4d58c9b8bcc9c99760581281e3240507a6"
+    },
+    {
+      "file": "workspace-navy-dark.png",
+      "sha256": "b4922710d92b08c2c25b24732a51bdfd808a5d564dd9f5d0e384042370e7993b"
+    },
+    {
+      "file": "workspace-navy-light.png",
+      "sha256": "268f02c6a19863c68140636d7a48c62a48d52910db20befbddc3b42665082fe9"
+    },
+    {
+      "file": "workspace-victorian-dark.png",
+      "sha256": "d8872fc7c483f77dbc875aabc49907d166d1166de803b0e558308faaed000561"
+    },
+    {
+      "file": "workspace-victorian-light.png",
+      "sha256": "68cc8661e85b46fb3b53d9fc0b4f7cc4c723088095f23f4e74cad1d6fd1ccd88"
+    }
+  ]
+}

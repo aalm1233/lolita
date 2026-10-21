@@ -59,7 +59,7 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
         else->"核对${selected.size}件分层输入与费用"
     }
     Scaffold(containerColor=Color.Transparent,contentWindowInsets=WindowInsets(0,0,0,0),topBar={
-        GradientTopAppBar(title={Text("批量素材")},navigationIcon={IconButton(onClick=onBack){SkinIcon(IconKey.ArrowBack,Modifier.semantics{contentDescription="返回"})}},
+        GradientTopAppBar(title={Text("批量生成展示图")},navigationIcon={IconButton(onClick=onBack){SkinIcon(IconKey.ArrowBack,Modifier.semantics{contentDescription="返回"})}},
             actions={IconButton(onClick=onConfigure){SkinIcon(IconKey.Settings,Modifier.semantics{contentDescription="图像服务配置"})};IconButton(onClick=onTasks){SkinIcon(IconKey.ViewAgenda,Modifier.semantics{contentDescription="任务中心"})}})
     },bottomBar={Surface(color=MaterialTheme.colorScheme.surface){Column(Modifier.fillMaxWidth().imePadding().padding(horizontal=skin.spacingLarge,vertical=skin.spacingMedium)){
         Text(if(s.busy)"正在处理本批 · 已准备${s.prepared}件实际输入" else if(saving)"勾选后核对三项；本地保存不计费。" else "本次已选${selected.size}件；按阶段整批确认，可离页处理。",style=MaterialTheme.typography.bodySmall)
@@ -116,8 +116,13 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                         if(s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)){
                             TextButton(onClick={row.task?.let{ImageTaskRequest.decode(it.requestJson).materialSpec?.originalInputPath}?.let{zoom=it}},modifier=Modifier.fillMaxWidth()){Text("对照原输入")}
                         }
-                        if(s.phase==MaterialBatchPhase.SAVED)Text(if(row.material?.sourceTaskId in s.jobs.map{it.id})"本批已确认 · AI整理" else "当前原素材 · 新候选尚未保存",style=MaterialTheme.typography.bodySmall)
-                        else BatchCheck(if(s.phase==MaterialBatchPhase.FRONT)"主视结构正确，继续分层" else if(row.canRetry)"重新处理此项" else "本次处理",row.key in s.selected,!s.busy && s.selectable(row)){viewModel.toggle(row.key,it)}
+                        if(s.phase==MaterialBatchPhase.SAVED) {
+                            Text(if(row.material?.sourceTaskId in s.jobs.map{it.id})"本批已确认 · AI整理" else "当前原素材 · 新候选尚未保存",style=MaterialTheme.typography.bodySmall)
+                            row.material?.let { material ->
+                                val isCover = row.item?.imageUrls?.firstOrNull() == material.imagePath
+                                OutlinedButton(onClick={viewModel.setCover(row.itemId,material.id)},enabled=!s.busy && !isCover && material.matchesSource(row.semantic,row.item?.composition ?: ItemComposition.UNCONFIRMED),modifier=Modifier.fillMaxWidth().testTag("batchSetCover${row.itemId}")){Text(if(isCover)"当前封面" else "设为封面")}
+                            }
+                        } else BatchCheck(if(s.phase==MaterialBatchPhase.FRONT)"主视结构正确，继续分层" else if(row.canRetry)"重新处理此项" else "本次处理",row.key in s.selected,!s.busy && s.selectable(row)){viewModel.toggle(row.key,it)}
                         row.task?.let{task->TextButton(onClick={onOpenTask(task.id)},modifier=Modifier.fillMaxWidth()){Text("任务详情")}}
                     }}}}
                     if(rows.size<columns)Spacer(Modifier.weight(1f))

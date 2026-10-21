@@ -285,7 +285,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=135, versionName="2.64.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=136, versionName="2.65.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -626,3 +626,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 本轮真实请求4次：衬衫与靴子主视成功、靴子分层成功（含底图2张）、衬衫分层超时且不重试，新增成功输出4张。独立100张额度累计8次请求／10张已知成功输出；超时最多17张按保守预留，合计占用27、保守余73，实际服务端是否计费未知。其他类别未逐项真实测试，模型仍会重绘细节。私有照片与输出不入公开源码／APK，记录`docs/material-categories-service-evaluation-2026-10-21.json`。
 
 - 2.64.0／135正式交付：源码`94721aa5`及标签已推送，定向跨品类／旧请求与批次／ZIP／完整试衣复用、七皮肤浅暗／320dp两倍字／真实IME通过。提交归档clean原签名Release从2.63.0覆盖并两次启动，36旧表原列、v5批次与14图SHA保全；36主包assets、7背景RGBA及依赖／profile核验，测试夹具未入主包。正式App服装／鞋履及裙装详情批次入口已核对；GitHub／Gitee同一APK匿名完整下载、SHA／HEAD及公开最高版本查询通过。未重跑应用内网络检查、未删旧附件；本轮4次真实请求含1次分层超时未重试，保守余73张。回执`docs/material-categories-release-2.64.0-verification.json`。
+
+### 实验室与统一展示图（2.65.0）
+
+- 个人页一级“实验室”卡片集中提供批量生成展示图、虚拟试衣、我的模特、假发头模图、识图录入、任务中心和统一API配置入口；业务上下文内快捷入口保留。`Screen.Laboratory`与`LaboratoryViewModel`使用现有薄仓库流，假发选择按稳定WIG_HEAD身份且有参考图片，可搜索，不按名称猜类型。
+- 详情只保留一个普通“生成展示图”入口，预选当前物品进入已有批量素材流程；已确认预览可进入管理、设封面及试衣。普通服装人台与小物旧入口退出详情；全头假发戴头模保留独立MANNEQUIN/WIG_HEAD逻辑，原历史任务/待确认/重试不改协议。
+- `ImageTaskCoordinator.setMaterialCover`事务复核当前素材ID、类型/组合、透明图完整性和SHA，再从最新相册置首共享路径并写AI_GENERATED来源。主视/透明层确认不自动改封面，显式设置保留原照片与其他资料；重复设置幂等，移除/替换素材和删除任务不能误删相册引用。相册、素材与ZIP共用原引用保护和路径映射，Room32/36实体、备份13不变。
+- 前置四页/七皮肤浅暗/320dp图稿与设计记录：`docs/plans/2026-10-21-laboratory-display-flow.md`。18项去重定向设备回归与Debug通过，实际五组七皮肤浅暗及320dp两倍字/真实IME归档在`docs/visuals/2026-10-21-laboratory-native/`；实施记录为`docs/laboratory-display-implementation-2026-10-21.md`。本轮不新增真实付费请求，入口迁移与设封面仅本地操作，受控图片不冒充生成品质。

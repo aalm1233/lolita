@@ -359,6 +359,26 @@ class ImageTaskCoordinator(
             return row.id
     }
 
+    /** Shares the confirmed bytes with the album; all owners participate in normal cleanup/backup. */
+    suspend fun setMaterialCover(itemId: Long, expectedId: String) = accepted {
+        state.withLock { db.withTransaction {
+            val item = requireNotNull(db.itemDao().getItemById(itemId)) { "原物品已删除" }
+            val material = requireNotNull(db.itemTryOnMaterialDao().getForItem(itemId)) { "当前展示图已移除" }
+            require(material.id == expectedId) { "当前展示图已更新，请重新查看" }
+            val semantic = db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic
+            require(material.matchesSource(semantic, item.composition)) { "物品类型或组合已改变，请重新核对" }
+            require(validateImage(material.imagePath) && validateMaterialImage(material.imagePath) &&
+                imageSha256(material.imagePath) == material.resultSha256) { "展示图已改变或无法读取" }
+            val images = listOf(material.imagePath) + item.imageUrls.filterNot { it == material.imagePath }
+            if (images != item.imageUrls) check(db.itemDao().updateImages(itemId, images, System.currentTimeMillis()) == 1)
+            val provenance = db.imageProvenanceDao()
+            if (provenance.get(itemId, material.imagePath)?.sourceType != com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED) {
+                provenance.upsert(com.lolita.app.data.local.entity.ImageProvenance(material.imagePath, itemId,
+                    com.lolita.app.data.local.entity.ImageSourceType.AI_GENERATED, "SINGLE_ITEM_MATERIAL", material.sourceTaskId))
+            }
+        } }
+    }
+
     suspend fun removeMaterial(itemId: Long, expectedId: String) = accepted {
         val paths = state.withLock { db.withTransaction {
             val row = db.itemTryOnMaterialDao().getForItem(itemId) ?: return@withTransaction emptyList<String>()

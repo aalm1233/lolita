@@ -158,6 +158,7 @@ fun LolitaNavHost(
     createPersonalModelEditViewModel: (SavedStateHandle) -> PersonalModelEditViewModel = { PersonalModelEditViewModel(it) },
     createMaterialWorkspaceViewModel: (SavedStateHandle) -> com.lolita.app.ui.screen.material.MaterialWorkspaceViewModel = { com.lolita.app.ui.screen.material.MaterialWorkspaceViewModel(it) },
     createMaterialBatchViewModel: (SavedStateHandle) -> com.lolita.app.ui.screen.material.MaterialBatchViewModel = { com.lolita.app.ui.screen.material.MaterialBatchViewModel(it) },
+    createLaboratoryViewModel: () -> com.lolita.app.ui.screen.settings.LaboratoryViewModel = { com.lolita.app.ui.screen.settings.LaboratoryViewModel() },
     imageTaskBarViewModel: ImageTaskBarViewModel = viewModel()
 ) {
     val activeEntry by navController.currentBackStackEntryAsState()
@@ -337,7 +338,8 @@ fun LolitaNavHost(
                 val material by remember(itemId) { AppModule.itemTryOnMaterialRepository().observe(itemId) }.collectAsState(initial = null)
                 ItemDetailScreen(
                     itemId = itemId, currentMaterial = material,
-                    onNavigateToMaterial = { id -> navController.navigate(if(material==null)Screen.MaterialBatch.createRoute(itemId=id) else Screen.TryOnMaterial.createRoute(id)) },
+                    onNavigateToMaterial = { id -> navController.navigate(Screen.MaterialBatch.createRoute(itemId=id)) },
+                    onViewMaterial = { id -> navController.navigate(Screen.TryOnMaterial.createRoute(id)) },
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
                     onNavigateToItem = { navController.navigate(Screen.ItemDetail.createRoute(it)) },
@@ -591,12 +593,23 @@ fun LolitaNavHost(
                     onNavigateToBackupRestore = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToTaobaoImport = { navController.navigate(Screen.TaobaoImport.route) },
                     onNavigateToThemeSelect = { navController.navigate(Screen.ThemeSelect.route) },
-                    onNavigateToTryOn = { navController.navigate(Screen.TryOn.createRoute()) },
-                    onNavigateToTasks = { navController.navigate(Screen.ImageTasks.route) },
-                    onNavigateToPersonalModels = { navController.navigate(Screen.PersonalModels.route) },
-                    onConfigureApi = { navController.navigate(Screen.AiConfiguration.route) },
+                    onNavigateToLaboratory = { navController.navigate(Screen.Laboratory.route) },
                     appUpdateViewModel = appUpdateViewModel
                 )
+            }
+
+            composable(Screen.Laboratory.route) { entry ->
+                val factory = remember(entry) { viewModelFactory { initializer { createLaboratoryViewModel() } } }
+                val laboratory: com.lolita.app.ui.screen.settings.LaboratoryViewModel = viewModel(entry, factory = factory)
+                com.lolita.app.ui.screen.settings.LaboratoryScreen(
+                    onBack = { navController.popBackStack() },
+                    onBatch = { navController.navigate(Screen.MaterialBatch.createRoute()) },
+                    onTryOn = { navController.navigate(Screen.TryOn.createRoute()) },
+                    onModels = { navController.navigate(Screen.PersonalModels.route) },
+                    onWigHead = { navController.navigate(Screen.Mannequin.createRoute(it)) },
+                    onRecognize = { navController.navigate(Screen.ItemEdit.createRoute()) },
+                    onTasks = { navController.navigate(Screen.ImageTasks.route) },
+                    onConfigure = { navController.navigate(Screen.AiConfiguration.route) }, viewModel = laboratory)
             }
 
             composable(Screen.AiConfiguration.route) {

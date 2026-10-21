@@ -148,6 +148,19 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
     fun selectFailed(){val s=state.value;if(s.busy)return;invalidateFee();val keys=s.rows.filter{it.canRetry && s.selectable(it)}.take(MaterialBatchIdentity.MAX_ITEMS).map{it.key}.toSet();handle["batchSelected${s.phase}"]=keys.toList();state.update{it.copy(selected=keys,checks=emptySet())}}
     fun selectReady(){val s=state.value;if(s.busy)return;invalidateFee();val keys=s.rows.filter{it.task?.status==ImageTaskStatus.AWAITING_CONFIRMATION && s.selectable(it)}.take(MaterialBatchIdentity.MAX_ITEMS).map{it.key}.toSet();handle["batchSelected${s.phase}"]=keys.toList();state.update{it.copy(selected=keys,checks=emptySet())}}
     fun instructions(value:String){if(state.value.busy)return;invalidateFee();handle["batchInstructions"]=value.take(200);state.update{it.copy(instructions=value.take(200))}}
+    fun setCover(itemId: Long, expectedId: String) {
+        if (state.value.busy) return
+        state.update { it.copy(busy = true, error = null, message = null) }
+        viewModelScope.launch {
+            try {
+                coordinator.setMaterialCover(itemId, expectedId)
+                state.update { it.copy(message = "已设为封面，原商品照片已保留") }
+            } catch (failure: Exception) {
+                if (failure is CancellationException) throw failure
+                state.update { it.copy(error = "设置封面未完成，请核对当前展示图后重试") }
+            } finally { state.update { it.copy(busy = false) } }
+        }
+    }
     fun selectSource(itemId:Long,path:String){val s=state.value;if(s.busy || path !in s.rows.firstOrNull{it.itemId==itemId}?.item?.productReferenceImages.orEmpty())return
         invalidateFee();releaseCrop(itemId);handle["batchSource$itemId"]=path;handle["batchOriginal$itemId"]=null;refresh()}
     fun crop(itemId:Long,original:String,path:String){val s=state.value;if(s.busy || original !in s.rows.firstOrNull{it.itemId==itemId}?.item?.productReferenceImages.orEmpty()){cleanup(listOf(path));return}

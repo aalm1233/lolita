@@ -77,7 +77,8 @@ fun ItemDetailScreen(
     onCopyToNew: (String) -> Unit = {},
     viewModel: ItemEditViewModel = viewModel(),
     currentMaterial: com.lolita.app.data.local.entity.ItemTryOnMaterial? = null,
-    onNavigateToMaterial: (Long) -> Unit = {}
+    onNavigateToMaterial: (Long) -> Unit = {},
+    onViewMaterial: (Long) -> Unit = onNavigateToMaterial
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
@@ -784,17 +785,8 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        if (uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic?.supportsMaterialPreparation == true && item.status.supportsVirtualTryOn) {
-                            LolitaSection(title = "试衣素材") { row {
-                                currentMaterial?.let { material ->
-                                    com.lolita.app.ui.screen.material.MaterialPhoto(material.imagePath, "查看已确认主视素材", onClick = { onNavigateToMaterial(item.id) }, height = 150, checker = true)
-                                    Text("主视单品 · 已确认 · 可重复用于试衣", style = MaterialTheme.typography.bodySmall)
-                                } ?: Text("将商品照片整理成主视单品，核对后反复用于试衣。", style = MaterialTheme.typography.bodyMedium)
-                                OutlinedButton(onClick = { onNavigateToMaterial(item.id) }, modifier = Modifier.fillMaxWidth()) {
-                                    Text(if (currentMaterial == null) "整理试衣素材" else "查看与使用素材")
-                                }
-                            } }
-                        }
+                        ItemDisplaySection(item, uiState.categories.firstOrNull { it.id == item.categoryId }, currentMaterial,
+                            onNavigateToMaterial, onViewMaterial)
 
                         LolitaSection(title = "记录信息") {
                             row {
@@ -1133,15 +1125,24 @@ private fun SizeChartGallery(images: List<String>) {
 @Composable
 internal fun MannequinDetailEntry(item: Item, category: com.lolita.app.data.local.entity.Category?, onNavigate: (Long) -> Unit) {
     val subject = mannequinSubject(category, confirmedSemantics = true)
-    if (subject == null || item.productReferenceImages.isEmpty()) return
+    if (subject?.presentation != MannequinPresentation.WIG_HEAD || item.productReferenceImages.isEmpty()) return
     val skin = LolitaSkin.current
     OutlinedButton(onClick = { onNavigate(item.id) }, modifier = Modifier.fillMaxWidth()) {
         SkinIcon(IconKey.Outfit, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(skin.spacingMedium))
-        Text(when (subject.presentation) {
-            MannequinPresentation.WIG_HEAD -> "生成假发头模图"
-            MannequinPresentation.ACCESSORY -> "生成单品展示图"
-            MannequinPresentation.DRESS_FORM -> if (subject.semantic == CategorySemantic.BLOUSE) "生成衬衫人台图" else "生成人台图（实验）"
-        })
+        Text("生成假发头模图")
     }
+}
+
+@Composable
+internal fun ItemDisplaySection(item: Item, category: com.lolita.app.data.local.entity.Category?,
+    material: com.lolita.app.data.local.entity.ItemTryOnMaterial?, onGenerate: (Long) -> Unit, onView: (Long) -> Unit) {
+    if (category?.categorySemantic?.supportsMaterialPreparation != true || !item.status.supportsVirtualTryOn) return
+    LolitaSection(title = "展示图") { row {
+        material?.let {
+            com.lolita.app.ui.screen.material.MaterialPhoto(it.imagePath, "查看已确认展示图", onClick = { onView(item.id) }, height = 150, checker = true)
+            Text("已确认 · 点击查看，可设为封面或用于试衣", style = MaterialTheme.typography.bodySmall)
+        } ?: Text("将商品照片整理成透明单品图，确认后可作封面，也可用于试衣。", style = MaterialTheme.typography.bodyMedium)
+        OutlinedButton(onClick = { onGenerate(item.id) }, modifier = Modifier.fillMaxWidth()) { Text("生成展示图") }
+    } }
 }

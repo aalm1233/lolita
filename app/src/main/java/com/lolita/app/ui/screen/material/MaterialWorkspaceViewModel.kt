@@ -29,7 +29,7 @@ data class MaterialWorkspaceState(
     val checks: Set<Int> = emptySet(), val frontConfirmed: Boolean = false,
     val bases: List<MaterialBaseChoice> = emptyList(), val selectedBase: MaterialBaseChoice? = null,
     val clothingConfirmed: Boolean = false, val submittedTaskId: String? = null,
-    val saved: Boolean = false, val error: String? = null
+    val saved: Boolean = false, val error: String? = null, val message: String? = null
 ) {
     val request get() = task?.let { runCatching { ImageTaskRequest.decode(it.requestJson) }.getOrNull() }
     val layers get() = task?.let { runCatching { MaterialLayers.decode(it.layersJson) }.getOrDefault(emptyList()) }.orEmpty()
@@ -231,6 +231,10 @@ class MaterialWorkspaceViewModel(
             coordinator.confirmMaterial(requireNotNull(current.task).id, requireNotNull(current.selectedPath), expectedCurrentId, checked = true)
             state.update { it.copy(saved = true) }
         }
+    }
+    fun setCover(expectedId: String) = mutate {
+        coordinator.setMaterialCover(itemId, expectedId)
+        state.update { it.copy(message = "已设为封面，原商品照片已保留") }
     }
     fun removeMaterial(expectedId: String) = mutate { coordinator.removeMaterial(itemId, expectedId) }
     fun discardTask() { val id = state.value.task?.id ?: return; mutate { coordinator.discard(id) } }

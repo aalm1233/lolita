@@ -363,5 +363,24 @@
       "file": "native-small-ime.png",
       "sha256": "62f646acbd04711690c0b86314046a6a9af7cf5c73df3cd559dd33dfb90e23f0"
     }
-  ]
+  ],
+  "signed_release": {
+    "version": "2.64.0/135",
+    "private_photos": false,
+    "real_paid_calls_in_ui": 0,
+    "screenshots": [
+      {
+        "file": "release-clothing.png",
+        "sha256": "102ef4c15daef7d6a7d341682123653b4b97edf63d1b7dabc5c260f91ad8be27"
+      },
+      {
+        "file": "release-footwear.png",
+        "sha256": "843d0f254eca0e51bdb8c478fd81b3c6ebd5bbd96e90ccc364d6c15b9a6811a7"
+      },
+      {
+        "file": "release-detail-batch.png",
+        "sha256": "c5ed7558c0d029388a38fe9f9d9afd33d67bb06f21e6561ffccf4a647194920d"
+      }
+    ]
+  }
 }

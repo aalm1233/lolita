@@ -1,0 +1,402 @@
+{
+  "version": "2.64.0",
+  "version_code": 135,
+  "date": "2026-10-21",
+  "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+  "tag": "v2.64.0",
+  "scope": "Mixed batch material preparation for all confirmed wardrobe semantics across clothing, wigs/hair pieces, hosiery, footwear, headwear/accessories, bags and handheld props; 1–30 owned/wished items, filters preserve selections; existing fusion unchanged",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 135,
+    "version": "2.64.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "67b8f38e3eb32c593acf640804b79c14fd9d920038e39655c9635ef67503c1ec",
+    "bytes": 81193252,
+    "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "packaging": {
+    "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 36,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "upgrade": {
+    "passed": true,
+    "serial": "emulator-5598",
+    "avd": "Lolita_Material_Release_20261021",
+    "baseline": "2.63.0/134",
+    "target": "2.64.0/135",
+    "same_signature": true,
+    "install_r": true,
+    "uninstall_or_clear_data": false,
+    "old_tables_compared": 36,
+    "old_columns_and_rows_preserved": true,
+    "original_images_sha256_preserved": 14,
+    "room_version": 32,
+    "existing_batch_columns_preserved": true,
+    "starts": [
+      {
+        "status": "ok",
+        "alive_after_seconds": 4
+      },
+      {
+        "status": "ok",
+        "alive_after_seconds": 4
+      }
+    ]
+  },
+  "upgrade_fixture": {
+    "own_avd_only": true,
+    "new_fixture_items": [
+      9002,
+      9003
+    ],
+    "old_v5_completed_batch": "b91d0d71-33d6-4884-add1-b332f1d12d52",
+    "private_photos": false,
+    "paid_calls": 0
+  },
+  "signed_app_entry": {
+    "passed": true,
+    "real_signed_apk": true,
+    "task_center_batch_entry": true,
+    "clothing_and_footwear_filters_include_correct_old_items": true,
+    "hidden_selection_retained": true,
+    "clothing_detail_enters_batch_preselecting_current_item": true,
+    "paid_calls": 0,
+    "installed_apk_sha256": "67b8f38e3eb32c593acf640804b79c14fd9d920038e39655c9635ef67503c1ec",
+    "installed_apk_matches_release": true,
+    "images": [
+      "release-footwear.png",
+      "release-clothing.png",
+      "release-batch-all.png",
+      "release-clothing-detail.png",
+      "release-detail-batch.png"
+    ]
+  },
+  "tests": {
+    "targeted_only": true,
+    "jvm_classes": [
+      "MaterialCategoriesTest",
+      "TryOnMaterialProtocolTest",
+      "MaterialBatchBackupFormatTest",
+      "MaterialBackupFormatTest",
+      "ImageTaskBackupFormatTest"
+    ],
+    "new_device_classes": [
+      "MaterialCategoriesWorkflowTest (4 methods)",
+      "MaterialCategoriesScreenTest (2 methods)"
+    ],
+    "related_device_classes": [
+      "MaterialBatchWorkflowTest",
+      "MaterialWorkflowTest",
+      "MaterialBatchViewModelTest",
+      "MaterialWorkspaceViewModelTest",
+      "MaterialBatchNavigationTest",
+      "ImageTaskExecutionTest",
+      "ImageTaskAdmissionCleanupTest",
+      "MaterialWorkspaceScreenTest#realPagesAcrossSevenSkinsLightDarkAndExplicitFeeReview"
+    ],
+    "skipped": "Existing controlledSocketResponseCanCompleteThroughTaskPipeline explicitly opt-in; not enabled",
+    "native_screenshots": 41,
+    "public_contact_boards": 7,
+    "real_api_calls_recorded_separately": "docs/material-categories-service-evaluation-2026-10-21.json",
+    "logs": [
+      {
+        "file": "logs/2.64.0-debug-build.log",
+        "sha256": "da56379b23eb737c51716fa2c6b3272f810eadb511aca293fba3a5ad72fb0a87",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-scoped-tests.log",
+        "sha256": "6cf3323db33d5536a50ceeff42de502e056ce62313482cc86b39cfc05ecd845f",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-ui-regression-tests.log",
+        "sha256": "b4838494dc73802173b6f357486f8301d29f3f0049dbf430c905dedf1af4f6bc",
+        "success": false,
+        "note": "Screenshot wait repaired in later scoped run"
+      },
+      {
+        "file": "logs/2.64.0-visual-diagnostic.log",
+        "sha256": "1554556407df561aa1700c3505d1b531186e839302f3ca8663976918d2554192",
+        "success": false,
+        "note": "Screenshot wait repaired in later scoped run"
+      },
+      {
+        "file": "logs/2.64.0-visual-final.log",
+        "sha256": "139b7f3dd5e8332df79739548eca7ff77dc3ee1c3e5197da3e28632d00cae415",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-small-tests.log",
+        "sha256": "60799962cef15aa4d76d68275c908a6e26c1a37bb03c32229b711daf4350436c",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-final-reuse-tests.log",
+        "sha256": "3dc25e63daee73381c4d0e00f6a778a7c592abd9c4b67bcad1041b65e224c36a",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-visual-reviewed-final.log",
+        "sha256": "597ebc852966f7107fffc183e16aaa366aa5ce27317ede65246edbfe469310fc",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-small-reviewed-final.log",
+        "sha256": "7d1b75f0c32369b8e60ac1208e2a1dc00d1b64bac1162ac1db0a561af3d11687",
+        "success": true,
+        "note": "Targeted scope completed"
+      },
+      {
+        "file": "logs/2.64.0-small-ime-final.log",
+        "sha256": "39d961c4ed0c7e2eb2f83356414d31f792ac7537ac915979bc4373834d998f13",
+        "success": true,
+        "note": "Final scoped repair verification"
+      },
+      {
+        "file": "logs/2.64.0-final-domain-tests.log",
+        "sha256": "4b8335d01257e73789bff5a645ccc857ae7adcddd43816f6352f70b57f8b2de5",
+        "success": true,
+        "note": "Final scoped repair verification"
+      }
+    ]
+  },
+  "room_version": 32,
+  "entities": 36,
+  "backup_version": 13,
+  "new_protocol": 6,
+  "legacy_protocols_unchanged": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "service_evaluation": "material-categories-service-evaluation-2026-10-21.json",
+  "new_paid_requests": 4,
+  "new_known_successful_outputs_including_background": 4,
+  "timeout_requests_without_retry": 1,
+  "remaining_output_budget": {
+    "limit": 100,
+    "cumulative_requests": 8,
+    "known_successful_outputs": 10,
+    "unknown_timeout_reserved_outputs": 17,
+    "conservative_remaining_units": 73,
+    "actual_server_billing_unknown_for_timeout": true
+  },
+  "platforms": {
+    "github": {
+      "tag": "v2.64.0",
+      "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "release_id": 419271582,
+      "prerelease": false,
+      "files": {
+        "lolita-2.64.0.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.64.0/lolita-2.64.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 81193252,
+          "sha256": "67b8f38e3eb32c593acf640804b79c14fd9d920038e39655c9635ef67503c1ec",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.64.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "77ad918639b32d3fcd028a08ef42fcf69b36969ac32bd85653a769a4c15cccc9",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 81193252,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee_before_formal": {
+      "tag": "v2.64.0",
+      "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "release_id": 1225459,
+      "prerelease": true,
+      "files": {
+        "lolita-2.64.0.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/lolita-2.64.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 81193252,
+          "sha256": "67b8f38e3eb32c593acf640804b79c14fd9d920038e39655c9635ef67503c1ec",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "77ad918639b32d3fcd028a08ef42fcf69b36969ac32bd85653a769a4c15cccc9",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 81193252,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "gitee_formal": {
+      "tag": "v2.64.0",
+      "release_id": 1225459,
+      "prerelease": false,
+      "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "assets": {
+        "lolita-2.64.0.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/lolita-2.64.0.apk",
+        "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/SHA256SUMS"
+      },
+      "metadata_source": "owner-authenticated exact release GET; not a public update check"
+    },
+    "gitee_public_update": {
+      "latest_tag": "v2.64.0",
+      "pages": 3,
+      "formal_only": true,
+      "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/lolita-2.64.0.apk",
+      "source_commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "passed": true,
+      "http_status": 200
+    },
+    "gitee_head": {
+      "http_status": 200,
+      "bytes": 81193252,
+      "content_type": "application/zip",
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ],
+      "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.64.0/lolita-2.64.0.apk"
+    }
+  },
+  "credential_hygiene": {
+    "removed_build_signing_symlinks": [
+      "local.properties",
+      "lolita-release.jks"
+    ],
+    "protected_originals_preserved": true,
+    "token_copied_or_printed": false
+  },
+  "old_release_assets_deleted": false,
+  "in_app_network_update_retested": false,
+  "network_note": "Public API/download/HEAD checked separately; prior accepted in-app network limitation not rerun or claimed successful",
+  "limits": [
+    "Types must be confirmed through existing category semantics; names are never silently classified",
+    "Real evaluation covers blouse and boots plus prior waist example; other families have scoped protocol/workflow/visual checks, not universal model-quality evidence",
+    "Blouse layer request timed out and was not retried; remote outcome and billing unknown",
+    "AI reconstructs details; no exact pixels, hidden-side reconstruction or physical-fit claim",
+    "Private real inputs and outputs excluded from public source, production APK and test fixtures"
+  ]
+}

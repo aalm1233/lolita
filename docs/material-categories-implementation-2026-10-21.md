@@ -43,3 +43,11 @@ Debug及定向验证通过。正式源码、clean原签名构建、2.63.0覆盖�
 ## 完成检查
 
 图稿先于实现，七皮肤与原生对照、小屏大字／IME、完整Fit和放大、隐私和独立计费均已按本轮范围核对；旧协议、备份与图片引用、类型／组合变化、批量事务及完整试衣复用已验证。账本／统计／提醒无新增写入。AGENTS及产品规范同步更新，正式交付另记回执。
+
+## 正式交付
+
+源码`94721aa5`和`v2.64.0`标签已推送；提交归档执行clean原签名Release通过，36份主包项目assets、7张背景alpha／可见RGB、依赖素材与生成profile核验。十张新增测试插画及私有照片未进入主包。独立AVD从2.63.0覆盖并两次启动，36张旧表原列、已有v5批次及14张基准图片SHA保全，Room仍32。正式App的服装／鞋履筛选、隐藏选择保留、裙装详情进入批次预选当前件均实测，安装包与发布APK字节一致。
+
+[GitHub](https://github.com/aalm1233/lolita/releases/tag/v2.64.0)及[Gitee](https://gitee.com/aalm1233/lolita/releases/tag/v2.64.0)正式发布同一APK和校验文件，双平台匿名完整下载、SHA及HEAD通过，公开版本查询选中2.64.0。未重跑应用内网络检查，不把公开查询当作应用内成功；未删除旧附件。详细[发布回执](material-categories-release-2.64.0-verification.json)。
+
+![正式包服装入口](visuals/2026-10-21-material-categories-native/release-clothing.png)

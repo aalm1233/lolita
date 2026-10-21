@@ -31,4 +31,8 @@
 
 Debug构建通过。无新真实生图请求，不消耗现有授权额度；累计额度与超时预留沿用上一轮记录。模型本身可能改写细节的限制保持。
 
-正式源码归档clean Release、2.64.0同签名升级及公开分发结果在本轮发布回执中记录。
+正式源码9b9f7a7f及v2.65.0已推送，提交源码归档clean原签名Release通过。2.64.0覆盖升级及重复启动保全36张旧表原列、原v5批次和14张原图片SHA；可选设置前基准清单未捕获，不声称本轮逐字节验证设置（本次没有新增或修改持久设置字段）。验证脚本缺可选字段的报告错误已修复，基于原2.64.0基准重新生成报告，没有清数据或重装规避。
+
+正式App入口[实验室](visuals/2026-10-21-laboratory-native/release/release-laboratory.png)与[单品展示图](visuals/2026-10-21-laboratory-native/release/release-item-display-entry.png)核对通过；36份主包assets、7张背景RGBA、依赖素材和生成profile与提交源码一致，测试夹具及未跟踪图片未入包。
+
+GitHub/Gitee同一正式APK与SHA文件的匿名完整下载、SHA256及HEAD通过，公开更新API选中2.65.0（HTTP200，3页）。Gitee首次发布请求超时后，经owner元数据确认不存在该tag，再安全恢复发布；没有删除旧附件，也未重跑App内手动网络检查。回执见[2.65.0发布验证](laboratory-display-release-2.65.0-verification.json)。

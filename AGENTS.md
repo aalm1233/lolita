@@ -633,3 +633,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 详情只保留一个普通“生成展示图”入口，预选当前物品进入已有批量素材流程；已确认预览可进入管理、设封面及试衣。普通服装人台与小物旧入口退出详情；全头假发戴头模保留独立MANNEQUIN/WIG_HEAD逻辑，原历史任务/待确认/重试不改协议。
 - `ImageTaskCoordinator.setMaterialCover`事务复核当前素材ID、类型/组合、透明图完整性和SHA，再从最新相册置首共享路径并写AI_GENERATED来源。主视/透明层确认不自动改封面，显式设置保留原照片与其他资料；重复设置幂等，移除/替换素材和删除任务不能误删相册引用。相册、素材与ZIP共用原引用保护和路径映射，Room32/36实体、备份13不变。
 - 前置四页/七皮肤浅暗/320dp图稿与设计记录：`docs/plans/2026-10-21-laboratory-display-flow.md`。18项去重定向设备回归与Debug通过，实际五组七皮肤浅暗及320dp两倍字/真实IME归档在`docs/visuals/2026-10-21-laboratory-native/`；实施记录为`docs/laboratory-display-implementation-2026-10-21.md`。本轮不新增真实付费请求，入口迁移与设封面仅本地操作，受控图片不冒充生成品质。
+
+- 2.65.0／136正式交付：源码`9b9f7a7f`与标签已推送，18项去重定向设备回归、Debug及提交归档clean原签名Release通过；真实七皮肤浅暗／320dp两倍字／IME与正式App入口已核对。2.64.0覆盖及重复启动保全36旧表、原批次及14图SHA（本轮未捕获可选设置字节前基准，不声称设置逐字节验证）；36主包assets、7背景RGBA及依赖／profile核验。GitHub／Gitee正式附件匿名完整下载、SHA／HEAD与公开最高正式版本查询通过；Gitee首次发布请求超时后安全恢复，未删旧附件、未重跑App内手动网络检查。新增生图0次，保守余73张；回执`docs/laboratory-display-release-2.65.0-verification.json`。

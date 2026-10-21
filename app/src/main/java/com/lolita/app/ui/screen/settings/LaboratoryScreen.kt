@@ -27,7 +27,7 @@ fun LaboratoryEntry(onClick: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 SkinIcon(IconKey.Apps, Modifier.size(28.dp), tint = MaterialTheme.colorScheme.primary)
-                Text("实验室", style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+                Text("实验室", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
                 SkinIcon(IconKey.ArrowForward, Modifier.size(24.dp))
             }
             Text("展示图、虚拟试衣、识图与 API 配置", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -38,9 +38,9 @@ internal fun lolitaTypography(headingFamily: FontFamily): Typography {
     )
 }
 
-/** App bars sit between feature and section headings without borrowing the row style. */
+/** Navigation titles stay compact; section headings retain the stronger weight. */
 val Typography.appBarTitle: TextStyle
-    get() = titleLarge.copy(fontSize = 20.sp, lineHeight = 28.sp)
+    get() = titleMedium.copy(fontWeight = FontWeight.Medium)
 
 /** Compact factual labels, e.g. a grid brand/status; not explanatory paragraphs. */
 val Typography.metadata: TextStyle

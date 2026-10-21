@@ -1,0 +1,21 @@
+{
+  "kind": "Original pre-implementation drawings, not Compose or AI output evidence",
+  "images": [
+    {
+      "file": "comparison.png",
+      "sha256": "db79129e747c6323a43e77145256f1031214ff54c1a01f4cd36f0d83f6f37d65"
+    },
+    {
+      "file": "skins-light.png",
+      "sha256": "9791ce03c077cd3a6e6b74fc93fa14ecbfe3e4c444905526703bfd2e038dceb5"
+    },
+    {
+      "file": "skins-dark.png",
+      "sha256": "2e79fae6a179add7246dcbc29f3def1f02f12de3162632a77ed95c1a0644ec52"
+    },
+    {
+      "file": "small.png",
+      "sha256": "8527ac720371f825914d0ee09002b1a48d2f4829a3fbe5fcfea3387314afbdfc"
+    }
+  ]
+}

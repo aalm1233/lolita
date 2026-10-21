@@ -96,7 +96,8 @@
 
 ## 字体规格
 
-- `Type.kt` 的 `lolitaTypography` 为七皮肤唯一文字规格来源，`SkinConfigs` 仅传入各自标题字体。主卡22/30sp、顶栏`appBarTitle`20/28、分区18/26、行标题16/24、正文与输入16/24、紧凑解释14/22、说明13/20、按钮15/22、`metadata`与底栏12/18；标题600、普通行与按钮500、阅读正文400，字距0。普通行用`titleSmall`，`titleMedium`专门表达分区。
+- `Type.kt` 的 `lolitaTypography` 为七皮肤唯一文字规格来源，`SkinConfigs` 仅传入各自标题字体。主卡22/30sp、顶栏`appBarTitle`18/26、分区18/26、行标题16/24、正文与输入16/24、紧凑解释14/22、说明13/20、按钮15/22、`metadata`与底栏12/18；主功能／分区标题600、顶栏／普通行与按钮500、阅读正文400，字距0。普通行用`titleSmall`，`titleMedium`专门表达分区。
+- 个人页“实验室”一级卡片标题仍用`titleSmall`16/24sp、Medium500及阅读字体，与属性管理等同级入口一致；不能因FEATURED容器就改成22sp主功能标题。公共顶栏18/26sp、Medium500，与18sp/600分区通过字重、位置区分。修正设计见`docs/plans/2026-10-21-compact-laboratory-titles.md`。
 - 标题保留皮肤字体；正文、输入、操作、元数据统一阅读字体，大号金额／数值用`numericReading`。不按2K原生像素倍增sp，不限制系统fontScale；高频控件采用最小高度自然增长。首页紧凑搜索14/22为保留一行布局的明确例外，微型年历与字体演示按用途单独处理。
 - 首页标签采用无横向内边距的Tab内容插槽，搜索与右侧控制统一32dp。筛选数量角标保留12sp，按实际高度为图标上方预留空间，数量0/3/12与普通／两倍字体下保留符号下半部；不只负向偏移导致裁切。
 - 设计与验收见`docs/plans/2026-10-21-typography-system.md`与`docs/typography-implementation-2026-10-21.md`；`TypographyScreenTest`验证真实2K／七皮肤浅暗层级与阅读字体、小屏两倍字和实际键盘。
@@ -292,7 +293,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=138, versionName="2.66.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=139, versionName="2.66.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

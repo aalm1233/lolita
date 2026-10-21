@@ -145,7 +145,8 @@ class TypographyScreenTest {
             val styles=nodes.mapValues{layout(it.value).layoutInput.style}
             val section=layout(compose.onNodeWithText("服饰资料")).layoutInput.style
             assertTrue(styles.getValue("typeFeature").fontSize>styles.getValue("typeAppBar").fontSize)
-            assertTrue(styles.getValue("typeAppBar").fontSize>section.fontSize)
+            assertEquals(section.fontSize,styles.getValue("typeAppBar").fontSize)
+            assertTrue(styles.getValue("typeAppBar").fontWeight!!<section.fontWeight!!)
             assertTrue(section.fontSize>styles.getValue("typeRow").fontSize)
             assertTrue(styles.getValue("typeRow").fontSize>styles.getValue("typeHelp").fontSize)
             val reading=layout(compose.onNodeWithTag("typeReading"))

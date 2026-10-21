@@ -10,6 +10,11 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.*
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.font.FontWeight
+import org.json.JSONArray
+import org.json.JSONObject
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.lifecycle.SavedStateHandle
@@ -98,6 +103,47 @@ class LaboratoryScreenTest {
         }
         val dir=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"laboratory-native").apply{mkdirs()}
         compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap -> File(dir,"$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG,100,it) }; bitmap.recycle() }
+    }
+    @Test fun laboratoryEntryMatchesPeerAndNavigationTitlesStayCompactAcrossSkins() {
+        val context=InstrumentationRegistry.getInstrumentation().targetContext
+        Assume.assumeTrue(context.resources.configuration.fontScale<1.5f)
+        val measurements=JSONArray()
+        fun textLayout(node:SemanticsNodeInteraction):TextLayoutResult {
+            val layouts=mutableListOf<TextLayoutResult>()
+            node.performSemanticsAction(SemanticsActions.GetTextLayoutResult){it(layouts)}
+            return layouts.single()
+        }
+        for(night in listOf(false,true))for(type in SkinType.entries) {
+            compose.runOnIdle { page.value="personal";skin.value=type;dark.value=night }
+            compose.onNodeWithTag("laboratoryEntry").performScrollTo().assertIsDisplayed()
+            val entry=textLayout(compose.onNode(hasText("实验室") and hasAnyAncestor(hasTestTag("laboratoryEntry")),useUnmergedTree=true)).layoutInput.style
+            val peer=textLayout(compose.onNodeWithText("属性管理",useUnmergedTree=true)).layoutInput.style
+            assertEquals(peer.fontSize,entry.fontSize)
+            assertEquals(peer.lineHeight,entry.lineHeight)
+            assertEquals(peer.fontWeight,entry.fontWeight)
+            assertEquals(peer.fontFamily,entry.fontFamily)
+            assertEquals(16f,entry.fontSize.value)
+            screenshot("compact-entry-${type.name.lowercase()}-${if(night)"dark" else "light"}")
+            compose.onNodeWithTag("laboratoryEntry").performClick()
+            compose.onNodeWithTag("laboratoryBatch").assertIsDisplayed()
+            val titleLayout=textLayout(compose.onNodeWithText("实验室",useUnmergedTree=true))
+            val title=titleLayout.layoutInput.style
+            assertEquals(18f,title.fontSize.value)
+            assertEquals(26f,title.lineHeight.value)
+            assertEquals(FontWeight.Medium,title.fontWeight)
+            assertEquals(titleLayout.layoutInput.text.length,titleLayout.getLineEnd(titleLayout.lineCount-1))
+            assertTrue((0 until titleLayout.lineCount).all { line ->
+                !titleLayout.isLineEllipsized(line) && titleLayout.getLineRight(line)<=titleLayout.size.width+1f &&
+                    titleLayout.getLineBottom(line)<=titleLayout.size.height+1f
+            })
+            screenshot("compact-page-${type.name.lowercase()}-${if(night)"dark" else "light"}")
+            measurements.put(JSONObject().put("skin",type.name).put("dark",night)
+                .put("entry_sp",entry.fontSize.value).put("entry_weight",entry.fontWeight!!.weight)
+                .put("same_as_peer",true).put("top_bar_sp",title.fontSize.value).put("top_bar_weight",title.fontWeight!!.weight))
+        }
+        File(context.filesDir,"laboratory-native/compact-title-measurements.json").writeText(measurements.toString(2))
+        compose.onNodeWithTag("laboratoryBatch").performClick()
+        compose.onNodeWithTag("materialBatch").assertIsDisplayed()
     }
     @Test fun actualPagesAcrossSevenSkinsAndCoverActionsUseSameConfirmedImage() {
         Assume.assumeTrue(InstrumentationRegistry.getInstrumentation().targetContext.resources.configuration.fontScale<1.5)

@@ -1,0 +1,238 @@
+{
+  "passed_unique_tests": 4,
+  "groups": [
+    {
+      "methods": [
+        "com.lolita.app.ui.theme.TypographyScreenTest#native2kHasRealHierarchyAndStableReadingAcrossSevenSkins",
+        "com.lolita.app.data.LaboratoryScreenTest#laboratoryEntryMatchesPeerAndNavigationTitlesStayCompactAcrossSkins"
+      ],
+      "passed": 2,
+      "resolution_px": [
+        1440,
+        3200
+      ],
+      "density_dpi": 600,
+      "font_scale": 1.0,
+      "real_ime": false
+    },
+    {
+      "methods": [
+        "com.lolita.app.ui.theme.TypographyScreenTest#realLargeFontKeepsCompleteControlsAndKeyboardActions",
+        "com.lolita.app.data.LaboratoryScreenTest#realSmallLargeFontLabAndWigSearchWorkWithKeyboard"
+      ],
+      "passed": 2,
+      "resolution_px": [
+        1440,
+        3200
+      ],
+      "density_dpi": 720,
+      "font_scale": 2.0,
+      "real_ime": true
+    }
+  ],
+  "scope": "Actual laboratory entry vs peer title, shared appbar, seven skins light/dark and real small-font IME; unrelated features not rerun",
+  "paid_calls": 0,
+  "concepts_and_actual_pages_separate": true,
+  "actual_images": [
+    {
+      "file": "laboratory-native/compact-entry-chinese-dark.png",
+      "sha256": "4e6f0623e6663acd3873ae72a2bcb00ab1d9e432b2a1d8032c9ff3b9e636e04a"
+    },
+    {
+      "file": "laboratory-native/compact-entry-chinese-light.png",
+      "sha256": "a4fdf64eb62373746cd3a262c9d49f603e1155e829384280b40f5cabd75f0e0b"
+    },
+    {
+      "file": "laboratory-native/compact-entry-classic-dark.png",
+      "sha256": "5080b2c1095af2520bb784e1488fc543f86c9ab0866f3ea8a6fff43f596ce10b"
+    },
+    {
+      "file": "laboratory-native/compact-entry-classic-light.png",
+      "sha256": "0dd147d2b7c02d87798589ba1339a2675c1b01a83e4c0cb272ce5afbfa1d14c6"
+    },
+    {
+      "file": "laboratory-native/compact-entry-country-dark.png",
+      "sha256": "a75b1872f64bc7396f8a5dce0bb65ffefaa41c092e5aade52981524cdb891851"
+    },
+    {
+      "file": "laboratory-native/compact-entry-country-light.png",
+      "sha256": "903148963273a457c352614146d06a2c34e35dcf5e9b8fe5e443e3469332bfa4"
+    },
+    {
+      "file": "laboratory-native/compact-entry-default-dark.png",
+      "sha256": "a09acfcd4c94a61a276cd5a79ffaab9230acaacfdca25ea9b04612670253d45d"
+    },
+    {
+      "file": "laboratory-native/compact-entry-default-light.png",
+      "sha256": "6d3d6f5cea16bfddc2fbcfb17b90fa2ba5cce08fdc3b5b2059e5a34f8ced7b75"
+    },
+    {
+      "file": "laboratory-native/compact-entry-gothic-dark.png",
+      "sha256": "d34fb23d49b50ecc0da3a0110980877860d0e0d7e31440d32dd9818546bb20b9"
+    },
+    {
+      "file": "laboratory-native/compact-entry-gothic-light.png",
+      "sha256": "c45c8b898f5bde597896cdf8de855baa1f0107dcaf485ee0fb28e65ea1e71cde"
+    },
+    {
+      "file": "laboratory-native/compact-entry-navy-dark.png",
+      "sha256": "4d35c02242ca85347117ec7fb2470715af135d189739865be33cc5a0bc7aaa94"
+    },
+    {
+      "file": "laboratory-native/compact-entry-navy-light.png",
+      "sha256": "a2f5903771ddec9db5c67ce6c368c5d023eecb547c7cbb5c16aaac40442b0c6b"
+    },
+    {
+      "file": "laboratory-native/compact-entry-victorian-dark.png",
+      "sha256": "1fcd2000670e326c48ba793801e9da9cf56441f9d8904dff2b2346bb5da6eb45"
+    },
+    {
+      "file": "laboratory-native/compact-entry-victorian-light.png",
+      "sha256": "8274df20cbeb5c01954f7b058152cec237477f036390c9af8bd3c32b06068cee"
+    },
+    {
+      "file": "laboratory-native/compact-page-chinese-dark.png",
+      "sha256": "5415c4860dc47c83ee453f0b61dac46e6c15a7d0907616a7ccfada0d10ad58e3"
+    },
+    {
+      "file": "laboratory-native/compact-page-chinese-light.png",
+      "sha256": "47eec85c648b3deef4a778e014da4d67fc071359170f8c647729e5acc63f5a0b"
+    },
+    {
+      "file": "laboratory-native/compact-page-classic-dark.png",
+      "sha256": "b16f21a62597d4a74f25f0fa70826933d07edffd456fc482b8ac94726b7a2aab"
+    },
+    {
+      "file": "laboratory-native/compact-page-classic-light.png",
+      "sha256": "49cdedadf9737975d2cc2ea4b5ace9ff03613a7aa0bfcc0ef8663f9e755d4f82"
+    },
+    {
+      "file": "laboratory-native/compact-page-country-dark.png",
+      "sha256": "ffb2d51df44c8689505bea4b5e2f469704d3fac2a792daf087ac595731d566e8"
+    },
+    {
+      "file": "laboratory-native/compact-page-country-light.png",
+      "sha256": "d6585f589acaa90917fa8154f00ff17fb81bac8e7ef87cb05d09d50e14c16772"
+    },
+    {
+      "file": "laboratory-native/compact-page-default-dark.png",
+      "sha256": "efed65d7f31059b312c022bd08ec096355479bfa08fed81b99bc1f5d1498f198"
+    },
+    {
+      "file": "laboratory-native/compact-page-default-light.png",
+      "sha256": "942e80b1b0ce7df4592b7e642a10fa410ae76721c7ec653a0f8d6636398b1f5f"
+    },
+    {
+      "file": "laboratory-native/compact-page-gothic-dark.png",
+      "sha256": "943f043036d83cf5220ef3264e0d2fc6ff9afbfbc09d9997148c403d087fa427"
+    },
+    {
+      "file": "laboratory-native/compact-page-gothic-light.png",
+      "sha256": "a2801382e1de6f22677d7db7904c5cc376fb81c3e3ecc9c84b579c30657f1226"
+    },
+    {
+      "file": "laboratory-native/compact-page-navy-dark.png",
+      "sha256": "0f671c3663f37cc038ee2c3daf095059b93969aa7ba55b53cfc3035bd7c90dd0"
+    },
+    {
+      "file": "laboratory-native/compact-page-navy-light.png",
+      "sha256": "a7e599dccca9e29a4b54b7741aaea93090df41a821552d44d2a8351359842aef"
+    },
+    {
+      "file": "laboratory-native/compact-page-victorian-dark.png",
+      "sha256": "5e045c93bcd615a1eb454637a2a696548d68496a01c0bb24cb1d84c84d56700c"
+    },
+    {
+      "file": "laboratory-native/compact-page-victorian-light.png",
+      "sha256": "b2bc3122c46e66da7b580533913f3e74cebfffdcb8bbdc13a8831159cdf80eaf"
+    },
+    {
+      "file": "laboratory-native/small-batch-cover.png",
+      "sha256": "e22151e5fcde5980578de8d2aa3a6fe54dd4b31a2d34feed1374ac6cc3fec63b"
+    },
+    {
+      "file": "laboratory-native/small-cover.png",
+      "sha256": "f5d897924423df5a8469e59b4e1a3b8f25ff3e3ebdf8d888eaa3cc3f2316bb83"
+    },
+    {
+      "file": "laboratory-native/small-detail.png",
+      "sha256": "21841b4397ea2617056fdd2daff6558e6396b88d55ae2c48221b145ee988cfcf"
+    },
+    {
+      "file": "laboratory-native/small-lab.png",
+      "sha256": "b8ad75f9e69243e502ab28902f134be2f9661ec788b0195028c7e4ff716ba500"
+    },
+    {
+      "file": "laboratory-native/small-services.png",
+      "sha256": "baaad8ba9f32ddf928ebd4103d9925e7a7b10ee556cf2e849f33d58fcbc0f37e"
+    },
+    {
+      "file": "laboratory-native/small-wig-ime.png",
+      "sha256": "8394bc11c240acec647b945ee49c4ceb6c4ec96d5105878db426f6b6d57cb2fb"
+    },
+    {
+      "file": "typography-native/scale-chinese-dark.png",
+      "sha256": "7151ca0bb2f9e748da29284abcc0915c4636f3173c0515145d2b1bfc3e0565e7"
+    },
+    {
+      "file": "typography-native/scale-chinese-light.png",
+      "sha256": "30db0eb6fdef4243c9cbae1b3564093a6df0e97113d0ec70c2dc56bad9796bdf"
+    },
+    {
+      "file": "typography-native/scale-classic-dark.png",
+      "sha256": "245ca5158add56d92ef1fd4c95a69c22fcf3f34f48f025219cad92639146f7d0"
+    },
+    {
+      "file": "typography-native/scale-classic-light.png",
+      "sha256": "4ada9a55212b4208ea7c09168cf8b277fa2d0a4862143cf23477b4f4e1b3b07e"
+    },
+    {
+      "file": "typography-native/scale-country-dark.png",
+      "sha256": "a43b2a1f5a684aaf40435a868c764aeae073adc1d5ed5804bddd2706e434ebd9"
+    },
+    {
+      "file": "typography-native/scale-country-light.png",
+      "sha256": "39b49ac522d29ced7553474fd9d1537c82c7ed13bccc0ab9ca956659863fe8f5"
+    },
+    {
+      "file": "typography-native/scale-default-dark.png",
+      "sha256": "7728f3a524f17bb7dd7bfccb70b1a8f78da87c44674c712086eec9d705dd1769"
+    },
+    {
+      "file": "typography-native/scale-default-light.png",
+      "sha256": "994a6b0c490c924a7f6726eb6e5eee67bfe85fb4292e891f4cdf51879ec5ecc3"
+    },
+    {
+      "file": "typography-native/scale-gothic-dark.png",
+      "sha256": "4bdc6d5d7149d6904947a0f1f16ab9b28bac30b583c0a3999001bd32a683b2ab"
+    },
+    {
+      "file": "typography-native/scale-gothic-light.png",
+      "sha256": "3b7c2af0fc95d715be23c06817116ad6dc3bc318599ad7bafdccf2aecfb12847"
+    },
+    {
+      "file": "typography-native/scale-navy-dark.png",
+      "sha256": "26398fd2bbd7d6c08aa6390031d6bfe41141043e277034f62828c36503a68269"
+    },
+    {
+      "file": "typography-native/scale-navy-light.png",
+      "sha256": "747b3ebbd8c0d83400108d8b24048a5dccf1328cd3452b4c6f9e8d3b221521d5"
+    },
+    {
+      "file": "typography-native/scale-victorian-dark.png",
+      "sha256": "80eef52e80c63fc0dac334321c39f49ed0625ceb67ad38480c893e57e0bceba9"
+    },
+    {
+      "file": "typography-native/scale-victorian-light.png",
+      "sha256": "0d7396e63347709dc5a90e3ddf92a57140a5c70563b473666f41ba78336d43f4"
+    },
+    {
+      "file": "typography-native/small-input-ime.png",
+      "sha256": "d8e77ecc7497e30f74ce5e548e7de4706f580a9c5bfda2a8054cfb31bba38054"
+    },
+    {
+      "file": "typography-native/small-search-ime.png",
+      "sha256": "74c509baf150c13a7fccb59de8cafa71d62494eabb2e9403a8f4c55a8784cc37"
+    }
+  ]
+}

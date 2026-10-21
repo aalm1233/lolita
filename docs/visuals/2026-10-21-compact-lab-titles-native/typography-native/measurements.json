@@ -1,0 +1,218 @@
+{
+  "width_px": 1440,
+  "density_dpi": 600,
+  "width_dp": 384,
+  "font_scale": 1,
+  "actual_styles": [
+    {
+      "skin": "DEFAULT",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "GOTHIC",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "CHINESE",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "CLASSIC",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "NAVY",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "COUNTRY",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "VICTORIAN",
+      "dark": false,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "DEFAULT",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "GOTHIC",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "CHINESE",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "CLASSIC",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "NAVY",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "COUNTRY",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    },
+    {
+      "skin": "VICTORIAN",
+      "dark": true,
+      "sizes": {
+        "typeFeature": 22,
+        "typeAppBar": 18,
+        "typeRow": 16,
+        "typeHelp": 13,
+        "typeMetadata": 12
+      },
+      "section": 18,
+      "body_line_ends": [
+        30
+      ]
+    }
+  ]
+}

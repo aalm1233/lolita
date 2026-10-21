@@ -1,0 +1,128 @@
+[
+  {
+    "skin": "DEFAULT",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "GOTHIC",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "CHINESE",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "CLASSIC",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "NAVY",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "COUNTRY",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "VICTORIAN",
+    "dark": false,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "DEFAULT",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "GOTHIC",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "CHINESE",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "CLASSIC",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "NAVY",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "COUNTRY",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  },
+  {
+    "skin": "VICTORIAN",
+    "dark": true,
+    "entry_sp": 16,
+    "entry_weight": 500,
+    "same_as_peer": true,
+    "top_bar_sp": 18,
+    "top_bar_weight": 500
+  }
+]

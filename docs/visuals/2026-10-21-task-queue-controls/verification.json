@@ -1,0 +1,87 @@
+{
+  "kind": "Pre-implementation concept drawings, not Compose or real API evidence",
+  "date": "2026-10-21",
+  "images": [
+    {
+      "file": "flow.png",
+      "sha256": "4064f38b8f97bf7c96f31061b705af5837ddd35170b1fb9500d68384616370b3",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "skins-light.png",
+      "sha256": "4231109fb2ff7c748056d95d9b89ffdf18f8b673f5bca6e3022b053b41cc474a",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "skins-dark.png",
+      "sha256": "ae5961d5562c8ea62816bb0ba908706436d83b7c44e9b9982eed45df0a3569f9",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "small.png",
+      "sha256": "4bb331456b7e9e095e7905e5dabf234411ffbea5115afd68d7c04a2cbfbd4ada",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    }
+  ]
+}

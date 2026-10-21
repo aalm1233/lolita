@@ -50,6 +50,10 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                     }
                 }
             }
+            item("queue-actions") {
+                ImageTaskQueueActions(state.tasks, state.isLoading || state.bulkBusy || state.mutating.isNotEmpty(), viewModel::stopQueued, viewModel::discardPending)
+            }
+            state.message?.let { message -> item("operation-message") { Text(message, style = MaterialTheme.typography.bodyMedium) } }
             item("background-advice") { ImageBackgroundAdvice() }
             item("description") { Text("离开页面后继续处理。人台图与个人模特需核对后保存；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
             if (state.isLoading) item("loading") { LolitaCard { Column { ShimmerLine(0.7f, 18.dp); Spacer(Modifier.height(skin.spacingMedium)); ShimmerLine(0.9f, 14.dp) } } }

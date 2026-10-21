@@ -214,8 +214,32 @@ class ImageTaskCoordinator(
     }
 
     suspend fun cancelMaterialBatch(batchId: String, taskIds: List<String>) {
+        // Drain the waiting tail atomically before cancelling/joining the current reader.
+        // Otherwise runNext can claim the next item between two individual cancellations.
+        stopQueued(taskIds, batchId)
         val current = dao.getAll().filter { it.batchId == batchId && it.id in taskIds && it.status.retainsSourceImages }
         current.forEach { cancel(it.id) }
+    }
+
+    /** IDs are the user's confirmed snapshot; never sweep new submissions or active readers. */
+    suspend fun stopQueued(taskIds: List<String>, batchId: String? = null): Int = accepted {
+        val ids = taskIds.toSet()
+        val stopped = state.withLock {
+            db.withTransaction {
+                val rows = dao.getAll().filter {
+                    it.id in ids && (batchId == null || it.batchId == batchId) && it.status == ImageTaskStatus.QUEUED && !it.requestSent
+                }
+                val now = System.currentTimeMillis()
+                rows.forEach { dao.update(it.copy(status = ImageTaskStatus.CANCELLED, updatedAt = now, error = "已停止后续排队，未发送请求").releaseUnusedSourceImages()) }
+                rows
+            }
+        }
+        synchronized(sessions) { stopped.forEach { task ->
+            pending -= task.id
+            owners.remove(task.id)?.taskIds?.remove(task.id)
+        } }
+        cleanup(stopped.flatMap { it.sourceImagePaths })
+        stopped.size
     }
 
     private suspend fun validatePrepared(input: PreparedMaterialInput, source: String) {
@@ -649,15 +673,25 @@ class ImageTaskCoordinator(
         }
     }
 
-    suspend fun discard(id: String) = accepted {
+    suspend fun discard(id: String) { discardPending(listOf(id)) }
+
+    /** Saving and discarding use the same state lock; stale saved/deleted rows are skipped. */
+    suspend fun discardPending(taskIds: List<String>, batchId: String? = null): Int = accepted {
+        val ids = taskIds.toSet()
+        var count = 0
         val paths = state.withLock {
-            val task = dao.get(id) ?: return@withLock emptyList()
-            if (task.status != ImageTaskStatus.AWAITING_CONFIRMATION) return@withLock emptyList()
-            dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null, layersJson = "[]",
-                sourceImagePaths = if (task.keepSourceImages) task.sourceImagePaths else emptyList(), updatedAt = System.currentTimeMillis()))
-            (if (task.keepSourceImages) emptyList() else task.sourceImagePaths) + listOfNotNull(task.resultImagePath) + MaterialLayers.decode(task.layersJson).map { it.imagePath }
+            db.withTransaction {
+                val rows = dao.getAll().filter { it.id in ids && (batchId == null || it.batchId == batchId) && it.status == ImageTaskStatus.AWAITING_CONFIRMATION }
+                val now = System.currentTimeMillis()
+                rows.flatMap { task ->
+                    dao.update(task.copy(status = ImageTaskStatus.DISCARDED, resultImagePath = null, layersJson = "[]",
+                        sourceImagePaths = if (task.keepSourceImages) task.sourceImagePaths else emptyList(), updatedAt = now))
+                    (if (task.keepSourceImages) emptyList() else task.sourceImagePaths) + listOfNotNull(task.resultImagePath) + MaterialLayers.decode(task.layersJson).map { it.imagePath }
+                }.also { count = rows.size }
+            }
         }
         cleanup(paths)
+        count
     }
 
     suspend fun delete(id: String) = accepted {

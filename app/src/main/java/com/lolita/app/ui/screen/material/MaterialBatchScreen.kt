@@ -21,6 +21,7 @@ import com.lolita.app.domain.model.*
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.screen.tasks.label
+import com.lolita.app.ui.screen.tasks.ImageTaskQueueActions
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.icon.*
@@ -76,6 +77,9 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                 if(s.loading)item("loading"){LolitaCard{Column{ShimmerRect(160.dp,180.dp,modifier=Modifier.fillMaxWidth());ShimmerLine(0.8f,18.dp)}}}
                 s.error?.let{item("error"){LolitaSection(title="操作提示"){row{Text(it,color=MaterialTheme.colorScheme.error)}}}}
                 s.message?.let{item("message"){Text(it,style=MaterialTheme.typography.bodyMedium)}}
+                if(!s.draft)item("queue-actions"){
+                    ImageTaskQueueActions(s.jobs,s.busy || s.loading || s.loadFailed,viewModel::stopQueued,viewModel::discardPending)
+                }
                 if(!s.draft)item("summary"){LolitaSection(title=s.name){row{
                     val count=s.jobs.map{it.batchPosition}.distinct().size
                     val pending=s.jobs.count{it.status==ImageTaskStatus.AWAITING_CONFIRMATION}

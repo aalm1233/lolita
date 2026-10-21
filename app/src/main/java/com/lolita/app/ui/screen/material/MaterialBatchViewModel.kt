@@ -210,6 +210,18 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
         coordinator.confirmMaterialBatch(id,rows,true);handle["batchSelected${MaterialBatchPhase.LAYERS}"]=emptyList<String>();handle["batchPhase"]=MaterialBatchPhase.SAVED.name
         refresh(state.value.copy(phase=MaterialBatchPhase.SAVED,checks=emptySet(),message="已保存${rows.size}份确认素材"))}}
     fun cancel(ids:List<String>)=mutate{coordinator.cancelMaterialBatch(id,ids)}
+    fun stopQueued(ids:List<String>)=mutate{
+        invalidateFee()
+        val count=coordinator.stopQueued(ids,id)
+        state.update{it.copy(message="已停止${count}个排队任务；已开始项继续处理")}
+    }
+    fun discardPending(ids:List<String>)=mutate{
+        invalidateFee()
+        val count=coordinator.discardPending(ids,id)
+        val selected=state.value.selected-ids.toSet()
+        handle["batchSelected${state.value.phase}"]=selected.toList()
+        state.update{it.copy(selected=selected,checks=emptySet(),message="已舍弃${count}项；已保存或状态变化的任务已跳过")}
+    }
     private fun mutate(action:suspend()->Unit){if(state.value.busy)return;state.update{it.copy(busy=true,error=null)};viewModelScope.launch{try{action()}catch(failure:Exception){if(failure is CancellationException)throw failure;state.update{it.copy(error="本批操作未完成，请核对最新状态；原资料仍保留")}}finally{state.update{it.copy(busy=false)}}}}
     fun dismissFee(){if(!state.value.busy)invalidateFee()}
     private fun invalidateFee(){generation++;val old=leases;leases=emptyList();val paths=state.value.fee?.rows.orEmpty().map{it.input.imagePath};state.update{it.copy(fee=null)};releaseBatchImages(old,paths,cleanup)}

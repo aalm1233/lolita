@@ -285,7 +285,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=136, versionName="2.65.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=137, versionName="2.66.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -439,6 +439,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - Room27／备份7及图片归属不变。实际付费联调在用量限制调整后成功返回1张图（76.29秒，2张输入）；不能推论所有印花准确。验证、来源与样片见 `docs/seedream-provider-2026-10-16.md`，回归包含 API／不可变快照 JVM、独立AVD真实Keystore双Key保全、双VM同步及七皮肤浅暗服务选择、原生成与导航测试。
 
 ## 后台图像任务与版本说明（2.51.0）
+
+- 任务中心与素材批次共用`ImageTaskQueueActions`：停止后续仅处理确认时仍QUEUED且未发请求的冻结ID，当前执行继续；多选舍弃默认零选择，支持全选、完整Fit预览和放大。`stopQueued`与`discardPending`经Coordinator应用作用域、统一状态锁和Room事务提交，跳过已保存/删除/状态变化项，不扫入后来新建任务。批次原“停止未完成”先整体停止队尾再取消当前读者，避免逐条取消间隙领取后续；原图、已确认资料与共享图片/备份租约继续保护。Room32/备份13不变，前置图稿和受控回归见`docs/plans/2026-10-21-task-queue-controls.md`，真实付费请求0次。
 
 - 全局 `ImageTaskBarViewModel` 在 `LolitaNavHost` 根层订阅持久任务；排队、执行和待确认时立即在底栏上方显示 `ImageTaskBar`，不依赖任务中心VM或进入页面。无活动/待确认即收起，显示真实阶段与队列/待确认数，点击进入任务中心；使用COMPACT卡片/皮肤图标，布局为页面留出空间，不暴露物品名称或图片，不改执行/通知/重试协议。回归覆盖启动前隐藏、跨页实时更新、点击、待确认与终态收起。
 - 虚拟试衣与人台图提交到持久 `ImageTask`，由 `ImageTaskCoordinator` 的应用作用域接收，`ImageTaskRunner` / `ImageTaskService` 串行执行。页面仅观察并提交，离开、底栏和快捷穿搭不再受全局生成/预览状态限制；短暂提交防双击，付费确认固定展示的服务，配置变化时拒绝陈旧确认。旧版 SavedState 预览单独验证、查看及明确追加/舍弃，不因 VM 销毁删除。

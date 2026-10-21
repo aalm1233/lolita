@@ -26,7 +26,9 @@ data class ImageTaskUiState(
     val personalModels: List<PersonalModel> = emptyList(),
     val defaultSaveFailed: Set<String> = emptySet(),
     val savedPersonalIds: Map<String, Long> = emptyMap(),
-    val materials: List<com.lolita.app.data.local.entity.ItemTryOnMaterial> = emptyList()
+    val materials: List<com.lolita.app.data.local.entity.ItemTryOnMaterial> = emptyList(),
+    val bulkBusy: Boolean = false,
+    val message: String? = null
 ) {
     val visibleTasks get() = tasks.filter {
         when (filter) {
@@ -90,7 +92,9 @@ class ImageTaskViewModel @JvmOverloads constructor(
     personalModels: Flow<List<PersonalModel>> = flowOf(emptyList()),
     private val setDefaultPersonalModel: suspend (Long?) -> Unit = { AppModule.appPreferences().setDefaultPersonalModelId(it) },
     private val confirmPersonalTask: suspend (String) -> Long = { AppModule.imageTaskCoordinator().confirmPersonalModel(it) },
-    materials: Flow<List<com.lolita.app.data.local.entity.ItemTryOnMaterial>> = flowOf(emptyList())
+    materials: Flow<List<com.lolita.app.data.local.entity.ItemTryOnMaterial>> = flowOf(emptyList()),
+    private val stopQueuedTasks: suspend (List<String>) -> Int = { AppModule.imageTaskCoordinator().stopQueued(it) },
+    private val discardPendingTasks: suspend (List<String>) -> Int = { AppModule.imageTaskCoordinator().discardPending(it) }
 
 ) : ViewModel() {
     private val state = MutableStateFlow(ImageTaskUiState())
@@ -122,8 +126,23 @@ class ImageTaskViewModel @JvmOverloads constructor(
     }
     fun discard(id: String) = mutate(id, discardTask)
     fun delete(id: String) = mutate(id, deleteTask)
+    fun stopQueued(ids: List<String>) = bulk(ids, "已停止", stopQueuedTasks)
+    fun discardPending(ids: List<String>) = bulk(ids, "已舍弃", discardPendingTasks)
+    private fun bulk(ids: List<String>, action: String, operation: suspend (List<String>) -> Int) {
+        if (state.value.bulkBusy || state.value.mutating.isNotEmpty() || ids.isEmpty()) return
+        val snapshot = ids.distinct()
+        state.update { it.copy(bulkBusy = true, mutating = snapshot.toSet(), error = null, message = null) }
+        viewModelScope.launch {
+            try {
+                val count = operation(snapshot)
+                state.update { it.copy(message = "$action${count}项；状态已变化的任务已跳过") }
+            } catch (e: CancellationException) { throw e }
+            catch (_: Exception) { state.update { it.copy(error = "批量操作未完成，请核对最新任务后重试") } }
+            finally { state.update { it.copy(bulkBusy = false, mutating = emptySet()) } }
+        }
+    }
     private fun mutate(id: String, operation: suspend (String) -> Unit) {
-        if (id in state.value.mutating) return
+        if (state.value.bulkBusy || id in state.value.mutating) return
         state.update { it.copy(mutating = it.mutating + id, error = null) }
         viewModelScope.launch {
             try { operation(id) }

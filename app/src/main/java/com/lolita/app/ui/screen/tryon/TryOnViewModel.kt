@@ -144,7 +144,7 @@ class TryOnViewModel @JvmOverloads constructor(
             combine(items, categories, materials) { rows, groups, assets ->
                 Triple(rows.filter { it.status.supportsVirtualTryOn }, groups, assets.filter { asset ->
                     val current = rows.firstOrNull { it.id == asset.itemId }?.let { item -> groups.firstOrNull { it.id == item.categoryId }?.categorySemantic }
-                    current != null && runCatching { ImageTaskRequest.decode(asset.requestJson).garments.single().semantic }.getOrNull() == current
+                    current != null && rows.firstOrNull { it.id == asset.itemId }?.let { asset.matchesSource(current, it.composition) } == true
                 })
             }
                 .catch { failure ->

@@ -193,7 +193,8 @@ class ImageTaskCoordinator(
             jobs.forEach { job ->
                 val request = ImageTaskRequest.decode(job.requestJson)
                 val item = requireNotNull(db.itemDao().getItemById(request.garments.single().itemId)) { "批次中有物品已删除" }
-                require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY) { "批次中有物品类型或状态已改变" }
+                require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic &&
+                    (request.version < 6 || item.composition == request.garments.single().composition)) { "批次中有物品类型、组合或状态已改变" }
                 if (request.materialSpec?.stage == MaterialStage.FRONT_VIEW) {
                     require(request.productOriginalImagePath in item.productReferenceImages &&
                         db.itemTryOnMaterialDao().getForItem(item.id)?.id == request.materialSpec.expectedMaterialId) { "原图或当前素材已改变" }
@@ -234,15 +235,16 @@ class ImageTaskCoordinator(
         val item = requireNotNull(db.itemDao().getItemById(itemId)) { "物品已删除" }
         require(item.status.supportsVirtualTryOn && originalPath in item.productReferenceImages) { "原参考图片或物品状态已改变" }
         val semantic = db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic
-        require(semantic == CategorySemantic.WAIST_ACCESSORY) { "首版请先选择已确认类型的腰饰" }
+        require(semantic?.supportsMaterialPreparation == true) { "请先在服饰编辑中核对物品类型" }
         require(instructions.length <= 200)
         validatePrepared(input, input.sourcePath)
         require(db.itemTryOnMaterialDao().getForItem(itemId)?.id == expectedMaterialId) { "当前素材已改变，请重新核对" }
         val stage = if (provider == ImageGenerationProvider.SEEDREAM) MaterialStage.FRONT_VIEW else MaterialStage.TRANSPARENT
         val spec = MaterialTaskSpec(stage, expectedMaterialId, input.imagePath, originalInputSha256 = input.sha256)
-        val prompt = if (stage == MaterialStage.FRONT_VIEW) TryOnMaterialPrompts.front(instructions) else TryOnMaterialPrompts.transparent(instructions)
-        val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.WAIST, semantic, item.composition)),
-            instructions, version = 5, promptVersion = 1, promptSnapshot = prompt, serviceModel = provider.model,
+        val legacy = semantic == CategorySemantic.WAIST_ACCESSORY
+        val prompt = if (legacy) TryOnMaterialPrompts.front(instructions) else TryOnMaterialPrompts.front(requireNotNull(semantic), item.composition, instructions)
+        val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, requireNotNull(semantic).defaultWearRole, semantic, item.composition)),
+            instructions, version = if (legacy) 5 else 6, promptVersion = if (legacy) 1 else MaterialPreparation.PROMPT_VERSION, promptSnapshot = prompt, serviceModel = provider.model,
             inputSha256s = listOf(input.sha256), productOriginalImagePath = originalPath, materialSpec = spec)
         return item to request
     }
@@ -268,8 +270,11 @@ class ImageTaskCoordinator(
         require(validateImage(source)) { "主视图已丢失" }
         validatePrepared(input, source)
         val item = requireNotNull(db.itemDao().getItemById(old.garments.single().itemId)) { "原物品已删除" }
-        require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY)
-        val request = old.copy(promptSnapshot = TryOnMaterialPrompts.extract(old.instructions), inputSha256s = listOf(input.sha256),
+        require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == old.garments.single().semantic &&
+            (old.version < 6 || item.composition == old.garments.single().composition)) { "原物品类型、组合或状态已改变" }
+        val garment = old.garments.single()
+        val request = old.copy(promptSnapshot = if (old.version == 5) TryOnMaterialPrompts.extract(old.instructions)
+            else TryOnMaterialPrompts.extract(requireNotNull(garment.semantic), requireNotNull(garment.composition), old.instructions), inputSha256s = listOf(input.sha256),
             materialSpec = requireNotNull(old.materialSpec).copy(stage = MaterialStage.EXTRACT_LAYER, parentTaskId = parent.id))
         return parent to request
     }
@@ -331,7 +336,8 @@ class ImageTaskCoordinator(
             require(request.materialSpec?.stage != MaterialStage.FRONT_VIEW) { "请先分离主视图中的单品" }
             val itemId = request.garments.single().itemId
             val item = requireNotNull(db.itemDao().getItemById(itemId)) { "原物品已删除，无法保存素材" }
-            require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic) { "原物品类型或状态已改变，请重新核对" }
+            require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic &&
+                (request.version < 6 || item.composition == request.garments.single().composition)) { "原物品类型、组合或状态已改变，请重新核对" }
             val candidates = MaterialLayers.decode(task.layersJson)
             require(selectedPath == task.resultImagePath || candidates.any { it.imagePath == selectedPath }) { "所选图层不属于本任务" }
             require(validateImage(selectedPath) && validateMaterialImage(selectedPath)) { "这次未得到有效透明单品，请核对结果" }
@@ -390,7 +396,7 @@ class ImageTaskCoordinator(
                     require(item.status.supportsVirtualTryOn && if (row.materialId == null) row.imagePath in item.imageUrls
                         else material?.id == row.materialId && material.imagePath == row.imagePath &&
                             validateMaterialImage(row.imagePath) && imageSha256(row.imagePath) == material.resultSha256 &&
-                            ImageTaskRequest.decode(material.requestJson).garments.single().semantic == db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic) { "所选物品或图片已改变" }
+                            material.matchesSource(db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic, item.composition)) { "所选物品或图片已改变" }
                     require(row.semantic == null || db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == row.semantic) { "分类语义已改变，请重新核对" }
                 }
                 val person = personalModelId?.let { requireNotNull(db.personalModelDao().get(it)) { "所选人物已删除" } }

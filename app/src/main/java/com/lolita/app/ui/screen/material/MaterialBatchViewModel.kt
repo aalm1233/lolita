@@ -19,9 +19,12 @@ import java.util.UUID
 enum class MaterialBatchPhase(val label: String) { INPUTS("选物品"), FRONT("主视图"), LAYERS("透明层"), SAVED("已确认") }
 data class MaterialBatchRow(val key: String, val itemId: Long, val name: String, val brand: String, val position: Int,
     val item: Item?, val semantic: CategorySemantic?, val material: ItemTryOnMaterial?, val task: ImageTask?,
-    val source: String, val original: String, val selectedLayer: String? = null) {
-    val eligible get() = item?.status?.supportsVirtualTryOn == true && semantic == CategorySemantic.WAIST_ACCESSORY
+    val source: String, val original: String, val selectedLayer: String? = null, val categoryName: String = "") {
+    val eligible get() = item?.status?.supportsVirtualTryOn == true && semantic?.supportsMaterialPreparation == true
     val layers get() = task?.let { runCatching { MaterialLayers.decode(it.layersJson) }.getOrDefault(emptyList()) }.orEmpty()
+    val matchesTask get() = task?.let{ImageTaskRequest.decode(it.requestJson)}?.let{request->
+        request.garments.single().semantic == semantic && (request.version<6 || request.garments.single().composition == item?.composition)
+    } ?: true
     val image get() = selectedLayer ?: task?.resultImagePath ?: source
     val canRetry get() = task?.let { !it.sourceResourcesMissing && it.status in setOf(ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED) } == true
 }
@@ -34,17 +37,17 @@ data class MaterialBatchState(val id: String, val name: String, val phase: Mater
     val rows: List<MaterialBatchRow> = emptyList(), val jobs: List<ImageTask> = emptyList(), val selected: Set<String> = emptySet(),
     val query: String = "", val onlyMissing: Boolean = false, val instructions: String = "", val checks: Set<Int> = emptySet(),
     val provider: ImageGenerationProvider = ImageGenerationProvider.SEEDREAM, val hasKey: Boolean = false, val keyLoaded: Boolean = false,
-    val revision: Int = 0, val fee: MaterialBatchFee? = null, val error: String? = null, val message: String? = null) {
+    val revision: Int = 0, val fee: MaterialBatchFee? = null, val error: String? = null, val message: String? = null, val family: WardrobeFamily? = null) {
     val identity get() = MaterialBatchIdentity(id,name)
     val draft get() = jobs.isEmpty()
     val selectedRows get() = rows.filter { it.key in selected }
-    val visibleRows get() = rows.filter { (query.isBlank() || "${it.name} ${it.brand}".contains(query.trim(),true)) && (!onlyMissing || it.material == null) }
+    val visibleRows get() = rows.filter { (query.isBlank() || "${it.name} ${it.brand} ${it.categoryName} ${it.semantic?.label.orEmpty()}".contains(query.trim(),true)) && (family == null || it.semantic?.family == family) && (!onlyMissing || it.material == null) }
     val active get() = jobs.filter { it.status.retainsSourceImages }
     val latestJobs get() = jobs.groupBy{it.batchPosition}.values.map{rows->rows.maxWith(compareBy<ImageTask>{it.createdAt}.thenBy{it.id})}
     fun selectable(row: MaterialBatchRow): Boolean = when(phase) {
         MaterialBatchPhase.INPUTS -> row.eligible && row.source.isNotBlank() && (draft || row.canRetry)
-        MaterialBatchPhase.FRONT -> row.eligible && row.task?.status == ImageTaskStatus.AWAITING_CONFIRMATION
-        MaterialBatchPhase.LAYERS -> row.eligible && (row.task?.status == ImageTaskStatus.AWAITING_CONFIRMATION || row.canRetry)
+        MaterialBatchPhase.FRONT -> row.eligible && row.matchesTask && row.task?.status == ImageTaskStatus.AWAITING_CONFIRMATION
+        MaterialBatchPhase.LAYERS -> row.eligible && row.matchesTask && (row.task?.status == ImageTaskStatus.AWAITING_CONFIRMATION || row.canRetry)
         MaterialBatchPhase.SAVED -> false
     }
     fun fingerprint(): String = "$id|$name|$phase|$instructions|$revision|$provider|" + selectedRows.joinToString { row ->
@@ -68,7 +71,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
     private val id=handle.get<String>("batchId")?.takeIf(String::isNotBlank) ?: handle.get<String>("batchDraftId") ?: UUID.randomUUID().toString().also{handle["batchDraftId"]=it}
     private val initialPhase=(handle.get<String>("batchPhase") ?: handle.get<String>("phase"))?.let{runCatching{MaterialBatchPhase.valueOf(it)}.getOrNull()}
     private val state=MutableStateFlow(MaterialBatchState(id,handle.get<String>("batchName") ?: "素材批次 · ${SimpleDateFormat("MM/dd HH:mm",Locale.CHINA).format(Date())}",
-        phase=initialPhase ?: MaterialBatchPhase.INPUTS, query=handle.get<String>("batchQuery").orEmpty(),instructions=handle.get<String>("batchInstructions").orEmpty()))
+        phase=initialPhase ?: MaterialBatchPhase.INPUTS, query=handle.get<String>("batchQuery").orEmpty(),instructions=handle.get<String>("batchInstructions").orEmpty(), family=handle.get<String>("batchFamily")?.let{runCatching{WardrobeFamily.valueOf(it)}.getOrNull()}))
     val uiState=state.asStateFlow()
     private var data:Data?=null
     private var phaseInitialized=initialPhase!=null
@@ -87,7 +90,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
                 val jobs=snapshot.tasks.filter{it.batchId==id}
                 if(!phaseInitialized && jobs.isNotEmpty()) {
                     val layers=jobs.filter{ImageTaskRequest.decode(it.requestJson).materialSpec?.stage==MaterialStage.EXTRACT_LAYER}
-                    val next=if(layers.any{it.status==ImageTaskStatus.AWAITING_CONFIRMATION || it.status in setOf(ImageTaskStatus.FAILED,ImageTaskStatus.INTERRUPTED,ImageTaskStatus.CANCELLED)})MaterialBatchPhase.LAYERS
+                    val next=if(layers.any{it.status!=ImageTaskStatus.COMPLETED})MaterialBatchPhase.LAYERS
                         else if(layers.isNotEmpty() && layers.all{it.status==ImageTaskStatus.COMPLETED})MaterialBatchPhase.SAVED else MaterialBatchPhase.FRONT
                     state.update{it.copy(phase=next)};phaseInitialized=true
                 }
@@ -106,7 +109,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
         val d=data ?: return emptyList()
         val requests=s.jobs.associate{it.id to ImageTaskRequest.decode(it.requestJson)}
         val grouped=s.jobs.groupBy{requireNotNull(requests[it.id]).garments.single().itemId}
-        val records=if(s.draft) d.items.filter{it.status.supportsVirtualTryOn && d.categories.firstOrNull{c->c.id==it.categoryId}?.categorySemantic==CategorySemantic.WAIST_ACCESSORY}.map{it.id to null}
+        val records=if(s.draft) d.items.filter{it.status.supportsVirtualTryOn && d.categories.firstOrNull{c->c.id==it.categoryId}?.categorySemantic?.supportsMaterialPreparation==true}.map{it.id to null}
             else grouped.map{it.key to it.value.minBy{j->requireNotNull(j.batchPosition)}}
         return records.mapIndexedNotNull { index,(itemId,first) ->
             val item=d.items.firstOrNull{it.id==itemId};val all=grouped[itemId].orEmpty()
@@ -121,7 +124,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
             MaterialBatchRow(key,itemId,item?.name ?: first?.let{requests[it.id]?.garments?.single()?.name}.orEmpty(),
                 d.brands.firstOrNull{it.id==item?.brandId}?.name.orEmpty(),first?.batchPosition ?: index,item,
                 d.categories.firstOrNull{it.id==item?.categoryId}?.categorySemantic,material,task,source,original,
-                layer?.takeIf{path->task?.let{MaterialLayers.decode(it.layersJson).any{l->l.imagePath==path}}==true})
+                layer?.takeIf{path->task?.let{MaterialLayers.decode(it.layersJson).any{l->l.imagePath==path}}==true}, d.categories.firstOrNull{it.id==item?.categoryId}?.name.orEmpty())
         }.sortedBy{it.position}
     }
     private fun refresh(next:MaterialBatchState=state.value) {
@@ -134,6 +137,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
     }
     fun phase(value:MaterialBatchPhase){if(state.value.busy)return;invalidateFee();handle["batchPhase"]=value.name;phaseInitialized=true;refresh(state.value.copy(phase=value,error=null,message=null))}
     fun query(value:String){handle["batchQuery"]=value;state.update{it.copy(query=value)}}
+    fun family(value:WardrobeFamily?){handle["batchFamily"]=value?.name;state.update{it.copy(family=value)}}
     fun onlyMissing(value:Boolean){state.update{it.copy(onlyMissing=value)}}
     fun toggle(key:String,value:Boolean){
         val s=state.value;if(s.busy)return;val row=s.rows.firstOrNull{it.key==key} ?: return
@@ -186,7 +190,7 @@ class MaterialBatchViewModel(private val handle: SavedStateHandle,
         finally{state.update{it.copy(busy=false)}}}
     }
     fun saveSnapshot():List<BatchMaterialConfirmation>? {
-        val s=state.value;if(s.busy || s.phase!=MaterialBatchPhase.LAYERS || s.checks!=setOf(0,1,2) || s.selectedRows.isEmpty() || s.selectedRows.any{it.task?.status!=ImageTaskStatus.AWAITING_CONFIRMATION || !it.eligible})return null
+        val s=state.value;if(s.busy || s.phase!=MaterialBatchPhase.LAYERS || s.checks!=setOf(0,1,2) || s.selectedRows.isEmpty() || s.selectedRows.any{it.task?.status!=ImageTaskStatus.AWAITING_CONFIRMATION || !it.eligible || !it.matchesTask})return null
         return s.selectedRows.map{BatchMaterialConfirmation(requireNotNull(it.task).id,requireNotNull(it.image),it.material?.id)}
     }
     fun save(rows:List<BatchMaterialConfirmation>){if(rows!=saveSnapshot())return;mutate{

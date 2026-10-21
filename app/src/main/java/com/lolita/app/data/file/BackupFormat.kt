@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 12
+    const val VERSION = 13
     const val SCHEMA_VERSION = 32
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
@@ -158,6 +158,9 @@ internal object BackupFormat {
         root.addProperty("formatVersion", version)
         root.addProperty("schemaVersion", schema)
         val data = gson.fromJson(root, BackupData::class.java)
+        if (version < 13) require((data.imageTasks.map { it.requestJson } + data.itemTryOnMaterials.map { it.requestJson }).none {
+            com.lolita.app.domain.model.ImageTaskRequest.decode(it).version >= 6
+        }) { "旧备份格式不能包含新版素材请求" }
         validate(data)
         return data.copy(categories = data.categories.map(HistoricalCategoryRecognition::recognize))
     }

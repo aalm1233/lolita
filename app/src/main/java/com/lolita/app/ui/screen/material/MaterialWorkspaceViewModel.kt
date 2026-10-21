@@ -33,7 +33,8 @@ data class MaterialWorkspaceState(
 ) {
     val request get() = task?.let { runCatching { ImageTaskRequest.decode(it.requestJson) }.getOrNull() }
     val layers get() = task?.let { runCatching { MaterialLayers.decode(it.layersJson) }.getOrDefault(emptyList()) }.orEmpty()
-    val eligible get() = item?.status?.supportsVirtualTryOn == true && semantic == CategorySemantic.WAIST_ACCESSORY && !loading && !failed
+    val eligible get() = item?.status?.supportsVirtualTryOn == true && semantic?.supportsMaterialPreparation == true && !loading && !failed
+    val accessoryEligible get() = eligible && semantic == CategorySemantic.WAIST_ACCESSORY
     val pending get() = task?.status == ImageTaskStatus.AWAITING_CONFIRMATION
     val front get() = request?.materialSpec?.stage == MaterialStage.FRONT_VIEW
     val retryLayers get() = request?.materialSpec?.stage == MaterialStage.EXTRACT_LAYER && task?.sourceResourcesMissing == false &&
@@ -170,7 +171,7 @@ class MaterialWorkspaceViewModel(
         if (current.busy || !current.eligible || !current.hasKey || !current.keyLoaded) return
         if (action != MaterialFeeAction.ADD_ACCESSORY && current.provider != ImageGenerationProvider.SEEDREAM) return
         if (action == MaterialFeeAction.DECOMPOSE && ((!current.retryLayers && (!current.pending || !current.front)) || !current.frontConfirmed)) return
-        if (action == MaterialFeeAction.ADD_ACCESSORY && (current.material == null || current.selectedBase == null || !current.clothingConfirmed)) return
+        if (action == MaterialFeeAction.ADD_ACCESSORY && (!current.accessoryEligible || current.material == null || current.selectedBase == null || !current.clothingConfirmed)) return
         if (action == MaterialFeeAction.PREPARE && (current.originalPath ?: current.source) !in current.item!!.productReferenceImages) return
         invalidateFee()
         val ticket = generation

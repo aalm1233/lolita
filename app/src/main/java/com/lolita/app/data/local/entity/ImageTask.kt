@@ -45,7 +45,7 @@ data class ImageTask(
         if (batchId == null) require(batchName == null && batchPosition == null) { "批次元数据不完整" }
         else {
             com.lolita.app.domain.model.MaterialBatchIdentity(batchId, requireNotNull(batchName))
-            require(batchPosition in 0 until com.lolita.app.domain.model.MaterialBatchIdentity.MAX_ITEMS && request.version == 5 &&
+            require(batchPosition in 0 until com.lolita.app.domain.model.MaterialBatchIdentity.MAX_ITEMS && request.version in 5..6 &&
                 kind == ImageTaskKind.SINGLE_ITEM_MATERIAL) { "批次用途或顺序无效" }
         }
         require(!sourceResourcesMissing || keepSourceImages && request.version >= 4) { "仅不可变输入任务可标记资源缺失" }

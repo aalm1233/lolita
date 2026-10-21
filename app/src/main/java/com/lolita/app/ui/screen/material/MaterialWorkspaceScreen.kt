@@ -59,7 +59,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
         else -> "核对输入与整理费用"
     }
     val canSubmit = !state.busy && !state.loading && when {
-        addAccessory -> state.eligible && state.keyLoaded && (!state.hasKey || state.material != null && state.selectedBase != null && state.clothingConfirmed)
+        addAccessory -> state.accessoryEligible && state.keyLoaded && (!state.hasKey || state.material != null && state.selectedBase != null && state.clothingConfirmed)
         (!state.pending || state.front) && state.provider != ImageGenerationProvider.SEEDREAM -> state.eligible && state.keyLoaded
         state.pending && state.front || state.retryLayers -> state.eligible && state.frontConfirmed && state.keyLoaded && state.hasKey
         state.pending -> state.eligible && state.checks == setOf(0,1,2) && state.selectedPath != null
@@ -165,7 +165,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                 } } }
                 item("checks") { LolitaSection(title = if (state.front) "确认主视角" else "核对这件单品") { row {
                     if (state.front) MaterialCheck("主视角与关键结构正确，继续分离单品", state.frontConfirmed, !state.busy, viewModel::frontConfirmed)
-                    else listOf("只包含这件物品及其附属部件", "造型、颜色和关键五金正确", "没有残留人台、文字或其他服饰").forEachIndexed { index, label ->
+                    else listOf("只包含这条物品记录的完整组成及附属部件", "造型、颜色和部件数量正确", "没有残留人台、文字或其他服饰").forEachIndexed { index, label ->
                         MaterialCheck(label, index in state.checks, !state.busy) { viewModel.check(index, it) }
                     }
                     Text("系带、链条、绳端和透明孔洞属于商品结构，不按像素连通块数判断件数。", style = MaterialTheme.typography.bodySmall)
@@ -180,7 +180,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                     state.material?.let { material ->
                         MaterialPhoto(material.imagePath, "放大当前确认素材", onClick = { zoom = material.imagePath }, height = 200, checker = true)
                         Text("主视单品 · 已确认 · AI 整理", style = MaterialTheme.typography.bodySmall)
-                        OutlinedButton(onClick = { modePicker = true }, modifier = Modifier.fillMaxWidth()) { Text("用这份素材试衣") }
+                        OutlinedButton(onClick = { if(state.accessoryEligible) modePicker = true else state.item?.id?.let(onFullTryOn) }, enabled = state.material?.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED) == true, modifier = Modifier.fillMaxWidth()) { Text("用这份素材试衣") }
                         TextButton(onClick = { removeId = material.id }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("移除当前素材") }
                     }
                 } } }
@@ -192,12 +192,12 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                         Text(if (state.originalPath != null) "已框选：只发送本次选区，原图保留。" else "可选商品相册或详情图，只发送当前选中的一张。", style = MaterialTheme.typography.bodySmall)
                     } } }
                     item("prepare") { LolitaSection(title = "整理成主视单品") { row {
-                        Text("先摆正视角，保留腰饰及所附扣具、系带、链条。主视图由 AI 重建，纹样和细节可能改变。")
+                        Text("按物品类型整理主展示视角，保留原结构、长度、花纹及附属部件；单只不补双，发片不补成整顶。主视图由 AI 重建，细节可能改变。")
                         MaterialInstructions(state.instructions, !state.busy, viewModel::instructions)
-                        Text("首版素材整理使用已验证的即梦服务：先核对主视图，再单独确认分层费用；选出并核对单品层后保存。", style = MaterialTheme.typography.bodySmall)
+                        Text("素材整理使用即梦服务：先核对主视图，再单独确认分层费用；选出并核对单品层后保存。", style = MaterialTheme.typography.bodySmall)
                     } } }
                 }
-                if (!state.loading && !state.eligible && state.item != null) item("eligibility") { LolitaSection(title = "使用范围") { row { Text("首版支持已拥有或心愿中、类型已确认的腰饰。请先核对物品类型。") } } }
+                if (!state.loading && !state.eligible && state.item != null) item("eligibility") { LolitaSection(title = "使用范围") { row { Text("支持已拥有或心愿中的服饰和小物，请先核对物品类型；旧任务的类型或组合改变后需重新整理。") } } }
             }
         }
     }
@@ -208,7 +208,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
     if (modePicker) AlertDialog(onDismissRequest = { modePicker = false }, title = { Text("如何使用这份素材") }, text = { Column {
         Text("完整换装继续选择基础服装；加配饰使用一张已有穿搭底图。")
         OutlinedButton(onClick = { modePicker = false; state.item?.id?.let(onFullTryOn) }, modifier = Modifier.fillMaxWidth()) { Text("完整换装") }
-        Button(onClick = { modePicker = false; state.item?.id?.let(onAddAccessory) }, modifier = Modifier.fillMaxWidth()) { Text("在原穿搭上加配饰") }
+        if(state.accessoryEligible) Button(onClick = { modePicker = false; state.item?.id?.let(onAddAccessory) }, modifier = Modifier.fillMaxWidth()) { Text("在原穿搭上加配饰") }
     } }, confirmButton = { TextButton(onClick = { modePicker = false }) { Text("返回") } })
     if (discard) AlertDialog(onDismissRequest = { discard = false }, title = { Text("舍弃本次预览？") }, text = { Text("只清理未被其他资料使用的预览；原图与当前确认素材继续保留。") }, confirmButton = { TextButton(onClick = { discard = false; viewModel.discardTask() }) { Text("舍弃") } }, dismissButton = { TextButton(onClick = { discard = false }) { Text("保留") } })
     removeId?.let { id -> AlertDialog(onDismissRequest = { removeId = null }, title = { Text("移除当前试衣素材？") }, text = { Text("原商品相册、已提交任务和试衣历史各自保留；重新整理需要再次确认生成费用。") }, confirmButton = { TextButton(onClick = { removeId = null; viewModel.removeMaterial(id) }) { Text("移除素材") } }, dismissButton = { TextButton(onClick = { removeId = null }) { Text("保留") } }) }

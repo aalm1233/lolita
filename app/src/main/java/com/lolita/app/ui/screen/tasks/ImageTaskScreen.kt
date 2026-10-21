@@ -40,7 +40,7 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("imageTasks"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             item("new-material-batch"){LolitaSection(title="批量整理试衣素材"){row{
-                Text("一次选多件腰饰，统一确认费用，在同一批次查看主视图、分层和保存结果。",style=MaterialTheme.typography.bodySmall)
+                Text("一次选多件服饰和小物，统一确认费用，在同一批次查看主视图、分层和保存结果。",style=MaterialTheme.typography.bodySmall)
                 Button(onClick=onNewMaterialBatch,modifier=Modifier.fillMaxWidth()){Text("新建素材批次")}
             }}}
             item("filters") {

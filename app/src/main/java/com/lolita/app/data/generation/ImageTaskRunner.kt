@@ -50,7 +50,7 @@ class ImageTaskExecutor(
         val credentials = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { readCredentials(task.provider) }
         val request = ImageTaskRequest.decode(task.requestJson)
         if (request.version == 4) require(request.serviceModel == task.provider.model) { "原服务型号已不可用，请核对后为新任务重新选择；原请求未改变" }
-        if (request.version == 5) {
+        if (request.version >= 5) {
             request.validate(task.kind)
             require(request.serviceModel == task.provider.model) { "原服务型号已改变" }
             com.lolita.app.data.tryon.ImageGenerationGate.process.runExclusive {

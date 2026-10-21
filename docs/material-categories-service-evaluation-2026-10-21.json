@@ -1,0 +1,142 @@
+{
+  "date": "2026-10-21",
+  "authorization": "Same independent 100-output allowance authorized for this app material workflow; prior 6 successful outputs, 94 units available before this extension",
+  "new_requests": 4,
+  "new_successful_outputs_including_layer_background": 4,
+  "timeout_requests": 1,
+  "automatic_retries": 0,
+  "unknown_server_billing": "Blouse layer request timed out; no result or actual bill known; reserved worst-case 17 outputs, no retry",
+  "cumulative_requests": 8,
+  "cumulative_known_successful_outputs": 10,
+  "cumulative_conservative_allocated_units": 27,
+  "remaining_conservative_units": 73,
+  "model": "doubao-seedream-5-0-pro-260628",
+  "production_prompt_source_sha256": "0df80dc99ff3213b0eaed350dfb4383fb1483b8a3f89e29c26e3509a1d83de04",
+  "transport": "Production Seedream API adapters with prompts exported from compiled production classes. Host harness sends the existing reference bytes (blouse JPEG, boots PNG); native PNG preparation is separately device-tested, not asserted byte-identical to host inputs.",
+  "privacy": "Existing private evaluation inputs and outputs remain outside source, APK and public screenshots; records contain hashes and generic descriptions only.",
+  "manual_review": {
+    "blouse_front": "Mannequin/text removed, garment remains standalone with collar, sleeves and hem; lace, buttons and fine fabric details are reconstructed, not exact source pixels. No transparent blouse result returned due timeout.",
+    "boots_front": "Original two visible boots remain a pair, leg/background removed, necessary side angle retained; hardware and texture still reconstructed.",
+    "boots_layer": "One transparent foreground layer contains both boots without legs or page text. Transparent/opaque pixels verified; no exact-pixel or universal-fidelity claim."
+  },
+  "unverified_families": [
+    "wig and hair pieces",
+    "hosiery",
+    "bags",
+    "other headwear/accessories beyond previous waist sample",
+    "handheld props"
+  ],
+  "records": [
+    {
+      "id": "general-blouse-front",
+      "mode": "image",
+      "outcome": "SUCCESS",
+      "conservative_output_units": 1,
+      "prompt_sha256": "fe87ca311d03dd4c03de0002d7b53a34341732808becc4abe5afde0ea0d062c0",
+      "input_sha256s": [
+        "8fc27914dcd6ff9dd12a2952ac15834cb347e3742f929fece48afdd1ace85d6a"
+      ],
+      "result": {
+        "id": "general-blouse-front",
+        "mode": "image",
+        "model": "doubao-seedream-5-0-pro-260628",
+        "generatedImages": 1,
+        "status": "SUCCESS",
+        "outputs": [
+          {
+            "file": "output.png",
+            "sha256": "0591e8ca97ae2a826d14df476ceb6cd629bc0f3a1288f4dc6f733583a130ebb3",
+            "size": [
+              1536,
+              1024
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "general-ankle-boots-front",
+      "mode": "image",
+      "outcome": "SUCCESS",
+      "conservative_output_units": 1,
+      "prompt_sha256": "b3897a500a1885901d016a52a31a5b6486160a9b5d7937da95c4bd6381cdf957",
+      "input_sha256s": [
+        "b222a901f636d8ffdb9c756f604eee7647800d7da0d3d153f088b106e6db9ac3"
+      ],
+      "result": {
+        "id": "general-ankle-boots-front",
+        "mode": "image",
+        "model": "doubao-seedream-5-0-pro-260628",
+        "generatedImages": 1,
+        "status": "SUCCESS",
+        "outputs": [
+          {
+            "file": "output.png",
+            "sha256": "317290ab349269b62fab86450cc32026f68aefe82d4a07cf4321e34c9ed77d4e",
+            "size": [
+              1536,
+              1024
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "general-blouse-layers",
+      "mode": "layers",
+      "outcome": "FAILED",
+      "conservative_output_units": 17,
+      "prompt_sha256": "5b5c379936ef3990b2129b18ee77eeb1b64115a2c1be1e84c7cd7bb8a7f26b88",
+      "input_sha256s": [
+        "0591e8ca97ae2a826d14df476ceb6cd629bc0f3a1288f4dc6f733583a130ebb3"
+      ],
+      "result": {
+        "id": "general-blouse-layers",
+        "mode": "layers",
+        "model": "doubao-seedream-5-0-pro-260628",
+        "status": "FAILED",
+        "failure": "TIMEOUT"
+      }
+    },
+    {
+      "id": "general-ankle-boots-layers",
+      "mode": "layers",
+      "outcome": "SUCCESS",
+      "conservative_output_units": 2,
+      "prompt_sha256": "12aec2fa48e22d6f4fcc0a8c226c6801c18e3904e1b1cd1aeb4d18e6702a09b0",
+      "input_sha256s": [
+        "317290ab349269b62fab86450cc32026f68aefe82d4a07cf4321e34c9ed77d4e"
+      ],
+      "result": {
+        "id": "general-ankle-boots-layers",
+        "mode": "layers",
+        "model": "doubao-seedream-5-0-pro-260628",
+        "generatedImages": 2,
+        "status": "SUCCESS",
+        "outputs": [
+          {
+            "file": "layer-1.png",
+            "sha256": "ff3ca2dbb83fedbef85257d2748d5ec438d42d0c964f62ca42f992caf5876d61",
+            "size": [
+              1822,
+              1514
+            ],
+            "z": 1,
+            "name": "黑色铆钉厚底短靴",
+            "description": "提取图中完整的一双黑色亮面朋克风厚底短靴，保留所有鞋楦、鞋头、鞋面扣带、铆钉、鞋带、跟高、鞋底、靴筒及左右靴的全部差异细节，不拆分部件，不补造未显示的靴子部分，保持原主展示视角、真实颜色、纹理、镂空和边缘细节，不添加任何额外元素",
+            "bounds": [
+              141,
+              52,
+              850,
+              936
+            ],
+            "transparentPixels": 923400,
+            "foregroundPixels": 1819243
+          }
+        ]
+      }
+    }
+  ],
+  "production_category_guidance_source_sha256": "37cd4a17e2e45c431cb692f3227dcd4e0565ff1f17c642c384ec602561370b9a",
+  "category_guidance_note": "Doll-specific protection added before release; evaluated blouse and boots branches unchanged."
+}

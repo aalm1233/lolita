@@ -31,6 +31,7 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
     onNewBatch:()->Unit,onOpenTask:(String)->Unit) {
     val s by viewModel.uiState.collectAsState();val skin=LolitaSkin.current
     val scroll=rememberLazyListState();ObserveSkinScroll(scroll)
+    var familyPicker by remember{mutableStateOf(false)}
     var zoom by remember{mutableStateOf<String?>(null)}
     var sourcePicker by remember{mutableStateOf<MaterialBatchRow?>(null)}
     var referenceRow by remember{mutableStateOf<MaterialBatchRow?>(null)}
@@ -85,8 +86,9 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                     Text("单件失败不阻塞其他结果；不会自动重试或连续付费。",style=MaterialTheme.typography.bodySmall)
                 }}}
                 item("instructions"){LolitaSection(title=when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"一次选择，多件一起整理" else "原始输入与失败主视图";MaterialBatchPhase.FRONT->"集中核对主视图";MaterialBatchPhase.LAYERS->"集中核对透明单品";else->"本批当前确认素材"}){row{
-                    Text(when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"每批主动选择1至30件已拥有或心愿腰饰，逐卡可换图和框选。" else "只选择失败、中断或取消的主视图重新处理。成功结果继续保留。";MaterialBatchPhase.FRONT->"勾选已查看且主视结构正确的结果，一次确认进入分层。原透视摆正后对称可以合理。";MaterialBatchPhase.LAYERS->"每件选择包含完整附属部件的一层，勾选并完成三项核对后整批保存。失败项可单独重新确认分层。";else->"已保存素材可继续从物品详情用于试衣；本轮工作流到素材保存结束。"},style=MaterialTheme.typography.bodyMedium)
-                    OutlinedTextField(value=s.query,onValueChange=viewModel::query,label={Text("搜索名称或品牌")},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("batchSearch"))
+                    Text(when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"每批主动选择1至30件已拥有或心愿服饰和小物，逐卡可换图和框选。" else "只选择失败、中断或取消的主视图重新处理。成功结果继续保留。";MaterialBatchPhase.FRONT->"勾选已查看且主视结构正确的结果，一次确认进入分层。原透视摆正后对称可以合理。";MaterialBatchPhase.LAYERS->"每件选择包含完整附属部件的一层，勾选并完成三项核对后整批保存。失败项可单独重新确认分层。";else->"已保存素材可继续从物品详情用于试衣；本轮工作流到素材保存结束。"},style=MaterialTheme.typography.bodyMedium)
+                    OutlinedTextField(value=s.query,onValueChange=viewModel::query,label={Text("搜索物品")},placeholder={Text("名称／品牌／类型")},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("batchSearch"))
+                    OutlinedButton(onClick={familyPicker=true},enabled=!s.busy,modifier=Modifier.fillMaxWidth().testTag("batchFamily")){Text(s.family?.label ?: "全部品类")}
                     if(s.phase==MaterialBatchPhase.INPUTS && s.draft)BatchCheck("只看尚无确认素材",s.onlyMissing,!s.busy,viewModel::onlyMissing)
                     Text("已选${selected.size}件，其中${selected.count{it !in s.visibleRows}}件在当前筛选外。筛选保留选择。",style=MaterialTheme.typography.bodySmall)
                     if(!s.draft)FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
@@ -97,15 +99,16 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                         FilterChip(selected=!darkChecker,onClick={darkChecker=false},label={Text("浅底检查")});FilterChip(selected=darkChecker,onClick={darkChecker=true},label={Text("深底检查")})
                     }
                 }}}
-                if(s.visibleRows.isEmpty() && !s.loading)item("empty"){LolitaSection(title="暂无可显示物品"){row{Text(if(s.draft)"请先确认物品为已拥有／心愿腰饰，并添加参考图片；也可清除搜索或筛选。" else "本阶段尚无结果。其他任务会继续排队，完成后在这里集中处理。")}}}
+                if(s.visibleRows.isEmpty() && !s.loading)item("empty"){LolitaSection(title="暂无可显示物品"){row{Text(if(s.draft)"请先确认物品为已拥有／心愿服饰或小物、核对类型并添加参考图片；也可清除搜索或品类筛选。" else "本阶段尚无结果。其他任务会继续排队，完成后在这里集中处理。")}}}
                 items(s.visibleRows.chunked(columns),key={rows->s.phase.name+rows.joinToString{it.key}}){rows->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(skin.spacingMedium)){
                     rows.forEach{row->Column(Modifier.weight(1f).testTag("batchRow${row.itemId}")){LolitaCard{Column(verticalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                         Text(row.name,style=MaterialTheme.typography.titleSmall)
                         val path=if(s.phase==MaterialBatchPhase.SAVED)row.material?.imagePath else row.image
                         path?.takeIf(String::isNotBlank)?.let{MaterialPhoto(it,"放大第${row.position+1}件：${row.name}",{zoom=it},if(columns==1)210 else 135,checker=s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED),darkChecker=darkChecker)}
+                        Text(listOf(row.categoryName, row.item?.composition?.label.orEmpty()).filter(String::isNotBlank).joinToString(" · "),style=MaterialTheme.typography.bodySmall)
                         if(row.brand.isNotBlank())Text(row.brand,style=MaterialTheme.typography.bodySmall)
                         row.task?.let{task->Text(task.status.label,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary);task.error?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.error)}}
-                        if(!row.eligible && s.phase!=MaterialBatchPhase.SAVED)Text("原物品已删除或类型／状态已改变",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
+                        if((!row.eligible || !row.matchesTask && s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)) && s.phase!=MaterialBatchPhase.SAVED)Text("原物品已删除或类型／组合／状态已改变",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
                         if(s.phase==MaterialBatchPhase.INPUTS){
                             TextButton(onClick={referenceRow=row},enabled=!s.busy && row.item!=null && (s.draft || row.canRetry),modifier=Modifier.fillMaxWidth()){Text("调整参考图")}
                         }
@@ -121,13 +124,14 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                 }}
                 if(s.phase==MaterialBatchPhase.INPUTS)item("requirements"){LolitaSection(title="本批整理要求"){row{MaterialInstructions(s.instructions,!s.busy,viewModel::instructions);Text("只影响这次勾选的新请求，已提交任务继续使用原快照。",style=MaterialTheme.typography.bodySmall)}}}
                 if(s.phase==MaterialBatchPhase.LAYERS && !retryLayers)item("checks"){LolitaSection(title="核对本次勾选的${selected.size}件"){row{
-                    listOf("各自只包含该物品及附属部件","造型、颜色和关键五金正确","没有残留人台、文字或其他服饰").forEachIndexed{index,label->BatchCheck(label,index in s.checks,!s.busy){viewModel.check(index,it)}}
+                    listOf("各自只包含该物品及附属部件","造型、颜色和部件数量正确","没有残留人台、文字或其他服饰").forEachIndexed{index,label->BatchCheck(label,index in s.checks,!s.busy){viewModel.check(index,it)}}
                     if(selected.any{it.canRetry})Text("待核对结果与失败项请分开选择；可用上方按钮明确选择一组。",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
-                    Text("链条、系带、绳端按同一商品整体核对，透明性通过不等于结构正确。",style=MaterialTheme.typography.bodySmall)
+                    Text("一条物品可为单件、成双或成组，连同附属部件整体核对；不补造成对，透明性通过不等于结构正确。",style=MaterialTheme.typography.bodySmall)
                 }}}
             }
         }
     }
+    if(familyPicker)MaterialFamilyPicker(s.family,{viewModel.family(it);familyPicker=false},{familyPicker=false})
     s.fee?.let{fee->MaterialBatchFeeDialog(fee,s.busy,viewModel::dismissFee,{viewModel.submitFee(fee)},{zoom=it})}
     sourcePicker?.let{row->row.item?.let{item->MaterialSourcePicker(item,row.original,{viewModel.selectSource(row.itemId,it);sourcePicker=null},{sourcePicker=null})}}
     referenceRow?.let{row->AlertDialog(onDismissRequest={referenceRow=null},title={Text("${row.name} · 参考图")},text={Column{
@@ -169,4 +173,13 @@ private fun MaterialBatchFeeDialog(fee:MaterialBatchFee,busy:Boolean,onDismiss:(
             item{BatchCheck("已核对本批全部实际输入、接收方和费用范围",checked,!busy){checked=it}}
         }}
     }
+}
+
+@Composable
+private fun MaterialFamilyPicker(selected:WardrobeFamily?,onSelect:(WardrobeFamily?)->Unit,onDismiss:()->Unit){
+    val list=rememberLazyListState();ObserveSkinScroll(list)
+    AlertDialog(onDismissRequest=onDismiss,title={Text("选择品类")},text={LazyColumn(state=list,modifier=Modifier.heightIn(max=440.dp)){
+        item{TextButton(onClick={onSelect(null)},modifier=Modifier.fillMaxWidth()){Text(if(selected==null)"全部品类 · 已选" else "全部品类")}}
+        items(WardrobeFamily.entries.filter{it!=WardrobeFamily.UNCONFIRMED}){family->TextButton(onClick={onSelect(family)},modifier=Modifier.fillMaxWidth()){Text(family.label+if(selected==family)" · 已选" else "")}}
+    }},confirmButton={TextButton(onClick=onDismiss){Text("返回")}})
 }

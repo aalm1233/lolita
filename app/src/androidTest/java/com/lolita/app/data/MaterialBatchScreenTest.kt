@@ -89,7 +89,7 @@ class MaterialBatchScreenTest {
         skins("layers")
         compose.runOnIdle{skin.value=SkinType.DEFAULT;dark.value=false;vm.selectReady()}
         compose.onNodeWithTag("batchPrimary").assertIsNotEnabled()
-        for(label in listOf("各自只包含该物品及附属部件","造型、颜色和关键五金正确","没有残留人台、文字或其他服饰")){
+        for(label in listOf("各自只包含该物品及附属部件","造型、颜色和部件数量正确","没有残留人台、文字或其他服饰")){
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasText(label));compose.onNodeWithText(label).performClick()
         }
         compose.onNodeWithTag("batchPrimary").assertIsEnabled().performClick()

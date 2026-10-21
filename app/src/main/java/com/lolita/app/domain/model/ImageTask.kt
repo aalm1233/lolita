@@ -40,7 +40,7 @@ data class ImageTaskRequest(
     val accessoryBase: AccessoryBaseSnapshot? = null
 ) {
     init {
-        require(version in 1..5) { "不支持的图像任务请求版本" }
+        require(version in 1..6) { "不支持的图像任务请求版本" }
         require(version >= 4 || ((version == 3) == (mannequinSubject != null))) { "展示图分类快照必须使用新版请求" }
         require(version != 3 || (personalModel == null && tryOnModel == null && garments.size == 1 && garments.single().role == TryOnRole.MAIN)) { "新版展示图请求不能混入其他任务资料" }
         require(version in setOf(2, 4, 5) || (personalModel == null && tryOnModel == null)) { "个人模特资料必须使用新版请求" }
@@ -63,7 +63,7 @@ data class ImageTaskRequest(
             require(wigHeadTemplate == null || wigHeadTemplate.sha256 == inputSha256s.first()) { "头模图片校验与实际输入不一致" }
             require(mannequinSubject?.presentation != MannequinPresentation.WIG_HEAD || wigHeadTemplate != null) { "请选择本次头模" }
         }
-        require(version == 5 || (materialSpec == null && accessoryBase == null && garments.all { it.materialId == null })) { "新素材用途须使用新协议" }
+        require(version >= 5 || (materialSpec == null && accessoryBase == null && garments.all { it.materialId == null })) { "新素材用途须使用新协议" }
         if (version == 5) {
             require(personalModel == null && mannequinSubject == null && wigHeadTemplate == null)
             require(materialSpec != null || accessoryBase != null || garments.any { it.materialId != null })
@@ -71,13 +71,19 @@ data class ImageTaskRequest(
             materialSpec?.validate()
             accessoryBase?.validate()
         }
+        if (version == 6) {
+            require(materialSpec != null && accessoryBase == null && personalModel == null && tryOnModel == null && mannequinSubject == null && wigHeadTemplate == null && promptVersion == MaterialPreparation.PROMPT_VERSION)
+            val garment = garments.single()
+            require(garment.semantic?.supportsMaterialPreparation == true && garment.role == garment.semantic.defaultWearRole && garment.composition != null && garment.materialId == null) { "素材品类、角色或组合无效" }
+            materialSpec.validate()
+        }
         personalModel?.validate()
     }
 
     fun validate(kind: ImageTaskKind) {
         when (kind) {
             ImageTaskKind.TRY_ON -> {
-                require(version != 3 && mannequinSubject == null) { "展示图请求不能用于试衣" }
+                require(version !in setOf(3, 6) && mannequinSubject == null) { "展示图请求不能用于试衣" }
                 require(personalModel == null) { "试衣任务不能包含模特生成资料" }
                 require(materialSpec == null)
                 if (accessoryBase != null) {
@@ -95,8 +101,8 @@ data class ImageTaskRequest(
                 require(garments.size == 1 && garments.single().role == TryOnRole.MAIN) { "展示图只能选择一件物品" }
             }
             ImageTaskKind.SINGLE_ITEM_MATERIAL -> {
-                require(version == 5 && materialSpec != null && accessoryBase == null && tryOnModel == null)
-                require(garments.size == 1 && garments.single().semantic == CategorySemantic.WAIST_ACCESSORY)
+                require(version in 5..6 && materialSpec != null && accessoryBase == null && tryOnModel == null)
+                require(garments.size == 1 && (version == 6 || garments.single().semantic == CategorySemantic.WAIST_ACCESSORY))
             }
             ImageTaskKind.PERSONAL_MODEL -> {
                 require(version == 2 && garments.isEmpty() && personalModel != null && tryOnModel == null) { "模特生成任务资料无效" }
@@ -130,7 +136,7 @@ data class ImageTaskRequest(
 
     fun validateInputImages(paths: List<String>) {
         validatePaths(paths)
-        if (version == 5) materialSpec?.originalInputPath?.let { path ->
+        if (version >= 5) materialSpec?.originalInputPath?.let { path ->
             require(runCatching { imageSha256(path) == materialSpec?.originalInputSha256 }.getOrDefault(false)) { "原始输入校验失败" }
         }
         if (version >= 4) paths.forEachIndexed { index, path ->
@@ -176,7 +182,7 @@ data class ImageTaskRequest(
                 2 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel")
                 3 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject")
                 4 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject", "promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate", "productOriginalImagePath")
-                5 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject", "promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate", "productOriginalImagePath", "materialSpec", "accessoryBase")
+                5, 6 -> root.requireFields("version", "garments", "instructions", "personalModel", "tryOnModel", "mannequinSubject", "promptVersion", "promptSnapshot", "serviceModel", "inputSha256s", "wigHeadTemplate", "productOriginalImagePath", "materialSpec", "accessoryBase")
                 else -> throw IllegalArgumentException("不支持的图像任务请求版本")
             }
             val garments = root.getAsJsonArray("garments").map { entry ->

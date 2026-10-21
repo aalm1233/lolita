@@ -23,6 +23,7 @@ import com.lolita.app.data.local.entity.Item
 import com.lolita.app.domain.model.mannequinSubject
 import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.supportsMaterialPreparation
 import com.lolita.app.domain.model.supportsVirtualTryOn
 import com.lolita.app.domain.model.productReferenceImages
 import com.lolita.app.domain.usecase.OrderAccounting
@@ -783,7 +784,7 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        if (uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic == CategorySemantic.WAIST_ACCESSORY && item.status.supportsVirtualTryOn) {
+                        if (uiState.categories.firstOrNull { it.id == item.categoryId }?.categorySemantic?.supportsMaterialPreparation == true && item.status.supportsVirtualTryOn) {
                             LolitaSection(title = "试衣素材") { row {
                                 currentMaterial?.let { material ->
                                     com.lolita.app.ui.screen.material.MaterialPhoto(material.imagePath, "查看已确认主视素材", onClick = { onNavigateToMaterial(item.id) }, height = 150, checker = true)

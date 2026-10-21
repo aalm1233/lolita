@@ -19,10 +19,15 @@ data class ItemTryOnMaterial(
     @ColumnInfo(name = "confirmed_at") val confirmedAt: Long = createdAt
 ) {
     fun protectedImagePaths(): Set<String> = setOf(imagePath, sourceImagePath, inputImagePath)
+    fun matchesSource(semantic: CategorySemantic?, composition: ItemComposition): Boolean = runCatching {
+        val request = ImageTaskRequest.decode(requestJson)
+        request.garments.single().semantic == semantic && (request.version < 6 || request.garments.single().composition == composition)
+    }.getOrDefault(false)
     fun validate() {
         require(java.util.UUID.fromString(id).toString() == id && itemId > 0 && sourceTaskId.isNotBlank())
         require(protectedImagePaths().none(String::isBlank) && resultSha256.matches(Regex("[a-f0-9]{64}")))
         val request = ImageTaskRequest.decode(requestJson)
-        require(request.version == 5 && request.materialSpec != null && request.garments.single().itemId == itemId)
+        request.validate(ImageTaskKind.SINGLE_ITEM_MATERIAL)
+        require(request.version in 5..6 && request.materialSpec != null && request.garments.single().itemId == itemId)
     }
 }

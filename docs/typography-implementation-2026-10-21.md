@@ -18,10 +18,10 @@ Type.kt成为七皮肤唯一规格：主卡22/30、顶栏20/28、分区18/26、�
 
 测试修复了两类宿主问题：LazyColumn未组合的输入需要先按列表滚动定位；超高批次卡中目标按钮需继续滚动到具体后代。文字完成度检查按真实行边界、完整字符范围和省略状态判断，避免缓存MultiParagraph的空白约束宽度引发误报；实际大字首页横向裁字则通过取消默认Tab留白修正，没有缩小字体或放宽断言。
 
-[真实七皮肤层级](visuals/2026-10-21-typography-native/scale-light-overview.jpg)、[暗色实验室](visuals/2026-10-21-typography-native/lab-dark-overview.jpg)、[统计摘要](visuals/2026-10-21-typography-native/stats-light-overview.jpg)与各自原尺寸图已归档；原创矢量服饰夹具只证明UI与流程，不是真实模型质量证据。设计角色已通过层级、字重与皮肤身份验收；小屏角标是补充实拍后针对遮挡的最小修正。
+[真实七皮肤层级](visuals/2026-10-21-typography-native/scale-light-overview.jpg)、[暗色实验室](visuals/2026-10-21-typography-native/lab-dark-overview.jpg)、[统计摘要](visuals/2026-10-21-typography-native/stats-light-overview.jpg)与各自原尺寸图已归档；原创矢量服饰夹具只证明UI与流程，不是真实模型质量证据。设计角色已通过层级、字重与皮肤身份验收；小屏角标是补充实拍后针对遮挡的最小修正，最后3张实拍亦获设计角色复核通过。
 
 ## 数据、隐私与交付
 
 本次纯文字与相关布局，Room32／36实体、备份13、原商品照片与缩略／Fit／放大行为不变；生成费用确认、保存与服务边界沿用。新增真实付费调用0次。没有新迁移、图片引用或清理逻辑，因此不重复无关全库和所有原图哈希审计。
 
-正式包在提交源码归档中clean构建，核对原签名、主包素材与源码字节，从上一正式2.66.0覆盖并重复启动、保留已选择中华皮肤的设置。发布及附件匿名下载、SHA／HEAD、公开最高正式版本结果待回执补齐；不重复用户已要求忽略的应用内手动网络检查，不把公开API查询代称为App检查更新成功。
+正式包在提交源码归档中clean构建，核对原签名、主包素材与源码字节，从上一正式2.66.0覆盖并重复启动、保留已选择中华皮肤的设置。源码`0325e7af`及标签已推送，14项最终去重定向设备用例、Debug与clean正式构建通过。GitHub／Gitee同一正式APK和SHA文件匿名完整下载、SHA／HEAD通过，公开API选中最高正式2.66.1。三份已有设置SHA保持，正式2K页面实拍见[实验室](visuals/2026-10-21-typography-native/release/release-laboratory.png)与同目录首页／个人／统计；[发布回执](typography-release-2.66.1-verification.json)逐项记录。不重复用户已要求忽略的应用内手动网络检查，不把公开API查询代称为App检查更新成功。

@@ -1129,5 +1129,28 @@
       "file": "typography-native/small-search-ime.png",
       "sha256": "0f39fc45c13213f35d7a571d377d9d82513c7bc3b92865efd4fd1ff5ff3323bc"
     }
+  ],
+  "supplemental_badge_designer_review_passed": true,
+  "official_release_captures": [
+    {
+      "file": "release/release-launch.png",
+      "sha256": "be06e08c53299312da04fe3d5ac5e8fb4d5d977a9fbb2a3135a24d1d9d8fac50"
+    },
+    {
+      "file": "release/release-personal.png",
+      "sha256": "25a0785e6eade45ac95c38dceeda455ad6ea0ee4b2acdf45c3b041b412ab989a"
+    },
+    {
+      "file": "release/release-laboratory.png",
+      "sha256": "0a1ab2de43bef64933c54676450b3f3442c706b6b2e96d471ac3e0a29f3848fd"
+    },
+    {
+      "file": "release/release-home.png",
+      "sha256": "7ed148f5335adeb588f8733f598653ee5ef8a83b2fc780a6f4e0439ff2678b3a"
+    },
+    {
+      "file": "release/release-stats.png",
+      "sha256": "dd41bf4a971342cd5e22661dedfd38dc7fb494a67de8e1c1d25db851607ea96e"
+    }
   ]
 }

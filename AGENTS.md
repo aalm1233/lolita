@@ -649,3 +649,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 任务中心与素材批次新增停止后续排队和多选舍弃，当前执行可继续；整批停止先原子处理队尾，再取消当前读者。候选默认零选择，支持全选/清空、完整Fit和放大；状态变化项跳过，原图/已保存资料/共享图片保留。设计与20项去重定向设备回归、三组七皮肤浅暗及真实320dp两倍字见`docs/task-queue-controls-implementation-2026-10-21.md`。
 - 2.66.0／137源码`b0a43f69`及标签已推送，Debug与提交归档clean原签名Release通过；2.65.0覆盖及重复启动保全36旧表、原任务/批次、14图SHA和两份持久设置，36主包assets/7背景RGBA及依赖/profile核验。GitHub/Gitee同一APK匿名完整下载、SHA/HEAD、源码标签和公开最高版本查询通过；未重跑App内手动网络检查、未删旧附件。Room32/备份13/旧v1～6不变，本轮真实生图0次。回执`docs/task-queue-controls-release-2.66.0-verification.json`。
+
+
+## 统一字体与2K适配（2.66.1）
+
+- Type.kt统一七皮肤字号、行高和字重，公共顶栏／分区、高频列表与设置条目消费同一角色，阅读／输入／操作及金额保持统一字体；首页四标签与控制同排，筛选角标按真实高度预留空间。统计摘要优先，完整品类明细独立分区，原隐私与导航保留。设计和实施见`docs/plans/2026-10-21-typography-system.md`、`docs/typography-implementation-2026-10-21.md`。
+- 2.66.1／138：源码`0325e7af`与标签已推送，14项去重定向设备回归、Debug及提交归档clean原签名Release通过。1440×3200七皮肤浅暗、320dp两倍字体／真实IME、数量0/3/12与独立设计角色复核通过；2.66.0覆盖及两次启动保留中华皮肤与3份既有设置SHA。36主包assets、7背景RGBA及依赖／profile与提交源码一致；纯字体布局不重复全库／图片／备份审计。GitHub／Gitee正式同一APK与校验文件匿名完整下载、SHA／HEAD及公开最高正式版本查询通过；未重跑App手动网络检查，未删旧附件、无新生图调用，Room32／备份13不变。回执`docs/typography-release-2.66.1-verification.json`。

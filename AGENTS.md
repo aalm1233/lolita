@@ -637,3 +637,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 前置四页/七皮肤浅暗/320dp图稿与设计记录：`docs/plans/2026-10-21-laboratory-display-flow.md`。18项去重定向设备回归与Debug通过，实际五组七皮肤浅暗及320dp两倍字/真实IME归档在`docs/visuals/2026-10-21-laboratory-native/`；实施记录为`docs/laboratory-display-implementation-2026-10-21.md`。本轮不新增真实付费请求，入口迁移与设封面仅本地操作，受控图片不冒充生成品质。
 
 - 2.65.0／136正式交付：源码`9b9f7a7f`与标签已推送，18项去重定向设备回归、Debug及提交归档clean原签名Release通过；真实七皮肤浅暗／320dp两倍字／IME与正式App入口已核对。2.64.0覆盖及重复启动保全36旧表、原批次及14图SHA（本轮未捕获可选设置字节前基准，不声称设置逐字节验证）；36主包assets、7背景RGBA及依赖／profile核验。GitHub／Gitee正式附件匿名完整下载、SHA／HEAD与公开最高正式版本查询通过；Gitee首次发布请求超时后安全恢复，未删旧附件、未重跑App内手动网络检查。新增生图0次，保守余73张；回执`docs/laboratory-display-release-2.65.0-verification.json`。
+
+### 队列停止与批量舍弃（2.66.0）
+
+- 任务中心与素材批次新增停止后续排队和多选舍弃，当前执行可继续；整批停止先原子处理队尾，再取消当前读者。候选默认零选择，支持全选/清空、完整Fit和放大；状态变化项跳过，原图/已保存资料/共享图片保留。设计与20项去重定向设备回归、三组七皮肤浅暗及真实320dp两倍字见`docs/task-queue-controls-implementation-2026-10-21.md`。
+- 2.66.0／137源码`b0a43f69`及标签已推送，Debug与提交归档clean原签名Release通过；2.65.0覆盖及重复启动保全36旧表、原任务/批次、14图SHA和两份持久设置，36主包assets/7背景RGBA及依赖/profile核验。GitHub/Gitee同一APK匿名完整下载、SHA/HEAD、源码标签和公开最高版本查询通过；未重跑App内手动网络检查、未删旧附件。Room32/备份13/旧v1～6不变，本轮真实生图0次。回执`docs/task-queue-controls-release-2.66.0-verification.json`。

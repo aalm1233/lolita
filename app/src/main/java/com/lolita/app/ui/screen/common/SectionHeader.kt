@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lolita.app.ui.theme.LolitaSkin
 
@@ -50,7 +49,6 @@ fun SectionHeader(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
             if (action != null) {

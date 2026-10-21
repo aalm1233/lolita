@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.stats
 
+import com.lolita.app.ui.theme.numericReading
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import com.lolita.app.ui.theme.skin.component.skinClickable
@@ -165,7 +167,7 @@ fun SpendingTrendContent(
             }
             Text(
                 text = "${uiState.selectedYear}年",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.numericReading,
                 fontWeight = FontWeight.Bold
             )
             IconButton(onClick = { viewModel.nextYear() }) {
@@ -177,7 +179,7 @@ fun SpendingTrendContent(
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "¥${String.format("%.2f", uiState.yearTotal)}",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.numericReading,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )

@@ -186,7 +186,7 @@ private fun FilteredItemCard(item: Item, review: ItemPurchaseReview? = null, onC
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     item.name,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

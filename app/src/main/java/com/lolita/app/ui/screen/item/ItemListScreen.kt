@@ -49,6 +49,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -89,6 +90,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed as staggeredI
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import com.lolita.app.ui.screen.common.GalleryCard
 import com.lolita.app.ui.component.GalleryPreviewDialog
+import com.lolita.app.ui.theme.metadata
 import com.lolita.app.ui.theme.LolitaSkin
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -402,12 +404,12 @@ fun ItemListScreen(
                     val familyOptions = listOf<Pair<String, WardrobeFamily?>>("全部" to null) + WardrobeFamily.entries.map { it.label to it }
                     familyOptions.forEach { (label, family) ->
                         FilterChip(selected = uiState.filterFamily == family,
-                            onClick = { viewModel.filterByFamily(family) }, label = { Text(label, fontSize = 12.sp) })
+                            onClick = { viewModel.filterByFamily(family) }, label = { Text(label, style = MaterialTheme.typography.labelMedium) })
                     }
                     FilterChip(
                         selected = uiState.filterPendingPaymentOnly,
                         onClick = { viewModel.togglePendingPaymentOnly() },
-                        label = { Text("待付款", fontSize = 12.sp) },
+                        label = { Text("待付款", style = MaterialTheme.typography.labelMedium) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = filterAccent.copy(alpha = 0.15f),
                             selectedLabelColor = filterAccent
@@ -719,7 +721,7 @@ private fun TodayOutfitShortcut(
 }
 
 @Composable
-private fun NormalModeBar(
+internal fun NormalModeBar(
     pagerState: PagerState,
     onSearchClick: () -> Unit,
     onTabSelected: (Int) -> Unit,
@@ -740,13 +742,13 @@ private fun NormalModeBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 2.dp, vertical = 2.dp),
+            .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Search icon (left)
         IconButton(
             onClick = onSearchClick,
-            modifier = Modifier.size(36.dp)
+            modifier = Modifier.size(32.dp)
         ) {
             SkinIcon(IconKey.Search, tint = contentColor)
         }
@@ -755,8 +757,7 @@ private fun NormalModeBar(
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 2.dp),
+                .weight(1f),
             containerColor = Color.Transparent,
             contentColor = contentColor,
             divider = {},
@@ -771,51 +772,47 @@ private fun NormalModeBar(
                 Tab(
                     selected = pagerState.currentPage == index,
                     onClick = { onTabSelected(index) },
-                    modifier = Modifier.height(34.dp),
-                    text = {
-                        Text(
-                            text = label,
-                            fontSize = 12.sp,
-                            fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Medium,
-                            maxLines = 1,
-                            softWrap = false,
-                            overflow = TextOverflow.Clip
-                        )
-                    },
+                    modifier = Modifier.heightIn(min = 34.dp),
                     selectedContentColor = contentColor,
                     unselectedContentColor = contentColor.copy(alpha = 0.7f)
-                )
+                ) {
+                    Text(
+                        text = label,
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = if (pagerState.currentPage == index) FontWeight.SemiBold else FontWeight.Medium,
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Clip
+                    )
+                }
             }
         }
 
-        // Filter icon (right)
-        Box {
-            IconButton(
-                onClick = onFilterClick,
-                modifier = Modifier.size(32.dp)
-            ) {
-                SkinIcon(
-                    IconKey.FilterList,
-                    tint = if (activeFilterCount > 0) contentColor else contentColor.copy(alpha = 0.7f)
-                )
+        // Keep the badge inside a growing container, above the filter's lower half.
+        Layout(content = {
+            IconButton(onClick = onFilterClick, modifier = Modifier.size(32.dp).testTag("homeFilterButton")) {
+                SkinIcon(IconKey.FilterList,
+                    tint = if (activeFilterCount > 0) contentColor else contentColor.copy(alpha = 0.7f))
             }
             if (activeFilterCount > 0) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .size(14.dp),
-                    shape = CircleShape,
-                    color = Color.White
-                ) {
+                Surface(modifier = Modifier.defaultMinSize(minWidth = 20.dp, minHeight = 20.dp)
+                    .testTag("homeFilterBadge"), shape = CircleShape, color = Color.White) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            "$activeFilterCount",
-                            fontSize = 9.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text("$activeFilterCount", modifier = Modifier.padding(horizontal = 2.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            maxLines = 1, softWrap = false,
+                            color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                 }
+            }
+        }) { measurables, constraints ->
+            val button = measurables.first().measure(constraints.copy(minWidth = 0, minHeight = 0))
+            val badge = measurables.getOrNull(1)?.measure(constraints.copy(minWidth = 0, minHeight = 0, maxWidth = button.width))
+            val topSpace = badge?.let { it.height / 2 + 4.dp.roundToPx() } ?: 0
+            layout(button.width, button.height + topSpace) {
+                button.placeRelative(0, topSpace)
+                badge?.placeRelative(button.width - badge.width, 0)
             }
         }
 
@@ -841,7 +838,7 @@ private fun NormalModeBar(
 }
 
 @Composable
-private fun SearchModeBar(
+internal fun SearchModeBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onCancel: () -> Unit,
@@ -869,7 +866,7 @@ private fun SearchModeBar(
                     .padding(horizontal = 12.dp, vertical = 8.dp)
                     .focusRequester(focusRequester),
                 singleLine = true,
-                textStyle = TextStyle(color = contentColor, fontSize = 14.sp),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = contentColor),
                 cursorBrush = SolidColor(contentColor),
                 decorationBox = { innerTextField ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -877,7 +874,7 @@ private fun SearchModeBar(
                         Spacer(Modifier.width(6.dp))
                         Box(Modifier.weight(1f)) {
                             if (query.isEmpty()) {
-                                Text("搜索服饰", color = contentColor.copy(alpha = 0.6f), fontSize = 14.sp)
+                                Text("搜索服饰", color = contentColor.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyMedium)
                             }
                             innerTextField()
                         }
@@ -897,7 +894,7 @@ private fun SearchModeBar(
         Text(
             "取消",
             color = contentColor,
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.clickable { onCancel() }
         )
     }
@@ -905,7 +902,7 @@ private fun SearchModeBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ItemCard(
+internal fun ItemCard(
     data: ItemCardData,
     onClick: () -> Unit,
     onEdit: () -> Unit,
@@ -962,7 +959,7 @@ private fun ItemCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = item.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f),
                         maxLines = 2,
@@ -1014,7 +1011,7 @@ private fun ItemCard(
                 if (details.isNotEmpty()) {
                     Text(
                         text = details,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.metadata,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -1023,7 +1020,7 @@ private fun ItemCard(
                 if (item.parentItemId != null) {
                     Text(
                         text = if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.metadata,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -1059,7 +1056,7 @@ private fun ItemCard(
                             ItemStatus.PENDING_PAYMENT -> "待付款"
                             ItemStatus.PENDING_REVIEW -> "待核对"
                         },
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.metadata,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -1146,7 +1143,7 @@ private fun GalleryCardSkeleton(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ItemGridCard(
+internal fun ItemGridCard(
     data: ItemCardData,
     onClick: () -> Unit,
     onEdit: () -> Unit,
@@ -1227,7 +1224,7 @@ private fun ItemGridCard(
                             Text(
                                 text = "¥%.0f".format(itemPrice),
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MaterialTheme.typography.metadata,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
@@ -1250,7 +1247,7 @@ private fun ItemGridCard(
                     )
                     if (item.parentItemId != null) {
                         Text(if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
-                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            style = MaterialTheme.typography.metadata, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     brandName?.let {
                         Row(
@@ -1260,7 +1257,7 @@ private fun ItemGridCard(
                             BrandLogo(logoUrl = brandLogoUrl, brandName = brandName, size = 14.dp)
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MaterialTheme.typography.metadata,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -1291,7 +1288,7 @@ private fun ItemGridCard(
                                 ItemStatus.PENDING_PAYMENT -> "待付款"
                                 ItemStatus.PENDING_REVIEW -> "待核对"
                             },
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.metadata,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -1437,7 +1434,7 @@ private fun FilterOptionRow(
                 label = {
                     Text(
                         text = selectedValue ?: "全部",
-                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -1453,7 +1450,7 @@ private fun FilterOptionRow(
                     selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                     selectedLabelColor = MaterialTheme.colorScheme.primary
                 ),
-                modifier = Modifier.height(30.dp)
+                modifier = Modifier.heightIn(min = 30.dp)
             )
 
             DropdownMenu(
@@ -1465,7 +1462,7 @@ private fun FilterOptionRow(
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        placeholder = { Text("搜索", fontSize = 13.sp) },
+                        placeholder = { Text("搜索", style = MaterialTheme.typography.bodyMedium) },
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                             .width(200.dp),
@@ -1481,7 +1478,7 @@ private fun FilterOptionRow(
                         text = {
                             Text(
                                 option,
-                                fontSize = 13.sp,
+                                style = MaterialTheme.typography.bodyMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )

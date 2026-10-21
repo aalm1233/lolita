@@ -4,14 +4,12 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lolita.app.R
@@ -36,31 +34,6 @@ fun getSkinConfig(skinType: SkinType): LolitaSkinConfig = when (skinType) {
     SkinType.VICTORIAN -> victorianSkinConfig()
 }
 
-private fun buildTypography(fontFamily: FontFamily): Typography {
-    val default = Typography()
-    return Typography(
-        displayLarge = default.displayLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.5).sp),
-        displayMedium = default.displayMedium.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
-        displaySmall = default.displaySmall.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
-        headlineLarge = default.headlineLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.25).sp),
-        headlineMedium = default.headlineMedium.copy(fontFamily = fontFamily, letterSpacing = (-0.15).sp),
-        headlineSmall = default.headlineSmall.copy(fontFamily = fontFamily, letterSpacing = (-0.1).sp),
-        titleLarge = default.titleLarge.copy(fontFamily = fontFamily, letterSpacing = (-0.1).sp),
-        titleMedium = default.titleMedium.copy(fontFamily = fontFamily, letterSpacing = 0.05.sp),
-        titleSmall = default.titleSmall.copy(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
-            letterSpacing = 0.1.sp
-        ),
-        bodyLarge = default.bodyLarge.copy(fontFamily = fontFamily),
-        bodyMedium = default.bodyMedium.copy(fontFamily = fontFamily),
-        bodySmall = default.bodySmall.copy(fontFamily = fontFamily),
-        labelLarge = default.labelLarge.copy(fontFamily = fontFamily),
-        labelMedium = default.labelMedium.copy(fontFamily = fontFamily),
-        labelSmall = default.labelSmall.copy(fontFamily = fontFamily),
-    )
-}
 
 fun defaultSkinConfig(): LolitaSkinConfig {
     val fontFamily = FontFamily.Default
@@ -98,7 +71,7 @@ fun defaultSkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(Pink600, Pink400),
         accentColor = Pink400, accentColorDark = Pink400,
         cardColor = White, cardColorDark = Gray800,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(16.dp),
         buttonShape = RoundedCornerShape(16.dp),
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
@@ -178,7 +151,7 @@ fun gothicSkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(Color(0xFF2D0A30), purple),
         accentColor = purple, accentColorDark = brightPurple,
         cardColor = White, cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(8.dp),
         buttonShape = RoundedCornerShape(8.dp),
         topBarDecoration = "✝", topBarDecorationAlpha = 0.5f,
@@ -261,7 +234,7 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(darkVermillion, vermillion),
         accentColor = vermillion, accentColorDark = Color(0xFFE85050),
         cardColor = Color(0xFFFFFDF5), cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(4.dp),
         buttonShape = RoundedCornerShape(4.dp),
         topBarDecoration = "☁", topBarDecorationAlpha = 0.6f,
@@ -344,7 +317,7 @@ fun classicSkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(darkWine, wine),
         accentColor = wine, accentColorDark = Color(0xFFA05060),
         cardColor = Color(0xFFFFF8F5), cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(12.dp),
         buttonShape = RoundedCornerShape(12.dp),
         topBarDecoration = "♠", topBarDecorationAlpha = 0.5f,
@@ -427,7 +400,7 @@ fun navySkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(Color(0xFF1B3A5C), Color(0xFF2E6EB5)),
         accentColor = skyBlue, accentColorDark = lightSkyBlue,
         cardColor = Color(0xFFF5FAFF), cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(14.dp),
         buttonShape = RoundedCornerShape(14.dp),
         topBarDecoration = "⚓", topBarDecorationAlpha = 0.6f,
@@ -513,7 +486,7 @@ fun countrySkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(Color(0xFF37442F), deepSage),
         accentColor = berry, accentColorDark = Color(0xFFD78678),
         cardColor = warmWhite, cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(20.dp),
         buttonShape = RoundedCornerShape(18.dp),
         topBarDecoration = "✿", topBarDecorationAlpha = 0.7f,
@@ -603,7 +576,7 @@ fun victorianSkinConfig(): LolitaSkinConfig {
         gradientColorsDark = listOf(darkBg, roseRed),
         accentColor = deepRose, accentColorDark = roseRed,
         cardColor = cream, cardColorDark = darkSurface,
-        fontFamily = fontFamily, typography = buildTypography(fontFamily),
+        fontFamily = fontFamily, typography = lolitaTypography(fontFamily),
         cardShape = RoundedCornerShape(12.dp),
         buttonShape = RoundedCornerShape(8.dp),
         topBarDecoration = "⚜", topBarDecorationAlpha = 0.5f,

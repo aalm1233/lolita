@@ -582,7 +582,6 @@ private fun CoordinateItemCard(
                         Text(
                             text = item.name.firstOrNull()?.toString() ?: "?",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -592,7 +591,7 @@ private fun CoordinateItemCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     item.name,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
                 if (item.description.isNotEmpty()) {

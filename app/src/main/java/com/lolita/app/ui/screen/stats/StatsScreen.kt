@@ -34,6 +34,7 @@ import com.lolita.app.data.repository.OutfitLogRepository
 import com.lolita.app.data.repository.PriceRepository
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.screen.item.PurchaseReviewShortcut
+import com.lolita.app.ui.theme.numericReading
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
@@ -148,13 +149,15 @@ fun StatsContent(
         )
         LolitaSection("衣橱概况") {
             row { WardrobeCounts(uiState, onNavigateToFilteredList) }
-            row { InventoryCategoryCounts(uiState.wardrobeCounts, onNavigateToFilteredList) }
         }
         if (uiState.showTotalPrice) {
             SpendingOverview(uiState)
             uiState.mostExpensiveItem?.let { item ->
                 MostExpensiveOrder(item, onClick = { onNavigateToItemDetail(item.itemId) })
             }
+        }
+        LolitaSection("品类概况") {
+            row { InventoryCategoryCounts(uiState.wardrobeCounts, onNavigateToFilteredList) }
         }
         if (uiState.topBrands.isNotEmpty()) {
             OwnedBrands(uiState.topBrands, onNavigateToFilteredList)
@@ -171,8 +174,8 @@ private fun InventoryCategoryCounts(counts: WardrobeInventoryCounts, onNavigate:
             val label = if (family == WardrobeFamily.UNCONFIRMED) "待确认品类" else family.label
             Row(Modifier.fillMaxWidth().skinClickable { onNavigate("family", family.name, label) }
                 .padding(vertical = skin.spacingSmall), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("${counts.byFamily[family] ?: 0} 件")
+                Text(label, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("${counts.byFamily[family] ?: 0} 件", style = MaterialTheme.typography.bodyLarge.numericReading)
             }
         }
     }
@@ -258,7 +261,7 @@ private fun SpendingOverview(state: StatsUiState) {
 private fun SpendingDetail(title: String, amount: Double, description: String) {
     val skin = LolitaSkin.current
     val labelStyle = MaterialTheme.typography.bodyMedium
-    val amountStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+    val amountStyle = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold).numericReading
     val text = overviewMoney(amount)
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -298,7 +301,7 @@ private fun OverviewNumber(
 ) {
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
-    val numberStyle = style.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.sp)
+    val numberStyle = style.numericReading.copy(fontWeight = FontWeight.SemiBold)
     BoxWithConstraints(modifier) {
         val width = with(density) { maxWidth.roundToPx() }
         var fontSize = numberStyle.fontSize

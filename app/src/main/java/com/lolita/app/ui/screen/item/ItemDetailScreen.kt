@@ -394,7 +394,6 @@ fun ItemDetailScreen(
                                 Text(
                                     text = item.name,
                                     style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold,
                                     modifier = Modifier.weight(1f).padding(end = skin.spacingMedium),
                                     maxLines = 3,
                                     overflow = TextOverflow.Ellipsis
@@ -680,7 +679,7 @@ fun ItemDetailScreen(
                                                     )
                                                     Text(
                                                         "¥${String.format("%.2f", price.totalPrice)}",
-                                                        style = MaterialTheme.typography.titleMedium,
+                                                        style = MaterialTheme.typography.titleSmall,
                                                         fontWeight = FontWeight.Bold,
                                                         color = MaterialTheme.colorScheme.primary
                                                     )

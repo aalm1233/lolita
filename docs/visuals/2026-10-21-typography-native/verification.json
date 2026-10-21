@@ -1,0 +1,1133 @@
+{
+  "version": "2.66.1",
+  "passed_unique_scoped_device_tests": 14,
+  "groups": [
+    {
+      "class": "TypographyScreenTest",
+      "methods": 2,
+      "final_passed": true,
+      "logs": [
+        "direct-type-normal-final.log",
+        "direct-type-small-final.log"
+      ]
+    },
+    {
+      "class": "LaboratoryScreenTest",
+      "methods": 2,
+      "final_passed": true,
+      "logs": [
+        "2k-tests.log",
+        "small-retry-tests.log"
+      ]
+    },
+    {
+      "class": "MaterialBatchScreenTest",
+      "methods": 1,
+      "final_passed": true,
+      "logs": [
+        "small-final-tests.log"
+      ]
+    },
+    {
+      "class": "ItemSizeSelectorTest",
+      "methods": 1,
+      "final_passed": true,
+      "logs": [
+        "small-final-tests.log"
+      ]
+    },
+    {
+      "class": "StatsOverviewScreenTest",
+      "methods": 6,
+      "final_passed": true,
+      "logs": [
+        "2k-final-tests.log"
+      ]
+    },
+    {
+      "class": "ImageTaskQueueActionsTest",
+      "methods": 2,
+      "final_passed": true,
+      "logs": [
+        "isolated-small-tests.log",
+        "direct-final-2k.log"
+      ]
+    }
+  ],
+  "resolution_px": [
+    1440,
+    3200
+  ],
+  "normal_density_dpi": 600,
+  "small_density_dpi": 720,
+  "small_font_scale": 2.0,
+  "real_ime": true,
+  "seven_skins_light_dark": true,
+  "native_screenshots": 263,
+  "filter_counts_checked": [
+    0,
+    3,
+    12
+  ],
+  "test_scope": "Typography callers and directly changed layouts; final header tests rerun after corrections. Previously passed unaffected scopes not repeated. Logs include failed earlier attempts; final selected methods pass.",
+  "designer_review": "Passed hierarchy, weight, seven-skin identity and stats order; badge corrected after supplemental small screenshot.",
+  "real_paid_calls": 0,
+  "room_schema": 32,
+  "entities": 36,
+  "backup_format": 13,
+  "tests_requiring_database_image_backup_changes": false,
+  "images": [
+    {
+      "file": "laboratory-native/batch-chinese-dark.png",
+      "sha256": "370142c73b54fd8f7d8ee604bcc8aa2cd94d03d36e735db7cf9c1e37ebab9427"
+    },
+    {
+      "file": "laboratory-native/batch-chinese-light.png",
+      "sha256": "5efdfb2cc0dab518e88a999881e76805b79f2ddea2283b9c5b004fb81fdbdb4b"
+    },
+    {
+      "file": "laboratory-native/batch-classic-dark.png",
+      "sha256": "dec6dec465c825dc0fa96c72f4a9f0eeec41388f22ac697d5adf250a598e7cb4"
+    },
+    {
+      "file": "laboratory-native/batch-classic-light.png",
+      "sha256": "ad3bc2c68e35e5e4662a9d928ba4df8e1830d20ef3bd9362bb5e9c702a6452cf"
+    },
+    {
+      "file": "laboratory-native/batch-country-dark.png",
+      "sha256": "b3ec9bf7b424fefd4edb52bf32311de8d19a13f7b5ffe58bf228dc85f74b0b00"
+    },
+    {
+      "file": "laboratory-native/batch-country-light.png",
+      "sha256": "e35f03dd87c6f0256e2b14fc537ad581a2454cbc8e2e3125c69edd98fa85bbf3"
+    },
+    {
+      "file": "laboratory-native/batch-default-dark.png",
+      "sha256": "47b5015b007da635a6f48d3ffa77c1f4d79308472a62f32b5ab90dd4f643eec8"
+    },
+    {
+      "file": "laboratory-native/batch-default-light.png",
+      "sha256": "c7d5f3f386182cb4f734b8c1f39a846423dec907352967d3724191c7a6ef2211"
+    },
+    {
+      "file": "laboratory-native/batch-gothic-dark.png",
+      "sha256": "e662a64d32d375a85538a3b5cfc528d42791028ac4e754e2a728770af270c0bd"
+    },
+    {
+      "file": "laboratory-native/batch-gothic-light.png",
+      "sha256": "020f59bd2d449412d4529a7e6133d3458ddeaa0fe38f47997b8d542e5212e725"
+    },
+    {
+      "file": "laboratory-native/batch-navy-dark.png",
+      "sha256": "9f01c9b78c9da37382ccfd33235760a3bd6080905a03526ce5336aa06114082b"
+    },
+    {
+      "file": "laboratory-native/batch-navy-light.png",
+      "sha256": "08db86a8478159753e36559fa75604ebbc77aee204356bfd90a2914fafb5fd4c"
+    },
+    {
+      "file": "laboratory-native/batch-victorian-dark.png",
+      "sha256": "4d58cfe714b61212cad90cc12f1d212f8ca330693e2d2856d52e77ee3168f2c9"
+    },
+    {
+      "file": "laboratory-native/batch-victorian-light.png",
+      "sha256": "533ee3f1e2c7720d2979c4f0a2d0857b835f4b6e88eea307ab10490dbfccfe22"
+    },
+    {
+      "file": "laboratory-native/cover-selected.png",
+      "sha256": "a6d3cd2eef700a69a7ac9fe7eb0b74466e9154ef9ad7f688a2556192ec018144"
+    },
+    {
+      "file": "laboratory-native/detail-chinese-dark.png",
+      "sha256": "980ef5b6a89965a5b4f56ead236d571365786c9eacb7dbad506f03f0bda0459f"
+    },
+    {
+      "file": "laboratory-native/detail-chinese-light.png",
+      "sha256": "2a929f678e1552ca46d82c20f43ada0afcf3be91abd39a15b868ff4874d11184"
+    },
+    {
+      "file": "laboratory-native/detail-classic-dark.png",
+      "sha256": "30e167adcec06665480841398ac875fb9adc4183005934f6b9d62bcbf4c95f80"
+    },
+    {
+      "file": "laboratory-native/detail-classic-light.png",
+      "sha256": "ebbc412b9daa012bf82ecfd7780baab097e552e5a2b86e0712cd9197e0cad860"
+    },
+    {
+      "file": "laboratory-native/detail-country-dark.png",
+      "sha256": "6f0d927fad9fc9da9d608716f146dc45627a69280887e9f858034690228de9a4"
+    },
+    {
+      "file": "laboratory-native/detail-country-light.png",
+      "sha256": "418845fcdf653da6cc2be4706612cfa72995fdf2298fca748be5842c76b12e43"
+    },
+    {
+      "file": "laboratory-native/detail-default-dark.png",
+      "sha256": "bac3a0cff768f00644de6c4b181a489aa8a9d82a2ff5fb2cc4aebca058502592"
+    },
+    {
+      "file": "laboratory-native/detail-default-light.png",
+      "sha256": "2da24c74aa9bf70976750ea40b0a7171258f00d79a5568a5e61a76370888d5c1"
+    },
+    {
+      "file": "laboratory-native/detail-gothic-dark.png",
+      "sha256": "4e6f1b04cf6ecbf43396f4c2adf4c8913b40b332d3e81cbb4577dcd1766c9371"
+    },
+    {
+      "file": "laboratory-native/detail-gothic-light.png",
+      "sha256": "ad93acd3341ac4631c52b606f4dc133d29a15539874defbfe20d4fd5c5a1f27c"
+    },
+    {
+      "file": "laboratory-native/detail-navy-dark.png",
+      "sha256": "eb0bcd51c0ee1cd5b62520ff8c95b07986a576209d19f77fce7f725354dd6f00"
+    },
+    {
+      "file": "laboratory-native/detail-navy-light.png",
+      "sha256": "9231125ca69bcbcebebf89244462537c5e1891366944b290a7405238d6fc4220"
+    },
+    {
+      "file": "laboratory-native/detail-victorian-dark.png",
+      "sha256": "14f06960a739335754e3ae45f3bf020477c7d9ed4b1addc39263114e3f351be1"
+    },
+    {
+      "file": "laboratory-native/detail-victorian-light.png",
+      "sha256": "a5e7051b12467d79d58c95125fb5acb024bb6d2d5bdb4eb2d8c03a5e0c126cb9"
+    },
+    {
+      "file": "laboratory-native/lab-chinese-dark.png",
+      "sha256": "7ed61846ce9161b5455525b982b364aae8a9ea09f4b963097d3190a1b5081650"
+    },
+    {
+      "file": "laboratory-native/lab-chinese-light.png",
+      "sha256": "d5f1af19e58b32d91867153cd2b61b5a78d1e3335d18b7eaf3d84ef336ffd762"
+    },
+    {
+      "file": "laboratory-native/lab-classic-dark.png",
+      "sha256": "157bf1d3150efee5220487f9f21c4ca6a6254423932af86b82de47106558b7eb"
+    },
+    {
+      "file": "laboratory-native/lab-classic-light.png",
+      "sha256": "151446dc1b4dec7c9627d230b08b5b1fa3c5b50548f6da9952b92c872e611fb0"
+    },
+    {
+      "file": "laboratory-native/lab-country-dark.png",
+      "sha256": "6e8a1b544e5670b1e4ff92d50b54fea5c786f10be5a02503c99da27d7bc20b28"
+    },
+    {
+      "file": "laboratory-native/lab-country-light.png",
+      "sha256": "642073f6f6baa8b7085b086afe6943bedf03293c469ba9f9228679248a7bed2a"
+    },
+    {
+      "file": "laboratory-native/lab-default-dark.png",
+      "sha256": "6eec965669514617da4f017e82763d3b1cdfabf89ef1cbd3481e8e6daed66e0c"
+    },
+    {
+      "file": "laboratory-native/lab-default-light.png",
+      "sha256": "4d64a7588278131f9ef260a29bb0591d448d627ecebcfdf7a3d1d8b218453cf4"
+    },
+    {
+      "file": "laboratory-native/lab-gothic-dark.png",
+      "sha256": "29c01bcb64d887c071521714323e085b54b3aee9eba79f72e59fe81baaa6b836"
+    },
+    {
+      "file": "laboratory-native/lab-gothic-light.png",
+      "sha256": "79b6dad0495670a2dab414bf2dce9b765c5cdf6d1e7dd6d05656cc233d625bad"
+    },
+    {
+      "file": "laboratory-native/lab-navy-dark.png",
+      "sha256": "0f785f98d0a744495c0b41e61bbb709357a8b6b58a3bdd33b65a6b2a28d89666"
+    },
+    {
+      "file": "laboratory-native/lab-navy-light.png",
+      "sha256": "22e05251d355e5a63931d70fcf44145c8417fa90f7b0926827f6df573a50ff90"
+    },
+    {
+      "file": "laboratory-native/lab-victorian-dark.png",
+      "sha256": "5d26645ef8264ba89aac45072d0363bdb0d2d52d4a9d2cb8c49195fd5f915895"
+    },
+    {
+      "file": "laboratory-native/lab-victorian-light.png",
+      "sha256": "917d029f27535ff28d9cb748c9c162efc14ced1e2eb28ae7f692a8712efe15a4"
+    },
+    {
+      "file": "laboratory-native/personal-chinese-dark.png",
+      "sha256": "781308b46b8f341b105f2536ea21ed6a94458b09f4c674f543663b1c0c2448af"
+    },
+    {
+      "file": "laboratory-native/personal-chinese-light.png",
+      "sha256": "efb6927e052638aadbdc170723b52f49c35ba638b17ead298b58a7dbc0bfbcf0"
+    },
+    {
+      "file": "laboratory-native/personal-classic-dark.png",
+      "sha256": "67f518ebb3912e6eefd9ffbb8f1661fa1f27ff85e824941ef0530993ed4c5463"
+    },
+    {
+      "file": "laboratory-native/personal-classic-light.png",
+      "sha256": "5060cabf6afc9a0679d24e7a5163b74a9bc889af73a518ae078f36c939b630b5"
+    },
+    {
+      "file": "laboratory-native/personal-country-dark.png",
+      "sha256": "43d7778ae3500409b44317edf522baffb1fd08b16728ac9a2f8d99439ecba493"
+    },
+    {
+      "file": "laboratory-native/personal-country-light.png",
+      "sha256": "bd5b072c37fcf82a049325fcf04d460d1d65392faa190eb851f0798cbf762bf0"
+    },
+    {
+      "file": "laboratory-native/personal-default-dark.png",
+      "sha256": "6b4f3aa5583a79894ed6dd6d08b3a73a044e4119a0338c7487eb5d656e215419"
+    },
+    {
+      "file": "laboratory-native/personal-default-light.png",
+      "sha256": "0b86828b397422124d94d45023849775fd1df80eee8f3b6ae7865970069b08da"
+    },
+    {
+      "file": "laboratory-native/personal-gothic-dark.png",
+      "sha256": "a2057a353e06ae4af5985600f74827efdf9e9556ca7f779d8f602b0d317d4520"
+    },
+    {
+      "file": "laboratory-native/personal-gothic-light.png",
+      "sha256": "47fa8458fb067558f6c248521fa4ccf7bea9f30f5ff3c30e50fe764ba66f8f9d"
+    },
+    {
+      "file": "laboratory-native/personal-navy-dark.png",
+      "sha256": "92710f7dc8dcd82da0734b69e6fa1997a5064e6b07f906b105a01d54ee13c02a"
+    },
+    {
+      "file": "laboratory-native/personal-navy-light.png",
+      "sha256": "7884a6e7ffc88f5a348bbfcedd8027d9143f4b3dab35ba361ce4785906c3acdd"
+    },
+    {
+      "file": "laboratory-native/personal-victorian-dark.png",
+      "sha256": "3d06e2e5ec6bad2450547e508265ba705c6e66a0ffbf7a6c00c1ee766b5532fb"
+    },
+    {
+      "file": "laboratory-native/personal-victorian-light.png",
+      "sha256": "b8c7f9cdbbd0983cb5e7253e7e0434c4725fb34442bfaa5b49591e2a8b690b62"
+    },
+    {
+      "file": "laboratory-native/small-batch-cover.png",
+      "sha256": "464989429e28fa1e9e65f271bec09e848e9312313ade9401fae54f058873f926"
+    },
+    {
+      "file": "laboratory-native/small-cover.png",
+      "sha256": "d04455b1bfef2a647204cefbf430a90b62a9e5d9b9eddc2b74c405bcac9c3569"
+    },
+    {
+      "file": "laboratory-native/small-detail.png",
+      "sha256": "21841b4397ea2617056fdd2daff6558e6396b88d55ae2c48221b145ee988cfcf"
+    },
+    {
+      "file": "laboratory-native/small-lab.png",
+      "sha256": "078a9f538f38d4d6578ecaf21fbcabb9cccd69de37f24c89552f5ad4ae37aaca"
+    },
+    {
+      "file": "laboratory-native/small-services.png",
+      "sha256": "00d45cbdd20067414f3c4144e3e0e8f4ae6af13c5c99b496b478da70428611f0"
+    },
+    {
+      "file": "laboratory-native/small-wig-ime.png",
+      "sha256": "a85b85111571d85b2f98c87e83d0c9c7e54cdb4c76900843bf460d15eb0a823d"
+    },
+    {
+      "file": "laboratory-native/workspace-chinese-dark.png",
+      "sha256": "80be0ac9de17f97e65bd3074109e0cfb9cadb8bbbb841e06ff1d3082a0f57db3"
+    },
+    {
+      "file": "laboratory-native/workspace-chinese-light.png",
+      "sha256": "9f5b71b045a759fe0d7b68bba9f7bc516148ea178467f89cc6b27be457f6a3c8"
+    },
+    {
+      "file": "laboratory-native/workspace-classic-dark.png",
+      "sha256": "6c08929505cb0027ac13c34f22a5e4924698e45341172a66d4b9bb609b5a1ee7"
+    },
+    {
+      "file": "laboratory-native/workspace-classic-light.png",
+      "sha256": "b819b07f6a7143d74b0de5e2c79a9c4dfb4fe008acbd2fc99e908789c6a77040"
+    },
+    {
+      "file": "laboratory-native/workspace-country-dark.png",
+      "sha256": "c498fde9e2f27ae5742cab893e6e1b6d545f662d334e9842319475d8797abb39"
+    },
+    {
+      "file": "laboratory-native/workspace-country-light.png",
+      "sha256": "046db61a12aa5cb173e016b5f45323d2e685aa2c4e40dd507f8bc5960bc0c63b"
+    },
+    {
+      "file": "laboratory-native/workspace-default-dark.png",
+      "sha256": "96e2e37bf5d64cf675f16cd13fb05ee392c01a8a4c6a05a21f8c08f1b805745f"
+    },
+    {
+      "file": "laboratory-native/workspace-default-light.png",
+      "sha256": "4fe813ddcc34a94ffd4e93c7d5516587990b1157853e4fef3436527d983217fc"
+    },
+    {
+      "file": "laboratory-native/workspace-gothic-dark.png",
+      "sha256": "e1116ba86c875285d794f16c47589331ce76b5a22165657dd8b61e4e8a7721aa"
+    },
+    {
+      "file": "laboratory-native/workspace-gothic-light.png",
+      "sha256": "656032b0a96df6a2fcd348f546bbc2984aaa18f79d2a9be3c77e08bb72e7c5c4"
+    },
+    {
+      "file": "laboratory-native/workspace-navy-dark.png",
+      "sha256": "31e7c6d36a9189231d3dd3408fa2870c8351d6b06a822814d0d27724e4a10f6b"
+    },
+    {
+      "file": "laboratory-native/workspace-navy-light.png",
+      "sha256": "07bae548a2ee166399fdf61fd411bc0a9dff5b965133583bad793c90e6fd81b0"
+    },
+    {
+      "file": "laboratory-native/workspace-victorian-dark.png",
+      "sha256": "a222ece2255c05f03ca9f25944536fa06c167eee1c394b4f1c225674367165f6"
+    },
+    {
+      "file": "laboratory-native/workspace-victorian-light.png",
+      "sha256": "26974283dd349afb79782bf57f7c4a5cff7705652ff813b9a87fb5c0035623c5"
+    },
+    {
+      "file": "material-batch-native/small-fee.png",
+      "sha256": "43afd73065771c65da7e261d04158726b560a422c715c335fc891132d26a6928"
+    },
+    {
+      "file": "material-batch-native/small-ime.png",
+      "sha256": "401b14dc4145a129da0c5087e52785012750472359a5f9a6ae11197d41297f28"
+    },
+    {
+      "file": "material-batch-native/small-inputs.png",
+      "sha256": "f22387646596c644ba9b331d743216360ce39fc53f4795cf48a9c57ec0dd79f7"
+    },
+    {
+      "file": "size-selector-screenshots/CHINESE-dark.png",
+      "sha256": "f95cc6fe045ae9bc39f4dfadf1810d0b36318e0a28ffc4b358a2a42f6cbd3fc0"
+    },
+    {
+      "file": "size-selector-screenshots/CHINESE-light.png",
+      "sha256": "ab03029710d06851e35de1a8846286d65cc073b85ddc834be344161f18c8f857"
+    },
+    {
+      "file": "size-selector-screenshots/CLASSIC-dark.png",
+      "sha256": "d07fa701a1c2cb3752fda771d96491d7d865f5d247bee1a78a51e56c8f01d20f"
+    },
+    {
+      "file": "size-selector-screenshots/CLASSIC-light.png",
+      "sha256": "672535429a8f8c24af7c97831fdbeee67c5eca83fe05720a2d77d3608acd2193"
+    },
+    {
+      "file": "size-selector-screenshots/COUNTRY-dark.png",
+      "sha256": "38d2d6cb096c1056bb50138d7f9df3ae1407e2b2d5841905861c3cc98535bb73"
+    },
+    {
+      "file": "size-selector-screenshots/COUNTRY-light.png",
+      "sha256": "757a846976cf3afa1cc27f09d152c4d97ee0989e67331737d1343ed0155c88e9"
+    },
+    {
+      "file": "size-selector-screenshots/DEFAULT-dark.png",
+      "sha256": "d13cc204b28e95d5adce0ba165a6cc67972e1d7bb4ac747d65689b7fe18182ff"
+    },
+    {
+      "file": "size-selector-screenshots/DEFAULT-light.png",
+      "sha256": "90bf6dda849825ff218f7cce847d0cbf8d42a37036da11ae2380b19c28c12fb2"
+    },
+    {
+      "file": "size-selector-screenshots/GOTHIC-dark.png",
+      "sha256": "4d9372a98946d7e419fbee4068bd121bbc90b9e86b6c5a3d322e2842069755bb"
+    },
+    {
+      "file": "size-selector-screenshots/GOTHIC-light.png",
+      "sha256": "01988d02f8ce3c0ea04dcb542e7f529cca69729174c984960339af901f4979a0"
+    },
+    {
+      "file": "size-selector-screenshots/NAVY-dark.png",
+      "sha256": "98197cbef12f7bccab6defa2e52383435ace0379347a533d107774ca5813c17c"
+    },
+    {
+      "file": "size-selector-screenshots/NAVY-light.png",
+      "sha256": "ecc934d7b0d2b47764a15a6aa0d5a26d0ce903b082d6e27d29f800bbc94a9878"
+    },
+    {
+      "file": "size-selector-screenshots/VICTORIAN-dark.png",
+      "sha256": "24a3e62890431e049ce1b6f899e5f08bc56d7b016ceedb7a55140ef3dbae3ef8"
+    },
+    {
+      "file": "size-selector-screenshots/VICTORIAN-light.png",
+      "sha256": "5d8527c0fc6c2df0af5e943c2323033baa1ae190dab993aa0b498321689ec9ac"
+    },
+    {
+      "file": "stats-overview-previews/billion-chinese-dark-amount.png",
+      "sha256": "28f593c87a4fe408de1927b9dc418ddd2662267ae1283c2cebe088b5638fb48e"
+    },
+    {
+      "file": "stats-overview-previews/billion-chinese-dark-brand.png",
+      "sha256": "fab17f08aece7b8b3fd664df2239cd2e7939f63eda1b8282f064773a74471b90"
+    },
+    {
+      "file": "stats-overview-previews/billion-chinese-light-amount.png",
+      "sha256": "84a545f89adb548c887437eb5d152c2b63617371863877e3798b5b867f0bcf9a"
+    },
+    {
+      "file": "stats-overview-previews/billion-chinese-light-brand.png",
+      "sha256": "fbcf2c2274bfc198d1024b6c19709724fbbd9d31229535e543b6054cc672bef7"
+    },
+    {
+      "file": "stats-overview-previews/billion-classic-dark-amount.png",
+      "sha256": "89622c0ca044e757e5ea26da59f43250e98875e23b8d716d958a7a29ae27e77a"
+    },
+    {
+      "file": "stats-overview-previews/billion-classic-dark-brand.png",
+      "sha256": "7fe025d70f2b4153959b84773624f083377e1134cc778e5d310a81f5ad446226"
+    },
+    {
+      "file": "stats-overview-previews/billion-classic-light-amount.png",
+      "sha256": "c15481d6206240094dd74cf5b315eb958eba31b8c3a0c99f511ab30af1ebc0d1"
+    },
+    {
+      "file": "stats-overview-previews/billion-classic-light-brand.png",
+      "sha256": "9c9f95e15ca7d038af94c42b9195b16ae91cbdf48ef42c79e5ca27f1772305c8"
+    },
+    {
+      "file": "stats-overview-previews/billion-country-dark-amount.png",
+      "sha256": "dff4ca869df3d7465a54c7bbaeef8572a7410ee52663e8052ce333c392914892"
+    },
+    {
+      "file": "stats-overview-previews/billion-country-dark-brand.png",
+      "sha256": "e2cfba4bce76ab9f3a566bd16b91fd0a92a58969e9d622de91898ff167381535"
+    },
+    {
+      "file": "stats-overview-previews/billion-country-light-amount.png",
+      "sha256": "295dab6772df46bf78a0302296ef9debb42957692f1bb610b2e054e3248203a3"
+    },
+    {
+      "file": "stats-overview-previews/billion-country-light-brand.png",
+      "sha256": "df9b7a2c4dba9bb8ff3ef202b9dcecbdb70be75b3c5466d6b2596e4c40e8991e"
+    },
+    {
+      "file": "stats-overview-previews/billion-default-dark-amount.png",
+      "sha256": "00af691f371e54c1ef5d581bd4c226c8cc16edf1329210f549fa486a19b932ac"
+    },
+    {
+      "file": "stats-overview-previews/billion-default-dark-brand.png",
+      "sha256": "0b7449db9df6be056af22b979f3d593e1b4602a7d60d20606dfd652e8fd9e6fe"
+    },
+    {
+      "file": "stats-overview-previews/billion-default-light-amount.png",
+      "sha256": "8b461918023ee274b32e2679b4a2fdd8809ab2632a9b5659b1cc57f8ae19671c"
+    },
+    {
+      "file": "stats-overview-previews/billion-default-light-brand.png",
+      "sha256": "6bde16846c4736ad8fef636b57e766019b30b5e67e7e7d93b19c076c665aa76c"
+    },
+    {
+      "file": "stats-overview-previews/billion-gothic-dark-amount.png",
+      "sha256": "8e7a46eed560348f86fe5e7727bf96456add96cd2c922cf0561b369f7c9ae145"
+    },
+    {
+      "file": "stats-overview-previews/billion-gothic-dark-brand.png",
+      "sha256": "ff6183b5940df888bdcc1347ce424dedec68f9712e757e995425599655ed6d79"
+    },
+    {
+      "file": "stats-overview-previews/billion-gothic-light-amount.png",
+      "sha256": "ac7e2950c72fd47eb297c462cee56b309462f40df69a459a1f951415a7376bf8"
+    },
+    {
+      "file": "stats-overview-previews/billion-gothic-light-brand.png",
+      "sha256": "b33b48b15b6f18fb8fada76bdfd8dc0f40c2b0ec1018bd954f1b5d2101303021"
+    },
+    {
+      "file": "stats-overview-previews/billion-navy-dark-amount.png",
+      "sha256": "01e53cbcf386772d2bc762b568134530bce417457ce30ad06356025be0dc0960"
+    },
+    {
+      "file": "stats-overview-previews/billion-navy-dark-brand.png",
+      "sha256": "c5cf0cd4c3336776b99f930993ac134ec0fd528d4fd370c0ce70f1800089bccb"
+    },
+    {
+      "file": "stats-overview-previews/billion-navy-light-amount.png",
+      "sha256": "41e5c99c5babe8aed34db1dbfeaf349429fefc1c5a2c9d0603632a6a61406c94"
+    },
+    {
+      "file": "stats-overview-previews/billion-navy-light-brand.png",
+      "sha256": "c23706a0b07e48bc07680a66718c482ddb70b5a25b1211e46d4ffc60c508368c"
+    },
+    {
+      "file": "stats-overview-previews/billion-victorian-dark-amount.png",
+      "sha256": "08afdab17c0005bbe1ae50555b17b4cbf3b4c6cf1bee497c9059d1652aa7411f"
+    },
+    {
+      "file": "stats-overview-previews/billion-victorian-dark-brand.png",
+      "sha256": "ea18fb95e4f157fa9a0560e8b316212ca161febf27f0f93c38a0705da5f8284a"
+    },
+    {
+      "file": "stats-overview-previews/billion-victorian-light-amount.png",
+      "sha256": "0416de32a823b805c1a3f17e811bbeb5fb22f84c2b60c2f52f83b52927d4d8c0"
+    },
+    {
+      "file": "stats-overview-previews/billion-victorian-light-brand.png",
+      "sha256": "a196278a9e8e519324374725a1fac15526f95fba2f1897294fbcb486829553ec"
+    },
+    {
+      "file": "stats-overview-previews/compact-default-light.png",
+      "sha256": "dd222fb6362440c55f48d5e5b9356043e6575a61ebd0dc582e096673c791a411"
+    },
+    {
+      "file": "stats-overview-previews/million-chinese-dark-amount.png",
+      "sha256": "1de499a5c364682e6c6ee0a2527946fbd42ba80c0686cca559be28c7347e76ca"
+    },
+    {
+      "file": "stats-overview-previews/million-chinese-dark-brand.png",
+      "sha256": "fab17f08aece7b8b3fd664df2239cd2e7939f63eda1b8282f064773a74471b90"
+    },
+    {
+      "file": "stats-overview-previews/million-chinese-light-amount.png",
+      "sha256": "397d1d8c066a888c78449edda092529c644571ef9d305bf38aa17b95582005fc"
+    },
+    {
+      "file": "stats-overview-previews/million-chinese-light-brand.png",
+      "sha256": "fbcf2c2274bfc198d1024b6c19709724fbbd9d31229535e543b6054cc672bef7"
+    },
+    {
+      "file": "stats-overview-previews/million-classic-dark-amount.png",
+      "sha256": "4f7a4bdfcfc6789baebbd67883b028884e177e57b76a73f2c734ed0c40436baa"
+    },
+    {
+      "file": "stats-overview-previews/million-classic-dark-brand.png",
+      "sha256": "7fe025d70f2b4153959b84773624f083377e1134cc778e5d310a81f5ad446226"
+    },
+    {
+      "file": "stats-overview-previews/million-classic-light-amount.png",
+      "sha256": "71428dd67bcfe91811ed614fa4fceb98ad8ae2074f88c78f00e7468590d86076"
+    },
+    {
+      "file": "stats-overview-previews/million-classic-light-brand.png",
+      "sha256": "9c9f95e15ca7d038af94c42b9195b16ae91cbdf48ef42c79e5ca27f1772305c8"
+    },
+    {
+      "file": "stats-overview-previews/million-country-dark-amount.png",
+      "sha256": "5cb4969669878c9d8672ad82d4496428d10d096d3f685bd31bc552747d8cc2a2"
+    },
+    {
+      "file": "stats-overview-previews/million-country-dark-brand.png",
+      "sha256": "e2cfba4bce76ab9f3a566bd16b91fd0a92a58969e9d622de91898ff167381535"
+    },
+    {
+      "file": "stats-overview-previews/million-country-light-amount.png",
+      "sha256": "7620be21a57bf247df64889d1fa8829248e33a501f8d6febf107f28d279e454e"
+    },
+    {
+      "file": "stats-overview-previews/million-country-light-brand.png",
+      "sha256": "df9b7a2c4dba9bb8ff3ef202b9dcecbdb70be75b3c5466d6b2596e4c40e8991e"
+    },
+    {
+      "file": "stats-overview-previews/million-default-dark-amount.png",
+      "sha256": "08d6a99361cef861f356696b3cb4f67c6ca1a45b6264ec0c7c76f5245929e078"
+    },
+    {
+      "file": "stats-overview-previews/million-default-dark-brand.png",
+      "sha256": "0b7449db9df6be056af22b979f3d593e1b4602a7d60d20606dfd652e8fd9e6fe"
+    },
+    {
+      "file": "stats-overview-previews/million-default-light-amount.png",
+      "sha256": "68e71041e2f0b26f0c4f48d4caf06deb2e920e2d6af5091e736ffd8f0a34b0e0"
+    },
+    {
+      "file": "stats-overview-previews/million-default-light-brand.png",
+      "sha256": "6bde16846c4736ad8fef636b57e766019b30b5e67e7e7d93b19c076c665aa76c"
+    },
+    {
+      "file": "stats-overview-previews/million-gothic-dark-amount.png",
+      "sha256": "2723b21ad727ce2b62bd1b74563d12d0a59db1afdda7b79610e894689ec35a6e"
+    },
+    {
+      "file": "stats-overview-previews/million-gothic-dark-brand.png",
+      "sha256": "ff6183b5940df888bdcc1347ce424dedec68f9712e757e995425599655ed6d79"
+    },
+    {
+      "file": "stats-overview-previews/million-gothic-light-amount.png",
+      "sha256": "42a2fbdea03252c1e0b4f9a65633b8ade1c259b7e226fd36e6060a514a56690d"
+    },
+    {
+      "file": "stats-overview-previews/million-gothic-light-brand.png",
+      "sha256": "b33b48b15b6f18fb8fada76bdfd8dc0f40c2b0ec1018bd954f1b5d2101303021"
+    },
+    {
+      "file": "stats-overview-previews/million-navy-dark-amount.png",
+      "sha256": "f13dbe6d65c63c744a637b395131419498f2ac17e487b86c8f5890a3715325d6"
+    },
+    {
+      "file": "stats-overview-previews/million-navy-dark-brand.png",
+      "sha256": "c5cf0cd4c3336776b99f930993ac134ec0fd528d4fd370c0ce70f1800089bccb"
+    },
+    {
+      "file": "stats-overview-previews/million-navy-light-amount.png",
+      "sha256": "b630d5333310b5a3da6780bb3fd0596c563dae3f4ee0b9348820a749e6cd9f96"
+    },
+    {
+      "file": "stats-overview-previews/million-navy-light-brand.png",
+      "sha256": "c23706a0b07e48bc07680a66718c482ddb70b5a25b1211e46d4ffc60c508368c"
+    },
+    {
+      "file": "stats-overview-previews/million-victorian-dark-amount.png",
+      "sha256": "5fede9bf4fe94048a779115ba97de4111fd36ec5a1ed855828013a32ba800d68"
+    },
+    {
+      "file": "stats-overview-previews/million-victorian-dark-brand.png",
+      "sha256": "ea18fb95e4f157fa9a0560e8b316212ca161febf27f0f93c38a0705da5f8284a"
+    },
+    {
+      "file": "stats-overview-previews/million-victorian-light-amount.png",
+      "sha256": "531c8258bfcbe4a46e3b4ab5c09aaed088a6ea32420ae04539b3094de6baddab"
+    },
+    {
+      "file": "stats-overview-previews/million-victorian-light-brand.png",
+      "sha256": "a196278a9e8e519324374725a1fac15526f95fba2f1897294fbcb486829553ec"
+    },
+    {
+      "file": "stats-overview-previews/normal-chinese-dark.png",
+      "sha256": "cc621d232b1d98738fb23e382ceeff23a768d8801ca4d93e47c82b9daab6fba6"
+    },
+    {
+      "file": "stats-overview-previews/normal-chinese-light.png",
+      "sha256": "b1cd7604cf3f6aed1c49514fce851d7d1ac37252244c9c7d72f40f72b9c1c865"
+    },
+    {
+      "file": "stats-overview-previews/normal-classic-dark.png",
+      "sha256": "1c5a800e8d1c8bbc0cbdb2cc7ae8df33d31ca250ea7caeaee71996c9b4d9ca2f"
+    },
+    {
+      "file": "stats-overview-previews/normal-classic-light.png",
+      "sha256": "cf68d84fd1a35c8d775a7047e3884c032a0f1454f8656b9f556e731c62d06982"
+    },
+    {
+      "file": "stats-overview-previews/normal-country-dark.png",
+      "sha256": "a020164fba075bd390d6d9d3082259b71fa0679ceee6ea5910b3f888ff56609b"
+    },
+    {
+      "file": "stats-overview-previews/normal-country-light.png",
+      "sha256": "833967e5a45ef7c7972e688460ac546fc566a887b5960232c622d0d4baeec778"
+    },
+    {
+      "file": "stats-overview-previews/normal-default-dark.png",
+      "sha256": "58a35060f72060fca278070a49663e80e04868deec9a0b05bc3ac2be333096dd"
+    },
+    {
+      "file": "stats-overview-previews/normal-default-light.png",
+      "sha256": "e67d46080d2cd336be8f302c01a63bd006c4427e8dcfeb5c6644c8c3fc21dde5"
+    },
+    {
+      "file": "stats-overview-previews/normal-gothic-dark.png",
+      "sha256": "27dbfbfd12112d7225700e82292a3a65ff1201a3ac6e8f5e45225633abd6e04c"
+    },
+    {
+      "file": "stats-overview-previews/normal-gothic-light.png",
+      "sha256": "0568e202d3c4adad24048c413fcf2074ae185d6d9f262586e23eb777aebf53df"
+    },
+    {
+      "file": "stats-overview-previews/normal-navy-dark.png",
+      "sha256": "215f09208f09e18d7f9706ac9a9f915fe57ee04927f565d567ea68463a827808"
+    },
+    {
+      "file": "stats-overview-previews/normal-navy-light.png",
+      "sha256": "9e56edceb6b7c384c4a2a931be9df9dd9720e68711319d6aaac006c0c77bf42b"
+    },
+    {
+      "file": "stats-overview-previews/normal-victorian-dark.png",
+      "sha256": "54b6dbe380894112ea722653b40fdce1cf06ebd681cc1f00afbe6cfbfc2a5d68"
+    },
+    {
+      "file": "stats-overview-previews/normal-victorian-light.png",
+      "sha256": "b9a1d65ec15bf58e199a25f910960a7fd99b3f66fe9547f95b21757cd7b79006"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-CHINESE-dark.png",
+      "sha256": "d01eebec9a0e6b9ac280393e969560d2671303892b5a7d6b04ba809d426a0737"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-CHINESE-light.png",
+      "sha256": "e8fa99893653689bd02d783356c8d7c5542cdaca98f8df1b09318cc0bab7d495"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-CLASSIC-dark.png",
+      "sha256": "07f4ddd9b6c113444d2415dbdf421def77ef33812ed4cd9334df47f2c11e66da"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-CLASSIC-light.png",
+      "sha256": "ad96df902cf1408fbf3abf3dde942e7c9da3b1537723f3473c1c940fc0f47e94"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-COUNTRY-dark.png",
+      "sha256": "bc7a0e9c76e6afd4feac16ac789c8645fe7a1800c54ec64b13f8f41e8a6a0083"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-COUNTRY-light.png",
+      "sha256": "b018491a9545c7d7bfa071bdff928ba594bbaf2ef918af3f730da06e4523cd87"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-DEFAULT-dark.png",
+      "sha256": "4a3f8865823d68177d978dcba0ae8d0b1927456e426b1c4d94d3c3c90523caca"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-DEFAULT-light.png",
+      "sha256": "fce9f1c306250c3bf17af54968b9d14890d6c4fd327e5c79d25241047a984a70"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-GOTHIC-dark.png",
+      "sha256": "9601e37412930bc05c625eda87ee292ca8d761a8602c93e2aeb73795889d506c"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-GOTHIC-light.png",
+      "sha256": "2398df51bafacf7169b5147b2ea9ac8db108e924e42734b6e4af32e295d4f094"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-NAVY-dark.png",
+      "sha256": "78707907882b432bdd44b70219ed8d8aa09becd3360aeef0bf5f4ded7f4cb5d8"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-NAVY-light.png",
+      "sha256": "7274fcac31606cfa22f8cc20477e7e293e5bfb7463caa944fc47ff1b1a5f51b2"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-VICTORIAN-dark.png",
+      "sha256": "28273604d8d197041e6dea353c4fce882f1fd7145684962dd6755969651e3565"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-off-VICTORIAN-light.png",
+      "sha256": "ac26c5377a7cafe6abdac1fdb0e163d4e5a50228c9bb5dcbd6e223eaf05946cb"
+    },
+    {
+      "file": "stats-overview-previews/review-prices-on.png",
+      "sha256": "4b398882f316f630e3dde5a5557d38cce954f341f5df4d446f11de95bb78b03b"
+    },
+    {
+      "file": "task-queue-native/batch-chinese-dark.png",
+      "sha256": "8be14b51e8a13e5f0b8a3b70bcd75faa6b93419a2228791a21ac577bd117d7dd"
+    },
+    {
+      "file": "task-queue-native/batch-chinese-light.png",
+      "sha256": "40057494945e11fed15717b14885da11cda7b7f4339b0ceac7221da42d0c6a09"
+    },
+    {
+      "file": "task-queue-native/batch-classic-dark.png",
+      "sha256": "4d33b68fb0ffa98d6c7d4de67881e6c483bf8338b074c4712436662259369ec6"
+    },
+    {
+      "file": "task-queue-native/batch-classic-light.png",
+      "sha256": "ec5980a6cbcd9b8a3cde40028872d97ea4243fad40dcca55a1676f3a7c092bef"
+    },
+    {
+      "file": "task-queue-native/batch-country-dark.png",
+      "sha256": "bc7fa0dc6c5a861606d0c15056e79869f104e6bc5779b61683c3912cc8987927"
+    },
+    {
+      "file": "task-queue-native/batch-country-light.png",
+      "sha256": "e6ddebf2362b2f8e65ef37f749ab7ada76aee41b65229d1804b6454cd8cbc220"
+    },
+    {
+      "file": "task-queue-native/batch-default-dark.png",
+      "sha256": "6c20fb73c6a37d3b8cf84a80fcd61dc105a907ab52781ff07b07e2906187a36d"
+    },
+    {
+      "file": "task-queue-native/batch-default-light.png",
+      "sha256": "c49be762715b895fbdbc2cb2bd7b51a0fdc39f7f88ac60de3b9f1ea9a6240fb6"
+    },
+    {
+      "file": "task-queue-native/batch-gothic-dark.png",
+      "sha256": "854128c65b66c65f62d350f6e4ad2337a3bc1474a6a16ed0d7b50c0610ed21bc"
+    },
+    {
+      "file": "task-queue-native/batch-gothic-light.png",
+      "sha256": "698f580c19c835bc17787827abc8ce394e809af46891b65d877639cdf94d1b88"
+    },
+    {
+      "file": "task-queue-native/batch-navy-dark.png",
+      "sha256": "2c72080c0e522780a17b5195bb750ecb5f64ded2be106b904f0b196d41e3c425"
+    },
+    {
+      "file": "task-queue-native/batch-navy-light.png",
+      "sha256": "9d9d6de9632e7f4bd18c8c5eddb03ccf46fc19b5f4c29a0fe8cc2bfa0c42d4c1"
+    },
+    {
+      "file": "task-queue-native/batch-victorian-dark.png",
+      "sha256": "7b5c29ef7bba94c322c24a02da3e83727b0fd7b91b822262547ed1033948ad68"
+    },
+    {
+      "file": "task-queue-native/batch-victorian-light.png",
+      "sha256": "b244cd2695666ce865cae7092afd6524a955e37a8c909999e9ea07ad627eb422"
+    },
+    {
+      "file": "task-queue-native/center-chinese-dark.png",
+      "sha256": "c167eabdb6fa1bd604ea8521ab3f7ee8660af060207978739e8c47afcd00d365"
+    },
+    {
+      "file": "task-queue-native/center-chinese-light.png",
+      "sha256": "8f2dcfefe8b2666040621d016a1ca2ef4ef8d129ed7db3c041e14c2e0d00f24b"
+    },
+    {
+      "file": "task-queue-native/center-classic-dark.png",
+      "sha256": "d38af44798560733be48b3ba4832deaa38a47a54825beba356d4c0a2ececea75"
+    },
+    {
+      "file": "task-queue-native/center-classic-light.png",
+      "sha256": "d417ec7bb899c64d6ce33115651980fbc8e529efe839f73c2e6f5ef736bd4ced"
+    },
+    {
+      "file": "task-queue-native/center-country-dark.png",
+      "sha256": "5ce5a45cff7155a81f14ab14841dfe91bcadc5ca1c8b484349c8fe494585f6da"
+    },
+    {
+      "file": "task-queue-native/center-country-light.png",
+      "sha256": "492057b7ce819c1f6c4c000729e81926b796ea989ab94d7345589a342638f0e7"
+    },
+    {
+      "file": "task-queue-native/center-default-dark.png",
+      "sha256": "4421bf71d67c0385cb2102b54208a27359d99e22cc8242b5e0009a0e17825f05"
+    },
+    {
+      "file": "task-queue-native/center-default-light.png",
+      "sha256": "c88ac626b1d456af9db7342ae3d687d7a67411d9e3a4c1d2610d3289dd87d037"
+    },
+    {
+      "file": "task-queue-native/center-gothic-dark.png",
+      "sha256": "7c22efbdcc3b0611a910e20ce72001aebb981f61c32c42f7f3262cde1af1d27a"
+    },
+    {
+      "file": "task-queue-native/center-gothic-light.png",
+      "sha256": "7028befcb57df4d356e65edf037bb331a227e0ad14980d54defb035f316f8163"
+    },
+    {
+      "file": "task-queue-native/center-navy-dark.png",
+      "sha256": "3ded6a91331319b4a746db56240cb133c21f17765cd95121128bc52a7d15a086"
+    },
+    {
+      "file": "task-queue-native/center-navy-light.png",
+      "sha256": "6baaf44384dad95b5cd3f8064ee9c01f6d56a69770acb293309606df2bd376fd"
+    },
+    {
+      "file": "task-queue-native/center-victorian-dark.png",
+      "sha256": "664b38ec0035914d0b94b738352ecf6ec6aa8dc797602ec00887dd7cf580966b"
+    },
+    {
+      "file": "task-queue-native/center-victorian-light.png",
+      "sha256": "a6e1bf5907ba8365d8fb5150a2cec5bffbd8a124efaa4a539a8fa9ef2b2aade8"
+    },
+    {
+      "file": "task-queue-native/selection-chinese-dark.png",
+      "sha256": "1a15847ea383f7f19cab41424fb46d598a6e1039793cb1947066919dd0b50dd8"
+    },
+    {
+      "file": "task-queue-native/selection-chinese-light.png",
+      "sha256": "aeee0217270c415293027b28ee2abc2e5220181c5e264868fdf3277e98608be2"
+    },
+    {
+      "file": "task-queue-native/selection-classic-dark.png",
+      "sha256": "9aaeaabe581abeeb4c1b33ba02755f3a3fa23f83523368e14473f132b2458b80"
+    },
+    {
+      "file": "task-queue-native/selection-classic-light.png",
+      "sha256": "25737bc4c6ee36932812809d79a8bb8bfea3609b3e4a0a9ebc1cee0077470f4a"
+    },
+    {
+      "file": "task-queue-native/selection-country-dark.png",
+      "sha256": "98ebe80dc6b08dcd7b43547255cc7663f98176b8dac01052ee87b82a9a22889d"
+    },
+    {
+      "file": "task-queue-native/selection-country-light.png",
+      "sha256": "ef3783be6be9c85dfcf20a60ea654c5f3fbda518fc354969a57d4a2a0e99d0bf"
+    },
+    {
+      "file": "task-queue-native/selection-default-dark.png",
+      "sha256": "6224d88f62c20628fad6bccd9a81b8f6e569c6a27b86ede16d8bfeea7f7e301c"
+    },
+    {
+      "file": "task-queue-native/selection-default-light.png",
+      "sha256": "61ee8fbbdd3003a3fa5eb15df7cb5a31aaf8ae12192f96c5cf60f70ceb131606"
+    },
+    {
+      "file": "task-queue-native/selection-gothic-dark.png",
+      "sha256": "d2115a3214a366aaefcbef574433018f362cfd9b311a2734155e1e1e4e618ae3"
+    },
+    {
+      "file": "task-queue-native/selection-gothic-light.png",
+      "sha256": "7eb9ba559ffb177392a8f5850e6c9a3c7de0aa801ed199539d0bc9953a063664"
+    },
+    {
+      "file": "task-queue-native/selection-navy-dark.png",
+      "sha256": "ece6ddaa2b0e6c1551399e13afcfaf6262b4f57bb9e6a4188552bc4963c1e0ab"
+    },
+    {
+      "file": "task-queue-native/selection-navy-light.png",
+      "sha256": "d4b4acfc70dd52a1f27b18c195d1dfebc766436016f8e1df01c83d723a22059a"
+    },
+    {
+      "file": "task-queue-native/selection-victorian-dark.png",
+      "sha256": "1547387b93e7b9f11a429be399c70afd0c58df62ce38ad7756f4561108a9c2fb"
+    },
+    {
+      "file": "task-queue-native/selection-victorian-light.png",
+      "sha256": "61e7c077a76738d0420dd0538c02aefb9ea3fb9a7ca337e989ed66e8b33b145b"
+    },
+    {
+      "file": "task-queue-native/small-batch-selection.png",
+      "sha256": "e533612af5141201a92ca57ef544af6e5bb96de3a117de5cc2a6464a2056e4d8"
+    },
+    {
+      "file": "task-queue-native/small-batch.png",
+      "sha256": "045336cdd646b734cad9fd1a67232d09e54112e5192df2f0a7f8ea3d24b3deb2"
+    },
+    {
+      "file": "task-queue-native/small-center-selection.png",
+      "sha256": "e533612af5141201a92ca57ef544af6e5bb96de3a117de5cc2a6464a2056e4d8"
+    },
+    {
+      "file": "task-queue-native/small-center.png",
+      "sha256": "d22e8e7a9e995f550d37367063ffdb96c5f8c1d0ab849b3c7b46495005f7919d"
+    },
+    {
+      "file": "typography-native/home-chinese-dark.png",
+      "sha256": "65b0119beb5fa952cdc21a99ab63f38d44f6539a73eca8f23eeda6276791d588"
+    },
+    {
+      "file": "typography-native/home-chinese-light.png",
+      "sha256": "6a9bf036143de271e8a4ce1dafdfd13cd21048ee198ff0cee5e0638419ca1780"
+    },
+    {
+      "file": "typography-native/home-classic-dark.png",
+      "sha256": "7baa739025a074b6a7969aabd65087b5a3f628b7a8679b036cfec2190bca6496"
+    },
+    {
+      "file": "typography-native/home-classic-light.png",
+      "sha256": "798af86ce6107bc32db4d667082ad48d4c31c691678626f27be58a5da0ff73c9"
+    },
+    {
+      "file": "typography-native/home-country-dark.png",
+      "sha256": "e12ee01391e383b7dfea30856d8b6237a4fbb634ded02ed94f9b6cb0e6c599f3"
+    },
+    {
+      "file": "typography-native/home-country-light.png",
+      "sha256": "38486421f1866ee215e7e26c8823d193ac94dcc2c3b3a872c189b3a801fa8823"
+    },
+    {
+      "file": "typography-native/home-default-dark.png",
+      "sha256": "ec3535e22f9417e90425b0339cbd5ec4beb2fe2bca583cb5560485d798b57503"
+    },
+    {
+      "file": "typography-native/home-default-light.png",
+      "sha256": "c7c592423a8c049cf582664957adf779bc13d1ed0cd0bb190e3377146f70f348"
+    },
+    {
+      "file": "typography-native/home-gothic-dark.png",
+      "sha256": "bd5e77e4fbe9337fe6fa5b57fb456666075e7f55745d0ea47e5fb1c98552669c"
+    },
+    {
+      "file": "typography-native/home-gothic-light.png",
+      "sha256": "99537dda504980d53ca40b44ab04fc99fd04c1155aa4962f85e2a38e54d50f8c"
+    },
+    {
+      "file": "typography-native/home-navy-dark.png",
+      "sha256": "b78d610001624b44649269c81eca8e632660bf7ad3f601377e25ef9429720871"
+    },
+    {
+      "file": "typography-native/home-navy-light.png",
+      "sha256": "a6557d63c4ae6038d1246cf4024dcbf72aa403d0f34395a0b6047f71ce77e287"
+    },
+    {
+      "file": "typography-native/home-victorian-dark.png",
+      "sha256": "e45fb5aa4af44f80b8ba52e234358919b65e30c68daa8894a33e1d795b503366"
+    },
+    {
+      "file": "typography-native/home-victorian-light.png",
+      "sha256": "1a25d59f9f452fd927eec2504647f616bf855057b96b84f247a8c489283d054d"
+    },
+    {
+      "file": "typography-native/normal-filter-0.png",
+      "sha256": "d454d98652ebfabb5184d792e5daa31a2a29bf099897972163026776fb4edfe3"
+    },
+    {
+      "file": "typography-native/normal-filter-12.png",
+      "sha256": "d2e6c8e226b23aae3f272ed1c605a266df78164da6b7dfef5876c65ed1f484e1"
+    },
+    {
+      "file": "typography-native/normal-filter-3.png",
+      "sha256": "c7c592423a8c049cf582664957adf779bc13d1ed0cd0bb190e3377146f70f348"
+    },
+    {
+      "file": "typography-native/scale-chinese-dark.png",
+      "sha256": "da3b644d3bd2d8164d003bbe5406ebd6301b85c55be8b106ac431d052e5f62a0"
+    },
+    {
+      "file": "typography-native/scale-chinese-light.png",
+      "sha256": "79d23c2fc0e5b3a1b13ef2a08cc6a7c782f0e2413c38c514087f8272bbb520ec"
+    },
+    {
+      "file": "typography-native/scale-classic-dark.png",
+      "sha256": "2d0991c81f946ef88f0854f165821842fb5beefd8875cc02e22e46b965d81212"
+    },
+    {
+      "file": "typography-native/scale-classic-light.png",
+      "sha256": "e0d3a8d655236f17c57e7958379f6dc9c13b3f2616b203f8d036462d6e0ea7b1"
+    },
+    {
+      "file": "typography-native/scale-country-dark.png",
+      "sha256": "298b4240e32f8860dfcf4385fa63e077e73cdb0ff5e7aae356887f04eabb19fa"
+    },
+    {
+      "file": "typography-native/scale-country-light.png",
+      "sha256": "d20c1730bb7b14c1d4eedb8489e6ed672ab0c4f6e013b2944ab2dcc46f903cef"
+    },
+    {
+      "file": "typography-native/scale-default-dark.png",
+      "sha256": "96d103c285418c8f2c21376ea0d43e4044535c374c31676cc7d2d4617f95bcec"
+    },
+    {
+      "file": "typography-native/scale-default-light.png",
+      "sha256": "0733a184c7945f0f050e61341941a10ca1dae2823f28612c973cb883f7eebbd4"
+    },
+    {
+      "file": "typography-native/scale-gothic-dark.png",
+      "sha256": "3399d4fbdf1ca98d41f198725a3b3b0b5d34f70b6fe3e0b9fe74a1f516cd809b"
+    },
+    {
+      "file": "typography-native/scale-gothic-light.png",
+      "sha256": "72746300825e89227d3779a701176612404f4220fd545c5334aebde3fca89928"
+    },
+    {
+      "file": "typography-native/scale-navy-dark.png",
+      "sha256": "f4fe690fbc74cae8a50e484d1a3e1193de5314dc7a4c1b857c4c17bd01bff7c5"
+    },
+    {
+      "file": "typography-native/scale-navy-light.png",
+      "sha256": "de25a7de8b275c2df7c7709ddd810dad2fe95c90b4e5f9c92640f40dcd424d14"
+    },
+    {
+      "file": "typography-native/scale-victorian-dark.png",
+      "sha256": "57c45984e44009ca9246a905ba4cfabdb5018a4fed43fff0c047d6793d8242dd"
+    },
+    {
+      "file": "typography-native/scale-victorian-light.png",
+      "sha256": "4c097b762a7e0f3dbba55a957a3c1078ae195b042f1706eaa8f67aaa1a72b119"
+    },
+    {
+      "file": "typography-native/small-filter-0.png",
+      "sha256": "c0497aaf825aacae8fd94db6c4a3b004858fbc998a0e971c87999a7fb3113ea3"
+    },
+    {
+      "file": "typography-native/small-filter-12.png",
+      "sha256": "4a266cc2a3d3338d94b3d954e345fc4883c096e080fa1766994c24c549f5335d"
+    },
+    {
+      "file": "typography-native/small-filter-3.png",
+      "sha256": "231e6ae7c28d4742f557887915b7fbb8148b8041a2d28a940eb2178653e73cbf"
+    },
+    {
+      "file": "typography-native/small-home.png",
+      "sha256": "231e6ae7c28d4742f557887915b7fbb8148b8041a2d28a940eb2178653e73cbf"
+    },
+    {
+      "file": "typography-native/small-input-ime.png",
+      "sha256": "2620953710f21084bf8f8668079c15ce05e70fcc919c629bd14cc4b68b601913"
+    },
+    {
+      "file": "typography-native/small-search-ime.png",
+      "sha256": "0f39fc45c13213f35d7a571d377d9d82513c7bc3b92865efd4fd1ff5ff3323bc"
+    }
+  ]
+}

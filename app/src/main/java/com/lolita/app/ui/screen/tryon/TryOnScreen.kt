@@ -213,7 +213,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
             items(state.results, key = { "result-${it.id}" }) { result ->
                 LolitaCard {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                        Text(result.name, style = MaterialTheme.typography.titleMedium)
+                        Text(result.name, style = MaterialTheme.typography.titleSmall)
                         val date = remember(result.createdAt) { SimpleDateFormat("yyyy年M月d日 HH:mm", Locale.CHINA).format(Date(result.createdAt)) }
                         Text(date, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         ImageFrame(Modifier.fillMaxWidth()) {

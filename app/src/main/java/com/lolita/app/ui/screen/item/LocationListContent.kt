@@ -121,7 +121,7 @@ private fun LocationCardItem(
             }
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(name, style = MaterialTheme.typography.titleMedium)
+                Text(name, style = MaterialTheme.typography.titleSmall)
                 if (description.isNotBlank()) {
                     Text(
                         description,

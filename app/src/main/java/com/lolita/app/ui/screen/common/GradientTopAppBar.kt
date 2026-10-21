@@ -20,9 +20,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.lolita.app.ui.theme.appBarTitle
+import com.lolita.app.ui.theme.metadata
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.navigation.LocalHazeState
 import dev.chrisbanes.haze.HazeState
@@ -94,11 +94,7 @@ fun GradientTopAppBar(
                         navigationIcon()
                     }
                     ProvideTextStyle(
-                        MaterialTheme.typography.titleMedium.copy(
-                            color = topBarContentColor,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
+                        MaterialTheme.typography.appBarTitle.copy(color = topBarContentColor)
                     ) {
                         Box(
                             modifier = Modifier.weight(1f),
@@ -161,11 +157,7 @@ fun GradientTopAppBar(
                         navigationIcon()
                     }
                     ProvideTextStyle(
-                        MaterialTheme.typography.titleMedium.copy(
-                            color = topBarContentColor,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
+                        MaterialTheme.typography.appBarTitle.copy(color = topBarContentColor)
                     ) {
                         Box(
                             modifier = Modifier.weight(1f),
@@ -189,7 +181,7 @@ private fun AnimatedDecoration(skin: com.lolita.app.ui.theme.LolitaSkinConfig, i
     if (!animateDecorations) {
         Text(
             skin.topBarDecoration,
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.metadata,
             color = decoColor.copy(alpha = skin.topBarDecorationAlpha)
         )
         return
@@ -219,7 +211,7 @@ private fun AnimatedDecoration(skin: com.lolita.app.ui.theme.LolitaSkinConfig, i
 
     Text(
         skin.topBarDecoration,
-        fontSize = 12.sp,
+        style = MaterialTheme.typography.metadata,
         color = decoColor.copy(alpha = skin.topBarDecorationAlpha * glowAlpha),
         modifier = Modifier.graphicsLayer {
             scaleX = breathScale

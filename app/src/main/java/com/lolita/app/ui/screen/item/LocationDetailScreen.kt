@@ -116,7 +116,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                                     node.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
                                         modifier = Modifier.size(52.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
                                     Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
-                                        Text(node.name, style = MaterialTheme.typography.titleMedium)
+                                        Text(node.name, style = MaterialTheme.typography.titleSmall)
                                         Text(StorageTree.pathFor(node.locationId, node.id, state.locations, state.nodes), style = MaterialTheme.typography.bodySmall)
                                         Text("${state.nodeItemCounts[node.id] ?: 0} 条记录", style = MaterialTheme.typography.labelMedium)
                                     }

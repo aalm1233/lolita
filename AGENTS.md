@@ -57,7 +57,7 @@
 - `LocalHazeState` CompositionLocal 在 `LolitaNavHost` 中创建并提供，外层 `Box` 设 `hazeSource`，使内容可滚动到顶栏/底栏后方。
 - 卡片复用 `LolitaCard`（已集成皮肤 `cardElevation` + `cardBorderStroke`）。支持 `variant` 参数：`CardVariant.DEFAULT`（默认）、`CardVariant.GALLERY`（无边框/无内边距/零阴影，图片主导）、`CardVariant.FEATURED`（高阴影/大内边距，突出展示）、`CardVariant.COMPACT`（低阴影/紧内边距/细边框，替代 raw Card）。
 - `LolitaCard.contentPadding` 可覆盖变体默认内边距，避免内容层重复 padding；图文列表卡的图片贴边时传 `PaddingValues(0.dp)`，仅文字区保留一次内边距，图片顶部圆角使用皮肤 `cornerRadiusMedium`，网格骨架同步实际 0.8 宽高比。半透明卡片 tint 在公共组件内一次合成到当前 `surface`，完全透明卡片仍保持透明。
-- 统计总览将四项数量收进单个衣橱概况区块；消费概览突出当前订单实付，全部已录实付与参考均价采用明细行，金额直接显示原始 Double 的两位小数，不通过 Float 动画改变显示值。金额、长品牌及最高实付信息需在小屏/大字体下完整排布；关闭金额设置时整块消费与最高实付隐藏。卡片只保留一层内边距，间距与圆角消费皮肤令牌，加载态使用匹配布局的骨架屏。真实 Compose 回归位于 `StatsOverviewScreenTest`（独立内存 Room、UUID 设置；含导航、实时隐私和浅暗七套皮肤截图）。 本轮预览归档在 `docs/visuals/2026-10-12-stats-overview-light.png` 和 `docs/visuals/2026-10-12-stats-overview-victorian-dark.png`。
+- 统计总览按四项衣橱概况→消费概览／最高实付→独立品类概况→品牌排序；品类保留完整登记摘要、八类数量和导航。消费概览突出当前订单实付，全部已录实付与参考均价采用明细行，金额直接显示原始 Double 的两位小数，不通过 Float 动画改变显示值。金额、长品牌及最高实付信息需在小屏/大字体下完整排布；关闭金额设置时整块消费与最高实付隐藏。卡片只保留一层内边距，间距与圆角消费皮肤令牌，加载态使用匹配布局的骨架屏。真实 Compose 回归位于 `StatsOverviewScreenTest`（独立内存 Room、UUID 设置；含导航、实时隐私和浅暗七套皮肤截图）。 本轮预览归档在 `docs/visuals/2026-10-12-stats-overview-light.png` 和 `docs/visuals/2026-10-12-stats-overview-victorian-dark.png`。
 - 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
 - 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
@@ -93,6 +93,13 @@
 - 实拍及真实旧包升级核对见 `docs/builtin-assets-2026-10-12.md`（含浅/暗房间与横向透明商标）；原测试资料 140 件服饰、215 个品牌及四个位置保全，图片逐项 SHA256 验证。
 - `BuiltInLibraryTest` 使用独立内存 Room、UUID 设置和测试图片目录，覆盖历史资料保全、并发/重复初始化、删除/改名/去图、失败/取消清理、新品牌插入和 ZIP/恢复屏障。设备验证必须定向到独立 AVD，不能清理用户设备数据。
 - 2.41.0 / 91 用 clean 正式构建完成14店铺与6房间素材发布验证；已发布2.40.5原包同签名覆盖升级，原24张表、140件服饰、215个品牌、4个位置及190张原图片保全，新图片SHA256和重启幂等核对通过。记录见 `docs/builtin-assets-release-2.41.0-verification.json`。
+
+## 字体规格
+
+- `Type.kt` 的 `lolitaTypography` 为七皮肤唯一文字规格来源，`SkinConfigs` 仅传入各自标题字体。主卡22/30sp、顶栏`appBarTitle`20/28、分区18/26、行标题16/24、正文与输入16/24、紧凑解释14/22、说明13/20、按钮15/22、`metadata`与底栏12/18；标题600、普通行与按钮500、阅读正文400，字距0。普通行用`titleSmall`，`titleMedium`专门表达分区。
+- 标题保留皮肤字体；正文、输入、操作、元数据统一阅读字体，大号金额／数值用`numericReading`。不按2K原生像素倍增sp，不限制系统fontScale；高频控件采用最小高度自然增长。首页紧凑搜索14/22为保留一行布局的明确例外，微型年历与字体演示按用途单独处理。
+- 首页标签采用无横向内边距的Tab内容插槽，搜索与右侧控制统一32dp。筛选数量角标保留12sp，按实际高度为图标上方预留空间，数量0/3/12与普通／两倍字体下保留符号下半部；不只负向偏移导致裁切。
+- 设计与验收见`docs/plans/2026-10-21-typography-system.md`与`docs/typography-implementation-2026-10-21.md`；`TypographyScreenTest`验证真实2K／七皮肤浅暗层级与阅读字体、小屏两倍字和实际键盘。
 
 ## 皮肤系统
 
@@ -285,7 +292,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=137, versionName="2.66.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=138, versionName="2.66.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

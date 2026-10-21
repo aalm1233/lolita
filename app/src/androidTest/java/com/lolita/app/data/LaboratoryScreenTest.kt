@@ -152,7 +152,7 @@ class LaboratoryScreenTest {
         compose.onNodeWithTag("materialPrimary").assertIsDisplayed().assertTextContains("重新生成展示图")
         compose.runOnIdle { page.value="batch" }
         compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("batchSetCover${item.id}"))
-        compose.onNodeWithTag("batchSetCover${item.id}").assertIsDisplayed();screenshot("small-batch-cover")
+        compose.onNodeWithTag("batchSetCover${item.id}").performScrollTo().assertIsDisplayed();screenshot("small-batch-cover")
         compose.runOnIdle { page.value="detail" }
         compose.onNodeWithText("生成展示图").assertIsDisplayed();screenshot("small-detail")
     }

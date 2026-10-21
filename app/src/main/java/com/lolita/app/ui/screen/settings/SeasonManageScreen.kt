@@ -132,7 +132,7 @@ private fun SeasonCard(season: Season, onEdit: () -> Unit, onDelete: () -> Unit)
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(season.name, style = MaterialTheme.typography.titleMedium)
+                Text(season.name, style = MaterialTheme.typography.titleSmall)
             }
             IconButton(onClick = onEdit) {
                 SkinIcon(IconKey.Edit)

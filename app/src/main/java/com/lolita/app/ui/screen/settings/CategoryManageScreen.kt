@@ -34,7 +34,7 @@ fun CategoryManageScreen(onBack: () -> Unit, viewModel: CategoryManageViewModel 
             items(state.categories, key = { it.id }) { category -> LolitaCard(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text(category.name, style = MaterialTheme.typography.titleMedium)
+                        Text(category.name, style = MaterialTheme.typography.titleSmall)
                         Text("${category.categorySemantic.family.label} · ${(category.defaultWearRole ?: category.categorySemantic.defaultWearRole).label}", style = MaterialTheme.typography.bodySmall)
                     }
                     IconButton(onClick = { viewModel.showEditDialog(category) }) { SkinIcon(IconKey.Edit) }

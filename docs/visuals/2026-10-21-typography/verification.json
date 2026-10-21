@@ -1,0 +1,156 @@
+{
+  "kind": "Pre-implementation concept drawings, not Compose or real API evidence",
+  "date": "2026-10-21",
+  "images": [
+    {
+      "file": "flow.png",
+      "sha256": "d7df1826595d8c80e23dd47dbdc01429eecc018b0f7d912339a6c3278098b699",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "skins-light.png",
+      "sha256": "8dec0ac920d8c022b00ee7f515000394839945706b2dffbf56848ebc8590aa52",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "skins-dark.png",
+      "sha256": "56281c03901eff03d366400fc7ec739291e8c566c20e7bd2deaf117e2f48b16a",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "small.png",
+      "sha256": "7e0f0859a6bfaee8a0c5c93e4a90ccb166c538edafdb749b3319a0147b5b2d7c",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "home.png",
+      "sha256": "a1130b1ec6886bd7d59e5c1415359f11f5350aabfe5b41d7f3da40682b7d811c",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "stats-light.png",
+      "sha256": "6477882700e930de47e9753dea05470186186d39bb30dd71a1115f2b87e387a7",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "file": "stats-dark.png",
+      "sha256": "2f39f9d8318d8fa6758748ba44addc773383fb52cc04b6a7398c30f8b38d31ee",
+      "checks": [
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        },
+        {
+          "overflow": false
+        }
+      ]
+    }
+  ]
+}

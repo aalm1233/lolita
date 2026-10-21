@@ -89,7 +89,7 @@ private fun RoomCard(room: Location, count: Int, nodeCount: Int, busy: Boolean,
                 room.imageUrl?.let { LolitaShimmerImage(model = it, contentDescription = null,
                     modifier = Modifier.size(60.dp).clip(RoundedCornerShape(skin.cornerRadiusSmall)), contentScale = ContentScale.Crop) }
                 Column(Modifier.weight(1f).padding(start = skin.spacingMedium)) {
-                    Text(room.name, style = MaterialTheme.typography.titleMedium)
+                    Text(room.name, style = MaterialTheme.typography.titleSmall)
                     if (room.description.isNotBlank()) Text(room.description, style = MaterialTheme.typography.bodySmall)
                     Text("$nodeCount 个收纳位置 · $count 条记录", style = MaterialTheme.typography.labelMedium)
                 }

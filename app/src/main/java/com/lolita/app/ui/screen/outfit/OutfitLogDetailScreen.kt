@@ -170,7 +170,6 @@ fun OutfitLogDetailScreen(
                     Text(
                         text = dateFormat.format(Date(log.date)),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )

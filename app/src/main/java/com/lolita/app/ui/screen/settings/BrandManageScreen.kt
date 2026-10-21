@@ -157,7 +157,7 @@ private fun BrandCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     if (brand.isUnsetBrand) "未设置品牌" else brand.name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
 

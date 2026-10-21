@@ -309,7 +309,7 @@ private fun WishlistItemCard(
                 ) {
                     Text(
                         item.name,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )

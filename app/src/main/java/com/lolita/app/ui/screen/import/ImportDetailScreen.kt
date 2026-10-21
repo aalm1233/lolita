@@ -317,8 +317,7 @@ private fun ImportItemCard(
             // 序号 + 状态标签
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("#${index + 1}", style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                    Text("#${index + 1}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                     // 定金/尾款标签
                     if (item.paymentRole != null) {
                         val isPaired = item.pairedWith != null

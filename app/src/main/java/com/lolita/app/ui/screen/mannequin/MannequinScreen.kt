@@ -33,6 +33,7 @@ import com.lolita.app.domain.model.productDetailImages
 import com.lolita.app.ui.screen.tasks.LatestImageTask
 import com.lolita.app.ui.component.FullScreenImageViewer
 import com.lolita.app.ui.screen.common.*
+import com.lolita.app.ui.theme.metadata
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.component.skinClickable
@@ -86,7 +87,7 @@ fun MannequinScreen(
                     val textStyle = LocalTextStyle.current
                     val density = LocalDensity.current
                     val decoration = measurer.measure(AnnotatedString(skin.topBarDecoration),
-                        style = textStyle.copy(fontSize = 12.sp))
+                        style = MaterialTheme.typography.metadata)
                     val title = "衬衫展示"
                     val naturalTitle = measurer.measure(AnnotatedString(title), style = textStyle, softWrap = false)
                     BoxWithConstraints {

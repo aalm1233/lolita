@@ -142,7 +142,7 @@ private fun AttributeMenuItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
                 Text(

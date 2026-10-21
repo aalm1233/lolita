@@ -232,7 +232,7 @@ private fun SourceCard(source: Source, onEdit: () -> Unit, onDelete: () -> Unit)
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(source.name, style = MaterialTheme.typography.titleMedium)
+                Text(source.name, style = MaterialTheme.typography.titleSmall)
             }
             IconButton(onClick = onEdit) {
                 SkinIcon(IconKey.Edit)

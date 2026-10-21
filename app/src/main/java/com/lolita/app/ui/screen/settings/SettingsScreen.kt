@@ -279,7 +279,7 @@ fun SettingsScreen(
             ) {
                 Text(
                     "我的 Lolita",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -399,7 +399,7 @@ private fun ProfileSection(
                 ) {
                     Text(
                         text = uiState.nickname.ifEmpty { "点击设置昵称" },
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -513,7 +513,7 @@ private fun SettingsMenuItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
@@ -566,7 +566,7 @@ private fun SettingsToggleItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
                 Text(

@@ -90,8 +90,8 @@ fun StatsPageScreen(
                             text = {
                                 Text(
                                     text = title,
-                                    fontSize = 14.sp,
-                                    fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = if (pagerState.currentPage == index) FontWeight.SemiBold else FontWeight.Medium
                                 )
                             },
                             selectedContentColor = MaterialTheme.colorScheme.primary,

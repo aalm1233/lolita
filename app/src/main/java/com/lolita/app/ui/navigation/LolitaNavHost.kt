@@ -234,7 +234,7 @@ fun LolitaNavHost(
                         icon = {
                             SkinIcon(item.iconKey, modifier = Modifier.size(26.dp), tint = tint)
                         },
-                        label = { Text(item.label, modifier = Modifier.offset(y = (-4).dp)) },
+                        label = { Text(item.label, style = MaterialTheme.typography.labelMedium, modifier = Modifier.offset(y = (-4).dp)) },
                         selected = selected,
                         onClick = {
                             navController.navigate(item.screen.route) {

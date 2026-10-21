@@ -247,7 +247,7 @@ private fun MaterialCheck(label: String, checked: Boolean, enabled: Boolean, onC
 }
 
 @Composable
-private fun MaterialInstructions(value: String, enabled: Boolean, onChange: (String) -> Unit) {
+internal fun MaterialInstructions(value: String, enabled: Boolean, onChange: (String) -> Unit) {
     Text("需要保留或补充的特征（可选）", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = LolitaSkin.current.spacingMedium))
     OutlinedTextField(value = value, onValueChange = onChange, enabled = enabled, placeholder = { Text("例如：两枚扣具、保留细链") },
         supportingText = { Text("${value.length} / 200 · 将发送给所选图像服务") }, modifier = Modifier.fillMaxWidth().testTag("materialInstructions"), minLines = 2,
@@ -287,7 +287,7 @@ private fun MaterialFeeDialog(fee: MaterialFeeConfirmation, busy: Boolean, onDis
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun MaterialSourcePicker(item: Item, selected: String, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
+internal fun MaterialSourcePicker(item: Item, selected: String, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
     var details by rememberSaveable { mutableStateOf(selected in item.productDetailImages) }
     val scroll = rememberLazyListState(); ObserveSkinScroll(scroll)
     AlertDialog(onDismissRequest = onDismiss, title = { Text("选择参考图片") }, text = { Column {

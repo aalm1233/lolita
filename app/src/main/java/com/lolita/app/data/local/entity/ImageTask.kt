@@ -29,7 +29,10 @@ data class ImageTask(
     @ColumnInfo(name = "source_resources_missing", defaultValue = "0") val sourceResourcesMissing: Boolean = false,
     @ColumnInfo(name = "material_id", defaultValue = "NULL") val materialId: String? = null,
     @ColumnInfo(name = "layers_json", defaultValue = "'[]'") val layersJson: String = "[]",
-    @ColumnInfo(name = "generated_image_count", defaultValue = "1") val generatedImageCount: Int = 1
+    @ColumnInfo(name = "generated_image_count", defaultValue = "1") val generatedImageCount: Int = 1,
+    @ColumnInfo(name = "batch_id", defaultValue = "NULL") val batchId: String? = null,
+    @ColumnInfo(name = "batch_name", defaultValue = "NULL") val batchName: String? = null,
+    @ColumnInfo(name = "batch_position", defaultValue = "NULL") val batchPosition: Int? = null
 ) {
     companion object {
         const val SOURCE_RESOURCES_MISSING_MESSAGE = "原输入资源缺失，无法继续生成；原模板与请求快照已保留，请重新选择资料新建任务"
@@ -39,6 +42,12 @@ data class ImageTask(
         require(id.isNotBlank() && title.isNotBlank()) { "图像任务缺少标识或名称" }
         val request = ImageTaskRequest.decode(requestJson)
         request.validate(kind)
+        if (batchId == null) require(batchName == null && batchPosition == null) { "批次元数据不完整" }
+        else {
+            com.lolita.app.domain.model.MaterialBatchIdentity(batchId, requireNotNull(batchName))
+            require(batchPosition in 0 until com.lolita.app.domain.model.MaterialBatchIdentity.MAX_ITEMS && request.version == 5 &&
+                kind == ImageTaskKind.SINGLE_ITEM_MATERIAL) { "批次用途或顺序无效" }
+        }
         require(!sourceResourcesMissing || keepSourceImages && request.version >= 4) { "仅不可变输入任务可标记资源缺失" }
         require(keepSourceImages == (request.version >= 4)) { "任务输入保留策略与协议不匹配" }
         if (keepSourceImages && resultImagePath != null) require(resultImagePath !in sourceImagePaths && resultImagePath != request.productOriginalImagePath) { "生成结果不能复用输入或裁切原图" }
@@ -59,7 +68,11 @@ data class ImageTask(
         (kind == ImageTaskKind.PERSONAL_MODEL && status in setOf(ImageTaskStatus.AWAITING_CONFIRMATION,
             ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED))
 
-    /** Completed paths are informational: the owning Item/TryOnResult/PersonalModel protects its image. */
+    /** Batch review still shows the accepted front after its layer request has started. */
+    fun retainsBatchFrontPreview(): Boolean = batchId != null && kind == ImageTaskKind.SINGLE_ITEM_MATERIAL &&
+        status == ImageTaskStatus.COMPLETED && ImageTaskRequest.decode(requestJson).materialSpec?.stage == com.lolita.app.domain.model.MaterialStage.FRONT_VIEW
+
+    /** Completed paths belong to business results, except accepted batch fronts retained for review. */
     fun protectedImagePaths(): Set<String> = buildSet {
         if (retainsSourceImages) addAll(sourceImagePaths.filter { it.isNotBlank() })
         if (keepSourceImages) ImageTaskRequest.decode(requestJson).let { request ->
@@ -68,6 +81,7 @@ data class ImageTask(
         }
         if (status == ImageTaskStatus.AWAITING_CONFIRMATION) com.lolita.app.domain.model.MaterialLayers.decode(layersJson).forEach { add(it.imagePath) }
         if (status == ImageTaskStatus.AWAITING_CONFIRMATION) resultImagePath?.takeIf { it.isNotBlank() }?.let(::add)
+        if (retainsBatchFrontPreview()) resultImagePath?.takeIf { it.isNotBlank() }?.let(::add)
     }
 
     fun releaseUnusedSourceImages(): ImageTask = if (retainsSourceImages || sourceImagePaths.isEmpty()) this

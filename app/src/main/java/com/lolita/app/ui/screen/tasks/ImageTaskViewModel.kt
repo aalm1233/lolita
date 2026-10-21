@@ -48,6 +48,9 @@ data class ImageTaskUiState(
         else -> task.resultImagePath?.takeIf { path -> items.any { item -> item.id == task.garmentId && path in item.imageUrls } }
     }
     fun canAppend(task: ImageTask): Boolean = task.kind == ImageTaskKind.MANNEQUIN && task.status == ImageTaskStatus.AWAITING_CONFIRMATION && items.any { it.id == task.garmentId }
+    val visibleMaterialBatches get() = tasks.filter{it.batchId!=null}.groupBy{it.batchId}.values.filter { group ->
+        when(filter){ImageTaskFilter.ALL->true;ImageTaskFilter.ACTIVE->group.any{it.status.retainsSourceImages};ImageTaskFilter.PENDING->group.any{it.status==ImageTaskStatus.AWAITING_CONFIRMATION};ImageTaskFilter.FINISHED->group.all{it.status.isTerminal}}
+    }.sortedWith(compareBy<List<ImageTask>>{group->when{group.any{it.status.retainsSourceImages}->0;group.any{it.status==ImageTaskStatus.AWAITING_CONFIRMATION}->1;else->2}}.thenByDescending{it.maxOf{job->job.createdAt}})
 }
 
 val ImageTaskKind.label: String get() = when (this) {

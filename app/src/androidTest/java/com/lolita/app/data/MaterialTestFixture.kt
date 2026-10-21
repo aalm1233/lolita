@@ -37,12 +37,14 @@ internal class MaterialTestFixture {
     var frontCalls = 0
     var layerCalls = 0
     var fusionCalls = 0
+    var serviceStarts = 0
+    var frontOutput: suspend () -> ByteArray = { opaque }
     var layerOutput: (suspend () -> GeneratedImageLayers) = { GeneratedImageLayers(listOf(GeneratedImageLayer(transparent,1,"腰饰","含细链和独立绳端",listOf(100,100,900,900))),2) }
     var receivedImages = emptyList<ByteArray>()
     lateinit var source: String
     var itemId = 0L
     var categoryId = 0L
-    val coordinator = ImageTaskCoordinator(db,scope,{}, { ImageFileHelper.saveGeneratedImage(context,it) },ImageFileHelper::deleteImage,
+    val coordinator = ImageTaskCoordinator(db,scope,{serviceStarts++}, { ImageFileHelper.saveGeneratedImage(context,it) },ImageFileHelper::deleteImage,
         { ImageFileHelper.isOwnedGeneratedImage(context,it) },
         validateSourceImage = { ImageFileHelper.isOwnedReadableImage(context,it) },
         validateProductImage = { ImageFileHelper.isOwnedReadableProductImage(context,it) },
@@ -53,7 +55,7 @@ internal class MaterialTestFixture {
         images::prepare,images::prepareMannequin,
         { _,inputs,_ -> fusionCalls++; receivedImages=inputs; opaque },
         prepareSnapshotImages=images::prepareSnapshots,
-        generateMaterial={ _,inputs,_ -> frontCalls++; receivedImages=inputs; opaque },
+        generateMaterial={ _,inputs,_ -> frontCalls++; receivedImages=inputs; frontOutput() },
         decomposeMaterial={ _,inputs,_ -> layerCalls++; receivedImages=inputs; layerOutput() })
     val runner = ImageTaskRunner(coordinator,executor::execute)
     suspend fun init() {

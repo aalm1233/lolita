@@ -157,6 +157,7 @@ fun LolitaNavHost(
     createPersonalModelViewModel: () -> PersonalModelViewModel = { PersonalModelViewModel() },
     createPersonalModelEditViewModel: (SavedStateHandle) -> PersonalModelEditViewModel = { PersonalModelEditViewModel(it) },
     createMaterialWorkspaceViewModel: (SavedStateHandle) -> com.lolita.app.ui.screen.material.MaterialWorkspaceViewModel = { com.lolita.app.ui.screen.material.MaterialWorkspaceViewModel(it) },
+    createMaterialBatchViewModel: (SavedStateHandle) -> com.lolita.app.ui.screen.material.MaterialBatchViewModel = { com.lolita.app.ui.screen.material.MaterialBatchViewModel(it) },
     imageTaskBarViewModel: ImageTaskBarViewModel = viewModel()
 ) {
     val activeEntry by navController.currentBackStackEntryAsState()
@@ -336,7 +337,7 @@ fun LolitaNavHost(
                 val material by remember(itemId) { AppModule.itemTryOnMaterialRepository().observe(itemId) }.collectAsState(initial = null)
                 ItemDetailScreen(
                     itemId = itemId, currentMaterial = material,
-                    onNavigateToMaterial = { id -> navController.navigate(Screen.TryOnMaterial.createRoute(id)) },
+                    onNavigateToMaterial = { id -> navController.navigate(if(material==null)Screen.MaterialBatch.createRoute(itemId=id) else Screen.TryOnMaterial.createRoute(id)) },
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
                     onNavigateToItem = { navController.navigate(Screen.ItemDetail.createRoute(it)) },
@@ -732,6 +733,18 @@ fun LolitaNavHost(
                 )
             }
 
+            composable(Screen.MaterialBatch.route,arguments=listOf(
+                navArgument("batchId"){type=NavType.StringType;defaultValue=""},
+                navArgument("itemId"){type=NavType.LongType;defaultValue=0L},
+                navArgument("phase"){type=NavType.StringType;defaultValue=""}
+            )){entry->
+                val factory=remember(entry){viewModelFactory{initializer{createMaterialBatchViewModel(createSavedStateHandle())}}}
+                com.lolita.app.ui.screen.material.MaterialBatchScreen(viewModel=viewModel(viewModelStoreOwner=entry,factory=factory),
+                    onBack={navController.popBackStack()},onTasks={navController.navigate(Screen.ImageTasks.route)},
+                    onConfigure={navController.navigate(Screen.AiConfiguration.route)},
+                    onNewBatch={navController.navigate(Screen.MaterialBatch.createRoute()){popUpTo(Screen.MaterialBatch.route){inclusive=true}}},
+                    onOpenTask={navController.navigate(Screen.ImageTaskDetail.createRoute(it))})
+            }
             listOf(Screen.TryOnMaterial.route, Screen.AddAccessory.route).forEach { route ->
                 composable(route, arguments = listOf(
                     navArgument("itemId") { type = NavType.LongType },
@@ -821,6 +834,8 @@ fun LolitaNavHost(
                 val factory = remember(entry) { viewModelFactory { initializer { createImageTaskViewModel() } } }
                 ImageTaskScreen(onNavigateBack = { navController.popBackStack() },
                     onOpenTask = { navController.navigate(Screen.ImageTaskDetail.createRoute(it)) },
+                    onNewMaterialBatch={navController.navigate(Screen.MaterialBatch.createRoute())},
+                    onOpenMaterialBatch={navController.navigate(Screen.MaterialBatch.createRoute(batchId=it))},
                     viewModel = viewModel(viewModelStoreOwner = entry, factory = factory))
             }
             composable(Screen.ImageTaskDetail.route, arguments = listOf(navArgument("taskId") { type = NavType.StringType })) { entry ->
@@ -828,7 +843,7 @@ fun LolitaNavHost(
                 ImageTaskDetailScreen(taskId = entry.arguments?.getString("taskId").orEmpty(),
                     onNavigateBack = { navController.popBackStack() }, onRetry = { task ->
                         val route = when (task.kind) {
-                            ImageTaskKind.SINGLE_ITEM_MATERIAL -> Screen.TryOnMaterial.createRoute(task.garmentId ?: 0L, task.id)
+                            ImageTaskKind.SINGLE_ITEM_MATERIAL -> if(task.batchId!=null)Screen.MaterialBatch.createRoute(task.batchId,phase=if(com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson).materialSpec?.stage==com.lolita.app.domain.model.MaterialStage.FRONT_VIEW)"INPUTS" else "LAYERS") else Screen.TryOnMaterial.createRoute(task.garmentId ?: 0L, task.id)
                             ImageTaskKind.TRY_ON -> {
                                 val base = runCatching { com.lolita.app.domain.model.ImageTaskRequest.decode(task.requestJson).accessoryBase }.getOrNull()
                                 if (base != null) Screen.AddAccessory.createRoute(task.garmentId ?: 0L, base.id.takeIf { base.type == com.lolita.app.domain.model.AccessoryBaseType.TRY_ON_RESULT }, task.id)
@@ -840,7 +855,7 @@ fun LolitaNavHost(
                         navController.navigate(route)
                     }, viewModel = viewModel(viewModelStoreOwner = entry, factory = factory),
                     onOpenPersonalModels = { navController.navigate(Screen.PersonalModels.route) },
-                    onOpenMaterial = { task -> navController.navigate(Screen.TryOnMaterial.createRoute(task.garmentId ?: 0L, task.id)) })
+                    onOpenMaterial = { task -> navController.navigate(if(task.batchId!=null)Screen.MaterialBatch.createRoute(task.batchId) else Screen.TryOnMaterial.createRoute(task.garmentId ?: 0L, task.id)) })
             }
 
             // Quick Outfit Log

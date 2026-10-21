@@ -32,7 +32,7 @@
 
 ## 数据库
 
-- Room 数据库版本31，36个实体；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
+- Room 数据库版本32，36个实体；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -285,7 +285,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=133, versionName="2.62.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=134, versionName="2.63.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -324,7 +324,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。
 
 - 父表重建迁移使用 `MigrationDataGuard` 保全价格、付款、穿搭关联和图鉴链接，兼容外键开启/关闭；12→13 无需重建时不创建临时快照。
-- 备份格式version10、schemaVersion30，覆盖除本机`RestoreJournal`外34个业务/缓存实体；旧1–9通过`BackupFormat`显式迁移，新字段缺失补空或未确认。未知格式/字段/枚举及损坏数据拒绝，新衣橱引用和证据由`WardrobeBackupValidation`校验。
+- 备份格式version12、schemaVersion32，覆盖除本机`RestoreJournal`外35个业务/缓存实体；旧1–11通过`BackupFormat`显式迁移，新字段缺失补空或未确认。未知格式/字段/枚举及损坏数据拒绝，新衣橱引用和证据由`WardrobeBackupValidation`校验。
 - ZIP 使用图片 SHA256 清单；恢复先创建独立图片文件，再在 Room 事务内写入并逐字段核对，不覆盖在线主库、不替换旧图片目录。旧图片保留，共享图片删除需检查所有持久引用。
 - 草稿相册/尺码图及冻结展示任务的商品原图兼容本机历史文件名，继续校验精确私有路径、非软链与图片完整性；模板、派生裁切、识图证据和个人照片保持UUID规则。导出和JSON资源可用性检查复用`validateFrozenTaskImages`，不因当前相册变化误标历史任务缺图。`LegacyDraftBackupTest`覆盖真实草稿/任务准入后的JSON/ZIP往返与失败保全，说明见`docs/zip-backup-legacy-images-2026-10-18.md`。
 - 恢复后的闹钟/日历处理由事务提交的 `RestoreJournal` 支持启动重试；数据库失败不删除旧日历。普通账本修改使用 `affectedPriceIdsJson` 限定订单范围，并合并未完成日志；恢复、启动和重启显式恢复须升级为全量（null 范围）。`ReminderCleanup` 按付款 ID 与日历指针去重，保留同阶段不同旧日历指针，权限失败重试不得无限累积。
@@ -607,3 +607,10 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 设计与概念图先归档于`docs/plans/2026-10-20-item-tryon-material-app-design.md`，实施／受控设备与真实服务分开记录于`docs/item-material-implementation-2026-10-21.md`。真实Compose七皮肤浅暗、320dp两倍字、真实键盘及NavHost底栏图见`docs/visuals/2026-10-21-item-material-native/`。新100张额度仅用4次请求／6张成功输出（含分层底图）、余94，无自动重试，私有照片与派生图不入公开包。
 
 - 2.62.0 /133正式交付：源码`be57547d`与标签已推送，提交源码归档clean原签名Release通过；独立AVD从2.61.1覆盖并两次启动，35张旧表原字段与11张原图片保全，真实正式包可从既有心愿腰饰详情进入素材页。36份项目assets、7张背景RGBA及依赖／生成profile核验，测试插画与私有照片未入主包。GitHub／Gitee同一APK和SHA文件匿名完整下载／HEAD通过，Gitee公开最高正式版本选中2.62.0；未重跑应用内网络检查、未删旧附件。首版创建限即梦；新100张额度用4次请求／6张成功输出（含分层底图），余94，无自动重试。回执`docs/item-material-release-2.62.0-verification.json`。
+
+### 批量整理素材任务流（2.63.0）
+
+- 本轮按用户要求只做素材批量整理，不新增批量融合。任务中心“新建素材批次”进入`Screen.MaterialBatch`，一次主动选择1至30件已拥有／心愿腰饰，默认零选择；无素材的物品详情只预选当前件，可继续增加。搜索／筛选保留隐藏选择，逐卡换图／框选，集中核对主视图、选择透明单品层和三项核对后批量保存；有素材的详情仍进原管理与单件融合入口。
+- `MaterialBatchViewModel`使用StateFlow及SavedStateHandle；费用确认冻结全部实际输入、服务、补充要求和操作标识。主视生成与分层各自统一确认N次请求，分层最多17N张输出含底图；失败项独立重新确认，不自动重试或跨阶段计费。全部输入验证和任务插入事务完成后才启动服务，操作标识确定任务ID以防重复接受；批量保存验证当前素材身份，任何一项失效则整体回退。
+- Room31→32只追加`image_tasks.batch_id/batch_name/batch_position`可空列，36实体不变，旧任务不推断分组。任务中心按批次归并，子阶段沿用同一位置及物品；原v1～5请求与单件流程保留。已接受主视图在进入分层后仍由批次任务保护，ZIP保存并映射到新路径，供回看。备份12兼容旧1～11缺失批次，CSV追加三列，恢复活动任务转中断而不重发。
+- 图稿先于实现，七皮肤浅暗与真实320dp两倍字体／IME、真实NavHost验证见`docs/plans/2026-10-21-material-batch-flow.md`及`docs/material-batch-implementation-2026-10-21.md`；批量事务／重复提交／独立失败／原资料保全／ZIP与回看图保护、迁移和旧单件执行／取消清理均定向覆盖。新增真实付费调用0次，沿用2.62.0已验证的即梦适配器，不以受控测试宣称更多品类保真或融合质量提升。

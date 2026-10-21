@@ -12,8 +12,8 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 11
-    const val SCHEMA_VERSION = 31
+    const val VERSION = 12
+    const val SCHEMA_VERSION = 32
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
@@ -354,6 +354,12 @@ internal object BackupFormat {
                     request.garments.map { it.itemId.toString() } == result.itemIds && request.garments.map { it.name } == result.itemNames &&
                     (request.tryOnModel?.personalModelId ?: accessoryPerson?.id) == result.personalModelId &&
                     (request.tryOnModel?.name ?: accessoryPerson?.name) == result.personalModelName) { "图像任务与试衣历史不匹配" }
+            }
+        }
+        data.imageTasks.filter { it.batchId != null }.groupBy { it.batchId }.values.forEach { group ->
+            require(group.map { it.batchName }.distinct().size == 1) { "批次名称不一致" }
+            group.groupBy { it.batchPosition }.values.forEach { rows ->
+                require(rows.map { com.lolita.app.domain.model.ImageTaskRequest.decode(it.requestJson).garments.single().itemId }.distinct().size == 1) { "批次位置关联了不同物品" }
             }
         }
         val brands = ids(data.brands.map { it.id }, "品牌")

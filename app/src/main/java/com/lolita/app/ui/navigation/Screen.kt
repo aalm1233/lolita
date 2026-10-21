@@ -168,6 +168,12 @@ sealed interface Screen {
 
     data object ImageTasks : Screen { override val route = "image_tasks" }
 
+    data object MaterialBatch : Screen {
+        override val route = "material_batch?batchId={batchId}&itemId={itemId}&phase={phase}"
+        fun createRoute(batchId:String?=null,itemId:Long?=null,phase:String?=null) =
+            "material_batch?batchId=${android.net.Uri.encode(batchId.orEmpty())}&itemId=${itemId ?: 0L}&phase=${android.net.Uri.encode(phase.orEmpty())}"
+    }
+
     data object ImageTaskDetail : Screen {
         override val route = "image_task/{taskId}"
         fun createRoute(id: String) = "image_task/${android.net.Uri.encode(id)}"

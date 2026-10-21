@@ -26,7 +26,8 @@ import java.util.Locale
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, viewModel: ImageTaskViewModel = viewModel()) {
+fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, viewModel: ImageTaskViewModel = viewModel(),
+    onNewMaterialBatch:()->Unit={},onOpenMaterialBatch:(String)->Unit={}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
@@ -38,6 +39,10 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
     }) { padding ->
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("imageTasks"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
+            item("new-material-batch"){LolitaSection(title="批量整理试衣素材"){row{
+                Text("一次选多件腰饰，统一确认费用，在同一批次查看主视图、分层和保存结果。",style=MaterialTheme.typography.bodySmall)
+                Button(onClick=onNewMaterialBatch,modifier=Modifier.fillMaxWidth()){Text("新建素材批次")}
+            }}}
             item("filters") {
                 FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     ImageTaskFilter.entries.forEach { filter ->
@@ -49,12 +54,22 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
             item("description") { Text("离开页面后继续处理。人台图与个人模特需核对后保存；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
             if (state.isLoading) item("loading") { LolitaCard { Column { ShimmerLine(0.7f, 18.dp); Spacer(Modifier.height(skin.spacingMedium)); ShimmerLine(0.9f, 14.dp) } } }
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }
-            if (!state.isLoading && state.visibleTasks.isEmpty()) item("empty") {
+            if (!state.isLoading && state.visibleTasks.none{it.batchId==null} && state.visibleMaterialBatches.isEmpty()) item("empty") {
                 LolitaSection(title = "暂无${if (state.filter == ImageTaskFilter.ALL) "" else state.filter.label}任务") { row {
                     Text("从虚拟试衣、个人模特或物品详情的人台图、小物展示图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
                 } }
             }
-            items(state.visibleTasks, key = { it.id }) { task ->
+            items(state.visibleMaterialBatches,key={requireNotNull(it.first().batchId)}){batch->
+                LolitaSection(title=requireNotNull(batch.first().batchName)){row{
+                    val count=batch.map{it.garmentId}.distinct().size
+                    Text("${count}件物品 · ${batch.count{it.status.retainsSourceImages}}个排队或执行 · ${batch.count{it.status==com.lolita.app.domain.model.ImageTaskStatus.AWAITING_CONFIRMATION}}个待核对")
+                    val latest=batch.groupBy{it.batchPosition}.values.map{rows->rows.maxWith(compareBy<ImageTask>{it.createdAt}.thenBy{it.id})}
+                    Text("${latest.count{it.materialId!=null}}份已确认 · ${latest.count{it.status in setOf(com.lolita.app.domain.model.ImageTaskStatus.FAILED,com.lolita.app.domain.model.ImageTaskStatus.INTERRUPTED,com.lolita.app.domain.model.ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
+                    Text("主视图、透明层与确认素材集中处理，失败项单独重新确认。",style=MaterialTheme.typography.bodySmall)
+                    TextButton(onClick={onOpenMaterialBatch(requireNotNull(batch.first().batchId))},modifier=Modifier.fillMaxWidth()){Text("打开本批任务流")}
+                }}
+            }
+            items(state.visibleTasks.filter{it.batchId==null}, key = { it.id }) { task ->
                 LolitaSection(title = task.title, modifier = Modifier.skinClickable { onOpenTask(task.id) }) { row {
                     Spacer(Modifier.height(skin.spacingMedium))
                     Text("${task.displayTypeLabel} · ${task.provider.label}", style = MaterialTheme.typography.bodySmall)

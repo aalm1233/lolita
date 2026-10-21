@@ -125,6 +125,98 @@ class ImageTaskCoordinator(
         }
     }
 
+    suspend fun submitMaterialBatch(batch: MaterialBatchIdentity, operationId: String, rows: List<BatchMaterialInput>,
+        provider: ImageGenerationProvider): List<String> = acceptedMaterial(rows.flatMap { listOf(it.input.imagePath, it.input.sourcePath, it.originalPath) }) {
+        validateBatchRows(rows.map { it.itemId }, rows.map { it.position })
+        val jobs = rows.map { row ->
+            val (item, request) = materialRequest(row.itemId, row.input, row.originalPath, row.instructions, provider, row.expectedMaterialId)
+            batchTask(batch, operationId, row.position, ImageTaskKind.SINGLE_ITEM_MATERIAL, provider, "${item.name} · 整理主视图", request, listOf(row.input.imagePath))
+        }
+        enqueueBatch(jobs)
+    }
+
+    suspend fun submitLayerBatch(batch: MaterialBatchIdentity, operationId: String, rows: List<BatchLayerInput>): List<String> =
+        acceptedMaterial(rows.flatMap { listOf(it.input.imagePath, it.input.sourcePath) }) {
+            val parents = mutableListOf<ImageTask>()
+            val jobs = rows.map { row ->
+                val (parent, request) = layerRequest(row.taskId, row.input)
+                require(parent.batchId == batch.id && parent.batchName == batch.name) { "任务不属于当前批次" }
+                parents += parent
+                batchTask(batch, operationId, requireNotNull(parent.batchPosition), ImageTaskKind.SINGLE_ITEM_MATERIAL, parent.provider,
+                    "${request.garments.single().name} · 分离单品图层", request, listOf(row.input.imagePath))
+            }
+            validateBatchRows(jobs.map { ImageTaskRequest.decode(it.requestJson).garments.single().itemId }, jobs.map { requireNotNull(it.batchPosition) })
+            enqueueBatch(jobs, parents)
+        }
+
+    private fun validateBatchRows(items: List<Long>, positions: List<Int>) {
+        require(items.size in 1..MaterialBatchIdentity.MAX_ITEMS && items.distinct().size == items.size && items.all { it > 0 } &&
+            positions.size == items.size && positions.distinct().size == positions.size && positions.all { it in 0 until MaterialBatchIdentity.MAX_ITEMS }) { "每批请选择1至30件不同物品" }
+    }
+
+    private fun batchTask(batch: MaterialBatchIdentity, operationId: String, position: Int, kind: ImageTaskKind,
+        provider: ImageGenerationProvider, title: String, request: ImageTaskRequest, paths: List<String>) =
+        ImageTask(batch.taskId(operationId, request.garments.single().itemId), kind, provider, title, request.encode(), paths,
+            keepSourceImages = true, batchId = batch.id, batchName = batch.name, batchPosition = position)
+
+    /** Validate the entire admission before its single transaction; start no service for a partial batch. */
+    private suspend fun enqueueBatch(jobs: List<ImageTask>, parents: List<ImageTask> = emptyList()): List<String> {
+        require(jobs.isNotEmpty())
+        val existing = jobs.map { dao.get(it.id) }
+        if (existing.any { it != null }) {
+            require(existing.zip(jobs).all { (old, job) -> old != null && old.kind == job.kind && old.provider == job.provider &&
+                old.requestJson == job.requestJson && old.sourceImagePaths == job.sourceImagePaths && old.batchId == job.batchId && old.batchPosition == job.batchPosition }) { "这次批量提交已发生变化，请重新核对" }
+            return jobs.map { it.id }
+        }
+        val previous = dao.getAll().filter { it.batchId == jobs.first().batchId }
+        require(previous.all { it.batchName == jobs.first().batchName }) { "批次名称已改变" }
+        jobs.forEach { job ->
+            job.validate()
+            val request = ImageTaskRequest.decode(job.requestJson)
+            job.sourceImagePaths.forEach { require(validateSourceImage(it)) { "实际输入已丢失" } }
+            request.productOriginalImagePath?.let { require(validateProductImage(it)) { "原参考图已丢失" } }
+            request.validateInputImages(job.sourceImagePaths)
+            require(previous.filter { it.batchPosition == job.batchPosition }.all {
+                ImageTaskRequest.decode(it.requestJson).garments.single().itemId == request.garments.single().itemId
+            }) { "批次位置不能改绑到其他物品" }
+            val latest = previous.filter { it.batchPosition == job.batchPosition &&
+                ImageTaskRequest.decode(it.requestJson).materialSpec?.stage == request.materialSpec?.stage }
+                .maxWithOrNull(compareBy<ImageTask> { it.createdAt }.thenBy { it.id })
+            if (latest != null) {
+                require(latest.status in setOf(ImageTaskStatus.FAILED, ImageTaskStatus.INTERRUPTED, ImageTaskStatus.CANCELLED)) { "本项已有新的任务或结果，请刷新批次后核对" }
+                if (request.materialSpec?.stage == MaterialStage.EXTRACT_LAYER)
+                    require(request.materialSpec.parentTaskId == latest.id) { "只能重新处理当前失败项" }
+            }
+        }
+        state.withLock { db.withTransaction {
+            check(!paused)
+            jobs.forEach { job ->
+                val request = ImageTaskRequest.decode(job.requestJson)
+                val item = requireNotNull(db.itemDao().getItemById(request.garments.single().itemId)) { "批次中有物品已删除" }
+                require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY) { "批次中有物品类型或状态已改变" }
+                if (request.materialSpec?.stage == MaterialStage.FRONT_VIEW) {
+                    require(request.productOriginalImagePath in item.productReferenceImages &&
+                        db.itemTryOnMaterialDao().getForItem(item.id)?.id == request.materialSpec.expectedMaterialId) { "原图或当前素材已改变" }
+                }
+            }
+            jobs.forEach { dao.insert(it) }
+            parents.forEach { parent ->
+                val current = requireNotNull(dao.get(parent.id))
+                require(current == parent) { "主视图状态已改变" }
+                if (current.status == ImageTaskStatus.AWAITING_CONFIRMATION)
+                    dao.update(current.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis()))
+            }
+        } }
+        synchronized(sessions) { pending.addAll(jobs.map { it.id }) }
+        jobs.forEach { startAcceptedTask(it) }
+        return jobs.map { it.id }
+    }
+
+    suspend fun cancelMaterialBatch(batchId: String, taskIds: List<String>) {
+        val current = dao.getAll().filter { it.batchId == batchId && it.id in taskIds && it.status.retainsSourceImages }
+        current.forEach { cancel(it.id) }
+    }
+
     private suspend fun validatePrepared(input: PreparedMaterialInput, source: String) {
         require(input.sourcePath == source && validateProductImage(source) && imageSha256(source) == input.sourceSha256 &&
             validateSourceImage(input.imagePath) && imageSha256(input.imagePath) == input.sha256) { "实际输入已改变，请重新预览并确认费用" }
@@ -132,6 +224,12 @@ class ImageTaskCoordinator(
 
     suspend fun submitMaterial(itemId: Long, input: PreparedMaterialInput, originalPath: String,
         instructions: String, provider: ImageGenerationProvider, expectedMaterialId: String?): String = acceptedMaterial(listOf(input.imagePath, input.sourcePath, originalPath)) {
+        val (item, request) = materialRequest(itemId, input, originalPath, instructions, provider, expectedMaterialId)
+        enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, provider, "${item.name} · 整理主视图", request, listOf(input.imagePath))
+    }
+
+    private suspend fun materialRequest(itemId: Long, input: PreparedMaterialInput, originalPath: String,
+        instructions: String, provider: ImageGenerationProvider, expectedMaterialId: String?): Pair<com.lolita.app.data.local.entity.Item, ImageTaskRequest> {
         require(provider == ImageGenerationProvider.SEEDREAM) { "首版素材整理请使用已验证的即梦服务" }
         val item = requireNotNull(db.itemDao().getItemById(itemId)) { "物品已删除" }
         require(item.status.supportsVirtualTryOn && originalPath in item.productReferenceImages) { "原参考图片或物品状态已改变" }
@@ -146,10 +244,19 @@ class ImageTaskCoordinator(
         val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.WAIST, semantic, item.composition)),
             instructions, version = 5, promptVersion = 1, promptSnapshot = prompt, serviceModel = provider.model,
             inputSha256s = listOf(input.sha256), productOriginalImagePath = originalPath, materialSpec = spec)
-        enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, provider, "${item.name} · ${if (stage == MaterialStage.FRONT_VIEW) "整理主视图" else "整理试衣素材"}", request, listOf(input.imagePath))
+        return item to request
     }
 
     suspend fun submitMaterialLayers(parentTaskId: String, input: PreparedMaterialInput): String = acceptedMaterial(listOf(input.imagePath, input.sourcePath)) {
+        val (parent, request) = layerRequest(parentTaskId, input)
+        val id = enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, parent.provider, "${request.garments.single().name} · 分离单品图层", request, listOf(input.imagePath))
+        state.withLock { dao.get(parent.id)?.takeIf { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }?.let {
+            dao.update(it.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis()))
+        } }
+        id
+    }
+
+    private suspend fun layerRequest(parentTaskId: String, input: PreparedMaterialInput): Pair<ImageTask, ImageTaskRequest> {
         val parent = requireNotNull(dao.get(parentTaskId)) { "主视图任务已删除" }
         val old = ImageTaskRequest.decode(parent.requestJson)
         val firstDecomposition = old.materialSpec?.stage == MaterialStage.FRONT_VIEW && parent.status == ImageTaskStatus.AWAITING_CONFIRMATION
@@ -164,16 +271,19 @@ class ImageTaskCoordinator(
         require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == CategorySemantic.WAIST_ACCESSORY)
         val request = old.copy(promptSnapshot = TryOnMaterialPrompts.extract(old.instructions), inputSha256s = listOf(input.sha256),
             materialSpec = requireNotNull(old.materialSpec).copy(stage = MaterialStage.EXTRACT_LAYER, parentTaskId = parent.id))
-        val id = enqueue(ImageTaskKind.SINGLE_ITEM_MATERIAL, parent.provider, "${item.name} · 分离单品图层", request, listOf(input.imagePath))
-        state.withLock { dao.get(parent.id)?.takeIf { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }?.let {
-            dao.update(it.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis()))
-        } }
-        id
+        return parent to request
     }
 
     suspend fun submitAddAccessory(itemId: Long, materialId: String, base: AccessoryBaseSnapshot,
         baseInput: PreparedMaterialInput, itemInput: PreparedMaterialInput, instructions: String,
         provider: ImageGenerationProvider): String = acceptedMaterial(listOf(baseInput.imagePath, baseInput.sourcePath, itemInput.imagePath, itemInput.sourcePath)) {
+        val request = accessoryRequest(itemId, materialId, base, baseInput, itemInput, instructions, provider)
+        enqueue(ImageTaskKind.TRY_ON, provider, "${base.name.take(80)} · 加腰饰", request, listOf(baseInput.imagePath, itemInput.imagePath))
+    }
+
+    private suspend fun accessoryRequest(itemId: Long, materialId: String, base: AccessoryBaseSnapshot,
+        baseInput: PreparedMaterialInput, itemInput: PreparedMaterialInput, instructions: String,
+        provider: ImageGenerationProvider): ImageTaskRequest {
         base.validate()
         require(instructions.length <= 200)
         val item = requireNotNull(db.itemDao().getItemById(itemId)) { "所选物品已删除" }
@@ -189,16 +299,33 @@ class ImageTaskCoordinator(
         val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.WAIST, CategorySemantic.WAIST_ACCESSORY, item.composition, materialId)),
             instructions, version = 5, promptVersion = 1, promptSnapshot = TryOnMaterialPrompts.add(item.name, instructions), serviceModel = provider.model,
             inputSha256s = listOf(baseInput.sha256, itemInput.sha256), accessoryBase = base)
-        enqueue(ImageTaskKind.TRY_ON, provider, "${base.name.take(80)} · 加腰饰", request, listOf(baseInput.imagePath, itemInput.imagePath))
+        return request
     }
 
     suspend fun confirmMaterial(id: String, selectedPath: String, expectedCurrentId: String?, checked: Boolean): String = accepted {
         require(checked) { "请完成三项单品核对" }
         val released = mutableListOf<String>()
-        val materialId = state.withLock { db.withTransaction {
+        val materialId = state.withLock { db.withTransaction { confirmMaterialLocked(id, selectedPath, expectedCurrentId, released) } }
+        cleanup(released)
+        materialId
+    }
+
+    suspend fun confirmMaterialBatch(batchId: String, rows: List<BatchMaterialConfirmation>, checked: Boolean): List<String> = accepted {
+        require(checked && rows.size in 1..MaterialBatchIdentity.MAX_ITEMS && rows.map { it.taskId }.distinct().size == rows.size) { "请核对本次选中的单品" }
+        val released = mutableListOf<String>()
+        val materialIds = state.withLock { db.withTransaction {
+            val jobs = rows.map { requireNotNull(dao.get(it.taskId)) }
+            require(jobs.all { it.batchId == batchId } && jobs.map { it.batchPosition }.distinct().size == jobs.size)
+            rows.map { confirmMaterialLocked(it.taskId, it.imagePath, it.expectedMaterialId, released) }
+        } }
+        cleanup(released)
+        materialIds
+    }
+
+    private suspend fun confirmMaterialLocked(id: String, selectedPath: String, expectedCurrentId: String?, released: MutableList<String>): String {
             val task = requireNotNull(dao.get(id)) { "任务已删除" }
             require(task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL)
-            if (task.status == ImageTaskStatus.COMPLETED) return@withTransaction requireNotNull(task.materialId)
+            if (task.status == ImageTaskStatus.COMPLETED) return requireNotNull(task.materialId)
             require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION)
             val request = ImageTaskRequest.decode(task.requestJson)
             require(request.materialSpec?.stage != MaterialStage.FRONT_VIEW) { "请先分离主视图中的单品" }
@@ -223,10 +350,7 @@ class ImageTaskCoordinator(
                 layersJson = MaterialLayers.encode(candidates.filter { it.imagePath == selectedPath }),
                 updatedAt = System.currentTimeMillis(), error = null))
             released += candidates.map { it.imagePath }
-            row.id
-        } }
-        cleanup(released)
-        materialId
+            return row.id
     }
 
     suspend fun removeMaterial(itemId: Long, expectedId: String) = accepted {
@@ -429,6 +553,11 @@ class ImageTaskCoordinator(
             }
         } }
         onPersisted()
+        startAcceptedTask(task)
+        return task.id
+    }
+
+    private suspend fun startAcceptedTask(task: ImageTask) {
         try { startService(task.id) } catch (_: Exception) {
             // An existing service may have claimed the new row before start rejection.
             val job = state.withLock {
@@ -439,7 +568,6 @@ class ImageTaskCoordinator(
             finish(task.id, ImageTaskStatus.INTERRUPTED, "后台执行未能启动，请回到应用后重新发起")
             state.withLock { interrupting -= task.id }
         }
-        return task.id
     }
 
     suspend fun cancel(id: String) = accepted {

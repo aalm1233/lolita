@@ -325,9 +325,9 @@ class BackupManager(
                 sb.appendLine("${it.id},${escapeCsv(it.name)},${escapeCsv(it.imageUrl)},${escapeCsv(gson.toJson(it.itemIds))},${escapeCsv(gson.toJson(it.itemNames))},${escapeCsv(it.model)},${it.createdAt},${it.personalModelId ?: ""},${escapeCsv(it.personalModelName)},${escapeCsv(it.requestSnapshotJson)}")
             }
             sb.appendLine("\n=== IMAGE_TASKS ===")
-            sb.appendLine("id,kind,provider,title,request_json,source_image_paths,status,request_sent,created_at,updated_at,try_on_result_id,result_image_path,error,personal_model_id,keep_source_images,source_resources_missing")
+            sb.appendLine("id,kind,provider,title,request_json,source_image_paths,status,request_sent,created_at,updated_at,try_on_result_id,result_image_path,error,personal_model_id,keep_source_images,source_resources_missing,batch_id,batch_name,batch_position")
             backupData.imageTasks.forEach {
-                sb.appendLine("${escapeCsv(it.id)},${it.kind},${it.provider},${escapeCsv(it.title)},${escapeCsv(it.requestJson)},${escapeCsv(gson.toJson(it.sourceImagePaths))},${it.status},${it.requestSent},${it.createdAt},${it.updatedAt},${it.tryOnResultId ?: ""},${escapeCsv(it.resultImagePath)},${escapeCsv(it.error)},${it.personalModelId ?: ""},${it.keepSourceImages},${it.sourceResourcesMissing}")
+                sb.appendLine("${escapeCsv(it.id)},${it.kind},${it.provider},${escapeCsv(it.title)},${escapeCsv(it.requestJson)},${escapeCsv(gson.toJson(it.sourceImagePaths))},${it.status},${it.requestSent},${it.createdAt},${it.updatedAt},${it.tryOnResultId ?: ""},${escapeCsv(it.resultImagePath)},${escapeCsv(it.error)},${it.personalModelId ?: ""},${it.keepSourceImages},${it.sourceResourcesMissing},${escapeCsv(it.batchId)},${escapeCsv(it.batchName)},${it.batchPosition ?: ""}")
             }
 
             sb.appendLine("\n=== PERSONAL_MODELS ===")
@@ -569,6 +569,7 @@ class BackupManager(
                 com.lolita.app.data.tryon.MaterialImageValidation.hasTransparentForeground(local)) { "确认素材图片损坏或透明内容已改变" }
         }
         data.tryOnResults.mapNotNull { it.baseSnapshotImagePath }.forEach { readable(it) }
+        data.imageTasks.filter { it.retainsBatchFrontPreview() }.forEach { task -> readable(requireNotNull(task.resultImagePath)) }
         data.imageTasks.filter { it.status == ImageTaskStatus.AWAITING_CONFIRMATION }.forEach { task ->
             com.lolita.app.domain.model.MaterialLayers.decode(task.layersJson).forEach { layer ->
                 readable(layer.imagePath)
@@ -964,7 +965,7 @@ class BackupManager(
                 sourceImagePaths = if (task.retainsSourceImages) task.sourceImagePaths.map(::business) else emptyList(),
                 // Completed paths are informational. Missing/deleted business images do not
                 // become mandatory ZIP entries or retain old-device absolute paths.
-                resultImagePath = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) task.resultImagePath?.let(::business)
+                resultImagePath = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION || task.retainsBatchFrontPreview()) task.resultImagePath?.let(::business)
                     else task.resultImagePath?.let(businessPaths::get)
             )
         })

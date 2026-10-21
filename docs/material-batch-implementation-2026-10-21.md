@@ -35,3 +35,11 @@ JVM定向覆盖`MaterialBatchBackupFormatTest`、`MaterialBackupFormatTest`及`I
 ## 完成检查
 
 已先图稿、七皮肤效果，再实现并对照真实页面；已检查Fit／放大／原图和透明底；已覆盖迁移、旧备份、ZIP、事务和引用保护；已控制陈旧确认、重复提交、失败及独立付费；无账本／统计／提醒语义变化。AGENTS与产品规范同步维护，提交推送和正式发布依仓库流程执行。
+
+## 正式交付
+
+源码`f43762d2`与`v2.63.0`标签已推送，提交源码归档执行clean原签名Release通过。独立AVD从2.62.0覆盖并两次启动，36张旧表原列及11张原图片SHA全部保全，新增批次列保持空；正式App从个人页进入任务中心新建批次，零预选且原心愿腰饰可见，安装包字节与发布APK一致。36份项目assets、7张背景alpha／可见RGB、依赖素材及生成profile均核验，未跟踪图片和测试插画未进入主包。
+
+[GitHub发布](https://github.com/aalm1233/lolita/releases/tag/v2.63.0)与[Gitee发布](https://gitee.com/aalm1233/lolita/releases/tag/v2.63.0)使用同一APK和SHA256SUMS，两边匿名完整下载、SHA及HEAD通过，公开Gitee版本查询选中2.63.0。未重跑用户已接受限制的应用内网络检查，不把公开查询当作应用内成功，未删除旧附件。详细[发布回执](material-batch-release-2.63.0-verification.json)。
+
+![正式包实际入口](visuals/2026-10-21-material-batch-native/release-batch-page.png)

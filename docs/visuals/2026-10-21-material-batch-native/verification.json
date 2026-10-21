@@ -556,5 +556,12 @@
       "name": "saved-light.png",
       "sha256": "4508abb584c916bbab0a9dd5bab7e9c217e988ef7c26c12c2fd5710200147c16"
     }
-  ]
+  ],
+  "signed_release": {
+    "file": "release-batch-page.png",
+    "sha256": "30f3949353cc11e9f57f585e0897513ec445c8c2c4461e2af2d7297abd3ea678",
+    "version": "2.63.0/134",
+    "route": "个人 → 任务中心 → 新建素材批次",
+    "real_paid_calls": 0
+  }
 }

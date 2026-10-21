@@ -614,3 +614,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - `MaterialBatchViewModel`使用StateFlow及SavedStateHandle；费用确认冻结全部实际输入、服务、补充要求和操作标识。主视生成与分层各自统一确认N次请求，分层最多17N张输出含底图；失败项独立重新确认，不自动重试或跨阶段计费。全部输入验证和任务插入事务完成后才启动服务，操作标识确定任务ID以防重复接受；批量保存验证当前素材身份，任何一项失效则整体回退。
 - Room31→32只追加`image_tasks.batch_id/batch_name/batch_position`可空列，36实体不变，旧任务不推断分组。任务中心按批次归并，子阶段沿用同一位置及物品；原v1～5请求与单件流程保留。已接受主视图在进入分层后仍由批次任务保护，ZIP保存并映射到新路径，供回看。备份12兼容旧1～11缺失批次，CSV追加三列，恢复活动任务转中断而不重发。
 - 图稿先于实现，七皮肤浅暗与真实320dp两倍字体／IME、真实NavHost验证见`docs/plans/2026-10-21-material-batch-flow.md`及`docs/material-batch-implementation-2026-10-21.md`；批量事务／重复提交／独立失败／原资料保全／ZIP与回看图保护、迁移和旧单件执行／取消清理均定向覆盖。新增真实付费调用0次，沿用2.62.0已验证的即梦适配器，不以受控测试宣称更多品类保真或融合质量提升。
+
+- 2.63.0／134正式交付：源码`f43762d2`及标签已推送，定向批量／原单件执行与清理回归、Debug及提交归档clean原签名Release通过；63张真实测试截图、七皮肤浅暗／320dp两倍字／真实IME／NavHost与正式App入口核对。2.62.0同签名覆盖并两次启动保全36张旧表原列与11张原图SHA；36份项目assets、7背景RGBA及依赖／profile核验。GitHub／Gitee同一APK匿名完整下载、SHA／HEAD及公开最高正式版本查询通过，未重跑应用内网络检查、未删旧附件。新增付费0次，仅批量整理素材，回执`docs/material-batch-release-2.63.0-verification.json`。

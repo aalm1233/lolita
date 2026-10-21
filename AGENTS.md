@@ -656,3 +656,6 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - Type.kt统一七皮肤字号、行高和字重，公共顶栏／分区、高频列表与设置条目消费同一角色，阅读／输入／操作及金额保持统一字体；首页四标签与控制同排，筛选角标按真实高度预留空间。统计摘要优先，完整品类明细独立分区，原隐私与导航保留。设计和实施见`docs/plans/2026-10-21-typography-system.md`、`docs/typography-implementation-2026-10-21.md`。
 - 2.66.1／138：源码`0325e7af`与标签已推送，14项去重定向设备回归、Debug及提交归档clean原签名Release通过。1440×3200七皮肤浅暗、320dp两倍字体／真实IME、数量0/3/12与独立设计角色复核通过；2.66.0覆盖及两次启动保留中华皮肤与3份既有设置SHA。36主包assets、7背景RGBA及依赖／profile与提交源码一致；纯字体布局不重复全库／图片／备份审计。GitHub／Gitee正式同一APK与校验文件匿名完整下载、SHA／HEAD及公开最高正式版本查询通过；未重跑App手动网络检查，未删旧附件、无新生图调用，Room32／备份13不变。回执`docs/typography-release-2.66.1-verification.json`。
+
+
+- 2.66.2／139收敛实验室导航：个人入口与属性管理同为16/24sp、Medium500及阅读字体，公共顶栏18/26sp、Medium500，主功能22sp及其他规格保持。源码`8b5f383f`与标签已推送，4项最终去重定向设备方法、Debug与提交归档clean原签名Release通过；七皮肤浅暗／320dp两倍字／真实IME与50张相关原生截图、实际入口及同级样式测量通过。2.66.1覆盖及重复启动保全中华皮肤与3份设置SHA，正式实拍已核对；独立AVD的System UI ANR以保留数据的重启解决，未改应用逻辑或放宽IME断言。GitHub／Gitee正式同一附件匿名完整下载、SHA／HEAD及公开最高版本查询通过；未删旧资产、未重复App手动网络检查或无关全库／图片／备份审计，无新生成调用。设计与回执见`docs/plans/2026-10-21-compact-laboratory-titles.md`、`docs/compact-laboratory-titles-release-2.66.2-verification.json`。

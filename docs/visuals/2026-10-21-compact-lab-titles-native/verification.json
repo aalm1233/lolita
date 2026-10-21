@@ -234,5 +234,27 @@
       "file": "typography-native/small-search-ime.png",
       "sha256": "74c509baf150c13a7fccb59de8cafa71d62494eabb2e9403a8f4c55a8784cc37"
     }
+  ],
+  "signed_release_captures": [
+    {
+      "file": "release/release-launch.png",
+      "sha256": "a3ddda053cd21317a3b85d0106026792eaf20cd09e352e50e42c33c3f915ee03"
+    },
+    {
+      "file": "release/release-personal.png",
+      "sha256": "0e7a33fa8c2d36e6c4a95f71548b7d7b02b0ef44568e01d404d925b168e73672"
+    },
+    {
+      "file": "release/release-laboratory.png",
+      "sha256": "4e0806dab6792926ed5aa75287f607348ec2a0cb4d45723449a374ebf6744f94"
+    },
+    {
+      "file": "release/release-home.png",
+      "sha256": "e326b7efb445e87aac3aa015619f327c8680f8b39e58894af064da19ea5c5a2a"
+    },
+    {
+      "file": "release/release-stats.png",
+      "sha256": "ae51b70edc26bec9f2abe02ba712ef0600bbd2b717375f42606d65910686801f"
+    }
   ]
 }

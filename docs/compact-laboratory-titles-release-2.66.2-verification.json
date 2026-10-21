@@ -1,0 +1,303 @@
+{
+  "version": "2.66.2",
+  "version_code": 139,
+  "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+  "date": "2026-10-21",
+  "diff_base": "v2.66.1 / 0325e7afb95da18787419a237c5788db44a7370c",
+  "changes": {
+    "laboratory_entry": "titleSmall16/24sp Medium500; exact same size, line-height, weight and reading family as Attribute Management peer",
+    "shared_appbar": "18/26sp Medium500; seven skin heading faces retained",
+    "feature_body_card_icon_behaviour_unchanged": true
+  },
+  "design": {
+    "preimplementation_comparison": true,
+    "seven_skins_light_dark": true,
+    "actual_entry_and_peer_measurements": true,
+    "screenshots": 50,
+    "actual_screenshot_directory": "docs/visuals/2026-10-21-compact-lab-titles-native"
+  },
+  "tests": {
+    "passed_unique_tests": 4,
+    "groups": [
+      {
+        "methods": [
+          "com.lolita.app.ui.theme.TypographyScreenTest#native2kHasRealHierarchyAndStableReadingAcrossSevenSkins",
+          "com.lolita.app.data.LaboratoryScreenTest#laboratoryEntryMatchesPeerAndNavigationTitlesStayCompactAcrossSkins"
+        ],
+        "passed": 2,
+        "resolution_px": [
+          1440,
+          3200
+        ],
+        "density_dpi": 600,
+        "font_scale": 1.0,
+        "real_ime": false
+      },
+      {
+        "methods": [
+          "com.lolita.app.ui.theme.TypographyScreenTest#realLargeFontKeepsCompleteControlsAndKeyboardActions",
+          "com.lolita.app.data.LaboratoryScreenTest#realSmallLargeFontLabAndWigSearchWorkWithKeyboard"
+        ],
+        "passed": 2,
+        "resolution_px": [
+          1440,
+          3200
+        ],
+        "density_dpi": 720,
+        "font_scale": 2.0,
+        "real_ime": true
+      }
+    ],
+    "scope": "Actual laboratory entry vs peer title, shared appbar, seven skins light/dark and real small-font IME; unrelated features not rerun",
+    "paid_calls": 0
+  },
+  "debug_build": true,
+  "committed_source_clean_release": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 139,
+    "version": "2.66.2",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "12ef784b6ea02d9003d8b7827997404f1985ea77aa8a122f9e1df55e96b55982",
+    "bytes": 81242404,
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "packaging": {
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 36,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "upgrade": {
+    "passed": true,
+    "previous_version": "2.66.1/138",
+    "version": "2.66.2/139",
+    "same_original_certificate": true,
+    "install_replace": true,
+    "launches": 2,
+    "installed_apk_sha256": "12ef784b6ea02d9003d8b7827997404f1985ea77aa8a122f9e1df55e96b55982",
+    "settings_sha256_preserved": true,
+    "settings_file_count": 3,
+    "scope": "Typography/layout only; preceding official release on dedicated typography AVD. No full database/image/backup audit repeated."
+  },
+  "official_ui": {
+    "passed": true,
+    "signed_official_apk": true,
+    "native_resolution": [
+      1440,
+      3200
+    ],
+    "density_dpi": 600,
+    "skin": "CHINESE selected in previous version",
+    "captures": [
+      "release-launch.png",
+      "release-personal.png",
+      "release-laboratory.png",
+      "release-home.png",
+      "release-stats.png"
+    ],
+    "paid_calls": 0
+  },
+  "room_schema": 32,
+  "entities": 36,
+  "backup_format": 13,
+  "database_backup_image_protocol_changes": false,
+  "unrelated_full_suites_or_full_database_image_audits_repeated": false,
+  "paid_generation_calls": 0,
+  "github": {
+    "tag": "v2.66.2",
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "release_id": 419552649,
+    "prerelease": false,
+    "files": {
+      "lolita-2.66.2.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.66.2/lolita-2.66.2.apk",
+        "anonymous_full_download": true,
+        "bytes": 81242404,
+        "sha256": "12ef784b6ea02d9003d8b7827997404f1985ea77aa8a122f9e1df55e96b55982",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.66.2/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "65c197c7c9b8ac262e7760d23e5e75ed942ca441a2e5c59a269f6ca8bf698fba",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 81242404,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee_preformal_anonymous_download": {
+    "tag": "v2.66.2",
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "release_id": 1226547,
+    "prerelease": true,
+    "files": {
+      "lolita-2.66.2.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/lolita-2.66.2.apk",
+        "anonymous_full_download": true,
+        "bytes": 81242404,
+        "sha256": "12ef784b6ea02d9003d8b7827997404f1985ea77aa8a122f9e1df55e96b55982",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "65c197c7c9b8ac262e7760d23e5e75ed942ca441a2e5c59a269f6ca8bf698fba",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 81242404,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "gitee_formal": {
+    "tag": "v2.66.2",
+    "release_id": 1226547,
+    "prerelease": false,
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "assets": {
+      "lolita-2.66.2.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/lolita-2.66.2.apk",
+      "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/SHA256SUMS"
+    },
+    "metadata_source": "owner-authenticated exact release GET; not a public update check"
+  },
+  "gitee_formal_head": {
+    "http_status": 200,
+    "bytes": 81242404,
+    "content_type": "application/zip",
+    "redirect_chain": [
+      {
+        "host": "gitee.com",
+        "status": 302
+      },
+      {
+        "host": "gitee.com",
+        "status": 302
+      },
+      {
+        "host": "foruda.gitee.com",
+        "status": 200
+      }
+    ],
+    "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/lolita-2.66.2.apk"
+  },
+  "public_update": {
+    "latest_tag": "v2.66.2",
+    "pages": 3,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.66.2/lolita-2.66.2.apk",
+    "source_commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+    "passed": true,
+    "http_status": 200
+  },
+  "manual_app_update_check": {
+    "performed": false,
+    "reason": "Prior user instruction accepts network restriction and excludes repeating manual checks; public API success is separate."
+  },
+  "old_assets_deleted": false,
+  "notes": [
+    "Initial two IME cases timed out while the dedicated AVD displayed a System UI ANR dialog; original application code and IME assertions unchanged, rebooted only that AVD and reran only those two cases successfully.",
+    "UI-only typography correction; no database, backup, image-reference or paid-service protocol changes. Existing preferences are compared during the original-signature upgrade, not a full business-data audit."
+  ]
+}

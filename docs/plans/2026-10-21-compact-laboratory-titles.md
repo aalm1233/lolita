@@ -26,4 +26,4 @@
 - [x] 修改前图稿、七皮肤浅暗与小屏方案。
 - [x] 数据、图片、隐私与费用适用边界说明。
 - [x] 实现、Debug与4项最终定向设备方法通过，50张实际截图及样式测量已归档；[实施记录](../compact-laboratory-titles-implementation-2026-10-21.md)。
-- [ ] 正式升级、发布、附件校验与源码推送。
+- [x] 2.66.1原签名覆盖、两次启动与设置保全、双渠道正式发布／匿名下载校验及源码推送；[回执](../compact-laboratory-titles-release-2.66.2-verification.json)。

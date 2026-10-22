@@ -1,0 +1,398 @@
+{
+  "version": "2.67.0",
+  "version_code": 142,
+  "recorded_at": "2026-10-22T18:00:10.436506+08:00",
+  "source_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+  "source_tag": "v2.67.0",
+  "build": {
+    "package": "com.lolita.app",
+    "version_code": 142,
+    "version": "2.67.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19",
+    "bytes": 83399061,
+    "source_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "packaging": {
+    "source_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 37,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "targeted_device_validation": {
+    "finalUniqueDeviceMethods": 28,
+    "finalAllPassed": true,
+    "phases": {
+      "initial": {
+        "failed": 2,
+        "passed": 20
+      },
+      "followup": {
+        "passed": 6
+      },
+      "layout-final": {
+        "passed": 3
+      },
+      "small": {
+        "passed": 4
+      },
+      "art": {
+        "passed": 2
+      },
+      "small-art": {
+        "passed": 1
+      }
+    },
+    "methods": [
+      {
+        "class": "com.lolita.app.data.LaboratoryNavigationTest",
+        "method": "personalLaboratoryProvidesBatchAndAllAiRoutesWithoutSubmitting",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.data.LaboratoryScreenTest",
+        "method": "realSmallLargeFontLabAndWigSearchWorkWithKeyboard",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+        "method": "backupKeepsRealResultAndWarningsAndDisablesConflictingActions",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+        "method": "changedPagesUseSevenNativeSkinsInLightAndDark",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+        "method": "emptyStateAndTaskActionsHaveExplicitLocalDestinations",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+        "method": "profileMoneyChangesLiveAndPreservesTwoDecimalPlaces",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeNavigationScreenTest",
+        "method": "actualEmptyWardrobeImportAndRestoreActionsUseExistingRoutes",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.copy.CreativeNavigationScreenTest",
+        "method": "real320dpDoubleFontNavigationStaysAboveGestureAreaAcrossSkins",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "allSevenSkinsKeepRootActionsSingleLineAndSeparatedAt320dpInBothFontScales",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "allSevenSkinsKeepSelectionAndMoveControlsReachableOnSmallScreensWithLargeText",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "roomShowsCabinetsAndCabinetFindsAttachmentsAndNestedItemsWithoutDuplicates",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "rootActionsStaySingleLineAndCreateRoomNodesAt320dpWithNormalAndLargeText",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "selectionSurvivesFilteringAndOnlyMovesAfterAffectedCountConfirmation",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+        "method": "unpaidItemsAreAbsentFromRoomCountsAndPickerAndLostOwnershipClearsSelection",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "actualPriceAndTaskBarSevenSkinsLightDarkAndLargeText",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+        "method": "templatesFillBothWaysAndManualOverrideIsNeverRewritten",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.settings.BackupExportResultTest",
+        "method": "actualZipJsonCsvUrisRemainReadableAndPreviewDoesNotReplaceRecords",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.settings.BackupExportResultTest",
+        "method": "exportBusyGuardPreventsSecondExportAndRestoreDuringResultResolution",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+        "method": "filtersShowPendingRunningAndFinishedWithoutChangingRecords",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+        "method": "missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+        "method": "sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+        "method": "wearingDescriptionAcrossSevenSkinsAndKeyboardAndPaidConfirmation",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimationTest",
+        "method": "backgroundStopsRequestingFramesDuringScrollAndResumesAfterward",
+        "status": "passed"
+      },
+      {
+        "class": "com.lolita.app.ui.theme.skin.component.SkinArtBackgroundTest",
+        "method": "realIllustrationsPreserveThemeSurfaceInBothModesAndStayStatic",
+        "status": "passed"
+      }
+    ],
+    "debugBuild": "passed",
+    "realSmallDevice": "960x2100 / 480dpi / fontScale 2.0 / API35",
+    "temporaryDisplaySettingsRestored": true,
+    "appPaidAiRequests": 0,
+    "designImageGenCallsThisImplementation": 1
+  },
+  "upgrade": {
+    "passed": true,
+    "previous_version": "2.66.4/141",
+    "version": "2.67.0/142",
+    "same_original_certificate": true,
+    "install_replace": true,
+    "launches": 2,
+    "installed_apk_sha256": "ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19",
+    "settings_sha256_preserved": true,
+    "settings_file_count": 3,
+    "scope": "UI copy/presentation only; original settings on dedicated release AVD. No unrelated full database/image/backup audit repeated."
+  },
+  "official_ui": {
+    "passed": true,
+    "apk": "2.67.0/142 official signed APK",
+    "privacyHiddenInPersonal": true,
+    "emptyImportAndRestoreReachable": true,
+    "tryOnSelectionInFirstViewport": true,
+    "oneTextPriceSave": true,
+    "screens": [
+      "release-empty",
+      "release-backup",
+      "release-private-personal",
+      "release-tryon",
+      "release-tasks",
+      "release-price",
+      "release-price-ime"
+    ],
+    "businessSaves": 0,
+    "paidCalls": 0
+  },
+  "github": {
+    "tag": "v2.67.0",
+    "source_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+    "release_id": 420539727,
+    "prerelease": false,
+    "files": {
+      "lolita-2.67.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.67.0/lolita-2.67.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83399061,
+        "sha256": "ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.67.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "77ef13369eaf2834b7aebb15794f23d7b396aaf02af87de7a5ffc969919a2398",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83399061,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.67.0",
+    "source_commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+    "release_id": 1229610,
+    "prerelease": false,
+    "files": {
+      "lolita-2.67.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.67.0/lolita-2.67.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83399061,
+        "sha256": "ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.67.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "77ef13369eaf2834b7aebb15794f23d7b396aaf02af87de7a5ffc969919a2398",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83399061,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "public_update_query": {
+    "attempted": true,
+    "http_status": 403,
+    "highest_formal_version_verified": false,
+    "raw_response_suppressed": true,
+    "no_network_or_update_code_changed": true
+  },
+  "actual_app_update_check": {
+    "performed": true,
+    "attempts": 1,
+    "status": "error",
+    "visible_result": [
+      "检查失败",
+      "当前版本：v2.67.0",
+      "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+      "查看发布页",
+      "关闭",
+      "重试"
+    ],
+    "public_api_is_not_a_substitute": true
+  },
+  "old_attachments_deleted": false,
+  "app_paid_ai_requests": 0,
+  "design_imagegen_calls": 1,
+  "user_untracked_work_preserved": true,
+  "database_or_backup_format_changed": false
+}

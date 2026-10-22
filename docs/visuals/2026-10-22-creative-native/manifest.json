@@ -1080,5 +1080,52 @@
       "source": "artifacts/releases/2.67.0/native/creative-navigation-native/victorian-dark-small.png",
       "sha256": "3762d297e8f066cf5e9e1a0f7e7f0cc01bd5d7d0e43640ec3bcb328e73e851df"
     }
+  ],
+  "officialScreens": [
+    {
+      "file": "release-empty.png",
+      "sha256": "bb95fbe19229682688a843a8a5a95ff1385f1c24f57173f97dda098c0636cc35",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-backup.png",
+      "sha256": "54f92d35eba46758bfee201ba597ee2783e12c7985b00dfc6e684ca6c483e450",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-private-personal.png",
+      "sha256": "2cb8ec52768511712f808a8f4e297034e75c16f3d3fc9cc80ecb6cb50c4a700b",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-tryon.png",
+      "sha256": "7ce1452e79919c50949e605313e5df0ff8ac6b565cccc9d8b9f3d696f1a882d7",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-tasks.png",
+      "sha256": "b86d8d24c70b918d886e9a7f269d17d30f05d054c04567321cfe309d4f9faf9c",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-price.png",
+      "sha256": "145d30c25f81420977e82843665c7735615d0f91913742be2f12248157bbda0e",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-price-ime.png",
+      "sha256": "afcddb53b2220cd39699de8bf5e9d168b6092b90093c4067149098f687ab95f6",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-laboratory.png",
+      "sha256": "22a4058992d5e95eea721121e3ba6bf15195d2b305d9c05b60ce1264478f9c68",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    },
+    {
+      "file": "release-manual-update-check.png",
+      "sha256": "28e2ce028f006b817f64deb1ececc1ddffbae77f77a55b64c1632ef2eb41ee05",
+      "kind": "actual official 2.67.0 APK screenshot, CHINESE, preserved release AVD"
+    }
   ]
 }

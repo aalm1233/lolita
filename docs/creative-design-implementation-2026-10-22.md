@@ -57,3 +57,13 @@ Room32、36实体、备份13、CSV业务列、原任务请求与业务图片均�
 - [x] Debug及28项去重定向设备方法通过，未跑无关全量测试。
 - [x] AGENTS.md维护本轮组件、交互与版本；设计规范索引同步。
 - 正式源码提交、隔离clean Release、原签名覆盖及双平台分发的最终结果，以 `docs/creative-design-release-2.67.0-verification.json` 为准。
+
+## 正式交付结果
+
+源码 `94b13c23` 与标签 `v2.67.0` 已推送。从该提交归档执行clean Release，正式APK为83,399,061字节，原签名保持；37份项目assets、7张背景RGBA、依赖素材与生成profile均核验通过。独立发布AVD从2.66.4／141覆盖并两次启动，3份原有设置摘要保全；本轮未重复无关全库／原图审计。正式包的金额隐藏、空态入口、试衣首屏及唯一文字保存已实拍核对，没有保存业务记录或付费调用。
+
+[正式包三页实拍](visuals/2026-10-22-creative-native/release-overview.jpg)、[价格真实IME](visuals/2026-10-22-creative-native/release-price-ime.png)、[金额隐私](visuals/2026-10-22-creative-native/release-private-personal.png)、[备份](visuals/2026-10-22-creative-native/release-backup.png)与[任务中心](visuals/2026-10-22-creative-native/release-tasks.png)可直接对照。正式包实拍有Haze source，与前述独立组件截图的渐变回退分别记录。
+
+GitHub与Gitee均已正式发布，同一APK及SHA256SUMS匿名完整下载、大小／摘要和HEAD跳转链核验通过，未删除旧附件。APK SHA256为 `ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19`，GitHub标签准确指向上述源码；Gitee仍只承担分发说明与附件。
+
+Gitee公开版本API本次返回HTTP403，未确认公开最高版本查询；正式应用仅实际检查一次，显示「Gitee 暂时拒绝访问或请求过于频繁，请稍后重试」。[实拍](visuals/2026-10-22-creative-native/release-manual-update-check.png)和[完整回执](creative-design-release-2.67.0-verification.json)保留这一限制。附件直链可用，不以下载成功代替应用检查更新成功，本轮没有更改网络／更新代码或重试修复网络。

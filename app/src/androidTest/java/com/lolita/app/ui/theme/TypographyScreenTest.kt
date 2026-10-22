@@ -12,6 +12,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -61,7 +63,7 @@ class TypographyScreenTest {
                 Scaffold(containerColor=MaterialTheme.colorScheme.background,contentWindowInsets=WindowInsets(0,0,0,0),topBar={
                     if(page.value in listOf("home","search")) Surface(color=MaterialTheme.colorScheme.primaryContainer){Column(Modifier.statusBarsPadding()){
                         if(page.value=="home")NormalModeBar(pager,{}, {},false,{},filterCount.value,SortOption.entries.first(),true,true,{},{},IconKey.GridView)
-                        else SearchModeBar(input,{input=it},{page.value="home"},focus,"搜索服饰")
+                        else SearchModeBar(input,{input=it},{page.value="home"},focus,"搜索物品")
                     }} else GradientTopAppBar(title={Text("衣橱与试衣",Modifier.testTag("typeAppBar"))},navigationIcon={IconButton(onClick={}){SkinIcon(IconKey.ArrowBack)}})
                 },bottomBar={Surface{Column(Modifier.fillMaxWidth().imePadding().padding(16.dp)){
                     Button(onClick={submitted++},Modifier.fillMaxWidth().testTag("typePrimary")){Text("保存本次资料")}
@@ -114,7 +116,7 @@ class TypographyScreenTest {
     private fun checkFilterCounts(prefix:String) {
         for(count in listOf(0,3,12)) {
             compose.runOnIdle{filterCount.value=count}
-            for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNodeWithText(label))
+            for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNode(hasText(label) and hasAnyAncestor(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Tab)), useUnmergedTree = true))
             val badge=compose.onNodeWithTag("homeFilterBadge")
             if(count==0)badge.assertDoesNotExist() else {
                 badge.assertIsDisplayed()
@@ -158,7 +160,7 @@ class TypographyScreenTest {
             capture("scale-${type.name.lowercase()}-${if(night)"dark" else "light"}")
             records.put(JSONObject().put("skin",type.name).put("dark",night).put("sizes",JSONObject(styles.mapValues{it.value.fontSize.value})).put("section",section.fontSize.value).put("body_line_ends",JSONArray(lines)))
             compose.runOnIdle{page.value="home"}
-            for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNodeWithText(label))
+            for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNode(hasText(label) and hasAnyAncestor(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Tab)), useUnmergedTree = true))
             compose.onNodeWithTag("typeList").performScrollToNode(hasTestTag("typeGrid"))
             capture("home-${type.name.lowercase()}-${if(night)"dark" else "light"}")
             if(type==SkinType.DEFAULT && !night)checkFilterCounts("normal")
@@ -177,7 +179,7 @@ class TypographyScreenTest {
         InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot().let{im->File(dir,"small-input-ime.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)};im.recycle()}
         compose.onNodeWithTag("typePrimary").performClick();assertEquals(1,submitted)
         compose.runOnIdle{page.value="home"}
-        for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNodeWithText(label))
+        for(label in listOf("位置","服饰","套装","心愿"))complete(compose.onNode(hasText(label) and hasAnyAncestor(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Tab)), useUnmergedTree = true))
         checkFilterCounts("small")
         capture("small-home")
         compose.runOnIdle{page.value="search"}

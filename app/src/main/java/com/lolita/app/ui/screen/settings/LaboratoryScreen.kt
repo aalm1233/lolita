@@ -30,7 +30,7 @@ fun LaboratoryEntry(onClick: () -> Unit) {
                 Text("实验室", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
                 SkinIcon(IconKey.ArrowForward, Modifier.size(24.dp))
             }
-            Text("展示图、虚拟试衣、识图与 API 配置", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("展示图、试衣与识图", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -54,20 +54,19 @@ fun LaboratoryScreen(onBack: () -> Unit, onBatch: () -> Unit, onTryOn: () -> Uni
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             item("batch") { LolitaCard(variant = CardVariant.FEATURED) {
                 Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                    Text("服饰与小物", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     Text("批量生成展示图", style = MaterialTheme.typography.titleLarge)
-                    Text("一次选择 1～30 件，统一整理、集中核对。确认图片可作封面，也可用于试衣。", style = MaterialTheme.typography.bodyMedium)
+                    Text("一次选择最多 30 件，确认后可作封面或用于试衣。", style = MaterialTheme.typography.bodyMedium)
                     Button(onClick = onBatch, modifier = Modifier.fillMaxWidth().testTag("laboratoryBatch")) { Text("选择物品") }
                 }
             } }
             item("images") { LolitaSection("展示与试衣") {
-                row { LaboratoryAction("虚拟试衣", "选择人物与服饰，查看试衣历史", IconKey.Outfit, onTryOn) }
-                row { LaboratoryAction("我的模特", "根据照片或身体参数创建模特", IconKey.Outfit, onModels) }
-                row { LaboratoryAction("假发头模图", "选择假发与头模，保留发型与发梢", IconKey.Image, { wigs = true }) }
+                row { LaboratoryAction("虚拟试衣", "预览搭配与查看历史", IconKey.Outfit, onTryOn) }
+                row { LaboratoryAction("我的模特", "用照片或身体参数创建", IconKey.Outfit, onModels) }
+                row { LaboratoryAction("假发头模图", "选择假发与头模，生成佩戴预览", IconKey.Image, { wigs = true }) }
             } }
             item("services") { LolitaSection("录入与服务") {
-                row { LaboratoryAction("识图录入", "添加参考照片，框选后核对识图结果", IconKey.Camera, onRecognize) }
-                row { LaboratoryAction("任务中心", "查看批次、生成进度与待确认结果", IconKey.ViewAgenda, onTasks) }
+                row { LaboratoryAction("识图录入", "从图片提取资料，核对后填入", IconKey.Camera, onRecognize) }
+                row { LaboratoryAction("任务中心", "查看进度和待确认结果", IconKey.ViewAgenda, onTasks) }
                 row { LaboratoryAction("API 配置", "管理生图、识图服务与密钥", IconKey.Settings, onConfigure) }
             } }
         }

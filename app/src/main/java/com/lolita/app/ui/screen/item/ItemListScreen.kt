@@ -212,7 +212,7 @@ fun ItemListScreen(
     uiState.errorMessage?.let { msg ->
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
-            title = { Text("提示") },
+            title = { Text("操作未完成") },
             text = { Text(msg) },
             confirmButton = {
                 TextButton(onClick = { viewModel.clearError() }) {
@@ -291,7 +291,7 @@ fun ItemListScreen(
                                     isSearchMode = false
                                 },
                                 focusRequester = searchFocusRequester,
-                                placeholder = "搜索服饰"
+                                placeholder = "搜索物品"
                             )
                         } else {
                             // Normal mode: search icon | tabs | action icons
@@ -497,7 +497,7 @@ fun ItemListScreen(
                             SkinEmptyState(
                                 iconKey = IconKey.Home,
                                 title = "暂无服饰",
-                                subtitle = "点击右下角 + 添加新服饰",
+                                subtitle = "点击右下角 + 添加物品",
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else if (uiState.viewMode == ViewMode.GALLERY) {
@@ -694,7 +694,7 @@ private fun TodayOutfitShortcut(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = if (hasTodayOutfit) "今天的搭配已记录" else "记录今天的搭配",
+                    text = if (hasTodayOutfit) "已记录" else "尚未记录",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -874,7 +874,7 @@ internal fun SearchModeBar(
                         Spacer(Modifier.width(6.dp))
                         Box(Modifier.weight(1f)) {
                             if (query.isEmpty()) {
-                                Text("搜索服饰", color = contentColor.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyMedium)
+                                Text("搜索物品", color = contentColor.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyMedium)
                             }
                             innerTextField()
                         }
@@ -1019,7 +1019,7 @@ internal fun ItemCard(
                 }
                 if (item.parentItemId != null) {
                     Text(
-                        text = if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
+                        text = if (item.includedInParentPrice) "小物 · 随主件计价" else "小物 · 独立计价",
                         style = MaterialTheme.typography.metadata,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -1051,7 +1051,7 @@ internal fun ItemCard(
                     Text(
                         text = when (item.status) {
                             ItemStatus.OWNED -> "已拥有"
-                            ItemStatus.WISHED -> "愿望单"
+                            ItemStatus.WISHED -> "心愿"
                             ItemStatus.PENDING_BALANCE -> "待补尾款"
                             ItemStatus.PENDING_PAYMENT -> "待付款"
                             ItemStatus.PENDING_REVIEW -> "待核对"
@@ -1246,7 +1246,7 @@ internal fun ItemGridCard(
                         overflow = TextOverflow.Ellipsis
                     )
                     if (item.parentItemId != null) {
-                        Text(if (item.includedInParentPrice) "所属小物 · 共用主件价格" else "所属小物 · 独立计价",
+                        Text(if (item.includedInParentPrice) "小物 · 随主件计价" else "小物 · 独立计价",
                             style = MaterialTheme.typography.metadata, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     brandName?.let {
@@ -1283,7 +1283,7 @@ internal fun ItemGridCard(
                         Text(
                             text = when (item.status) {
                                 ItemStatus.OWNED -> "已拥有"
-                                ItemStatus.WISHED -> "愿望单"
+                                ItemStatus.WISHED -> "心愿"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                                 ItemStatus.PENDING_PAYMENT -> "待付款"
                                 ItemStatus.PENDING_REVIEW -> "待核对"
@@ -1347,7 +1347,7 @@ private fun FilterPanel(
                 uiState.categoryOptions.filter { uiState.filterFamily == null || it.categorySemantic.family == uiState.filterFamily },
                 { viewModel.filterByCategory(it) })
             if (uiState.filterCategoryId != null) TextButton(onClick = { viewModel.filterByCategory(null) }) { Text("清除类型筛选") }
-            OutlinedTextField(uiState.filterSize, viewModel::filterBySize, label = { Text("筛选原始尺码") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(uiState.filterSize, viewModel::filterBySize, label = { Text("尺码") }, singleLine = true, modifier = Modifier.fillMaxWidth())
             StorageLocationPicker(uiState.filterLocationId, uiState.filterStorageNodeId, locations, uiState.storageNodes, viewModel::filterByStorage)
             if (uiState.filterFamily == WardrobeFamily.WIG || uiState.filterFamily == WardrobeFamily.FOOTWEAR) {
                 OutlinedTextField(uiState.filterSpecification, viewModel::filterBySpecification,

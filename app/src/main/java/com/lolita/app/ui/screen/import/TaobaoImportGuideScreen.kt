@@ -46,9 +46,7 @@ fun TaobaoImportGuideScreen(
             item {
                 GuideSection(title = "关于淘宝订单导入") {
                     Text(
-                        "本功能可将淘宝订单批量导入为服饰记录，自动解析品牌、类型、颜色、尺码等信息。" +
-                            "导入前，你需要先从淘宝导出订单的 Excel 文件。\n\n" +
-                            "无需电脑，直接在手机上用 Chrome 浏览器即可完成导出。",
+                        "先从淘宝导出订单文件，再回到应用导入。",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

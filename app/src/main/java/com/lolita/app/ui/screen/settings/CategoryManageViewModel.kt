@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.settings
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Category
@@ -65,7 +67,7 @@ class CategoryManageViewModel(
                 hideAddDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message ?: "添加失败"
+                    errorMessage = uiErrorText(e, "添加失败")
                 )
             }
         }
@@ -87,7 +89,7 @@ class CategoryManageViewModel(
             } catch (e: Exception) {
                 hideDeleteConfirm()
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message ?: "删除失败"
+                    errorMessage = uiErrorText(e, "删除失败")
                 )
             }
         }
@@ -118,7 +120,7 @@ class CategoryManageViewModel(
                 }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message ?: "修改失败"
+                    errorMessage = uiErrorText(e, "修改失败")
                 )
             }
         }
@@ -130,7 +132,7 @@ class CategoryManageViewModel(
             try {
                 categoryRepository.updateCategory(category, confirmSemanticChange = true)
                 _uiState.value = _uiState.value.copy(pendingSemanticChange = null, editingCategory = null)
-            } catch (failure: Exception) { _uiState.value = _uiState.value.copy(errorMessage = failure.message) }
+            } catch (failure: Exception) { _uiState.value = _uiState.value.copy(errorMessage = uiErrorText(failure)) }
         }
     }
 }

@@ -192,7 +192,7 @@ fun CoordinateListContent(
             SkinEmptyState(
                 iconKey = IconKey.Star,
                 title = "暂无套装",
-                subtitle = "点击 + 创建第一个套装"
+                subtitle = "创建套装，集中查看搭配单品"
             )
         }
     } else if (uiState.coordinates.isEmpty()) {

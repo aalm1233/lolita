@@ -23,7 +23,7 @@ fun ApiKeyDialog(hasKey: Boolean, keyRevision: Int, isConfiguring: Boolean, busy
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
     LaunchedEffect(keyRevision) { if (keyRevision != initialRevision) { value = ""; onDismiss() } }
-    AlertDialog(onDismissRequest = { if (!isConfiguring) onDismiss() }, modifier = Modifier.imePadding(), title = { Text("配置 API Key") },
+    AlertDialog(onDismissRequest = { if (!isConfiguring) onDismiss() }, modifier = Modifier.imePadding(), title = { Text("配置服务密钥") },
         text = {
             Column(Modifier.verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 Text(serviceLabel, style = MaterialTheme.typography.titleSmall)

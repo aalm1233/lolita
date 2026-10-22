@@ -124,7 +124,7 @@ fun ImportDetailContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             GradientTopAppBar(
-                title = { Text("完善导入数据 (${uiState.importItems.size}件)") },
+                title = { Text("核对导入资料（${uiState.importItems.size} 件）") },
                 navigationIcon = {
                     IconButton(onClick = { showBackConfirmDialog = true }) {
                         SkinIcon(IconKey.ArrowBack)
@@ -160,7 +160,7 @@ fun ImportDetailContent(
                         }
                     }
                     val validCount = uiState.importItems.indices.count { isImportItemReady(it, uiState.importItems) }
-                    Text("${validCount}/${uiState.importItems.size} 条资料已完善",
+                    Text("${validCount}/${uiState.importItems.size} 条资料可导入",
                         style = MaterialTheme.typography.bodyMedium)
                     Button(
                         onClick = { showImportConfirm = true },
@@ -183,7 +183,7 @@ fun ImportDetailContent(
                         FilterChip(selected = singleMode, onClick = { singleMode = true }, label = { Text("逐件填写") })
                         FilterChip(selected = !singleMode, onClick = { singleMode = false }, label = { Text("批量编辑") })
                     }
-                    Text(if (singleMode) "先确认付款类型，再核对资料与账目。" else "先确认付款类型，再核对资料和金额。可先跳过，修改会保留；最后统一导入已完善的商品。",
+                    Text(if (singleMode) "先确认付款类型，再核对资料与账目。" else "先确认付款类型，再核对资料和金额。可先跳过，修改会保留；最后统一导入已就绪商品。",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     if (!singleMode) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         listOf("全部", "全款", "定金", "尾款", "待配对").forEachIndexed { filter, label ->
@@ -226,7 +226,7 @@ fun ImportDetailContent(
         AlertDialog(
             onDismissRequest = { showImportConfirm = false },
             title = { Text("确认导入") },
-            text = { Text("本次将处理 $ready 条已完善的商品资料，定金与尾款配对后合并为同一件服饰。${if (ready < uiState.importItems.size) "另有 ${uiState.importItems.size - ready} 条未完善，本次不会导入。" else ""}") },
+            text = { Text("本次将处理 $ready 条可导入商品资料，定金与尾款配对后合并为同一件服饰。${if (ready < uiState.importItems.size) "另有 ${uiState.importItems.size - ready} 条尚未就绪，本次不会导入。" else ""}") },
             confirmButton = { TextButton(onClick = { showImportConfirm = false; onExecuteImport() }) { Text("确认导入") } },
             dismissButton = { TextButton(onClick = { showImportConfirm = false }) { Text("继续核对") } }
         )
@@ -235,13 +235,13 @@ fun ImportDetailContent(
     if (showBackConfirmDialog) {
         AlertDialog(
             onDismissRequest = { showBackConfirmDialog = false },
-            title = { Text("确认返回") },
-            text = { Text("已编辑的导入数据尚未保存，返回后将丢失所有修改。") },
+            title = { Text("放弃未保存的修改？") },
+            text = { Text("返回后，本次未导入的修改将丢失。") },
             confirmButton = {
                 TextButton(onClick = {
                     showBackConfirmDialog = false
                     onBack()
-                }) { Text("返回") }
+                }) { Text("放弃并返回") }
             },
             dismissButton = {
                 TextButton(onClick = { showBackConfirmDialog = false }) { Text("继续编辑") }
@@ -355,7 +355,7 @@ private fun ImportItemCard(
                     }
                     if (isValid) {
                         Surface(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), shape = MaterialTheme.shapes.small) {
-                            Text("已完善", Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            Text("可导入", Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                         }
                     }
@@ -365,10 +365,10 @@ private fun ImportItemCard(
             Text(item.name, style = if (floating) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold)
             Text("源订单 ${item.originalItem.orderId} · 第 ${item.sourceUnitIndex + 1}/${item.originalItem.quantity} 件", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("原商品金额列：¥${item.originalItem.price}；原数量：${item.originalItem.quantity}。下方金额均为本件分配，允许核对后修改。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("源金额 ¥${item.originalItem.price} · 数量 ${item.originalItem.quantity}；下方为本件分摊金额。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-            if (item.name != item.originalItem.name) Text("原商品：${item.originalItem.name}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("付款类型 · 识别有误可直接修改", style = MaterialTheme.typography.labelMedium)
+            if (item.name != item.originalItem.name) com.lolita.app.ui.screen.common.ExpandableInfo("原商品名称") { Text(item.originalItem.name, style = MaterialTheme.typography.bodySmall) }
+            Text("付款类型", style = MaterialTheme.typography.labelMedium)
             FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 FilterChip(
                     selected = item.paymentRole == null,
@@ -423,7 +423,7 @@ private fun ImportItemCard(
                         onValueChange = { v ->
                             onUpdate { it.copy(priceInput = v, price = v.toDoubleOrNull() ?: Double.NaN) }
                         },
-                        label = { Text(if (floating) "本件尾款金额" else "尾款商品金额（本件）") },
+                        label = { Text(if (floating) "本件尾款金额" else "尾款金额") },
                         modifier = Modifier.weight(1f),
                         singleLine = true,
                         prefix = { Text("¥") }
@@ -431,7 +431,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = item.purchaseDate,
                         onValueChange = { v -> onUpdate { it.copy(purchaseDate = v) } },
-                        label = { Text(if (floating) "实际付款日期" else "实际付款日期（核对）") },
+                        label = { Text(if (floating) "实际付款日期" else "实际付款日期") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
@@ -447,8 +447,8 @@ private fun ImportItemCard(
                         onValueChange = { v ->
                             onUpdate { it.copy(priceInput = v, price = v.toDoubleOrNull() ?: Double.NaN) }
                         },
-                        label = { Text(if (floating) { if (item.paymentRole == PaymentRole.DEPOSIT) "本件定金金额" else "本件商品金额" }
-                            else if (item.paymentRole == PaymentRole.DEPOSIT) "定金商品金额（本件）" else "商品金额（本件优惠后）") },
+                        label = { Text(if (floating) { if (item.paymentRole == PaymentRole.DEPOSIT) "本件定金金额" else "本件金额" }
+                            else if (item.paymentRole == PaymentRole.DEPOSIT) "定金金额" else "本件金额") },
                         modifier = Modifier.weight(1f),
                         singleLine = true,
                         prefix = { Text("¥") }
@@ -456,7 +456,7 @@ private fun ImportItemCard(
                     OutlinedTextField(
                         value = item.purchaseDate,
                         onValueChange = { v -> onUpdate { it.copy(purchaseDate = v) } },
-                        label = { Text(if (floating) "实际付款日期" else "实际付款日期（核对）") },
+                        label = { Text(if (floating) "实际付款日期" else "实际付款日期") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
@@ -518,7 +518,7 @@ private fun ImportItemCard(
                                         .format(java.util.Date(it))
                                 } ?: "",
                                 onValueChange = {},
-                                label = { Text(if (floating) "尾款应付日期" else "尾款应付日期（可待定）") },
+                                label = { Text(if (floating) "尾款应付日期" else "尾款应付日期") },
                                 placeholder = { Text("日期待定") },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,

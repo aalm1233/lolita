@@ -62,10 +62,10 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                 }, enabled = !state.saving && state.summary != null) { Text(if (state.limitCents == null) "设置" else "修改") }
             }) { row {
                 Text(state.limitCents?.let(::budgetMoney) ?: "尚未设置预算", style = MaterialTheme.typography.headlineSmall)
-                Text("每月单独设置，可设为 0；取消预算后保留付款记录。", style = MaterialTheme.typography.bodySmall)
+
             } } }
             state.summary?.let { summary ->
-                item { LolitaSection("本月付款压力") {
+                item { LolitaSection("本月付款") {
                     row { BudgetAmount("本月已录实付", summary.paidCents) }
                     row { BudgetAmount("本月剩余待付", summary.pendingCents) }
                     row { BudgetAmount("此前剩余待付", summary.earlierPendingCents) }
@@ -74,7 +74,7 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                         Text(if (remaining == null) "设置预算后可查看预计余额" else if (remaining < 0) "预计超支 ${budgetMoney(-remaining)}" else "预计余额 ${budgetMoney(remaining)}",
                             style = MaterialTheme.typography.titleMedium,
                             color = if (remaining != null && remaining < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
-                        Text("预计余额 = 预算 − 本月实付 − 本月待付 − 此前待付。实付按实际付款日期归月，待付只计算当前跟踪订单的剩余阶段。", style = MaterialTheme.typography.bodySmall)
+                        com.lolita.app.ui.screen.common.ExpandableInfo("计算方式") { Text("预计余额 = 预算 − 本月实付 − 本月待付 − 此前待付。实付按实际付款日期归月，待付只计算当前跟踪订单的剩余阶段。", style = MaterialTheme.typography.bodySmall) }
                     }
                 } }
                 if (summary.undatedPendingCents > 0 || summary.undatedPaidCents != 0L) item {
@@ -101,6 +101,7 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
     if (editing && state.showMoney) AlertDialog(onDismissRequest = { if (!state.saving) editing = false },
         title = { Text("设置 ${state.month.monthValue} 月预算") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                Text("每月单独设置，可设为 0；取消预算后保留付款记录。", style = MaterialTheme.typography.bodySmall)
                 OutlinedTextField(value = input, onValueChange = { input = it }, label = { Text("预算金额（元）") }, singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), enabled = !state.saving)
                 state.error?.let { Text(it, color = MaterialTheme.colorScheme.error) }

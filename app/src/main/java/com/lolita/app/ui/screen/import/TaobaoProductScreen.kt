@@ -50,7 +50,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
         Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding()) {
             if (state.url == null) {
                 Column(Modifier.verticalScroll(scroll).padding(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                    LolitaSection("分享商品") {
+                    LolitaSection("粘贴商品链接") {
                         row { Text("复制淘宝商品分享内容，在这里粘贴。首次读取可能需要在网页登录淘宝。") }
                         row { OutlinedTextField(value = state.input, onValueChange = vm::input, label = { Text("分享内容或商品链接") }, modifier = Modifier.fillMaxWidth(), minLines = 3) }
                         row { Button(onClick = vm::open, enabled = state.input.isNotBlank()) { Text("打开商品网页") } }
@@ -99,7 +99,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                         row { Text(draft.name, style = MaterialTheme.typography.titleMedium) }
                         row { Text("品牌：${draft.brand.ifBlank { "待填写" }}") }
                         row { Text("类别：${draft.category.ifBlank { "待填写" }}${if (draft.categoryCandidates.size > 1) "（商品含多种款式，请核对）" else ""}") }
-                        row { Text("可导入 ${draft.remoteImages.size} 张主图，${draft.remoteDetailImages.size} 张详情图将按原图放入尺码表；颜色标签可在编辑时补充。") }
+                        row { Text("将导入 ${draft.remoteImages.size} 张商品图和 ${draft.remoteDetailImages.size} 张资料图。") }
                     }
                     if (state.batchTotal == 0 && draft.skuVariants.orEmpty().isNotEmpty()) {
                         LolitaSection("分别导入") {
@@ -107,11 +107,11 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                                 Row(Modifier.fillMaxWidth().toggleable(state.splitSkuVariants,
                                     enabled = !state.busy, role = Role.Switch, onValueChange = vm::splitSkuVariants),
                                     verticalAlignment = Alignment.CenterVertically) {
-                                    Text("按颜色和尺码分别导入", Modifier.weight(1f).padding(end = skin.spacingMedium))
+                                    Text("按颜色与尺码", Modifier.weight(1f).padding(end = skin.spacingMedium))
                                     Switch(checked = state.splitSkuVariants, onCheckedChange = null, enabled = !state.busy)
                                 }
                             }
-                            row { Text("每个勾选组合保存一件，同一颜色可选多个尺码；规格原文可在编辑时核对。") }
+                            row { Text("每个勾选组合保存一件物品，同色可选多个尺码。") }
                         }
                     } else if (state.batchTotal == 0 && draft.variants.orEmpty().isEmpty() && draft.colorVariants.orEmpty().size > 1) {
                         LolitaSection("分别导入") {
@@ -119,7 +119,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                                 Row(Modifier.fillMaxWidth().toggleable(state.splitColorVariants,
                                     enabled = !state.busy, role = Role.Switch,
                                     onValueChange = vm::splitColorVariants), verticalAlignment = Alignment.CenterVertically) {
-                                    Text("按颜色分类分别导入", Modifier.weight(1f).padding(end = skin.spacingMedium))
+                                    Text("按颜色分类", Modifier.weight(1f).padding(end = skin.spacingMedium))
                                     Switch(checked = state.splitColorVariants, onCheckedChange = null, enabled = !state.busy)
                                 }
                             }
@@ -159,9 +159,9 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                             if (state.paused) row { Text("当前物品尚未保存，可以继续核对。退出会结束剩余导入，已保存物品会保留。") }
                         }
                     }
-                    LolitaSection("商品参数") { row { Text(draft.properties) } }
-                    LolitaSection("报价与来源说明") { row { Text(draft.description) } }
-                    Text("进入编辑后核对品牌、分类和图片。参考报价存入来源说明。保存后到服饰详情的“录入价格”使用报价并确认订单；实付另行记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    LolitaCard { ExpandableInfo("商品参数") { Text(draft.properties) } }
+                    LolitaCard { ExpandableInfo("报价与来源说明") { Text(draft.description) } }
+                    Text("编辑时核对资料。参考报价可在物品详情录价时采用，实付另行记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Button(onClick = { if (state.completed) onBack() else vm.edit(onEdit) },
                     enabled = !state.busy && (state.batchTotal > 0 || !requiresSelection || selectedCount > 0), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {

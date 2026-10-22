@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.look
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
@@ -43,13 +45,13 @@ class LookBuilderViewModel(
         _state.value = LookBuilderState()
         loadJob = viewModelScope.launch {
         try {
-            val target = recommendations.getItemById(id) ?: error("服饰不存在")
+            val target = recommendations.getItemById(id) ?: error("物品不存在")
             require(target.status == com.lolita.app.data.local.entity.ItemStatus.OWNED) { "请选择已拥有的服饰作为主件" }
             val groups = FullLookEngine.build(target, recommendations.getOwnedItemsExcluding(id), categories.getAllCategories().first(), recommendations.getCoOccurringItemIds(id))
             _state.value = LookBuilderState(target, groups, LookSelection.initial(groups), loading = false)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            _state.update { it.copy(loading = false, error = e.message ?: "加载失败") }
+            _state.update { it.copy(loading = false, error = uiErrorText(e, "加载失败")) }
         }
     }
     }
@@ -77,7 +79,7 @@ class LookBuilderViewModel(
                 _state.update { it.copy(saving = false, savedId = id) }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _state.update { it.copy(saving = false, error = e.message ?: "保存失败") }
+                _state.update { it.copy(saving = false, error = uiErrorText(e, "保存失败")) }
             }
         }
     }

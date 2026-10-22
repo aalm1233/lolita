@@ -169,11 +169,11 @@ class TryOnScreenTest {
             compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasContentDescription(description))
             compose.onNodeWithContentDescription(description).performClick()
         }
-        choose("选择服饰：心愿鞋");choose("选择服饰：心愿袜")
+        choose("选择物品：心愿鞋");choose("选择物品：心愿袜")
         compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("已拥有",substring=false))
         compose.onNodeWithText("已拥有",substring=false).performClick()
         assertEquals(listOf(13L,14L),vm.uiState.value.selected.map {it.itemId})
-        compose.onNodeWithText("全部状态").performClick();choose("选择服饰：月光裙")
+        compose.onNodeWithText("全部状态").performClick();choose("选择物品：月光裙")
         val output=File(instrumentation.targetContext.filesDir,"tryon-wishlist-shoes-screens").apply {mkdirs()}
         // Dialog owns an Android window: pair native night mode with the requested
         // visual pass instead of mixing a light parent theme and a dark window.
@@ -184,32 +184,32 @@ class TryOnScreenTest {
         }
         for(skin in SkinType.entries)for(dark in darkModes) {
             compose.runOnIdle {presentation.value=Presentation(width=360,scale=1f,skin=skin,dark=dark)}
-            compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed()
+            compose.onNodeWithText("完成（3 件）").assertIsDisplayed()
             compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("全部状态"))
             instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
                 File(output,"${skin.name.lowercase()}-${if(dark)"dark" else "light"}-options.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
             }
-            compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasContentDescription("已选服饰：心愿鞋"))
+            compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasContentDescription("已选物品：心愿鞋"))
             instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
                 File(output,"${skin.name.lowercase()}-${if(dark)"dark" else "light"}.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
             }
         }
         compose.runOnIdle {presentation.value=Presentation(width=320,scale=2f,dark=darkModes.last())}
-        compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithText("完成（3 件）").assertIsDisplayed().assertIsEnabled()
         instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
             File(output,"small-320dp-2x.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
         }
-        compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("搜索服饰名称"))
-        compose.onNodeWithText("搜索服饰名称").performClick().performTextInput("心愿袜")
+        compose.onNodeWithTag("tryOnPicker").performScrollToNode(hasText("搜索物品名称"))
+        compose.onNodeWithText("搜索物品名称").performClick().performTextInput("心愿袜")
         compose.waitUntil(5_000) {
             instrumentation.uiAutomation.windows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD }
         }
-        compose.onNodeWithText("完成搭配选择（3件）").assertIsDisplayed()
+        compose.onNodeWithText("完成（3 件）").assertIsDisplayed()
         instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
             File(output,"small-320dp-2x-keyboard.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
         }
         instrumentation.sendKeyDownUpSync(android.view.KeyEvent.KEYCODE_BACK)
-        compose.onNodeWithText("完成搭配选择（3件）").performClick()
+        compose.onNodeWithText("完成（3 件）").performClick()
         assertEquals(listOf(TryOnRole.SHOES,TryOnRole.HOSIERY,TryOnRole.MAIN),vm.uiState.value.selected.map {it.role})
         assertNull(vm.uiState.value.selectionIssue)
     }
@@ -221,26 +221,26 @@ class TryOnScreenTest {
         val output = File(instrumentation.targetContext.filesDir, "try-on-physics-screens").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
-            workspace("穿戴要求（选填）")
+            workspace("穿戴要求")
             compose.onNodeWithTag("tryOnInstructions").performTextClearance()
             compose.onNodeWithTag("tryOnInstructions").performTextInput("BNT 戴靠后，露出刘海；衬衫掖进裙腰。")
-            compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
             compose.runOnIdle { keyboard?.hide() }
             compose.waitForIdle()
-            workspace("穿戴要求（选填）")
+            workspace("穿戴要求")
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
         compose.runOnIdle { presentation.value = Presentation(width = 320, scale = 2f, skin = SkinType.VICTORIAN, dark = true) }
-        workspace("补充穿戴描述")
+        workspace("补充穿戴要求")
         compose.onNodeWithTag("tryOnInstructions").performClick()
         compose.onNodeWithTag("tryOnInstructions").performTextInput(" ")
         compose.waitForIdle()
-        compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
         val ime = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
         File(output, "small-large-font-keyboard.png").outputStream().use { ime.compress(Bitmap.CompressFormat.PNG, 100, it) }
         compose.runOnIdle { keyboard?.hide() }
-        compose.onNodeWithText("生成一张试衣图").performClick()
+        compose.onNodeWithText("生成试衣图").performClick()
         compose.onNodeWithTag("tryOnConfirmedInstructions").performScrollTo().assertTextContains("BNT 戴靠后，露出刘海；衬衫掖进裙腰。", substring = true)
         compose.onNodeWithText("确认并加入任务").assertIsDisplayed().assertHasClickAction()
         val dialog = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
@@ -258,11 +258,11 @@ class TryOnScreenTest {
         show()
         workspace("从衣橱选择")
         compose.onNodeWithText("从衣橱选择").performClick()
-        compose.onNodeWithContentDescription("选择服饰：月光裙").performClick()
-        compose.onNodeWithText("搜索服饰名称").performTextInput("蝴蝶")
+        compose.onNodeWithContentDescription("选择物品：月光裙").performClick()
+        compose.onNodeWithText("搜索物品名称").performTextInput("蝴蝶")
         compose.onNodeWithText("头饰", substring = false).performClick()
-        compose.onNodeWithContentDescription("选择服饰：蝴蝶结").assertIsDisplayed()
-        compose.onNodeWithText("完成搭配选择（1件）").performClick()
+        compose.onNodeWithContentDescription("选择物品：蝴蝶结").assertIsDisplayed()
+        compose.onNodeWithText("完成（1 件）").performClick()
         assertEquals(listOf(11L), vm.uiState.value.selected.map { it.itemId })
         workspace("更换参考图片")
         compose.onNodeWithText("更换参考图片").performClick()
@@ -277,7 +277,7 @@ class TryOnScreenTest {
     @Test fun missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection() {
         compose.runOnIdle { vm.toggleItem(11) }
         show()
-        compose.onNodeWithText("配置 API Key").performClick()
+        compose.onNodeWithText("配置服务密钥").performClick()
         workspace("API 配置")
         compose.onNodeWithText("API 配置").performClick()
         assertEquals(2, configured)
@@ -293,7 +293,7 @@ class TryOnScreenTest {
             compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
             workspace("从衣橱选择")
             compose.onNodeWithText("从衣橱选择").assertIsDisplayed().assertHasClickAction()
-            compose.onNodeWithText("配置 API Key").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("配置服务密钥").assertIsDisplayed().assertIsEnabled()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -307,7 +307,7 @@ class TryOnScreenTest {
         for ((skin, dark) in listOf(SkinType.DEFAULT to false, SkinType.VICTORIAN to true)) {
             compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
             workspace("本次试衣人物")
-            compose.onNodeWithText("配置 API Key").assertIsDisplayed()
+            compose.onNodeWithText("配置服务密钥").assertIsDisplayed()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
             File(output, "normal-${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -387,7 +387,7 @@ class TryOnScreenTest {
         show()
         compose.onNodeWithTag("tryOnUploadSummary").assertIsDisplayed().assertTextContains("9 张", substring = true)
         compose.onNodeWithTag("tryOnUploadSummary").assertTextContains("计费", substring = true)
-        compose.onNodeWithText("生成一张试衣图").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
     }
 
     private data class Presentation(val width: Int = 320, val scale: Float = 2f,

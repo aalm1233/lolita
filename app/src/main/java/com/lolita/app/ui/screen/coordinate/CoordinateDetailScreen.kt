@@ -408,24 +408,6 @@ private fun CoordinateInfoCard(
                 )
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(
-                        "服饰: $itemCount 件",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                    )
-                }
-            }
-
             // Price summary
             if (totalPrice > 0) {
                 SectionHeader(title = "价格汇总")
@@ -434,7 +416,7 @@ private fun CoordinateInfoCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "总价",
+                        "订单总价合计",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -638,7 +620,7 @@ private fun StatusBadge(status: ItemStatus) {
         Text(
             text = when (status) {
                 ItemStatus.OWNED -> "已拥有"
-                ItemStatus.WISHED -> "愿望单"
+                ItemStatus.WISHED -> "心愿"
                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                         ItemStatus.PENDING_PAYMENT -> "待付款"
                         ItemStatus.PENDING_REVIEW -> "待核对"
@@ -684,7 +666,7 @@ private fun ItemPickerContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("选择服饰", style = MaterialTheme.typography.titleMedium)
+            Text("选择物品", style = MaterialTheme.typography.titleMedium)
             SkinClickableBox(onClick = onConfirm) {
                 Surface(
                     color = MaterialTheme.colorScheme.primary,
@@ -707,7 +689,7 @@ private fun ItemPickerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 4.dp),
-            placeholder = { Text("搜索服饰...") },
+            placeholder = { Text("搜索物品...") },
             leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) },
             singleLine = true
         )
@@ -722,7 +704,7 @@ private fun ItemPickerContent(
             if (filteredItems.isEmpty()) {
                 item {
                     Text(
-                        if (searchQuery.isBlank()) "暂无服饰" else "未找到匹配的服饰",
+                        if (searchQuery.isBlank()) "暂无服饰" else "没有符合条件的物品",
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

@@ -83,7 +83,7 @@ fun ColorSelector(
 
     Column(modifier = modifier) {
         Text(
-            text = "颜色 (可选)",
+            text = "颜色",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

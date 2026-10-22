@@ -22,13 +22,13 @@ fun UnsavedChangesHandler(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("确认返回") },
-            text = { Text("有未保存的修改，确定要返回吗？") },
+            title = { Text("放弃未保存的修改？") },
+            text = { Text("返回后，本次未保存的修改将丢失。") },
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
                     onBack()
-                }) { Text("返回") }
+                }) { Text("放弃并返回") }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) { Text("继续编辑") }

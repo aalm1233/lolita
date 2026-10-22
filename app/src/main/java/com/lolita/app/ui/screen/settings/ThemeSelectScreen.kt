@@ -146,7 +146,7 @@ private fun SkinPreviewCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Lolita Fashion",
+                text = "我的衣橱 Lolita",
                 fontFamily = skin.fontFamily,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
@@ -181,11 +181,7 @@ private fun SkinPreviewCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = skin.topBarDecoration,
-                fontSize = 20.sp,
-                color = skin.lightColorScheme.primary.copy(alpha = 0.6f)
-            )
+
 
             if (isSelected) {
                 Spacer(modifier = Modifier.height(4.dp))

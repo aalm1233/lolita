@@ -44,7 +44,7 @@ fun SizeSelector(
             OutlinedTextField(
                 enabled = enabled,
                 value = selectedSize.orEmpty(), onValueChange = {}, readOnly = true,
-                label = { Text("尺码 (可选)") }, placeholder = { Text("请选择尺码") }, singleLine = true,
+                label = { Text("尺码") }, placeholder = { Text("请选择尺码") }, singleLine = true,
                 trailingIcon = { SkinIcon(if (expanded) IconKey.ExpandLess else IconKey.ExpandMore) },
                 modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled)
             )

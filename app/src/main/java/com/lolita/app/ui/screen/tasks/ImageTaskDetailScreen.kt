@@ -51,8 +51,10 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                     Spacer(Modifier.height(skin.spacingMedium))
                     Text("${task.displayTypeLabel} · ${task.provider.label}", style = MaterialTheme.typography.bodyMedium)
                     TaskStage(task)
-                    Text("创建于 ${formatTaskDate(task.createdAt)}", style = MaterialTheme.typography.bodySmall)
-                    Text("更新于 ${formatTaskDate(task.updatedAt)}", style = MaterialTheme.typography.bodySmall)
+                    ExpandableInfo("记录时间") {
+                        Text("创建于 ${formatTaskDate(task.createdAt)}", style = MaterialTheme.typography.bodySmall)
+                        Text("更新于 ${formatTaskDate(task.updatedAt)}", style = MaterialTheme.typography.bodySmall)
+                    }
                     val request = remember(task.requestJson) { runCatching { ImageTaskRequest.decode(task.requestJson) }.getOrNull() }
                     request?.let {
                         if (it.garments.isNotEmpty()) Text(it.garments.joinToString("、") { row -> row.name }, Modifier.padding(top = skin.spacingSmall))
@@ -73,7 +75,6 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                         LolitaShimmerImage(model = path, contentDescription = "放大生成结果", contentScale = ContentScale.Fit,
                             modifier = Modifier.fillMaxWidth().heightIn(min = 220.dp, max = 440.dp).aspectRatio(0.75f).skinClickable { zoom = true }, circularRevealEnabled = false)
                     }
-                    Text("点击图片放大核对", Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
                 } } }
                 else if (task.status in setOf(ImageTaskStatus.COMPLETED, ImageTaskStatus.AWAITING_CONFIRMATION)) item("missing-result") {
                     Text(if (task.status == ImageTaskStatus.COMPLETED && task.kind == ImageTaskKind.SINGLE_ITEM_MATERIAL && task.materialId == null) "主视图已用于后续分层，请在任务中心查看分层任务。" else if (task.status == ImageTaskStatus.COMPLETED && task.kind == ImageTaskKind.PERSONAL_MODEL) "已保存的个人模特已删除或底图已丢失。任务记录仍保留。" else if (task.status == ImageTaskStatus.COMPLETED) "原结果已删除或图片已丢失。任务记录仍保留。" else "预览图片已丢失，可舍弃后重新发起。")
@@ -145,6 +146,6 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
             confirmButton = { TextButton(onClick = {
                 confirmation = null
                 when (action) { "save-personal" -> viewModel.confirmPersonal(taskId, makeDefault); "append" -> viewModel.confirm(taskId); "discard" -> viewModel.discard(taskId); "cancel" -> viewModel.cancel(taskId); else -> viewModel.delete(taskId) }
-            }, enabled = !busy) { Text("确认") } }, dismissButton = { TextButton(onClick = { confirmation = null }) { Text("返回核对") } })
+            }, enabled = !busy) { Text(when (action) { "save-personal" -> "确认保存模特"; "append" -> "确认添加到相册"; "discard" -> "确认舍弃"; "cancel" -> "确认停止等待"; else -> "确认删除记录" }) } }, dismissButton = { TextButton(onClick = { confirmation = null }) { Text("返回核对") } })
     }
 }

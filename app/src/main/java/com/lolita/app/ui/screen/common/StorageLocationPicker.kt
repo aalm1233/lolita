@@ -50,7 +50,7 @@ fun StorageLocationPicker(
     }
     pending?.let { target ->
         AlertDialog(onDismissRequest = { pending = null },
-            title = { Text("更换房间并清除原收纳位置？") },
+            title = { Text("更换房间并清除原层格？") },
             text = { Text("原柜架和层格属于其他房间。本次将使用新选择的位置。") },
             confirmButton = { TextButton(onClick = {
                 onLocationSelected(target.first, target.second)

@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.settings
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -73,7 +75,7 @@ class SourceManageViewModel(
                 sourceRepository.insertSource(Source(name = name.trim(), isPreset = false))
                 hideAddDialog()
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(errorMessage = "添加失败：来源名称已存在")
+                _uiState.value = _uiState.value.copy(errorMessage = "该来源名称已存在")
             }
         }
     }
@@ -93,7 +95,7 @@ class SourceManageViewModel(
                 hideDeleteConfirm()
             } catch (e: Exception) {
                 hideDeleteConfirm()
-                _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "删除失败")
+                _uiState.value = _uiState.value.copy(errorMessage = uiErrorText(e, "删除失败"))
             }
         }
     }
@@ -117,7 +119,7 @@ class SourceManageViewModel(
                 hideEditDialog()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "重命名失败：来源名称已存在"
+                    errorMessage = "该来源名称已存在"
                 )
             }
         }
@@ -170,14 +172,8 @@ fun SourceManageScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Text("来源列表", style = MaterialTheme.typography.titleLarge)
-            }
-            item {
-                HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-            }
             if (uiState.sources.isEmpty()) {
-                item { SkinEmptyState(iconKey = IconKey.Apps, title = "暂无来源") }
+                item { SkinEmptyState(iconKey = IconKey.Apps, title = "尚未添加来源") }
             } else {
                 items(uiState.sources, key = { it.id }) { source ->
                     SourceCard(source = source, onEdit = { viewModel.showEditDialog(source) }, onDelete = { viewModel.showDeleteConfirm(source) })
@@ -197,7 +193,7 @@ fun SourceManageScreen(
         AlertDialog(
             onDismissRequest = { viewModel.hideDeleteConfirm() },
             title = { Text("确认删除") },
-            text = { Text("确定要删除来源 \"${uiState.showDeleteConfirm?.name}\" 吗？") },
+            text = { Text("删除后，将从关联物品中移除来源「${uiState.showDeleteConfirm?.name}」，物品记录保留。") },
             confirmButton = {
                 TextButton(
                     onClick = { uiState.showDeleteConfirm?.let { viewModel.deleteSource(it) } },

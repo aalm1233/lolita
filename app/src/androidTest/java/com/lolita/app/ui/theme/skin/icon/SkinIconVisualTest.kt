@@ -321,7 +321,7 @@ class SkinIconVisualTest {
     )
 
     private val keyLabels = mapOf(
-        IconKey.Home to "首页", IconKey.Wishlist to "愿望单", IconKey.Outfit to "穿搭",
+        IconKey.Home to "首页", IconKey.Wishlist to "心愿", IconKey.Outfit to "穿搭",
         IconKey.Stats to "统计", IconKey.Settings to "设置", IconKey.Add to "添加",
         IconKey.Delete to "删除", IconKey.Edit to "编辑", IconKey.Search to "搜索",
         IconKey.Sort to "排序", IconKey.Save to "保存", IconKey.Close to "关闭",

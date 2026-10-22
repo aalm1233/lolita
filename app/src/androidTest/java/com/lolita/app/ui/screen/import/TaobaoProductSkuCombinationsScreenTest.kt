@@ -94,7 +94,7 @@ class TaobaoProductSkuCombinationsScreenTest {
     }
     private fun choose(name: String) = compose.onNodeWithContentDescription("选择规格：$name").performScrollTo().performClick()
     private fun startTwo() {
-        compose.onNodeWithText("按颜色和尺码分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色与尺码").performScrollTo().performClick()
         compose.onNodeWithText("请至少选择一个组合").assertIsNotEnabled()
         choose("黑色 · S"); choose("白色 · M")
         compose.onNodeWithText("核对并逐件编辑（2件）").assertIsEnabled()
@@ -123,9 +123,9 @@ class TaobaoProductSkuCombinationsScreenTest {
         compose.onNodeWithText("清空搜索").performScrollTo().performClick()
         choose("黑色 · S")
         compose.onNodeWithText("核对并逐件编辑（2件）").assertIsEnabled()
-        compose.onNodeWithText("按颜色和尺码分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色与尺码").performScrollTo().performClick()
         compose.onNodeWithText("核对并进入服饰编辑").assertIsEnabled()
-        compose.onNodeWithText("按颜色和尺码分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色与尺码").performScrollTo().performClick()
         choose("黑色 · S")
         assertEquals(setOf("sku-0-0", "sku-0-1", "sku-1-1"), vm.state.value.selectedVariantIds)
         assertEquals("36.50", vm.state.value.draft!!.skuVariants.orEmpty()[0].referenceQuote?.amount)

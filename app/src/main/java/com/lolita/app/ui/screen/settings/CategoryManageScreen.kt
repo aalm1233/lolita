@@ -30,7 +30,7 @@ fun CategoryManageScreen(onBack: () -> Unit, viewModel: CategoryManageViewModel 
     }, floatingActionButton = { FloatingActionButton(onClick = viewModel::showAddDialog) { SkinIcon(IconKey.Add) } },
         snackbarHost = { SnackbarHost(snackbar) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding).padding(LolitaSkin.current.spacingLarge), verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.cardGap)) {
-            item { Text("品类独立于名称。旧类型需确认语义后才使用对应生成规则。", style = MaterialTheme.typography.bodyMedium) }
+            item { Text("类型决定试衣和展示方式，改名不会改变类型。", style = MaterialTheme.typography.bodyMedium) }
             items(state.categories, key = { it.id }) { category -> LolitaCard(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
@@ -54,7 +54,7 @@ fun CategoryManageScreen(onBack: () -> Unit, viewModel: CategoryManageViewModel 
         confirmButton = { TextButton(onClick = { viewModel.deleteCategory(category) }) { Text("删除") } },
         dismissButton = { TextButton(onClick = viewModel::hideDeleteConfirm) { Text("取消") } }) }
     state.pendingSemanticChange?.let { category -> AlertDialog(onDismissRequest = viewModel::cancelSemanticChange,
-        title = { Text("确认统一变更") }, text = { Text("${state.affectedItemCount} 件物品将使用“${category.categorySemantic.label}”及对应穿戴位置。原规格、图片和订单完整保留。") },
+        title = { Text("更改关联物品的类型？") }, text = { Text("${state.affectedItemCount} 件物品将使用“${category.categorySemantic.label}”及对应穿戴位置。原规格、图片和订单完整保留。") },
         confirmButton = { TextButton(onClick = viewModel::confirmSemanticChange) { Text("确认变更") } },
         dismissButton = { TextButton(onClick = viewModel::cancelSemanticChange) { Text("取消") } }) }
 }
@@ -72,7 +72,7 @@ private fun CategoryDialog(category: Category?, onDismiss: () -> Unit, onSave: (
             Row(Modifier.horizontalScroll(rememberScrollState())) { WardrobeFamily.entries.forEach { value ->
                 FilterChip(selected = family == value, onClick = { family = value }, label = { Text(value.label) })
             } }
-            OutlinedTextField(query, { query = it }, label = { Text("搜索语义类型") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, singleLine = true, modifier = Modifier.fillMaxWidth())
             LazyColumn(Modifier.heightIn(max = 150.dp)) { items(CategorySemantic.entries.filter { it.family == family && it.label.contains(query, true) }) { candidate ->
                 TextButton(onClick = { semantic = candidate; role = null }) { Text("${if (semantic == candidate) "✓ " else ""}${candidate.label}") }
             } }

@@ -60,7 +60,7 @@ fun PersonalModelEditScreen(
     LaunchedEffect(state.taskId) { state.taskId?.let(onTask) }
     LaunchedEffect(state.discarded) { if (state.discarded) onBack() }
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = {
-        GradientTopAppBar(title = { Text("捏模特") }, navigationIcon = {
+        GradientTopAppBar(title = { Text("创建模特") }, navigationIcon = {
             IconButton(onClick = exit, enabled = canExit) { SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" }) }
         })
     }, bottomBar = {
@@ -75,7 +75,7 @@ fun PersonalModelEditScreen(
                 Button(onClick = { if (!state.hasKey) onConfigureApi() else confirm = state.provider }, enabled = if (state.hasKey) state.canGenerate else !state.isLoading && !state.loadFailed && !state.busy && state.keyLoaded,
                     modifier = Modifier.fillMaxWidth().testTag("generatePersonalModel")) {
                     if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
-                    Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成模特")
+                    Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置服务密钥" else "生成模特")
                 }
             }
         }
@@ -85,21 +85,15 @@ fun PersonalModelEditScreen(
             if (state.isLoading) item("loading") { LolitaCard { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                 ShimmerLine(widthFraction = .7f, height = 24.dp); ShimmerRect(width = 200.dp, height = 180.dp, modifier = Modifier.fillMaxWidth())
             } } }
-            item("intro") {
-                Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                    Text("从照片或身体参数开始", style = MaterialTheme.typography.titleLarge)
-                    Text("补充想保留的特征，生成一张自然站立、头脚完整的全身模特照。", style = MaterialTheme.typography.bodyMedium)
-                }
-            }
             item("mode") {
                 LolitaSection(title = "创建方式") { row {
                     FlowRow(Modifier.fillMaxWidth().padding(top = skin.spacingMedium), horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                         FilterChip(selected = state.draft.mode == PersonalModelMode.PHOTO, onClick = { viewModel.update { it.copy(mode = PersonalModelMode.PHOTO) } },
-                            enabled = editable, label = { Text("基于照片") })
+                            enabled = editable, label = { Text("照片生成") })
                         FilterChip(selected = state.draft.mode == PersonalModelMode.PARAMETERS, onClick = { viewModel.update { it.copy(mode = PersonalModelMode.PARAMETERS) } },
-                            enabled = editable, label = { Text("仅用参数") })
+                            enabled = editable, label = { Text("参数生成") })
                     }
-                    Text(if (state.draft.mode == PersonalModelMode.PHOTO) "添加脸部照或正面全身照；两种都有，更像你。" else "使用虚拟面容。切换前的本人照片只保留在本机草稿中。", style = MaterialTheme.typography.bodySmall)
+                    Text(if (state.draft.mode == PersonalModelMode.PHOTO) "添加脸部照或正面全身照，也可同时提供。" else "使用虚拟面容。切换前的本人照片只保留在本机草稿中。", style = MaterialTheme.typography.bodySmall)
                 } }
             }
             if (state.draft.mode == PersonalModelMode.PHOTO) {
@@ -193,7 +187,7 @@ fun PersonalModelEditScreen(
             item("service") {
                 LolitaSection(title = "图像服务 · ${state.provider.label}", action = { TextButton(onClick = { onConfigureApi() }, enabled = !state.busy && state.keyLoaded) { Text("API 配置") } }) { row {
                     ImageServiceSelector(state.provider, enabled = editable && state.keyLoaded, onSelect = viewModel::selectProvider)
-                    Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key", style = MaterialTheme.typography.bodySmall)
+                    Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "服务密钥已配置" else "尚未配置服务密钥", style = MaterialTheme.typography.bodySmall)
                     Text("生成结果会保留在任务中心，确认满意后才加入模特库。", style = MaterialTheme.typography.bodySmall)
                 } }
             }

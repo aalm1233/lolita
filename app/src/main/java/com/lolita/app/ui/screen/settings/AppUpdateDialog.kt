@@ -67,7 +67,7 @@ internal fun AppUpdateDialog(
                     update != null -> {
                         Text("最新发布：v${update.release.versionName}")
                         if (hasUpdate) {
-                            Text(if (downloadUrl != null) "在浏览器中下载 APK 后覆盖安装。" else "请前往发布页选择安装包下载。")
+                            Text(if (downloadUrl != null) "在浏览器中下载安装包 后覆盖安装。" else "请前往发布页选择安装包下载。")
                         }
                         SectionHeader("本版更新")
                         val notes = update.release.releaseNotes.takeIf { it.isNotBlank() }
@@ -91,9 +91,9 @@ internal fun AppUpdateDialog(
                 state.isChecking -> TextButton(onClick = {}, enabled = false) { Text("检查中") }
                 state.error != null -> TextButton(onClick = onRetry) { Text("重试") }
                 hasUpdate -> TextButton(onClick = { onOpenUrl(downloadUrl ?: releaseUrl) }) {
-                    Text(if (downloadUrl != null) "下载 APK" else "查看发布页")
+                    Text(if (downloadUrl != null) "下载安装包" else "查看发布页")
                 }
-                else -> TextButton(onClick = onDismiss) { Text("知道了") }
+                else -> TextButton(onClick = onDismiss) { Text("关闭") }
             }
         },
         dismissButton = {

@@ -138,7 +138,16 @@ fun WishlistAnalysisContent(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    WishlistAnalysisBody(uiState, modifier, viewModel::selectPriority, onNavigateToFilteredList)
+}
 
+@Composable
+internal fun WishlistAnalysisBody(
+    uiState: WishlistAnalysisUiState,
+    modifier: Modifier = Modifier,
+    onSelectPriority: (Int) -> Unit = {},
+    onNavigateToFilteredList: (String, String, String) -> Unit = { _, _, _ -> }
+) {
     if (uiState.isLoading) {
         val shimmer = rememberShimmer(ShimmerBounds.Window)
         Column(
@@ -179,7 +188,7 @@ fun WishlistAnalysisContent(
     if (uiState.wishedCount == 0 && uiState.ownedCount == 0) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
-                text = "暂无数据",
+                text = "尚无已拥有或心愿物品",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -214,7 +223,7 @@ fun WishlistAnalysisContent(
                 )
                 Column {
                     Text(
-                        text = "愿望单预算",
+                        text = "心愿参考总价",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -237,11 +246,16 @@ fun WishlistAnalysisContent(
             }
         }
 
+        com.lolita.app.ui.screen.common.ExpandableInfo("统计口径") {
+            Text("参考总价仅合计有唯一价格的独立计价心愿物品；未录价不代表免费。", style = MaterialTheme.typography.bodySmall)
+            Text("已拥有占比 = 已拥有数量 ÷ 已拥有与心愿数量合计，不代表心愿达成率。", style = MaterialTheme.typography.bodySmall)
+        }
+
         // Fulfillment progress bar
         StatsProgressBar(
             current = uiState.ownedCount.toDouble(),
             total = (uiState.ownedCount + uiState.wishedCount).toDouble(),
-            label = "已实现 (${uiState.ownedCount}/${uiState.ownedCount + uiState.wishedCount})",
+            label = "已拥有占比 (${uiState.ownedCount}/${uiState.ownedCount + uiState.wishedCount})",
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -265,7 +279,7 @@ fun WishlistAnalysisContent(
                     modifier = Modifier.size(180.dp),
                     centerText = "${uiState.wishedCount}件",
                     selectedIndex = uiState.selectedPriorityIndex,
-                    onSliceClick = { viewModel.selectPriority(it) }
+                    onSliceClick = onSelectPriority
                 )
             }
 

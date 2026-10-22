@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item.recognition
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.ItemEvidence
@@ -71,7 +73,7 @@ class ItemRecognitionViewModel(private val repository: RecognitionRepository=App
     }
     private fun report(failure: Exception) {
         if(failure is CancellationException) throw failure
-        _uiState.update { it.copy(error=failure.message?.take(180) ?: "操作未完成，请重新核对") }
+        _uiState.update { it.copy(error=uiErrorText(failure, "操作未完成，请重新核对")) }
     }
     suspend fun stageRegion(draftId: String,path: String,baseline: Map<RecognitionField,String>,family: WardrobeFamily,appearanceOnly: Boolean): String {
         try { return repository.addRegion(draftId,path,baseline,family,appearanceOnly) }

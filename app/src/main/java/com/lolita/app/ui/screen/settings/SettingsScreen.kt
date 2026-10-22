@@ -168,7 +168,7 @@ fun SettingsScreen(
 
             SettingsMenuItem(
                 title = "属性管理",
-                description = "管理品牌、类型、风格、季节、位置、来源",
+                description = "品牌、类型与收纳等",
                 iconKey = IconKey.Category,
                 iconTint = if (isDark) Color(0xFFB39DDB) else Color(0xFF7E57C2),
                 onClick = onNavigateToAttributeManage
@@ -176,7 +176,7 @@ fun SettingsScreen(
 
             SettingsMenuItem(
                 title = "数据备份与恢复",
-                description = "导出/导入数据，支持 JSON 和 CSV 格式",
+                description = "使用 ZIP 备份记录和图片",
                 iconKey = IconKey.FileOpen,
                 iconTint = if (isDark) Color(0xFF90CAF9) else Color(0xFF64B5F6),
                 onClick = onNavigateToBackupRestore
@@ -243,8 +243,8 @@ fun SettingsScreen(
             )
 
             SettingsToggleItem(
-                title = "显示总价",
-                description = "控制列表价格、消费统计和购买资料提醒",
+                title = "显示金额",
+                description = "显示价格、消费统计和购买资料提醒",
                 iconKey = IconKey.AttachMoney,
                 iconTint = if (isDark) Color(0xFFFFCC80) else Color(0xFFFFB74D),
                 checked = showTotalPrice,

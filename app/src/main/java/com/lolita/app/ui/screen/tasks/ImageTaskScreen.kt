@@ -39,14 +39,13 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
     }) { padding ->
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("imageTasks"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
-            item("new-material-batch"){LolitaSection(title="批量整理试衣素材"){row{
-                Text("一次选多件服饰和小物，统一确认费用，在同一批次查看主视图、分层和保存结果。",style=MaterialTheme.typography.bodySmall)
-                Button(onClick=onNewMaterialBatch,modifier=Modifier.fillMaxWidth()){Text("新建素材批次")}
-            }}}
+            item("new-material-batch") {
+                OutlinedButton(onClick = onNewMaterialBatch, modifier = Modifier.fillMaxWidth()) { Text("新建展示图批次") }
+            }
             item("filters") {
                 FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     ImageTaskFilter.entries.forEach { filter ->
-                        FilterChip(selected = state.filter == filter, onClick = { viewModel.filter(filter) }, label = { Text(filter.label) })
+                        FilterChip(selected = state.filter == filter, onClick = { viewModel.filter(filter) }, label = { Text(filter.label) }, modifier = Modifier.semantics { contentDescription = "任务筛选：${filter.label}" })
                     }
                 }
             }
@@ -55,12 +54,11 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
             }
             state.message?.let { message -> item("operation-message") { Text(message, style = MaterialTheme.typography.bodyMedium) } }
             item("background-advice") { ImageBackgroundAdvice() }
-            item("description") { Text("离开页面后继续处理。人台图与个人模特需核对后保存；重启中断的任务不会自动重新计费。", style = MaterialTheme.typography.bodySmall) }
             if (state.isLoading) item("loading") { LolitaCard { Column { ShimmerLine(0.7f, 18.dp); Spacer(Modifier.height(skin.spacingMedium)); ShimmerLine(0.9f, 14.dp) } } }
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }
             if (!state.isLoading && state.visibleTasks.none{it.batchId==null} && state.visibleMaterialBatches.isEmpty()) item("empty") {
                 LolitaSection(title = "暂无${if (state.filter == ImageTaskFilter.ALL) "" else state.filter.label}任务") { row {
-                    Text("从虚拟试衣、个人模特或物品详情的人台图、小物展示图提交生成后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
+                    Text("从展示图、虚拟试衣或我的模特提交后，可在这里查看进度和结果。", Modifier.padding(top = skin.spacingMedium))
                 } }
             }
             items(state.visibleMaterialBatches,key={requireNotNull(it.first().batchId)}){batch->
@@ -69,8 +67,7 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                     Text("${count}件物品 · ${batch.count{it.status.retainsSourceImages}}个排队或执行 · ${batch.count{it.status==com.lolita.app.domain.model.ImageTaskStatus.AWAITING_CONFIRMATION}}个待核对")
                     val latest=batch.groupBy{it.batchPosition}.values.map{rows->rows.maxWith(compareBy<ImageTask>{it.createdAt}.thenBy{it.id})}
                     Text("${latest.count{it.materialId!=null}}份已确认 · ${latest.count{it.status in setOf(com.lolita.app.domain.model.ImageTaskStatus.FAILED,com.lolita.app.domain.model.ImageTaskStatus.INTERRUPTED,com.lolita.app.domain.model.ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
-                    Text("主视图、透明层与确认素材集中处理，失败项单独重新确认。",style=MaterialTheme.typography.bodySmall)
-                    TextButton(onClick={onOpenMaterialBatch(requireNotNull(batch.first().batchId))},modifier=Modifier.fillMaxWidth()){Text("打开本批任务流")}
+                    TextButton(onClick={onOpenMaterialBatch(requireNotNull(batch.first().batchId))},modifier=Modifier.fillMaxWidth()){Text("查看批次")}
                 }}
             }
             items(state.visibleTasks.filter{it.batchId==null}, key = { it.id }) { task ->
@@ -100,7 +97,7 @@ internal fun TaskStage(task: ImageTask) {
         Text(task.status.label, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
         if (task.status.retainsSourceImages) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            Text("已等待 ${((now - task.createdAt).coerceAtLeast(0) / 1_000)} 秒", style = MaterialTheme.typography.bodySmall)
+            Text("已提交 ${((now - task.createdAt).coerceAtLeast(0) / 1_000)} 秒", style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -109,7 +106,6 @@ internal fun TaskStage(task: ImageTask) {
 fun LatestImageTask(task: ImageTask?, onOpen: () -> Unit) {
     val skin = LolitaSkin.current
     LolitaSection(title = "最近提交的任务") { row {
-        Text("已加入任务，可离开页面", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodyMedium)
         task?.let { TaskStage(it) }
         TextButton(onClick = onOpen, modifier = Modifier.fillMaxWidth()) { Text("查看任务") }
     } }

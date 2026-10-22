@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -101,7 +103,7 @@ class WishlistViewModel(
             try {
                 itemRepository.deleteItem(item)
             } catch (e: Exception) {
-                _errorMessage.value = e.message ?: "删除失败"
+                _errorMessage.value = uiErrorText(e, "删除失败")
             }
         }
     }
@@ -129,7 +131,7 @@ fun WishlistContent(
     deleteError?.let { msg ->
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
-            title = { Text("提示") },
+            title = { Text("操作未完成") },
             text = { Text(msg) },
             confirmButton = {
                 TextButton(onClick = { viewModel.clearError() }) { Text("确定") }
@@ -141,7 +143,7 @@ fun WishlistContent(
         AlertDialog(
             onDismissRequest = { itemToDelete = null },
             title = { Text("确认删除") },
-            text = { Text("确定要从愿望单删除 \"${itemToDelete?.name}\" 吗？") },
+            text = { Text("确定要从心愿删除 \"${itemToDelete?.name}\" 吗？") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -170,7 +172,7 @@ fun WishlistContent(
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.search(it) },
-                placeholder = { Text("搜索愿望单") },
+                placeholder = { Text("搜索心愿") },
                 leadingIcon = { SkinIcon(IconKey.Search) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -202,8 +204,8 @@ fun WishlistContent(
         } else if (uiState.allItems.isEmpty()) {
             SkinEmptyState(
                 iconKey = IconKey.Wishlist,
-                title = "愿望单为空",
-                subtitle = "添加心仪的服饰到愿望单",
+                title = "心愿为空",
+                subtitle = "添加心仪的服饰到心愿",
                 modifier = Modifier.fillMaxSize()
             )
         } else if (uiState.filteredItems.isEmpty()) {
@@ -339,17 +341,7 @@ private fun WishlistItemCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Text(
-                    text = when (item.status) {
-                        ItemStatus.OWNED -> "已拥有"
-                        ItemStatus.WISHED -> "愿望单"
-                        ItemStatus.PENDING_BALANCE -> "待补尾款"
-                        ItemStatus.PENDING_PAYMENT -> "待付款"
-                        ItemStatus.PENDING_REVIEW -> "待核对"
-                    },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.settings
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Season
@@ -71,7 +73,7 @@ class SeasonManageViewModel(
                 hideDeleteConfirm()
             } catch (e: Exception) {
                 hideDeleteConfirm()
-                _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "删除失败")
+                _uiState.value = _uiState.value.copy(errorMessage = uiErrorText(e, "删除失败"))
             }
         }
     }

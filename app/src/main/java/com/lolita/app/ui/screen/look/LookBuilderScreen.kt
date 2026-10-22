@@ -61,8 +61,8 @@ fun LookBuilderScreen(itemId: Long, onBack: () -> Unit, onSaved: (Long) -> Unit,
                 state.error?.let { error -> item { Text(error, color = MaterialTheme.colorScheme.error)
                     TextButton(onClick = { viewModel.load(itemId, force = true) }, enabled = !state.saving) { Text("刷新搭配") }
                 } }
-                state.target?.let { target -> item { LolitaSection(title = "主件 · 固定") { row { LookItem(target) { onItem(target.id) } } } } }
-                item { Text("按衣橱中的已拥有服饰补齐搭配。锁定喜欢的单品后，换一套会保留它；不需要的分类可以跳过。", style = MaterialTheme.typography.bodyMedium) }
+                state.target?.let { target -> item { LolitaSection(title = "固定单品") { row { LookItem(target) { onItem(target.id) } } } } }
+                item { Text("锁定喜欢的单品，再换一套；不需要的类型可以跳过。", style = MaterialTheme.typography.bodyMedium) }
                 if (state.groups.isEmpty() && state.target != null) item { Text("暂时没有可补齐的服饰，也可以把主件保存为套装。") }
                 state.groups.forEach { (slot, options) ->
                     val selected = options.firstOrNull { it.item.id == state.selection.selected[slot] }

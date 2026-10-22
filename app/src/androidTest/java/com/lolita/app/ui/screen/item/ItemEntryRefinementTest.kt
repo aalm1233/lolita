@@ -227,7 +227,7 @@ class ItemEntryRefinementTest {
     }
 
     private fun field(label: String) = compose.onNode(hasSetTextAction() and hasText(label))
-    private fun expandSpecifications() = compose.onNodeWithContentDescription("展开规格与备注").performScrollTo().performClick()
+    private fun expandSpecifications() = compose.onNodeWithContentDescription("展开详细规格").performScrollTo().performClick()
     private fun chooseType(current: String, family: String, row: String) {
         compose.onNodeWithText(current).performScrollTo().performClick()
         compose.onNodeWithText(family, substring = false).performScrollTo().performClick()
@@ -235,22 +235,22 @@ class ItemEntryRefinementTest {
     }
 
     @Test fun foldingAndChangingTypeKeepAllProfilesAndFinancialRelationshipsOnSave() = runBlocking {
-        field("描述与备注（选填）").assertDoesNotExist()
+        field("备注").assertDoesNotExist()
         field("主要发色").assertDoesNotExist()
         compose.onNodeWithText("所属主件：原主件").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("包含在主件价格中，不重复计价，收货状态随主件").assertExists()
+        compose.onNodeWithText("随主件计价，不重复计价，拥有状态随主件").assertExists()
         compose.onNodeWithContentDescription("展开补充资料").performScrollTo().performClick()
-        field("描述与备注（选填）").performScrollTo().assertTextContains("原备注保持完整")
+        field("备注").performScrollTo().assertTextContains("原备注保持完整")
         compose.onNodeWithContentDescription("收起补充资料").performScrollTo().performClick()
         expandSpecifications()
-        field("长度（原单位）").performScrollTo().performTextReplacement("68 cm")
+        field("长度").performScrollTo().performTextReplacement("68 cm")
         chooseType("假发 · 测试假发", "鞋履", "测试鞋履 · 鞋履")
         expandSpecifications()
-        field("鞋码原文").performScrollTo().assertTextContains("37 EU")
+        field("鞋码").performScrollTo().assertTextContains("37 EU")
         chooseType("鞋履 · 测试鞋履", "假发", "测试假发 · 假发")
         expandSpecifications()
-        field("长度（原单位）").performScrollTo().assertTextContains("68 cm")
-        compose.onNodeWithContentDescription("收起规格与备注").performScrollTo().performClick()
+        field("长度").performScrollTo().assertTextContains("68 cm")
+        compose.onNodeWithContentDescription("收起详细规格").performScrollTo().performClick()
         compose.onAllNodesWithContentDescription("保存物品").assertCountEquals(1)
         compose.onNodeWithContentDescription("保存物品").assertIsDisplayed().performClick()
         compose.waitUntil(10_000) { saved == 1 }
@@ -315,20 +315,20 @@ class ItemEntryRefinementTest {
                 compose.runOnIdle { skin.value = candidate }
                 compose.onNodeWithText("添加照片（可选）").performScrollTo().assertIsDisplayed()
                 compose.onNode(hasText("识图填入", substring = true) and hasClickAction()).assertExists()
-                field("描述与备注（选填）").assertDoesNotExist()
+                field("备注").assertDoesNotExist()
                 field("主要发色").assertDoesNotExist()
-                field("鞋码原文").assertDoesNotExist()
+                field("鞋码").assertDoesNotExist()
                 compose.onAllNodesWithContentDescription("保存物品").assertCountEquals(1)
                 val save = compose.onNodeWithContentDescription("保存物品").assertIsDisplayed().assertIsEnabled()
                 verifyTextLayout(compose.onNodeWithText("保存物品", useUnmergedTree = true), "Save must fit at real double text")
                 captureEntry(output, candidate, night, "entry", false, manifest)
 
-                compose.onNodeWithContentDescription("展开规格与备注").performScrollTo().assertIsDisplayed()
+                compose.onNodeWithContentDescription("展开详细规格").performScrollTo().assertIsDisplayed()
                 compose.onNodeWithContentDescription("展开补充资料").assertExists()
                 compose.onNodeWithText("所属主件：原主件").assertExists()
-                compose.onNodeWithText("包含在主件价格中，不重复计价，收货状态随主件").assertExists()
+                compose.onNodeWithText("随主件计价，不重复计价，拥有状态随主件").assertExists()
                 field("主要发色").assertDoesNotExist()
-                field("描述与备注（选填）").assertDoesNotExist()
+                field("备注").assertDoesNotExist()
                 captureEntry(output, candidate, night, "folded-details", false, manifest)
 
                 field("物品名称 *").performScrollTo().performClick()

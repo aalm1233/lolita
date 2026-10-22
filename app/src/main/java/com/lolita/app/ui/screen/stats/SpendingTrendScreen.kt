@@ -137,7 +137,7 @@ fun SpendingTrendContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "开启价格显示以查看消费趋势",
+                text = "前往个人页开启「显示金额」以查看消费趋势",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

@@ -191,7 +191,7 @@ private fun WardrobeCounts(
     val skin = LolitaSkin.current
     val counts = listOf(
         OverviewCount("已拥有", state.ownedCount) { onNavigate("status_owned", "", "已拥有") },
-        OverviewCount("愿望单", state.wishedCount) { onNavigate("status_wished", "", "愿望单") },
+        OverviewCount("心愿", state.wishedCount) { onNavigate("status_wished", "", "心愿") },
         OverviewCount("套装", state.coordinateCount),
         OverviewCount("穿搭记录", state.outfitLogCount)
     )
@@ -235,15 +235,19 @@ private fun SpendingOverview(state: StatsUiState) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OverviewNumber(overviewMoney(state.totalSpending), MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary)
-                Text("当前绑定订单的已录实付", style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
         row {
-            SpendingDetail("全部已录实付", state.allRecordedSpending, "包含归档订单，只累计已保存的真实付款")
+            SpendingDetail("全部已录实付", state.allRecordedSpending, "含归档订单")
         }
         if (state.ownedCount > 0) row {
-            SpendingDetail("订单参考均价", state.averagePrice, "已拥有服饰的当前订单总价均值，不代表实付均价")
+            SpendingDetail("订单参考均价", state.averagePrice, "")
+        }
+        row {
+            com.lolita.app.ui.screen.common.ExpandableInfo("统计口径") {
+                Text("当前订单实付仅合计当前绑定订单；全部已录实付包含归档订单的真实付款。", style = MaterialTheme.typography.bodySmall)
+                Text("参考均价为已拥有物品的当前订单总价均值，不代表实付均价。", style = MaterialTheme.typography.bodySmall)
+            }
         }
         if (state.purchaseReviews.isNotEmpty() && state.incompleteCurrentOrderCount > 0) row {
             Column(Modifier.padding(vertical = skin.spacingMedium),
@@ -284,7 +288,7 @@ private fun SpendingDetail(title: String, amount: Double, description: String) {
                 }
             }
         }
-        Text(description, style = MaterialTheme.typography.bodySmall,
+        if (description.isNotBlank()) Text(description, style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
@@ -345,11 +349,11 @@ private fun MostExpensiveOrder(item: ItemWithSpending, onClick: () -> Unit) {
 private fun OwnedBrands(brands: List<BrandItemCount>, onNavigate: (String, String, String) -> Unit) {
     val skin = LolitaSkin.current
     val maxCount = (brands.maxOfOrNull { it.itemCount } ?: 1).coerceAtLeast(1)
-    LolitaSection("已拥有品牌 · Top 5") {
+    LolitaSection("品牌排行 · 前 5") {
         brands.forEachIndexed { index, brand ->
             row {
                 Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(skin.cornerRadiusSmall))
-                    .skinClickable { onNavigate("brand", brand.brandName, "品牌: ${brand.brandName}") }
+                    .skinClickable { onNavigate("brand", brand.brandName, "${brand.brandName}") }
                     .semantics(mergeDescendants = true) {}
                     .padding(vertical = skin.spacingMedium).heightIn(min = 48.dp),
                     verticalAlignment = Alignment.Top,

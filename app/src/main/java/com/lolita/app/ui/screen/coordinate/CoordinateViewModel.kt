@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.coordinate
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Coordinate
@@ -160,7 +162,7 @@ class CoordinateListViewModel(
                 coordinateRepository.deleteCoordinate(coordinate)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message ?: "删除失败"
+                    errorMessage = uiErrorText(e, "删除失败")
                 )
             }
         }
@@ -393,7 +395,7 @@ class CoordinateEditViewModel(
                     imageUrls = coordinate.imageUrls, selectedItemIds = itemIds, isLoading = false) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取套装失败") }
+                _uiState.update { it.copy(isLoading = false, loadError = uiErrorText(failure, "读取套装失败")) }
             }
         }
     }

@@ -111,7 +111,7 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
                             FilterChip(selected = state.stageId == stage.id, onClick = { viewModel.updateStageId(stage.id) },
                                 label = { Text("${stage.name} · ${formatPriceAmount(stage.amount)}") }, enabled = canEdit)
                         }
-                        Text("同一阶段可以分多次付款，每次实付分别保留。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("同一阶段可分多次记录实付。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 } }
                 Button(onClick = savePayment, enabled = canSave, modifier = Modifier.fillMaxWidth()) {
@@ -125,6 +125,6 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
             }
         }
     }
-    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("提示") }, text = { Text(error) },
+    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("未能保存付款") }, text = { Text(error) },
         confirmButton = { TextButton(onClick = viewModel::clearError) { Text("确定") } }) }
 }

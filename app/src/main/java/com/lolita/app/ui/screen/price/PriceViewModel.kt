@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.price
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.dao.PriceWithPayments
@@ -147,7 +149,7 @@ class PriceManageViewModel(
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = e.message ?: "价格加载失败") }
+                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "价格加载失败")) }
             }
         }
     }
@@ -167,7 +169,7 @@ class PriceManageViewModel(
             try { action() }
             catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _uiState.update { it.copy(error = e.message ?: "订单状态更新失败") }
+                _uiState.update { it.copy(error = uiErrorText(e, "订单状态更新失败")) }
             } finally { _uiState.update { it.copy(isUpdating = false) } }
         }
     }
@@ -200,7 +202,7 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = e.message ?: "加载失败") }
+                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "加载失败")) }
             }
         }
     }
@@ -294,7 +296,7 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
         if (_uiState.value.isSaving) return Result.failure(IllegalStateException("正在保存"))
         _uiState.update { it.copy(isSaving = true) }
         return try { val result = block(); hasUnsavedChanges = false; _uiState.update { it.copy(isSaving = false) }; Result.success(result) }
-        catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = e.message ?: "保存失败") }; Result.failure(e) }
+        catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = uiErrorText(e, "保存失败")) }; Result.failure(e) }
     }
 }
 
@@ -314,7 +316,7 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
                 }
             }.catch { error ->
                 if (error is CancellationException) throw error
-                _uiState.update { it.copy(isLoading = false, exists = false, errorMessage = error.message ?: "付款资料加载失败") }
+                _uiState.update { it.copy(isLoading = false, exists = false, errorMessage = uiErrorText(error, "付款资料加载失败")) }
             }.collect { next ->
                 _uiState.update { next.copy(errorMessage = it.errorMessage, isWorking = it.isWorking) }
             }
@@ -333,7 +335,7 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
         orderRepository.deletePayment(payment.id)
     } } }
     private fun requireStageEditing() {
-        require(_uiState.value.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) { "历史付款阶段只读，请先在价格页核对账本并启用跟踪" }
+        require(_uiState.value.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) { "历史付款阶段只读，请先在价格页核对并跟踪付款" }
     }
     private suspend fun <T> runAction(block: suspend () -> T): Result<T> {
         val state = _uiState.value
@@ -344,7 +346,7 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
             Result.success(block())
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            _uiState.update { it.copy(errorMessage = e.message ?: "操作失败") }
+            _uiState.update { it.copy(errorMessage = uiErrorText(e, "操作失败")) }
             Result.failure(e)
         } finally { _uiState.update { it.copy(isWorking = false) } }
     }
@@ -386,7 +388,7 @@ class PaymentEditViewModel(private val orderRepository: OrderRepository = AppMod
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = e.message ?: "加载失败") }
+                _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "加载失败")) }
             }
         }
     }
@@ -431,6 +433,6 @@ class PaymentEditViewModel(private val orderRepository: OrderRepository = AppMod
             val state = _uiState.value
             val result = block(parseMoney(state.amount)!!, state)
             hasUnsavedChanges = false; _uiState.update { it.copy(isSaving = false) }; Result.success(result)
-        } catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = e.message ?: "保存失败") }; Result.failure(e) }
+        } catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = uiErrorText(e, "保存失败")) }; Result.failure(e) }
     }
 }

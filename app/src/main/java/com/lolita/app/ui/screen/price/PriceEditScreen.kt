@@ -80,8 +80,8 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                                 FilterChip(selected = state.priceType == type, onClick = { viewModel.updatePriceType(type) }, label = { Text(label) }, enabled = canEdit)
                             }
                         }
-                        OutlinedButton(onClick = { confirmTemplate = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth()) { Text("使用所选模板") }
-                        if (tracked) Text(state.calculationHint ?: "填入总额与部分阶段后，自动补算唯一缺项；阶段填齐时可反推商品金额。手动填写的金额会保留。",
+                        OutlinedButton(onClick = { confirmTemplate = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth()) { Text("重设付款计划") }
+                        if (tracked) Text(state.calculationHint ?: "金额可自动补算，手动输入优先。",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(if (tracked) "阶段只是应付总额的拆分。实付请在付款页单独记录。" else "原阶段金额和日期保留，不据此认定欠款或设置提醒。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     } }

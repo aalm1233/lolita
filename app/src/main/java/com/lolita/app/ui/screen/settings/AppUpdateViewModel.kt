@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.settings
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.BuildConfig
@@ -90,7 +92,7 @@ class AppUpdateViewModel(
             } catch (e: Exception) {
                 if (id == checkId && interactiveCheck) {
                     val message = when (e) {
-                        is ReleaseCheckException, is IllegalArgumentException -> e.message ?: "发布信息无法识别，请前往 Gitee 查看"
+                        is ReleaseCheckException, is IllegalArgumentException -> uiErrorText(e, "发布信息无法识别，请前往 Gitee 查看")
                         is SocketTimeoutException -> "连接 Gitee 超时，请稍后重试"
                         else -> "检查更新失败，请检查网络或前往 Gitee 查看"
                     }

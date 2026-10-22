@@ -87,10 +87,10 @@ fun PriceManageScreen(
                                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             if (state.includedInParentPrice || order.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
                                 Button(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) {
-                                    Text(if (state.includedInParentPrice) "查看主件付款" else "付款阶段与实付记录")
+                                    Text(if (state.includedInParentPrice) "查看主件付款" else "付款计划与记录")
                                 }
                             } else {
-                                TextButton(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text("查看付款阶段与实付记录") }
+                                TextButton(enabled = !state.isUpdating, onClick = { onNavigateToPaymentManage(order.price.id) }, modifier = Modifier.fillMaxWidth()) { Text("查看付款计划与记录") }
                             }
                             TextButton(onClick = { detailsExpanded = !detailsExpanded }, modifier = Modifier.fillMaxWidth()) {
                                 Text(if (detailsExpanded) "收起价格明细" else "展开价格明细")
@@ -109,7 +109,7 @@ fun PriceManageScreen(
                                     Text("历史已购，付款资料未补齐")
                                 }
                             }
-                            TextButton(enabled = !state.isUpdating, onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("保留历史并解除当前订单") }
+                            TextButton(enabled = !state.isUpdating, onClick = { confirmArchive = true }, modifier = Modifier.fillMaxWidth()) { Text("归档当前订单") }
                         }
                     }
                 }
@@ -182,7 +182,7 @@ fun PriceManageScreen(
         AlertDialog(
             modifier = Modifier.testTag("purchaseReviewDialog"),
             onDismissRequest = { purchaseConfirmation = null },
-            title = { Text(if (historical) "确认历史已购" else "核对账本并启用跟踪") },
+            title = { Text(if (historical) "确认历史已购" else "核对并跟踪付款") },
             text = {
                 if (historical) Text("此次仅确认这件服饰已拥有，历史付款资料仍待补齐，确认后仍留在待核对购买资料清单。订单价格、所有原始阶段和付款记录保留；不会生成实付金额或付款日期，未付余额仍为未知。")
                 else Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
@@ -218,7 +218,7 @@ fun PriceManageScreen(
             dismissButton = { TextButton(modifier = Modifier.testTag("reviewCancel"), onClick = { purchaseConfirmation = null }) { Text("取消") } }
         )
     }
-    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("提示") }, text = { Text(error) },
+    state.error?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("账本操作未完成") }, text = { Text(error) },
         confirmButton = { TextButton(onClick = viewModel::clearError) { Text("确定") } }) }
 }
 
@@ -250,7 +250,7 @@ internal fun PurchaseRecordNotice(
                 ) { Text(if (isWorking) "处理中…" else "确认历史已购") }
                 if (onConfirmTracked != null) TextButton(
                     onClick = onConfirmTracked, enabled = !isWorking, modifier = Modifier.fillMaxWidth().testTag("reviewTrackedEntry")
-                ) { Text("核对账本并启用跟踪") }
+                ) { Text("核对并跟踪付款") }
                 if (onReturnToReview != null) TextButton(
                     onClick = onReturnToReview, enabled = !isWorking, modifier = Modifier.fillMaxWidth()
                 ) { Text("返回核对购买资料") }

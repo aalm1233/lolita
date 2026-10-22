@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -58,7 +60,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 
 /**
- * Item Detail Screen - 服饰详情界面
+ * Item Detail Screen - 物品详情界面
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +109,7 @@ fun ItemDetailScreen(
     if (showError != null) {
         AlertDialog(
             onDismissRequest = { showError = null },
-            title = { Text("提示") },
+            title = { Text("操作未完成") },
             text = { Text(showError ?: "") },
             confirmButton = {
                 TextButton(onClick = { showError = null }) {
@@ -122,7 +124,7 @@ fun ItemDetailScreen(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text("确认删除") },
-            text = { Text("确定要删除这件服饰吗？此操作不可撤销。") },
+            text = { Text("将删除该物品及相关价格、付款记录，此操作无法撤销。") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -130,7 +132,7 @@ fun ItemDetailScreen(
                         coroutineScope.launch {
                             viewModel.deleteItem()
                                 .onSuccess { onBack() }
-                                .onFailure { showError = it.message }
+                                .onFailure { showError = uiErrorText(it) }
                         }
                     },
                     colors = ButtonDefaults.textButtonColors(
@@ -153,7 +155,7 @@ fun ItemDetailScreen(
     if (showAttachPicker) {
         val parentIds = uiState.allItems.mapNotNull { it.parentItemId }.toSet()
         ItemSearchPickerDialog(
-            title = "挂入已有小物",
+            title = "添加已有小物",
             items = uiState.allItems.filter { it.id != itemId && it.parentItemId == null && it.id !in parentIds },
             onSelect = { childToAttach = it; shareChildPrice = false; showAttachPicker = false },
             onDismiss = { showAttachPicker = false }
@@ -162,16 +164,16 @@ fun ItemDetailScreen(
     childToAttach?.let { child ->
         AlertDialog(
             onDismissRequest = { childToAttach = null },
-            title = { Text("挂入 ${child.name}") },
+            title = { Text("关联 ${child.name}") },
             text = {
                 Column {
-                    Text("挂载只改变所属主件，保留小物的图片、尺寸与穿搭记录。")
+                    Text("关联只改变所属主件，保留小物的图片、尺寸与穿搭记录。")
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(checked = shareChildPrice, onCheckedChange = { shareChildPrice = it })
-                        Text("包含在主件价格中")
+                        Text("随主件计价")
                     }
                     Text(if (shareChildPrice) "不单独计价，随主件付清后变为已拥有"
-                        else "保留独立价格，按自己的付款判断收货状态",
+                        else "保留独立价格，按自己的付款判断拥有状态",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
@@ -180,9 +182,9 @@ fun ItemDetailScreen(
                     coroutineScope.launch {
                         viewModel.attachExistingChild(child.id, shareChildPrice)
                             .onSuccess { childToAttach = null }
-                            .onFailure { childToAttach = null; showError = it.message }
+                            .onFailure { childToAttach = null; showError = uiErrorText(it) }
                     }
-                }) { Text("挂入") }
+                }) { Text("关联") }
             },
             dismissButton = { TextButton(onClick = { childToAttach = null }) { Text("取消") } }
         )
@@ -190,15 +192,15 @@ fun ItemDetailScreen(
     childToDetach?.let { child ->
         AlertDialog(
             onDismissRequest = { childToDetach = null },
-            title = { Text("解除小物挂载") },
+            title = { Text("解除小物关联") },
             text = { Text("${child.name} 将变为独立服饰，现有图片、穿搭和付款记录都会保留；共用价格的小物解除后需要单独录入价格。") },
             confirmButton = {
                 TextButton(onClick = {
                     coroutineScope.launch {
                         viewModel.detachChild(child.id).onSuccess { childToDetach = null }
-                            .onFailure { childToDetach = null; showError = it.message }
+                            .onFailure { childToDetach = null; showError = uiErrorText(it) }
                     }
-                }) { Text("解除挂载") }
+                }) { Text("解除关联") }
             },
             dismissButton = { TextButton(onClick = { childToDetach = null }) { Text("取消") } }
         )
@@ -211,7 +213,7 @@ fun ItemDetailScreen(
         topBar = {
             if (!hasImage) {
                 GradientTopAppBar(
-                    title = { Text("服饰详情") },
+                    title = { Text("物品详情") },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             SkinIcon(IconKey.ArrowBack)
@@ -292,7 +294,7 @@ fun ItemDetailScreen(
                         .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("服饰不存在")
+                    Text("物品不存在")
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -447,7 +449,7 @@ fun ItemDetailScreen(
                                     ) {
                                         BrandLogo(brand = brand, size = 20.dp)
                                         Text(
-                                            text = if (brand?.isUnsetBrand == true) "未设置品牌" else brand?.name ?: "未知",
+                                            text = if (brand?.isUnsetBrand == true) "未设置品牌" else brand?.name ?: "资料暂不可用",
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium
                                         )
@@ -458,7 +460,7 @@ fun ItemDetailScreen(
                             row {
                                 DetailRow(
                                     label = "类型",
-                                    value = uiState.categories.find { it.id == item.categoryId }?.name ?: "未知"
+                                    value = uiState.categories.find { it.id == item.categoryId }?.name ?: "资料暂不可用"
                                 )
                             }
 
@@ -466,7 +468,7 @@ fun ItemDetailScreen(
                                 row {
                                     DetailRow(
                                         label = "所属套装",
-                                        value = uiState.coordinates.find { it.id == coordinateId }?.name ?: "未知"
+                                        value = uiState.coordinates.find { it.id == coordinateId }?.name ?: "资料暂不可用"
                                     )
                                 }
                             }
@@ -490,7 +492,7 @@ fun ItemDetailScreen(
                         }
 
                         TextButton(onClick = { coroutineScope.launch {
-                            runCatching { viewModel.copyToNewDraft() }.onSuccess(onCopyToNew).onFailure { showError = it.message }
+                            runCatching { viewModel.copyToNewDraft() }.onSuccess(onCopyToNew).onFailure { showError = uiErrorText(it) }
                         } }, modifier = Modifier.fillMaxWidth()) { Text("复制资料为新物品") }
 
                         WardrobeSpecificationDetails(
@@ -514,8 +516,8 @@ fun ItemDetailScreen(
                                         Spacer(Modifier.width(8.dp))
                                         SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp))
                                     }
-                                    Text(if (item.includedInParentPrice) "已包含在主件价格中，收货状态随主件"
-                                        else "独立计价，收货状态按本件付款计算",
+                                    Text(if (item.includedInParentPrice) "已随主件计价，拥有状态随主件"
+                                        else "独立计价，拥有状态按本件付款计算",
                                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
@@ -536,7 +538,7 @@ fun ItemDetailScreen(
                                             Spacer(Modifier.width(skin.spacingSmall))
                                             Text("新增小物")
                                         }
-                                        TextButton(onClick = { showAttachPicker = true }) { Text("挂入已有") }
+                                        TextButton(onClick = { showAttachPicker = true }) { Text("添加已有") }
                                     }
                                 }
                             } else {
@@ -558,7 +560,7 @@ fun ItemDetailScreen(
                                                     Spacer(Modifier.width(12.dp))
                                                     Column(Modifier.weight(1f)) {
                                                         Text(child.name, style = MaterialTheme.typography.bodyMedium)
-                                                        Text(if (child.includedInParentPrice) "包含在主件价格中" else "独立计价",
+                                                        Text(if (child.includedInParentPrice) "随主件计价" else "独立计价",
                                                             style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         Text(itemStatusLabel(child.status), style = MaterialTheme.typography.labelSmall,
                                                             color = MaterialTheme.colorScheme.primary)
@@ -570,7 +572,7 @@ fun ItemDetailScreen(
                                     }
                                     row {
                                         OutlinedButton(onClick = { showAttachPicker = true }, modifier = Modifier.fillMaxWidth()) {
-                                            Text("挂入已有小物")
+                                            Text("添加已有小物")
                                         }
                                     }
                                 }
@@ -590,7 +592,7 @@ fun ItemDetailScreen(
                         if (!item.size.isNullOrEmpty() || item.sizeChartImageUrl != null || item.sizeChartImageUrls.isNotEmpty()) {
                             LolitaCard(modifier = Modifier.fillMaxWidth()) {
                                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    SectionHeader(title = "尺码信息")
+                                    SectionHeader(title = "尺码与资料图")
                                     if (!item.size.isNullOrEmpty()) {
                                         Spacer(Modifier.height(8.dp))
                                         DetailRow(label = "尺码", value = item.size!!)
@@ -603,156 +605,9 @@ fun ItemDetailScreen(
                             }
                         }
 
-                        LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                SectionHeader(
-                                    title = "价格与付款",
-                                    action = {
-                                        OutlinedButton(
-                                            onClick = onNavigateToPriceManage,
-                                            enabled = !item.includedInParentPrice || uiState.legacyPriceCount > 0,
-                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-                                        ) {
-                                            Text(if (item.includedInParentPrice) "历史价格" else "价格与付款", style = MaterialTheme.typography.labelMedium)
-                                            Spacer(Modifier.width(4.dp))
-                                            SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp))
-                                        }
-                                    }
-                                )
-                                Spacer(Modifier.height(8.dp))
-
-                                if (item.includedInParentPrice) {
-                                    Text("已包含在主件价格中，不重复计价", style = MaterialTheme.typography.bodyMedium)
-                                    if (uiState.legacyPriceCount > 0) {
-                                        Text("原有 ${uiState.legacyPriceCount} 笔价格与付款记录已保留，可查看历史价格",
-                                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    }
-                                    TextButton(onClick = { item.parentItemId?.let(onNavigateToItem) }) { Text("查看主件价格与付款") }
-                                } else if (uiState.pricesWithPayments.isEmpty()) {
-                                    Card(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
-                                        )
-                                    ) {
-                                        Column(
-                                            modifier = Modifier.padding(16.dp),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-                                            Text(
-                                                if (uiState.legacyPriceCount > 0) "历史价格待核对，请在价格与付款中确定唯一订单"
-                                                else "尚未录入价格，点击价格与付款设置订单",
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    val dateFormat = remember { java.text.SimpleDateFormat("yyyy年MM月dd日", java.util.Locale.getDefault()) }
-                                    uiState.pricesWithPayments.forEach { priceWithPayments ->
-                                        val price = priceWithPayments.price
-                                        val payments = priceWithPayments.payments
-                                        val paidAmount = OrderAccounting.sum(payments.filter { it.isPaid }.map { it.amount })
-
-                                        Card(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            colors = CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
-                                            )
-                                        ) {
-                                            Column(
-                                                modifier = Modifier.padding(16.dp),
-                                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                                            ) {
-                                                Row(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    horizontalArrangement = Arrangement.SpaceBetween
-                                                ) {
-                                                    Text(
-                                                        when (price.type) {
-                                                            PriceType.FULL -> "全价"
-                                                            PriceType.DEPOSIT_BALANCE -> "定金+尾款"
-                                                            PriceType.MULTI_STAGE -> "多段付款"
-                                                        },
-                                                        style = MaterialTheme.typography.labelMedium,
-                                                        color = MaterialTheme.colorScheme.primary
-                                                    )
-                                                    Text(
-                                                        "¥${String.format("%.2f", price.totalPrice)}",
-                                                        style = MaterialTheme.typography.titleSmall,
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = MaterialTheme.colorScheme.primary
-                                                    )
-                                                }
-
-                                                if (price.type == PriceType.DEPOSIT_BALANCE) {
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        horizontalArrangement = Arrangement.SpaceBetween
-                                                    ) {
-                                                        Text(
-                                                            "定金 ¥${String.format("%.2f", price.deposit ?: 0.0)}",
-                                                            style = MaterialTheme.typography.bodySmall,
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                        )
-                                                        Text(
-                                                            "尾款 ¥${String.format("%.2f", price.balance ?: 0.0)}",
-                                                            style = MaterialTheme.typography.bodySmall,
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                        )
-                                                    }
-                                                }
-
-                                                if (priceWithPayments.binding?.purchaseRecordStatus != com.lolita.app.data.local.entity.PurchaseRecordStatus.TRACKED) {
-                                                    Text(
-                                                        if (priceWithPayments.binding?.purchaseRecordStatus == com.lolita.app.data.local.entity.PurchaseRecordStatus.HISTORICAL_OWNED)
-                                                            "历史已购，付款记录未补全" else "历史付款资料待核对",
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                    if (paidAmount > 0) Text("已录实付 ¥${String.format("%.2f", paidAmount)}",
-                                                        style = MaterialTheme.typography.bodySmall)
-                                                } else run {
-                                                    val unpaidAmount = OrderAccounting.remaining(price.totalPrice, paidAmount)
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        horizontalArrangement = Arrangement.SpaceBetween
-                                                    ) {
-                                                        Text(
-                                                            "已付 ¥${String.format("%.2f", paidAmount)}",
-                                                            style = MaterialTheme.typography.bodySmall,
-                                                            color = MaterialTheme.colorScheme.primary
-                                                        )
-                                                        if (unpaidAmount > 0) {
-                                                            Text(
-                                                                "待付 ¥${String.format("%.2f", unpaidAmount)}",
-                                                                style = MaterialTheme.typography.bodySmall,
-                                                                color = MaterialTheme.colorScheme.error
-                                                            )
-                                                        }
-                                                    }
-                                                }
-
-                                                payments.filter { it.isPaid }
-                                                    .minByOrNull { it.paidDate ?: Long.MAX_VALUE }
-                                                    ?.paidDate?.let { date ->
-                                                        Text(
-                                                            "付款日期: ${dateFormat.format(java.util.Date(date))}",
-                                                            style = MaterialTheme.typography.bodySmall,
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                        )
-                                                    }
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                    }
-                                }
-
-                                if (uiState.legacyPriceCount > 0 && uiState.pricesWithPayments.isNotEmpty()) {
-                                    Text("另有 ${uiState.legacyPriceCount} 笔历史价格已保留，可在价格与付款中核对",
-                                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-
+                        if (item.status == ItemStatus.OWNED || item.status.supportsVirtualTryOn ||
+                            mannequinSubject(uiState.categories.firstOrNull { it.id == item.categoryId }, confirmedSemantics = true)?.presentation == MannequinPresentation.WIG_HEAD) LolitaCard(modifier = Modifier.fillMaxWidth()) {
+                            Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                                 MannequinDetailEntry(item, uiState.categories.firstOrNull { it.id == item.categoryId }, onNavigateToMannequin)
 
                                 if (item.status == ItemStatus.OWNED) {
@@ -767,7 +622,7 @@ fun ItemDetailScreen(
                                         ) {
                                             SkinIcon(IconKey.Star, modifier = Modifier.size(18.dp))
                                             Spacer(Modifier.width(6.dp))
-                                            Text("推荐搭配")
+                                            Text("搭配推荐")
                                         }
                                     }
                                 }
@@ -787,19 +642,21 @@ fun ItemDetailScreen(
                         ItemDisplaySection(item, uiState.categories.firstOrNull { it.id == item.categoryId }, currentMaterial,
                             onNavigateToMaterial, onViewMaterial)
 
-                        LolitaSection(title = "记录信息") {
-                            row {
+                        LolitaCard {
+                            com.lolita.app.ui.screen.common.ExpandableInfo("记录信息") {
+                            Column {
                                 DetailRow(
                                     label = "创建时间",
                                     value = formatDate(item.createdAt)
                                 )
                             }
-                            row {
+                            Column {
                                 DetailRow(
                                     label = "更新时间",
                                     value = formatDate(item.updatedAt)
                                 )
                             }
+                        }
                         }
                     }
                 }
@@ -894,7 +751,7 @@ internal fun ItemOrderSummary(
             })
             when {
                 item.includedInParentPrice -> Text(
-                    "已包含在主件价格中",
+                    "已随主件计价",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -933,6 +790,14 @@ internal fun ItemOrderSummary(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            if (uiState.legacyPriceCount > 0) Text("另有 ${uiState.legacyPriceCount} 笔历史订单，可在账本查看。", style = MaterialTheme.typography.bodySmall)
+            currentOrder?.let { order ->
+                com.lolita.app.ui.screen.common.ExpandableInfo("订单明细") {
+                    Text("订单总价（含邮费） ¥${String.format("%.2f", order.price.totalPrice)}", style = MaterialTheme.typography.bodyMedium)
+                    Text("付款形式：${when (order.price.type) { PriceType.FULL -> "全款"; PriceType.DEPOSIT_BALANCE -> "定金尾款"; PriceType.MULTI_STAGE -> "多段付款" }}", style = MaterialTheme.typography.bodySmall)
+                    Text("邮费 ¥${String.format("%.2f", order.price.shipping)}", style = MaterialTheme.typography.bodySmall)
+                }
+            }
             if (purchaseReview != null) {
                 if (currentOrder == null && uiState.legacyPriceCount > 0 && sharedParentId == null) Text(
                     "先选择一笔历史订单，再核对购买资料。",
@@ -969,7 +834,7 @@ private fun StatusBadge(status: ItemStatus) {
         Text(
             text = when (status) {
                 ItemStatus.OWNED -> "已拥有"
-                ItemStatus.WISHED -> "愿望单"
+                ItemStatus.WISHED -> "心愿"
                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                 ItemStatus.PENDING_PAYMENT -> "待付款"
                 ItemStatus.PENDING_REVIEW -> "待核对"
@@ -1114,7 +979,7 @@ private fun formatDate(timestamp: Long): String {
 @Composable
 private fun SizeChartGallery(images: List<String>) {
     var preview by remember { mutableStateOf<Int?>(null) }
-    Text("共 ${images.size} 张，点击图片可放大查看。", style = MaterialTheme.typography.bodySmall)
+    Text("共 ${images.size} 张", style = MaterialTheme.typography.bodySmall)
     ImageGalleryPager(imageUrls = images, onImageClick = { preview = it },
         modifier = Modifier.fillMaxWidth().height(240.dp), contentDescription = "尺码表",
         contentScale = ContentScale.Fit)
@@ -1140,8 +1005,8 @@ internal fun ItemDisplaySection(item: Item, category: com.lolita.app.data.local.
     LolitaSection(title = "展示图") { row {
         material?.let {
             com.lolita.app.ui.screen.material.MaterialPhoto(it.imagePath, "查看已确认展示图", onClick = { onView(item.id) }, height = 150, checker = true)
-            Text("已确认 · 点击查看，可设为封面或用于试衣", style = MaterialTheme.typography.bodySmall)
-        } ?: Text("将商品照片整理成透明单品图，确认后可作封面，也可用于试衣。", style = MaterialTheme.typography.bodyMedium)
+            Text("AI 生成 · 已确认", style = MaterialTheme.typography.bodySmall)
+        } ?: Text("生成透明单品图，可作封面或用于试衣。", style = MaterialTheme.typography.bodyMedium)
         OutlinedButton(onClick = { onGenerate(item.id) }, modifier = Modifier.fillMaxWidth()) { Text("生成展示图") }
     } }
 }

@@ -63,7 +63,7 @@ open class ImageTaskNavigationFixture {
         compose.runOnIdle { controller.navigate(Screen.ItemDetail.createRoute(11)) }
         compose.runOnIdle { controller.navigate(if (mannequin) Screen.Mannequin.createRoute(11) else Screen.TryOn.createRoute(itemId = 11)) }
         compose.onNodeWithTag("globalImageTaskBar").assertDoesNotExist()
-        compose.onNodeWithText(if (mannequin) "生成正面人台图" else "生成一张试衣图").assertIsEnabled().performClick()
+        compose.onNodeWithText(if (mannequin) "生成正面人台图" else "生成试衣图").assertIsEnabled().performClick()
         assertEquals(0, submissions)
         compose.onNodeWithText("确认并加入任务").performClick()
         compose.waitUntil(10_000) { submissions == 1 && tasks.value.size == 1 }

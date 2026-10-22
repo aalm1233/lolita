@@ -119,7 +119,7 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                     IconButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.semantics {contentDescription = "关闭裁切"}) { SkinIcon(IconKey.Close) }
                 }
                 Column(Modifier.weight(1f).verticalScroll(scroll), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                    Text("只使用确认后的选区像素；原图保持不变。此步骤不会调用识图或生图服务。", style = MaterialTheme.typography.bodySmall)
+                    Text("原图保留，只使用确认后的选区；裁切不调用付费服务。", style = MaterialTheme.typography.bodySmall)
                     if (loading) {
                         ShimmerRect(width = 320.dp, height = 280.dp, modifier = Modifier.fillMaxWidth())
                     }
@@ -135,14 +135,14 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                                 onSelection = { invalidatePreview(); selection = it },
                                 onViewport = { newZoom, newPan -> zoom = newZoom; pan = newPan })
                             Text(if (previewInParent) "拖动四角调整范围，双指缩放查看。" else
-                                "拖动四角调整矩形，拖动框内移动选区；框外拖动图像，双指缩放与平移。缩放仅用于查看，不会增加像素。",
+                                "拖动四角或框内调整范围，双指缩放查看。",
                                 style = MaterialTheme.typography.bodySmall)
                             if (previewInParent) TextButton(onClick = { showAdvanced = !showAdvanced }, enabled = !busy) {
                                 Text(if (showAdvanced) "收起精细调整" else "精细调整与图片信息")
                             }
                             if ((!previewInParent || showAdvanced) &&
                                 (original.bitmap.width != original.sourceWidth || original.bitmap.height != original.sourceHeight)) {
-                                Text("显示预览已降采样为 ${original.bitmap.width} × ${original.bitmap.height} px；最终从原图区域解码，以实际裁切预览尺寸为准。",
+                                Text("查看预览已缩小为 ${original.bitmap.width} × ${original.bitmap.height} px；最终从原图区域解码，以实际裁切预览尺寸为准。",
                                     style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -168,9 +168,9 @@ fun ImageRegionCropDialog(sourcePath: String, onDismiss: () -> Unit, onCropped: 
                                         circularRevealEnabled = false, contentScale = ContentScale.Fit,
                                         modifier = Modifier.fillMaxWidth().height(280.dp))
                                 }
-                                Text("实际裁切 ${result.width} × ${result.height} px · JPEG · 已移除位置等 EXIF 信息",
+                                Text("实际裁切 ${result.width} × ${result.height} px · JPEG · 已移除位置等照片信息",
                                     style = MaterialTheme.typography.bodyMedium)
-                                if (result.sampled) Text("为限制长图或大图内存，已按区域降采样；上方为最终文件的实际像素尺寸。",
+                                if (result.sampled) Text("大图已适当缩小，上方显示最终图片尺寸。",
                                     style = MaterialTheme.typography.bodySmall)
                                 OutlinedButton(onClick = { invalidatePreview() }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("返回调整选区") }
                             }

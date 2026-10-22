@@ -173,7 +173,7 @@ fun SpendingDistributionContent(
 
         if (!uiState.showTotalPrice) {
             Text(
-                text = "开启价格显示以查看消费分析",
+                text = "前往个人页开启「显示金额」以查看消费分析",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

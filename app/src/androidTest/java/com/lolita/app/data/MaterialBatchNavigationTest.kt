@@ -41,16 +41,16 @@ class MaterialBatchNavigationTest {
         }}
         compose.runOnIdle{nav.navigate(Screen.ImageTasks.route)}
         compose.waitUntil(10000){tasks?.uiState?.value?.tasks?.size==3}
-        compose.onNodeWithTag("imageTasks").performScrollToNode(hasText("打开本批任务流"))
-        compose.onAllNodesWithText("打开本批任务流").assertCountEquals(1)
-        compose.onNodeWithText("打开本批任务流").performClick()
+        compose.onNodeWithTag("imageTasks").performScrollToNode(hasText("查看批次"))
+        compose.onAllNodesWithText("查看批次").assertCountEquals(1)
+        compose.onNodeWithText("查看批次").performClick()
         compose.waitUntil(10000){batchVm?.uiState?.value?.let{!it.loading && it.jobs.size==3}==true}
         compose.onNodeWithTag("batchPrimary").assertIsDisplayed().assertIsNotEnabled()
         compose.onNodeWithText("首页").assertIsDisplayed()
         val dir=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"material-batch-native").apply{mkdirs()}
         compose.onRoot().captureToImage().asAndroidBitmap().let{im->File(dir,"nav-workspace.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
         compose.onNodeWithContentDescription("返回").performClick()
-        compose.onNodeWithTag("imageTasks").performScrollToNode(hasText("新建素材批次"));compose.onNodeWithText("新建素材批次").performClick()
+        compose.onNodeWithTag("imageTasks").performScrollToNode(hasText("新建展示图批次"));compose.onNodeWithText("新建展示图批次").performClick()
         compose.waitUntil(10000){batchVm?.uiState?.value?.let{!it.loading && it.draft}==true}
         assertTrue(batchVm!!.uiState.value.selected.isEmpty());assertEquals(3,runBlocking{f.db.imageTaskDao().getAll().size});assertEquals(0,f.layerCalls)
     }

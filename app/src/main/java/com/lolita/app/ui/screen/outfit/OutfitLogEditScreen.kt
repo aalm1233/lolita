@@ -114,7 +114,7 @@ fun OutfitLogEditScreen(
         AlertDialog(
             onDismissRequest = { showDiscardDialog = false },
             title = { Text("放弃更改？") },
-            text = { Text("有未保存的更改，确定要放弃吗？") },
+            text = { Text("本次未保存的修改将丢失。") },
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
@@ -331,7 +331,7 @@ private fun NoteInputCard(note: String, enabled: Boolean, onNoteChange: (String)
                 value = note,
                 onValueChange = onNoteChange,
                 enabled = enabled,
-                placeholder = { Text("记录穿搭心得...") },
+                placeholder = { Text("穿搭心得或备注") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(skin.cornerRadiusMedium),
                 minLines = 3,
@@ -425,7 +425,7 @@ private fun ItemSelectionCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
-            SectionHeader(title = "关联服饰（${selectedIds.size}）")
+            SectionHeader(title = "穿搭单品（${selectedIds.size}）")
             Spacer(modifier = Modifier.height(skin.spacingMedium))
             OutlinedButton(
                 onClick = { expanded = true },
@@ -435,7 +435,7 @@ private fun ItemSelectionCard(
             ) {
                 SkinIcon(IconKey.Outfit, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(skin.spacingMedium))
-                Text("选择服饰")
+                Text("选择物品")
             }
         }
     }

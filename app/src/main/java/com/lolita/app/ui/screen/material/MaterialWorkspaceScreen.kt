@@ -80,7 +80,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
         }, actions = { IconButton(onClick = onTasks) { SkinIcon(IconKey.ViewAgenda, Modifier.semantics { contentDescription = "任务中心" }) } }) },
         bottomBar = { Surface(color = MaterialTheme.colorScheme.surface, tonalElevation = skin.cardElevation) {
             Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                Text(when {
+                if (!managing) Text(when {
                     addAccessory -> "穿搭底图＋腰饰素材，共2张；试衣另行计费。"
                     state.pending && state.front || state.retryLayers -> "分层是一次新请求，按实际成功输出张数计费。"
                     state.pending -> "本地保存不计费，原商品照片继续保留。"
@@ -110,11 +110,11 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
             if (state.error != null) item("error") { LolitaSection(title = "操作提示") { row { Text(state.error!!, color = MaterialTheme.colorScheme.error) } } }
             if (!state.loading && state.item == null) item("missing") { LolitaSection(title = "原物品已删除") { row { Text("预览和任务仍可查看，无法保存到已删除物品；不会自动新建或改绑。") } } }
             if (addAccessory) {
-                item("base") { LolitaSection(title = "保留这张穿搭", action = { TextButton(onClick = { basePicker = true }, enabled = !state.busy) { Text("更换") } }) { row {
+                item("base") { LolitaSection(title = "原穿搭图", action = { TextButton(onClick = { basePicker = true }, enabled = !state.busy) { Text("更换") } }) { row {
                     val base = state.selectedBase
                     if (base == null) {
                         Text("请选择已保存试衣图，或已确认且穿着所需服装的个人模特。")
-                        OutlinedButton(onClick = { basePicker = true }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("选择本次底图") }
+                        OutlinedButton(onClick = { basePicker = true }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("选择原穿搭图") }
                     } else {
                         MaterialPhoto(base.imagePath, "放大本次穿搭底图", onClick = { zoom = base.imagePath }, height = 250)
                         Text(base.snapshot.name, style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = skin.spacingMedium))
@@ -134,15 +134,15 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                     }
                 } } }
                 item("requirements") { LolitaSection(title = "穿戴要求") { row {
-                    Text("只加当前腰饰，尽量保留底图人物与原搭配，检查材质、遮挡和接触阴影的协调。")
+                    Text("添加这件腰饰，尽量保留原人物与搭配。")
                     MaterialInstructions(state.instructions, !state.busy, viewModel::instructions)
                     Text("人物、原裙纹和其他区域仍可能重画；这是穿搭效果预览，不能判断真实尺码。", style = MaterialTheme.typography.bodySmall)
                 } } }
             } else if (state.retryLayers) {
                 item("retry-layer") { LolitaSection(title = "重新核对主视图") { row {
-                    Text("上次分层未完成。可复用已冻结的主视图，重新确认本次分层费用；不会重新生成主视图。")
+                    Text("上次分层未完成；可复用这张主视图，重新核对分层费用。")
                     state.layerSource?.let { path -> MaterialPhoto(path, "放大待重新分层的主视图", onClick = { zoom = path }, height = 230) }
-                    MaterialCheck("主视角与关键结构正确，继续分离单品", state.frontConfirmed, !state.busy, viewModel::frontConfirmed)
+                    MaterialCheck("主体视角与结构正确", state.frontConfirmed, !state.busy, viewModel::frontConfirmed)
                     TextButton(onClick = { state.item?.id?.let(onNewMaterial) }, enabled = !state.busy) { Text("换图重新整理") }
                 } } }
             } else if (state.pending) {
@@ -168,11 +168,11 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                     Text("原图有透视时，摆正后主体更对称可以是正确结果。真实不对称细节仍应保留。", style = MaterialTheme.typography.bodySmall)
                 } } }
                 item("checks") { LolitaSection(title = if (state.front) "确认主视角" else "核对这件单品") { row {
-                    if (state.front) MaterialCheck("主视角与关键结构正确，继续分离单品", state.frontConfirmed, !state.busy, viewModel::frontConfirmed)
-                    else listOf("只包含这条物品记录的完整组成及附属部件", "造型、颜色和部件数量正确", "没有残留人台、文字或其他服饰").forEachIndexed { index, label ->
+                    if (state.front) MaterialCheck("主体视角与结构正确", state.frontConfirmed, !state.busy, viewModel::frontConfirmed)
+                    else listOf("组成与附属部件完整", "颜色、造型与数量正确", "无多余人台、文字或其他物品").forEachIndexed { index, label ->
                         MaterialCheck(label, index in state.checks, !state.busy) { viewModel.check(index, it) }
                     }
-                    Text("系带、链条、绳端和透明孔洞属于商品结构，不按像素连通块数判断件数。", style = MaterialTheme.typography.bodySmall)
+                    Text("成双、成组及系带链条等附属部件，按物品原组成一起核对。", style = MaterialTheme.typography.bodySmall)
                 } } }
                 item("review-actions") { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     TextButton(onClick = { state.item?.id?.let(onNewMaterial) }, enabled = !state.busy && state.item != null) { Text("换图再整理") }
@@ -183,13 +183,13 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                 if (state.saved || state.material != null) item("current") { LolitaSection(title = if (state.saved) "素材已保存" else "已确认展示图") { row {
                     state.material?.let { material ->
                         MaterialPhoto(material.imagePath, "放大当前确认素材", onClick = { zoom = material.imagePath }, height = 200, checker = true)
-                        Text("主视单品 · 已确认 · AI 整理", style = MaterialTheme.typography.bodySmall)
+                        Text("AI 整理 · 已确认", style = MaterialTheme.typography.bodySmall)
                         val isCover = state.item?.imageUrls?.firstOrNull() == material.imagePath
                         OutlinedButton(onClick = { viewModel.setCover(material.id) }, enabled = !state.busy && !isCover && material.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED), modifier = Modifier.fillMaxWidth().testTag("materialSetCover")) {
                             Text(if (isCover) "当前封面" else "设为封面")
                         }
                         state.message?.let { Text(it, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall) }
-                        OutlinedButton(onClick = { if(state.accessoryEligible) modePicker = true else state.item?.id?.let(onFullTryOn) }, enabled = state.material?.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED) == true, modifier = Modifier.fillMaxWidth()) { Text("用这份素材试衣") }
+                        OutlinedButton(onClick = { if(state.accessoryEligible) modePicker = true else state.item?.id?.let(onFullTryOn) }, enabled = state.material?.matchesSource(state.semantic, state.item?.composition ?: ItemComposition.UNCONFIRMED) == true, modifier = Modifier.fillMaxWidth()) { Text("用于试衣") }
                         TextButton(onClick = { removeId = material.id }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("移除当前素材") }
                     }
                 } } }
@@ -201,7 +201,7 @@ fun MaterialWorkspaceScreen(viewModel: MaterialWorkspaceViewModel, addAccessory:
                         Text(if (state.originalPath != null) "已框选：只发送本次选区，原图保留。" else "可选商品相册或详情图，只发送当前选中的一张。", style = MaterialTheme.typography.bodySmall)
                     } } }
                     item("prepare") { LolitaSection(title = "整理成主视单品") { row {
-                        Text("按物品类型整理主展示视角，保留原结构、长度、花纹及附属部件；单只不补双，发片不补成整顶。主视图由 AI 重建，细节可能改变。")
+                        Text("按物品类型整理主视图，保留原结构与组成；AI 可能改变细节，请核对。")
                         MaterialInstructions(state.instructions, !state.busy, viewModel::instructions)
                         Text("素材整理使用即梦服务：先核对主视图，再单独确认分层费用；选出并核对单品层后保存。", style = MaterialTheme.typography.bodySmall)
                     } } }
@@ -271,7 +271,7 @@ private fun MaterialFeeDialog(fee: MaterialFeeConfirmation, busy: Boolean, onDis
     var checked by remember(fee) { mutableStateOf(false) }
     Dialog(onDismissRequest = { if (!busy) onDismiss() }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Scaffold(modifier = Modifier.testTag("materialFeeRoot"), containerColor = MaterialTheme.colorScheme.surface, contentWindowInsets = WindowInsets(0,0,0,0), topBar = {
-            GradientTopAppBar(title = { Text("生成前确认") }, navigationIcon = { IconButton(onClick = { if (!busy) onDismiss() }) { SkinIcon(IconKey.ArrowBack) } })
+            GradientTopAppBar(title = { Text("发送前确认") }, navigationIcon = { IconButton(onClick = { if (!busy) onDismiss() }) { SkinIcon(IconKey.ArrowBack) } })
         }, bottomBar = { Column(Modifier.fillMaxWidth().padding(skin.spacingLarge)) {
             Button(onClick = onSend, enabled = checked && !busy, modifier = Modifier.fillMaxWidth().testTag("materialFeeSend")) { Text(if (busy) "正在加入任务…" else "确认发送并${if (fee.action == MaterialFeeAction.DECOMPOSE) "分层" else "生成"}") }
             TextButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("返回修改") }
@@ -279,11 +279,11 @@ private fun MaterialFeeDialog(fee: MaterialFeeConfirmation, busy: Boolean, onDis
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             item { Text("接收方：${fee.provider.recipient} · ${fee.provider.label}", style = MaterialTheme.typography.titleSmall) }
             item { Text("实际发送 ${fee.inputs.size} 张图片；不附带未选相册、订单、价格、位置、身体参数或原始自拍。", style = MaterialTheme.typography.bodyMedium) }
-            itemsIndexed(fee.inputs) { index, input -> LolitaSection(title = "实际输入 ${index+1}") { row { MaterialPhoto(input.imagePath, "放大实际输入${index+1}", onClick = { onZoom(input.imagePath) }, height = 210) } } }
+            itemsIndexed(fee.inputs) { index, input -> LolitaSection(title = "将发送的图片 ${index+1}") { row { MaterialPhoto(input.imagePath, "放大实际输入${index+1}", onClick = { onZoom(input.imagePath) }, height = 210) } } }
             item { LolitaSection(title = "本次费用与结果") { row {
                 Text(when (fee.action) {
                     MaterialFeeAction.DECOMPOSE -> "本次仅1次图层拆分请求，可能返回底图1张与最多16个透明层，共最多17张。按实际成功输出张数计费，不能预先确认金额。返回后需选择并核对单品层，不自动试衣。"
-                    MaterialFeeAction.PREPARE -> if (fee.provider == ImageGenerationProvider.SEEDREAM) "本次只生成主视图1张，核对后再另行确认图层拆分费用。API按实际资费计费，不会自动开始分层或融合。" else "本次仅生成1张透明主视候选图，API单独计费。返回后需核对，不能保证商品细节完全一致。"
+                    MaterialFeeAction.PREPARE -> if (fee.provider == ImageGenerationProvider.SEEDREAM) "本次生成 1 张主视图，按服务资费计费；核对后另行确认分层费用，不自动继续生成。" else "本次仅生成1张透明主视候选图，API单独计费。返回后需核对，不能保证商品细节完全一致。"
                     MaterialFeeAction.ADD_ACCESSORY -> "本次生成1张试衣图，API单独计费。结果自动进入试衣历史，不记为实际穿过。人物、原裙纹和其他区域仍可能重画。"
                 })
                 if (fee.instructions.isNotBlank()) Text("本次补充要求：${fee.instructions}")

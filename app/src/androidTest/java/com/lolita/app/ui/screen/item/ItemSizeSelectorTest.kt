@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.graphics.asAndroidBitmap
 import android.content.res.Configuration
+import android.content.Context
+import android.content.ContextWrapper
+import com.lolita.app.data.recognition.RecognitionCoordinator
+import com.lolita.app.data.recognition.RecognitionSettings
+import com.lolita.app.ui.screen.item.recognition.ItemRecognitionViewModel
 import android.graphics.Bitmap
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,6 +38,7 @@ import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.ui.screen.common.SizeOptionsViewModel
 import com.lolita.app.ui.theme.LolitaTheme
 import com.lolita.app.ui.theme.SkinType
+import com.lolita.app.domain.model.WardrobeSpecifications
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import java.io.File
@@ -49,6 +55,7 @@ class ItemSizeSelectorTest {
     private lateinit var preferences: AppPreferences
     private lateinit var preferencesScope: CoroutineScope
     private lateinit var directory: File
+    private lateinit var recognitionContext: Context
     private val skin = mutableStateOf(SkinType.DEFAULT)
     private val dark = mutableStateOf(false)
     private val compact = mutableStateOf(false)
@@ -62,11 +69,16 @@ class ItemSizeSelectorTest {
     @Before fun setup() = runBlocking {
         db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
         directory = File(context.cacheDir, "size-selector-${UUID.randomUUID()}").apply { mkdirs() }
+        recognitionContext = object : ContextWrapper(context) {
+            override fun getNoBackupFilesDir() = File(directory, "keys").apply { mkdirs() }
+            override fun getSharedPreferences(name: String, mode: Int) =
+                context.getSharedPreferences("${directory.name}-$name", mode)
+        }
         openPreferences()
         db.brandDao().insertBrand(Brand(id = 1, name = "尺码测试品牌"))
         db.categoryDao().insertCategory(Category(id = 1, name = "JSK"))
         db.itemDao().insertItem(Item(id = 1, name = "已有特殊尺码的裙子", description = "", status = ItemStatus.OWNED,
-            brandId = 1, categoryId = 1, size = "定制 88/72"))
+            brandId = 1, categoryId = 1, specificationsJson = WardrobeSpecifications().encode(), size = "定制 88/72"))
         compose.runOnIdle {
             editor = ItemEditViewModel(
                 ItemRepository(db.itemDao(), database = db), BrandRepository(db.brandDao(), db.itemDao(), db),
@@ -77,11 +89,22 @@ class ItemSizeSelectorTest {
             store.put("editor", editor)
             ViewModelProvider(store, object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    require(modelClass == SizeOptionsViewModel::class.java)
                     @Suppress("UNCHECKED_CAST")
-                    return SizeOptionsViewModel(preferences, ItemRepository(db.itemDao())) as T
+                    return when (modelClass) {
+                        SizeOptionsViewModel::class.java -> SizeOptionsViewModel(preferences, ItemRepository(db.itemDao()))
+                        ItemRecognitionViewModel::class.java -> ItemRecognitionViewModel(
+                            RecognitionRepository(db, recognitionContext),
+                            RecognitionCoordinator(db, recognitionContext, preferencesScope,
+                                readKey = { error("No key in a size selector test") }, keyRevision = { 0 },
+                                recognize = { _, _, _ -> error("No network in a size selector test") }, providerReady = { false }),
+                            RecognitionSettings(recognitionContext))
+                        else -> error("Unexpected ViewModel ${modelClass.name}")
+                    } as T
                 }
-            })[SizeOptionsViewModel::class.java]
+            }).also { provider ->
+                provider[SizeOptionsViewModel::class.java]
+                provider[ItemRecognitionViewModel::class.java]
+            }
         }
         val owner = object : ViewModelStoreOwner { override val viewModelStore = store }
         compose.setContent {
@@ -105,14 +128,18 @@ class ItemSizeSelectorTest {
     @After fun close() = runBlocking {
         compose.runOnIdle { store.clear() }
         preferencesScope.coroutineContext[Job]!!.cancelAndJoin()
-        db.close(); directory.deleteRecursively(); Unit
+        db.close()
+        File(context.applicationInfo.dataDir, "shared_prefs").listFiles()
+            ?.filter { it.name.startsWith(directory.name + "-") && it.name.endsWith(".xml") }
+            ?.forEach { context.deleteSharedPreferences(it.name.removeSuffix(".xml")) }
+        directory.deleteRecursively(); Unit
     }
 
     @Test fun existingCustomSizeCanBeReplacedFromDropdownAndCleared() {
-        compose.onNodeWithText("尺码 (可选)").performScrollTo().performClick()
+        compose.onNodeWithText("尺码").performScrollTo().performClick()
         compose.onNodeWithText("M", useUnmergedTree = true).assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals("M", editor.uiState.value.size) }
-        compose.onNodeWithText("尺码 (可选)").performClick()
+        compose.onNodeWithText("尺码").performClick()
         compose.onNodeWithText("未设置").performClick()
         compose.runOnIdle { assertNull(editor.uiState.value.size) }
         runBlocking { assertEquals("定制 88/72", db.itemDao().getItemById(1)!!.size) }
@@ -151,9 +178,9 @@ class ItemSizeSelectorTest {
 
     @Test fun selectingBuiltInSizeSavesOnlyChosenItemSizeAndRetainsLegacyOption() = runBlocking {
         val before = db.itemDao().getItemById(1)!!
-        compose.onNodeWithText("尺码 (可选)").performScrollTo().performClick()
+        compose.onNodeWithText("尺码").performScrollTo().performClick()
         compose.onNodeWithText("XL", useUnmergedTree = true).performClick()
-        compose.onNodeWithText("尺码 (可选)").performClick()
+        compose.onNodeWithText("尺码").performClick()
         compose.onNodeWithText("定制 88/72", useUnmergedTree = true).performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("均码", useUnmergedTree = true).performScrollTo().performClick()
         withContext(Dispatchers.Main) { editor.saveItem().getOrThrow() }
@@ -166,14 +193,14 @@ class ItemSizeSelectorTest {
         val output = File(context.filesDir, "size-selector-screenshots").apply { mkdirs() }
         for (type in SkinType.entries) for (isDark in listOf(false, true)) {
             compose.runOnIdle { skin.value = type; dark.value = isDark; compact.value = true }
-            compose.onNodeWithText("尺码 (可选)").performScrollTo().assertIsDisplayed().performClick()
+            compose.onNodeWithText("尺码").performScrollTo().assertIsDisplayed().performClick()
             compose.onNode(hasText("XL") and hasAnyAncestor(isPopup()), useUnmergedTree = true)
                 .performScrollTo().assertIsDisplayed().performClick()
             compose.onNodeWithContentDescription("添加尺码").assertIsDisplayed().performClick()
             compose.onNodeWithText("自定义尺码").assertIsDisplayed()
             compose.onNodeWithText("取消").performClick()
-            compose.onNodeWithText("尺码 (可选)").performScrollTo()
-            val field = compose.onNodeWithText("尺码 (可选)").fetchSemanticsNode().boundsInRoot
+            compose.onNodeWithText("尺码").performScrollTo()
+            val field = compose.onNodeWithText("尺码").fetchSemanticsNode().boundsInRoot
             val add = compose.onNodeWithContentDescription("添加尺码").fetchSemanticsNode().boundsInRoot
             compose.onRoot().captureToImage().asAndroidBitmap().let { full ->
                 val left = max(0, min(field.left, add.left).toInt() - 24)

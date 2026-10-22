@@ -98,7 +98,7 @@ fun MannequinScreen(
                             modifier = Modifier.width(titleWidth).testTag("blouseMannequinTitle"),
                             textAlign = TextAlign.Center, maxLines = 2)
                     }
-                } else Text("AI 展示图 · $modeLabel", maxLines = 2)
+                } else Text(if (wig) "假发头模图" else "AI 展示图 · $modeLabel", maxLines = 2)
             }, navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" })
@@ -119,7 +119,7 @@ fun MannequinScreen(
                         enabled = !state.busy && !state.isLoading && !state.loadFailed && state.keyLoaded && (!state.hasKey || state.selectionIssue == null),
                         modifier = Modifier.fillMaxWidth()) {
                         if (state.isSubmitting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
-                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成$modeLabel")
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置服务密钥" else "生成$modeLabel")
                     }
                 }
             }
@@ -132,15 +132,15 @@ fun MannequinScreen(
             } }
             if (state.legacyPreviewAvailable) item("legacy-preview") {
                 LolitaSection(title = "旧版未保存预览") { row {
-                    Text("旧版预览仍保留在本机，不属于任务中心。请在退出前添加到裙子图片；离开不会删除文件。", modifier = Modifier.padding(top = skin.spacingMedium))
+                    Text("旧版预览仍保留在本机，不属于任务中心。请添加到物品相册；离开不会删除文件。", modifier = Modifier.padding(top = skin.spacingMedium))
                     state.legacyPreviewPath?.let { path ->
                         ImageFrame(Modifier.fillMaxWidth()) {
                             LolitaShimmerImage(model = path, contentDescription = "放大旧版预览", contentScale = ContentScale.Fit,
                                 modifier = Modifier.fillMaxWidth().height(280.dp).skinClickable { zoomLegacy = true }, circularRevealEnabled = false)
                         }
-                        Button(onClick = viewModel::saveLegacyPreview, enabled = !state.busy && state.item != null, modifier = Modifier.fillMaxWidth()) { Text("添加旧版预览到裙子图片") }
+                        Button(onClick = viewModel::saveLegacyPreview, enabled = !state.busy && state.item != null, modifier = Modifier.fillMaxWidth()) { Text("添加到物品相册") }
                         TextButton(onClick = { discardLegacy = true }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("放弃旧版预览") }
-                    } ?: Text("旧版预览无法通过文件或归属校验；文件未删除。", color = MaterialTheme.colorScheme.error)
+                    } ?: Text("旧版预览暂不可用，原文件保留。", color = MaterialTheme.colorScheme.error)
                 } }
             }
             if (state.isLoading) item("loading") {
@@ -152,12 +152,12 @@ fun MannequinScreen(
             item("background-advice") { ImageBackgroundAdvice() }
             item("notice") {
                 LolitaSection(title = state.item?.name ?: "物品参考图") { row {
-                    Text(if (wig) "将本次假发戴在选定头模上，保留脸部、颈部和底座。生成后请核对颜色、卷度、刘海和发梢。"
+                    Text(if (wig) "将假发戴在所选头模上；生成后核对颜色、卷度、刘海与发梢。"
                         else if (accessory) "单独展示所选小物，不带人物或人台；原本成对或成组的物品保留组合。AI可能改绘细节，请核对后保存。"
                         else if (blouse) "仅将所选衬衫穿到固定无头、无手臂的人台上，保留领口、袖型、袖口、纽扣和完整下摆；下身留空，不补裙装、裤装或配套小物。AI可能改绘细节，请核对后保存。"
                         else "仅生成无杆正面人台图，不保留支撑杆和底座；AI可能改绘印花、蕾丝和比例，请核对后保存。", style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = skin.spacingMedium))
-                    Text("结果保存在任务中心，核对后可追加到原图片末尾。离开页面不会放弃预览。",
+                    Text("结果在任务中心核对后添加到相册。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
                     state.selectionIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall)) }
                     state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall) }
@@ -166,7 +166,7 @@ fun MannequinScreen(
             if (wig) {
                 item("head-choice-title") {
                     LolitaSection(title = "选择头模 · 单选") { row {
-                        Text("点选一款头模，点击图片可放大查看。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
+                        Text("选择一款头模。", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         state.selectedHeadTemplate?.let { Text("本次：${it.displayName}", style = MaterialTheme.typography.labelMedium) }
                         if (state.isLoadingHead) ShimmerRect(100.dp, 120.dp, modifier = Modifier.fillMaxWidth())
                     } }
@@ -186,7 +186,7 @@ fun MannequinScreen(
                     }
                 }
                 item("head-view-confirmation") {
-                    LolitaSection(title = "核对实际两张输入") { row {
+                    LolitaSection(title = "核对本次图片") { row {
                         state.selectedHeadTemplate?.let { selected ->
                             LolitaShimmerImage(model = selected.imagePath, contentDescription = "本次实际头模输入", contentScale = ContentScale.Fit,
                                 circularRevealEnabled = false, modifier = Modifier.fillMaxWidth().height(180.dp).skinClickable { headPreview = selected.imagePath })
@@ -195,10 +195,10 @@ fun MannequinScreen(
                             circularRevealEnabled = false, modifier = Modifier.fillMaxWidth().height(180.dp).skinClickable { headPreview = state.selectedImage })
                         OutlinedButton(onClick = { cropSource = state.originalImagePath ?: state.selectedImage }, enabled = !state.busy && state.selectedImage.isNotBlank(), modifier = Modifier.fillMaxWidth()) { Text("框选假发视图") }
                         if (state.originalImagePath != null) {
-                            Text("本次只发送已确认的裁切副本，原图和相册封面保持。", style = MaterialTheme.typography.bodySmall)
-                            TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("改回整张原图") }
+                            Text("只发送已确认选区，原图与封面保留。", style = MaterialTheme.typography.bodySmall)
+                            TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("使用整图") }
                         }
-                        Text("正面模板需要看得到刘海、头顶和正面轮廓的参考；只有背面或侧面的图请更换。长发应包含完整发梢，不凭空补出看不见的结构。", style = MaterialTheme.typography.bodySmall)
+                        Text("请选择正面完整的假发图，包含头顶、刘海和全部发梢。", style = MaterialTheme.typography.bodySmall)
                         Row(Modifier.fillMaxWidth().skinClickable(enabled = !state.busy) { viewModel.confirmReferenceView(!state.referenceViewConfirmed) }, verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(checked = state.referenceViewConfirmed, onCheckedChange = viewModel::confirmReferenceView, enabled = !state.busy)
                             Text("已核对假发的正面视角、刘海与完整发梢", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
@@ -211,16 +211,16 @@ fun MannequinScreen(
                     TextButton(onClick = { onConfigureApi() }, enabled = !state.busy) { Text("API 配置") }
                 }) { row {
                     ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
-                    Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
+                    Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "服务密钥已配置" else "尚未配置服务密钥",
                         style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = skin.spacingMedium))
-                    Text("${state.provider.keyHelp} 与虚拟试衣共用服务配置，两家密钥分开保存。取消等待后服务端仍可能处理并计费，应用不会自动重试。",
+                    Text("与虚拟试衣共用服务配置。取消或超时后仍可能计费，不自动重试。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
                 } }
             }
             item("source") {
                 LolitaSection(title = "选择一张原图") { row {
-                    Text("可从商品图或详情图中选择一张，原图与封面保留。", style = MaterialTheme.typography.bodySmall)
-                    Text(if (wig) "请选择一张正面轮廓、刘海和发梢完整的假发商品图；多视图请先选定目标视图，不发送拼图或多个头模。"
+                    Text("从商品图或详情图中选择一张。", style = MaterialTheme.typography.bodySmall)
+                    Text(if (wig) "请选择一张假发正面图，多视图可先框选。"
                         else if (accessory) "选清晰、完整的小物图；只上传选中的这一张。若图中有多件物品，请在补充说明中指明目标。"
                         else if (blouse) "请选择领口、双袖、袖口和下摆完整的衬衫正面原图；只使用选中的这一张，不补看不见的结构。"
                         else "选清晰、完整的裙子正面；只上传选中的这一张。", style = MaterialTheme.typography.bodySmall,
@@ -231,8 +231,8 @@ fun MannequinScreen(
                         FilterChip(selected = showDetailImages, onClick = { showDetailImages = true },
                             enabled = !state.busy && detailImages.isNotEmpty(), label = { Text("详情图（${detailImages.size}）") })
                     }
-                    Text("当前选择：$selectedSourceLabel${if (state.originalImagePath != null) "（已框选）" else ""}", style = MaterialTheme.typography.bodyMedium)
-                    if (!wig && state.originalImagePath != null) TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("改回整张原图") }
+                    Text("已选：$selectedSourceLabel${if (state.originalImagePath != null) "（已框选）" else ""}", style = MaterialTheme.typography.bodyMedium)
+                    if (!wig && state.originalImagePath != null) TextButton(onClick = viewModel::useOriginalImage, enabled = !state.busy) { Text("使用整图") }
                 } }
             }
             itemsIndexed(sourceImages, key = { _, path -> "source-$path" }) { index, path ->
@@ -276,7 +276,7 @@ fun MannequinScreen(
     headPreview?.let { FullScreenImageViewer(listOf(it), onDismiss = { headPreview = null }) }
     if (zoomLegacy && state.legacyPreviewPath != null) FullScreenImageViewer(listOf(state.legacyPreviewPath!!), onDismiss = { zoomLegacy = false })
     if (discardLegacy) AlertDialog(onDismissRequest = { discardLegacy = false }, title = { Text("放弃旧版预览？") },
-        text = { Text("此预览尚未添加到裙子图片，放弃后将按引用保护清理。") },
+        text = { Text("将删除这张未保存预览，已保存图片保留。") },
         confirmButton = { TextButton(onClick = { discardLegacy = false; viewModel.discardLegacyPreview() }) { Text("确认放弃") } },
         dismissButton = { TextButton(onClick = { discardLegacy = false }) { Text("继续核对") } })
     confirmation?.let { confirmed ->

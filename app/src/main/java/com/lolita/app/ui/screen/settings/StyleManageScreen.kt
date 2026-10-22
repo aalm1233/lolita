@@ -70,14 +70,8 @@ fun StyleManageScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Text("风格列表", style = MaterialTheme.typography.titleLarge)
-            }
-            item {
-                HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-            }
             if (uiState.styles.isEmpty()) {
-                item { SkinEmptyState(iconKey = IconKey.Palette, title = "暂无风格") }
+                item { SkinEmptyState(iconKey = IconKey.Palette, title = "尚未添加风格") }
             } else {
                 items(uiState.styles, key = { it.id }) { style ->
                     StyleCard(style = style, onEdit = { viewModel.showEditDialog(style) }, onDelete = { viewModel.showDeleteConfirm(style) })
@@ -97,7 +91,7 @@ fun StyleManageScreen(
         AlertDialog(
             onDismissRequest = { viewModel.hideDeleteConfirm() },
             title = { Text("确认删除") },
-            text = { Text("确定要删除风格 \"${uiState.showDeleteConfirm?.name}\" 吗？") },
+            text = { Text("删除后，将从关联物品中移除风格「${uiState.showDeleteConfirm?.name}」，物品记录保留。") },
             confirmButton = {
                 TextButton(
                     onClick = { uiState.showDeleteConfirm?.let { viewModel.deleteStyle(it) } },

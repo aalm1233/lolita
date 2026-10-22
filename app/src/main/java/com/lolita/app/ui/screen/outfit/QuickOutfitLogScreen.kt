@@ -135,7 +135,7 @@ fun QuickOutfitLogScreen(
                             onValueChange = viewModel::updateSearchQuery,
                             enabled = interactionEnabled,
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("搜索服饰名称或品牌", style = MaterialTheme.typography.bodyMedium) },
+                            placeholder = { Text("搜索物品名称或品牌", style = MaterialTheme.typography.bodyMedium) },
                             leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) },
                             trailingIcon = {
                                 if (uiState.searchQuery.isNotEmpty()) {
@@ -211,7 +211,7 @@ fun QuickOutfitLogScreen(
                                 )
                                 Spacer(Modifier.height(skin.spacingMedium))
                                 Text(
-                                    if (uiState.items.isEmpty()) "还没有可选的服饰" else "没有找到匹配的服饰",
+                                    if (uiState.items.isEmpty()) "还没有可选的服饰" else "没有符合条件的物品",
                                     style = MaterialTheme.typography.titleSmall
                                 )
                                 Spacer(Modifier.height(skin.spacingSmall))

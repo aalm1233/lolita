@@ -80,10 +80,6 @@ fun BrandManageScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Text(
-                    "品牌列表",
-                    style = MaterialTheme.typography.titleLarge
-                )
             }
 
             item {

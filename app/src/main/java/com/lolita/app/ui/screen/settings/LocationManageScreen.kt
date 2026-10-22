@@ -42,8 +42,8 @@ fun LocationManageScreen(onBack: () -> Unit, viewModel: LocationManageViewModel 
         LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap),
             flingBehavior = rememberSkinFlingBehavior()) {
-            item { LolitaSection(title = "实际存放位置") { row {
-                Text("房间下可添加柜架、收纳盒，再添加层或格。数量按物品记录计算，包含挂载小物。")
+            item { LolitaSection(title = "房间与收纳") { row {
+                if (state.locations.isEmpty()) Text("在房间中添加柜架、收纳盒或层格。")
                 Button(onClick = viewModel::showAddDialog, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { Text("新增房间") }
                 OutlinedButton(onClick = viewModel::showTemplates, enabled = !state.isSaving && state.locations.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth()) { Text("添加常用收纳") }

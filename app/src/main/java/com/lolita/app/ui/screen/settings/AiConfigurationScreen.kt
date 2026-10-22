@@ -38,7 +38,7 @@ fun AiConfigurationScreen(onBack: () -> Unit, viewModel: AiConfigurationViewMode
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("aiConfiguration"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             item("intro") {
-                Text("统一管理 API Key，分别选择默认生图和识图服务。保存后返回原页面即可使用。", style = MaterialTheme.typography.bodyMedium)
+                Text("分别选择生图与识图的默认服务。", style = MaterialTheme.typography.bodyMedium)
             }
             if (state.isLoading) item("loading") {
                 LolitaCard { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
@@ -72,7 +72,7 @@ fun AiConfigurationScreen(onBack: () -> Unit, viewModel: AiConfigurationViewMode
                         } }
                     }
                 }
-                item("privacy") { Text("密钥仅加密保存在本机。生图与识图分别配置，已保存的密钥不会回填，也不进入业务备份。", style = MaterialTheme.typography.bodySmall) }
+                item("privacy") { Text("密钥仅在本机加密保存，不包含在备份中。", style = MaterialTheme.typography.bodySmall) }
             }
         }
     }

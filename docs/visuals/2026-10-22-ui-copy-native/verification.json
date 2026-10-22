@@ -1,0 +1,1158 @@
+{
+  "unique_device_tests_passed": 148,
+  "latest_failures": [],
+  "latest_skips": [],
+  "unit_tests_passed": 3,
+  "build": "assembleDebug + assembleDebugAndroidTest; UiErrorTextTest only targeted JVM",
+  "native_normal": {
+    "pixels": [
+      1440,
+      3200
+    ],
+    "density_dpi": 600,
+    "font_scale": 1.0
+  },
+  "native_small": {
+    "pixels": [
+      1440,
+      3200
+    ],
+    "density_dpi": 720,
+    "width_dp": 320,
+    "font_scale": 2.0,
+    "real_ime": true
+  },
+  "paid_service_calls": 0,
+  "test_scope": "Affected UI and error/presentation dependencies; no unrelated full database, image or backup run.",
+  "actual_captures": 834,
+  "archived_files": [
+    {
+      "file": "configuration-dark-overview.jpg",
+      "sha256": "7ab8ae2cb0c2f1efe19a56c5afcd4fb5dd3a6bbede125ac556aae1fdedffb23d"
+    },
+    {
+      "file": "configuration-light-overview.jpg",
+      "sha256": "c0ef6129eab4fe9bfe9f2afe7fc0c6a07b559313f57a76c417de8ed11b90dba1"
+    },
+    {
+      "file": "copy-attributes-dark-overview.jpg",
+      "sha256": "16d15e606456717c0b0f3605f7d647dc323ea07b34035c91609d2ce1e0c8d9f0"
+    },
+    {
+      "file": "copy-attributes-light-overview.jpg",
+      "sha256": "f1ffe117d0fe6423ec57104f259beccd0a339662ce01cf6d1c98dcef48d82935"
+    },
+    {
+      "file": "copy-backup-dark-overview.jpg",
+      "sha256": "c82b0ee8bbdb6a9871591e973c51356257e97dc6dc0b58e3172d7c34225f585e"
+    },
+    {
+      "file": "copy-backup-light-overview.jpg",
+      "sha256": "8a7ad31df93fb2e7fba92842e6a66722d6050084abc99f655accbff9d7d68397"
+    },
+    {
+      "file": "copy-calendar-dark-overview.jpg",
+      "sha256": "82baae266ac4c35ef8a09b564c8c10ead28e0e60f7933c6c5fbc3bf92f5dd4ce"
+    },
+    {
+      "file": "copy-calendar-light-overview.jpg",
+      "sha256": "0bc2bc11f3d40321b4ed78845e45dd1244e0aa54307e99fd9ac378b5e9ea9a3f"
+    },
+    {
+      "file": "copy-room-dark-overview.jpg",
+      "sha256": "1fc871970137437b23c6b7215ea4389afcc8f9a46f5f3c38003fe922eed99d2c"
+    },
+    {
+      "file": "copy-room-light-overview.jpg",
+      "sha256": "e10128dc8633e1a22bcc5212f5a6e1ff1f941a8db46db0cada1b61a0207a1a9d"
+    },
+    {
+      "file": "copy-wishlist-dark-overview.jpg",
+      "sha256": "4021321b7dbec7923aa531c7a78df2f819dacc15354a7ec0fbadae7e04e82c7a"
+    },
+    {
+      "file": "copy-wishlist-light-overview.jpg",
+      "sha256": "6080b21b228b0bc44f6c14e6eed58fc03b586f3033057b354bc3d188ef53ce03"
+    },
+    {
+      "file": "entry-dark-overview.jpg",
+      "sha256": "b6ef16fed786a75b06ea5136a5a597c4fbf0567fd8eea2df010beb4ee2c3921b"
+    },
+    {
+      "file": "entry-light-overview.jpg",
+      "sha256": "77aea6091275c4bc30de47b8077577cd06370149649ba2da714a8bad597696a1"
+    },
+    {
+      "file": "item-detail-dark-overview.jpg",
+      "sha256": "03c6684c308e2fe12b2d992c317d396c75bc60aba64bbf59f40c76f315cc676b"
+    },
+    {
+      "file": "item-detail-light-overview.jpg",
+      "sha256": "b9dc4033c8fc055eacbde4728b0c4ca82d5807e4de88a7c7e026a2e32726c7b9"
+    },
+    {
+      "file": "laboratory-dark-overview.jpg",
+      "sha256": "5bd538cb1264084ee9cb85296fa93fcf84baea4cd7680c1ad53bbcaa2f58baf6"
+    },
+    {
+      "file": "laboratory-light-overview.jpg",
+      "sha256": "b1cc24ef197323ff5f0149760532c268b7239b1fdfcd671b854def33fbeaa940"
+    },
+    {
+      "file": "material-front-dark-overview.jpg",
+      "sha256": "83e1eaf23bd4f3b29753fa50b08173aecbbd57e11c3e26d46a48ca1ff9a5b75d"
+    },
+    {
+      "file": "material-front-light-overview.jpg",
+      "sha256": "81f65933f467d3b27a0708e223977a761f2497c8d2107eb2676ee36a954faf39"
+    },
+    {
+      "file": "material-inputs-dark-overview.jpg",
+      "sha256": "2d5f8799265cc78ddee3adf6332c4ee618381abb70d9f0e49420447362b1069c"
+    },
+    {
+      "file": "material-inputs-light-overview.jpg",
+      "sha256": "a19e650fc2e64f8ee6e27ab08e3880b7462990b2d536e76dbee13418d4ace977"
+    },
+    {
+      "file": "material-layers-dark-overview.jpg",
+      "sha256": "7091121b6a41ecea9d5c594fb31a602340e87d473426d2b4a66c52affb09e115"
+    },
+    {
+      "file": "material-layers-light-overview.jpg",
+      "sha256": "baa1871fb335bcdf66f7dfe3a1e81b0d355d8c643a5c4d5e3730d8bd9ab8987c"
+    },
+    {
+      "file": "material-saved-dark-overview.jpg",
+      "sha256": "4898c05f35ec9000b041227a5624413861a7c37c29ffaf0d1c843e5a9f70a41d"
+    },
+    {
+      "file": "material-saved-light-overview.jpg",
+      "sha256": "5fa68c3cffd8aee2c6b685830fa8a6be782c49e25fb321de62929a582c0456d4"
+    },
+    {
+      "file": "mixed-categories-dark-overview.jpg",
+      "sha256": "e579dcf162e2f19be4b72a76e6fe77e7b659bef91e84e37d48113119c0b5b345"
+    },
+    {
+      "file": "mixed-categories-light-overview.jpg",
+      "sha256": "ec61d5ffc0dd61716882c3668f35e20d2782618f50c67503abe24c2dc8e37519"
+    },
+    {
+      "file": "model-editor-dark-overview.jpg",
+      "sha256": "b433df4b67a937e691e7be22cc1b2787faa96f9e664e8b20c5f989c18d5f652b"
+    },
+    {
+      "file": "model-editor-light-overview.jpg",
+      "sha256": "683a0e5e7210af146b1f02954528efad7da835402fa647fbb6f4f777ac46b872"
+    },
+    {
+      "file": "recognition-dark-overview.jpg",
+      "sha256": "93d0ceb563d5657069219fa8e3b69372d2196c339fa0a55c9eec5830f374efc4"
+    },
+    {
+      "file": "recognition-light-overview.jpg",
+      "sha256": "7bc1e27ade1ec1fcaee4dcd7cecbb74294a21d0c271518a21885714a20760c20"
+    },
+    {
+      "file": "sku-import-dark-overview.jpg",
+      "sha256": "9e7ba90fa22cca57d521bcaa63da6a6573630f2bb269839b43598bb30400a0c4"
+    },
+    {
+      "file": "sku-import-light-overview.jpg",
+      "sha256": "168be7624a7a95c8b523ba23bfb276f9c0a852d5e3e114298f4d16cdca9eab32"
+    },
+    {
+      "file": "small/laboratory-native/small-batch-cover.png",
+      "sha256": "39130f48a28ad5b503d9e46da6a3c8f2808dfe5234450c26f3fd15eeea37ba9f"
+    },
+    {
+      "file": "small/laboratory-native/small-lab.png",
+      "sha256": "e7f1005c6d37bd633113f9d6012b526355425efc7ae09cf2b0d7e01842e776f4"
+    },
+    {
+      "file": "small/laboratory-native/small-services.png",
+      "sha256": "5aec8629da8c8610a3943e9c04fc9b2698ab572b1089a0856c760680c20eeb88"
+    },
+    {
+      "file": "small/laboratory-native/small-wig-ime.png",
+      "sha256": "bbd01ea19bf878c188b1ac3c31292ab72dd99e27a70d3e9753ae61c5c574dc0f"
+    },
+    {
+      "file": "small/material-batch-native/small-fee.png",
+      "sha256": "08d6d3541aa212c19ca11f0eee007db5e613b63b856d133b998f8780be0f3b92"
+    },
+    {
+      "file": "small/material-batch-native/small-ime.png",
+      "sha256": "91d24247b45c4bb50fd22c0f7125c52a5766b3d318d1db0d0fd00d51c98096e3"
+    },
+    {
+      "file": "small/material-category-native/small-fee.png",
+      "sha256": "c5543819a18f9dbb21b6cad9e0a6bb1deb50940aca885fa88c24866fc10a27fb"
+    },
+    {
+      "file": "small/material-category-native/small-ime.png",
+      "sha256": "e31e749457e6d26b1350dab56eb73c3c2597206a4197e627d19aad2096a9e697"
+    },
+    {
+      "file": "small/material-native-screens/small-fee.png",
+      "sha256": "f8f424f66e4a14cc394849ac48fdf5cfd299f5dbab217f725d3260f675b6764a"
+    },
+    {
+      "file": "small/material-native-screens/small-ime-full-device.png",
+      "sha256": "b72f12a39d67ed807bc2971d458621e2f17ba4b0420a8c53fa0c798438ea1ded"
+    },
+    {
+      "file": "small/material-native-screens/small-prepare-ime.png",
+      "sha256": "a6cbc7d2a015429c4e41adbbc8d15565bbc71ee09737b959ebf1a3fa1c3c4659"
+    },
+    {
+      "file": "small/material-native-screens/small-prepare.png",
+      "sha256": "4d6d3cd26b2e27fc087b672ff34916bc31feed690e4952aa3c8cdb28b7047585"
+    },
+    {
+      "file": "small/taobao-color-styles-screenshots/small-320dp-2x-keyboard-system.png",
+      "sha256": "52491168d5b48b1af7475b0905f94209497fe05b9e4aee85a44f76805bf2d602"
+    },
+    {
+      "file": "small/taobao-color-styles-screenshots/small-320dp-2x-keyboard.png",
+      "sha256": "93a3b7f8f87a2a31728539dbe86cd9caefd24bf16b40da2fced877155b8a5366"
+    },
+    {
+      "file": "small/taobao-sku-combination-screenshots/small-320dp-2x-keyboard.png",
+      "sha256": "e2ecc7f8d4076b84fb6b226f614b3d200d16f74e58b0a618f5c930658c211cec"
+    },
+    {
+      "file": "small/task-queue-native/small-batch-selection.png",
+      "sha256": "6dc220afb007d4e5c1457c0f23e5236acdc363ec1958510e9793bbb53b372659"
+    },
+    {
+      "file": "small/task-queue-native/small-batch.png",
+      "sha256": "bcf8c60262088bc835d9b2e74a6f8b085c93316484738295ac984fa56f1d16f9"
+    },
+    {
+      "file": "small/try-on-physics-screens/small-large-font-keyboard.png",
+      "sha256": "e954ca58dc4912405d06a72d006d69f5c7792a78ed96a830774c6fd19f472008"
+    },
+    {
+      "file": "small/tryon-wishlist-shoes-screens/small-320dp-2x-keyboard.png",
+      "sha256": "d322eb19679b90e0fe6b65c8bf9e19192c0365cc39e998911756af77a4b83fcf"
+    },
+    {
+      "file": "small/typography-native/small-input-ime.png",
+      "sha256": "f92fef4cd7243e30cd0ecab2df35f8ce044a365e3dbb83a8bef809173e761667"
+    },
+    {
+      "file": "small/typography-native/small-search-ime.png",
+      "sha256": "12f46be05a0a7385fb9751f0ad801935f620979a2a670689ebf69ea55e99bed6"
+    },
+    {
+      "file": "statistics-dark-overview.jpg",
+      "sha256": "6592d421bf1ec720506f369f594ece760204830d6a5b011a97b8cbe4dc346035"
+    },
+    {
+      "file": "statistics-light-overview.jpg",
+      "sha256": "c6f194abe3d6758560dedb68b59c0b4659c67d1144426142aea91a1a7a41b5d8"
+    },
+    {
+      "file": "task-actions-dark-overview.jpg",
+      "sha256": "ced6ee902244ace9f4f9450660c77bb24a5a47ebe2f56d2c1eed9182a94e72d6"
+    },
+    {
+      "file": "task-actions-light-overview.jpg",
+      "sha256": "eb05582979920ca33b93afe60b539062e854c4588904dfde2b42093887b663ea"
+    },
+    {
+      "file": "task-center-dark-overview.jpg",
+      "sha256": "d5f706426d9ab200948ffb9eb9bb8375f444630396e00334a1446f3f6d1d4f40"
+    },
+    {
+      "file": "task-center-light-overview.jpg",
+      "sha256": "ff3bc12fc7f86ce65fd1b14fa62a77a891def0b56c1b2dfd07b7b87874e3f8b5"
+    },
+    {
+      "file": "tryon-dark-overview.jpg",
+      "sha256": "9679c3ad2b44f34b456a0d879f7f4dffb64604a24cb453432bb968241fbe5782"
+    },
+    {
+      "file": "tryon-light-overview.jpg",
+      "sha256": "07d30d4109d937697e3fb132dea5f894c38bd5ba96508fa3f15c21f74e39c660"
+    },
+    {
+      "file": "tryon-picker-dark-overview.jpg",
+      "sha256": "facfe8cf5602b12eef00e3272a94f4821c865cdcba53c522863a3c454591323a"
+    },
+    {
+      "file": "tryon-picker-light-overview.jpg",
+      "sha256": "bd0236ea10d22621dd21cc6807aad32d536a695f868f2ddcd32dc683f7a11c85"
+    },
+    {
+      "file": "ui-copy-native/attributes-chinese-dark.png",
+      "sha256": "a211e0e75f44170af89dc39b4b8e35a68372bc7151c2602b263bae154d5c136c"
+    },
+    {
+      "file": "ui-copy-native/attributes-chinese-light.png",
+      "sha256": "d5588519dd59bd4371acffebd5b6c8df5d7415eaffc6448585cc1bebba06a883"
+    },
+    {
+      "file": "ui-copy-native/attributes-classic-dark.png",
+      "sha256": "c21fa76e80191e20009a905764c26d4d785d261cb585fb0bb6781b8fd9db0a76"
+    },
+    {
+      "file": "ui-copy-native/attributes-classic-light.png",
+      "sha256": "ffa1c0afb88818a3fc0a49d7b384cbe5a26c66dcb825bf0aea24007732e4fe09"
+    },
+    {
+      "file": "ui-copy-native/attributes-country-dark.png",
+      "sha256": "b3db3dbea4034dcf8f67eded1e5afdd9f0b5a408ee69cdd3ee23fc4cbf3f8dfc"
+    },
+    {
+      "file": "ui-copy-native/attributes-country-light.png",
+      "sha256": "6fa0ac71141870d62a4dda94d901c78e590eebde6706c91eebe334348818a2bb"
+    },
+    {
+      "file": "ui-copy-native/attributes-default-dark.png",
+      "sha256": "a5298f902aa29ccae8225aeb3ba320d6b1364a90582a7931b082e072ae7fab9f"
+    },
+    {
+      "file": "ui-copy-native/attributes-default-light.png",
+      "sha256": "00240fdd7b8425847b1c530bce21f8fff076f2ea92d5395bfeff68dcb9d9311d"
+    },
+    {
+      "file": "ui-copy-native/attributes-gothic-dark.png",
+      "sha256": "9a527af16dd0c25bc30c90e9da55ebff5ba07f629772a27d0bb0fddcef550f5a"
+    },
+    {
+      "file": "ui-copy-native/attributes-gothic-light.png",
+      "sha256": "7b0588528ebe7c57a962591d9a4be354ff7f8b5c39602085a773d7244e260f1d"
+    },
+    {
+      "file": "ui-copy-native/attributes-navy-dark.png",
+      "sha256": "ec417adcf6fb2d1216619f8fe1eb851a9e4aba3b66c45352593b4389e1b8b1e3"
+    },
+    {
+      "file": "ui-copy-native/attributes-navy-light.png",
+      "sha256": "4cc237ad3689f91c1b34395876020c0c13e1a47272038fb5b4b82f963a9d9562"
+    },
+    {
+      "file": "ui-copy-native/attributes-victorian-dark.png",
+      "sha256": "cd603169632a56f08a4f6cb7ccaf7e77c06df0fbb5518a7f7f36771d14839041"
+    },
+    {
+      "file": "ui-copy-native/attributes-victorian-light.png",
+      "sha256": "02c4e17f54abc6ff328966122c05091c32dca954441b689e8f74d820b25352f9"
+    },
+    {
+      "file": "ui-copy-native/backup-chinese-dark.png",
+      "sha256": "d07a666842b36f3426eef8047f14ca79a57c328b328641a9797a23afc2e256cc"
+    },
+    {
+      "file": "ui-copy-native/backup-chinese-light.png",
+      "sha256": "f224b218ac61f5269a59e585feca33a113262b5d5ff665e65b4065d6e16bcfbe"
+    },
+    {
+      "file": "ui-copy-native/backup-classic-dark.png",
+      "sha256": "67974462db6ff8685f0c1ad230c40795c9e1cbb1733c5eea520a47f26cb09ec8"
+    },
+    {
+      "file": "ui-copy-native/backup-classic-light.png",
+      "sha256": "f18a1830d9fea47ae2bc8d99e1731273420287b42d77b632017a1cb1e486c5f7"
+    },
+    {
+      "file": "ui-copy-native/backup-country-dark.png",
+      "sha256": "ec1e20f4858faaa087778115225753924d71e4517cf1f475f8256a13ad34f883"
+    },
+    {
+      "file": "ui-copy-native/backup-country-light.png",
+      "sha256": "251309bf60052676d41abbbdaeddf9876e8fccb92b12c83d508802b5119ac694"
+    },
+    {
+      "file": "ui-copy-native/backup-default-dark.png",
+      "sha256": "f54f7cdedf6108a4bbdf23949cd643d91b049d506411be3d62d6d40390a0605c"
+    },
+    {
+      "file": "ui-copy-native/backup-default-light.png",
+      "sha256": "ed19afe5d2f8cd88775f897dd3f2fa0ddf9bffce89a3720e6a870eb03ea27bfe"
+    },
+    {
+      "file": "ui-copy-native/backup-gothic-dark.png",
+      "sha256": "fd3be444077525e1aeb522ac5e7ad2423051ba0a333610da9dce0b9b0f9469e5"
+    },
+    {
+      "file": "ui-copy-native/backup-gothic-light.png",
+      "sha256": "9ef047befbd214c3368836e1146630a7da18e7749fc09d063dd8d3757f09d5d1"
+    },
+    {
+      "file": "ui-copy-native/backup-navy-dark.png",
+      "sha256": "eb4876cff9fbcb33395b16cbe59befa097d4eaa380b43e97386a53c2fed186b2"
+    },
+    {
+      "file": "ui-copy-native/backup-navy-light.png",
+      "sha256": "cd9c5b19985f38599ab7ee7f7388d33febdeb3ae88586cc95987b8bfe0101903"
+    },
+    {
+      "file": "ui-copy-native/backup-small-replacement.png",
+      "sha256": "4702ac041e5ef3fd4da213dc96b64d207b803d10f41b5898a44573398fabff71"
+    },
+    {
+      "file": "ui-copy-native/backup-small-warnings.png",
+      "sha256": "b549cb9449d0045d61f55e0ec3ee03e209afef97f198fee8d932361442b12546"
+    },
+    {
+      "file": "ui-copy-native/backup-victorian-dark.png",
+      "sha256": "35a2c43b883446a96ec6f80a22b8ff62000a89ae79603feae934e79a9899d507"
+    },
+    {
+      "file": "ui-copy-native/backup-victorian-light.png",
+      "sha256": "9f891583d8c8e1be8e027c44ecb440d26a0e49a4097ea76309ba13a70cd5306b"
+    },
+    {
+      "file": "ui-copy-native/calendar-chinese-dark.png",
+      "sha256": "e3eb282ea26472487a28e9496b173b1a04799a79351a91de114c4b16ea215080"
+    },
+    {
+      "file": "ui-copy-native/calendar-chinese-light.png",
+      "sha256": "19a0a983edf3356eb98e3cb3df5ae9b0f6dbee7adff418ef09ad906d61942667"
+    },
+    {
+      "file": "ui-copy-native/calendar-classic-dark.png",
+      "sha256": "5a1ceffc79b5a2142b38ea14ea837b8189177f8845d2cc4ededd8a93a9c6a963"
+    },
+    {
+      "file": "ui-copy-native/calendar-classic-light.png",
+      "sha256": "e12492078c158dbc4abc240456e2b06f3f83dd2b4d77b0e73fa27620c4cb48b9"
+    },
+    {
+      "file": "ui-copy-native/calendar-country-dark.png",
+      "sha256": "459aa4ae588d2a537480b68cefcbb0f1f62595c780d189916a318acb183f9625"
+    },
+    {
+      "file": "ui-copy-native/calendar-country-light.png",
+      "sha256": "ae4fb1e0fafc26eff090e61576ba9ad9fd2e67a8f4932d674b4906892c7cbe3e"
+    },
+    {
+      "file": "ui-copy-native/calendar-default-dark.png",
+      "sha256": "8de6ec8700f16fb07d905a486c94e7ed4d9b7ce73f030dc6a3e5965f9172cbf5"
+    },
+    {
+      "file": "ui-copy-native/calendar-default-light.png",
+      "sha256": "1cafcd931ac64b874c055a9e0af987c8ebe394894c9131227beeb708f75ddcad"
+    },
+    {
+      "file": "ui-copy-native/calendar-gothic-dark.png",
+      "sha256": "65206b25014db24a826f0d503efd36b7aed46317d4d676bba24b2edb81ca922b"
+    },
+    {
+      "file": "ui-copy-native/calendar-gothic-light.png",
+      "sha256": "69202258de994a7c1bec5beb5b71b04c78179799e6df7cf74e1576abaa001228"
+    },
+    {
+      "file": "ui-copy-native/calendar-navy-dark.png",
+      "sha256": "b43e0f24ab9cdfcfdbf3609de137473c4c410e8e33e037668cf531f16bfb4f3e"
+    },
+    {
+      "file": "ui-copy-native/calendar-navy-light.png",
+      "sha256": "0b2861b5e31e1d34b0cfa7ce2c8bef9348eacdf99cc0526ca00aceef692e538a"
+    },
+    {
+      "file": "ui-copy-native/calendar-small-double-font.png",
+      "sha256": "8b1ad95c7d37867dd3041195fa11d30a8b5674186b2b15aa1c03dac45c9a20f9"
+    },
+    {
+      "file": "ui-copy-native/calendar-victorian-dark.png",
+      "sha256": "0084d6cb9a650354da43be67554f9cb5db5a2119ee140c73f962f06def13d997"
+    },
+    {
+      "file": "ui-copy-native/calendar-victorian-light.png",
+      "sha256": "1dada3da4916ebad8d44d239b3f24dfb922ead905d206fb682e3d3e736d161a5"
+    },
+    {
+      "file": "ui-copy-native/room-chinese-dark.png",
+      "sha256": "6d35703bf52cdbe31a2ed8793899ae4728a82d10c6e1c9459730798b919288e8"
+    },
+    {
+      "file": "ui-copy-native/room-chinese-light.png",
+      "sha256": "2784f201553fa93ea2088f6696fce6fbc6cc61cac71d978664e21d56b4255cff"
+    },
+    {
+      "file": "ui-copy-native/room-classic-dark.png",
+      "sha256": "d2cc5f0b69ee9e841c68d399cfd03699ab8e34fb0c835740e7baa1d78184d84b"
+    },
+    {
+      "file": "ui-copy-native/room-classic-light.png",
+      "sha256": "6da23f6ffda8a8d4a0322c2fbf551dc1a783fb3ac252f734f60eefbbd7d9d291"
+    },
+    {
+      "file": "ui-copy-native/room-country-dark.png",
+      "sha256": "ddd9f437005aa1c07b29513e9a8595d03b73cb12277c4d257715db7dc2ef27d0"
+    },
+    {
+      "file": "ui-copy-native/room-country-light.png",
+      "sha256": "3ab5957aaffc6e7f0bdfae68a1cbbfd30e347a2fea85143d5a2d3b24e3f97ab8"
+    },
+    {
+      "file": "ui-copy-native/room-default-dark.png",
+      "sha256": "c6b714134fbef98343c8d50a1e068b11a707085cf5c072ae341e1f65517a5457"
+    },
+    {
+      "file": "ui-copy-native/room-default-light.png",
+      "sha256": "781325b700d8f47e79f066ef3ec831b97a215609b51e2991b86f1c38cbce20ae"
+    },
+    {
+      "file": "ui-copy-native/room-gothic-dark.png",
+      "sha256": "3ff66e30d1273bbd4080a7c7e6496c4af9dec380fd36defbb518442246d56a7c"
+    },
+    {
+      "file": "ui-copy-native/room-gothic-light.png",
+      "sha256": "04de6f62dbfd61a0e1755422c29833301f73d0cb178ae49b3b19a5ea1dfb74b0"
+    },
+    {
+      "file": "ui-copy-native/room-navy-dark.png",
+      "sha256": "00dc23942f76e201ecd0dd1519be8b05042197275c5e35c88dfaf8f0c99da77c"
+    },
+    {
+      "file": "ui-copy-native/room-navy-light.png",
+      "sha256": "bd3895e6208e567589d5bbddd7bdbc6239ed0b3758511343739a23d4a2ce10c3"
+    },
+    {
+      "file": "ui-copy-native/room-victorian-dark.png",
+      "sha256": "26f5a51fdf266a6584549a89bdf6cd8a5773bfa4081b253a2e765deff5452bbb"
+    },
+    {
+      "file": "ui-copy-native/room-victorian-light.png",
+      "sha256": "8d2e6fb0cba77876ab31a79e45eef41e400ab58e0990a59d9447c9358391455c"
+    },
+    {
+      "file": "ui-copy-native/wishlist-chinese-dark.png",
+      "sha256": "dc139daf458cd9d244cc95df5b965225bbd54530b0e270e9109e2ae8a792dd91"
+    },
+    {
+      "file": "ui-copy-native/wishlist-chinese-light.png",
+      "sha256": "0e982ae6e6026584e3abb5f6a0e534a571ffeba80e3833bb898210817e48426e"
+    },
+    {
+      "file": "ui-copy-native/wishlist-classic-dark.png",
+      "sha256": "95107e3791c051125ba847c6c91e5fb3cae3ef7b948c4ad73464f6e8de180505"
+    },
+    {
+      "file": "ui-copy-native/wishlist-classic-light.png",
+      "sha256": "a3fd351637cf4d2ad01e0f1875070bc74b018255d045f9f5a4dfc99c618e17ab"
+    },
+    {
+      "file": "ui-copy-native/wishlist-country-dark.png",
+      "sha256": "ac399eb67052923f6bf21fd17a6c2191f57e4910e4d11c56207dacffd09e325d"
+    },
+    {
+      "file": "ui-copy-native/wishlist-country-light.png",
+      "sha256": "64300696b171a8a0e94158a35848e12710dce586b061b4441108d2f74dc7793f"
+    },
+    {
+      "file": "ui-copy-native/wishlist-default-dark.png",
+      "sha256": "494db2428f76bfe165e653037412d2b1bb6ebfc6ae39f83440916e282f7d326f"
+    },
+    {
+      "file": "ui-copy-native/wishlist-default-light.png",
+      "sha256": "1160e67e1d789079d948acec94ffccb1d512b82c8c8781a239db7019388dac24"
+    },
+    {
+      "file": "ui-copy-native/wishlist-gothic-dark.png",
+      "sha256": "e49658432498d755c99bf52382b951eb071fcaae74f092c012879a27445a9322"
+    },
+    {
+      "file": "ui-copy-native/wishlist-gothic-light.png",
+      "sha256": "c0a9f1bb00c041592bed25e1bbc9bf7acab4c7f563db585bd7dafcce7a631efa"
+    },
+    {
+      "file": "ui-copy-native/wishlist-navy-dark.png",
+      "sha256": "3e39c6b0d25f101afc580b8d1019407c229ad38726274940a4900318de611dd4"
+    },
+    {
+      "file": "ui-copy-native/wishlist-navy-light.png",
+      "sha256": "6925d6689f1908eb311a2ded70771412c7d55c26be61a06ccf6bf5ef13811dfd"
+    },
+    {
+      "file": "ui-copy-native/wishlist-victorian-dark.png",
+      "sha256": "898b3e83229792c0cdd2137ab99cc18e4831028c0997952f06790beab7a8faf5"
+    },
+    {
+      "file": "ui-copy-native/wishlist-victorian-light.png",
+      "sha256": "5b28551095074c6cd7c0afa3f113eff57b2411d7954b58d1dcd48e228eacd6b2"
+    }
+  ],
+  "boards": [
+    {
+      "file": "copy-room-light-overview.jpg",
+      "sources": [
+        "ui-copy-native/room-default-light.png",
+        "ui-copy-native/room-gothic-light.png",
+        "ui-copy-native/room-chinese-light.png",
+        "ui-copy-native/room-classic-light.png",
+        "ui-copy-native/room-navy-light.png",
+        "ui-copy-native/room-country-light.png",
+        "ui-copy-native/room-victorian-light.png"
+      ],
+      "sha256": "e10128dc8633e1a22bcc5212f5a6e1ff1f941a8db46db0cada1b61a0207a1a9d"
+    },
+    {
+      "file": "copy-room-dark-overview.jpg",
+      "sources": [
+        "ui-copy-native/room-default-dark.png",
+        "ui-copy-native/room-gothic-dark.png",
+        "ui-copy-native/room-chinese-dark.png",
+        "ui-copy-native/room-classic-dark.png",
+        "ui-copy-native/room-navy-dark.png",
+        "ui-copy-native/room-country-dark.png",
+        "ui-copy-native/room-victorian-dark.png"
+      ],
+      "sha256": "1fc871970137437b23c6b7215ea4389afcc8f9a46f5f3c38003fe922eed99d2c"
+    },
+    {
+      "file": "copy-attributes-light-overview.jpg",
+      "sources": [
+        "ui-copy-native/attributes-default-light.png",
+        "ui-copy-native/attributes-gothic-light.png",
+        "ui-copy-native/attributes-chinese-light.png",
+        "ui-copy-native/attributes-classic-light.png",
+        "ui-copy-native/attributes-navy-light.png",
+        "ui-copy-native/attributes-country-light.png",
+        "ui-copy-native/attributes-victorian-light.png"
+      ],
+      "sha256": "f1ffe117d0fe6423ec57104f259beccd0a339662ce01cf6d1c98dcef48d82935"
+    },
+    {
+      "file": "copy-attributes-dark-overview.jpg",
+      "sources": [
+        "ui-copy-native/attributes-default-dark.png",
+        "ui-copy-native/attributes-gothic-dark.png",
+        "ui-copy-native/attributes-chinese-dark.png",
+        "ui-copy-native/attributes-classic-dark.png",
+        "ui-copy-native/attributes-navy-dark.png",
+        "ui-copy-native/attributes-country-dark.png",
+        "ui-copy-native/attributes-victorian-dark.png"
+      ],
+      "sha256": "16d15e606456717c0b0f3605f7d647dc323ea07b34035c91609d2ce1e0c8d9f0"
+    },
+    {
+      "file": "copy-wishlist-light-overview.jpg",
+      "sources": [
+        "ui-copy-native/wishlist-default-light.png",
+        "ui-copy-native/wishlist-gothic-light.png",
+        "ui-copy-native/wishlist-chinese-light.png",
+        "ui-copy-native/wishlist-classic-light.png",
+        "ui-copy-native/wishlist-navy-light.png",
+        "ui-copy-native/wishlist-country-light.png",
+        "ui-copy-native/wishlist-victorian-light.png"
+      ],
+      "sha256": "6080b21b228b0bc44f6c14e6eed58fc03b586f3033057b354bc3d188ef53ce03"
+    },
+    {
+      "file": "copy-wishlist-dark-overview.jpg",
+      "sources": [
+        "ui-copy-native/wishlist-default-dark.png",
+        "ui-copy-native/wishlist-gothic-dark.png",
+        "ui-copy-native/wishlist-chinese-dark.png",
+        "ui-copy-native/wishlist-classic-dark.png",
+        "ui-copy-native/wishlist-navy-dark.png",
+        "ui-copy-native/wishlist-country-dark.png",
+        "ui-copy-native/wishlist-victorian-dark.png"
+      ],
+      "sha256": "4021321b7dbec7923aa531c7a78df2f819dacc15354a7ec0fbadae7e04e82c7a"
+    },
+    {
+      "file": "copy-backup-light-overview.jpg",
+      "sources": [
+        "ui-copy-native/backup-default-light.png",
+        "ui-copy-native/backup-gothic-light.png",
+        "ui-copy-native/backup-chinese-light.png",
+        "ui-copy-native/backup-classic-light.png",
+        "ui-copy-native/backup-navy-light.png",
+        "ui-copy-native/backup-country-light.png",
+        "ui-copy-native/backup-victorian-light.png"
+      ],
+      "sha256": "8a7ad31df93fb2e7fba92842e6a66722d6050084abc99f655accbff9d7d68397"
+    },
+    {
+      "file": "copy-backup-dark-overview.jpg",
+      "sources": [
+        "ui-copy-native/backup-default-dark.png",
+        "ui-copy-native/backup-gothic-dark.png",
+        "ui-copy-native/backup-chinese-dark.png",
+        "ui-copy-native/backup-classic-dark.png",
+        "ui-copy-native/backup-navy-dark.png",
+        "ui-copy-native/backup-country-dark.png",
+        "ui-copy-native/backup-victorian-dark.png"
+      ],
+      "sha256": "c82b0ee8bbdb6a9871591e973c51356257e97dc6dc0b58e3172d7c34225f585e"
+    },
+    {
+      "file": "copy-calendar-light-overview.jpg",
+      "sources": [
+        "ui-copy-native/calendar-default-light.png",
+        "ui-copy-native/calendar-gothic-light.png",
+        "ui-copy-native/calendar-chinese-light.png",
+        "ui-copy-native/calendar-classic-light.png",
+        "ui-copy-native/calendar-navy-light.png",
+        "ui-copy-native/calendar-country-light.png",
+        "ui-copy-native/calendar-victorian-light.png"
+      ],
+      "sha256": "0bc2bc11f3d40321b4ed78845e45dd1244e0aa54307e99fd9ac378b5e9ea9a3f"
+    },
+    {
+      "file": "copy-calendar-dark-overview.jpg",
+      "sources": [
+        "ui-copy-native/calendar-default-dark.png",
+        "ui-copy-native/calendar-gothic-dark.png",
+        "ui-copy-native/calendar-chinese-dark.png",
+        "ui-copy-native/calendar-classic-dark.png",
+        "ui-copy-native/calendar-navy-dark.png",
+        "ui-copy-native/calendar-country-dark.png",
+        "ui-copy-native/calendar-victorian-dark.png"
+      ],
+      "sha256": "82baae266ac4c35ef8a09b564c8c10ead28e0e60f7933c6c5fbc3bf92f5dd4ce"
+    },
+    {
+      "file": "statistics-light-overview.jpg",
+      "sources": [
+        "stats-overview-previews/normal-default-light.png",
+        "stats-overview-previews/normal-gothic-light.png",
+        "stats-overview-previews/normal-chinese-light.png",
+        "stats-overview-previews/normal-classic-light.png",
+        "stats-overview-previews/normal-navy-light.png",
+        "stats-overview-previews/normal-country-light.png",
+        "stats-overview-previews/normal-victorian-light.png"
+      ],
+      "sha256": "c6f194abe3d6758560dedb68b59c0b4659c67d1144426142aea91a1a7a41b5d8"
+    },
+    {
+      "file": "statistics-dark-overview.jpg",
+      "sources": [
+        "stats-overview-previews/normal-default-dark.png",
+        "stats-overview-previews/normal-gothic-dark.png",
+        "stats-overview-previews/normal-chinese-dark.png",
+        "stats-overview-previews/normal-classic-dark.png",
+        "stats-overview-previews/normal-navy-dark.png",
+        "stats-overview-previews/normal-country-dark.png",
+        "stats-overview-previews/normal-victorian-dark.png"
+      ],
+      "sha256": "6592d421bf1ec720506f369f594ece760204830d6a5b011a97b8cbe4dc346035"
+    },
+    {
+      "file": "laboratory-light-overview.jpg",
+      "sources": [
+        "laboratory-native/compact-page-default-light.png",
+        "laboratory-native/compact-page-gothic-light.png",
+        "laboratory-native/compact-page-chinese-light.png",
+        "laboratory-native/compact-page-classic-light.png",
+        "laboratory-native/compact-page-navy-light.png",
+        "laboratory-native/compact-page-country-light.png",
+        "laboratory-native/compact-page-victorian-light.png"
+      ],
+      "sha256": "b1cc24ef197323ff5f0149760532c268b7239b1fdfcd671b854def33fbeaa940"
+    },
+    {
+      "file": "laboratory-dark-overview.jpg",
+      "sources": [
+        "laboratory-native/compact-page-default-dark.png",
+        "laboratory-native/compact-page-gothic-dark.png",
+        "laboratory-native/compact-page-chinese-dark.png",
+        "laboratory-native/compact-page-classic-dark.png",
+        "laboratory-native/compact-page-navy-dark.png",
+        "laboratory-native/compact-page-country-dark.png",
+        "laboratory-native/compact-page-victorian-dark.png"
+      ],
+      "sha256": "5bd538cb1264084ee9cb85296fa93fcf84baea4cd7680c1ad53bbcaa2f58baf6"
+    },
+    {
+      "file": "item-detail-light-overview.jpg",
+      "sources": [
+        "laboratory-native/detail-default-light.png",
+        "laboratory-native/detail-gothic-light.png",
+        "laboratory-native/detail-chinese-light.png",
+        "laboratory-native/detail-classic-light.png",
+        "laboratory-native/detail-navy-light.png",
+        "laboratory-native/detail-country-light.png",
+        "laboratory-native/detail-victorian-light.png"
+      ],
+      "sha256": "b9dc4033c8fc055eacbde4728b0c4ca82d5807e4de88a7c7e026a2e32726c7b9"
+    },
+    {
+      "file": "item-detail-dark-overview.jpg",
+      "sources": [
+        "laboratory-native/detail-default-dark.png",
+        "laboratory-native/detail-gothic-dark.png",
+        "laboratory-native/detail-chinese-dark.png",
+        "laboratory-native/detail-classic-dark.png",
+        "laboratory-native/detail-navy-dark.png",
+        "laboratory-native/detail-country-dark.png",
+        "laboratory-native/detail-victorian-dark.png"
+      ],
+      "sha256": "03c6684c308e2fe12b2d992c317d396c75bc60aba64bbf59f40c76f315cc676b"
+    },
+    {
+      "file": "material-inputs-light-overview.jpg",
+      "sources": [
+        "material-batch-native/inputs-default-light.png",
+        "material-batch-native/inputs-gothic-light.png",
+        "material-batch-native/inputs-chinese-light.png",
+        "material-batch-native/inputs-classic-light.png",
+        "material-batch-native/inputs-navy-light.png",
+        "material-batch-native/inputs-country-light.png",
+        "material-batch-native/inputs-victorian-light.png"
+      ],
+      "sha256": "a19e650fc2e64f8ee6e27ab08e3880b7462990b2d536e76dbee13418d4ace977"
+    },
+    {
+      "file": "material-inputs-dark-overview.jpg",
+      "sources": [
+        "material-batch-native/inputs-default-dark.png",
+        "material-batch-native/inputs-gothic-dark.png",
+        "material-batch-native/inputs-chinese-dark.png",
+        "material-batch-native/inputs-classic-dark.png",
+        "material-batch-native/inputs-navy-dark.png",
+        "material-batch-native/inputs-country-dark.png",
+        "material-batch-native/inputs-victorian-dark.png"
+      ],
+      "sha256": "2d5f8799265cc78ddee3adf6332c4ee618381abb70d9f0e49420447362b1069c"
+    },
+    {
+      "file": "material-front-light-overview.jpg",
+      "sources": [
+        "material-batch-native/front-default-light.png",
+        "material-batch-native/front-gothic-light.png",
+        "material-batch-native/front-chinese-light.png",
+        "material-batch-native/front-classic-light.png",
+        "material-batch-native/front-navy-light.png",
+        "material-batch-native/front-country-light.png",
+        "material-batch-native/front-victorian-light.png"
+      ],
+      "sha256": "81f65933f467d3b27a0708e223977a761f2497c8d2107eb2676ee36a954faf39"
+    },
+    {
+      "file": "material-front-dark-overview.jpg",
+      "sources": [
+        "material-batch-native/front-default-dark.png",
+        "material-batch-native/front-gothic-dark.png",
+        "material-batch-native/front-chinese-dark.png",
+        "material-batch-native/front-classic-dark.png",
+        "material-batch-native/front-navy-dark.png",
+        "material-batch-native/front-country-dark.png",
+        "material-batch-native/front-victorian-dark.png"
+      ],
+      "sha256": "83e1eaf23bd4f3b29753fa50b08173aecbbd57e11c3e26d46a48ca1ff9a5b75d"
+    },
+    {
+      "file": "material-layers-light-overview.jpg",
+      "sources": [
+        "material-batch-native/layers-default-light.png",
+        "material-batch-native/layers-gothic-light.png",
+        "material-batch-native/layers-chinese-light.png",
+        "material-batch-native/layers-classic-light.png",
+        "material-batch-native/layers-navy-light.png",
+        "material-batch-native/layers-country-light.png",
+        "material-batch-native/layers-victorian-light.png"
+      ],
+      "sha256": "baa1871fb335bcdf66f7dfe3a1e81b0d355d8c643a5c4d5e3730d8bd9ab8987c"
+    },
+    {
+      "file": "material-layers-dark-overview.jpg",
+      "sources": [
+        "material-batch-native/layers-default-dark.png",
+        "material-batch-native/layers-gothic-dark.png",
+        "material-batch-native/layers-chinese-dark.png",
+        "material-batch-native/layers-classic-dark.png",
+        "material-batch-native/layers-navy-dark.png",
+        "material-batch-native/layers-country-dark.png",
+        "material-batch-native/layers-victorian-dark.png"
+      ],
+      "sha256": "7091121b6a41ecea9d5c594fb31a602340e87d473426d2b4a66c52affb09e115"
+    },
+    {
+      "file": "material-saved-light-overview.jpg",
+      "sources": [
+        "material-batch-native/saved-default-light.png",
+        "material-batch-native/saved-gothic-light.png",
+        "material-batch-native/saved-chinese-light.png",
+        "material-batch-native/saved-classic-light.png",
+        "material-batch-native/saved-navy-light.png",
+        "material-batch-native/saved-country-light.png",
+        "material-batch-native/saved-victorian-light.png"
+      ],
+      "sha256": "5fa68c3cffd8aee2c6b685830fa8a6be782c49e25fb321de62929a582c0456d4"
+    },
+    {
+      "file": "material-saved-dark-overview.jpg",
+      "sources": [
+        "material-batch-native/saved-default-dark.png",
+        "material-batch-native/saved-gothic-dark.png",
+        "material-batch-native/saved-chinese-dark.png",
+        "material-batch-native/saved-classic-dark.png",
+        "material-batch-native/saved-navy-dark.png",
+        "material-batch-native/saved-country-dark.png",
+        "material-batch-native/saved-victorian-dark.png"
+      ],
+      "sha256": "4898c05f35ec9000b041227a5624413861a7c37c29ffaf0d1c843e5a9f70a41d"
+    },
+    {
+      "file": "mixed-categories-light-overview.jpg",
+      "sources": [
+        "material-category-native/inputs-default-light.png",
+        "material-category-native/inputs-gothic-light.png",
+        "material-category-native/inputs-chinese-light.png",
+        "material-category-native/inputs-classic-light.png",
+        "material-category-native/inputs-navy-light.png",
+        "material-category-native/inputs-country-light.png",
+        "material-category-native/inputs-victorian-light.png"
+      ],
+      "sha256": "ec61d5ffc0dd61716882c3668f35e20d2782618f50c67503abe24c2dc8e37519"
+    },
+    {
+      "file": "mixed-categories-dark-overview.jpg",
+      "sources": [
+        "material-category-native/inputs-default-dark.png",
+        "material-category-native/inputs-gothic-dark.png",
+        "material-category-native/inputs-chinese-dark.png",
+        "material-category-native/inputs-classic-dark.png",
+        "material-category-native/inputs-navy-dark.png",
+        "material-category-native/inputs-country-dark.png",
+        "material-category-native/inputs-victorian-dark.png"
+      ],
+      "sha256": "e579dcf162e2f19be4b72a76e6fe77e7b659bef91e84e37d48113119c0b5b345"
+    },
+    {
+      "file": "configuration-light-overview.jpg",
+      "sources": [
+        "api-configuration-visuals/default-light.png",
+        "api-configuration-visuals/gothic-light.png",
+        "api-configuration-visuals/chinese-light.png",
+        "api-configuration-visuals/classic-light.png",
+        "api-configuration-visuals/navy-light.png",
+        "api-configuration-visuals/country-light.png",
+        "api-configuration-visuals/victorian-light.png"
+      ],
+      "sha256": "c0ef6129eab4fe9bfe9f2afe7fc0c6a07b559313f57a76c417de8ed11b90dba1"
+    },
+    {
+      "file": "configuration-dark-overview.jpg",
+      "sources": [
+        "api-configuration-visuals/default-dark.png",
+        "api-configuration-visuals/gothic-dark.png",
+        "api-configuration-visuals/chinese-dark.png",
+        "api-configuration-visuals/classic-dark.png",
+        "api-configuration-visuals/navy-dark.png",
+        "api-configuration-visuals/country-dark.png",
+        "api-configuration-visuals/victorian-dark.png"
+      ],
+      "sha256": "7ab8ae2cb0c2f1efe19a56c5afcd4fb5dd3a6bbede125ac556aae1fdedffb23d"
+    },
+    {
+      "file": "tryon-light-overview.jpg",
+      "sources": [
+        "try-on-physics-screens/default-light.png",
+        "try-on-physics-screens/gothic-light.png",
+        "try-on-physics-screens/chinese-light.png",
+        "try-on-physics-screens/classic-light.png",
+        "try-on-physics-screens/navy-light.png",
+        "try-on-physics-screens/country-light.png",
+        "try-on-physics-screens/victorian-light.png"
+      ],
+      "sha256": "07d30d4109d937697e3fb132dea5f894c38bd5ba96508fa3f15c21f74e39c660"
+    },
+    {
+      "file": "tryon-dark-overview.jpg",
+      "sources": [
+        "try-on-physics-screens/default-dark.png",
+        "try-on-physics-screens/gothic-dark.png",
+        "try-on-physics-screens/chinese-dark.png",
+        "try-on-physics-screens/classic-dark.png",
+        "try-on-physics-screens/navy-dark.png",
+        "try-on-physics-screens/country-dark.png",
+        "try-on-physics-screens/victorian-dark.png"
+      ],
+      "sha256": "9679c3ad2b44f34b456a0d879f7f4dffb64604a24cb453432bb968241fbe5782"
+    },
+    {
+      "file": "tryon-picker-light-overview.jpg",
+      "sources": [
+        "tryon-wishlist-shoes-screens/default-light-options.png",
+        "tryon-wishlist-shoes-screens/gothic-light-options.png",
+        "tryon-wishlist-shoes-screens/chinese-light-options.png",
+        "tryon-wishlist-shoes-screens/classic-light-options.png",
+        "tryon-wishlist-shoes-screens/navy-light-options.png",
+        "tryon-wishlist-shoes-screens/country-light-options.png",
+        "tryon-wishlist-shoes-screens/victorian-light-options.png"
+      ],
+      "sha256": "bd0236ea10d22621dd21cc6807aad32d536a695f868f2ddcd32dc683f7a11c85"
+    },
+    {
+      "file": "tryon-picker-dark-overview.jpg",
+      "sources": [
+        "tryon-wishlist-shoes-screens/default-dark-options.png",
+        "tryon-wishlist-shoes-screens/gothic-dark-options.png",
+        "tryon-wishlist-shoes-screens/chinese-dark-options.png",
+        "tryon-wishlist-shoes-screens/classic-dark-options.png",
+        "tryon-wishlist-shoes-screens/navy-dark-options.png",
+        "tryon-wishlist-shoes-screens/country-dark-options.png",
+        "tryon-wishlist-shoes-screens/victorian-dark-options.png"
+      ],
+      "sha256": "facfe8cf5602b12eef00e3272a94f4821c865cdcba53c522863a3c454591323a"
+    },
+    {
+      "file": "task-center-light-overview.jpg",
+      "sources": [
+        "image-task-ui-contact-sheets/default-light-center.png",
+        "image-task-ui-contact-sheets/gothic-light-center.png",
+        "image-task-ui-contact-sheets/chinese-light-center.png",
+        "image-task-ui-contact-sheets/classic-light-center.png",
+        "image-task-ui-contact-sheets/navy-light-center.png",
+        "image-task-ui-contact-sheets/country-light-center.png",
+        "image-task-ui-contact-sheets/victorian-light-center.png"
+      ],
+      "sha256": "ff3bc12fc7f86ce65fd1b14fa62a77a891def0b56c1b2dfd07b7b87874e3f8b5"
+    },
+    {
+      "file": "task-center-dark-overview.jpg",
+      "sources": [
+        "image-task-ui-contact-sheets/default-dark-center.png",
+        "image-task-ui-contact-sheets/gothic-dark-center.png",
+        "image-task-ui-contact-sheets/chinese-dark-center.png",
+        "image-task-ui-contact-sheets/classic-dark-center.png",
+        "image-task-ui-contact-sheets/navy-dark-center.png",
+        "image-task-ui-contact-sheets/country-dark-center.png",
+        "image-task-ui-contact-sheets/victorian-dark-center.png"
+      ],
+      "sha256": "d5f706426d9ab200948ffb9eb9bb8375f444630396e00334a1446f3f6d1d4f40"
+    },
+    {
+      "file": "task-actions-light-overview.jpg",
+      "sources": [
+        "image-task-ui-contact-sheets/default-light-detail-actions.png",
+        "image-task-ui-contact-sheets/gothic-light-detail-actions.png",
+        "image-task-ui-contact-sheets/chinese-light-detail-actions.png",
+        "image-task-ui-contact-sheets/classic-light-detail-actions.png",
+        "image-task-ui-contact-sheets/navy-light-detail-actions.png",
+        "image-task-ui-contact-sheets/country-light-detail-actions.png",
+        "image-task-ui-contact-sheets/victorian-light-detail-actions.png"
+      ],
+      "sha256": "eb05582979920ca33b93afe60b539062e854c4588904dfde2b42093887b663ea"
+    },
+    {
+      "file": "task-actions-dark-overview.jpg",
+      "sources": [
+        "image-task-ui-contact-sheets/default-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/gothic-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/chinese-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/classic-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/navy-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/country-dark-detail-actions.png",
+        "image-task-ui-contact-sheets/victorian-dark-detail-actions.png"
+      ],
+      "sha256": "ced6ee902244ace9f4f9450660c77bb24a5a47ebe2f56d2c1eed9182a94e72d6"
+    },
+    {
+      "file": "sku-import-light-overview.jpg",
+      "sources": [
+        "taobao-sku-combination-screenshots/default-light-selected.png",
+        "taobao-sku-combination-screenshots/gothic-light-selected.png",
+        "taobao-sku-combination-screenshots/chinese-light-selected.png",
+        "taobao-sku-combination-screenshots/classic-light-selected.png",
+        "taobao-sku-combination-screenshots/navy-light-selected.png",
+        "taobao-sku-combination-screenshots/country-light-selected.png",
+        "taobao-sku-combination-screenshots/victorian-light-selected.png"
+      ],
+      "sha256": "168be7624a7a95c8b523ba23bfb276f9c0a852d5e3e114298f4d16cdca9eab32"
+    },
+    {
+      "file": "sku-import-dark-overview.jpg",
+      "sources": [
+        "taobao-sku-combination-screenshots/default-dark-selected.png",
+        "taobao-sku-combination-screenshots/gothic-dark-selected.png",
+        "taobao-sku-combination-screenshots/chinese-dark-selected.png",
+        "taobao-sku-combination-screenshots/classic-dark-selected.png",
+        "taobao-sku-combination-screenshots/navy-dark-selected.png",
+        "taobao-sku-combination-screenshots/country-dark-selected.png",
+        "taobao-sku-combination-screenshots/victorian-dark-selected.png"
+      ],
+      "sha256": "9e7ba90fa22cca57d521bcaa63da6a6573630f2bb269839b43598bb30400a0c4"
+    },
+    {
+      "file": "model-editor-light-overview.jpg",
+      "sources": [
+        "personal-model-contact-sheets/editor-default-light-320-large.png",
+        "personal-model-contact-sheets/editor-gothic-light-320-large.png",
+        "personal-model-contact-sheets/editor-chinese-light-320-large.png",
+        "personal-model-contact-sheets/editor-classic-light-320-large.png",
+        "personal-model-contact-sheets/editor-navy-light-320-large.png",
+        "personal-model-contact-sheets/editor-country-light-320-large.png",
+        "personal-model-contact-sheets/editor-victorian-light-320-large.png"
+      ],
+      "sha256": "683a0e5e7210af146b1f02954528efad7da835402fa647fbb6f4f777ac46b872"
+    },
+    {
+      "file": "model-editor-dark-overview.jpg",
+      "sources": [
+        "personal-model-contact-sheets/editor-default-dark-320-large.png",
+        "personal-model-contact-sheets/editor-gothic-dark-320-large.png",
+        "personal-model-contact-sheets/editor-chinese-dark-320-large.png",
+        "personal-model-contact-sheets/editor-classic-dark-320-large.png",
+        "personal-model-contact-sheets/editor-navy-dark-320-large.png",
+        "personal-model-contact-sheets/editor-country-dark-320-large.png",
+        "personal-model-contact-sheets/editor-victorian-dark-320-large.png"
+      ],
+      "sha256": "b433df4b67a937e691e7be22cc1b2787faa96f9e664e8b20c5f989c18d5f652b"
+    },
+    {
+      "file": "entry-light-overview.jpg",
+      "sources": [
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/default-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/gothic-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/chinese-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/classic-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/navy-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/country-light-entry-320dp-2x.png",
+        "entry-refinement-screenshots/33a664a8-71d8-4061-801f-448feb540f3f/victorian-light-entry-320dp-2x.png"
+      ],
+      "sha256": "77aea6091275c4bc30de47b8077577cd06370149649ba2da714a8bad597696a1"
+    },
+    {
+      "file": "entry-dark-overview.jpg",
+      "sources": [
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/default-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/gothic-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/chinese-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/classic-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/navy-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/country-dark-entry-320dp-2x.png",
+        "entry-refinement-screenshots/ed4bee0c-ab43-4ab3-a361-56648ea6c4b8/victorian-dark-entry-320dp-2x.png"
+      ],
+      "sha256": "b6ef16fed786a75b06ea5136a5a597c4fbf0567fd8eea2df010beb4ee2c3921b"
+    },
+    {
+      "file": "recognition-light-overview.jpg",
+      "sources": [
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/default-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/gothic-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/chinese-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/classic-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/navy-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/country-light-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/423ae363-c0db-451b-9908-3154c4d01d29/victorian-light-review-apply-320dp-2x.png"
+      ],
+      "sha256": "7bc1e27ade1ec1fcaee4dcd7cecbb74294a21d0c271518a21885714a20760c20"
+    },
+    {
+      "file": "recognition-dark-overview.jpg",
+      "sources": [
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/default-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/gothic-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/chinese-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/classic-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/navy-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/country-dark-review-apply-320dp-2x.png",
+        "recognition-flow-screenshots/509b048d-248b-472b-96d3-a8f9a2ba5e49/victorian-dark-review-apply-320dp-2x.png"
+      ],
+      "sha256": "93d0ceb563d5657069219fa8e3b69372d2196c339fa0a55c9eec5830f374efc4"
+    }
+  ],
+  "not_complete_matrices": [],
+  "notes": "Real Compose screens. Original vector/controlled fixtures; no paid service or quality claims. Design mockups are kept separately."
+}

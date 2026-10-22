@@ -103,7 +103,7 @@ class MaterialCategoriesScreenTest {
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("batchRow${vm.uiState.value.visibleRows.first().itemId}"));screenshot("family-${family.name.lowercase()}")
         }
         compose.runOnIdle{vm.family(null);vm.selectReady()}
-        for(label in listOf("各自只包含该物品及附属部件","造型、颜色和部件数量正确","没有残留人台、文字或其他服饰")){
+        for(label in listOf("组成与附属部件完整","颜色、造型与数量正确","无多余人台、文字或其他物品")){
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasText(label));compose.onNodeWithText(label).performClick()
         }
         compose.onNodeWithTag("batchPrimary").assertIsEnabled().performClick();compose.waitUntil(10000){vm.uiState.value.phase==MaterialBatchPhase.SAVED && !vm.uiState.value.busy}

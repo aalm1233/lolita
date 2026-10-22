@@ -215,7 +215,7 @@ class EditorLifecycleTest {
                 compose.onNodeWithText("服饰名称 *").assertIsNotEnabled()
                 compose.onNodeWithText("描述").assertIsNotEnabled()
                 compose.onNodeWithText("品牌 *").performScrollTo().assertIsNotEnabled()
-                compose.onNodeWithText("尺码 (可选)").performScrollTo().assertIsNotEnabled()
+                compose.onNodeWithText("尺码").performScrollTo().assertIsNotEnabled()
                 compose.onAllNodesWithText("添加图片")[1].performScrollTo().assertIsNotEnabled()
             }
         } finally {
@@ -461,7 +461,7 @@ class EditorLifecycleTest {
         val vm = own { OutfitLogEditViewModel(outfits, items) }
         compose.setContent { LolitaTheme { OutfitLogEditScreen(1, {}, {}, vm) } }
         compose.waitUntil(5000) { !vm.uiState.value.isLoading && 1L in vm.uiState.value.selectedItemIds }
-        compose.onNodeWithText("选择服饰").performScrollTo().performClick()
+        compose.onNodeWithText("选择物品").performScrollTo().performClick()
         compose.onNodeWithText("已有服饰").performClick()
         compose.runOnIdle { assertFalse(1L in vm.uiState.value.selectedItemIds) }
         compose.onNodeWithText("完成").performClick()

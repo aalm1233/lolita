@@ -145,7 +145,7 @@ private fun OrderSelectContent(
             ) {
                 SkinIcon(IconKey.FileOpen, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                 Spacer(Modifier.height(16.dp))
-                Text("选择淘宝订单导出的 Excel 文件",
+                Text("选择淘宝导出的 .xlsx 文件",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(24.dp))
@@ -158,7 +158,7 @@ private fun OrderSelectContent(
                         ))
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) { Text("选择文件（可多选）") }
+                ) { Text("选择文件（支持多选）") }
             }
         } else {
             OrderListBody(
@@ -196,15 +196,8 @@ private fun OrderListBody(
     ) {
         item {
             Column {
-                if (fileCount > 1) {
-                    Text("已解析 $fileCount 个文件，共 ${orders.size} 个订单" +
-                        if (dedupCount > 0) "（去重 $dedupCount 个）" else "",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary)
-                    Spacer(Modifier.height(4.dp))
-                }
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                    Text("共 ${orders.size} 个订单，${totalItems} 件商品",
+                    Text("${fileCount.coerceAtLeast(1)} 个文件 · ${orders.size} 笔订单 · $totalItems 件商品${if (dedupCount > 0) "（已去重 $dedupCount 笔）" else ""}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                     TextButton(onClick = { if (allSelected) onDeselectAll() else onSelectAll() }) {
@@ -308,7 +301,7 @@ private fun ImportPrepareContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             GradientTopAppBar(
-                title = { Text("数据准备") },
+                title = { Text("补充品牌和类型") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         SkinIcon(IconKey.ArrowBack)
@@ -359,7 +352,7 @@ private fun ImportPrepareContent(
         ) {
             item {
                 Text(
-                    "以下品牌和类型在数据库中不存在，勾选后将自动创建。",
+                    "以下名称尚未添加，勾选后创建。",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -508,7 +501,7 @@ private fun ImportResultContent(
             }
             if ((result?.skippedCount ?: 0) > 0) {
                 Text(
-                    "跳过 ${result?.skippedCount} 件未完善的商品",
+                    "跳过 ${result?.skippedCount} 件尚未就绪的商品",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

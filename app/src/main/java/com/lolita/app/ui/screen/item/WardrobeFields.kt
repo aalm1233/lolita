@@ -69,11 +69,11 @@ fun specificationProfile(semantic: CategorySemantic): String? = when {
     else -> null
 }
 fun specificationFields(profile: String): List<SpecificationField> = when (profile) {
-    "clothing" -> listOf("lengthCm" to "衣长（原单位）", "bustCm" to "胸围（成衣围度）", "waistCm" to "腰围（成衣围度）", "hipCm" to "臀围（成衣围度）", "shoulderWidthCm" to "肩宽（原单位）", "sleeveLengthCm" to "袖长（原单位）")
-    "wig" -> listOf("mainColor" to "主要发色", "lengthCm" to "长度（原单位）", "curl" to "直卷", "extraHairPieces" to "附加发片", "bangs" to "刘海", "parting" to "分缝", "material" to "材质", "heatResistance" to "耐热说明", "headCircumference" to "头围适配", "stylingNotes" to "修剪造型备注")
-    "hosiery" -> listOf("lengthType" to "袜长类型", "sizeText" to "尺码原文", "pattern" to "颜色或花纹", "thickness" to "厚薄", "denier" to "DEN 原始标识", "footLength" to "足长适配", "material" to "材质", "transparency" to "透肤情况")
-    "footwear" -> listOf("sizeText" to "鞋码原文", "sizeSystem" to "尺码体系", "heelHeightCm" to "跟高（原单位）", "innerLengthCm" to "内长（原单位）", "shaftHeightCm" to "筒高（原单位）", "toeShape" to "鞋头", "fastening" to "扣带", "comfort" to "脚感自评", "walkingNotes" to "步行时长备注")
-    "petticoat" -> listOf("lengthCm" to "长度（原单位）", "silhouette" to "轮廓", "volume" to "蓬度", "waistCm" to "腰围（原单位）", "layers" to "层数", "material" to "材质", "notes" to "搭配备注")
+    "clothing" -> listOf("lengthCm" to "衣长", "bustCm" to "胸围（成衣围度）", "waistCm" to "腰围（成衣围度）", "hipCm" to "臀围（成衣围度）", "shoulderWidthCm" to "肩宽", "sleeveLengthCm" to "袖长")
+    "wig" -> listOf("mainColor" to "主要发色", "lengthCm" to "长度", "curl" to "直卷", "extraHairPieces" to "附加发片", "bangs" to "刘海", "parting" to "分缝", "material" to "材质", "heatResistance" to "耐热说明", "headCircumference" to "头围适配", "stylingNotes" to "修剪造型备注")
+    "hosiery" -> listOf("lengthType" to "袜长类型", "sizeText" to "尺码", "pattern" to "颜色或花纹", "thickness" to "厚薄", "denier" to "DEN 标识", "footLength" to "足长适配", "material" to "材质", "transparency" to "透肤情况")
+    "footwear" -> listOf("sizeText" to "鞋码", "sizeSystem" to "尺码体系", "heelHeightCm" to "跟高", "innerLengthCm" to "内长", "shaftHeightCm" to "筒高", "toeShape" to "鞋头", "fastening" to "扣带", "comfort" to "脚感自评", "walkingNotes" to "步行时长备注")
+    "petticoat" -> listOf("lengthCm" to "长度", "silhouette" to "轮廓", "volume" to "蓬度", "waistCm" to "腰围", "layers" to "层数", "material" to "材质", "notes" to "搭配备注")
     "accessory" -> listOf("wearPosition" to "穿戴位置", "dimensions" to "尺寸", "fastening" to "固定方式", "material" to "材质")
     "bag" -> listOf("carryMode" to "携带方式", "dimensions" to "尺寸", "capacity" to "容量", "phoneFit" to "手机适配说明", "material" to "材质")
     else -> listOf("usage" to "使用方式", "dimensions" to "尺寸", "foldable" to "可折叠情况", "material" to "材质")
@@ -94,24 +94,19 @@ fun WardrobeSpecificationEditor(semantic: CategorySemantic, specifications: Ward
         (if (composition != ItemComposition.UNCONFIRMED) 1 else 0)
     val otherCount = filledByProfile.filterKeys { it != profile }.values.sum()
     val labels = fields.filter { root[profile].asJsonObject[it.key].asString.isNotBlank() }.map { it.label }
-    LolitaSection("规格与备注", action = {
+    LolitaSection("详细规格", action = {
         TextButton(onClick = { expanded = !expanded }, enabled = enabled,
-            modifier = Modifier.semantics { contentDescription = if (expanded) "收起规格与备注" else "展开规格与备注" }) {
+            modifier = Modifier.semantics { contentDescription = if (expanded) "收起详细规格" else "展开详细规格" }) {
             Text(if (expanded) "收起" else "展开")
         }
     }) {
         row {
-            Text(if (count == 0) "未填写 · 尺寸、材质和使用备注均可稍后补充"
-                else buildList {
-                    add("已填写 $count 项")
-                    if (labels.isNotEmpty()) add(labels.take(3).joinToString("、"))
-                    if (specifications.pattern.isNotBlank()) add("图案已填写")
-                    if (composition != ItemComposition.UNCONFIRMED) add(composition.label)
-                    if (otherCount > 0) add("保留其他类型 $otherCount 项")
-                }.joinToString(" · "), style = MaterialTheme.typography.bodySmall,
+            Text(if (count == 0) "尚未填写"
+                else "已填 $count 项", style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if (expanded) {
+            row { Text("按原资料填写数值和单位。", style = MaterialTheme.typography.bodySmall) }
             row {
                 OutlinedTextField(specifications.pattern, { onSpecifications(specifications.copy(pattern = it)) },
                     label = { Text("图案") }, enabled = enabled, modifier = Modifier.fillMaxWidth(), singleLine = true)
@@ -158,7 +153,7 @@ fun WardrobeSpecificationDetails(semantic: CategorySemantic, specifications: War
 fun CategorySemanticPicker(value: CategorySemantic, onSelected: (CategorySemantic) -> Unit) {
     var show by remember { mutableStateOf(false) }
     OutlinedButton(onClick = { show = true }, modifier = Modifier.fillMaxWidth()) {
-        Text(if (value == CategorySemantic.UNCONFIRMED) "确认品类与默认穿戴位置" else "${value.family.label} · ${value.label} · ${value.defaultWearRole.label}")
+        Text(if (value == CategorySemantic.UNCONFIRMED) "选择类型与默认穿戴位置" else "${value.family.label} · ${value.label} · ${value.defaultWearRole.label}")
     }
     if (show) {
         var query by remember { mutableStateOf("") }
@@ -167,7 +162,7 @@ fun CategorySemanticPicker(value: CategorySemantic, onSelected: (CategorySemanti
         val semanticScroll = rememberLazyListState()
         ObserveSkinScroll(familyScroll)
         ObserveSkinScroll(semanticScroll)
-        AlertDialog(onDismissRequest = { show = false }, title = { Text("选择稳定类型") }, text = {
+        AlertDialog(onDismissRequest = { show = false }, title = { Text("选择物品类型") }, text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(query, { query = it }, label = { Text("搜索类型") }, modifier = Modifier.fillMaxWidth())
                 Row(Modifier.horizontalScroll(familyScroll)) { WardrobeFamily.entries.filter { it != WardrobeFamily.UNCONFIRMED }.forEach { entry ->

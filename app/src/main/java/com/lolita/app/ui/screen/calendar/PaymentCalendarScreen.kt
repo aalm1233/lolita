@@ -47,6 +47,9 @@ import java.time.ZoneId
 import java.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
+import com.lolita.app.ui.theme.LolitaSkin
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.screen.common.GlassSurface
@@ -520,8 +523,9 @@ fun PaymentCalendarContent(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun YearHeader(
+internal fun YearHeader(
     year: Int,
     yearPaidTotal: Double,
     yearUnpaidTotal: Double,
@@ -543,39 +547,26 @@ private fun YearHeader(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Single row: <  ¥xx已  2026年  ¥xx待  >
-            Row(
+            val skin = LolitaSkin.current
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onPrevious) {
+                    SkinIcon(IconKey.KeyboardArrowLeft, Modifier.semantics { contentDescription = "上一年" })
+                }
+                Text("${year}年", style = MaterialTheme.typography.titleSmall,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.weight(1f))
+                IconButton(onClick = onNext) {
+                    SkinIcon(IconKey.KeyboardArrowRight, Modifier.semantics { contentDescription = "下一年" })
+                }
+            }
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
             ) {
-                IconButton(onClick = onPrevious, modifier = Modifier.size(24.dp)) {
-                    SkinIcon(IconKey.KeyboardArrowLeft, modifier = Modifier.size(16.dp))
-                }
-
-                Text(
-                    "¥${formatAmount(yearPaidTotal)}已",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = paidColor(),
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Text(
-                    "  ${year}年  ",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Text(
-                    "¥${formatAmount(yearUnpaidTotal)}待",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = primaryColor,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                IconButton(onClick = onNext, modifier = Modifier.size(24.dp)) {
-                    SkinIcon(IconKey.KeyboardArrowRight, modifier = Modifier.size(16.dp))
-                }
+                Text("已付 ¥${formatAmount(yearPaidTotal)}", style = MaterialTheme.typography.labelMedium,
+                    color = paidColor())
+                Text("待付 ¥${formatAmount(yearUnpaidTotal)}", style = MaterialTheme.typography.labelMedium,
+                    color = primaryColor)
             }
 
             if (yearOverdueAmount > 0) {
@@ -776,7 +767,7 @@ private fun PaymentInfoCard(
                 TextButton(onClick = {
                     showConfirmDialog = false
                     onMarkPaid()
-                }) { Text("确认") }
+                }) { Text("记录付款") }
             },
             dismissButton = {
                 TextButton(onClick = { showConfirmDialog = false }) { Text("取消") }

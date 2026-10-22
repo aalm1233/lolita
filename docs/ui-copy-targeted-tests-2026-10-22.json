@@ -1,0 +1,917 @@
+{
+  "unique_device_tests_passed": 148,
+  "latest_failures": [],
+  "latest_skips": [],
+  "unit_tests_passed": 3,
+  "build": "assembleDebug + assembleDebugAndroidTest; UiErrorTextTest only targeted JVM",
+  "native_normal": {
+    "pixels": [
+      1440,
+      3200
+    ],
+    "density_dpi": 600,
+    "font_scale": 1.0
+  },
+  "native_small": {
+    "pixels": [
+      1440,
+      3200
+    ],
+    "density_dpi": 720,
+    "width_dp": 320,
+    "font_scale": 2.0,
+    "real_ime": true
+  },
+  "paid_service_calls": 0,
+  "test_scope": "Affected UI and error/presentation dependencies; no unrelated full database, image or backup run.",
+  "results": [
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "wishLabelsMatchReferencePriceAndOwnershipAndRespectLiveMoneyPrivacy",
+      "status": 0,
+      "log": "copy-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "restoreConsequencesStayVisibleWhileCompleteCountsRemainExpandable",
+      "status": 0,
+      "log": "copy-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "actualCopyHierarchyAcrossSevenLightAndDarkSkins",
+      "status": 0,
+      "log": "copy-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "recordsWithoutPhotosAreNeverReportedAsAnEmptyRoom",
+      "status": 0,
+      "log": "copy-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "reviewEntryDisappearsAtZeroAndReappearsFromTheSameRoomFlow",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "currentSpendingIsFullyVisibleOnTheFirstCompactScreen",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "hidingAmountsRemovesEveryMoneyNodeIncludingTheHighestSpendingCard",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "reviewReminderFollowsPricesWithoutClearingThePurchaseReviewQueue",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "largeAmountsAndLongBrandsRemainCompleteAcrossSevenLightAndDarkSkins",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.stats.StatsOverviewScreenTest",
+      "test": "compactCountsBrandAndHighestSpendingKeepTheirOriginalNavigationArguments",
+      "status": 0,
+      "log": "stats-rerun-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "lookCanSkipRestoreLockAndSaveAfterMoveConfirmation",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "sharePreviewWaitsForGenerationAndRegeneratesWhenBrandsAreHidden",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "transientBudgetQueryFailureCanRetryAndObserveAgain",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "chosenLookSurvivesDetailRoundTripAndCanRefresh",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "budgetSetsEditsRemovesAndHonorsLivePrivacy",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest",
+      "test": "budgetAndLookUseSevenSkinsInLightAndDark",
+      "status": 0,
+      "log": "copy-stats-budget-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "unpricedWishlistHidesPurchaseStateReviewButKeepsSettingItsPrice",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "correctingTheLastUnknownParentDateRemovesTheSharedAccessoryReviewEntry",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "unpricedReviewOpensItemEditorWithoutCreatingAnOrderOrPayment",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "historicalConfirmationPreservesPartialActualPaymentsAndTheirDates",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "completeParentLedgerHidesSharedAccessoryReviewButKeepsOrdinaryPaymentAccess",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "trackingRequiresExplicitVerificationAndCancelKeepsEveryOriginalRecord",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest",
+      "test": "sharedAccessoryReviewNavigatesToParentWithoutChangingEitherLedger",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "test": "templatesFillBothWaysAndManualOverrideIsNeverRewritten",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "test": "historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "test": "changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "test": "persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "test": "actualPriceAndTaskBarSevenSkinsLightDarkAndLargeText",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PaymentManageScreenTest",
+      "test": "stagesAndActualPaymentsWithMatchingIdsRenderAndScrollWithoutCrashing",
+      "status": 0,
+      "log": "ledger-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "singleStackTracksRemainingRowsAndDisappearsInBatchAndAtLastRow",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "sizeDropdownAndQuickAddPreserveEachImportedItemsChoice",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "allSkinsRenderSingleStackAndDockInLightAndDark",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "defaultsToSingleAndRetainsEditsAcrossNavigationAndModes",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "changingAndRemovingPairKeepsCurrentItemWhileUpdatingNavigationPosition",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "footerIsReadableOnCompactScreenWithLargeFontAndLargeBatch",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "unlinkAndChangingCounterpartRequireFreshFinancialConfirmation",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "incompleteMoneyTextSurvivesNextPreviousAndModeSwitch",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "keyboardKeepsInputAndFloatingActionsReachableAndHidesDeck",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "batchUsesSamePairOrderAndFilteredCorrectionKeepsOriginalIndex",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "filteredCorrectionUsesOriginalIndexAndPairingIsReciprocal",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "pairingShowsCounterpartAndCanBeClearedFromTheCard",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "singleCardSummaryIncludesAllChosenRowsOfItsSourceOrder",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "separatedPairsStartWithDepositAndNavigateWithoutChangingSourceDrafts",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "identitySectionCanFoldWithoutLosingChanges",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "correctionAndReplacementInvalidateAllAffectedPeersButNoOpKeepsConfirmation",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "balanceDateConfirmationKeepsLocalDateAndReopeningUsesLatestDraft",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "missingIdentityExpandsItsFieldsAndKeepsDrafts",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.OrderImportInteractionTest",
+      "test": "storageControlsFollowConfirmedFullPaymentAndHideAcrossSkinsForPartialPayment",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductColorStylesScreenTest",
+      "test": "sevenSkinsLightDarkAndSmallLargeFontKeepChoiceAndActionReachable",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductColorStylesScreenTest",
+      "test": "fourOptionsCanSelectOnlyTwoAndToggleKeepsChoicesAndQuote",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductSkuCombinationsScreenTest",
+      "test": "searchSameColorMultipleSizesAndModeToggleKeepExactChoicesAndQuotes",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductSkuCombinationsScreenTest",
+      "test": "smallWindowLargeFontLongSizeAndRealPriceKeyboardKeepSubmitReachable",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.import.TaobaoProductSkuCombinationsScreenTest",
+      "test": "sevenSkinsLightDarkKeepSearchAndSizeChoicesReachable",
+      "status": 0,
+      "log": "import-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemSizeSelectorTest",
+      "test": "existingCustomSizeCanBeReplacedFromDropdownAndCleared",
+      "status": 0,
+      "log": "sizes-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AiConfigurationScreenTest",
+      "test": "allFourConfigurationsSaveMaskNeverRefillAndRemainUsableAcrossSkinsAndLargeText",
+      "status": 0,
+      "log": "personal-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest",
+      "test": "parameterEntryRequiresValidMeasurementsThenConfirmsBeforeSingleTaskSubmission",
+      "status": 0,
+      "log": "personal-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest",
+      "test": "libraryKeepsBuiltinChoiceAndCanSelectRenameAndDeleteConfirmedModel",
+      "status": 0,
+      "log": "personal-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.personalmodel.PersonalModelScreenTest",
+      "test": "allSevenSkinsRenderEditorInLightDarkAnd320dpLargeFont",
+      "status": 0,
+      "log": "personal-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "personalPickerRetainsGarmentsAcrossSevenSkinsAndExportsActualModelScreens",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "wishedShoesAndHosieryAcrossSevenSkinsKeepTheirSelectionWhenStatusIsHidden",
+      "status": 0,
+      "log": "tryon-native-dark-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "pickerFiltersKeepSelectionAndImageAndRoleControlsChangeActualReferences",
+      "status": 0,
+      "log": "ai-fixes-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "fullScreenResultPreviewActuallyZoomsTheImage",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "wearingDescriptionAcrossSevenSkinsAndKeyboardAndPaidConfirmation",
+      "status": 0,
+      "log": "ai-fixes-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "test": "configuredEightPieceSelectionShowsUploadAndCostBesideTheActionAtLargeText",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "detailSourceSelectionAcrossSevenSkinsAndSmallTextKeepsActualConfirmedInput",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "instructionsChangedWhileConfirmationIsOpenRequireNewConfirmation",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectionAndInstructionsSubmitOnlyAfterPaidConfirmationAndBackRemainsAvailable",
+      "status": 0,
+      "log": "ai-fixes-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "legacyPreviewCanBeZoomedAndExplicitlySavedWithoutNetworkOrLeavingCleanup",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "seedreamSelectionUsesMaskedKeyCorrectRecipientAndSevenSkinControls",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable",
+      "status": 0,
+      "log": "ai-fixes-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "missingKeyAndServiceActionBothOpenUnifiedConfigurationWithoutSending",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "selectedPhotoChangedWhileConfirmationIsOpenRequiresNewConfirmation",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "categoryRenameWhileConfirmationIsOpenRequiresNewConfirmation",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.mannequin.MannequinScreenTest",
+      "test": "standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory",
+      "status": 0,
+      "log": "ai-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialWorkspaceScreenTest",
+      "test": "realPagesAcrossSevenSkinsLightDarkAndExplicitFeeReview",
+      "status": 0,
+      "log": "material-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialWorkspaceScreenTest",
+      "test": "actualSmallDeviceLargeFontAndKeyboardKeepsPrimaryReachable",
+      "status": 0,
+      "log": "small-final-fixed-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialBatchScreenTest",
+      "test": "realSmallDeviceLargeFontSearchKeyboardAndFeeRemainReachable",
+      "status": 0,
+      "log": "small-final-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialBatchScreenTest",
+      "test": "batchWholeFlowAcrossSevenSkinsKeepsEachItemIndependentAndSavesTogether",
+      "status": 0,
+      "log": "material-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialCategoriesScreenTest",
+      "test": "realSmallDeviceLargeFontCategorySearchKeepsHiddenInputsAndKeyboardAction",
+      "status": 0,
+      "log": "small-final-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.MaterialCategoriesScreenTest",
+      "test": "mixedCategorySelectionReviewAndSavedAssetsMatchSevenSkins",
+      "status": 0,
+      "log": "material-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.LaboratoryScreenTest",
+      "test": "realSmallLargeFontLabAndWigSearchWorkWithKeyboard",
+      "status": 0,
+      "log": "small-final-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.LaboratoryScreenTest",
+      "test": "actualPagesAcrossSevenSkinsAndCoverActionsUseSameConfirmedImage",
+      "status": 0,
+      "log": "material-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.LaboratoryScreenTest",
+      "test": "laboratoryEntryMatchesPeerAndNavigationTitlesStayCompactAcrossSkins",
+      "status": 0,
+      "log": "material-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "filtersShowPendingRunningAndFinishedWithoutChangingRecords",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "sevenSkinsPersonalPreviewActionsFit320dpDoubleFontAndExportActualScreens",
+      "status": 0,
+      "log": "queue-fixes-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "failedRetryOnlyNavigatesToReviewAndDoesNotEnqueue",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "pendingPreviewSurvivesRestartAndExplicitAppendMergesLatestItemOnce",
+      "status": 0,
+      "log": "queue-fixes-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "personalSaveRetainsAcceptedModelWhenDefaultFailsAndPreferenceCanBeRetried",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "sevenSkinsLightDark320dpDoubleFontKeepDetailActionsAndFiltersReachable",
+      "status": 0,
+      "log": "queue-fixes-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "deletedOriginalCannotAppendButPreviewCanStillBeViewedAndDiscarded",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "tryOnTaskDetailsRetainTheOriginalWearingDescription",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "activeCancellationRequiresFeeWarningAndThenShowsCancelled",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "backgroundAdviceCanBeOpenedAndDismissedWithoutStartingTask",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "test": "personalPreviewAdjustKeepsOriginalAndCannotAppendToGarment",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskQueueActionsTest",
+      "test": "selectionZoomDismissAndExplicitDiscardPreserveOtherResults",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskQueueActionsTest",
+      "test": "real320dpDoubleFontKeepsBothPagesAndDialogActionsReachable",
+      "status": 0,
+      "log": "queue-small-native-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskQueueActionsTest",
+      "test": "taskCenterStopIncludesFilteredOutQueueAndKeepsCurrent",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskQueueActionsTest",
+      "test": "realPagesAndSelectionAcrossSevenSkinsLightDark",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.data.ImageTaskQueueActionsTest",
+      "test": "batchPageSelectAllDiscardsOnlyPendingAndStopTailKeepsCurrent",
+      "status": 0,
+      "log": "queue-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemEntryRefinementTest",
+      "test": "normalBackKeepsDraftWithoutSavingOrShowingADiscardPrompt",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemEntryRefinementTest",
+      "test": "sevenLightSkinsShowFoldedEntryAndKeyboardSave",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemEntryRefinementTest",
+      "test": "sevenDarkSkinsShowFoldedEntryAndKeyboardSave",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemEntryRefinementTest",
+      "test": "foldingAndChangingTypeKeepAllProfilesAndFinancialRelationshipsOnSave",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemEntryRefinementTest",
+      "test": "realKeyboardLeavesTheOnlySaveButtonReachable",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "historicalOwnershipKeepsThePartialLedgerReviewVisible",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "homeShortcutDisappearsWhenReviewsAreCompletedAndReturnsForNewReviews",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "ownedItemWithoutAnOrderStillOffersDataReview",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "ownedSharedAccessoryKeepsItsIncompleteParentReviewEntry",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "loadedReviewProjectionOverridesAnOlderPriceSubscription",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "homeShortcutIsHiddenWithAnEmptyQueue",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "ownedSharedAccessoryIsNotReviewedWhenTheParentProjectionIsComplete",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "currentReviewOrderHasAnExplicitButtonToItsPurchaseConfirmation",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "fullyPaidUnknownDateRemainsVisibleForDataReview",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "unboundHistoricalPricesLeadToOrderSelectionBeforeConfirmation",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "alreadyOwnedCompleteOrderDoesNotShowAPurchaseReviewButton",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "historicalNoticeOffersSupplementingPaymentsWithoutClaimingCompleteness",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "homeShortcutShowsReviewCountAndOpensTheQueue",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "sharedAccessoryReviewButtonOpensOnlyTheParentPricePage",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.PurchaseReviewEntryTest",
+      "test": "hidingPricesSuppressesPositiveReviewsAndRestoresTheCurrentCountWhenReenabled",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest",
+      "test": "sevenDarkSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest",
+      "test": "oversizedFullImageOffersCropAndCancelKeepsTheOriginalAndDraftReference",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest",
+      "test": "sevenLightSkinsKeepActualRegionsAndApplyControlsVisibleAt320dpAndDoubleText",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest",
+      "test": "preparedPreviewEnablesConfirmationAndAiClassificationPersistsWithoutSending",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.WardrobeRecognitionFlowTest",
+      "test": "realButtonsFilterRowsApplyInPartsSaveAndReopenTheAcceptedEvidence",
+      "status": 0,
+      "log": "recognition-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ImageRegionCropDialogTest",
+      "test": "draggingBothCornersReturnsOnlyTheActualGreenSelectionAfterPreviewConfirmation",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ImageRegionCropDialogTest",
+      "test": "cancellationDeletesTheActualPreviewAndKeepsSourceBytesUntouched",
+      "status": 0,
+      "log": "entry-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "calendarYearAmountsRemainCompleteAtSmallWidthAndDoubleFont",
+      "status": 0,
+      "log": "copy-final-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemSizeSelectorTest",
+      "test": "duplicateSizeIsReusedAndBlankOrCancelledAddDoesNotChangeSelection",
+      "status": 0,
+      "log": "sizes-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemSizeSelectorTest",
+      "test": "sevenSkinsLightAndDarkKeepDropdownAndAddUsableAtLargeFont",
+      "status": 0,
+      "log": "sizes-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemSizeSelectorTest",
+      "test": "selectingBuiltInSizeSavesOnlyChosenItemSizeAndRetainsLegacyOption",
+      "status": 0,
+      "log": "sizes-final-last-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.ItemSizeSelectorTest",
+      "test": "quickAddSelectsTrimsAndPersistsAcrossReopeningSettings",
+      "status": 0,
+      "log": "sizes-final-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.editor.EditorLifecycleTest",
+      "test": "missingRecordCanBeRetriedAndDoesNotSaveAsNew",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.editor.EditorLifecycleTest",
+      "test": "selectedNonOwnedItemCanBeRemovedInRealPicker",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateNotesTest",
+      "test": "longNotesScrollAndActionsRemainReachableAcrossSevenSkinsAtLargeFont",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateNotesTest",
+      "test": "manualCurrentVersionCheckStillShowsLatestReleaseNotes",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateNotesTest",
+      "test": "missingNotesHaveReadableFallback",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "reenteringHostWithTheSameViewModelDoesNotRecheckOrReopenThePrompt",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "unreachableApkFinishesWithoutShowingAnUpdateDialog",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "failedReleaseCheckFinishesWithoutShowingAnErrorDialog",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "equalVersionFinishesWithoutShowingAnUpdateDialog",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "recreatedHostWithANewViewModelStartsItsFirstAutomaticCheck",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "failedApkProbeFinishesWithoutShowingAnErrorDialog",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "downloadableNewVersionAppearsOnlyAfterItsLinkIsConfirmed",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.AppUpdateHostTest",
+      "test": "releaseWithoutAnApkFinishesWithoutShowingAnUpdateDialog",
+      "status": 0,
+      "log": "errors-lifecycle-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.theme.TypographyScreenTest",
+      "test": "realLargeFontKeepsCompleteControlsAndKeyboardActions",
+      "status": 0,
+      "log": "small-final-fixed-tests.log"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.UiCopyReviewScreenTest",
+      "test": "realSmallRestoreKeepsWarningsReadableAndConfirmationReachable",
+      "status": 0,
+      "log": "small-final-last-tests.log"
+    }
+  ]
+}

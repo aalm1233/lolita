@@ -163,8 +163,8 @@ class OrderImportInteractionTest {
     @Test fun sizeDropdownAndQuickAddPreserveEachImportedItemsChoice() {
         reveal("展开资料")
         compose.onNodeWithText("展开资料").performClick()
-        reveal("尺码 (可选)")
-        compose.onNodeWithText("尺码 (可选)").performClick()
+        reveal("尺码")
+        compose.onNodeWithText("尺码").performClick()
         compose.onNodeWithText("S", useUnmergedTree = true).performClick()
         compose.runOnIdle { assertEquals("S", vm.uiState.value.importItems[0].size) }
         compose.onNodeWithContentDescription("添加尺码").performClick()
@@ -174,8 +174,8 @@ class OrderImportInteractionTest {
         compose.onNodeWithText("下一件").performClick()
         reveal("展开资料")
         compose.onNodeWithText("展开资料").performClick()
-        reveal("尺码 (可选)")
-        compose.onNodeWithText("尺码 (可选)").performClick()
+        reveal("尺码")
+        compose.onNodeWithText("尺码").performClick()
         compose.onNodeWithText("定制裙长", useUnmergedTree = true).performScrollTo().assertIsDisplayed().performClick()
         compose.runOnIdle {
             assertEquals("定制裙长", vm.uiState.value.importItems[0].size)
@@ -200,7 +200,7 @@ class OrderImportInteractionTest {
         val folder=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"owned-storage").apply{mkdirs()}
         for(skin in SkinType.entries) for(isDark in listOf(false,true)) {
             compose.runOnIdle {skinType.value=skin;dark.value=isDark;compact.value=true}
-            reveal("尺码 (可选)")
+            reveal("尺码")
             compose.onNodeWithText("存放位置（可选）").assertDoesNotExist()
             compose.onNodeWithText("导入房间").assertDoesNotExist()
             File(folder,"import-${skin.name}-${if(isDark) "dark" else "light"}.png").outputStream().use {
@@ -438,7 +438,7 @@ class OrderImportInteractionTest {
             state.importItems[2].copy(name = "测试裙$index", brandId = 1, categoryId = 1, price = 100.0, financialConfirmed = true)
         }) }
         compose.runOnIdle { compact.value = true }
-        val progress = compose.onNodeWithText("100/100 条资料已完善").getUnclippedBoundsInRoot()
+        val progress = compose.onNodeWithText("100/100 条资料可导入").getUnclippedBoundsInRoot()
         val action = compose.onNodeWithText("核对并导入").getUnclippedBoundsInRoot()
         assertTrue("进度和按钮文字不得重叠: $progress / $action", progress.bottom <= action.top || progress.right <= action.left)
         assertTrue("导入按钮应保持单行文字及正常内边距: $action", action.bottom - action.top <= 64.dp)

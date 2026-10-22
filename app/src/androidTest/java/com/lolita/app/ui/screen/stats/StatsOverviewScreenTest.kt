@@ -236,12 +236,12 @@ class StatsOverviewScreenTest {
         awaitState { it.ownedCount == 1 && it.wishedCount == 1 && it.mostExpensiveItem?.itemId == highestId }
         settleAnimation()
         compose.onNodeWithText("已拥有").performScrollTo().performClick()
-        compose.onNodeWithText("愿望单").performScrollTo().performClick()
+        compose.onNodeWithText("心愿").performScrollTo().performClick()
         compose.onNodeWithText(longBrand).performScrollTo().performClick()
         compose.onNodeWithText("当前订单实付最高").performScrollTo().performClick()
         compose.runOnIdle {
-            assertEquals(listOf(Route("status_owned", "", "已拥有"), Route("status_wished", "", "愿望单"),
-                Route("brand", longBrand, "品牌: $longBrand")), routes)
+            assertEquals(listOf(Route("status_owned", "", "已拥有"), Route("status_wished", "", "心愿"),
+                Route("brand", longBrand, longBrand)), routes)
             assertEquals(listOf(highestId), itemDestinations)
         }
     }

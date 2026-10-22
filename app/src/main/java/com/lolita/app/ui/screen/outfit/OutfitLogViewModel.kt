@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.outfit
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.CancellationException
@@ -133,7 +135,7 @@ class OutfitLogListViewModel(
             try {
                 outfitLogRepository.deleteOutfitLogById(logId)
             } catch (e: Exception) {
-                _uiState.update { it.copy(error = e.message ?: "删除失败") }
+                _uiState.update { it.copy(error = uiErrorText(e, "删除失败")) }
             }
         }
     }
@@ -247,7 +249,7 @@ class OutfitLogEditViewModel(
                 }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取穿搭失败") }
+                _uiState.update { it.copy(isLoading = false, loadError = uiErrorText(failure, "读取穿搭失败")) }
             }
         }
     }
@@ -352,7 +354,7 @@ class OutfitLogEditViewModel(
             Result.success(logId)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            _uiState.update { it.copy(isSaving = false, error = e.message ?: "保存失败") }
+            _uiState.update { it.copy(isSaving = false, error = uiErrorText(e, "保存失败")) }
             Result.failure(e)
         }
     }

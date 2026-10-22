@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.compose.ui.graphics.Color
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -79,7 +81,7 @@ fun ItemEditScreen(
                 try { viewModel.keepDraft(); onBack() }
                 catch (failure: Exception) {
                     if (failure is CancellationException) throw failure
-                    isLeaving = false; showError = failure.message
+                    isLeaving = false; showError = uiErrorText(failure)
                 }
             }
         }
@@ -104,7 +106,7 @@ fun ItemEditScreen(
                 } else viewModel.addImage(path)
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                showError = failure.message ?: "照片未能添加，请重试"
+                showError = uiErrorText(failure, "照片未能添加，请重试")
             }
         }
     }
@@ -139,7 +141,7 @@ fun ItemEditScreen(
     if (showError != null) {
         AlertDialog(
             onDismissRequest = { showError = null },
-            title = { Text("提示") },
+            title = { Text("物品操作未完成") },
             text = { Text(showError ?: "") },
             confirmButton = {
                 TextButton(onClick = { showError = null }) {
@@ -154,7 +156,7 @@ fun ItemEditScreen(
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
             title = { Text("确认删除") },
-            text = { Text("确定要删除这件服饰吗？相关的价格和付款记录也会被删除。") },
+            text = { Text("将删除该物品及相关价格、付款记录，此操作无法撤销。") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -162,7 +164,7 @@ fun ItemEditScreen(
                         coroutineScope.launch {
                             viewModel.deleteItem()
                                 .onSuccess { onSaveSuccess() }
-                                .onFailure { showError = it.message }
+                                .onFailure { showError = uiErrorText(it) }
                         }
                     },
                     colors = ButtonDefaults.textButtonColors(
@@ -194,7 +196,7 @@ fun ItemEditScreen(
                     coroutineScope.launch {
                         runCatching { viewModel.discardDraft() }
                             .onSuccess { showDiscardDialog = false; onBack() }
-                            .onFailure { isLeaving = false; showError = it.message }
+                            .onFailure { isLeaving = false; showError = uiErrorText(it) }
                     }
                 }, enabled = !uiState.isSaving && !isLeaving) { Text("放弃草稿") }
             },
@@ -235,7 +237,7 @@ fun ItemEditScreen(
         title = { Text("放弃旧草稿？") },
         text = { Text("旧草稿的未保存编辑将被放弃，重新读取已保存物品的最新照片、位置与资料。") },
         confirmButton = { TextButton(onClick = { coroutineScope.launch {
-            runCatching { viewModel.discardConflictingDraftAndReload() }.onFailure { showError=it.message }
+            runCatching { viewModel.discardConflictingDraftAndReload() }.onFailure { showError=uiErrorText(it) }
             showConflictDiscardDialog=false
         } }) { Text("放弃并重载") } },
         dismissButton = { TextButton(onClick = { showConflictDiscardDialog=false }) { Text("继续保留草稿") } }
@@ -308,9 +310,9 @@ fun ItemEditScreen(
                     CategorySelector(enabled = canEdit, selectedCategoryId = uiState.categoryId,
                         categories = uiState.categories, onCategorySelected = viewModel::updateCategory,
                         isError = hasAttemptedSave && uiState.categoryId == 0L, preferredFamily = uiState.preferredFamily)
-                    Text("名称和类型填好即可保存，其他资料可稍后补充。",
+                    Text("名称和类型为必填，其他资料可稍后补充。",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    LolitaSection("常用资料（选填）") {
+                    LolitaSection("常用资料") {
                         row { SizeSelector(uiState.size, viewModel::updateSize, enabled = canEdit, modifier = Modifier.fillMaxWidth()) }
                         row {
                             OutlinedButton(onClick = { showColors = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth()) {
@@ -334,8 +336,8 @@ fun ItemEditScreen(
                         LolitaSection("主件与小物") {
                             if (uiState.parentItemId != null) row {
                                 Text("所属主件：${parent?.name ?: "正在读取"}")
-                                Text(if (uiState.includedInParentPrice) "包含在主件价格中，不重复计价，收货状态随主件"
-                                    else "保留独立价格与付款，收货状态按本件付款计算",
+                                Text(if (uiState.includedInParentPrice) "随主件计价，不重复计价，拥有状态随主件"
+                                    else "保留独立价格与付款，拥有状态按本件付款计算",
                                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 if (!uiState.includedInParentPrice && uiState.pricesWithPayments.isNotEmpty()) {
                                     Text("已有价格记录，请先在价格与付款中核对后再改为共用价格",
@@ -343,15 +345,15 @@ fun ItemEditScreen(
                                 }
                             }
                             if (uiState.children.isNotEmpty()) row {
-                                Text("已有 ${uiState.children.size} 件所属小物，解除挂载后才能挂到其他主件下面")
+                                Text("已有 ${uiState.children.size} 件所属小物，解除关联后才能挂到其他主件下面")
                             }
                         }
                     }
                     if (uiState.includedInParentPrice || uiState.pricesWithPayments.isNotEmpty() || uiState.legacyPriceCount > 0) {
-                        LolitaSection("收货状态") {
+                        LolitaSection("拥有状态") {
                             row {
                                 Text(itemStatusLabel(uiState.status))
-                                Text(if (uiState.includedInParentPrice) "包含在主件价格中，随主件付清后变为已拥有"
+                                Text(if (uiState.includedInParentPrice) "随主件计价，随主件付清后变为已拥有"
                                     else if (uiState.legacyPriceCount > 0 && uiState.pricesWithPayments.isEmpty()) "历史价格待核对，请在价格与付款中确定唯一订单"
                                     else "按实际付款自动更新，付清后即为已拥有",
                                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -366,7 +368,7 @@ fun ItemEditScreen(
                         if (uiState.seasons.isNotEmpty()) add(uiState.seasons.joinToString("、"))
                         uiState.source?.takeIf { it.isNotBlank() }?.let { add("来源：$it") }
                         uiState.coordinates.firstOrNull { it.id == uiState.coordinateId }?.let { add("套装：${it.name}") }
-                        if (uiState.parentItemId != null) add("主件挂载已设置")
+                        if (uiState.parentItemId != null) add("已关联主件")
                         val chartCount = listOfNotNull(uiState.sizeChartImageUrl).size + uiState.sizeChartImageUrls.size
                         if (chartCount > 0) add("资料图 $chartCount 张")
                         add(itemStatusLabel(uiState.status))
@@ -384,7 +386,7 @@ fun ItemEditScreen(
                         if (supplementaryExpanded) row {
                             Column(verticalArrangement = Arrangement.spacedBy(skin.spacingLarge)) {
                                 OutlinedTextField(uiState.description, viewModel::updateDescription, enabled = canEdit,
-                                    label = { Text("描述与备注（选填）") }, modifier = Modifier.fillMaxWidth(), minLines = 2, maxLines = 5)
+                                    label = { Text("备注") }, modifier = Modifier.fillMaxWidth(), minLines = 2, maxLines = 5)
                                 BrandSelector(enabled = canEdit, selectedBrandId = uiState.brandId, brands = uiState.brands,
                                     onBrandSelected = viewModel::updateBrand)
                                 if (!uiState.includedInParentPrice && uiState.pricesWithPayments.isEmpty() && uiState.legacyPriceCount == 0) {
@@ -403,7 +405,7 @@ fun ItemEditScreen(
                                 if (itemId != null && uiState.item != null) {
                                     OutlinedButton(onClick = { showDeleteConfirm = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth(),
                                         colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)) {
-                                        SkinIcon(IconKey.Delete); Spacer(Modifier.width(skin.spacingMedium)); Text("删除服饰")
+                                        SkinIcon(IconKey.Delete); Spacer(Modifier.width(skin.spacingMedium)); Text("删除物品")
                                     }
                                 }
                             }
@@ -415,7 +417,7 @@ fun ItemEditScreen(
                 Button(onClick = {
                     hasAttemptedSave = true
                     coroutineScope.launch {
-                        viewModel.saveItem().onSuccess { onSaveSuccess() }.onFailure { showError = it.message }
+                        viewModel.saveItem().onSuccess { onSaveSuccess() }.onFailure { showError = uiErrorText(it) }
                     }
                 }, enabled = canEdit && !uiState.isSettingCover && uiState.name.isNotBlank() && uiState.categoryId != 0L,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium)
@@ -453,7 +455,7 @@ private fun BrandSelector(
             value = brands.find { it.id == selectedBrandId }?.name ?: "未设置",
             onValueChange = {},
             readOnly = true,
-            label = { Text("品牌（可不设置）") },
+            label = { Text("品牌") },
             trailingIcon = { SkinIcon(IconKey.Search) },
             modifier = Modifier.fillMaxWidth(),
             isError = isError,
@@ -555,9 +557,9 @@ private fun CoordinateSelector(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val selectedName = if (selectedCoordinateId == null) {
-        "无"
+        "未设置"
     } else {
-        coordinates.find { it.id == selectedCoordinateId }?.name ?: "无"
+        coordinates.find { it.id == selectedCoordinateId }?.name ?: "未设置"
     }
 
     ExposedDropdownMenuBox(
@@ -569,7 +571,7 @@ private fun CoordinateSelector(
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text("所属套装 (可选)") },
+            label = { Text("所属套装") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -581,7 +583,7 @@ private fun CoordinateSelector(
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
-                text = { Text("无") },
+                text = { Text("未设置") },
                 onClick = {
                     onCoordinateSelected(null)
                     expanded = false
@@ -611,7 +613,7 @@ private fun StatusSelector(
 ) {
     Column {
         Text(
-            text = "收货状态",
+            text = "拥有状态",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -628,7 +630,7 @@ private fun StatusSelector(
                         Text(
                             when (status) {
                                 ItemStatus.OWNED -> "已拥有"
-                                ItemStatus.WISHED -> "愿望单"
+                                ItemStatus.WISHED -> "心愿"
                                 ItemStatus.PENDING_BALANCE -> "待补尾款"
                                 ItemStatus.PENDING_PAYMENT -> "待付款"
                                 ItemStatus.PENDING_REVIEW -> "待核对"
@@ -653,7 +655,7 @@ private fun PrioritySelector(
 ) {
     Column {
         Text(
-            text = "愿望单优先级",
+            text = "心愿优先级",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -695,7 +697,7 @@ private fun SeasonSelector(
 ) {
     Column {
         Text(
-            text = "季节 (可多选)",
+            text = "季节",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -728,7 +730,7 @@ private fun StyleSelector(
 ) {
     Column {
         Text(
-            text = "风格 (可选)",
+            text = "风格",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -770,7 +772,7 @@ private fun SourceSelector(
 ) {
     Column {
         Text(
-            text = "来源 (可选)",
+            text = "来源",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -810,8 +812,8 @@ private fun SizeChartImageSection(
     onRemoveImage: (Int) -> Unit
 ) {
     var preview by remember { mutableStateOf<Int?>(null) }
-    LolitaSection("尺码表图片（可选）") {
-        row { Text("共 ${imageUrls.size} 张，点击图片可放大查看。") }
+    LolitaSection("尺码与资料图") {
+        row { Text("共 ${imageUrls.size} 张") }
         row {
             MultiImageEditor(enabled = enabled, imageUrls = imageUrls, maxImages = 50, onAddImage = onAddImage,
                 onRemoveImage = onRemoveImage, contentScale = ContentScale.Fit,
@@ -833,9 +835,9 @@ private fun LocationSelector(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val selectedName = if (selectedLocationId == null) {
-        "无"
+        "未设置"
     } else {
-        locations.find { it.id == selectedLocationId }?.name ?: "无"
+        locations.find { it.id == selectedLocationId }?.name ?: "未设置"
     }
 
     ExposedDropdownMenuBox(
@@ -858,7 +860,7 @@ private fun LocationSelector(
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
-                text = { Text("无") },
+                text = { Text("未设置") },
                 onClick = { onLocationSelected(null); expanded = false }
             )
             locations.forEach { location ->
@@ -894,7 +896,7 @@ private fun ParentItemSelector(
                 Text(parent?.name ?: "独立服饰（选择主件可挂为小物）")
             }
             if (hasChildren) {
-                Text("已有所属小物，解除挂载后才能挂到其他主件下面", style = MaterialTheme.typography.bodySmall,
+                Text("已有所属小物，解除关联后才能挂到其他主件下面", style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
@@ -904,9 +906,9 @@ private fun ParentItemSelector(
                     Checkbox(checked = includedInParentPrice, onCheckedChange = onIncludedChanged,
                         enabled = enabled && (canSharePrice || includedInParentPrice))
                     Column(Modifier.weight(1f)) {
-                        Text("包含在主件价格中")
-                        Text(if (includedInParentPrice) "不单独计价，收货状态随主件"
-                            else "独立价格与付款，收货状态按自己的付款计算",
+                        Text("随主件计价")
+                        Text(if (includedInParentPrice) "不单独计价，拥有状态随主件"
+                            else "独立价格与付款，拥有状态按自己的付款计算",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
@@ -914,7 +916,7 @@ private fun ParentItemSelector(
                     Text("已有价格记录，请先在价格与付款中核对后再改为共用价格",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                TextButton(enabled = enabled, onClick = { onParentSelected(null) }) { Text("解除主件挂载") }
+                TextButton(enabled = enabled, onClick = { onParentSelected(null) }) { Text("解除主件关联") }
             }
         }
     }
@@ -945,7 +947,7 @@ internal fun ItemSearchPickerDialog(
         text = {
             Column {
                 OutlinedTextField(value = query, onValueChange = { query = it }, singleLine = true,
-                    label = { Text("搜索服饰") }, leadingIcon = { SkinIcon(IconKey.Search) }, modifier = Modifier.fillMaxWidth())
+                    label = { Text("搜索物品") }, leadingIcon = { SkinIcon(IconKey.Search) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 if (filtered.isEmpty()) Text("没有可选择的服饰", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 LazyColumn(Modifier.heightIn(max = 350.dp)) {
@@ -972,7 +974,7 @@ internal fun ItemSearchPickerDialog(
 
 internal fun itemStatusLabel(status: ItemStatus): String = when (status) {
     ItemStatus.OWNED -> "已拥有"
-    ItemStatus.WISHED -> "愿望单"
+    ItemStatus.WISHED -> "心愿"
     ItemStatus.PENDING_BALANCE -> "待补尾款"
     ItemStatus.PENDING_PAYMENT -> "待付款"
     ItemStatus.PENDING_REVIEW -> "待核对"

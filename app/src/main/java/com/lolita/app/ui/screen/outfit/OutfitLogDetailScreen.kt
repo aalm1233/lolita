@@ -62,7 +62,7 @@ fun OutfitLogDetailScreen(
         AlertDialog(
             onDismissRequest = { removeConfirmItem = null },
             title = { Text("确认移除") },
-            text = { Text("确定要移除关联服饰 \"${removeConfirmItem?.name}\" 吗？") },
+            text = { Text("移除「${removeConfirmItem?.name}」与本次穿搭的关联？物品记录保留。") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -240,7 +240,7 @@ fun OutfitLogDetailScreen(
                 // Associated items section
                 if (uiState.items.isNotEmpty()) {
                     item {
-                        SectionHeader(title = "关联服饰 (${uiState.items.size})")
+                        SectionHeader(title = "穿搭单品 (${uiState.items.size})")
                     }
                     items(uiState.items, key = { it.id }) { item ->
                         DetailItemCard(

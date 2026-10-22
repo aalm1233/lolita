@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.coordinate
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -70,7 +72,7 @@ fun CoordinateEditScreen(
         AlertDialog(
             onDismissRequest = { showDiscardDialog = false },
             title = { Text("放弃更改？") },
-            text = { Text("有未保存的更改，确定要放弃吗？") },
+            text = { Text("本次未保存的修改将丢失。") },
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
@@ -130,7 +132,7 @@ fun CoordinateEditScreen(
                                 result.onSuccess {
                                     onSaveSuccess()
                                 }.onFailure { e ->
-                                    showError = e.message ?: "保存失败"
+                                    showError = uiErrorText(e, "保存失败")
                                 }
                             }
                         },
@@ -187,7 +189,7 @@ fun CoordinateEditScreen(
                 value = uiState.description,
                 onValueChange = { viewModel.updateDescription(it) },
                 label = { Text("描述") },
-                placeholder = { Text("记录这个套装的搭配灵感...") },
+                placeholder = { Text("搭配灵感或备注") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences
@@ -200,7 +202,7 @@ fun CoordinateEditScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                "选择服饰 (${uiState.selectedItemIds.size}件)",
+                "选择物品 (${uiState.selectedItemIds.size}件)",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -213,7 +215,7 @@ fun CoordinateEditScreen(
             OutlinedTextField(
                 value = itemSearchQuery,
                 onValueChange = { itemSearchQuery = it },
-                label = { Text("搜索服饰") },
+                label = { Text("搜索物品") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 leadingIcon = { SkinIcon(IconKey.Search, modifier = Modifier.size(20.dp)) }
@@ -227,7 +229,7 @@ fun CoordinateEditScreen(
 
             if (filteredItems.isEmpty()) {
                 Text(
-                    if (itemSearchQuery.isBlank()) "暂无服饰，请先添加服饰" else "未找到匹配的服饰",
+                    if (itemSearchQuery.isBlank()) "暂无服饰，请先添加服饰" else "没有符合条件的物品",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

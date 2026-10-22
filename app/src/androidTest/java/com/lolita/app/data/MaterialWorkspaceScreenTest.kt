@@ -105,6 +105,7 @@ class MaterialWorkspaceScreenTest {
         // This method is invoked separately on a real 320dp / 2x-font AVD override.
         Assume.assumeTrue(config.screenWidthDp<=320 && config.fontScale>=1.99f)
         screenshot("small-prepare")
+        compose.onNodeWithTag("materialWorkspace").performScrollToNode(hasTestTag("materialInstructions"))
         compose.onNodeWithTag("materialInstructions").performScrollTo().performClick().performTextInput("两枚扣具及细链都保留")
         compose.waitUntil(10000){androidx.core.view.ViewCompat.getRootWindowInsets(hostView)?.isVisible(androidx.core.view.WindowInsetsCompat.Type.ime())==true}
         compose.waitForIdle();compose.onNodeWithTag("materialPrimary").assertIsDisplayed();screenshot("small-prepare-ime")

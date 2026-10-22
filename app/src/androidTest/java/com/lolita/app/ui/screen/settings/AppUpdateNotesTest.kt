@@ -49,7 +49,7 @@ class AppUpdateNotesTest {
             compose.onNodeWithText("已是最新版本").assertIsDisplayed()
             compose.onNodeWithText("本版更新").assertIsDisplayed()
             compose.onNodeWithText("生成后可离开页面，在任务中心查看进度。").performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("知道了").assertIsDisplayed().performClick()
+            compose.onNodeWithText("关闭").assertIsDisplayed().performClick()
             compose.onAllNodes(isDialog()).assertCountEquals(0)
         } finally { compose.runOnUiThread { store.clear() } }
     }
@@ -59,7 +59,7 @@ class AppUpdateNotesTest {
             AppUpdateUiState(showDialog = true, update = ReleaseUpdate(release(""), 0)),
             "2.51.0", {}, {}, {}) } }
         compose.onNodeWithText("此版本暂未提供更新说明").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("知道了").assertIsDisplayed()
+        compose.onNodeWithText("关闭").assertIsDisplayed()
     }
 
     @Test fun longNotesScrollAndActionsRemainReachableAcrossSevenSkinsAtLargeFont() {
@@ -88,14 +88,14 @@ class AppUpdateNotesTest {
         val output = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir, "image-task-update-notes").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = skin to dark }
-            compose.onNodeWithText("下载 APK").assertIsDisplayed().assertHasClickAction()
+            compose.onNodeWithText("下载安装包").assertIsDisplayed().assertHasClickAction()
             compose.onNodeWithText("关闭").assertIsDisplayed().assertHasClickAction()
             compose.onNodeWithText("最后一项：保留原始服饰图片。").performScrollTo().assertIsDisplayed()
             val bitmap = compose.onNode(isDialog()).captureToImage().asAndroidBitmap()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
-            compose.onNodeWithText("下载 APK").performClick()
+            compose.onNodeWithText("下载安装包").performClick()
             assertEquals("https://gitee.com/aalm1233/lolita/releases/download/v2.51.0/lolita-2.51.0.apk", opened)
             compose.onNodeWithTag("appUpdateContent").performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, -100_000f) }
         }

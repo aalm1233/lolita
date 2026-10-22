@@ -70,14 +70,8 @@ fun SeasonManageScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Text("季节列表", style = MaterialTheme.typography.titleLarge)
-            }
-            item {
-                HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)
-            }
             if (uiState.seasons.isEmpty()) {
-                item { SkinEmptyState(iconKey = IconKey.CalendarMonth, title = "暂无季节") }
+                item { SkinEmptyState(iconKey = IconKey.CalendarMonth, title = "尚未添加季节") }
             } else {
                 items(uiState.seasons, key = { it.id }) { season ->
                     SeasonCard(season = season, onEdit = { viewModel.showEditDialog(season) }, onDelete = { viewModel.showDeleteConfirm(season) })
@@ -97,7 +91,7 @@ fun SeasonManageScreen(
         AlertDialog(
             onDismissRequest = { viewModel.hideDeleteConfirm() },
             title = { Text("确认删除") },
-            text = { Text("确定要删除季节 \"${uiState.showDeleteConfirm?.name}\" 吗？") },
+            text = { Text("删除后，将从关联物品中移除季节「${uiState.showDeleteConfirm?.name}」，物品记录保留。") },
             confirmButton = {
                 TextButton(
                     onClick = { uiState.showDeleteConfirm?.let { viewModel.deleteSeason(it) } },

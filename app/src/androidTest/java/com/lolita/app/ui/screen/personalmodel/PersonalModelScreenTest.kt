@@ -79,7 +79,7 @@ class PersonalModelScreenTest {
     @Test fun parameterEntryRequiresValidMeasurementsThenConfirmsBeforeSingleTaskSubmission() {
         show()
         compose.onNodeWithTag("generatePersonalModel").assertIsNotEnabled()
-        compose.onNodeWithText("仅用参数").performClick()
+        compose.onNodeWithText("参数生成").performClick()
         scroll("身高（必填）")
         compose.onNodeWithText("身高（必填）").performTextInput("163")
         scroll("体重（必填）")

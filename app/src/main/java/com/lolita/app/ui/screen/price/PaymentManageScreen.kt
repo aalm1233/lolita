@@ -78,7 +78,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         } else {
                             PricingValueRow("已录实付", if (state.payments.isEmpty()) "付款记录未补全" else formatPriceAmount(state.paidAmount))
                             PricingValueRow("未付余额", "未知")
-                            Text(if (state.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED) "原付款阶段只读，可补录或更正真实实付。" else "付款阶段与实付记录只读，请先核对购买资料。",
+                            Text(if (state.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED) "原付款阶段只读，可补录或更正真实实付。" else "付款计划与记录只读，请先核对购买资料。",
                                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         if (state.paidAmount > state.totalPrice + 0.005) Text("原始记录存在超付，请核对。", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
@@ -125,8 +125,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         Text("应付日期：${formatPriceDate(stage.dueDate)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Column(Modifier.weight(1f)) {
-                                Text("${if (tracked) "阶段已付" else "已录抵扣"}：${if (!tracked && state.payments.isEmpty()) "付款记录未补全" else formatPriceAmount(paid)}", style = MaterialTheme.typography.bodySmall)
-                                if (!state.isCurrent || !tracked) Text("付款阶段只读", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("${if (tracked) "本阶段已付" else "已录抵扣"}：${if (!tracked && state.payments.isEmpty()) "付款记录未补全" else formatPriceAmount(paid)}", style = MaterialTheme.typography.bodySmall)
                             }
                             IconButton(enabled = canEditStages, modifier = Modifier.semantics { contentDescription = "编辑付款阶段：${stage.name}" }, onClick = { editingStage = StageDraft(stage.id, stage.name, moneyText(stage.amount), stage.dueDate, stage.reminderSet, stage.customReminderDays?.toString() ?: "1", stage.calendarEventId) }) { SkinIcon(IconKey.Edit) }
                             IconButton(enabled = canEditStages, modifier = Modifier.semantics { contentDescription = "删除付款阶段：${stage.name}" }, onClick = { stageToDelete = stage }) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }
@@ -153,7 +152,6 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Column(Modifier.weight(1f)) {
                                 Text("付款阶段：${stage?.name ?: "未指定阶段"}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                if (!state.isCurrent || state.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW) Text("实付记录只读", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             IconButton(enabled = canEditPayments, modifier = Modifier.semantics { contentDescription = "编辑实际付款：${formatPriceAmount(payment.amount)}" }, onClick = { onNavigateToPaymentEdit(payment.id) }) { SkinIcon(IconKey.Edit) }
                             IconButton(enabled = canEditPayments, modifier = Modifier.semantics { contentDescription = "撤销实际付款：${formatPriceAmount(payment.amount)}" }, onClick = { paymentToDelete = payment }) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }
@@ -172,7 +170,6 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         PaymentRecordGroupPart(isLast = index == state.legacyUnpaidPayments.lastIndex) {
                             PaymentRecordHeading("旧记录 #${old.id}", formatPriceAmount(old.amount))
                             Text("原应付日期：${formatPriceDate(old.dueDate)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text("原始计划只读", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -196,7 +193,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
             else "撤销实付 ${formatPriceAmount(payment.amount)} 后会重新计算余额。若不再付清，服饰及共用价格的小物将恢复待付款状态。") },
         confirmButton = { TextButton(enabled = canEditPayments, onClick = { viewModel.deletePayment(payment); paymentToDelete = null }) { Text("确认撤销", color = MaterialTheme.colorScheme.error) } },
         dismissButton = { TextButton(onClick = { paymentToDelete = null }) { Text("取消") } }) }
-    state.errorMessage?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("提示") }, text = { Text(error) },
+    state.errorMessage?.let { error -> AlertDialog(onDismissRequest = viewModel::clearError, title = { Text("付款操作未完成") }, text = { Text(error) },
         confirmButton = { TextButton(onClick = viewModel::clearError) { Text("确定") } }) }
 }
 

@@ -51,7 +51,7 @@ fun RecommendationScreen(
         containerColor = Color.Transparent,
         topBar = {
             GradientTopAppBar(
-                title = { Text("推荐搭配") },
+                title = { Text("搭配推荐") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         SkinIcon(IconKey.ArrowBack)
@@ -86,7 +86,7 @@ fun RecommendationScreen(
                 Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
                     SkinEmptyState(
                         iconKey = IconKey.Outfit,
-                        title = "暂无推荐搭配",
+                        title = "暂无搭配推荐",
                         subtitle = "添加更多服饰以获取搭配推荐"
                     )
                 }

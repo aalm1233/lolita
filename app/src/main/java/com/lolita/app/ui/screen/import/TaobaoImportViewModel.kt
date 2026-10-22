@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.`import`
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
@@ -214,7 +216,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = "解析失败: ${e.message}"
+                    errorMessage = uiErrorText(e, "订单文件未能解析，请核对文件后重试")
                 )
             }
         }
@@ -371,7 +373,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = "创建数据失败: ${e.message}"
+                    errorMessage = uiErrorText(e, "品牌或类型未能添加，请重试")
                 )
             }
         }
@@ -431,7 +433,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
             releaseDraftImages()
             _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL,
                 importItems = autoMatchDepositBalance(importItems), currentItemIndex = 0)
-        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message ?: "金额解析失败") }
+        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = uiErrorText(e, "金额解析失败")) }
     }
 
     private fun guessCategoryGroup(parsedType: String): String {
@@ -507,7 +509,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                 require(importCents(importSum(rows.map { it.shipping })) <= importCents(original.shipping)) { "订单 $orderId 分摊邮费超过源订单邮费，请核对，不能重复计费" }
                 require(importCents(importSum(rows.map { it.paidAmount })) <= importCents(original.totalPaid)) { "订单 $orderId 导入实付超过源订单实付，请核对分配" }
             }
-        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = e.message); return }
+        } catch (e: Exception) { _uiState.value = _uiState.value.copy(errorMessage = uiErrorText(e)); return }
         // A picker still copying must not attach its result to the committed snapshot.
         imageGeneration++
         imageRequests.clear()
@@ -593,7 +595,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
                     .onFailure { android.util.Log.w("TaobaoImport", "Import committed; reminders will retry", it) }
                 _uiState.value = _uiState.value.copy(currentStep = ImportStep.RESULT,
                     importResult = ImportResult(importedCount, mergedCount, allItems.size - processed.size))
-            } catch (e: Exception) { _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL, errorMessage = "导入失败: ${e.message}") }
+            } catch (e: Exception) { _uiState.value = _uiState.value.copy(currentStep = ImportStep.DETAIL, errorMessage = uiErrorText(e, "导入未完成，请核对资料后重试")) }
         }
     }
 
@@ -843,7 +845,7 @@ class TaobaoImportViewModel @JvmOverloads constructor(
     fun addCategory(name: String, group: CategoryGroup, semantic: CategorySemantic) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                require(semantic != CategorySemantic.UNCONFIRMED) { "请选择稳定类型" }
+                require(semantic != CategorySemantic.UNCONFIRMED) { "请选择物品类型" }
                 categoryRepository.insertCategory(Category(name = name, group = group, categorySemantic = semantic,
                     defaultWearRole = semantic.defaultWearRole))
                 val categories = categoryRepository.getAllCategories().first()

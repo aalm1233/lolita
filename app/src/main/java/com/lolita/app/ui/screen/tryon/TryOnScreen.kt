@@ -68,7 +68,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     if (state.hasKey && !state.isSubmitting && !keyboardVisible) {
-                        Text("上传“${state.modelName}”与服饰共 ${state.generationSelected.size + 1} 张图片及名称、穿戴位置、穿戴要求至 ${state.provider.recipient}，可能计费。",
+                        Text("将发送 ${state.generationSelected.size + 1} 张图片及穿戴资料至 ${state.provider.recipient}，另行计费。",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag("tryOnUploadSummary"))
                     }
@@ -81,7 +81,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                             CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(skin.spacingMedium))
                         }
-                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置 API Key" else "生成一张试衣图")
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置服务密钥" else "生成试衣图")
                     }
 
                 }
@@ -115,7 +115,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                         OutlinedButton(onClick = { showModelPicker = true }, enabled = !state.busy && !state.isLoading && state.modelsLoaded,
                             modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium)) { Text("更换试衣人物") }
                         state.modelIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
-                        Text("使用已确认的个人模特或内置虚拟模特预览搭配，更换人物保留已选服饰。生成可能偏离花纹、版型与细节，不能用于判断真实尺码。",
+                        Text("仅供效果参考，不能判断真实尺码。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                     }
                 }
@@ -126,16 +126,15 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 }) {
                     row {
                         ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
-                        Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "个人 API Key 已配置" else "尚未配置个人 API Key",
+                        Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "服务密钥已配置" else "尚未配置服务密钥",
                             modifier = Modifier.padding(vertical = skin.spacingMedium), style = MaterialTheme.typography.bodyMedium)
-                        Text("${state.provider.keyHelp} 两家密钥分开加密保存在本机，不进入备份。", style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
             item(key = "selection-header") {
                 LolitaSection(title = "搭配共 ${state.selected.size} 件 · 本次试衣 ${state.generationSelected.size} 件") {
                     row {
-                        Text("每件使用一张已有图片；请核对穿戴位置。搭配可超过8件，本次试衣须明确选择1至8件，并包含至少一件基础服装。",
+                        Text("本次选择 1～8 件，每件一张参考图，至少包含一件基础服装。请核对穿戴位置。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
                         OutlinedButton(onClick = { showPicker = true }, enabled = !state.busy && !state.isLoading && !state.loadFailed,
                             modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium)) {
@@ -164,8 +163,8 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                             Text("用于本次试衣", style = MaterialTheme.typography.bodyMedium)
                         }
                         TryOnItemImage(row.imagePath, "${row.name}的参考图片", Modifier.fillMaxWidth().height(160.dp))
-                        if (item == null) Text("服饰已不在已拥有衣橱，请移除后重新选择", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-                        if (row.imagePath.isBlank()) Text("这件服饰没有参考图片，请先到服饰编辑页添加", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        if (item == null) Text("该物品已不可用于试衣，请移除后重新选择", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        if (row.imagePath.isBlank()) Text("此物品没有参考图片，请先在物品编辑页添加", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                         OutlinedButton(onClick = { imageItemId = row.itemId }, enabled = !state.busy && item?.imageUrls?.any { it.isNotBlank() } == true,
                             modifier = Modifier.fillMaxWidth()) { Text("更换参考图片") }
                         OutlinedButton(onClick = { roleItemId = row.itemId }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("穿戴位置：${row.role.label}") }
@@ -173,35 +172,30 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                 }
             }
             item(key = "wearing-instructions") {
-                LolitaSection(title = "穿戴要求（选填）") {
+                LolitaSection(title = "补充穿戴要求") {
                     row {
                         Spacer(Modifier.height(skin.spacingMedium))
-                        Text("可说明 BNT 前后位置、系带、掖入和叠穿方式。裙撑、衣层与鞋履会按结构处理支撑、垂坠和遮挡。",
+                        Text("可补充头饰位置、系带或叠穿方式。",
                             style = MaterialTheme.typography.bodySmall)
                         OutlinedTextField(value = state.instructions, onValueChange = viewModel::updateInstructions,
-                            label = { Text("补充穿戴描述") },
+                            label = { Text("穿戴要求") },
                             placeholder = { Text("例如：BNT 戴靠后，露出刘海；衬衫掖进裙腰。") },
                             enabled = !state.busy && !state.isLoading, minLines = if (keyboardVisible) 2 else 3, maxLines = 5,
                             supportingText = { Text("${state.instructions.length} / ${TryOnRequest.MAX_INSTRUCTIONS} · 将发送给所选图像服务") },
                             modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium).testTag("tryOnInstructions"))
-                        Text("高跟鞋会结合鞋楦与跟高调整足踝和承重姿态，保留人物体型与腿部比例；生成效果仍需核对。",
-                            modifier = Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
+
                     }
                 }
             }
             item("background-advice") { ImageBackgroundAdvice() }
             item(key = "disclosure") {
-                LolitaSection(title = "生成前确认") {
-                    row {
-                        Text("点击生成后，将上传“${state.modelName}”底图与已选的 ${state.generationSelected.size} 张服饰图片到 ${state.provider.recipient}，共 ${state.generationSelected.size + 1} 张，并发送服饰名称、穿戴位置与填写的穿戴要求；生成可能产生费用。",
-                            modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
-                        Text("未选择鞋履时沿用人物底图鞋；未选择袜装时保留底图相应区域，这些默认外观不会登记为已选物品。", style = MaterialTheme.typography.bodySmall)
-                        Text("试衣图独立保存，不会改变服饰归属、穿搭次数或账目。取消、超时后服务端仍可能处理；应用不会自动重试。",
-                            modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
-                        state.selectionIssue?.let { Text(it, modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant) }
-                        state.error?.let { Text(it, modifier = Modifier.padding(top = skin.spacingMedium), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                Column {
+                    com.lolita.app.ui.screen.common.ExpandableInfo("效果说明") {
+                        Text("生成可能改变花纹、版型和细节，请核对后使用。鞋履可带来必要的足踝与承重姿态调整。", style = MaterialTheme.typography.bodySmall)
+                        Text("未选鞋袜沿用人物底图相应区域，不登记为已选物品。试衣图独立保存，不改变物品归属、穿搭次数或账目。", style = MaterialTheme.typography.bodySmall)
                     }
+                    state.selectionIssue?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    state.error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
                 }
             }
             item(key = "history-header") {
@@ -251,7 +245,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     accessoryBaseResultId?.let { baseId ->
         AlertDialog(onDismissRequest = { accessoryBaseResultId = null }, title = { Text("选择已确认腰饰素材") }, text = {
             Column {
-                Text("首版一次增加一件腰饰；底图已有冲突腰饰时，请先核对或换底图。", style = MaterialTheme.typography.bodySmall)
+                Text("每次增加一件腰饰；原穿搭已有冲突腰饰时，请先核对或换图。", style = MaterialTheme.typography.bodySmall)
                 LazyColumn(Modifier.heightIn(max = 420.dp)) {
                     val available = state.materials.filter { asset -> state.items.any { it.id == asset.itemId && state.categories.firstOrNull { category -> category.id == it.categoryId }?.categorySemantic == com.lolita.app.domain.model.CategorySemantic.WAIST_ACCESSORY } }
                     if (available.isEmpty()) item { Text("暂无已确认腰饰素材，请先在腰饰详情中整理并核对。") }

@@ -79,9 +79,8 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
             } else if (!state.isUnassigned && state.location == null) {
                 item { SkinEmptyState(iconKey = IconKey.Location, title = "房间已删除") }
             } else {
-                item { LolitaSection(title = "当前位置") { row {
-                    Text(state.currentPath, style = MaterialTheme.typography.titleMedium)
-                    Text("共 ${state.recordCount} 条记录（含挂载小物）", style = MaterialTheme.typography.bodySmall)
+                item { LolitaSection(title = state.currentPath) { row {
+                    Text("共 ${state.recordCount} 条记录（含关联小物）", style = MaterialTheme.typography.bodySmall)
                     val image = currentNode?.imageUrl ?: if (currentNode == null) state.location?.imageUrl else null
                     image?.let {
                         ImageFrame { LolitaShimmerImage(model = it, contentDescription = "位置封面",
@@ -133,7 +132,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                     StorageItemRow(item, state, item.id in state.selectedItemIds,
                         onToggle = { viewModel.toggleSelection(item.id) }, onClick = { onItemClick(item.id) }, modifier = Modifier.skinItemAppear(index))
                 }
-                if (state.items.isEmpty()) item { Text(if (state.searchQuery.isBlank()) "此处暂无直接存放的物品" else "没有匹配的记录",
+                if (state.items.isEmpty()) item { Text(if (state.searchQuery.isBlank()) "此位置暂无物品" else "没有匹配的记录",
                     color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = skin.spacingLarge)) }
             }
         }
@@ -211,7 +210,7 @@ private fun StorageItemRow(item: Item, state: LocationDetailUiState, checked: Bo
                     val details = listOfNotNull(state.brandNames[item.brandId], state.categoryNames[item.categoryId]).filter { it.isNotBlank() }
                     if (details.isNotEmpty()) Text(details.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
                     Text(StorageTree.pathFor(item.locationId, item.storageNodeId, state.locations, state.nodes), style = MaterialTheme.typography.labelSmall)
-                    if (item.parentItemId != null) Text("挂载小物", style = MaterialTheme.typography.labelSmall)
+                    if (item.parentItemId != null) Text("关联小物", style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -220,7 +219,7 @@ private fun StorageItemRow(item: Item, state: LocationDetailUiState, checked: Bo
 
 @Composable
 private fun ConfirmStorageMove(title: String, destination: String, busy: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    AlertDialog(onDismissRequest = { if (!busy) onDismiss() }, title = { Text(title) }, text = { Text("目标：$destination。确认后更新实际位置。") },
+    AlertDialog(onDismissRequest = { if (!busy) onDismiss() }, title = { Text(title) }, text = { Text("移至：$destination") },
         confirmButton = { TextButton(onClick = onConfirm, enabled = !busy) { Text(if (busy) "移动中…" else "确认移动") } },
         dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text("取消") } })
 }

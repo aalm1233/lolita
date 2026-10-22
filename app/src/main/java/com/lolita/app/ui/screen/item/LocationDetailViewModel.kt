@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.*
@@ -106,7 +108,7 @@ class LocationDetailViewModel(
             try { action(); onComplete() }
             catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(errorMessage = failure.message ?: "保存失败，请重试") }
+                _uiState.update { it.copy(errorMessage = uiErrorText(failure, "保存失败，请重试")) }
             } finally { _uiState.update { it.copy(isSaving = false) } }
         }
     }

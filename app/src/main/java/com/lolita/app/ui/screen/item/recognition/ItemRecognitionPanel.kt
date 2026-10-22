@@ -123,7 +123,7 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
             Text(if(state.tasks.any { it.status==RecognitionStatus.AWAITING_REVIEW }) "识图填入 · 有待核对结果" else "识图填入")
         }
         notice?.let { Text(it,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary) }
-        if(state.evidence.isNotEmpty()) TextButton(onClick={savedEvidence=true}) { Text("查看已采纳的识图来源（${state.evidence.size}）") }
+        if(state.evidence.isNotEmpty()) TextButton(onClick={savedEvidence=true}) { Text("已采纳的识图来源（${state.evidence.size}）") }
     }
     if(open) Dialog(onDismissRequest={if(!state.busy) open=false},properties=DialogProperties(usePlatformDefaultWidth=false,decorFitsSystemWindows=false)) {
         val listState=rememberLazyListState();ObserveSkinScroll(listState)
@@ -149,7 +149,7 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
                             notice="已填入 ${merge.acceptedIds.size} 项"+if(merge.conflicts.isNotEmpty()) "，${merge.conflicts.size} 项请继续核对" else "，保存后生效"
                             if(merge.acceptedIds.isNotEmpty()) open=false
                         }})
-                } else Text("选图后可先核对，再确认发送",style=MaterialTheme.typography.bodySmall)
+                } else Text("选图后核对，再确认发送",style=MaterialTheme.typography.bodySmall)
             } }
         }) { padding ->
             LazyColumn(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).onGloballyPositioned {tracker.updateViewport(it.boundsInWindow())},state=listState,
@@ -158,7 +158,7 @@ fun ItemRecognitionPanel(viewModel: ItemEditViewModel, modifier: Modifier=Modifi
                     Text("当前识图服务：${state.provider?.label ?: "未选择"}",style=MaterialTheme.typography.bodySmall)
                     if(task==null || chooseMore) {
                         SectionHeader(if(task?.status in setOf(RecognitionStatus.AWAITING_REVIEW,RecognitionStatus.APPLIED)) "核对识别结果" else "选择商品图或参数图")
-                        Text("只发送下方预览图片，识别结果由你确认后填入。",style=MaterialTheme.typography.bodySmall)
+                        Text("核对下方图片后发送，结果由你确认填入。",style=MaterialTheme.typography.bodySmall)
                         if(!state.hasKey) TextButton(onClick={configureApi()}) {Text("配置识图 API Key")}
                         Button(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!busy,modifier=Modifier.fillMaxWidth()) {Text("从相册选图")}
                         val paths=(editor.imageUrls+listOfNotNull(editor.sizeChartImageUrl)+editor.sizeChartImageUrls).distinct()
@@ -305,7 +305,7 @@ private fun recognitionReview(task:RecognitionTask,current:Map<RecognitionField,
             val variants=result.candidates.mapNotNull {it.variant}.distinct()
             val sizes=result.candidates.mapNotNull {it.sizeRow}.distinct()
             if(variants.isNotEmpty()) ReviewChoice("正在登记的款式",review.variant,variants,!busy) {onReview(review.copy(variant=it).forSelection(result.candidates))}
-            if(sizes.isNotEmpty()) ReviewChoice("实际购入尺码行",review.sizeRow,sizes,!busy) {onReview(review.copy(sizeRow=it).forSelection(result.candidates))}
+            if(sizes.isNotEmpty()) ReviewChoice("本件尺码",review.sizeRow,sizes,!busy) {onReview(review.copy(sizeRow=it).forSelection(result.candidates))}
             if(result.candidates.isEmpty()) Text("没有读到可填写的信息。可换一张清晰图片，或返回手工填写。")
             result.candidates.filter {it.field in common}.forEach { candidate ->
                 RecognitionCandidateRow(candidate,task,review,current,busy,onReview,onRetain,categories,brands)
@@ -352,7 +352,7 @@ private fun recognitionReview(task:RecognitionTask,current:Map<RecognitionField,
         },style=MaterialTheme.typography.bodySmall)
         if(candidate.field==RecognitionField.CATEGORY) ReferenceChoice("选择现有类型",review.resolvedCategoryId,categories,!busy) {onReview(review.copy(resolvedCategoryId=it))}
         if(candidate.field==RecognitionField.BRAND) ReferenceChoice("选择现有品牌",review.resolvedBrandId,brands,!busy) {onReview(review.copy(resolvedBrandId=it))}
-        TextButton(onClick={source=!source}) {Text(if(source) "收起原文与区域" else "查看原文与区域")}
+        TextButton(onClick={source=!source}) {Text(if(source) "收起来源" else "查看来源")}
         if(source) {
             Text(candidate.source.label,style=MaterialTheme.typography.labelMedium)
             Text(candidate.quote.ifBlank {"没有明文，仅为外观建议"},style=MaterialTheme.typography.bodySmall)
@@ -375,7 +375,7 @@ private fun recognitionReview(task:RecognitionTask,current:Map<RecognitionField,
                 TextButton(onClick={onRetain(path,false)}) { Text("保留为商品图") }
                 TextButton(onClick={onRetain(path,true)}) { Text("保留为资料图") }
             }
-            Text("来源默认只保留为识图证据，以上操作会另加入编辑草稿。",style=MaterialTheme.typography.bodySmall)
+            Text("来源已保留；加入商品图或资料图后，保存物品才生效。",style=MaterialTheme.typography.bodySmall)
         }
     },confirmButton={TextButton(onClick=onDismiss){Text("返回核对")}})
 }

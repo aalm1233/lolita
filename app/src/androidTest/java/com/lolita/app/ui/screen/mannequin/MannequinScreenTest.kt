@@ -133,14 +133,14 @@ class MannequinScreenTest {
         scroll("详情图 2"); compose.onNodeWithText("详情图 2").performClick()
         assertEquals(photos[4], vm.uiState.value.selectedImage)
         scroll("商品图（2）"); compose.onNodeWithText("商品图（2）").performClick()
-        compose.onNodeWithText("当前选择：详情图 2").assertExists()
+        compose.onNodeWithText("已选：详情图 2").assertExists()
         assertEquals(photos[4], vm.uiState.value.selectedImage)
         scroll("详情图（2）"); compose.onNodeWithText("详情图（2）").performClick().assertIsSelected()
         val output = File(instrumentation.targetContext.filesDir, "mannequin-detail-source-screens").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(width = 360, scale = 1f, skin = skin, dark = dark) }
             scroll("详情图（2）")
-            compose.onNodeWithText("当前选择：详情图 2").assertExists()
+            compose.onNodeWithText("已选：详情图 2").assertExists()
             File(output, "${skin.name.lowercase()}-${if (dark) "dark" else "light"}.png").outputStream().use {
                 compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
             }
@@ -242,7 +242,7 @@ class MannequinScreenTest {
     }
     @Test fun missingKeyAndServiceActionBothOpenUnifiedConfigurationWithoutSending() {
         show()
-        compose.onNodeWithText("配置 API Key").performClick()
+        compose.onNodeWithText("配置服务密钥").performClick()
         scroll("API 配置"); compose.onNodeWithText("API 配置").performClick()
         assertEquals(2, configured)
         assertNull(key)
@@ -260,7 +260,7 @@ class MannequinScreenTest {
         generated.complete("task-uuid")
         compose.waitUntil(10_000) { vm.uiState.value.latestTaskId == "task-uuid" && !vm.uiState.value.isSubmitting }
         assertEquals(1, calls)
-        scroll("已加入任务，可离开页面")
+        scroll("最近提交的任务")
         compose.onNodeWithText("查看任务").assertHasClickAction()
         compose.onNodeWithContentDescription("返回").performClick()
         assertEquals(1, navigated)
@@ -275,10 +275,10 @@ class MannequinScreenTest {
             store.put("legacy", vm)
         }
         compose.waitUntil(10_000) { !vm.uiState.value.isLoading }
-        show(); scroll("添加旧版预览到裙子图片")
+        show(); scroll("添加到物品相册")
         compose.onNodeWithContentDescription("放大旧版预览").performClick()
         compose.onNodeWithContentDescription("关闭图片预览").performClick()
-        compose.onNodeWithText("添加旧版预览到裙子图片").performClick()
+        compose.onNodeWithText("添加到物品相册").performClick()
         compose.waitUntil(10_000) { appended == photos[2] && !vm.uiState.value.savingLegacy }
         assertNull(discarded); assertEquals(0, calls)
     }
@@ -290,7 +290,7 @@ class MannequinScreenTest {
         val output = File(instrumentation.targetContext.filesDir, "mannequin-ui-contact-sheets").apply { mkdirs() }
         for (skin in SkinType.entries) for (dark in listOf(false, true)) {
             compose.runOnIdle { presentation.value = Presentation(skin = skin, dark = dark) }
-            scroll("已加入任务，可离开页面")
+            scroll("最近提交的任务")
             compose.onNodeWithText("查看任务").assertIsDisplayed().assertHasClickAction()
             compose.onNodeWithContentDescription("任务中心").assertIsDisplayed().assertHasClickAction()
             compose.onNodeWithText("生成正面人台图").assertIsDisplayed().assertIsEnabled()

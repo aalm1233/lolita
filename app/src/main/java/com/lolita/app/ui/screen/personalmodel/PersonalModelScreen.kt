@@ -44,8 +44,6 @@ fun PersonalModelScreen(
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = {
         GradientTopAppBar(title = { Text("我的模特") }, navigationIcon = {
             IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack, modifier = Modifier.semantics { contentDescription = "返回" }) }
-        }, actions = {
-            IconButton(onClick = onCreate) { SkinIcon(IconKey.Add, modifier = Modifier.semantics { contentDescription = "捏一个我的模特" }) }
         })
     }) { padding ->
         LazyColumn(state = scroll, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("personalModelLibrary"),
@@ -53,7 +51,6 @@ fun PersonalModelScreen(
             item("intro") {
                 Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     Text("试穿，像自己一点", style = MaterialTheme.typography.headlineSmall)
-                    Text("保存你的全身模特，在衣橱里试试不同搭配。", style = MaterialTheme.typography.bodyMedium)
                 }
             }
             if (state.isLoading) item("loading") {
@@ -69,14 +66,14 @@ fun PersonalModelScreen(
                         SkinIcon(IconKey.Outfit, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.primary)
                         Column(Modifier.weight(1f)) {
                             Text(if (state.defaultId == null) "当前试衣模特" else "内置虚构模特", style = MaterialTheme.typography.titleMedium)
-                            Text("无需保存个人照片，使用原有试衣方式。", style = MaterialTheme.typography.bodySmall)
+                            Text("使用内置虚拟模特，无需个人照片。", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                     OutlinedButton(onClick = { viewModel.choose(null) }, enabled = !state.isLoading && !state.mutating && state.defaultId != null,
                         modifier = Modifier.fillMaxWidth()) { Text(if (state.defaultId == null) "正在使用内置模特" else "使用内置模特") }
                 } }
             }
-            item("create") { Button(onClick = onCreate, modifier = Modifier.fillMaxWidth()) { Text("捏一个我的模特") } }
+            item("create") { Button(onClick = onCreate, modifier = Modifier.fillMaxWidth()) { Text("创建模特") } }
             state.error?.let { error -> item("error") { Text(error, color = MaterialTheme.colorScheme.error) } }
             itemsIndexed(state.models, key = { _, model -> model.id }) { _, model ->
                 LolitaSection(title = model.name) { row {
@@ -87,7 +84,7 @@ fun PersonalModelScreen(
                     }
                     val request = remember(model.requestJson) { runCatching { model.request() }.getOrNull() }
                     request?.let {
-                        Text("${it.measurements.heightCm} cm · ${it.measurements.weightKg} kg · ${if (it.mode == PersonalModelMode.PHOTO) "基于照片" else "仅用参数"}",
+                        Text("${it.measurements.heightCm} cm · ${it.measurements.weightKg} kg · ${if (it.mode == PersonalModelMode.PHOTO) "照片生成" else "参数生成"}",
                             style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = skin.spacingSmall))
                     }
                     Button(onClick = { viewModel.choose(model.id) }, enabled = !state.mutating && state.defaultId != model.id,

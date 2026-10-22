@@ -41,7 +41,7 @@ fun ImageTaskQueueActions(
             if (queued.isNotEmpty()) OutlinedButton(
                 onClick = { stopIds = queued.map { it.id } }, enabled = !busy,
                 modifier = Modifier.fillMaxWidth().testTag("stopQueued")
-            ) { Text("停止后续${queued.size}个排队任务") }
+            ) { Text("停止后续排队（${queued.size}）") }
             if (pending.isNotEmpty()) OutlinedButton(
                 onClick = { candidates = pending }, enabled = !busy,
                 modifier = Modifier.fillMaxWidth().testTag("discardPending")

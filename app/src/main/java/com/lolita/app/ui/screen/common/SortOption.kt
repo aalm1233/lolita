@@ -9,10 +9,10 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 enum class SortOption(val label: String) {
     DEFAULT("默认排序"),
-    DATE_DESC("日期 — 最新优先"),
-    DATE_ASC("日期 — 最早优先"),
-    PRICE_DESC("价格 — 最贵优先"),
-    PRICE_ASC("价格 — 最便宜优先")
+    DATE_DESC("最近更新"),
+    DATE_ASC("最早更新"),
+    PRICE_DESC("价格从高到低"),
+    PRICE_ASC("价格从低到高")
 }
 
 @Composable

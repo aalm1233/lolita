@@ -122,15 +122,6 @@ private fun LocationCardItem(
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(name, style = MaterialTheme.typography.titleSmall)
-                if (description.isNotBlank()) {
-                    Text(
-                        description,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
                 Spacer(Modifier.height(6.dp))
                 // Item count badge
                 Surface(
@@ -160,12 +151,6 @@ private fun LocationCardItem(
                             )
                         }
                     }
-                } else {
-                    Text(
-                        "暂无物品",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
                 }
             }
             SkinIcon(IconKey.KeyboardArrowRight, tint = MaterialTheme.colorScheme.onSurfaceVariant)

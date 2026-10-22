@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Item
@@ -77,7 +79,7 @@ class RecommendationViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+                _uiState.update { it.copy(isLoading = false, error = uiErrorText(e)) }
             } finally {
                 isLoadingGuard.set(false)
             }

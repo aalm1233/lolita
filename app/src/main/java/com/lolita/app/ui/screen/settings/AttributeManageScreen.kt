@@ -63,43 +63,37 @@ fun AttributeManageScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             AttributeMenuItem(
-                title = "品牌管理",
-                description = "管理预置和自定义品牌",
+                title = "品牌",
                 iconKey = IconKey.Apps,
                 iconTint = if (isDark) Color(0xFFFF8DC7) else Color(0xFFFF69B4),
                 onClick = onNavigateToBrand
             )
             AttributeMenuItem(
-                title = "类型管理",
-                description = "管理服饰类型",
+                title = "类型",
                 iconKey = IconKey.Category,
                 iconTint = if (isDark) Color(0xFFA5D6A7) else Color(0xFF6BCF7F),
                 onClick = onNavigateToCategory
             )
             AttributeMenuItem(
-                title = "风格管理",
-                description = "管理服饰风格",
+                title = "风格",
                 iconKey = IconKey.Star,
                 iconTint = if (isDark) Color(0xFFCE93D8) else Color(0xFFBA68C8),
                 onClick = onNavigateToStyle
             )
             AttributeMenuItem(
-                title = "季节管理",
-                description = "管理适用季节",
+                title = "季节",
                 iconKey = IconKey.CalendarMonth,
                 iconTint = if (isDark) Color(0xFF81D4FA) else Color(0xFF4FC3F7),
                 onClick = onNavigateToSeason
             )
             AttributeMenuItem(
-                title = "位置管理",
-                description = "管理服饰存放位置",
+                title = "房间与收纳",
                 iconKey = IconKey.Location,
                 iconTint = if (isDark) Color(0xFFA5D6A7) else Color(0xFF81C784),
                 onClick = onNavigateToLocation
             )
             AttributeMenuItem(
-                title = "来源管理",
-                description = "管理服饰来源",
+                title = "来源",
                 iconKey = IconKey.Link,
                 iconTint = if (isDark) Color(0xFFFFAB91) else Color(0xFFFF8A65),
                 onClick = onNavigateToSource
@@ -111,7 +105,6 @@ fun AttributeManageScreen(
 @Composable
 private fun AttributeMenuItem(
     title: String,
-    description: String,
     iconKey: IconKey,
     iconTint: Color,
     onClick: () -> Unit
@@ -145,11 +138,7 @@ private fun AttributeMenuItem(
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+
             }
             SkinIcon(
                 key = IconKey.ArrowForward,

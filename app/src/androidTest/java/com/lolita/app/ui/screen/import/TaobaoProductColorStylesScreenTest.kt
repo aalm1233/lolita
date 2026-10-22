@@ -75,7 +75,7 @@ class TaobaoProductColorStylesScreenTest {
     @After fun close() { compose.runOnIdle { store.clear() } }
 
     private fun chooseTwo() {
-        compose.onNodeWithText("按颜色分类分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色分类").performScrollTo().performClick()
         compose.onNodeWithText("请至少选择一款").assertIsNotEnabled()
         compose.onNodeWithText("款式1（测试示意）").performScrollTo().performClick()
         compose.onNodeWithText("款式3（测试示意）").performScrollTo().performClick()
@@ -100,10 +100,10 @@ class TaobaoProductColorStylesScreenTest {
         chooseTwo()
         compose.onAllNodesWithText("参考金额（元）")[1].performScrollTo().performTextInput("36.50")
         compose.runOnIdle { keyboard?.hide() }
-        compose.onNodeWithText("按颜色分类分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色分类").performScrollTo().performClick()
         compose.onNodeWithText("款式1（测试示意）").assertDoesNotExist()
         compose.onNodeWithText("核对并进入服饰编辑").assertIsEnabled()
-        compose.onNodeWithText("按颜色分类分别导入").performScrollTo().performClick()
+        compose.onNodeWithText("按颜色分类").performScrollTo().performClick()
         compose.onNodeWithText("核对并逐件编辑（2件）").assertIsEnabled()
         compose.runOnIdle {
             assertEquals(setOf("color-1", "color-3"), vm.state.value.selectedVariantIds)
@@ -116,7 +116,7 @@ class TaobaoProductColorStylesScreenTest {
         chooseTwo()
         for (mode in listOf(false, true)) for (type in SkinType.entries) {
             compose.runOnIdle { dark.value = mode; skin.value = type }
-            compose.onNodeWithText("按颜色分类分别导入").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("按颜色分类").performScrollTo().assertIsDisplayed()
             screenshot("${type.name.lowercase()}-${if (mode) "dark" else "light"}-options")
             compose.onNodeWithText("选择要拆分的物品").performScrollTo()
             compose.onNodeWithText("核对并逐件编辑（2件）").assertIsDisplayed().assertIsEnabled()

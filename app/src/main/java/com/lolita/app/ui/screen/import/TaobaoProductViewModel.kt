@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.`import`
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import android.app.Application
 import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
@@ -142,7 +144,7 @@ class TaobaoProductViewModel(
         } catch (e: Exception) {
             android.util.Log.w("TaobaoProductImport",
                 "商品资料读取失败：${e.cause?.javaClass?.simpleName ?: e.javaClass.simpleName}: ${e.cause?.message ?: e.message}")
-            mutable.update { it.copy(busy = false, error = e.message) }
+            mutable.update { it.copy(busy = false, error = uiErrorText(e)) }
         }
         persist()
     }
@@ -305,7 +307,7 @@ class TaobaoProductViewModel(
                 batch = batch?.copy(paused = true)
                 // Keep retry disabled until every untransferred copy has actually been removed.
                 publishBatch(busy = true, error = if (cacheMissing) missingCacheMessage()
-                    else "图片读取失败：${e.message}，可重试")
+                    else uiErrorText(e, "图片未能读取，请重试"))
                 persist()
             }
         } finally {

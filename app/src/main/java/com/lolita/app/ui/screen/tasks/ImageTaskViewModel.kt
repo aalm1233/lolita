@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /** Filtering and presentation only; every accepted mutation is owned by the coordinator. */
-enum class ImageTaskFilter(val label: String) { ALL("全部"), ACTIVE("进行中"), PENDING("待处理"), FINISHED("已结束") }
+enum class ImageTaskFilter(val label: String) { ALL("全部"), ACTIVE("进行中"), PENDING("待确认"), FINISHED("已结束") }
 
 data class ImageTaskUiState(
     val tasks: List<ImageTask> = emptyList(),

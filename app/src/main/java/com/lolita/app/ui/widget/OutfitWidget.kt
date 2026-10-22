@@ -59,12 +59,12 @@ private fun WidgetContent(hasOutfit: Boolean, itemCount: Int) {
 
         if (hasOutfit) {
             Text(
-                text = "今日已记录 $itemCount 件穿搭",
+                text = "今日穿搭 · $itemCount 件单品",
                 style = TextStyle(fontSize = 13.sp, color = pink)
             )
             Spacer(modifier = GlanceModifier.height(6.dp))
             Text(
-                text = "点击查看/编辑",
+                text = "查看今日穿搭",
                 style = TextStyle(fontSize = 12.sp)
             )
         } else {

@@ -47,7 +47,7 @@ class ImageTaskNotificationTest {
             val waiting = dao.observeExecutionSummary().first { it.taskId == null }
             val waitingText = ImageTaskNotifications.notification(context, waiting).extras
                 .getCharSequence(Notification.EXTRA_TEXT).toString()
-            assertTrue(waitingText.contains("等待处理")); assertTrue(waitingText.contains("排队 2 项"))
+            assertTrue(waitingText.contains("等待确认")); assertTrue(waitingText.contains("排队 2 项"))
             dao.deleteAll()
             val empty = dao.observeExecutionSummary().first { it.queuedCount == 0 }
             assertNull(empty.status)

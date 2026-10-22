@@ -223,7 +223,7 @@ class AppUpdateHostTest {
         compose.onAllNodes(isDialog()).assertCountEquals(1)
         compose.onNodeWithText("发现新版本").assertIsDisplayed()
         compose.onNodeWithText("最新发布：v2.42.0").assertIsDisplayed()
-        compose.onNodeWithText("下载 APK").assertIsDisplayed().assertHasClickAction()
+        compose.onNodeWithText("下载安装包").assertIsDisplayed().assertHasClickAction()
     }
 
     private fun assertNoUpdateDialog() {

@@ -96,8 +96,8 @@ fun FilteredItemListScreen(
             ) {
                 SkinEmptyState(
                     iconKey = IconKey.Search,
-                    title = if (isReviewList) "暂无待核对购买资料" else "暂无数据",
-                    subtitle = if (isReviewList) "当前购买资料已核对" else "没有找到匹配的服饰"
+                    title = if (isReviewList) "暂无待核对购买资料" else "没有符合条件的物品",
+                    subtitle = if (isReviewList) "当前购买资料已核对" else ""
                 )
             }
         } else {
@@ -111,7 +111,7 @@ fun FilteredItemListScreen(
                     item(key = "reviewInstructions") {
                         LolitaCard(modifier = Modifier.fillMaxWidth().testTag("reviewItemInstructions")) {
                             Text(
-                                "确认拥有后，价格、付款账本或实付日期未补齐的服饰仍留在清单。点击服饰补全资料；共用价格的小物随主件核对，独立计价的小物单独核对。",
+                                "确认拥有后，缺少的价格或付款资料仍需补全；共价小物随主件核对。",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -219,7 +219,7 @@ private fun FilteredItemCard(item: Item, review: ItemPurchaseReview? = null, onC
                     Text(
                         text = when (item.status) {
                             ItemStatus.OWNED -> "已拥有"
-                            ItemStatus.WISHED -> "愿望单"
+                            ItemStatus.WISHED -> "心愿"
                             ItemStatus.PENDING_BALANCE -> "待补尾款"
                         ItemStatus.PENDING_PAYMENT -> "待付款"
                         ItemStatus.PENDING_REVIEW -> "待核对"

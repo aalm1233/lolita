@@ -1121,7 +1121,7 @@ abstract fun sharedLibrarySyncDao(): SharedLibrarySyncDao
                         }
 
                         // Insert preset sources
-                        listOf("淘宝", "咸鱼", "线下").forEach { name ->
+                        listOf("淘宝", "闲鱼", "线下").forEach { name ->
                             db.execSQL("INSERT OR IGNORE INTO sources (name, is_preset, created_at) VALUES ('$name', 1, $now)")
                         }
             }

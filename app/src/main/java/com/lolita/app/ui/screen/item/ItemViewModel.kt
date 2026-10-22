@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.item
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
@@ -773,7 +775,7 @@ class ItemListViewModel(
             } catch (e: SQLiteConstraintException) {
                 _uiState.update { it.copy(errorMessage = "此服饰已被套装引用，无法删除。请先从套装中移除后再试。") }
             } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message ?: "删除失败") }
+                _uiState.update { it.copy(errorMessage = uiErrorText(e, "删除失败")) }
             }
         }
     }
@@ -857,7 +859,7 @@ class ItemEditViewModel(
                         .onFailure { failure ->
                             if(failure is CancellationException) throw failure
                             if(failure is ItemDraftTargetDeletedException) closeDeletedEditor()
-                            else _uiState.update { it.copy(draftError = "草稿保存失败：${failure.message}") }
+                            else _uiState.update { it.copy(draftError = uiErrorText(failure, "草稿未能保存，请重试")) }
                         }
                 }
             }
@@ -1154,7 +1156,7 @@ class ItemEditViewModel(
         }
         loadJob = viewModelScope.launch {
             try {
-                require(mode != ItemLoadMode.DETAIL || itemId > 0) { "服饰不存在，请重试" }
+                require(mode != ItemLoadMode.DETAIL || itemId > 0) { "物品不存在，请重试" }
                 loadReferenceData()
                 ensureLocationCollection()
                 priceJob?.cancel()
@@ -1201,7 +1203,7 @@ class ItemEditViewModel(
                             )
                         }
                     } else {
-                        error("服饰不存在，请重试")
+                        error("物品不存在，请重试")
                     }
                     if (mode == ItemLoadMode.EDITOR) restoreDraft(identity)
                     if(mode == ItemLoadMode.EDITOR && drafts?.hasRecognitionForItem(effectiveItemId)==true) draftMutex.withLock {
@@ -1291,7 +1293,7 @@ class ItemEditViewModel(
                 _uiState.update { it.copy(isLoading = false) }
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
-                _uiState.update { it.copy(isLoading = false, loadError = failure.message ?: "读取服饰失败",
+                _uiState.update { it.copy(isLoading = false, loadError = uiErrorText(failure, "读取服饰失败"),
                     hasDraftConflict = failure is ItemDraftConflictException) }
             }
         }
@@ -1343,7 +1345,7 @@ class ItemEditViewModel(
             } catch (failure: Exception) {
                 if (failure is CancellationException) throw failure
                 if (requestedIdentity == identity) _uiState.update {
-                    it.copy(coverError = failure.message ?: "设置封面失败，请重试")
+                    it.copy(coverError = uiErrorText(failure, "设置封面失败，请重试"))
                 }
             } finally {
                 if (requestedIdentity == identity) _uiState.update { it.copy(isSettingCover = false) }
@@ -1735,7 +1737,7 @@ class ItemEditViewModel(
 
     suspend fun deleteItem(): Result<Unit> {
         val state=_uiState.value
-        val item = state.item ?: return Result.failure(Exception("服饰不存在"))
+        val item = state.item ?: return Result.failure(Exception("物品不存在"))
         if(state.isLoading || state.isSaving || discardInProgress) return Result.failure(Exception("正在处理物品，请稍后再删除"))
         discardInProgress=true
         _uiState.update { it.copy(isSaving=true) }

@@ -141,7 +141,7 @@ class ImageTaskScreenTest {
         scrollTo("保存个人模特")
         compose.onNode(isToggleable()).assertIsOn()
         compose.onNodeWithText("保存个人模特").performScrollTo().performClick()
-        compose.onNodeWithText("确认").performClick()
+        compose.onNodeWithText("确认保存模特").performClick()
         withTimeout(10_000) { model.uiState.first { pendingId in it.defaultSaveFailed } }
         assertEquals(1, db.personalModelDao().getAll().size)
         assertEquals(ImageTaskStatus.COMPLETED, db.imageTaskDao().get(pendingId)!!.status)
@@ -188,13 +188,13 @@ class ImageTaskScreenTest {
         val restarted = newCoordinator(); restarted.awaitStartup()
         assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION, db.imageTaskDao().get(pendingId)!!.status)
         show()
-        scrollTo("点击图片放大核对")
+        compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasContentDescription("放大生成结果"))
         compose.onNodeWithContentDescription("放大生成结果").performClick()
         compose.onNodeWithContentDescription("关闭图片预览").assertIsDisplayed().performClick()
         val latest = db.itemDao().getItemById(11)!!.copy(name = "已编辑的裙名", description = "最新备注", imageUrls = listOf("/original.png", "/added.png"))
         db.itemDao().updateItem(latest)
         scrollTo("添加到原物品图片"); compose.onNodeWithText("添加到原物品图片").performClick()
-        compose.onNodeWithText("确认").performClick()
+        compose.onNodeWithText("确认添加到相册").performClick()
         withTimeout(10_000) { db.imageTaskDao().observe(pendingId).first { it?.status == ImageTaskStatus.COMPLETED } }
         val saved = db.itemDao().getItemById(11)!!
         assertEquals("已编辑的裙名", saved.name); assertEquals("最新备注", saved.description)
@@ -209,7 +209,7 @@ class ImageTaskScreenTest {
         show(); scrollTo("添加到原物品图片")
         compose.onNodeWithText("添加到原物品图片").assertIsNotEnabled()
         compose.onNodeWithText("舍弃预览").performScrollTo().performClick()
-        compose.onNodeWithText("确认").performClick()
+        compose.onNodeWithText("确认舍弃").performClick()
         withTimeout(10_000) { db.imageTaskDao().observe(pendingId).first { it?.status == ImageTaskStatus.DISCARDED } }
         withTimeout(10_000) { while (File(preview).exists()) delay(20) }
     }
@@ -221,13 +221,13 @@ class ImageTaskScreenTest {
     @Test fun activeCancellationRequiresFeeWarningAndThenShowsCancelled() = runBlocking {
         show(runningId); scrollTo("取消任务"); compose.onNodeWithText("取消任务").performClick()
         compose.onNodeWithText("停止本地等待可能仍会计费，应用不会自动重试。").assertIsDisplayed()
-        compose.onNodeWithText("确认").performClick()
+        compose.onNodeWithText("确认停止等待").performClick()
         withTimeout(10_000) { db.imageTaskDao().observe(runningId).first { it?.status == ImageTaskStatus.CANCELLED } }
         assertTrue(db.imageTaskDao().get(runningId)!!.requestSent)
     }
     @Test fun filtersShowPendingRunningAndFinishedWithoutChangingRecords() {
         detail.value = false; show()
-        compose.onNodeWithText("待处理").performClick(); assertEquals(listOf(pendingId), model.uiState.value.visibleTasks.map { it.id })
+        compose.onNodeWithContentDescription("任务筛选：待确认").performClick(); assertEquals(listOf(pendingId), model.uiState.value.visibleTasks.map { it.id })
         compose.onNodeWithText("进行中").performClick(); assertEquals(listOf(runningId), model.uiState.value.visibleTasks.map { it.id })
         compose.onNodeWithText("已结束").performClick(); assertEquals(listOf(failedId), model.uiState.value.visibleTasks.map { it.id })
     }
@@ -245,7 +245,7 @@ class ImageTaskScreenTest {
             compose.onNodeWithText("保存个人模特").assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithText("调整后另存").performScrollTo().assertIsDisplayed().assertHasClickAction()
             save(output, skin, dark, "personal-actions")
-            scrollTo("点击图片放大核对")
+            compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasContentDescription("放大生成结果"))
             compose.onNodeWithContentDescription("放大生成结果").assertHasClickAction()
             save(output, skin, dark, "personal-preview")
         }
@@ -260,12 +260,12 @@ class ImageTaskScreenTest {
             compose.onNodeWithText("添加到原物品图片").assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithText("舍弃预览").performScrollTo().assertIsDisplayed().assertHasClickAction()
             save(output, skin, dark, "detail-actions")
-            scrollTo("点击图片放大核对")
+            compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasContentDescription("放大生成结果"))
             compose.onNodeWithContentDescription("放大生成结果").assertHasClickAction()
             save(output, skin, dark, "detail-preview")
             compose.runOnIdle { detail.value = false; model.filter(ImageTaskFilter.ALL) }
             compose.onNodeWithText("全部").assertIsDisplayed()
-            compose.onNodeWithText("待处理").assertHasClickAction()
+            compose.onNodeWithContentDescription("任务筛选：待确认").assertHasClickAction()
             compose.onNodeWithText("已结束").performScrollTo().assertIsDisplayed()
             save(output, skin, dark, "center")
         }

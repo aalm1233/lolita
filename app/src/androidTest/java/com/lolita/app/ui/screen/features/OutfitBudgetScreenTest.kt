@@ -111,11 +111,11 @@ class OutfitBudgetScreenTest {
         val builderVisible = mutableStateOf(true)
         compose.setContent { FeatureTheme {
             if (builderVisible.value) LookBuilderScreen(1, {}, {}, {}, look)
-            else androidx.compose.material3.Text("服饰详情")
+            else androidx.compose.material3.Text("物品详情")
         } }
         compose.waitUntil(10_000) { !look.state.value.loading }
         compose.runOnIdle { look.choose("上衣", null); look.lock("头饰"); builderVisible.value = false }
-        compose.onNodeWithText("服饰详情").assertIsDisplayed()
+        compose.onNodeWithText("物品详情").assertIsDisplayed()
         compose.runOnIdle { builderVisible.value = true }
         compose.waitForIdle()
         assertNull(look.state.value.selection.selected["上衣"])

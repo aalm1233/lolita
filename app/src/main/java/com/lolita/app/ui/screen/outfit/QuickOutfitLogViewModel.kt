@@ -1,5 +1,7 @@
 package com.lolita.app.ui.screen.outfit
 
+import com.lolita.app.ui.screen.common.uiErrorText
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.entity.Category
@@ -198,7 +200,7 @@ class QuickOutfitLogViewModel(
                 _uiState.update { it.copy(isSaving = false, saveSuccess = true) }
             } catch (error: Exception) {
                 if (error is CancellationException) throw error
-                _uiState.update { it.copy(isSaving = false, error = error.message ?: "保存失败，请重试") }
+                _uiState.update { it.copy(isSaving = false, error = uiErrorText(error, "保存失败，请重试")) }
             }
         }
     }

@@ -63,7 +63,7 @@ internal fun TryOnPicker(
             bottomBar = {
                 Surface(tonalElevation = skin.cardElevation) {
                     Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth().imePadding()
-                        .padding(skin.spacingLarge)) { Text("完成搭配选择（${state.selected.size}件）") }
+                        .padding(skin.spacingLarge)) { Text("完成（${state.selected.size} 件）") }
                 }
             },
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
@@ -77,10 +77,10 @@ internal fun TryOnPicker(
             ) {
                 item(key = "controls", span = { GridItemSpan(maxLineSpan) }) {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                        Text("可选择已拥有与心愿物品，包含鞋履、袜装和挂载小物；筛选保留已选。搭配超过8件时，回到试衣页明确选择本次子集。", style = MaterialTheme.typography.bodySmall)
+                        Text("可选已拥有与心愿物品，筛选保留已选；本次试衣最多 8 件。", style = MaterialTheme.typography.bodySmall)
                         OutlinedTextField(value = state.searchQuery, onValueChange = onSearch,
                             modifier = Modifier.fillMaxWidth(), singleLine = true,
-                            label = { Text("搜索服饰名称") },
+                            label = { Text("搜索物品名称") },
                             shape = RoundedCornerShape(skin.cornerRadiusMedium),
                             leadingIcon = { SkinIcon(IconKey.Search) })
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
@@ -120,7 +120,7 @@ internal fun TryOnPicker(
                     LolitaCard(variant = CardVariant.GALLERY, contentPadding = PaddingValues(0.dp),
                         modifier = Modifier.fillMaxWidth().semantics {
                             this.selected = selected
-                            contentDescription = "${if (selected) "已选" else "选择"}服饰：${item.name}"
+                            contentDescription = "${if (selected) "已选" else "选择"}物品：${item.name}"
                         }.skinClickable(enabled = !state.busy, onClick = { onToggle(item.id) })) {
                         Column {
                             TryOnItemImage(item.imageUrls.firstOrNull().orEmpty(), item.name,

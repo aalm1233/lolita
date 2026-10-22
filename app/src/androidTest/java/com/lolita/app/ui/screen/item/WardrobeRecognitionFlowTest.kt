@@ -296,7 +296,7 @@ class WardrobeRecognitionFlowTest {
     }
 
     private fun chooseSize(value: String) {
-        compose.onNodeWithText("实际购入尺码行：", substring = true).performScrollTo().performClick()
+        compose.onNodeWithText("本件尺码：", substring = true).performScrollTo().performClick()
         compose.onNodeWithText(value, substring = false).performClick()
     }
 
@@ -444,8 +444,8 @@ class WardrobeRecognitionFlowTest {
         assertEquals(2, evidence.size); assertTrue(evidence.all { it.itemId == 1L && it.regionImagePaths == listOf(fixture.region) })
         compose.onNodeWithText("重新编辑已保存物品").performClick()
         compose.waitUntil(10_000) { active.value!!.editor.uiState.value.draftId != null && !active.value!!.editor.uiState.value.isLoading }
-        compose.waitUntil(5_000) { compose.onAllNodesWithText("查看已采纳的识图来源（2）").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithText("查看已采纳的识图来源（2）").performScrollTo().performClick()
+        compose.waitUntil(5_000) { compose.onAllNodesWithText("已采纳的识图来源（2）").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithText("已采纳的识图来源（2）").performScrollTo().performClick()
         compose.onNodeWithText("发长：60 cm").performClick()
         compose.onNodeWithText("商品实测 A款 S 发长60 cm").assertExists()
         imageNode("证据裁切区域").performScrollTo().assertIsDisplayed()
@@ -464,7 +464,7 @@ class WardrobeRecognitionFlowTest {
         val output = File(target.filesDir, "recognition-flow-screenshots/${UUID.randomUUID()}").apply { mkdirs() }
         val manifest = mutableListOf<Map<String, Any>>()
         // Inline source is the actual immutable JPEG, not the unrelated blue album photo.
-        compose.onAllNodesWithText("查看原文与区域")[0].performScrollTo().performClick()
+        compose.onAllNodesWithText("查看来源")[0].performScrollTo().performClick()
         SkinType.entries.forEach { candidate ->
             compose.runOnIdle { skin.value = candidate }
             listOf("返回", "API 配置").forEach { label ->

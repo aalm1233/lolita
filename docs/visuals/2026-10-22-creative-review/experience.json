@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-22",
+  "package": "com.lolita.app",
+  "versionName": "2.66.4",
+  "versionCode": 141,
+  "device": "emulator-5598",
+  "avd": "Lolita_Material_Release_20261021",
+  "skin": "CHINESE",
+  "baseline": {
+    "resolution": [
+      1170,
+      2532
+    ],
+    "densityDpi": 480,
+    "fontScale": 1.0,
+    "nightMode": "no"
+  },
+  "temporaryCheck": {
+    "resolution": [
+      960,
+      1800
+    ],
+    "densityDpi": 480,
+    "fontScale": 2.0,
+    "nightMode": "yes"
+  },
+  "baselineRestored": true,
+  "appPaidCalls": 0,
+  "coverage": [
+    "home locations",
+    "empty item tab",
+    "outfit empty state",
+    "statistics overview",
+    "profile amount visibility",
+    "laboratory light/dark",
+    "try-on first viewport",
+    "try-on selection and back",
+    "wishlist",
+    "item detail light/dark",
+    "batch display image inputs",
+    "laboratory 320dp fontScale 2"
+  ],
+  "privacyFinding": {
+    "toggleChecked": false,
+    "visibleProfileText": "当前订单实付 ¥0",
+    "source": "SettingsScreen.kt ProfileSection, unconditional Text",
+    "amountDecimals": "maximumFractionDigits = 0; source inspection only"
+  },
+  "limitation": "New designs are concept artwork; no application implementation or new-layout instrumented regression. Demo images are test fixtures, not AI-quality evidence.",
+  "intentionalBusinessWrites": 0,
+  "databaseByteComparison": false
+}

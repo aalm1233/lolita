@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-22",
+  "generation": "built-in image_gen",
+  "finalConceptPromptIds": [
+    3,
+    6
+  ],
+  "files": [
+    {
+      "file": "concept-main.png",
+      "width": 1476,
+      "height": 1066,
+      "sha256": "b64881f95c07089cd62336cb37fd639906bcd238426b01d4db840e1bd580d046",
+      "kind": "concept artwork"
+    },
+    {
+      "file": "concept-seven-skins.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "aa8a5e14bb9df7292e45d85bb93f50a28d3937033a224dee8f94047d16839a7b",
+      "kind": "concept artwork"
+    },
+    {
+      "file": "current-detail.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "cc66081932310e1ef2d61434dbe256caccb954443392d150df312af2b4cb960d",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-empty.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "2b722677f05ab47b848f432cbc06499e2d195d694357002429847a71979179e7",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-home.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "f53e9dadaba2d631e817106026067da35ce9dce6c41b68e207bb04867030a27d",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-lab-dark.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "7403c06d861f92a4e4a3d122c213b0a5ea74ead403c7c39642bdc3622db5919f",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-lab.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "c93a6e28dd302bf97ca9b5772e9801021c99ca998fb9b564b973353bb06d2020",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-outfits.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "e3bc6f0e2c87bc65032559603d2c2b0ecc5d2aca2f2f776fc0187e34308a79db",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-personal.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "d4a5602f58a71e8ac12e4f85ea0d0eb35a1cae3a76b1fc0314362e9a3f54b487",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-picker.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "c31f27d149eca2924b71a6b7b5812b8679ef69ece46d97985c258067fe8f4b9a",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-small-dark.png",
+      "width": 960,
+      "height": 1800,
+      "sha256": "caf54286585caf8dd8e013b6afec4d00b485a0a0a9b225171fff39260f8aac62",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-stats.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "232b1d804b6b264bae9f9561e55df12ae89abf1005b33475dcd3ae90cfb27783",
+      "kind": "native emulator screenshot"
+    },
+    {
+      "file": "current-tryon.png",
+      "width": 1170,
+      "height": 2532,
+      "sha256": "904499d583bea8cf188ea4f95a7bba2a2514b9fe8e6e899ae757e82c2d0ace93",
+      "kind": "native emulator screenshot"
+    }
+  ]
+}

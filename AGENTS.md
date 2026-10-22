@@ -668,3 +668,6 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 
 - 2.66.2／139收敛实验室导航：个人入口与属性管理同为16/24sp、Medium500及阅读字体，公共顶栏18/26sp、Medium500，主功能22sp及其他规格保持。源码`8b5f383f`与标签已推送，4项最终去重定向设备方法、Debug与提交归档clean原签名Release通过；七皮肤浅暗／320dp两倍字／真实IME与50张相关原生截图、实际入口及同级样式测量通过。2.66.1覆盖及重复启动保全中华皮肤与3份设置SHA，正式实拍已核对；独立AVD的System UI ANR以保留数据的重启解决，未改应用逻辑或放宽IME断言。GitHub／Gitee正式同一附件匿名完整下载、SHA／HEAD及公开最高版本查询通过；未删旧资产、未重复App手动网络检查或无关全库／图片／备份审计，无新生成调用。设计与回执见`docs/plans/2026-10-21-compact-laboratory-titles.md`、`docs/compact-laboratory-titles-release-2.66.2-verification.json`。
+
+
+- 2.66.3／140 全界面文案优化：按43路由报告精简重复解释，统一心愿／金额／拥有与类型语义，低频明细折叠、必要后果与费用常显。源码`f6f65ee5`和标签已推送；148项去重设备方法、3项JVM及Debug／提交归档clean Release通过，七皮肤浅暗、真实320dp两倍字与IME及正式页面已核对。2.66.2原签名覆盖两次启动保留中华皮肤与3份设置SHA；36项目assets／7背景RGBA与依赖／profile通过。GitHub／Gitee同一APK和校验文件匿名完整下载、SHA／HEAD及公开最高正式版本已确认；未删旧附件、未清用户数据、真实付费0次。应用内实际检查结果单独记录，不以公开接口代替。实施与回执见`docs/ui-copy-implementation-2026-10-22.md`、`docs/ui-copy-release-2.66.3-verification.json`。

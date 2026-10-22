@@ -56,3 +56,8 @@ Room32／36 实体、备份13、图片字段与引用清理均不变。仅新安
 - 原生测试退出后，测试 AVD 恢复原 1080×2400、420dpi、系统字体 1.0；未清空其旧主库或卸载应用。正式覆盖升级使用另一独立 AVD，2.66.2 中主动选定中华皮肤后记录原设置，按原正式签名验收。
 
 正式包与双渠道发布核验见 [2.66.3 发布回执](ui-copy-release-2.66.3-verification.json)。
+
+正式签名包实拍另归档：[备份页](visuals/2026-10-22-ui-copy-native/release/release-backup.png)、[实验室](visuals/2026-10-22-ui-copy-native/release/release-laboratory.png)及[应用内实际更新检查](visuals/2026-10-22-ui-copy-native/release/release-manual-update-check.png)。实际检查显示当前与最新发布均为 2.66.3，未自动重试。
+
+
+发布完成：GitHub 与 Gitee 正式附件均通过匿名完整下载、SHA256 及 HEAD；公开更新查询选中 2.66.3。原签名覆盖升级与 3 份设置字节保全通过。应用内手动检查更新显示「已是最新版本」，当前和最新均为 2.66.3，本轮仅点击一次，不以公开接口结果替代。

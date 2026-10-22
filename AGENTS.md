@@ -23,6 +23,7 @@
 - 整体体验与视觉提案见 `docs/plans/2026-10-22-creative-experience-review.md`，包含2.66.4正式包模拟器走查、三页面概念稿和七皮肤浅暗方向。本轮仅设计，未实现；其中个人页金额隐私问题、空态动作、实验室与试衣布局均为待实施项，不取代既有规范或验收记录。
 - 第二轮体验提案见 `docs/plans/2026-10-22-creative-experience-review-part2.md`：价格计划、任务结果、收纳、备份导出／恢复预览取消及导入指南走查，三页主稿与可检视的七皮肤浅暗稿。仅设计，未改应用；HTML预览检查不代替Compose验收，测试ZIP未执行恢复，第一轮金额隐私问题仍待修复。
 - 上述两轮提案于2.67.0开始实施，最终采用范围与原生验收以 `docs/creative-design-implementation-2026-10-22.md` 为准；前两条保留原设计阶段记录。实施计划为 `docs/plans/2026-10-22-creative-design-implementation.md`。
+- 第三轮功能体验见 `docs/plans/2026-10-22-order-import-experience-review.md`：2.67.0独立AVD实测淘宝订单重复导入、金额解析归零、多文件金额冲突、草稿回收、部分导入续办与320dp两倍字体问题，并提出核对/收纳衔接建议。本轮仅审查，未实现；截图与虚构订单证据在 `docs/visuals/2026-10-22-order-import-review/`，实施前仍须归档界面设计与七皮肤浅暗方案。
 
 ## 架构与实现约定
 

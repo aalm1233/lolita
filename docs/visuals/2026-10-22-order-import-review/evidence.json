@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-22",
+  "status": "review_only_not_implemented",
+  "source_commit": "d1ecd452d72337d36414fe499d8d0dd80734043b",
+  "app_version": "2.67.0",
+  "version_code": 142,
+  "build_type": "Debug",
+  "device": "emulator-5602",
+  "avd": "Lolita_Creative_Test_35",
+  "default_display": {
+    "pixels": "1080x2400",
+    "density": 420,
+    "font_scale": 1.0
+  },
+  "small_display": {
+    "pixels": "960x2100",
+    "density": 480,
+    "width_dp": 320,
+    "font_scale": 2.0
+  },
+  "images": "Original Android screencap PNG files; no pixel edits or generated screenshots",
+  "test_data": "Synthetic orders only; two duplicate sample items and one sample brand created in the isolated AVD; no user device data altered",
+  "observations": {
+    "repeat_import": "Source REVIEW-001, line 1, unit 1/2 inserted twice, item IDs 1 and 2, import_token null",
+    "invalid_money": "Unparseable text became 0.0; confirming did not enable import for the all-zero sample; no invalid item was committed",
+    "multi_file_conflict": "310.00 and 299.00 for the same order; selected both; UI reported one deduplicated order and retained 310.00 without conflict review",
+    "partial_import": "One item imported, five source records skipped; result offered only Done",
+    "process_death": "App backgrounded then am kill; pid absent; restart showed file selection without recovered draft",
+    "selection_counts": "Five selected product lines became six unit records; initial UI called lines items",
+    "small_screen": "Amount wrapped vertically and select-all not visible; large fixed bottom editor controls restricted content height"
+  },
+  "not_verified": [
+    "Authenticated Taobao export availability",
+    "Current online export formats",
+    "All seven skins/dark mode",
+    "TalkBack",
+    "Proposed fixes"
+  ],
+  "paid_ai_calls": 0,
+  "application_changes": false,
+  "files": [
+    {
+      "path": "02-selection.png",
+      "bytes": 656911,
+      "sha256": "a7069428e3bda130a4e998c05701304a7d60401887d7009f69bb480bc1c7e906"
+    },
+    {
+      "path": "02-selection.xml",
+      "bytes": 24847,
+      "sha256": "0a5b789ad1dd6adee13115219d3e42e26ef4808ea1cc800806e0395eb82b235c"
+    },
+    {
+      "path": "04-detail.png",
+      "bytes": 712665,
+      "sha256": "b3e34a3b97e86cd7e01c4a2316580ef06f32940e381fec6abb6416529f66e6b1"
+    },
+    {
+      "path": "04-detail.xml",
+      "bytes": 26417,
+      "sha256": "480bf013b9a8f8d6c6b13137b7c8e421aae0e5c3f568ddfb80cc6e810b81f53c"
+    },
+    {
+      "path": "07-partial-result.png",
+      "bytes": 902991,
+      "sha256": "1d7fbb8d3739e3625a552ab53fee2772485435b97f4803f1c91d8c27a9cf63b6"
+    },
+    {
+      "path": "07-partial-result.xml",
+      "bytes": 11634,
+      "sha256": "1a90db25d4ec2312bb62d2cfaf9efb484af24ad7db42cfa8ff6027bd796a2c06"
+    },
+    {
+      "path": "08-repeat-selection.png",
+      "bytes": 650861,
+      "sha256": "4d66950aea74a0f676e0e8ddbd19670497400bacdce8168890be0e147d889792"
+    },
+    {
+      "path": "08-repeat-selection.xml",
+      "bytes": 24847,
+      "sha256": "f25b2ae9efe1c061ea22c15606aaeabe067e89bc73810f61d6cf950fe4d89cfa"
+    },
+    {
+      "path": "09-repeat-result.png",
+      "bytes": 900434,
+      "sha256": "18d4439b1092a39ad25acd66e9bd416b74b166bec52e412bd1f359d8b5f3dac5"
+    },
+    {
+      "path": "09-repeat-result.xml",
+      "bytes": 11634,
+      "sha256": "e4bb1c1336a0b1c92a0996dca53ab6590024028b7113b4062c9fab0f7863f8aa"
+    },
+    {
+      "path": "10-repeat-count.png",
+      "bytes": 705785,
+      "sha256": "054a4c39d4374e9552b0c6f8dee4a1200569e723e18b96999cb21eb2fc5d3127"
+    },
+    {
+      "path": "10-repeat-count.xml",
+      "bytes": 22769,
+      "sha256": "ba3cb9df0e37113016a1d1f8738648798c19c54f0e06591f5982c8586f9aeefe"
+    },
+    {
+      "path": "13-zero-blocked-no-reason.png",
+      "bytes": 627238,
+      "sha256": "e657e800c7046883ac51faa3339ebe23e669c964050e3492d58397633a16140e"
+    },
+    {
+      "path": "13-zero-blocked-no-reason.xml",
+      "bytes": 25599,
+      "sha256": "a022272b794d31f6381d00dd3360f5d83b68c286fa11beda39ae21e2d11c8e29"
+    },
+    {
+      "path": "14-after-process-death.png",
+      "bytes": 916469,
+      "sha256": "7dcb5f5e8a7386eccc418731b0158c52e86d4c91c998fae04087c3dc6bc23996"
+    },
+    {
+      "path": "14-after-process-death.xml",
+      "bytes": 13942,
+      "sha256": "46bf89920b863f52e833842f489e7332e6d606482ef4258d82b9db585b3db7f5"
+    },
+    {
+      "path": "15-small-selection.png",
+      "bytes": 584076,
+      "sha256": "6c627a229f5d6a195121138a5b0dd884d699ce83587a8e2a297c8e5895280d13"
+    },
+    {
+      "path": "15-small-selection.xml",
+      "bytes": 16202,
+      "sha256": "5c206e97fdaa04053a32ee3f885ef3cfab3fcdc7b3fe2362d25b5121df58768e"
+    },
+    {
+      "path": "16-small-detail.png",
+      "bytes": 702666,
+      "sha256": "84602a1afc62b87b1f4f74267325320decbb077524800163ef58dfca11adfd4d"
+    },
+    {
+      "path": "16-small-detail.xml",
+      "bytes": 17831,
+      "sha256": "c4cfdbd1f4c19062aa38840aaeda0461afbd5b3845e246a74afb0cd45bd0104e"
+    },
+    {
+      "path": "18-conflict-dedup.png",
+      "bytes": 652526,
+      "sha256": "ca8a11b74c76a2acf00c7552e5d0d81ad80321162ec985baa8299aeb79a8e8f3"
+    },
+    {
+      "path": "18-conflict-dedup.xml",
+      "bytes": 24868,
+      "sha256": "2004ea79b4f29709cd7acf1c73a9ebe80767fc1dfff0055b8d70c0c820f739ea"
+    },
+    {
+      "path": "review-orders.xlsx",
+      "bytes": 2017,
+      "sha256": "6f545d63d6a8f13d834e602dd173c64ae904b6e7b9cd95fdf25cc5aaa702a41b"
+    },
+    {
+      "path": "review-invalid-money.xlsx",
+      "bytes": 1656,
+      "sha256": "43a8ca7f6caabace99bba6732f857455a9d4255c865104f3d7b5fb929d579181"
+    },
+    {
+      "path": "review-conflict.xlsx",
+      "bytes": 1666,
+      "sha256": "bdd0991bf734bf96af547f7491a78e0f154578bba7b48f406dcb5f392a73f5ae"
+    },
+    {
+      "path": "process-death.json",
+      "bytes": 342,
+      "sha256": "438a695df6a94a1e4e3fc00cfd5105fc3ab217f7bdac0a801349522b32330c94"
+    },
+    {
+      "path": "small-screen.json",
+      "bytes": 207,
+      "sha256": "1c8d986e24ff78cc5dc557f574f4141eb02ea9e8c8bce634a1cb06a1b1f15fa5"
+    },
+    {
+      "path": "duplicate-records.json",
+      "bytes": 628,
+      "sha256": "9fd819e1e561a97d9cf28503576db647d4185854e50bdc277dd6182b821432e4"
+    },
+    {
+      "path": "conflict-result.json",
+      "bytes": 1012,
+      "sha256": "b55c29059f748480d101b78b7dd7bd6ccd009ede740a23953b44f000d80174d0"
+    }
+  ]
+}

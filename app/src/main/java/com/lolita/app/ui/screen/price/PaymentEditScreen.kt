@@ -16,6 +16,7 @@ import com.lolita.app.data.local.entity.PurchaseRecordStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
+import com.lolita.app.ui.screen.common.EditorSaveBar
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -38,39 +39,16 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
     }
     LaunchedEffect(priceId, paymentId) { viewModel.loadPayment(priceId, paymentId) }
     val requestBack = UnsavedChangesHandler(viewModel.hasUnsavedChanges, onBack)
-    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text(if (paymentId != null) "编辑实际付款" else if (historical) "补录真实付款" else "记录实际付款") },
-        navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
-            IconButton(enabled = canSave, onClick = savePayment) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
-        }) }) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
+    Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = { GradientTopAppBar(title = { Text(if (paymentId != null) "编辑实际付款" else if (historical) "补录真实付款" else "记录实际付款") },
+        navigationIcon = { IconButton(onClick = requestBack, enabled = !state.isSaving) { SkinIcon(IconKey.ArrowBack) } }) },
+        bottomBar = { EditorSaveBar("保存付款记录", state.isSaving, canSave, savePayment) }) { padding ->
+        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             if (state.isLoading) PricingSkeleton() else if (state.loadFailed) {
                 LolitaSection("付款资料暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
             } else {
                 if (state.purchaseRecordStatus != PurchaseRecordStatus.TRACKED) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = requestBack)
-                LolitaSection("购买信息参考") {
-                    row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                        Text("服饰", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(state.itemName, style = MaterialTheme.typography.bodyLarge)
-                    } }
-                    state.purchaseSource?.takeIf { it.isNotBlank() }?.let { source ->
-                        row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                            Text("购买来源", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text(source, style = MaterialTheme.typography.bodyMedium)
-                        } }
-                    }
-                    row {
-                        PricingValueRow("订单总价", formatPriceAmount(state.orderTotal))
-                        PricingValueRow("已录实付", formatPriceAmount(state.recordedPaidAmount))
-                    }
-                    state.purchaseDescription?.takeIf { it.isNotBlank() }?.let { description ->
-                        row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-                            Text("原订单信息", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text(description, style = MaterialTheme.typography.bodyMedium)
-                        } }
-                    }
-                    row { Text("订单价格仅供核对，请确认真实实付金额后保存付款记录。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-                }
+                Text(state.itemName, style = MaterialTheme.typography.titleSmall)
                 LolitaSection("实际付款") { row {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                         if (state.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW) PricingValueRow("未付余额", "未知")
@@ -104,6 +82,29 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
                         }, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 } }
+                LolitaSection("购买信息参考") {
+                    row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                        Text("服饰", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(state.itemName, style = MaterialTheme.typography.bodyLarge)
+                    } }
+                    state.purchaseSource?.takeIf { it.isNotBlank() }?.let { source ->
+                        row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            Text("购买来源", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(source, style = MaterialTheme.typography.bodyMedium)
+                        } }
+                    }
+                    row {
+                        PricingValueRow("订单总价", formatPriceAmount(state.orderTotal))
+                        PricingValueRow("已录实付", formatPriceAmount(state.recordedPaidAmount))
+                    }
+                    state.purchaseDescription?.takeIf { it.isNotBlank() }?.let { description ->
+                        row { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            Text("原订单信息", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(description, style = MaterialTheme.typography.bodyMedium)
+                        } }
+                    }
+                    row { Text("订单价格仅供核对，请确认真实实付金额后保存付款记录。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                }
                 LolitaSection("关联付款阶段（可选）") { row {
                     Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                         FilterChip(selected = state.stageId == null, onClick = { viewModel.updateStageId(null) }, label = { Text("不指定阶段") }, enabled = canEdit)
@@ -114,13 +115,6 @@ fun PaymentEditScreen(priceId: Long, paymentId: Long?, onBack: () -> Unit, onSav
                         Text("同一阶段可分多次记录实付。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 } }
-                Button(onClick = savePayment, enabled = canSave, modifier = Modifier.fillMaxWidth()) {
-                    if (state.isSaving) {
-                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                        Spacer(Modifier.width(skin.spacingSmall))
-                    }
-                    Text(if (state.isSaving) "保存中…" else "保存付款记录")
-                }
                 Spacer(Modifier.height(skin.spacingLarge))
             }
         }

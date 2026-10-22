@@ -306,6 +306,7 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 以下文档保留具体方案及阶段记录。已被后续要求替代的实现方式不覆盖本规范，例如早期生成期间锁住页面的方案已由后台任务设计取代。
 
 - [项目协作与技术约定](../AGENTS.md)：架构、皮肤组件、数据完整性、测试及交付细节。
+- [两轮体验设计实施](creative-design-implementation-2026-10-22.md)：已归档艺术图稿到原生界面的采用范围、七皮肤浅暗、小屏大字、真实IME与数据边界。
 - [服饰部件与付款改造](plans/2026-10-11-item-pricing-redesign.md)：主件小物、当前订单、付款与历史资料规则。
 - [数据完整性验收](data-integrity-test-plan.md)：迁移、备份、关联和图片核对要求。
 - [七套皮肤图标个性](superpowers/specs/2026-10-12-icon-personality-design.md)与[非导航图标个性](superpowers/specs/2026-10-12-icon-details-design.md)：各皮肤造型与功能辨认。

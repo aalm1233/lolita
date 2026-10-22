@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,6 +15,7 @@ import com.lolita.app.data.local.entity.PurchaseRecordStatus
 import com.lolita.app.ui.screen.common.GradientTopAppBar
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.UnsavedChangesHandler
+import com.lolita.app.ui.screen.common.EditorSaveBar
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -37,15 +39,15 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
         }
     }
 
-    Scaffold(containerColor = Color.Transparent, topBar = {
+    Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = {
         GradientTopAppBar(title = { Text(if (priceId == null) "设置价格" else "编辑价格与计划") },
-            navigationIcon = { IconButton(onClick = requestBack) { SkinIcon(IconKey.ArrowBack) } }, actions = {
-                IconButton(enabled = viewModel.isValid() && !state.isSaving, onClick = {
-                    saveWithReminderPermissions(state.stages.any { it.reminderSet && it.dueDate != null })
-                }) { if (state.isSaving) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) else SkinIcon(IconKey.Save) }
-            })
+            navigationIcon = { IconButton(onClick = requestBack, enabled = !state.isSaving) { SkinIcon(IconKey.ArrowBack) } })
+    }, bottomBar = {
+        EditorSaveBar("保存价格与计划", state.isSaving, canEdit && viewModel.isValid()) {
+            saveWithReminderPermissions(state.stages.any { it.reminderSet && it.dueDate != null })
+        }
     }) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding().verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
+        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
             if (state.isLoading) PricingSkeleton() else if (state.loadFailed) {
                 LolitaSection("价格暂时无法读取") { row { Text("请返回后重试，现有价格与付款记录保留。") } }
@@ -80,16 +82,22 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                                 FilterChip(selected = state.priceType == type, onClick = { viewModel.updatePriceType(type) }, label = { Text(label) }, enabled = canEdit)
                             }
                         }
-                        OutlinedButton(onClick = { confirmTemplate = true }, enabled = canEdit, modifier = Modifier.fillMaxWidth()) { Text("重设付款计划") }
+                        TextButton(onClick = { confirmTemplate = true }, enabled = canEdit) { Text("重新拆分计划") }
                         if (tracked) Text(state.calculationHint ?: "金额可自动补算，手动输入优先。",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(if (tracked) "阶段只是应付总额的拆分。实付请在付款页单独记录。" else "原阶段金额和日期保留，不据此认定欠款或设置提醒。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     } }
                 }
                 state.stages.forEachIndexed { index, stage ->
+                    var expanded by rememberSaveable(stage.id, index) { mutableStateOf(stage.amount.isBlank()) }
                     LolitaSection("付款阶段 ${index + 1}", action = {
                         IconButton(onClick = { viewModel.removeStage(index) }, enabled = canEdit) { SkinIcon(IconKey.Delete, tint = MaterialTheme.colorScheme.error) }
-                    }) { row { StageDraftFields(stage, { viewModel.updateStage(index, it) }, canEdit) } }
+                    }) { row {
+                        PricingValueRow(stage.name.ifBlank { "未命名阶段" }, parseMoney(stage.amount)?.let(::formatPriceAmount) ?: "金额待填写")
+                        Text("应付日期：${formatPriceDate(stage.dueDate)}", style = MaterialTheme.typography.bodySmall)
+                        TextButton(onClick = { expanded = !expanded }) { Text(if (expanded) "收起阶段 ${index + 1}" else "编辑阶段 ${index + 1}") }
+                        if (expanded) StageDraftFields(stage, { viewModel.updateStage(index, it) }, canEdit)
+                    } }
                 }
                 OutlinedButton(onClick = viewModel::addStage, enabled = canEdit, modifier = Modifier.fillMaxWidth()) { SkinIcon(IconKey.Add); Spacer(Modifier.width(skin.spacingSmall)); Text("增加付款阶段") }
                 val sum = state.stages.sumOf { parseMoney(it.amount, true) ?: 0.0 }

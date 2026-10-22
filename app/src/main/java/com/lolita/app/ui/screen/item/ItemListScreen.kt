@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -71,6 +72,7 @@ import com.lolita.app.data.local.entity.CategoryGroup
 import com.lolita.app.domain.model.WardrobeFamily
 import com.lolita.app.ui.screen.common.StorageLocationPicker
 import com.lolita.app.ui.screen.common.SkinEmptyState
+import com.lolita.app.ui.screen.common.WardrobeEmptyIllustration
 import com.lolita.app.ui.screen.common.SortMenuButton
 import com.lolita.app.ui.screen.common.SortOption
 import com.lolita.app.ui.screen.common.SwipeToDeleteContainer
@@ -116,7 +118,10 @@ fun ItemListScreen(
     onNavigateToLocationDetail: (Long) -> Unit = {},
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
     viewModel: ItemListViewModel = viewModel(),
-    onAddItem: (WardrobeFamily?) -> Unit = { onNavigateToEdit(null) }
+    onAddItem: (WardrobeFamily?) -> Unit = { onNavigateToEdit(null) },
+    onImportOrders: () -> Unit = {},
+    onImportProduct: () -> Unit = {},
+    onRestoreBackup: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -167,6 +172,14 @@ fun ItemListScreen(
         uiState.filterBrandId?.let { "" }, uiState.filterFamily?.let { "" }, uiState.filterCategoryId?.let { "" },
         uiState.filterLocationId?.let { "" }, uiState.filterStorageNodeId?.let { "" }, uiState.filterSize.takeIf { it.isNotBlank() }, uiState.filterSpecification.takeIf { it.isNotBlank() }
     ).size
+    val emptyWardrobe = pagerState.currentPage == 1 && !uiState.isLoading && uiState.filteredItems.isEmpty()
+    var chooseImport by remember { mutableStateOf(false) }
+    if (chooseImport) AlertDialog(onDismissRequest = { chooseImport = false }, title = { Text("从淘宝导入") }, text = {
+        Column {
+            TextButton(onClick = { chooseImport = false; onImportProduct() }) { Text("商品链接导入（试用）") }
+            TextButton(onClick = { chooseImport = false; onImportOrders() }) { Text("订单文件导入") }
+        }
+    }, confirmButton = { TextButton(onClick = { chooseImport = false }) { Text("取消") } })
 
     // Auto-focus search field when entering search mode
     LaunchedEffect(isSearchMode) {
@@ -226,6 +239,7 @@ fun ItemListScreen(
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
+            if (!emptyWardrobe) {
             FloatingActionButton(
                 onClick = {
                     when (pagerState.currentPage) {
@@ -239,6 +253,7 @@ fun ItemListScreen(
                 shape = RoundedCornerShape(16.dp)
             ) {
                 SkinIcon(IconKey.Add, tint = Color.White)
+            }
             }
         }
     ) { padding ->
@@ -494,11 +509,19 @@ fun ItemListScreen(
                                 }
                             }
                         } else if (uiState.filteredItems.isEmpty()) {
+                            val filtered = activeFilterCount > 0 || uiState.searchQuery.isNotBlank() || uiState.filterPendingPaymentOnly
                             SkinEmptyState(
-                                iconKey = IconKey.Home,
-                                title = "暂无服饰",
-                                subtitle = "点击右下角 + 添加物品",
-                                modifier = Modifier.fillMaxSize()
+                                iconKey = if (filtered) IconKey.Search else IconKey.Home,
+                                title = if (filtered) "没有匹配的物品" else "从心爱之物开始整理",
+                                subtitle = if (filtered) "调整筛选或搜索，已有资料仍然保留" else "照片、名称，先记下来就好",
+                                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                                actionLabel = if (filtered) "清除筛选与搜索" else if (uiState.items.isEmpty()) "添加第一件物品" else "添加物品",
+                                onAction = { if (filtered) viewModel.clearWardrobeFilters() else onAddItem(null) },
+                                illustration = if (filtered) null else ({ WardrobeEmptyIllustration() }),
+                                secondaryActions = { if (!filtered) {
+                                    TextButton(onClick = { chooseImport = true }) { Text("从淘宝导入") }
+                                    TextButton(onClick = onRestoreBackup) { Text("已有资料？恢复备份") }
+                                } }
                             )
                         } else if (uiState.viewMode == ViewMode.GALLERY) {
                             var showPreview by remember { mutableStateOf(false) }

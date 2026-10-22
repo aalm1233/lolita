@@ -140,7 +140,8 @@ class StorageRoomScreenTest {
         compose.onNodeWithText("未付尾款物品").assertDoesNotExist()
         compose.onNodeWithText("取消").performClick()
         openCabinet()
-        compose.onNodeWithContentDescription("选择玛丽珍鞋").performScrollTo().performClick()
+        compose.onNodeWithTag("storage-room-list").performScrollToNode(hasContentDescription("选择玛丽珍鞋"))
+        compose.onNodeWithContentDescription("选择玛丽珍鞋").performClick()
         db.itemDao().updateItemStatus(shoe,"PENDING_PAYMENT")
         compose.waitUntil(10_000) { model.uiState.value.items.map {it.id}==listOf(accessory) && model.uiState.value.selectedItemIds.isEmpty() }
         assertEquals(1,model.uiState.value.nodeItemCounts[cabinet])
@@ -182,6 +183,10 @@ class StorageRoomScreenTest {
 
     private fun assertRootActions(expectedFontScale: Float) {
         assertNull(model.uiState.value.currentNodeId)
+        compose.onNodeWithTag("storage-room-list").performScrollToNode(hasText("整理收纳") or hasText("收起整理收纳"))
+        if (compose.onAllNodesWithText("整理收纳").fetchSemanticsNodes().isNotEmpty()) {
+            compose.onNodeWithText("整理收纳").performClick()
+        }
         val createLabel = "新增柜架 / 收纳盒"
         assertSingleLineAction(createLabel, expectedFontScale)
         assertSingleLineAction("移入物品", expectedFontScale)

@@ -54,6 +54,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
     var rename by remember { mutableStateOf<TryOnResult?>(null) }
     var delete by remember { mutableStateOf<TryOnResult?>(null) }
     var confirmation by remember { mutableStateOf<TryOnConfirmation?>(null) }
+    var serviceExpanded by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
@@ -81,7 +82,7 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                             CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                             Spacer(Modifier.width(skin.spacingMedium))
                         }
-                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置服务密钥" else "生成试衣图")
+                        Text(if (state.isSubmitting) "正在加入任务…" else if (!state.hasKey) "配置服务密钥" else "核对输入与费用")
                     }
 
                 }
@@ -100,34 +101,24 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                     TextButton(onClick = onManagePersonalModels, enabled = !state.busy) { Text("管理模特") }
                 }) {
                     row {
-                        Spacer(Modifier.height(skin.spacingMedium))
-                        if (!state.modelsLoaded) ShimmerRect(140.dp, 210.dp, modifier = Modifier.fillMaxWidth())
-                        else {
-                            Text(state.modelName, style = MaterialTheme.typography.titleSmall, modifier = Modifier.testTag("tryOnSelectedModel"))
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                             val modelPath = state.selectedPersonalModel?.imageUrl
                                 ?: if (state.selectedPersonalModelId == null) "file:///android_asset/tryon/model.png" else null
-                            if (modelPath != null) ImageFrame(Modifier.fillMaxWidth()) {
+                            if (!state.modelsLoaded) ShimmerRect(76.dp, 114.dp)
+                            else if (modelPath != null) ImageFrame(Modifier.width(76.dp)) {
                                 LolitaShimmerImage(model = modelPath,
                                     contentDescription = "放大本次试衣人物：${state.modelName}", contentScale = ContentScale.Fit,
-                                    modifier = Modifier.fillMaxWidth().height(210.dp).skinClickable { preview = modelPath }, circularRevealEnabled = false)
+                                    modifier = Modifier.fillMaxWidth().height(114.dp).skinClickable { preview = modelPath }, circularRevealEnabled = false)
+                            }
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                                Text(state.modelName, style = MaterialTheme.typography.titleSmall, modifier = Modifier.testTag("tryOnSelectedModel"))
+                                OutlinedButton(onClick = { showModelPicker = true }, enabled = !state.busy && !state.isLoading && state.modelsLoaded) { Text("更换试衣人物") }
                             }
                         }
-                        OutlinedButton(onClick = { showModelPicker = true }, enabled = !state.busy && !state.isLoading && state.modelsLoaded,
-                            modifier = Modifier.fillMaxWidth().padding(top = skin.spacingMedium)) { Text("更换试衣人物") }
                         state.modelIssue?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
                         Text("仅供效果参考，不能判断真实尺码。",
                             modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            }
-            item(key = "service") {
-                LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
-                    TextButton(onClick = { onConfigureApi() }, enabled = !state.busy) { Text("API 配置") }
-                }) {
-                    row {
-                        ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
-                        Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "服务密钥已配置" else "尚未配置服务密钥",
-                            modifier = Modifier.padding(vertical = skin.spacingMedium), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             }
@@ -168,6 +159,20 @@ fun TryOnScreen(onNavigateBack: () -> Unit, viewModel: TryOnViewModel = viewMode
                         OutlinedButton(onClick = { imageItemId = row.itemId }, enabled = !state.busy && item?.imageUrls?.any { it.isNotBlank() } == true,
                             modifier = Modifier.fillMaxWidth()) { Text("更换参考图片") }
                         OutlinedButton(onClick = { roleItemId = row.itemId }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text("穿戴位置：${row.role.label}") }
+                    }
+                }
+            }
+            item(key = "service") {
+                LolitaSection(title = "图像服务 · ${state.provider.label}", action = {
+                    TextButton(onClick = { serviceExpanded = !serviceExpanded }) { Text(if (serviceExpanded) "收起" else "更换服务") }
+                }) {
+                    row {
+                        if (serviceExpanded) {
+                            ImageServiceSelector(state.provider, enabled = !state.busy && state.keyLoaded, onSelect = viewModel::selectProvider)
+                            TextButton(onClick = onConfigureApi, enabled = !state.busy) { Text("API 配置") }
+                        }
+                        Text(if (!state.keyLoaded) "正在检查本机配置…" else if (state.hasKey) "服务密钥已配置" else "尚未配置服务密钥",
+                            modifier = Modifier.padding(vertical = skin.spacingMedium), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             }

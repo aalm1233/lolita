@@ -159,6 +159,7 @@ private fun OrderSelectContent(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) { Text("选择文件（支持多选）") }
+                TextButton(onClick = onNavigateToGuide) { Text("如何获取订单文件") }
             }
         } else {
             OrderListBody(

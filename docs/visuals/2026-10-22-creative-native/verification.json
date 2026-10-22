@@ -1,0 +1,172 @@
+{
+  "finalUniqueDeviceMethods": 28,
+  "finalAllPassed": true,
+  "phases": {
+    "initial": {
+      "failed": 2,
+      "passed": 20
+    },
+    "followup": {
+      "passed": 6
+    },
+    "layout-final": {
+      "passed": 3
+    },
+    "small": {
+      "passed": 4
+    },
+    "art": {
+      "passed": 2
+    },
+    "small-art": {
+      "passed": 1
+    }
+  },
+  "methods": [
+    {
+      "class": "com.lolita.app.data.LaboratoryNavigationTest",
+      "method": "personalLaboratoryProvidesBatchAndAllAiRoutesWithoutSubmitting",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.data.LaboratoryScreenTest",
+      "method": "realSmallLargeFontLabAndWigSearchWorkWithKeyboard",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+      "method": "backupKeepsRealResultAndWarningsAndDisablesConflictingActions",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+      "method": "changedPagesUseSevenNativeSkinsInLightAndDark",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+      "method": "emptyStateAndTaskActionsHaveExplicitLocalDestinations",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeExperienceScreenTest",
+      "method": "profileMoneyChangesLiveAndPreservesTwoDecimalPlaces",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeNavigationScreenTest",
+      "method": "actualEmptyWardrobeImportAndRestoreActionsUseExistingRoutes",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.copy.CreativeNavigationScreenTest",
+      "method": "real320dpDoubleFontNavigationStaysAboveGestureAreaAcrossSkins",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "allSevenSkinsKeepRootActionsSingleLineAndSeparatedAt320dpInBothFontScales",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "allSevenSkinsKeepSelectionAndMoveControlsReachableOnSmallScreensWithLargeText",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "roomShowsCabinetsAndCabinetFindsAttachmentsAndNestedItemsWithoutDuplicates",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "rootActionsStaySingleLineAndCreateRoomNodesAt320dpWithNormalAndLargeText",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "selectionSurvivesFilteringAndOnlyMovesAfterAffectedCountConfirmation",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.item.StorageRoomScreenTest",
+      "method": "unpaidItemsAreAbsentFromRoomCountsAndPickerAndLostOwnershipClearsSelection",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "actualPriceAndTaskBarSevenSkinsLightDarkAndLargeText",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest",
+      "method": "templatesFillBothWaysAndManualOverrideIsNeverRewritten",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.BackupExportResultTest",
+      "method": "actualZipJsonCsvUrisRemainReadableAndPreviewDoesNotReplaceRecords",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.settings.BackupExportResultTest",
+      "method": "exportBusyGuardPreventsSecondExportAndRestoreDuringResultResolution",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tasks.ImageTaskScreenTest",
+      "method": "filtersShowPendingRunningAndFinishedWithoutChangingRecords",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "method": "missingKeyAndServiceActionOpenUnifiedConfigurationWithoutChangingSelection",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "method": "sevenSkinsLightDarkAndLargeTextHaveReachableControlsAndExportActualScreenshots",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.screen.tryon.TryOnScreenTest",
+      "method": "wearingDescriptionAcrossSevenSkinsAndKeyboardAndPaidConfirmation",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.theme.skin.animation.SkinBackgroundAnimationTest",
+      "method": "backgroundStopsRequestingFramesDuringScrollAndResumesAfterward",
+      "status": "passed"
+    },
+    {
+      "class": "com.lolita.app.ui.theme.skin.component.SkinArtBackgroundTest",
+      "method": "realIllustrationsPreserveThemeSurfaceInBothModesAndStayStatic",
+      "status": "passed"
+    }
+  ],
+  "debugBuild": "passed",
+  "realSmallDevice": "960x2100 / 480dpi / fontScale 2.0 / API35",
+  "temporaryDisplaySettingsRestored": true,
+  "appPaidAiRequests": 0,
+  "designImageGenCallsThisImplementation": 1
+}

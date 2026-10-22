@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -195,7 +198,8 @@ fun LolitaNavHost(
             })
             NavigationBar(
                 modifier = Modifier
-                    .height(60.dp)
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .height(with(LocalDensity.current) { 48.dp + MaterialTheme.typography.labelMedium.lineHeight.toDp() })
                     .then(
                         if (skin.navBarBlurEnabled) {
                             Modifier.hazeEffect(
@@ -234,7 +238,7 @@ fun LolitaNavHost(
                         icon = {
                             SkinIcon(item.iconKey, modifier = Modifier.size(26.dp), tint = tint)
                         },
-                        label = { Text(item.label, style = MaterialTheme.typography.labelMedium, modifier = Modifier.offset(y = (-4).dp)) },
+                        label = { Text(item.label, style = MaterialTheme.typography.labelMedium) },
                         selected = selected,
                         onClick = {
                             navController.navigate(item.screen.route) {
@@ -302,6 +306,9 @@ fun LolitaNavHost(
                         navController.navigate(Screen.ItemEdit.createRoute(itemId))
                     },
                     onAddItem = { family -> navController.navigate(Screen.ItemEdit.createRoute(defaultFamily = family)) },
+                    onImportOrders = { navController.navigate(Screen.TaobaoImport.route) },
+                    onImportProduct = { navController.navigate(Screen.TaobaoProductImport.route) },
+                    onRestoreBackup = { navController.navigate(Screen.BackupRestore.route) },
                     onNavigateToCoordinateDetail = { coordinateId ->
                         navController.navigate(Screen.CoordinateDetail.createRoute(coordinateId))
                     },

@@ -203,8 +203,8 @@ fun chineseSkinConfig(): LolitaSkinConfig {
     return LolitaSkinConfig(
         skinType = SkinType.CHINESE,
         artBackgroundRes = R.drawable.bg_art_chinese,
-        artBackgroundAlpha = 0.28f,
-        artBackgroundAlphaDark = 0.20f,
+        artBackgroundAlpha = 0.14f,
+        artBackgroundAlphaDark = 0.12f,
         artBackgroundTintDark = Color(0xFFE0BAAF),
         name = "中华风韵",
         lightColorScheme = lightColorScheme(
@@ -241,7 +241,7 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         icons = ChineseIconProvider(),
         animations = ChineseAnimationProvider(),
         cardElevation = 1.dp,
-        cardBorderStroke = BorderStroke(0.5.dp, vermillion),
+        cardBorderStroke = BorderStroke(0.5.dp, vermillion.copy(alpha = 0.28f)),
         imageFrameElevation = 2.dp,
         imageFrameStroke = BorderStroke(0.5.dp, vermillion.copy(alpha = 0.6f)),
         imageFramePadding = 2.dp,
@@ -267,7 +267,7 @@ fun chineseSkinConfig(): LolitaSkinConfig {
         galleryCardElevation = 0.dp, galleryCardBorderStroke = null, galleryCardInnerPadding = 0.dp,
         featuredCardElevation = 2.dp, featuredCardBorderStroke = BorderStroke(0.5.dp, vermillion), featuredCardInnerPadding = 18.dp,
         compactCardElevation = 0.5.dp, compactCardBorderStroke = BorderStroke(0.3.dp, vermillion.copy(alpha = 0.4f)), compactCardInnerPadding = 6.dp,
-        cardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050)),
+        cardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050).copy(alpha = 0.35f)),
         imageFrameStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050).copy(alpha = 0.7f)),
         galleryCardBorderStrokeDark = null,
         featuredCardBorderStrokeDark = BorderStroke(0.5.dp, Color(0xFFE85050)),

@@ -22,6 +22,7 @@
 - 共用设计要求统一维护在上述规范，具体架构、组件、构建和发布仍遵守本文件；新增或调整长期约定时同步两处，用户最新明确要求优先。
 - 整体体验与视觉提案见 `docs/plans/2026-10-22-creative-experience-review.md`，包含2.66.4正式包模拟器走查、三页面概念稿和七皮肤浅暗方向。本轮仅设计，未实现；其中个人页金额隐私问题、空态动作、实验室与试衣布局均为待实施项，不取代既有规范或验收记录。
 - 第二轮体验提案见 `docs/plans/2026-10-22-creative-experience-review-part2.md`：价格计划、任务结果、收纳、备份导出／恢复预览取消及导入指南走查，三页主稿与可检视的七皮肤浅暗稿。仅设计，未改应用；HTML预览检查不代替Compose验收，测试ZIP未执行恢复，第一轮金额隐私问题仍待修复。
+- 上述两轮提案于2.67.0开始实施，最终采用范围与原生验收以 `docs/creative-design-implementation-2026-10-22.md` 为准；前两条保留原设计阶段记录。实施计划为 `docs/plans/2026-10-22-creative-design-implementation.md`。
 
 ## 架构与实现约定
 
@@ -61,6 +62,11 @@
 - `LolitaCard.contentPadding` 可覆盖变体默认内边距，避免内容层重复 padding；图文列表卡的图片贴边时传 `PaddingValues(0.dp)`，仅文字区保留一次内边距，图片顶部圆角使用皮肤 `cornerRadiusMedium`，网格骨架同步实际 0.8 宽高比。半透明卡片 tint 在公共组件内一次合成到当前 `surface`，完全透明卡片仍保持透明。
 - 统计总览按四项衣橱概况→消费概览／最高实付→独立品类概况→品牌排序；品类保留完整登记摘要、八类数量和导航。消费概览突出当前订单实付，全部已录实付与参考均价采用明细行，金额直接显示原始 Double 的两位小数，不通过 Float 动画改变显示值。金额、长品牌及最高实付信息需在小屏/大字体下完整排布；关闭金额设置时整块消费与最高实付隐藏。卡片只保留一层内边距，间距与圆角消费皮肤令牌，加载态使用匹配布局的骨架屏。真实 Compose 回归位于 `StatsOverviewScreenTest`（独立内存 Room、UUID 设置；含导航、实时隐私和浅暗七套皮肤截图）。 本轮预览归档在 `docs/visuals/2026-10-12-stats-overview-light.png` 和 `docs/visuals/2026-10-12-stats-overview-victorian-dark.png`。
 - 详情页分区容器复用 `LolitaSection`（iOS Settings 风格：`SectionHeader` + 行内容 + 内嵌分割线，包裹在 `LolitaCard` 内）。新详情页优先用 `LolitaSection` 而非手动 `LolitaCard + SectionHeader`。
+- 价格／付款编辑共用 `EditorSaveBar`，只有底部文字保存；子Scaffold设零Insets，内容消费padding，保存栏处理IME。付款先填真实实付，再看购买参考；付款阶段可展开编辑，摘要保留金额与未知应付日期，不改自动补算或原账本。
+- 衣橱真空态提供新增／明确选择淘宝导入方式／恢复备份，筛选空态提供清除搜索和属性筛选并保留页面拥有状态范围；相应空态不重复显示FAB。穿搭空态提供记录动作。`SkinEmptyState`支持可选操作及插画；`WardrobeEmptyIllustration`仅为装饰，原始RGBA与来源见 `docs/creative-illustration-sources-2026-10-22.json`，不代表用户库存。
+- 备份页突出ZIP，JSON／CSV使用次级导出，恢复后果常显；`BackupExportResult`仅在ViewModel保留实际返回URI／文件名／格式，供用户主动只读打开，打开失败不抹掉导出成功。导出、预览与恢复互斥，原备份格式与校验不变。个人页金额摘要实时消费显示金额设置，隐藏时无文字或语义占位，开启显示两位小数并允许换行。
+- 任务中心以可用结果缩略图及核对／结果／原因动作为主，缺图用类型回退，不把输入图当输出，不自动保存或重试；批次与全局任务栏保留。实验室的两项目的入口共享层级，服务状态只代表本机配置；试衣人物使用紧凑完整Fit且可放大，物品选择先于可展开服务设置。房间封面紧凑展示并可完整放大，描述和低频管理按需展开；订单文件按钮旁直达原指南。
+- 底栏在系统导航Insets上方按图标与当前文字行高增高，不使用负向标签偏移或压缩系统字号。中华背景、云朵与花瓣降低透明度，普通卡片边框弱于主操作；其余皮肤与原图不变。原生定向用例包括 `CreativeExperienceScreenTest`、`CreativeNavigationScreenTest`、`BackupExportResultTest` 及相关价格／试衣／收纳／实验室回归。
 - 详情页分区标题复用 `SectionHeader`（左侧竖线 + 标题 + 可选操作按钮 + 分割线，皮肤感知）。所有详情页统一使用 `SectionHeader`，不使用裸 `Text(titleMedium/Bold)`。
 - 图片展示区复用 `ImageFrame`（画框容器，皮肤感知边框/阴影/内边距）。
 - 详情页信息区块用 `LolitaSection` 或 `LolitaCard + SectionHeader` 包裹，不用裸 Text + HorizontalDivider。
@@ -305,7 +311,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=141, versionName="2.66.4"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=142, versionName="2.67.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

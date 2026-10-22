@@ -80,12 +80,14 @@ fun OutfitLogListScreen(
             GradientTopAppBar(title = { Text("穿搭日记") }, compact = true)
         },
         floatingActionButton = {
+            if (uiState.isLoading || uiState.allLogs.isNotEmpty()) {
             FloatingActionButton(
                 onClick = { onNavigateToEdit(null) },
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 SkinIcon(IconKey.Add, tint = Color.White)
+            }
             }
         }
     ) { padding ->
@@ -144,7 +146,9 @@ fun OutfitLogListScreen(
                             SkinEmptyState(
                                 iconKey = IconKey.Edit,
                                 title = "还没有穿搭日记",
-                                subtitle = "记录每天的穿搭"
+                                subtitle = "把今天喜欢的搭配留下来",
+                                actionLabel = "记录一次穿搭",
+                                onAction = { onNavigateToEdit(null) }
                             )
                         }
                     } else if (uiState.logs.isEmpty()) {
@@ -152,7 +156,9 @@ fun OutfitLogListScreen(
                             SkinEmptyState(
                                 iconKey = IconKey.Search,
                                 title = "无搜索结果",
-                                subtitle = "试试其他关键词"
+                                subtitle = "试试其他关键词",
+                                actionLabel = "清除搜索",
+                                onAction = { viewModel.search("") }
                             )
                         }
                     } else {

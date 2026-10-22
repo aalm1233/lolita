@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.unit.Density
@@ -149,6 +150,9 @@ class PriceAutofillIntegrationTest {
             compose.onNodeWithTag("globalImageTaskBar").assertIsDisplayed()
             capture("${type.name}-${if (night) "dark" else "light"}-price")
             compose.onNodeWithText("已按含邮费总额补算尾款，可直接修改。").performScrollTo().assertIsDisplayed()
+            if (compose.onAllNodes(hasText("490") and hasSetTextAction()).fetchSemanticsNodes().isEmpty()) {
+                compose.onNodeWithText("编辑阶段 2").performScrollTo().performClick()
+            }
             compose.onNode(hasText("490") and hasSetTextAction()).performScrollTo().assertIsDisplayed()
             capture("${type.name}-${if (night) "dark" else "light"}-plan")
         } }
@@ -159,11 +163,56 @@ class PriceAutofillIntegrationTest {
         compose.onNodeWithText("商品金额").performScrollTo().performClick()
         compose.onNodeWithText("商品金额").performTextReplacement("700")
         assertEquals("510", vm.uiState.value.stages[1].amount)
+        compose.onAllNodesWithText("保存价格与计划").assertCountEquals(1)
+        compose.onNodeWithText("保存价格与计划").assertIsDisplayed().assertIsEnabled()
         capture("large-keyboard")
         instrumentation.uiAutomation.takeScreenshot()?.let { bitmap ->
             File(context.filesDir, "daily-price-tasks/large-keyboard-system.png").outputStream().use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
         }
+    }
+
+    @Test fun paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment() = runBlocking {
+        val price = orders.createOrder(Price(itemId = itemId, type = PriceType.FULL, totalPrice = 680.0),
+            listOf(PaymentStage(priceId = 0, name = "全款", amount = 680.0)))
+        lateinit var payment: PaymentEditViewModel
+        instrumentation.runOnMainSync { payment = PaymentEditViewModel(orders); store.put("payment-editor", payment) }
+        var saved = 0
+        compose.setContent {
+            val host = LocalView.current
+            SideEffect { (host.context as android.app.Activity).window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) }
+            val config = Configuration(LocalConfiguration.current).apply {
+                uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO
+            }
+            CompositionLocalProvider(LocalConfiguration provides config,
+                LocalDensity provides Density(LocalDensity.current.density, if (large.value) 2f else 1f)) {
+                LolitaTheme(skin.value, dark.value) { Surface(Modifier.width(320.dp).fillMaxHeight()) {
+                    PaymentEditScreen(price, null, {}, { saved++ }, payment)
+                } }
+            }
+        }
+        compose.waitUntil(10_000) { !payment.uiState.value.isLoading && payment.uiState.value.itemName.isNotBlank() }
+        for (type in SkinType.entries) for (night in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = night }
+            compose.onAllNodesWithText("保存付款记录").assertCountEquals(1)
+            compose.onNodeWithText("保存付款记录").assertIsDisplayed().assertIsNotEnabled()
+            capture("payment-${type.name.lowercase()}-${if (night) "dark" else "light"}")
+        }
+        compose.runOnIdle { large.value = true }
+        compose.onNodeWithText("本次实付金额").performScrollTo().performClick().performTextInput("125.50")
+        assertTrue(orders.getOrder(price).first()!!.payments.isEmpty())
+        compose.onAllNodesWithText("保存付款记录").assertCountEquals(1)
+        compose.onNodeWithText("保存付款记录").assertIsDisplayed().assertIsEnabled()
+        capture("payment-large-keyboard")
+        instrumentation.uiAutomation.takeScreenshot()?.let { bitmap ->
+            File(context.filesDir, "daily-price-tasks/payment-real-ime.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+        }
+        compose.onNodeWithText("保存付款记录").performClick()
+        compose.waitUntil(10_000) { saved == 1 }
+        val order = orders.getOrder(price).first()!!
+        assertEquals(1, order.payments.size)
+        assertEquals(125.50, order.paidAmount, 0.0)
     }
 }

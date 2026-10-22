@@ -25,7 +25,7 @@ class ChinesePlumBlossomParticle : AmbientParticle() {
         y = -Random.nextFloat() * 80f
         petalSize = 20f + Random.nextFloat() * 16f
         fallSpeed = 0.1f + Random.nextFloat() * 0.2f
-        alpha = 0.12f + Random.nextFloat() * 0.15f
+        alpha = 0.04f + Random.nextFloat() * 0.05f
         wobblePhase = Random.nextFloat() * 6.28f
         wobbleSpeed = 0.0006f + Random.nextFloat() * 0.001f
         rotation = Random.nextFloat() * 360f

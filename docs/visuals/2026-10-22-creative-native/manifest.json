@@ -1,0 +1,1084 @@
+{
+  "kind": "actual Android Compose screenshots; contact sheets resize only, no content editing",
+  "fixture": "independent AVD with controlled records; no AI-quality claim",
+  "sourceScreens": [
+    {
+      "page": "empty",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-default-light.png",
+      "sha256": "b915bd76d7edfa97b8ebed491dc29692908c19c96e60cfc693c410332987f7ca"
+    },
+    {
+      "page": "empty",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-gothic-light.png",
+      "sha256": "5f0b5f7cf0066246312d098037e07b26e7aa5a6585de7ef6591dfd4e66ecd47b"
+    },
+    {
+      "page": "empty",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-chinese-light.png",
+      "sha256": "f8cd24f26d0800d9d3d87e0f146c0f8395fabc51b45959e9816ce8e7f98dc875"
+    },
+    {
+      "page": "empty",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-classic-light.png",
+      "sha256": "73622a61332ade43efcb45c8563cd0965c6ad691cb2194d37872d24f0e1695cf"
+    },
+    {
+      "page": "empty",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-navy-light.png",
+      "sha256": "07b25982b98f2338faa4f490c51fa70e422b2ff57b08146da8140ad4fdfbb2a8"
+    },
+    {
+      "page": "empty",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-country-light.png",
+      "sha256": "c2904fdc72d8b950ed3b344af264610d6c53696d5fa74699465077e865afd976"
+    },
+    {
+      "page": "empty",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-victorian-light.png",
+      "sha256": "d634f17639d73e7d158d139ffb0dddd839d3e13291abe8af13e810e07fefacff"
+    },
+    {
+      "page": "empty",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-default-dark.png",
+      "sha256": "919672490824d061e0b0e14eb1bf5f0231923a3263e34df7af1accb7775c5179"
+    },
+    {
+      "page": "empty",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-gothic-dark.png",
+      "sha256": "5f265ea5079a66010a1f7405ff8f88dfe4cdebcd8e090000af446abafaffde5a"
+    },
+    {
+      "page": "empty",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-chinese-dark.png",
+      "sha256": "b67cca7c0765b8a1c19f0a0488577cd268f875b766fd7a392cc215190360a8d5"
+    },
+    {
+      "page": "empty",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-classic-dark.png",
+      "sha256": "7b96ebbd7c9540e127a532551690e01411528f8f99d9fab648d65fa2f8f090d5"
+    },
+    {
+      "page": "empty",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-navy-dark.png",
+      "sha256": "48d403f1651219737621f14c372c8c61d70c1c72b19fa0183ff1d4bf238d63f6"
+    },
+    {
+      "page": "empty",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-country-dark.png",
+      "sha256": "797131175def686e27999c55bb37c74ccc81b4b1c2a6c5e2a4eb4adafbbc6575"
+    },
+    {
+      "page": "empty",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/empty-victorian-dark.png",
+      "sha256": "569793782fbec1943e68f1bcc63ceb25b65b90b9c5740a6717e2be6934ff342c"
+    },
+    {
+      "page": "laboratory",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-default-light.png",
+      "sha256": "dfa6e963966cf85f17b212fff5d5db8c95c2e993cbbf8bbeeab2489870412d1c"
+    },
+    {
+      "page": "laboratory",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-gothic-light.png",
+      "sha256": "7c36026cb9cd4d3d88b27d28c2ccd7c5d8635be5d8db259ef30751044348e2c3"
+    },
+    {
+      "page": "laboratory",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-chinese-light.png",
+      "sha256": "03d84593b267535bb310a6f4a217eccebd243210004bc9d79c0aa8628c42d161"
+    },
+    {
+      "page": "laboratory",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-classic-light.png",
+      "sha256": "e5e51af13e8086be850c604bad23fb979261ef88db09df683034823c382455ff"
+    },
+    {
+      "page": "laboratory",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-navy-light.png",
+      "sha256": "208bfb3f51990b0e7ff848957bb95ffdf4621c0a65fb3fd687065d1b015ac9e2"
+    },
+    {
+      "page": "laboratory",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-country-light.png",
+      "sha256": "78edd2ed9be12a2b788d55334646956afc95cab03204e31348733415405f6884"
+    },
+    {
+      "page": "laboratory",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-victorian-light.png",
+      "sha256": "afda0dcaaa9f012d227709447ac936587674e1c6aaa35155573d2711d89b77cd"
+    },
+    {
+      "page": "laboratory",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-default-dark.png",
+      "sha256": "9f14384996cf7f6356bd795cba4fc0f99bbe80d68623f89fdcb8d3af9daaa8b3"
+    },
+    {
+      "page": "laboratory",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-gothic-dark.png",
+      "sha256": "7dbebf95ce1dc7816e181a40211121e96818277af58c92e833aab41446a1a45d"
+    },
+    {
+      "page": "laboratory",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-chinese-dark.png",
+      "sha256": "148c59d25f336469f275b50e03eb4af9499da1725929ee5ec4b1d40846358398"
+    },
+    {
+      "page": "laboratory",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-classic-dark.png",
+      "sha256": "357b5dce5f88c1c562d27194563a38d6ba3f943d552d7b4e362f7ca7b95aa0e1"
+    },
+    {
+      "page": "laboratory",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-navy-dark.png",
+      "sha256": "7ebed436afcdb9b7aa039f7ff3e6dac8d1da5880dfa01b57fb275fba48ade2ed"
+    },
+    {
+      "page": "laboratory",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-country-dark.png",
+      "sha256": "32cbd607ae248f471ef7a5097d4482e50e71387713ec3a9faeacbf3193c91ecc"
+    },
+    {
+      "page": "laboratory",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/laboratory-victorian-dark.png",
+      "sha256": "0b41db893a03dd091686e13089f6d831a7593df849c04340602e746e1d9e7fc8"
+    },
+    {
+      "page": "backup",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-default-light.png",
+      "sha256": "45fdf0f1071f10f1e380562f722cb4e04365ff404d5e0ad2ddd2fd8713a89374"
+    },
+    {
+      "page": "backup",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-gothic-light.png",
+      "sha256": "bc065d32ee61b65dce4b4dd05168d6de363bc66a169a65ce0a393a8338a894cc"
+    },
+    {
+      "page": "backup",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-chinese-light.png",
+      "sha256": "f1394d9fcbb2284e9aa457d2b278baabfad266819b091148c06357027e1c6a64"
+    },
+    {
+      "page": "backup",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-classic-light.png",
+      "sha256": "1c0b50fa7400191d5a1ae1d81db2c2e19bbecb35426456edfb58bd4dba9ddca5"
+    },
+    {
+      "page": "backup",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-navy-light.png",
+      "sha256": "0e2d1e978c60badd7a6a20f31ebfb5eda4e8d5d4096f736ecf7cc10d99a0ce76"
+    },
+    {
+      "page": "backup",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-country-light.png",
+      "sha256": "98d031e6e2b71665aff7fd81248c264aad88b40c6b2e9fcd3af9db9249a60278"
+    },
+    {
+      "page": "backup",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-victorian-light.png",
+      "sha256": "367108adfae920f0d4389160b0adf188fdc32522f3c6a167c93157e1ba4536e8"
+    },
+    {
+      "page": "backup",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-default-dark.png",
+      "sha256": "f149f94cfdc9517fc000e587222178c94c3ef229f78999cb5aac72e40cc0b789"
+    },
+    {
+      "page": "backup",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-gothic-dark.png",
+      "sha256": "08d72b924d68fce15739b6c703ef7d9d1fe11e1ca99fcc943b86dbab35a8ded7"
+    },
+    {
+      "page": "backup",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-chinese-dark.png",
+      "sha256": "f7b90e41ae119328ebc909b61d94786ed0ead1878992b3326703111d4153b458"
+    },
+    {
+      "page": "backup",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-classic-dark.png",
+      "sha256": "73ee1fb826ddb27cd481a1947b162e9586c18f0ecb496e24154b778953dfb52c"
+    },
+    {
+      "page": "backup",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-navy-dark.png",
+      "sha256": "ce871a9a3784635928ad2d8526239cc91ffd0927d4b50f47b28ea038bf02a568"
+    },
+    {
+      "page": "backup",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-country-dark.png",
+      "sha256": "d89f5500abe2713298a85c5482dbc772dd6ca17791f3f2acb4a1f03e068b1012"
+    },
+    {
+      "page": "backup",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/backup-victorian-dark.png",
+      "sha256": "66954d13e8a0bea4fd6b0c8bf7fb27efb77e15c1d70a5fbb1ce8e5573ef8702b"
+    },
+    {
+      "page": "task",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-default-light.png",
+      "sha256": "3f12530a8d48972d823e9913e5678da8049dabad827cbf37fcef9b889609674e"
+    },
+    {
+      "page": "task",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-gothic-light.png",
+      "sha256": "e6c1a5bcabe21a31763159cc7083feb725aba3d35b955d5204ca12ddd8912b42"
+    },
+    {
+      "page": "task",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-chinese-light.png",
+      "sha256": "8e132ca37d7e47175140c27e0cdb6143522538677300385215be1f58bc536b8c"
+    },
+    {
+      "page": "task",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-classic-light.png",
+      "sha256": "9e79994196ae61f7507070493a5239ccf5eba39665565b05dbd6a75a1882a838"
+    },
+    {
+      "page": "task",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-navy-light.png",
+      "sha256": "0e8e8e819449cf945a0fac2601e027fb648db97fabd8fee81e0096443b3b52d7"
+    },
+    {
+      "page": "task",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-country-light.png",
+      "sha256": "3b88647738242dcc9e04dc2366dd611ad1401bf09558926712e8ec5e2eec42e1"
+    },
+    {
+      "page": "task",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-victorian-light.png",
+      "sha256": "c0122f12ba841a517d92d459f307d7efcf5fd7581deca72299e6c45ee4315a7b"
+    },
+    {
+      "page": "task",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-default-dark.png",
+      "sha256": "545982ce4ab9b3231f7a7d0e5439064dd7e63c25954de02696bbde91b68065b6"
+    },
+    {
+      "page": "task",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-gothic-dark.png",
+      "sha256": "591ec305d53dd3f22857b51914237bb253d150792ba474fbbf7e5194982ac404"
+    },
+    {
+      "page": "task",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-chinese-dark.png",
+      "sha256": "db13989c38a3c2711081afe3e82c0ff66932e6e295de6085d4dc6e70ae51e577"
+    },
+    {
+      "page": "task",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-classic-dark.png",
+      "sha256": "06edb0ffa3608361f9e120d2c5084370c5238c7030732c106825f5f127e5af4c"
+    },
+    {
+      "page": "task",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-navy-dark.png",
+      "sha256": "cbe2da8f6667e9cb56da164bd8656f47aba4dd25127d64f90f75ecdda59bf45f"
+    },
+    {
+      "page": "task",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-country-dark.png",
+      "sha256": "7b2c3b35326089c07e53a0972fde18b5834de0f508edab2a3ac7f33aced1e6a3"
+    },
+    {
+      "page": "task",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/task-victorian-dark.png",
+      "sha256": "befbbd89f79aee4315e37b9702ded4b82ed98c5a634394be827fda98166b6563"
+    },
+    {
+      "page": "profile",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-default-light.png",
+      "sha256": "76d8b99985d6c026842f1a37f04bbdca8c17adee67eba16faf87674846f5ee29"
+    },
+    {
+      "page": "profile",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-gothic-light.png",
+      "sha256": "143e5212f524f11d4cd329f6be0322810fc93923cad5f127578000176910543e"
+    },
+    {
+      "page": "profile",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-chinese-light.png",
+      "sha256": "18ebc4b35193c6d0194c41c08543db78fa2ff50fb8ecb2fcb408b473ded2d00b"
+    },
+    {
+      "page": "profile",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-classic-light.png",
+      "sha256": "b4b7453a83bfe85d95e01c54aa84fd02b5da9b140cd21860f6468bfbe33e629a"
+    },
+    {
+      "page": "profile",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-navy-light.png",
+      "sha256": "7875b354d301024ef9b18ca609e642bb398bb23948fdc6b07c5e7342f7247e8e"
+    },
+    {
+      "page": "profile",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-country-light.png",
+      "sha256": "cec0875f4d9d9e66021acf3690779f65b32e818cfb35aa28a5fd51591bcfc5c9"
+    },
+    {
+      "page": "profile",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-victorian-light.png",
+      "sha256": "4014cf7611ea6dda6b6e5271921991032944b25b1cfb605b108e23244c08cb58"
+    },
+    {
+      "page": "profile",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-default-dark.png",
+      "sha256": "b0765ccc9e444b6a7daab2dfeaf98002fe57fa5054ee415029ecfa4cbe98159d"
+    },
+    {
+      "page": "profile",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-gothic-dark.png",
+      "sha256": "1a4de65d8fc7055117d7763dec0dfba3b905a3b94aaccb26991a71e38f467ec2"
+    },
+    {
+      "page": "profile",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-chinese-dark.png",
+      "sha256": "f8847bf44d5d62ad2ab44aae592fcdec4e06e46a5d766fa98a89c511c89facae"
+    },
+    {
+      "page": "profile",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-classic-dark.png",
+      "sha256": "9fbf2542f78fc3edf3f9c258eb50e74e903a1402764aebaaecaeb35be3ccfcd3"
+    },
+    {
+      "page": "profile",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-navy-dark.png",
+      "sha256": "2e18b51c3e3f6a20f3545ef02d3709188131c6e70f8086413763f29db09362b7"
+    },
+    {
+      "page": "profile",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-country-dark.png",
+      "sha256": "d07408efd4cdcb29e519062531fb8201338591a6708fa51d1a56a79a1f9a94da"
+    },
+    {
+      "page": "profile",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-experience-native/profile-victorian-dark.png",
+      "sha256": "4fba339724d94d7828d9fd98fa3a1454988762dbb14f0bbf15397dd235de9066"
+    },
+    {
+      "page": "price",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/DEFAULT-light-price.png",
+      "sha256": "be9a0eac8c1491bed6a6ccf835d1b98f11aec3b0c653fb08e2e5ee1b82eedaed"
+    },
+    {
+      "page": "price",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/GOTHIC-light-price.png",
+      "sha256": "d0f9d6944f4ce84cb4588bfc86923cc1d4654e7b420452ff174323f54e14d4a7"
+    },
+    {
+      "page": "price",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CHINESE-light-price.png",
+      "sha256": "482a8f4e78dc11baf5d4bdc6a152e1d3a5b0b5e072cce4d7f8331bed4c6d46f7"
+    },
+    {
+      "page": "price",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CLASSIC-light-price.png",
+      "sha256": "0fd4d550f1aec961fdf0aa772386f4cbc8d43e618e851797930b471d5b7dfb32"
+    },
+    {
+      "page": "price",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/NAVY-light-price.png",
+      "sha256": "98813ce47f86f939106feb4cf07d0f985f7551609ff98d95d76c39011332b8f2"
+    },
+    {
+      "page": "price",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/COUNTRY-light-price.png",
+      "sha256": "c367c55284c4bcfeafc518bc9963019f0a2e6777092c54af141c9f24af1f42a1"
+    },
+    {
+      "page": "price",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/VICTORIAN-light-price.png",
+      "sha256": "fd58fbb4d21ef504491e0b5293e076669f5e82afaf46d9ad6e6d08518a92a63e"
+    },
+    {
+      "page": "price",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/DEFAULT-dark-price.png",
+      "sha256": "77434f8b6e6f75e74e6774f1cd8f34116c6d29c184e7c143ddd0c32f50a78f43"
+    },
+    {
+      "page": "price",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/GOTHIC-dark-price.png",
+      "sha256": "34906e4cc5554a482756c60b2ea428362853fbf3a2381fd8e309e3f0336bf770"
+    },
+    {
+      "page": "price",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CHINESE-dark-price.png",
+      "sha256": "6559d1d6b3553711b4d17dda27e0a92f0760ede2a6cee0739b86928e80cbaacd"
+    },
+    {
+      "page": "price",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CLASSIC-dark-price.png",
+      "sha256": "ebcf7f871ffa7cec226d184e15ed7886e1c0eec32c65740b3ed6f6f6d8785381"
+    },
+    {
+      "page": "price",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/NAVY-dark-price.png",
+      "sha256": "d312fd8d3e21439759568c83b22bdc6fe7a8d3866ef9ab9ada3632c9009d9bf1"
+    },
+    {
+      "page": "price",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/COUNTRY-dark-price.png",
+      "sha256": "b352f0789f4fb0d48dd5f33f74686060e0ad8d7be1ecafeb8ae796bec164c8f6"
+    },
+    {
+      "page": "price",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/VICTORIAN-dark-price.png",
+      "sha256": "ee36e888b5c46d1db4deda0ca9da92eb5fca58c9493946f109c8d574938a932d"
+    },
+    {
+      "page": "plan",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/DEFAULT-light-plan.png",
+      "sha256": "264f2d2d3fa16140c1c7fbf958ee4808f0a001b16717f86c7251418ba779be59"
+    },
+    {
+      "page": "plan",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/GOTHIC-light-plan.png",
+      "sha256": "05377a908e8aa101d1f266e1a9259ac70eda46ba3d370567775054be97418532"
+    },
+    {
+      "page": "plan",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CHINESE-light-plan.png",
+      "sha256": "660fb5feffd98ccdc42f49c2817665dc5bf4e214f7a04d675215d743964c31b2"
+    },
+    {
+      "page": "plan",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CLASSIC-light-plan.png",
+      "sha256": "6d05ab8653acd8f3ff1789e53f7325b11c82888730e7ca4efb0f7ef9e88ff691"
+    },
+    {
+      "page": "plan",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/NAVY-light-plan.png",
+      "sha256": "58a849438584cf60c23b40c74887d3b2000370b67390b53697a2481ad80ef1f1"
+    },
+    {
+      "page": "plan",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/COUNTRY-light-plan.png",
+      "sha256": "688c60bbb3b8b076dcb80cece672d2da730dfff8d76fb26265626918aa73c39f"
+    },
+    {
+      "page": "plan",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/VICTORIAN-light-plan.png",
+      "sha256": "6a09e14932d81284078ed17a4f1fd53bba9b48cbabc281f5b9ea7b9cd4bf1ede"
+    },
+    {
+      "page": "plan",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/DEFAULT-dark-plan.png",
+      "sha256": "469b7ea82ef254788ba92ca6e4581ea8cffef0bda7550778373d159db8dc97b9"
+    },
+    {
+      "page": "plan",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/GOTHIC-dark-plan.png",
+      "sha256": "3033e7134531997820712b37a8f7e48fc71cde4b191ca34dcdefa735029b85bb"
+    },
+    {
+      "page": "plan",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CHINESE-dark-plan.png",
+      "sha256": "759ad3611acd4d3e3d3248add8986efc08988d1ea7b16ed478fdc050714ae786"
+    },
+    {
+      "page": "plan",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/CLASSIC-dark-plan.png",
+      "sha256": "1f685b5049d2568d76408f0906b00ccb583395492bd055b9e72f80cfb54762ac"
+    },
+    {
+      "page": "plan",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/NAVY-dark-plan.png",
+      "sha256": "2e4cdcde34ac159c508bee09e27ec773f5f1aa807589f72b75d89c3fe118a151"
+    },
+    {
+      "page": "plan",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/COUNTRY-dark-plan.png",
+      "sha256": "b5c690f15db91dbabd61103d604d40983e8b4f5f7cd840aa767ee61bb98f565b"
+    },
+    {
+      "page": "plan",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/VICTORIAN-dark-plan.png",
+      "sha256": "f74c222c4cfe31c59ea9e3af5c9dc99eaba22b788a72b71ac51bd6f7582f06ea"
+    },
+    {
+      "page": "payment",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-default-light.png",
+      "sha256": "044f6361afa2b1900b60d8c5fbe38404e05cae86ca717a14386a97bc603a5f40"
+    },
+    {
+      "page": "payment",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-gothic-light.png",
+      "sha256": "c4f5f2a4de337749e3cf08ae8f031e00382ce4f80a3360a80f27eaa249bb986a"
+    },
+    {
+      "page": "payment",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-chinese-light.png",
+      "sha256": "665a6ba9299463213b455103a9d368bb681c2b4e24cdebfc04b9661f9f93b23a"
+    },
+    {
+      "page": "payment",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-classic-light.png",
+      "sha256": "b9806cc97dcab2fbc1518dbf017c7990137427dffbfcc5319568e1147d072210"
+    },
+    {
+      "page": "payment",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-navy-light.png",
+      "sha256": "13728dcf7876dbbf2393c092ef8a9c63abcd077dcb7525c649baadb1611d6376"
+    },
+    {
+      "page": "payment",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-country-light.png",
+      "sha256": "fc038c98669574182a6a62efbab72bc4a202825f5a0a24705b08dc9843ae0def"
+    },
+    {
+      "page": "payment",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-victorian-light.png",
+      "sha256": "60a568f0153d0477bbcbfe3f5876e0c66384cbf45426362ce0fa398b7b946d35"
+    },
+    {
+      "page": "payment",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-default-dark.png",
+      "sha256": "ec24f90cf0b57c4a37ac77149b240e7a25f744245bf9567a3e98f8edcfed3bd8"
+    },
+    {
+      "page": "payment",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-gothic-dark.png",
+      "sha256": "5d9354d5722d0b0718227a914593b16ee48958168c900727b6a8972efe0cb8fc"
+    },
+    {
+      "page": "payment",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-chinese-dark.png",
+      "sha256": "9cef5a0652eb9bf0f0a294026fc333e2431496608a1a9d78a112fc7b981444dc"
+    },
+    {
+      "page": "payment",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-classic-dark.png",
+      "sha256": "96b1c33afae3241f17e908bd5838557787948f107de6844703a609e92cf386f6"
+    },
+    {
+      "page": "payment",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-navy-dark.png",
+      "sha256": "7cd2b9fe7d0148bef21dc855b863d8df51fe0dd0571bd01db8bacb35ed7c8f10"
+    },
+    {
+      "page": "payment",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-country-dark.png",
+      "sha256": "e843ba48aae8c883c208c38b0171fa6c17b9c697fed615f524a0347feebf4a19"
+    },
+    {
+      "page": "payment",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/daily-price-tasks/payment-victorian-dark.png",
+      "sha256": "46cbae7e3ce8ad920fbbb3d4e48eee02b3b5c8538f4453d528c19ed917a7c792"
+    },
+    {
+      "page": "tryon",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/default-light.png",
+      "sha256": "b49e076b1dc4badcb635ad9f165b82a72170b193cb565143394ca7528f854494"
+    },
+    {
+      "page": "tryon",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/gothic-light.png",
+      "sha256": "8e30cc29aa3512502e92a70b55dc76c4d61dcd82db94d45929dcc9a4e361351e"
+    },
+    {
+      "page": "tryon",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/chinese-light.png",
+      "sha256": "01b3845f092891077f5c2b6d64dd4c98914b35dbd09e90859613550775713f53"
+    },
+    {
+      "page": "tryon",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/classic-light.png",
+      "sha256": "e821e4eed855fc9b57895929b29eb5e659c26123d0608579dc5711c8470f5740"
+    },
+    {
+      "page": "tryon",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/navy-light.png",
+      "sha256": "4b8f0f64d3f3374ed00e770663538278dfba2b987a3bb1942ebfd956dd8baf47"
+    },
+    {
+      "page": "tryon",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/country-light.png",
+      "sha256": "5a2b7da617be67d9cda722c2f08d281e05528e2a2c51093561819447d2f12668"
+    },
+    {
+      "page": "tryon",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/victorian-light.png",
+      "sha256": "1507276d5c860411f41bca698b8a5fee58b9eab63860d2a3538a0dbc5b16aa89"
+    },
+    {
+      "page": "tryon",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/default-dark.png",
+      "sha256": "a55dc0744a98196a55b0df034f229048312ad1a1ef1533a4ba9bbb6ada97a690"
+    },
+    {
+      "page": "tryon",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/gothic-dark.png",
+      "sha256": "d59da010c55a132cd3b586385dafd5ede912fe9339c8250d1da5705fdfdcd650"
+    },
+    {
+      "page": "tryon",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/chinese-dark.png",
+      "sha256": "3a14c57ff48e47bcd4b06fdde74af4c91ed081e70192cd275d0df1352f413e95"
+    },
+    {
+      "page": "tryon",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/classic-dark.png",
+      "sha256": "c301e07897571b477a6d208b205b3a8748ba0cdee954a8d9b2c871406db346ca"
+    },
+    {
+      "page": "tryon",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/navy-dark.png",
+      "sha256": "4d1c1be15000812904f17619f4ca8562d97250be618e1388dc19d3a2bc0068dd"
+    },
+    {
+      "page": "tryon",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/country-dark.png",
+      "sha256": "731245662239d9c29d92189381258fd71643bc06b3da0ac35f141a07215a0a77"
+    },
+    {
+      "page": "tryon",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/try-on-ui-contact-sheets/victorian-dark.png",
+      "sha256": "d4959622b42bf8b89213a30d1a75b2beccbb932486edfbc83fa7f9be4f8f2efc"
+    },
+    {
+      "page": "storage",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/default-light-320dp-1x.png",
+      "sha256": "312bcca32310b98532feec6aa1e98d56e1475c6c11a78ab2d0c0686840d8394f"
+    },
+    {
+      "page": "storage",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/gothic-light-320dp-1x.png",
+      "sha256": "886d9d1c6887339e2ba148ff08a8383dce1c2d0ca045307bdaa5e9d3d1ede7a7"
+    },
+    {
+      "page": "storage",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/chinese-light-320dp-1x.png",
+      "sha256": "c1816af779ba8864e03b1414108b78dff8ba93d7fa282e26c77c22953e1459fe"
+    },
+    {
+      "page": "storage",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/classic-light-320dp-1x.png",
+      "sha256": "02f1d29a3bfce11413d146e995f5aef8c3738d749402274663506efc52eab3b8"
+    },
+    {
+      "page": "storage",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/navy-light-320dp-1x.png",
+      "sha256": "d3925306cfcffd986091a3486959973a109509f5d03c750cade7d97df5a5f773"
+    },
+    {
+      "page": "storage",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/country-light-320dp-1x.png",
+      "sha256": "c4ea0f6e9d589079276915e205a60a5bbb13c9036f8a6c74774d585a9d29a124"
+    },
+    {
+      "page": "storage",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/victorian-light-320dp-1x.png",
+      "sha256": "8a80e5129ffd91d1da4526a107a2ccd6fd7180d09b4f5c348adfe38310793ae5"
+    },
+    {
+      "page": "storage",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/default-dark-320dp-1x.png",
+      "sha256": "5ae61f531847a603fe49a41f4fdff58bfeafe7fc8bb88f9ff78f10618c86a995"
+    },
+    {
+      "page": "storage",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/gothic-dark-320dp-1x.png",
+      "sha256": "c7c2dc59810b9b28935924b7c9d4a0d35d2be625c1ac4e56faf5d7080752d7f1"
+    },
+    {
+      "page": "storage",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/chinese-dark-320dp-1x.png",
+      "sha256": "d6b63aaec50dcb0d1e17d08136ce5eb251f7a24b6ec4cb02182af4b9b6d440d2"
+    },
+    {
+      "page": "storage",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/classic-dark-320dp-1x.png",
+      "sha256": "bdec5c0217f288538fe70386d60289323f1ae0aae338f649c7e5ffc0b510af13"
+    },
+    {
+      "page": "storage",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/navy-dark-320dp-1x.png",
+      "sha256": "35837070794c94f999ff982bbf049f9ed24c2801a2871e1b81cfbb5848dae0a0"
+    },
+    {
+      "page": "storage",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/country-dark-320dp-1x.png",
+      "sha256": "53eab862e1d5f450bfc6a7dd206b9f602efa0e66eff14fbe26ba28d533809ac9"
+    },
+    {
+      "page": "storage",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/storage-root-action-screenshots/bfc55c02-d7c6-4683-a117-cf281f697628/victorian-dark-320dp-1x.png",
+      "sha256": "3db9af0bdc9d32aa55fd7028ba30fbffc9dcb0abfa7f46f2e45cef84c524ed82"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "DEFAULT",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/default-light-small.png",
+      "sha256": "aacdd3a65bc77ff40590104fcd25f4022f1f1ae5c994e16b5e09f719c23a8d54"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "GOTHIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/gothic-light-small.png",
+      "sha256": "c6700aa8e1a8271d17b6ee9e9fa8ee8db4817ce2d8cebad86641492af53ffd34"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "CHINESE",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/chinese-light-small.png",
+      "sha256": "fb0fed27c7270741e787a7df286c6116e6832b2f6aeac3b873610b4c237f72e0"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "CLASSIC",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/classic-light-small.png",
+      "sha256": "c227cbcf7f82cc910acf01403445babcf6c5c0eb05b7947a3ae58744b979f158"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "NAVY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/navy-light-small.png",
+      "sha256": "240335144bec705bd1bdd3a1f7a68f3233d2ebb19c24f400d2cc59ec965db63e"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "COUNTRY",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/country-light-small.png",
+      "sha256": "c633834aef99b4f6e59897bb7c703123a8d54b25a1625dc0145b0ef9469f4229"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "VICTORIAN",
+      "mode": "light",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/victorian-light-small.png",
+      "sha256": "25834b6953ef3edf51a5d05d9b594368e0514473773560887f3bd8a798ba3132"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "DEFAULT",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/default-dark-small.png",
+      "sha256": "db621f072a26647013c32d661b64835568369896e60829ca5f06627122cbedf9"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "GOTHIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/gothic-dark-small.png",
+      "sha256": "860e975fbddb09a6974f7f722c2515cea9d7e150d6711729b71879aca8308439"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "CHINESE",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/chinese-dark-small.png",
+      "sha256": "08fd72c0eebc93f47add9050c42661bf30fb6cbe80f8b6720bf38a30c9000ea0"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "CLASSIC",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/classic-dark-small.png",
+      "sha256": "023ec2584c4bca17427da4da8012a9a49b6bad5dcfed4295d92099889dda4e7a"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "NAVY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/navy-dark-small.png",
+      "sha256": "173f6930aeb0b865ffc52df0f72ab2bcfd95013776f34dcec265a866cd41a801"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "COUNTRY",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/country-dark-small.png",
+      "sha256": "d982a129b6c5aa2919e9b53bc0177bc0efe819b18cc63c2e6922982224740e0f"
+    },
+    {
+      "page": "navigation-small",
+      "skin": "VICTORIAN",
+      "mode": "dark",
+      "source": "artifacts/releases/2.67.0/native/creative-navigation-native/victorian-dark-small.png",
+      "sha256": "3762d297e8f066cf5e9e1a0f7e7f0cc01bd5d7d0e43640ec3bcb328e73e851df"
+    }
+  ]
+}

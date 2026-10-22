@@ -119,6 +119,13 @@ class TryOnScreenTest {
         }
     }
 
+    private fun openService() {
+        compose.onNodeWithTag("tryOnWorkspace").performScrollToNode(hasText("更换服务") or hasText("收起"))
+        if (compose.onAllNodesWithText("更换服务").fetchSemanticsNodes().isNotEmpty()) {
+            compose.onNodeWithText("更换服务").performClick()
+        }
+    }
+
     private fun workspace(text: String) {
         compose.onNodeWithTag("tryOnWorkspace").performScrollToNode(hasText(text))
     }
@@ -224,7 +231,7 @@ class TryOnScreenTest {
             workspace("穿戴要求")
             compose.onNodeWithTag("tryOnInstructions").performTextClearance()
             compose.onNodeWithTag("tryOnInstructions").performTextInput("BNT 戴靠后，露出刘海；衬衫掖进裙腰。")
-            compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("核对输入与费用").assertIsDisplayed().assertIsEnabled()
             compose.runOnIdle { keyboard?.hide() }
             compose.waitForIdle()
             workspace("穿戴要求")
@@ -236,11 +243,11 @@ class TryOnScreenTest {
         compose.onNodeWithTag("tryOnInstructions").performClick()
         compose.onNodeWithTag("tryOnInstructions").performTextInput(" ")
         compose.waitForIdle()
-        compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithText("核对输入与费用").assertIsDisplayed().assertIsEnabled()
         val ime = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
         File(output, "small-large-font-keyboard.png").outputStream().use { ime.compress(Bitmap.CompressFormat.PNG, 100, it) }
         compose.runOnIdle { keyboard?.hide() }
-        compose.onNodeWithText("生成试衣图").performClick()
+        compose.onNodeWithText("核对输入与费用").performClick()
         compose.onNodeWithTag("tryOnConfirmedInstructions").performScrollTo().assertTextContains("BNT 戴靠后，露出刘海；衬衫掖进裙腰。", substring = true)
         compose.onNodeWithText("确认并加入任务").assertIsDisplayed().assertHasClickAction()
         val dialog = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
@@ -278,6 +285,7 @@ class TryOnScreenTest {
         compose.runOnIdle { vm.toggleItem(11) }
         show()
         compose.onNodeWithText("配置服务密钥").performClick()
+        openService()
         workspace("API 配置")
         compose.onNodeWithText("API 配置").performClick()
         assertEquals(2, configured)
@@ -300,6 +308,7 @@ class TryOnScreenTest {
             }
             workspace("更换参考图片")
             compose.onNodeWithText("更换参考图片").assertIsDisplayed()
+            openService()
             workspace("API 配置")
             compose.onNodeWithText("API 配置").performClick()
             assertTrue(configured > 0)
@@ -387,7 +396,7 @@ class TryOnScreenTest {
         show()
         compose.onNodeWithTag("tryOnUploadSummary").assertIsDisplayed().assertTextContains("9 张", substring = true)
         compose.onNodeWithTag("tryOnUploadSummary").assertTextContains("计费", substring = true)
-        compose.onNodeWithText("生成试衣图").assertIsDisplayed().assertIsEnabled()
+        compose.onNodeWithText("核对输入与费用").assertIsDisplayed().assertIsEnabled()
     }
 
     private data class Presentation(val width: Int = 320, val scale: Float = 2f,

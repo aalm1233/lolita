@@ -26,7 +26,7 @@ class ChineseCloudParticle : AmbientParticle() {
         y = height * 0.1f + Random.nextFloat() * height * 0.4f
         cloudWidth = 160f + Random.nextFloat() * 120f
         cloudHeight = 60f + Random.nextFloat() * 40f
-        baseAlpha = 0.05f + Random.nextFloat() * 0.1f
+        baseAlpha = 0.012f + Random.nextFloat() * 0.025f
         alpha = baseAlpha
         breathPhase = Random.nextFloat() * 6.28f
         breathSpeed = 0.0002f + Random.nextFloat() * 0.0003f

@@ -162,6 +162,7 @@ fun SettingsScreen(
         ) {
             ProfileSection(
                 uiState = uiState,
+                showTotalPrice = showTotalPrice,
                 onAvatarClick = { imagePickerLauncher.launch("image/*") },
                 onNicknameClick = { showNicknameDialog = true }
             )
@@ -363,8 +364,9 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun ProfileSection(
+internal fun ProfileSection(
     uiState: SettingsUiState,
+    showTotalPrice: Boolean,
     onAvatarClick: () -> Unit,
     onNicknameClick: () -> Unit
 ) {
@@ -424,25 +426,22 @@ private fun ProfileSection(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                val formattedSpent = NumberFormat.getNumberInstance(Locale.CHINA)
-                    .apply { maximumFractionDigits = 0 }
-                    .format(uiState.totalSpent)
-
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
                         text = "服饰 ${uiState.totalItems} 件 | 套装 ${uiState.totalCoordinates} 套",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
                     )
-                    Text(
-                        text = "当前订单实付 ¥$formattedSpent",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    if (showTotalPrice) {
+                        val formattedSpent = NumberFormat.getNumberInstance(Locale.CHINA)
+                            .apply { minimumFractionDigits = 2; maximumFractionDigits = 2 }
+                            .format(uiState.totalSpent)
+                        Text(
+                            text = "当前订单实付 ¥$formattedSpent",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }

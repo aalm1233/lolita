@@ -8,6 +8,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import com.lolita.app.data.repository.AiKeySlot
+import com.lolita.app.data.repository.AiKeyStatus
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -50,15 +53,27 @@ fun LaboratoryScreen(onBack: () -> Unit, onBatch: () -> Unit, onTryOn: () -> Uni
     }) { padding ->
         LazyColumn(state = list, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("laboratory"),
             contentPadding = PaddingValues(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
-            item("batch") { LolitaCard(variant = CardVariant.FEATURED) {
-                Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                    Text("批量生成展示图", style = MaterialTheme.typography.titleLarge)
-                    Text("一次选择最多 30 件，确认后可作封面或用于试衣。", style = MaterialTheme.typography.bodyMedium)
-                    Button(onClick = onBatch, modifier = Modifier.fillMaxWidth().testTag("laboratoryBatch")) { Text("选择物品") }
+            item("configuration") { LolitaCard(Modifier.fillMaxWidth(), variant = CardVariant.COMPACT) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+                    val config = state.configuration
+                    val slot = AiKeySlot.entries.firstOrNull { it.generation != null && it.generation == config?.generation }
+                    val status = config?.keys?.get(slot)
+                    Text(when {
+                        config == null && state.loading -> "正在检查本机图像配置…"
+                        config == null -> "本机图像配置暂时无法读取"
+                        status == AiKeyStatus.CONFIGURED -> "${config.generation?.label} · 本机密钥已配置"
+                        status == AiKeyStatus.UNREADABLE || slot == null -> "图像服务配置需检查"
+                        else -> "图像服务未配置"
+                    }, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                    TextButton(onClick = onConfigure) { Text("去配置") }
                 }
             } }
-            item("images") { LolitaSection("展示与试衣") {
-                row { LaboratoryAction("虚拟试衣", "预览搭配与查看历史", IconKey.Outfit, onTryOn) }
+            item("batch") { LaboratoryPurposeCard("批量生成展示图", "整理商品图，用作封面或试衣。一次最多 30 件。",
+                "选择物品", "laboratoryBatch", onBatch, tryOn = false) }
+            item("try-on") { LaboratoryPurposeCard("虚拟试衣", "先选人物，再选这次要穿的物品。",
+                "开始搭配", "laboratoryTryOn", onTryOn, tryOn = true) }
+            item("images") { LolitaSection("更多工具") {
                 row { LaboratoryAction("我的模特", "用照片或身体参数创建", IconKey.Outfit, onModels) }
                 row { LaboratoryAction("假发头模图", "选择假发与头模，生成佩戴预览", IconKey.Image, { wigs = true }) }
             } }
@@ -86,6 +101,32 @@ fun LaboratoryScreen(onBack: () -> Unit, onBatch: () -> Unit, onTryOn: () -> Uni
                 }
             }
         }, confirmButton = { TextButton(onClick = { wigs = false }) { Text("返回") } })
+    }
+}
+
+@Composable
+private fun LaboratoryPurposeCard(title: String, description: String, action: String, tag: String,
+    onClick: () -> Unit, tryOn: Boolean) {
+    val skin = LolitaSkin.current
+    LolitaCard(Modifier.fillMaxWidth().skinClickable(onClick = onClick)) {
+        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingLarge)) {
+                if (tryOn) ImageFrame(Modifier.width(64.dp)) {
+                    LolitaShimmerImage(model = "file:///android_asset/tryon/model.png", contentDescription = "内置试衣人物用途示意",
+                        contentScale = ContentScale.Fit, modifier = Modifier.fillMaxWidth().height(88.dp), circularRevealEnabled = false)
+                } else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                    SkinIcon(IconKey.Outfit, Modifier.size(38.dp), tint = MaterialTheme.colorScheme.primary)
+                    SkinIcon(IconKey.ArrowForward, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    SkinIcon(IconKey.Image, Modifier.size(38.dp), tint = MaterialTheme.colorScheme.primary)
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                    Text(title, style = MaterialTheme.typography.titleMedium)
+                    Text("用途示意", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            Text(description, style = MaterialTheme.typography.bodyMedium)
+            Button(onClick = onClick, modifier = Modifier.fillMaxWidth().testTag(tag)) { Text(action) }
+        }
     }
 }
 

@@ -2,6 +2,15 @@ package com.lolita.app.ui.screen.settings
 
 import androidx.compose.ui.graphics.Color
 import android.net.Uri
+import android.content.Intent
+import android.provider.OpenableColumns
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import com.lolita.app.ui.screen.common.LolitaSection
+import com.lolita.app.ui.theme.LolitaSkin
+import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -29,6 +38,14 @@ import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 import com.lolita.app.ui.screen.common.LolitaCard
 
+enum class BackupExportFormat(val title: String, val mimeType: String, val summary: String) {
+    ZIP("完整备份 · ZIP", "application/zip", "包含记录和图片"),
+    JSON("数据备份 · JSON", "application/json", "不含图片"),
+    CSV("表格导出 · CSV", "text/csv", "仅供查看，不能恢复")
+}
+
+data class BackupExportResult(val uri: Uri, val fileName: String, val format: BackupExportFormat)
+
 data class BackupRestoreUiState(
     val isExporting: Boolean = false,
     val isImporting: Boolean = false,
@@ -36,51 +53,63 @@ data class BackupRestoreUiState(
     val message: String? = null,
     val preview: BackupPreview? = null,
     val pendingImportUri: Uri? = null,
-    val showConfirmDialog: Boolean = false
-)
+    val showConfirmDialog: Boolean = false,
+    val lastExport: BackupExportResult? = null
+) {
+    val busy: Boolean get() = isExporting || isImporting || isPreviewing || showConfirmDialog
+}
 
-class BackupRestoreViewModel : ViewModel() {
-    private val backupManager: BackupManager = AppModule.backupManager()
+class BackupRestoreViewModel(
+    private val backupManager: BackupManager = AppModule.backupManager(),
+    private val exportName: suspend (Uri) -> String? = { uri ->
+        withContext(Dispatchers.IO) {
+            AppModule.context().contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use {
+                if (it.moveToFirst()) it.getString(0) else null
+            }
+        }
+    }
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BackupRestoreUiState())
     val uiState: StateFlow<BackupRestoreUiState> = _uiState.asStateFlow()
 
     private fun exportDirectory() = if (android.os.Build.VERSION.SDK_INT >= 29) "下载目录" else "应用专用下载目录"
 
-    fun exportJson() {
+    fun exportJson() = export(BackupExportFormat.JSON)
+    fun exportCsv() = export(BackupExportFormat.CSV)
+    fun exportZip() = export(BackupExportFormat.ZIP)
+
+    private fun export(format: BackupExportFormat) {
+        if (_uiState.value.busy) return
+        _uiState.value = _uiState.value.copy(isExporting = true, message = null, lastExport = null)
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
-            backupManager.exportToJson().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "JSON 数据备份已保存至${exportDirectory()}") },
-                onFailure = { _uiState.value = _uiState.value.copy(message = backupFailure(it, "备份失败，请检查存储空间后重试。")) }
-            )
-            _uiState.value = _uiState.value.copy(isExporting = false)
-        }
-    }
-    fun exportCsv() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
-            backupManager.exportToCsv().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "CSV 表格已保存至${exportDirectory()}") },
-                onFailure = { _uiState.value = _uiState.value.copy(message = backupFailure(it, "导出失败，请检查存储空间后重试。")) }
-            )
+            val result = when (format) {
+                BackupExportFormat.ZIP -> backupManager.exportToZip()
+                BackupExportFormat.JSON -> backupManager.exportToJson()
+                BackupExportFormat.CSV -> backupManager.exportToCsv()
+            }
+            result.fold(onSuccess = { uri ->
+                val name = try { exportName(uri) } catch (e: Exception) {
+                    if (e is kotlinx.coroutines.CancellationException) throw e
+                    null
+                }
+                _uiState.value = _uiState.value.copy(
+                    lastExport = BackupExportResult(uri, name ?: format.title, format),
+                    message = "${format.title}已保存至${exportDirectory()}"
+                )
+            }, onFailure = {
+                _uiState.value = _uiState.value.copy(message = backupFailure(it, "导出失败，请检查存储空间后重试。"))
+            })
             _uiState.value = _uiState.value.copy(isExporting = false)
         }
     }
 
-    fun exportZip() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isExporting = true, message = null)
-            backupManager.exportToZip().fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(message = "ZIP 完整备份已保存至${exportDirectory()}（含图片）") },
-                onFailure = { _uiState.value = _uiState.value.copy(message = backupFailure(it, "备份失败，请检查存储空间后重试。")) }
-            )
-            _uiState.value = _uiState.value.copy(isExporting = false)
-        }
+    fun openExportFailed() {
+        _uiState.value = _uiState.value.copy(message = "文件已导出，可在${exportDirectory()}查找；也可安装支持该格式的查看器后重试。")
     }
 
     fun onFileSelected(uri: Uri?) {
-        if (uri == null) return
+        if (uri == null || _uiState.value.busy) return
         _uiState.value = _uiState.value.copy(pendingImportUri = uri, isPreviewing = true)
         viewModelScope.launch {
             backupManager.previewBackup(uri).fold(
@@ -102,6 +131,7 @@ class BackupRestoreViewModel : ViewModel() {
     }
 
     fun confirmImport() {
+        if (!_uiState.value.showConfirmDialog || _uiState.value.isImporting) return
         val uri = _uiState.value.pendingImportUri ?: return
         _uiState.value = _uiState.value.copy(showConfirmDialog = false, isImporting = true, message = null)
         viewModelScope.launch {
@@ -148,39 +178,73 @@ fun BackupRestoreScreen(
     LaunchedEffect(state.message) {
         state.message?.let { snackbar.showSnackbar(it); viewModel.clearMessage() }
     }
-    Scaffold(containerColor = Color.Transparent, topBar = {
-        GradientTopAppBar(title = { Text("数据备份与恢复") }, navigationIcon = {
+    val context = LocalContext.current
+    Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = {
+        GradientTopAppBar(title = { Text("备份与恢复") }, navigationIcon = {
             IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) }
         })
     }, snackbarHost = { SnackbarHost(snackbar) }) { padding ->
-        val skin = com.lolita.app.ui.theme.LolitaSkin.current
-        Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(skin.spacingLarge),
-            verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
-            BackupExportOption("完整备份 · ZIP", "包含记录和图片，推荐使用", "导出完整备份", state.isExporting, viewModel::exportZip)
-            BackupExportOption("数据备份 · JSON", "不含图片；完整备份请选择 ZIP", "导出数据备份", state.isExporting, viewModel::exportJson)
-            BackupExportOption("表格导出 · CSV", "供表格查看，不用于恢复", "导出表格", state.isExporting, viewModel::exportCsv)
-            com.lolita.app.ui.screen.common.LolitaSection("恢复备份") { row {
-                Text("支持 ZIP 和 JSON。恢复成功后，当前记录将替换为备份内容。", style = MaterialTheme.typography.bodySmall)
-                Button(onClick = { picker.launch(arrayOf("application/json", "application/zip")) },
-                    enabled = !state.isImporting && !state.isPreviewing && !state.isExporting, modifier = Modifier.fillMaxWidth()) {
-                    if (state.isImporting || state.isPreviewing) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-                    Text(if (state.isPreviewing) "读取备份中…" else if (state.isImporting) "恢复中…" else "选择备份文件")
-                }
-            } }
-        }
+        BackupRestoreContent(state, viewModel::exportZip, viewModel::exportJson, viewModel::exportCsv,
+            { picker.launch(arrayOf("application/json", "application/zip")) },
+            { result ->
+                try {
+                    context.startActivity(Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(result.uri, result.format.mimeType)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    })
+                } catch (_: android.content.ActivityNotFoundException) { viewModel.openExportFailed() }
+                  catch (_: SecurityException) { viewModel.openExportFailed() }
+            }, Modifier.padding(padding).consumeWindowInsets(padding))
     }
     if (state.showConfirmDialog) state.preview?.let { BackupRestoreConfirmation(it, viewModel::confirmImport, viewModel::dismissDialog) }
 }
 
 @Composable
-private fun BackupExportOption(title: String, description: String, action: String, busy: Boolean, onExport: () -> Unit) {
-    com.lolita.app.ui.screen.common.LolitaSection(title) { row {
-        Text(description, style = MaterialTheme.typography.bodySmall)
-        Button(onClick = onExport, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
-            if (busy) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
-            Text(action)
+internal fun BackupRestoreContent(state: BackupRestoreUiState, onZip: () -> Unit, onJson: () -> Unit,
+    onCsv: () -> Unit, onRestore: () -> Unit, onOpen: (BackupExportResult) -> Unit, modifier: Modifier = Modifier) {
+    val skin = LolitaSkin.current
+    val scroll = rememberScrollState()
+    ObserveSkinScroll(scroll)
+    Column(modifier.fillMaxSize().verticalScroll(scroll).padding(skin.spacingLarge).testTag("backupContent"),
+        verticalArrangement = Arrangement.spacedBy(skin.cardGap)) {
+        LolitaSection("完整备份 · ZIP") { row {
+            Text("包含记录和图片，推荐使用", style = MaterialTheme.typography.bodyMedium)
+            Button(onClick = onZip, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) {
+                if (state.isExporting) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
+                Text(if (state.isExporting) "正在导出…" else "导出完整备份")
+            }
+        } }
+        state.lastExport?.let { result ->
+            LolitaSection("已导出") { row {
+                Text(result.fileName, style = MaterialTheme.typography.bodyMedium)
+                Text("${result.format.summary} · ${if (android.os.Build.VERSION.SDK_INT >= 29) "下载目录" else "应用专用下载目录"}",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                TextButton(onClick = { onOpen(result) }, enabled = !state.busy) { Text("查看文件") }
+            } }
         }
-    } }
+        LolitaSection("其他导出方式") {
+            row { BackupExportRow(BackupExportFormat.JSON, "导出数据备份", state.busy, onJson) }
+            row { BackupExportRow(BackupExportFormat.CSV, "导出表格", state.busy, onCsv) }
+        }
+        LolitaSection("恢复备份") { row {
+            Text("恢复成功后，当前记录将替换为备份内容。请先导出完整备份。", color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium)
+            Text("支持 ZIP 和 JSON；JSON 不含图片。", style = MaterialTheme.typography.bodySmall)
+            OutlinedButton(onClick = onRestore, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) {
+                if (state.isImporting || state.isPreviewing) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(skin.spacingMedium)) }
+                Text(if (state.isPreviewing) "读取备份中…" else if (state.isImporting) "恢复中…" else "选择备份文件")
+            }
+        } }
+    }
+}
+
+@Composable
+private fun BackupExportRow(format: BackupExportFormat, action: String, busy: Boolean, onExport: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(LolitaSkin.current.spacingSmall)) {
+        Text(format.title, style = MaterialTheme.typography.titleSmall)
+        Text(format.summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        TextButton(onClick = onExport, enabled = !busy) { Text(action) }
+    }
 }
 
 @Composable

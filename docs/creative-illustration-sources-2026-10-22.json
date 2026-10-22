@@ -1,0 +1,10 @@
+{
+  "asset": "app/src/main/assets/illustrations/empty-wardrobe.png",
+  "use": "Decorative empty wardrobe only; not user inventory, no product claim",
+  "source": "built-in image_gen, generated from text only",
+  "sourceFile": "exec-c461c752-29f6-4d64-b8ec-0e7a02c26041.png",
+  "sha256": "21bfa7b140c94dda0414b469c2f56ff4bde5d9642e6121e047c4c5fd97c60d77",
+  "rawRgbaPreserved": true,
+  "transparentBackground": true,
+  "prompt": "Use case: illustration-story\nAsset type: transparent empty-wardrobe decorative illustration for the Chinese 我的 Lolita Android wardrobe app, displayed at about180dp wide.\nPrimary request: An original delicate miniature wooden wardrobe, doors open, a single graceful ivory and dusty rose frilled lolita dress hanging from a hanger inside, a tidy little empty shelf. It is a decorative invitation to begin organizing, not a user inventory or product photograph.\nStyle/medium: refined hand-drawn watercolor and fine warm ink, fashion journal illustration, tasteful elegant feminine style, soft warm oak, muted rose and neutral cream, restrained subtle gilded hinges.\nComposition/framing: centered full wardrobe and dress, three quarter very slight perspective, square canvas with generous transparent margins, full hem and wardrobe feet visible. Strong simple silhouette readable when small. No room background or surrounding objects. Keep dress modest, no human, no face, no brand. Genuine transparent RGBA background, no white rectangle or baked checkerboard, no text, no lettering, no watermark. No floor patch, no big shadow; a tiny translucent grounding shadow only. Clear contour on both warm ivory and deep charcoal app backgrounds; avoid pale fuzzy disappearing outer edges. Do not create a UI, a phone, a logo, or an icon grid."
+}

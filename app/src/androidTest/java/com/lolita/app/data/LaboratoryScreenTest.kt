@@ -204,6 +204,7 @@ class LaboratoryScreenTest {
         compose.onNodeWithTag("settingsIcon-Laboratory", useUnmergedTree = true).assertIsDisplayed()
         screenshot("small-aligned-entry")
         compose.onNodeWithTag("laboratoryEntry").performClick()
+        compose.onNodeWithTag("laboratory").performScrollToNode(hasTestTag("laboratoryBatch"))
         compose.onNodeWithTag("laboratoryBatch").assertIsDisplayed();screenshot("small-lab")
         compose.onNodeWithTag("laboratory").performScrollToNode(hasText("API 配置"));compose.onNodeWithText("API 配置").assertIsDisplayed();screenshot("small-services")
         compose.onNodeWithTag("laboratory").performScrollToNode(hasText("假发头模图"));compose.onNodeWithText("假发头模图").performClick()

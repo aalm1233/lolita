@@ -29,6 +29,8 @@ import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
 import com.lolita.app.ui.theme.skin.animation.skinItemAppear
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
+import com.lolita.app.ui.theme.skin.component.skinClickable
+import com.lolita.app.ui.component.FullScreenImageViewer
 
 private data class NodeMoveTarget(val node: StorageNode, val roomId: Long, val parentId: Long?)
 
@@ -50,6 +52,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
     var batchTarget by remember { mutableStateOf<Pair<Long?, Long?>?>(null) }
     var addItems by remember { mutableStateOf(false) }
     var addingItemIds by remember { mutableStateOf<Set<Long>?>(null) }
+    var coverPreview by remember { mutableStateOf<String?>(null) }
     val currentNode = state.nodes.find { it.id == state.currentNodeId }
     val canCreate = !state.isUnassigned && (currentNode == null || currentNode.parentNodeId == null)
     LaunchedEffect(locationId) { viewModel.loadLocation(locationId) }
@@ -71,7 +74,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
             }
         }
     }) { padding ->
-        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding).testTag("storage-room-list"),
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("storage-room-list"),
             contentPadding = PaddingValues(skin.spacingLarge),
             verticalArrangement = Arrangement.spacedBy(skin.spacingMedium), flingBehavior = rememberSkinFlingBehavior()) {
             if (state.isLoading) {
@@ -83,28 +86,28 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                     Text("共 ${state.recordCount} 条记录（含关联小物）", style = MaterialTheme.typography.bodySmall)
                     val image = currentNode?.imageUrl ?: if (currentNode == null) state.location?.imageUrl else null
                     image?.let {
-                        ImageFrame { LolitaShimmerImage(model = it, contentDescription = "位置封面",
-                            modifier = Modifier.fillMaxWidth().heightIn(max = 200.dp).aspectRatio(1.8f)
+                        ImageFrame { LolitaShimmerImage(model = it, contentDescription = "放大位置封面",
+                            modifier = Modifier.fillMaxWidth().height(88.dp)
                                 .then(if (currentNode == null) Modifier.heroSharedElement("locationImage-$locationId") else Modifier)
-                                .clip(RoundedCornerShape(skin.cornerRadiusMedium)), contentScale = ContentScale.Crop) }
+                                .clip(RoundedCornerShape(skin.cornerRadiusMedium)).skinClickable { coverPreview = it }, contentScale = ContentScale.Crop) }
                     }
                     val description = currentNode?.description ?: state.location?.description.orEmpty()
-                    if (description.isNotBlank()) Text(description)
-                    if (currentNode != null) NodeActions(currentNode, state.isSaving,
-                        onEdit = { editNode = it }, onMove = { moveNode = it }, onDelete = { deleteNode = it })
+                    if (description.isNotBlank()) ExpandableInfo("位置说明") { Text(description) }
+                    if (currentNode != null) ExpandableInfo("管理收纳") { NodeActions(currentNode, state.isSaving,
+                        onEdit = { editNode = it }, onMove = { moveNode = it }, onDelete = { deleteNode = it }) }
                 } } }
                 item { OutlinedTextField(state.searchQuery, viewModel::updateSearch, modifier = Modifier.fillMaxWidth(),
                     label = { Text("搜索名称、品牌、分类或位置路径") }, leadingIcon = { SkinIcon(IconKey.Search) }, singleLine = true) }
                 if (!state.isUnassigned) {
                     item { OutlinedButton(onClick = { onAddItem(locationId, currentNode?.id) }, enabled = !state.isSaving,
                         modifier = Modifier.fillMaxWidth()) { Text("新增物品") } }
-                    item { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium), modifier = Modifier.fillMaxWidth()) {
+                    item { ExpandableInfo("整理收纳") {
                         if (canCreate) OutlinedButton(onClick = { addNode = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) {
                             Text(if (currentNode == null) "新增柜架 / 收纳盒" else "新增层 / 格")
                         }
-                        OutlinedButton(onClick = { addItems = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { Text("移入物品") }
+                        if (currentNode == null) TextButton(onClick = viewModel::showTemplates, enabled = !state.isSaving) { Text("添加常用收纳") }
                     } }
-                    if (currentNode == null) item { TextButton(onClick = viewModel::showTemplates, enabled = !state.isSaving) { Text("添加常用收纳") } }
+                    item { TextButton(onClick = { addItems = true }, enabled = !state.isSaving, modifier = Modifier.fillMaxWidth()) { Text("移入物品") } }
                 }
                 if (state.childNodes.isNotEmpty()) {
                     item { SectionHeader(title = if (currentNode == null) "柜架与收纳盒" else "层与格") }
@@ -121,7 +124,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
                                     }
                                     SkinIcon(IconKey.KeyboardArrowRight)
                                 }
-                                NodeActions(node, state.isSaving, { editNode = it }, { moveNode = it }, { deleteNode = it })
+                                ExpandableInfo("管理${node.name}") { NodeActions(node, state.isSaving, { editNode = it }, { moveNode = it }, { deleteNode = it }) }
                             }
                         }
                     }
@@ -183,6 +186,7 @@ fun LocationDetailScreen(locationId: Long, onBack: () -> Unit, onItemClick: (Lon
         { addingItemIds = null }) { viewModel.addItems(ids) { addingItemIds = null } } }
     if (state.showTemplates) StorageTemplateDialog(state.locations, state.templates, locationId, state.isSaving,
         viewModel::hideTemplates, viewModel::adoptTemplates)
+    coverPreview?.let { FullScreenImageViewer(listOf(it), onDismiss = { coverPreview = null }) }
 }
 
 @Composable

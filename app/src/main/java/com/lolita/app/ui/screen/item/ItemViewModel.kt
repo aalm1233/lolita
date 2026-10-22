@@ -613,6 +613,12 @@ class ItemListViewModel(
         _uiState.update { it.copy(filterFamily = family, filterGroup = null, filterCategoryId = null, filterSpecification = "") }
         refreshWardrobeFilters()
     }
+    fun clearWardrobeFilters() {
+        _uiState.update { it.copy(searchQuery = "", filterGroup = null, filterFamily = null, filterCategoryId = null,
+            filterSize = "", filterLocationId = null, filterStorageNodeId = null, filterSpecification = "",
+            filterSeason = null, filterStyle = null, filterColor = null, filterBrandId = null, filterPendingPaymentOnly = false) }
+        refreshWardrobeFilters()
+    }
     fun filterByCategory(categoryId: Long?) { _uiState.update { it.copy(filterCategoryId = categoryId) }; refreshWardrobeFilters() }
     fun filterBySize(raw: String) { _uiState.update { it.copy(filterSize = raw) }; refreshWardrobeFilters() }
     fun filterByStorage(roomId: Long?, nodeId: Long?) {

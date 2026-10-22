@@ -1,0 +1,5 @@
+Use case: illustration-story
+Asset type: a single fictional garment illustration for a Chinese wardrobe app design prototype, not a real product or brand, not a production app asset.
+Primary request: A refined original slate-blue and pale ivory Lolita JSK jumper dress, sleeveless square neckline, simple ivory shoulder bows, fitted natural waist and a full bell-shaped mid-calf skirt with delicate botanical hem embroidery and small lace panels. Full front view on an invisible form, no body or mannequin, no human. Every strap and the entire hem visible with generous margins.
+Style: highly finished watercolor fashion illustration with crisp elegant ink details, softly dimensional, realistic cloth structure but clearly illustrated. Calm dusty blue and ivory with restrained fine botanical details. Original pattern, no known brands, no logo, no letters, no text.
+Composition: one garment centered in a vertical portrait canvas. Genuine transparent RGBA background, no floor, no backdrop, no checkerboard, no watermark. No shoes, socks, hat, extra accessories, props or UI. Readable outline on both pale cream and dark charcoal backgrounds.

@@ -1,0 +1,5303 @@
+{
+  "date": "2026-10-22",
+  "scope": "Browser design prototype only; not Android application validation",
+  "browser": "155.0.8059.85",
+  "layoutCases": 392,
+  "dimensions": [
+    {
+      "width": 390,
+      "height": 844,
+      "fontScale": 1
+    },
+    {
+      "width": 320,
+      "height": 810,
+      "fontScale": 2
+    }
+  ],
+  "layoutFailures": [],
+  "dialogCases": 112,
+  "dialogs": [
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "modal": "stale",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "modal": "discard",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "modal": "duplicate",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "modal": "save-failure",
+      "pass": true
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "modal": "stale",
+      "pass": true
+    }
+  ],
+  "consoleOrAssetErrors": [],
+  "interactions": [
+    {
+      "name": "搜索缩小范围但保留5条已选",
+      "pass": true
+    },
+    {
+      "name": "筛选内取消只影响该项",
+      "pass": true
+    },
+    {
+      "name": "全选当前结果恢复该项且保留隐藏选择",
+      "pass": true
+    },
+    {
+      "name": "页面重载保留筛选选择",
+      "pass": true
+    },
+    {
+      "name": "失败文件可单独重试",
+      "pass": true
+    },
+    {
+      "name": "字段缺失直接给出阻碍且不跳页",
+      "pass": true
+    },
+    {
+      "name": "未完成金额输入在浏览器重载后保留原字符串",
+      "pass": true
+    },
+    {
+      "name": "配对确认需要用户勾选",
+      "pass": true
+    },
+    {
+      "name": "提交失败明确整批未写入",
+      "pass": true
+    },
+    {
+      "name": "示例提交进入结果",
+      "pass": true
+    },
+    {
+      "name": "续办只展示3条剩余",
+      "pass": true
+    },
+    {
+      "name": "金额开关实时隐藏摘要",
+      "pass": true
+    },
+    {
+      "name": "原物品变更提示重新比较",
+      "pass": true
+    },
+    {
+      "name": "原图以完整图片打开",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "Fixed fictional sample arithmetic; no real XLSX/parser/Room/network writes",
+    "Keyboard is a layout mockup, not real Android IME",
+    "Native Compose, TalkBack, migration, backup, process death and paid API tests not run in this design-only task"
+  ],
+  "states": [
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(66, 66, 66)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 245, 245)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 224, 224)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(224, 216, 208)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(26, 26, 26)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(208, 224, 240)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(49, 40, 31)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(229, 223, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(62, 39, 35)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 593,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": false,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 619,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "entry",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "files",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "select",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "conflict",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "mapping",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "queue",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "detail",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "pair",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "commit",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "result",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "added",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "storage",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "purchase",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "small": true,
+      "screen": "supplement",
+      "overflow": false,
+      "bad": [],
+      "mainHeight": 547,
+      "footerVisible": true,
+      "headingColor": "rgb(245, 230, 211)"
+    }
+  ],
+  "primaryButtonContrast": [
+    {
+      "skin": "sweet",
+      "dark": false,
+      "foreground": "rgb(32, 23, 37)",
+      "background": "rgb(255, 105, 180)",
+      "contrast": 6.5513886075902965
+    },
+    {
+      "skin": "sweet",
+      "dark": true,
+      "foreground": "rgb(33, 33, 33)",
+      "background": "rgb(255, 182, 217)",
+      "contrast": 9.925950895720256
+    },
+    {
+      "skin": "gothic",
+      "dark": false,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(74, 14, 78)",
+      "contrast": 14.344300939054765
+    },
+    {
+      "skin": "gothic",
+      "dark": true,
+      "foreground": "rgb(26, 26, 46)",
+      "background": "rgb(203, 160, 220)",
+      "contrast": 7.7985862806813335
+    },
+    {
+      "skin": "chinese",
+      "dark": false,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(196, 30, 58)",
+      "contrast": 5.843137711360682
+    },
+    {
+      "skin": "chinese",
+      "dark": true,
+      "foreground": "rgb(26, 20, 16)",
+      "background": "rgb(255, 152, 152)",
+      "contrast": 8.855395294944673
+    },
+    {
+      "skin": "classic",
+      "dark": false,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(114, 47, 55)",
+      "contrast": 9.645173932653824
+    },
+    {
+      "skin": "classic",
+      "dark": true,
+      "foreground": "rgb(26, 21, 21)",
+      "background": "rgb(231, 171, 182)",
+      "contrast": 9.378887826277253
+    },
+    {
+      "skin": "navy",
+      "dark": false,
+      "foreground": "rgb(32, 23, 37)",
+      "background": "rgb(74, 144, 217)",
+      "contrast": 5.189135017479272
+    },
+    {
+      "skin": "navy",
+      "dark": true,
+      "foreground": "rgb(13, 27, 42)",
+      "background": "rgb(156, 202, 255)",
+      "contrast": 10.192656843915485
+    },
+    {
+      "skin": "country",
+      "dark": false,
+      "foreground": "rgb(32, 23, 37)",
+      "background": "rgb(124, 154, 105)",
+      "contrast": 5.520201565782371
+    },
+    {
+      "skin": "country",
+      "dark": true,
+      "foreground": "rgb(31, 38, 28)",
+      "background": "rgb(180, 206, 157)",
+      "contrast": 9.063282209889449
+    },
+    {
+      "skin": "victorian",
+      "dark": false,
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(156, 37, 77)",
+      "contrast": 7.539378513243381
+    },
+    {
+      "skin": "victorian",
+      "dark": true,
+      "foreground": "rgb(26, 18, 16)",
+      "background": "rgb(242, 167, 181)",
+      "contrast": 9.640490701682415
+    }
+  ],
+  "visualReview": {
+    "boards": [
+      "main",
+      "reliability",
+      "support",
+      "details",
+      "states",
+      "skins-light",
+      "skins-dark",
+      "edge"
+    ],
+    "findingsFixed": [
+      "Scoped board headings to prevent overriding dark native title color and 2x typography",
+      "Dark date input uses dark color scheme",
+      "Small-screen financial fields are full width and amounts occupy their own line",
+      "Financial screenshots scroll to the field label instead of clipping it"
+    ],
+    "limitations": "Browser token approximations; native fonts, Haze, gestures, focus and IME still require Compose implementation validation"
+  }
+}

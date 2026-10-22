@@ -1,0 +1,284 @@
+{
+  "date": "2026-10-22",
+  "status": "Design-only assets; no production implementation",
+  "sourceBaseline": "15d2562ba7649984427593f84ad61596b3a50982",
+  "newImageGenerationCalls": 2,
+  "applicationPaidApiCalls": 0,
+  "newGeneratedAssets": [
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/art-direction.png",
+      "sha256": "194a3d861b124d84904bfe05b48de642215330634f9eb49a689c3505acf49066",
+      "bytes": 1638644,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "tool": "built-in image_gen",
+      "generationDate": "2026-10-22",
+      "originalGeneratedPath": "01a16270-b3e8-7582-aaba-8eb3a7ae5b3a/exec-46bd0912-adb7-4f32-ad34-fb505c276a36.png",
+      "promptFile": "art-direction-prompt.txt",
+      "fullPrompt": "Use case: ui-mockup\nAsset type: art-directed high-fidelity mobile Android interface concept board, three complete portrait screens side by side on a neutral warm ivory presentation background. Landscape canvas, generous gutters, no cropped screens.\nPrimary request: Design the next iteration of an existing Chinese Lolita wardrobe application, centered on reliable Taobao order importing. This is a tasteful delicate wardrobe journal, precise and highly usable, NOT an ecommerce checkout. Show three screens: selecting orders, checking one item, and a partially completed import. All UI labels Chinese. Preserve four bottom navigation labels exactly: 首页 / 穿搭 / 统计 / 个人. No extra tabs.\nStyle: refined soft blush and warm white, quiet watercolor ribbon or floral ornament restricted to top left and bottom right margins, clear opaque white cards, ink-gray reading text, muted deep rose primary controls with legible white labels. Delicate heading serif and readable sans serif body. Restrained shadows and rounded rectangles from an existing Material3 app, no giant hero illustration, no gold clutter, no fake product photos or logos. 8-point spacing and clear hierarchy.\nScreen one title: \"挑选订单\". A small saved draft label \"草稿已保存\". Compact search field \"搜索商品、店铺或订单号\", filters \"全部\" \"待核对\" \"已导入\". Two spacious order cards: fictional shop \"星月衣橱\", item \"星月花园 JSK\", subtitle \"蓝色 · M · 数量 2\"; order amount on its own full line \"订单实付 ¥310.00\", never cramped beside long shop names. Second card item \"蕾丝衬衫\" and \"白色 · S · 数量 1\", amount \"订单实付 ¥89.00\". A small line \"已选 5 条商品记录，拆为 6 条资料\". Single bottom action \"核对所选资料\".\nScreen two title: \"核对导入资料\". Compact top segmented status \"可导入 3\" / \"待核对 3\". Item heading \"星月花园 JSK\", metadata \"第 1 / 2 件 · 蓝色 · M\". Payment type chips \"全款\" \"定金\" \"尾款\". A concise source statement \"来源订单：REVIEW-001\". Clear form labels with full width amount fields: \"本件商品金额\" value \"150.00\", \"分摊邮费\" value \"5.00\", \"实际已付\" value \"155.00\". Date in own row \"实际付款日期\" and \"2026-10-01\"; a visible subtle caution \"订单时间仅供参考，请确认付款日期\". Collapsible secondary section \"物品资料\". Primary bottom action \"确认本件并继续\"; no duplicate save icons. Tiny secondary \"返回清单\".\nScreen three title: \"本次导入\". Compact check emblem, result \"已新增 3 件物品\". A clearly separate small card \"还有 3 条资料待核对\" with two rows \"定金尾款待确认\" and \"物品类型待补充\". Main button \"继续核对剩余资料\". Two secondary actions \"查看本次新增\" and \"整理收纳\". A low emphasis affordance \"返回衣橱\". Do not label incomplete processing as all finished.\nConstraints: text legible and accurate, visual quietness, source facts and uncertain values visibly distinct, no promises about actual inventory or real payment, no account login or external-service settings. This image is an artistic concept; exact functionality will be specified in an accompanying interactive prototype. Do not add English brand slogans, phone-camera hardware, platform logos or watermarks.\n",
+      "use": "Pre-implementation artistic direction only. Generated typography, generic icons and oversized success emblem are superseded by the deterministic prototype.",
+      "postProcessing": "Unmodified tool output copied byte-for-byte"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/sample-garment.png",
+      "sha256": "7a48c1cda0b40c3f5830f7fcc9900a82682cc0f89331b367980a6726e6681cd2",
+      "bytes": 2407897,
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "tool": "built-in image_gen",
+      "generationDate": "2026-10-22",
+      "originalGeneratedPath": "01a16270-b3e8-7582-aaba-8eb3a7ae5b3a/exec-f643530c-b05c-4799-b973-b49940dddc2a.png",
+      "promptFile": "sample-garment-prompt.txt",
+      "fullPrompt": "Use case: illustration-story\nAsset type: a single fictional garment illustration for a Chinese wardrobe app design prototype, not a real product or brand, not a production app asset.\nPrimary request: A refined original slate-blue and pale ivory Lolita JSK jumper dress, sleeveless square neckline, simple ivory shoulder bows, fitted natural waist and a full bell-shaped mid-calf skirt with delicate botanical hem embroidery and small lace panels. Full front view on an invisible form, no body or mannequin, no human. Every strap and the entire hem visible with generous margins.\nStyle: highly finished watercolor fashion illustration with crisp elegant ink details, softly dimensional, realistic cloth structure but clearly illustrated. Calm dusty blue and ivory with restrained fine botanical details. Original pattern, no known brands, no logo, no letters, no text.\nComposition: one garment centered in a vertical portrait canvas. Genuine transparent RGBA background, no floor, no backdrop, no checkerboard, no watermark. No shoes, socks, hat, extra accessories, props or UI. Readable outline on both pale cream and dark charcoal backgrounds.\n",
+      "use": "Fictional original slate-blue JSK illustration for design preview only; not a brand, user inventory photo or production app asset.",
+      "postProcessing": "Unmodified tool output copied byte-for-byte"
+    }
+  ],
+  "reusedAssets": [
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_country.png",
+      "sha256": "c0c8ea4ce05bf94d7ea801caa503d0b7c6f5a37b518402c827bbd3f81089ef5c",
+      "bytes": 1079977,
+      "dimensions": [
+        862,
+        1825
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_classic.png",
+      "sha256": "f857f10ab35869d44bd3f3c1f4588f57267fb222a39308d7b14e618cd75cb3d2",
+      "bytes": 869552,
+      "dimensions": [
+        887,
+        1774
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_chinese.png",
+      "sha256": "674f3e855ef2fb41c3de0cc9effc3f16d86b62d0d78ed20c570e45d9a3e29d5f",
+      "bytes": 1064130,
+      "dimensions": [
+        863,
+        1823
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_sweet.png",
+      "sha256": "12cc1554b489a5e43f73349326e9517be0e8fa1ddbcdd5a8c685b9a9d26728f3",
+      "bytes": 1283283,
+      "dimensions": [
+        862,
+        1824
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_navy.png",
+      "sha256": "65d89475ff49a617d22e4828a7478237922c3fcccdc8c7165692c3e8e3f0b9c0",
+      "bytes": 1025929,
+      "dimensions": [
+        862,
+        1825
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_gothic.png",
+      "sha256": "96abdf66a1557780f2e710fa6377baad8c9635f60541fe14d59eb55b35004e07",
+      "bytes": 950854,
+      "dimensions": [
+        820,
+        1918
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/bg_art_victorian.png",
+      "sha256": "327b2e17df32697b379c54bcbffdcc6e176eb7032def333c958961bea68a5de2",
+      "bytes": 1142797,
+      "dimensions": [
+        862,
+        1824
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "app/src/main/res/font/pacifico_regular.ttf",
+      "sha256": "5b6c0d5334a7bf77dea52b975c5a0c408878c0f7115ed5b6fb151f634b7bf701",
+      "bytes": 329380
+    },
+    {
+      "path": "app/src/main/res/font/playfair_display_regular.ttf",
+      "sha256": "861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b",
+      "bytes": 193380
+    },
+    {
+      "path": "app/src/main/res/font/cinzel_regular.ttf",
+      "sha256": "6e67a440d19a22e7a14631e7fb8efb71cdf43fde8adf040b7935ac2b38519ab0",
+      "bytes": 76640
+    },
+    {
+      "path": "app/src/main/res/font/noto_serif_sc_regular.ttf",
+      "sha256": "c358a69de3df5f423a8946a7b03e3126fb6ba116f1130a463455b4e39e1f0742",
+      "bytes": 14807636
+    },
+    {
+      "path": "app/src/main/res/font/cormorant_garamond.ttf",
+      "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
+      "bytes": 1195560
+    },
+    {
+      "path": "docs/visuals/2026-10-12-icon-personality-navigation-light.png",
+      "sha256": "f7a36d98f5e3878d0300b50b0dbf52195e4d542878a47a353cee53d958e5fb16",
+      "bytes": 69153,
+      "dimensions": [
+        906,
+        500
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/visuals/2026-10-12-icon-personality-navigation-dark.png",
+      "sha256": "fcc1e9e80b09358c5740c5d1937ece1d71d951c0cb62c32ed6ec06c46b756f01",
+      "bytes": 69435,
+      "dimensions": [
+        906,
+        500
+      ],
+      "mode": "RGBA",
+      "alphaExtrema": [
+        255,
+        255
+      ]
+    }
+  ],
+  "renderedBoards": [
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/main.png",
+      "sha256": "78d3dab0e0fbe1a4f62c1412fd1ef11576214ddfd2733fb05a9caa564e190b97",
+      "bytes": 399433,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/reliability.png",
+      "sha256": "6d905b31eb9c36aba7453cafa91f3cd21495c29a9f0809b7160bb31da485975a",
+      "bytes": 407777,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/support.png",
+      "sha256": "c57f72151372c10cf891114c1a35babb22ddd3cb759100cc0d1404ab8a065e22",
+      "bytes": 404889,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/details.png",
+      "sha256": "592d03adb652f35e88833511349ae042eb5aa0dba28cc6ea6f0fe9c2ade579fd",
+      "bytes": 425201,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/states.png",
+      "sha256": "a56a916c062d1a011ad482436b4c26c59b751875adc4ca38ac1b2e7efb0ea9b7",
+      "bytes": 457242,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/skins-light.png",
+      "sha256": "f4e127f335021df3d33647d5f654e91a8843a717e96a96b3853ccc8bd571b0f7",
+      "bytes": 825318,
+      "dimensions": [
+        1750,
+        2107
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/skins-dark.png",
+      "sha256": "9961c0b026eedaa8286bbb5623fceaee09e65333f811e22c066b2fe29dea2c14",
+      "bytes": 745808,
+      "dimensions": [
+        1750,
+        2107
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "docs/visuals/2026-10-22-order-import-design/edge.png",
+      "sha256": "996ae187b703af926dda30d4ef069c44d71c6c36a6b406a0d8260aa8ddfde5d4",
+      "bytes": 311429,
+      "dimensions": [
+        1750,
+        1166
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "rendering": "HTML/CSS/JavaScript rendered by headless Chrome with Playwright. Existing resources are referenced directly; native nav icon glyphs are sampled via CSS background positioning, not redrawn. Dark art treatment and card rendering are browser approximations, not Compose screenshots.",
+  "privacy": "All orders, brands, amounts, and garment examples are fictional. No real XLSX, user photos, account access or external product request used."
+}

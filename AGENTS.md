@@ -672,3 +672,6 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 
 - 2.66.3／140 全界面文案优化：按43路由报告精简重复解释，统一心愿／金额／拥有与类型语义，低频明细折叠、必要后果与费用常显。源码`f6f65ee5`和标签已推送；148项去重设备方法、3项JVM及Debug／提交归档clean Release通过，七皮肤浅暗、真实320dp两倍字与IME及正式页面已核对。2.66.2原签名覆盖两次启动保留中华皮肤与3份设置SHA；36项目assets／7背景RGBA与依赖／profile通过。GitHub／Gitee同一APK和校验文件匿名完整下载、SHA／HEAD及公开最高正式版本已确认；未删旧附件、未清用户数据、真实付费0次。应用内实际检查结果单独记录，不以公开接口代替。实施与回执见`docs/ui-copy-implementation-2026-10-22.md`、`docs/ui-copy-release-2.66.3-verification.json`。
+
+
+- 2.66.4／141实验室入口对齐与独立图标：源码`de28bff2`及标签已推送，实验室共用同级SettingsMenuItem文字列和内边距，七套新增独立烧瓶图标。clean Debug／提交归档clean Release、3项定向设备方法通过；52×7真实图标尺寸／tint／透明与七皮肤浅暗入口坐标、320dp两倍字／IME通过，原51键5矩阵共1,785单元与2.66.3逐像素一致。原签名2.66.3覆盖与两次启动保留中华皮肤及3份设置SHA，正式包标题／说明与属性入口左边缘均234px。36项目assets／7背景RGBA及依赖／profile、双渠道正式附件匿名完整下载／SHA／HEAD与公开最高版本通过；App实际更新检查另存回执，未删旧附件、未清用户数据、无付费生成。记录见`docs/laboratory-entry-alignment-implementation-2026-10-22.md`及`docs/laboratory-entry-release-2.66.4-verification.json`。

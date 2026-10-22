@@ -23,4 +23,4 @@
 - [x] 前置图稿、七皮肤浅暗和小屏方案。
 - [x] 数据、图片、隐私和费用边界说明。
 - [x] 实现、真实页面对照及定向测试；[实施与验收记录](../laboratory-entry-alignment-implementation-2026-10-22.md)。
-- [ ] 原签名覆盖升级、正式发布及下载校验。
+- [x] 原签名覆盖升级、正式发布及下载校验；[发布回执](../laboratory-entry-release-2.66.4-verification.json)。

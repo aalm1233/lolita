@@ -21,3 +21,6 @@ LaboratoryEntry 复用 SettingsMenuItem。标题和说明在同一 Column，和�
 Room32、36实体、备份13、原图片与引用、隐私、生成请求和费用协议不变。未修改实验室内部功能顺序或其他页面，不重跑无关账本、备份及全库图片回归。
 
 正式包从提交源码归档 clean 构建，按原签名由2.66.3覆盖并重复启动，原设置与内置素材字节、双渠道APK与校验文件及更新入口结果另见[发布回执](laboratory-entry-release-2.66.4-verification.json)。
+
+
+发布完成：原签名覆盖及3份设置SHA保全通过，正式个人页实验室与属性管理标题／说明左边缘均为234px；[正式包实拍](visuals/2026-10-22-laboratory-entry-native/release/release-personal.png)。GitHub／Gitee同一APK的匿名完整下载、SHA及HEAD通过，公开最高版本为2.66.4。应用内单次实际检查结果为「已是最新版本（当前及最新均为2.66.4）」，[实际检查截图](visuals/2026-10-22-laboratory-entry-native/release/release-manual-update-check.png)，不以公开API代替。

@@ -123,6 +123,21 @@ class LaboratoryScreenTest {
             assertEquals(peer.fontWeight,entry.fontWeight)
             assertEquals(peer.fontFamily,entry.fontFamily)
             assertEquals(16f,entry.fontSize.value)
+            fun textNode(text: String) = compose.onNodeWithText(text, useUnmergedTree = true)
+            val titleBounds = textNode("实验室").fetchSemanticsNode().boundsInRoot
+            val descriptionBounds = textNode("展示图、试衣与识图").fetchSemanticsNode().boundsInRoot
+            val peerTitle = textNode("属性管理").fetchSemanticsNode().boundsInRoot
+            val peerDescription = textNode("品牌、类型与收纳等").fetchSemanticsNode().boundsInRoot
+            assertEquals(titleBounds.left, descriptionBounds.left, 1f)
+            assertEquals(peerTitle.left, titleBounds.left, 1f)
+            assertEquals(peerDescription.left, descriptionBounds.left, 1f)
+            val icon = compose.onNodeWithTag("settingsIcon-Laboratory", useUnmergedTree = true).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val peerIcon = compose.onNodeWithTag("settingsIcon-Category", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            assertEquals(peerIcon.left, icon.left, 1f)
+            assertEquals(peerIcon.right, icon.right, 1f)
+            val subtitle = textLayout(textNode("展示图、试衣与识图")).layoutInput.style
+            val peerSubtitle = textLayout(textNode("品牌、类型与收纳等")).layoutInput.style
+            assertEquals(peerSubtitle, subtitle)
             screenshot("compact-entry-${type.name.lowercase()}-${if(night)"dark" else "light"}")
             compose.onNodeWithTag("laboratoryEntry").performClick()
             compose.onNodeWithTag("laboratoryBatch").assertIsDisplayed()
@@ -181,7 +196,14 @@ class LaboratoryScreenTest {
         val context=InstrumentationRegistry.getInstrumentation().targetContext
         Assume.assumeTrue(context.resources.configuration.screenWidthDp<=320 && context.resources.configuration.fontScale>=1.99f)
         compose.runOnIdle { page.value="personal" }
-        compose.onNodeWithTag("laboratoryEntry").performScrollTo().performClick()
+        compose.onNodeWithTag("laboratoryEntry").performScrollTo().assertIsDisplayed()
+        val title=compose.onNodeWithText("实验室",useUnmergedTree=true).fetchSemanticsNode().boundsInRoot
+        val description=compose.onNodeWithText("展示图、试衣与识图",useUnmergedTree=true).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        val peer=compose.onNodeWithText("品牌、类型与收纳等",useUnmergedTree=true).fetchSemanticsNode().boundsInRoot
+        assertEquals(title.left,description.left,1f);assertEquals(peer.left,description.left,1f)
+        compose.onNodeWithTag("settingsIcon-Laboratory", useUnmergedTree = true).assertIsDisplayed()
+        screenshot("small-aligned-entry")
+        compose.onNodeWithTag("laboratoryEntry").performClick()
         compose.onNodeWithTag("laboratoryBatch").assertIsDisplayed();screenshot("small-lab")
         compose.onNodeWithTag("laboratory").performScrollToNode(hasText("API 配置"));compose.onNodeWithText("API 配置").assertIsDisplayed();screenshot("small-services")
         compose.onNodeWithTag("laboratory").performScrollToNode(hasText("假发头模图"));compose.onNodeWithText("假发头模图").performClick()

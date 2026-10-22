@@ -8,8 +8,10 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.component.skinClickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -62,6 +65,7 @@ import com.lolita.app.data.notification.DailyOutfitReminderScheduler
 import com.lolita.app.data.notification.NotificationChannelSetup
 import com.lolita.app.data.preferences.AppPreferences
 import com.lolita.app.ui.screen.common.GradientTopAppBar
+import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -479,16 +483,21 @@ private fun NicknameEditDialog(
 }
 
 @Composable
-private fun SettingsMenuItem(
+internal fun SettingsMenuItem(
     title: String,
     description: String,
     iconKey: IconKey,
     iconTint: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    variant: CardVariant = CardVariant.DEFAULT
 ) {
+    val skin = LolitaSkin.current
     LolitaCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        variant = variant,
+        contentPadding = PaddingValues(skin.cardInnerPadding)
     ) {
         Row(
             modifier = Modifier
@@ -505,7 +514,7 @@ private fun SettingsMenuItem(
                     SkinIcon(
                         key = iconKey,
                         tint = iconTint,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(22.dp).testTag("settingsIcon-${iconKey.name}")
                     )
                 }
             }

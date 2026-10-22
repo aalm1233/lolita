@@ -1,0 +1,17 @@
+{
+  "kind": "Original pre-implementation drawings, not Compose or AI output evidence",
+  "images": [
+    {
+      "file": "skins-light.png",
+      "sha256": "3e64996240a8f15fcf78766656179ede77ef99a8347b5d63c67faffbcf5a4d63"
+    },
+    {
+      "file": "skins-dark.png",
+      "sha256": "8e49a1b0a63df450c13e6ef56c09f187be83a08dee6356cad0a815e2b0c4b994"
+    },
+    {
+      "file": "small.png",
+      "sha256": "0e198f322515501182389886251554f6671ad1c4539295ab93ffa65ccb963908"
+    }
+  ]
+}

@@ -33,6 +33,7 @@ interface ActionIcons {
 }
 
 interface ContentIcons {
+    @Composable fun Laboratory(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Star(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun StarBorder(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Image(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)

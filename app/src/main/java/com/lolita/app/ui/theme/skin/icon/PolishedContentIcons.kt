@@ -14,6 +14,7 @@ import kotlin.math.sin
 /** Object silhouettes carry the family identity at the same optical weight as navigation. */
 internal fun DrawScope.drawPolishedContentIcon(key: IconKey, style: SkinIconStyle, tint: Color) {
     when (key) {
+        IconKey.Laboratory -> drawLaboratoryIcon(style, tint)
         IconKey.Star, IconKey.StarBorder -> drawPath(
             contentStar(style), tint, style = if (key == IconKey.Star) Fill else style.stroke
         )

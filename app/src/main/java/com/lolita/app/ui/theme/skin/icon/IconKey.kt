@@ -11,5 +11,7 @@ enum class IconKey {
     // Arrow
     ArrowBack, ArrowForward, KeyboardArrowLeft, KeyboardArrowRight, ExpandMore, ExpandLess, ArrowDropDown, SwapVert, OpenInNew,
     // Status
-    CheckCircle, Warning, Error, Info, Visibility, VisibilityOff, Help
+    CheckCircle, Warning, Error, Info, Visibility, VisibilityOff, Help,
+    // Appended to preserve the original keys and contact-sheet positions.
+    Laboratory
 }

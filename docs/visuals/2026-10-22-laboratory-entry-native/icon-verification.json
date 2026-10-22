@@ -1,0 +1,135 @@
+{
+  "previous_source_tag": "v2.66.3",
+  "previous_version": "2.66.3",
+  "current_version": "2.66.4",
+  "previous_keys": [
+    "Home",
+    "Wishlist",
+    "Outfit",
+    "Stats",
+    "Settings",
+    "Add",
+    "Delete",
+    "Edit",
+    "Search",
+    "Sort",
+    "Save",
+    "Close",
+    "Share",
+    "FilterList",
+    "MoreVert",
+    "ContentCopy",
+    "Refresh",
+    "ViewAgenda",
+    "GridView",
+    "Apps",
+    "Gallery",
+    "Star",
+    "StarBorder",
+    "Image",
+    "Camera",
+    "AddPhoto",
+    "Link",
+    "LinkOff",
+    "Palette",
+    "FileOpen",
+    "CalendarMonth",
+    "Notifications",
+    "AttachMoney",
+    "Category",
+    "Location",
+    "ArrowBack",
+    "ArrowForward",
+    "KeyboardArrowLeft",
+    "KeyboardArrowRight",
+    "ExpandMore",
+    "ExpandLess",
+    "ArrowDropDown",
+    "SwapVert",
+    "OpenInNew",
+    "CheckCircle",
+    "Warning",
+    "Error",
+    "Info",
+    "Visibility",
+    "VisibilityOff",
+    "Help"
+  ],
+  "current_key_count": 52,
+  "compared_cells": 1785,
+  "all_original_drawings_unchanged": true,
+  "real_android_software_canvas": true,
+  "native_density": 2,
+  "matrices": [
+    {
+      "mode": "light",
+      "original_51_keys_in_all_7_skins_pixel_identical": true,
+      "laboratory_unique_silhouettes": 7,
+      "laboratory_cell_sha256": [
+        "6cff15b1765e9f250f5b68d07569abbbfebbee14d04488a83f85dc6ca18a98d3",
+        "43cd6496054c487abe0cae16b4bf329c4ea71f932954e71e2d1cdd6c372ee41d",
+        "5494746e332b1d97a19ce7122868c896a3fcee474a6fc647b7a393cd6d7265ce",
+        "d4109c587aa9f49fbd47f42837423d3adaad244ef24962ac061144bd614ff185",
+        "47a259dae1e919e1335dcae81a265fa366387bc91a312ddc5dd4d15ac6ccbd90",
+        "1346258ed46e9a59b58db940e22f6f98fef2bb6e9f67a813e5f5bfa79aac0a46",
+        "9c87bc261ec6d535890247f1600ebf0ed27b0a6d709b52ac41398682a6629e44"
+      ]
+    },
+    {
+      "mode": "dark",
+      "original_51_keys_in_all_7_skins_pixel_identical": true,
+      "laboratory_unique_silhouettes": 7,
+      "laboratory_cell_sha256": [
+        "c503590013ed3a4ff9d806f3d4c265ffbbd2ea0c2e2e7ae84d06a7e8ec4e73b5",
+        "cf24c6f733d87ba0a2fbef0177b1cef0e65f6cba9e3b3c9048d663d86e058415",
+        "46300a144707025e90a9dd2063d8836c03bab0127a985e4bd71b5b738325954e",
+        "4b180086d288868b774d68a78ac5b9c97c7a9b436150d3e4b8a197730c86eda9",
+        "34f2a1b4ee4413155e4bf3ad9839f2631c1013632c0af8db594febde81d000ee",
+        "8f4ecc861879ae4ebf3a584c01640adc03fde6c0b4d65fdb95da90974305985c",
+        "6582fa59ca97f147a1e91a29442a55773693f52d3ccc78dc4a7a0a3583e055f3"
+      ]
+    },
+    {
+      "mode": "18dp",
+      "original_51_keys_in_all_7_skins_pixel_identical": true,
+      "laboratory_unique_silhouettes": 7,
+      "laboratory_cell_sha256": [
+        "2ec68b337b5e71c85130c7ef76aadcc57c3140c40187d54f0347e2e8338bf927",
+        "c3e95aa510eea47d396d5ea095da819419dbc6cdc932e3bef32e8ce03191463e",
+        "64b5a5c274d8d31a5d2a51ba1eef388e3321f0a17677692545c71b5170a3d822",
+        "a31ec1a7ebd6b0f7360b40ecfa0d373d710053a3a5b5bcc8fdd0b21538308a64",
+        "8a845aa91e4d931f45ed9b8904881daf7d70547bcdf63505f5f23b1076bf8755",
+        "ab3fb687ae41aa1742bc837f076accf03ce0f5975932df94750627116bdf0c28",
+        "82a1aa7858cc184c4e663ae94696f397f70ea7fc77cb15d0e607074750b40a27"
+      ]
+    },
+    {
+      "mode": "26dp",
+      "original_51_keys_in_all_7_skins_pixel_identical": true,
+      "laboratory_unique_silhouettes": 7,
+      "laboratory_cell_sha256": [
+        "1f84dfccf619306d02faffa7b2c17877a0fac88a6f5b67c7bcdfd3e8838855fe",
+        "89b4f53b12a5bbdb3ba0fd8ce91b3b7eeaecd31292e64fbbaf7173af903acac1",
+        "17cc270f776ed9e9dadeffe59a1436304c1233db63e563b5365aa9d64a8849bf",
+        "489fc48d7ff2db85d0bb8acedf4a8ed0d3a0201322c8a3bcad4ae46a4700c8fe",
+        "75067c3e3e96321114045ef853b701ac9b5b1795d0843be36f46cd443b35538a",
+        "fa31db5463f400f9486631d8691514c13c1a1696cc131a53a008f556036bd8b5",
+        "43a39a31aa298f20b8925c69e5ee188f0989562c2d41e41c11e273a5090a24a6"
+      ]
+    },
+    {
+      "mode": "32dp",
+      "original_51_keys_in_all_7_skins_pixel_identical": true,
+      "laboratory_unique_silhouettes": 7,
+      "laboratory_cell_sha256": [
+        "cb858249aaf1b00a749ebfceb47b8ccb8782546f1579e3ea367c1fe731802cec",
+        "b4fa081ac6998ffd2856b6e2426b73674fc92231e501b1fb9141d839dbd4db34",
+        "40e367c052f78e5c15ee66b528720ba9caa00cb21c36bb8287b2fae2b7090ce6",
+        "83bebe0a21496b4b327fdae04310e764e9907c29a7f16bd44facf0d7c3fc4bee",
+        "ff20ec8bc954037268609fd6afd6b94a62f6a7b699563dc49be0abe6f8e1d4d3",
+        "1733b5f459028af46e2defabad0c68bd5a0b9f6d3dc5cda7b6094b28600927cc",
+        "7fa02dff19a18ac6391302037fe39ef992e2f189f050d70e295cad3601e3cb2c"
+      ]
+    }
+  ]
+}

@@ -103,6 +103,8 @@ open class BaseActionIcons : ActionIcons {
 }
 
 open class BaseContentIcons : ContentIcons {
+    @Composable override fun Laboratory(modifier: Modifier, tint: Color) =
+        PolishedSkinIcon(IconKey.Laboratory, SkinIconStyle.SWEET, modifier, tint)
     @Composable override fun Star(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Star, null, modifier, tint)
     @Composable override fun StarBorder(modifier: Modifier, tint: Color) =

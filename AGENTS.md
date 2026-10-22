@@ -107,6 +107,7 @@
 
 - `Type.kt` 的 `lolitaTypography` 为七皮肤唯一文字规格来源，`SkinConfigs` 仅传入各自标题字体。主卡22/30sp、顶栏`appBarTitle`18/26、分区18/26、行标题16/24、正文与输入16/24、紧凑解释14/22、说明13/20、按钮15/22、`metadata`与底栏12/18；主功能／分区标题600、顶栏／普通行与按钮500、阅读正文400，字距0。普通行用`titleSmall`，`titleMedium`专门表达分区。
 - 个人页“实验室”一级卡片标题仍用`titleSmall`16/24sp、Medium500及阅读字体，与属性管理等同级入口一致；不能因FEATURED容器就改成22sp主功能标题。公共顶栏18/26sp、Medium500，与18sp/600分区通过字重、位置区分。修正设计见`docs/plans/2026-10-21-compact-laboratory-titles.md`。
+- 个人页“实验室”入口复用 `SettingsMenuItem`；FEATURED 仅保留表面装饰，内边距与普通入口共用 `cardInnerPadding`。40dp 图标底座、22dp 图标、12dp 图文间距、18dp 箭头及标题／说明列与属性管理等一致。独立 `IconKey.Laboratory` 经 Base 与七套实际 provider 提供不同烧瓶主体，绘制在 `PolishedLaboratoryIcon.kt`；其他51键不变。设计及测量回归见 `docs/plans/2026-10-22-laboratory-entry-alignment.md`。
 - 标题保留皮肤字体；正文、输入、操作、元数据统一阅读字体，大号金额／数值用`numericReading`。不按2K原生像素倍增sp，不限制系统fontScale；高频控件采用最小高度自然增长。首页紧凑搜索14/22为保留一行布局的明确例外，微型年历与字体演示按用途单独处理。
 - 首页标签采用无横向内边距的Tab内容插槽，搜索与右侧控制统一32dp。筛选数量角标保留12sp，按实际高度为图标上方预留空间，数量0/3/12与普通／两倍字体下保留符号下半部；不只负向偏移导致裁切。
 - 设计与验收见`docs/plans/2026-10-21-typography-system.md`与`docs/typography-implementation-2026-10-21.md`；`TypographyScreenTest`验证真实2K／七皮肤浅暗层级与阅读字体、小屏两倍字和实际键盘。
@@ -116,10 +117,10 @@
 - **7 套皮肤**：`DEFAULT` / `GOTHIC` / `CHINESE` / `CLASSIC` / `NAVY` / `COUNTRY` / `VICTORIAN`。
 - 新页面/交互复用皮肤感知组件，不做脱节的普通 Material 页面。
 - 新增图标需同时补：`BaseSkinIconProvider` + **7 个**皮肤专属 provider（`SweetIconProvider`, `GothicIconProvider`, `ChineseIconProvider`, `ClassicIconProvider`, `NavyIconProvider`, `CountryIconProvider`, `VictorianIconProvider`）+ `IconKey` 枚举。图标是 Canvas 手绘，不是 Material icon。
-- 七套图标通过 `PolishedSkinIconProvider` 共用完整的 51 个 `IconKey`；绘制入口 `PolishedSkinIcon` 按导航、内容、操作/箭头/状态分派到 `PolishedNavigationIcons`、`PolishedContentIcons`、`PolishedControlIcons`；后者仅分派到 `PolishedActionDrawings` 与 `PolishedDirectionStatusDrawings`，分别管理操作及方向/状态造型。旧的田园/维多利亚装饰图标实现已移除。 七套保留统一网格与入口，各绘制组按皮肤维护主体轮廓：甜美饱满曲线、哥特尖拱切角、中华飞檐交领、古典对称收束、海军灯塔舷窗、田园宽檐围裙、维多利亚拱形层叠。导航、内容、高频操作都需体现造型语言；不得仅改圆角/微内纹或给同一主符号套装饰框。五个导航造型沿用已认可版本；其余 46 个键在七套皮肤中均需保持不同的主体构件/轮廓/笔势，包括加号、保存、分享、九宫格、下拉及显隐。基础控件保持直接语义，不能只加端点小装饰。
+- 七套图标通过 `PolishedSkinIconProvider` 共用完整的 52 个 `IconKey`；绘制入口 `PolishedSkinIcon` 按导航、内容、操作/箭头/状态分派到 `PolishedNavigationIcons`、`PolishedContentIcons`、`PolishedControlIcons`；后者仅分派到 `PolishedActionDrawings` 与 `PolishedDirectionStatusDrawings`，分别管理操作及方向/状态造型。旧的田园/维多利亚装饰图标实现已移除。 七套保留统一网格与入口，各绘制组按皮肤维护主体轮廓：甜美饱满曲线、哥特尖拱切角、中华飞檐交领、古典对称收束、海军灯塔舷窗、田园宽檐围裙、维多利亚拱形层叠。导航、内容、高频操作都需体现造型语言；不得仅改圆角/微内纹或给同一主符号套装饰框。五个导航造型沿用已认可版本；其余 47 个键在七套皮肤中均需保持不同的主体构件/轮廓/笔势，包括加号、保存、分享、九宫格、下拉及显隐。基础控件保持直接语义，不能只加端点小装饰。
 - 图标使用 `SkinIconCanvas` 的 24×24 逻辑坐标，主线宽 1.7，主体保留约 2 单位安全边距；调用方尺寸优先，非正方形区域居中等比缩放。七套底栏图标统一 26dp，选中使用皮肤 accent，未选中使用 `onSurfaceVariant`。
 - 功能图标保留明确语义（加号、垃圾桶、刷新箭头、图表、齿轮）；风格通过全套图标的主体造型、工具构件与笔势体现，避免在 24dp 中叠加盾牌/吊牌/缎带缩小功能符号。全部颜色来自 tint，派生透明度必须乘原 tint.alpha，不使用固定奶油色/象牙色；实心/空心星标共用同一轮廓。
-- 图标回归：`SkinIconVisualTest` 在 Android 上通过真实七套 provider 渲染全部 51 个图标，检查留白、18/24/26/32dp 与矩形尺寸、tint 和完全透明输入；输出亮/暗完整矩阵和中文概览至 app 私有目录 `files/skin-icon-contact-sheets/`；本轮概览归档在 `docs/visuals/2026-10-11-skin-icons-light.png` 和 `docs/visuals/2026-10-11-skin-icons-dark.png`。 2026-10-12 个性恢复新增 26dp 浅暗中文概览及导航/操作/内容/箭头/状态五组导出；归档在 `docs/visuals/2026-10-12-icon-personality-*.png`，说明见 `docs/icon-personality-2026-10-12.md`。 2.40.4 / 89 使用 clean Release 在独立 AVD 上从已发布 2.40.3 覆盖升级，同签名并保留皮肤设置；正式包七套导航与皮肤预览实拍亦归档在该前缀下。添加照片采用单次差集裁切，避免半透明边框重复合成；真实 provider 半透明回归比较图片与添加照片下半部未改边框/山形像素。非导航扩展回归逐键比较七套真实绘制，禁止相同位图回退；所有分组额外导出 18/32dp 浅色对照，小尺寸辨认与艺术差异仍须看实际矩阵。扩展说明与归档为 `docs/icon-details-2026-10-12.md`、`docs/visuals/2026-10-12-icon-details-*.png`。2.40.5 / 90使用clean Release从2.40.4同签名覆盖升级并保留皮肤设置，正式包完整51×7仪器化回归通过；43张实际矩阵与已审阅Debug图逐像素一致，35个导航单元与上一正式包一致。验证测试宿主/导出目录的临时适配不得留入正式源码。定向运行：`./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.lolita.app.ui.theme.skin.icon.SkinIconVisualTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true`。设备旧包与新包必须先核对签名；UTP 在安装失败后也可能自动卸载旧包，测试前保全模拟器数据或使用独立 AVD，禁止用卸载绕过签名冲突。
+- 图标回归：`SkinIconVisualTest` 在 Android 上通过真实七套 provider 渲染全部 52 个图标，检查留白、18/24/26/32dp 与矩形尺寸、tint 和完全透明输入；输出亮/暗完整矩阵和中文概览至 app 私有目录 `files/skin-icon-contact-sheets/`；本轮概览归档在 `docs/visuals/2026-10-11-skin-icons-light.png` 和 `docs/visuals/2026-10-11-skin-icons-dark.png`。 2026-10-12 个性恢复新增 26dp 浅暗中文概览及导航/操作/内容/箭头/状态五组导出；归档在 `docs/visuals/2026-10-12-icon-personality-*.png`，说明见 `docs/icon-personality-2026-10-12.md`。 2.40.4 / 89 使用 clean Release 在独立 AVD 上从已发布 2.40.3 覆盖升级，同签名并保留皮肤设置；正式包七套导航与皮肤预览实拍亦归档在该前缀下。添加照片采用单次差集裁切，避免半透明边框重复合成；真实 provider 半透明回归比较图片与添加照片下半部未改边框/山形像素。非导航扩展回归逐键比较七套真实绘制，禁止相同位图回退；所有分组额外导出 18/32dp 浅色对照，小尺寸辨认与艺术差异仍须看实际矩阵。扩展说明与归档为 `docs/icon-details-2026-10-12.md`、`docs/visuals/2026-10-12-icon-details-*.png`。2.40.5 / 90使用clean Release从2.40.4同签名覆盖升级并保留皮肤设置，正式包完整51×7仪器化回归通过；43张实际矩阵与已审阅Debug图逐像素一致，35个导航单元与上一正式包一致。验证测试宿主/导出目录的临时适配不得留入正式源码。定向运行：`./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.lolita.app.ui.theme.skin.icon.SkinIconVisualTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true`。设备旧包与新包必须先核对签名；UTP 在安装失败后也可能自动卸载旧包，测试前保全模拟器数据或使用独立 AVD，禁止用卸载绕过签名冲突。
 - 新增列表/切换/过渡效果优先复用现有 skin 动画体系（`SkinClickable`, `SkinItemAppear`, `SkinNavigationOverlay` 等）。
 - 滚动容器通过 `ObserveSkinScroll(ScrollableState)` 向 NavHost 的 `SkinScrollActivity` 注册；按来源合并拖动/惯性状态，离开 composition 只移除自身，禁止多个列表直接写同一个全局 Boolean。位置、套装列表/网格、服饰列表/网格/画廊、穿搭、首页心愿、统计总览、付款年历、消费分布/趋势、愿望分析及首页/统计 pager 均已接入。背景粒子按实际 Canvas 尺寸初始化，使用帧时钟与实际时间更新（最高约 60Hz），滚动期间冻结并保留画面，恢复时不得重置/跳跃。
 - `SkinItemAppear` 的进度仅在 `graphicsLayer` 中读取，避免逐帧重组卡片。`SkinFlingBehavior` 用独立上帧位置计算位移，原始释放速度只经摩擦衰减，遇到未消费位移立即停止并保留余速。懒列表的索引使用 `itemsIndexed`，不要在逐卡片 composition 中扫描 `indexOf`。
@@ -302,7 +303,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=140, versionName="2.66.3"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=141, versionName="2.66.4"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -22,17 +22,15 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @Composable
 fun LaboratoryEntry(onClick: () -> Unit) {
-    val skin = LolitaSkin.current
-    LolitaCard(onClick = onClick, variant = CardVariant.FEATURED, modifier = Modifier.fillMaxWidth().testTag("laboratoryEntry")) {
-        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
-                SkinIcon(IconKey.Apps, Modifier.size(28.dp), tint = MaterialTheme.colorScheme.primary)
-                Text("实验室", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
-                SkinIcon(IconKey.ArrowForward, Modifier.size(24.dp))
-            }
-            Text("展示图、试衣与识图", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-    }
+    SettingsMenuItem(
+        title = "实验室",
+        description = "展示图、试衣与识图",
+        iconKey = IconKey.Laboratory,
+        iconTint = MaterialTheme.colorScheme.primary,
+        onClick = onClick,
+        modifier = Modifier.testTag("laboratoryEntry"),
+        variant = CardVariant.FEATURED
+    )
 }
 
 @Composable

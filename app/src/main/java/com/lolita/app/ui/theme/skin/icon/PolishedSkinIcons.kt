@@ -54,7 +54,7 @@ internal fun PolishedSkinIcon(
             IconKey.Star, IconKey.StarBorder, IconKey.Image, IconKey.Camera, IconKey.AddPhoto,
             IconKey.Link, IconKey.LinkOff, IconKey.Palette, IconKey.FileOpen,
             IconKey.CalendarMonth, IconKey.Notifications, IconKey.AttachMoney,
-            IconKey.Category, IconKey.Location -> drawPolishedContentIcon(key, style, tint)
+            IconKey.Category, IconKey.Location, IconKey.Laboratory -> drawPolishedContentIcon(key, style, tint)
             IconKey.Add, IconKey.Delete, IconKey.Edit, IconKey.Search, IconKey.Sort,
             IconKey.Save, IconKey.Close, IconKey.Share, IconKey.FilterList, IconKey.MoreVert,
             IconKey.ContentCopy, IconKey.Refresh, IconKey.ViewAgenda, IconKey.GridView,

@@ -312,10 +312,10 @@ class SkinIconVisualTest {
         }
     }
 
-    // This review emphasizes the 46 non-navigation glyphs requested in this iteration.
+    // This review emphasizes the 47 non-navigation glyphs requested in this iteration.
     private val overviewKeys = listOf(
         IconKey.Add, IconKey.Delete, IconKey.Edit, IconKey.Search, IconKey.Save, IconKey.Share,
-        IconKey.Apps, IconKey.Image, IconKey.Camera, IconKey.Palette, IconKey.AttachMoney,
+        IconKey.Apps, IconKey.Laboratory, IconKey.Image, IconKey.Camera, IconKey.Palette, IconKey.AttachMoney,
         IconKey.CalendarMonth, IconKey.ArrowBack, IconKey.ExpandMore, IconKey.ArrowDropDown,
         IconKey.CheckCircle, IconKey.Warning, IconKey.Visibility, IconKey.VisibilityOff
     )
@@ -332,7 +332,7 @@ class SkinIconVisualTest {
         IconKey.Camera to "相机", IconKey.AddPhoto to "添加照片", IconKey.Link to "关联",
         IconKey.LinkOff to "解除关联", IconKey.Palette to "配色", IconKey.FileOpen to "打开文件",
         IconKey.CalendarMonth to "月份", IconKey.Notifications to "提醒",
-        IconKey.AttachMoney to "金额", IconKey.Category to "分类", IconKey.Location to "位置",
+        IconKey.AttachMoney to "金额", IconKey.Category to "分类", IconKey.Location to "位置", IconKey.Laboratory to "实验室",
         IconKey.ArrowBack to "返回", IconKey.ArrowForward to "前进",
         IconKey.KeyboardArrowLeft to "左箭头", IconKey.KeyboardArrowRight to "右箭头",
         IconKey.ExpandMore to "展开", IconKey.ExpandLess to "收起", IconKey.ArrowDropDown to "下拉",
@@ -348,9 +348,9 @@ class SkinIconVisualTest {
         val families = listOf(
             "navigation" to keys.filter { it.ordinal <= IconKey.Settings.ordinal },
             "actions" to keys.filter { it.ordinal in IconKey.Add.ordinal..IconKey.Gallery.ordinal },
-            "content" to keys.filter { it.ordinal in IconKey.Star.ordinal..IconKey.Location.ordinal },
+            "content" to keys.filter { it.ordinal in IconKey.Star.ordinal..IconKey.Location.ordinal || it == IconKey.Laboratory },
             "arrows" to keys.filter { it.ordinal in IconKey.ArrowBack.ordinal..IconKey.OpenInNew.ordinal },
-            "status" to keys.filter { it.ordinal >= IconKey.CheckCircle.ordinal }
+            "status" to keys.filter { it.ordinal in IconKey.CheckCircle.ordinal..IconKey.Help.ordinal }
         )
         for ((family, selectedKeys) in families) {
             saveContactSheet(raw, "$family-$name", background, foreground, selectedKeys)

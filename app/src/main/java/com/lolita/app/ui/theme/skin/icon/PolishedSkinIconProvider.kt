@@ -62,6 +62,8 @@ private class PolishedActionIcons(private val style: SkinIconStyle) : ActionIcon
 }
 
 private class PolishedContentIcons(private val style: SkinIconStyle) : ContentIcons {
+    @Composable override fun Laboratory(modifier: Modifier, tint: Color) =
+        PolishedSkinIcon(IconKey.Laboratory, style, modifier, tint)
     @Composable override fun Star(modifier: Modifier, tint: Color) =
         PolishedSkinIcon(IconKey.Star, style, modifier, tint)
     @Composable override fun StarBorder(modifier: Modifier, tint: Color) =

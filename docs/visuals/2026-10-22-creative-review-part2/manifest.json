@@ -1,0 +1,125 @@
+{
+  "status": "proposal, not implemented",
+  "files": [
+    {
+      "file": "concept-interactive.html",
+      "bytes": 10991,
+      "sha256": "229ac59c46e6208eb3ad598af5b355d06509608c1a31965e6283bf8303c50868",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "concept-main.png",
+      "bytes": 1688232,
+      "sha256": "b6a2e5011894ddc9409ccfea5a8f2907b832ac11125d3d8c1039f411f4588f47",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "concept-seven-skins.html",
+      "bytes": 33275,
+      "sha256": "39cdb6c6608743c833442d1fefce4ac584dbf97ea7baf3ac64a67a849b499930",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "concept-seven-skins.png",
+      "bytes": 683728,
+      "sha256": "0fb991250334e3c3273d81dab143d062294988f9f9dfe1f49745a3a194261319",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "current-backup-dark.png",
+      "bytes": 599585,
+      "sha256": "e9b3a5337b210f6da7008e6d4289c86fa4cd4de20c1facf21bf48cd1831c53fc",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-backup-export.png",
+      "bytes": 727879,
+      "sha256": "dd49a29b884cde8fb29de0567bada54e41a852ce0a045eb350cc8303dd5dee9e",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-backup-preview.png",
+      "bytes": 566565,
+      "sha256": "d5b09aeb8c1a6aad7b186af11aaf3a7509d589ab6f9290a9ed26efb206de1cfb",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-backup-small-dark.png",
+      "bytes": 495895,
+      "sha256": "7999a8a94d47b350847d10c8bf0ebb987b1b343b98d73c1149f002eed0a035c9",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-backup.png",
+      "bytes": 759925,
+      "sha256": "a0801b25165d4dc99573edcb80717f11a2e489e1524ef326e527a2dfd78f5548",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-import-guide.png",
+      "bytes": 784197,
+      "sha256": "6900e26f29e5d8b27ef7543fa22985df90d89d5c77a44851c609a84d34a7a4cf",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-order-import.png",
+      "bytes": 857525,
+      "sha256": "e8532e4a9e51980fa4b7580f3d2252e6d94712bc1afcd892f3821278eeb448c0",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-price-edit.png",
+      "bytes": 650630,
+      "sha256": "18b656d1e0d7c96c9774ba4f964d26053cf8bb80b58259c87a4a4ba4708b21ad",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-price-keyboard.png",
+      "bytes": 503622,
+      "sha256": "358b5f66f72cad25f3486fd607bd4949ec7f10967f6244a8b4b57cf4060e7c79",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-room.png",
+      "bytes": 1503930,
+      "sha256": "0eeac7baf8af57a01e692c8e01abe9bc8da3423a8ab3fc4c5dd3cb0b89989188",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-storage-templates.png",
+      "bytes": 754562,
+      "sha256": "349ec9cfe2fdc0a88502f6ff3473ee20b8cc5e540351f56cae625b48944de50c",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-task-detail.png",
+      "bytes": 660916,
+      "sha256": "83527548aec013f1547b887f3dcfc6d0efc73889bee1e50fb52b480ed27b4b92",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "current-tasks.png",
+      "bytes": 881578,
+      "sha256": "14b7fe958dddecb9d1bf39a965469db21da496ed0818427701ee344c26dcc4cc",
+      "kind": "real Android screenshot"
+    },
+    {
+      "file": "experience.json",
+      "bytes": 1218,
+      "sha256": "ba5f2fcff460cd690762d2efeaaa6c2f71b838248e14e29498b95766ccdd0b0e",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "preview-validation.json",
+      "bytes": 607,
+      "sha256": "e0a3b7d5e687b53fd4b160198219ff472f513daaad95d87869cd1f114f139e2d",
+      "kind": "design artifact / metadata"
+    },
+    {
+      "file": "prompts.json",
+      "bytes": 8335,
+      "sha256": "291c386fafa9d0c9ae012092cec650079d112f4c7d4f41e12aa80414c3dda3b8",
+      "kind": "design artifact / metadata"
+    }
+  ]
+}

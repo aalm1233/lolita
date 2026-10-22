@@ -1,0 +1,36 @@
+{
+  "renderer": "Playwright Chromium, HTML concept only",
+  "errors": [],
+  "checks": [
+    {
+      "width": 320,
+      "large": false,
+      "overflow": false,
+      "buttonCount": 4
+    },
+    {
+      "width": 320,
+      "large": true,
+      "overflow": false,
+      "buttonCount": 4
+    },
+    {
+      "width": 736,
+      "large": false,
+      "overflow": false,
+      "buttonCount": 4
+    },
+    {
+      "width": 736,
+      "large": true,
+      "overflow": false,
+      "buttonCount": 4
+    }
+  ],
+  "counts": {
+    "panels": 14,
+    "jsonWarnings": 14,
+    "csvWarnings": 14,
+    "zipActions": 14
+  }
+}

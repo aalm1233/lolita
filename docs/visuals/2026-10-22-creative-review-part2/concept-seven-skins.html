@@ -1,0 +1,257 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><style>
+#lolita-backup-proposal{padding:18px 8px 24px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+#lolita-backup-proposal *{box-sizing:border-box}
+#lolita-backup-proposal .lp-caption{text-align:center;margin:0 0 14px;color:light-dark(#4e4649,#e9dce0);font-size:14px;line-height:22px}
+#lolita-backup-proposal .lp-phone{--lp-scale:1;max-width:390px;width:100%;margin:auto;overflow:hidden;background:var(--lp-bg);color:var(--lp-text);border:1px solid var(--lp-line);border-radius:26px;box-shadow:0 12px 38px #00000014;font-size:calc(16px * var(--lp-scale));line-height:1.5;position:relative}
+#lolita-backup-proposal .lp-top{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;padding:22px 18px 14px;gap:4px;background:var(--lp-bg)}
+#lolita-backup-proposal .lp-top>span{font-size:30px;line-height:1}
+#lolita-backup-proposal h2{font-family:var(--lp-title);font-size:calc(18px * var(--lp-scale));line-height:1.45;font-weight:500;margin:0;text-align:center}
+#lolita-backup-proposal h3{font-size:inherit;line-height:1.5;margin:0;font-weight:600;overflow-wrap:anywhere}
+#lolita-backup-proposal main{padding:12px 18px 0;display:grid;gap:24px}
+#lolita-backup-proposal button{font:inherit;line-height:1.5;color:inherit;cursor:pointer;min-height:48px}
+#lolita-backup-proposal button:focus-visible{outline:3px solid var(--lp-accent);outline-offset:4px}
+#lolita-backup-proposal .lp-hero{border:1px solid var(--lp-line);border-radius:var(--lp-radius);padding:20px 16px 16px;background:var(--lp-surface)}
+#lolita-backup-proposal .lp-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+#lolita-backup-proposal p{margin:6px 0 0;font-size:calc(14px * var(--lp-scale));line-height:1.6;color:var(--lp-muted)}
+#lolita-backup-proposal h3 small{display:inline-block;font-size:calc(12px * var(--lp-scale));font-weight:500;padding:2px 7px;background:var(--lp-soft);color:var(--lp-accent);border-radius:5px}
+#lolita-backup-proposal .lp-primary,#lolita-backup-proposal .lp-outline{width:100%;border:1px solid var(--lp-accent);border-radius:var(--lp-button);padding:11px 10px;font-size:calc(15px * var(--lp-scale));font-weight:500}
+#lolita-backup-proposal .lp-primary{background:var(--lp-accent);color:var(--lp-on)}
+#lolita-backup-proposal .lp-outline{background:var(--lp-surface);color:var(--lp-accent)}
+#lolita-backup-proposal .lp-section{font-family:var(--lp-title);font-size:calc(18px * var(--lp-scale));line-height:1.5;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+#lolita-backup-proposal .lp-section:before{content:"";width:3px;height:18px;background:var(--lp-accent);flex-shrink:0;border-radius:2px}
+#lolita-backup-proposal .lp-group{background:var(--lp-surface);border:1px solid var(--lp-line);border-radius:var(--lp-radius);overflow:hidden}
+#lolita-backup-proposal .lp-row{background:transparent;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;border:0;padding:14px 15px}
+#lolita-backup-proposal .lp-row+.lp-row{border-top:1px solid var(--lp-line)}
+#lolita-backup-proposal .lp-row strong{font-weight:500;font-size:calc(16px * var(--lp-scale))}
+#lolita-backup-proposal .lp-row small{display:block;font-size:calc(13px * var(--lp-scale));color:var(--lp-muted);margin-top:4px}
+#lolita-backup-proposal .lp-warning{margin:0 0 14px;padding:12px 14px;color:var(--lp-text);background:var(--lp-soft);border-left:3px solid var(--lp-accent);border-radius:4px}
+#lolita-backup-proposal .lp-nav{display:flex;justify-content:space-around;gap:8px;flex-wrap:wrap;border-top:1px solid var(--lp-line);padding:16px 12px 22px;font-size:calc(12px * var(--lp-scale));background:var(--lp-surface);color:var(--lp-muted)}
+#lolita-backup-proposal .lp-nav strong{color:var(--lp-accent);font-weight:600}
+#lolita-backup-proposal .lp-feedback{min-height:36px;font-size:calc(12px * var(--lp-scale));color:var(--lp-muted);padding-bottom:14px}
+#lolita-backup-proposal .lp-archive{width:52px;height:54px;position:relative;display:flex;align-items:center;justify-content:center;border:2px solid var(--lp-accent);color:var(--lp-accent);background:var(--lp-soft);flex-shrink:0;font-size:12px;letter-spacing:1px}
+#lolita-backup-proposal .lp-archive:before,#lolita-backup-proposal .lp-archive:after{content:"";position:absolute}
+#lolita-backup-proposal [data-skin="sweet"] .lp-archive{border-radius:15px 15px 20px 20px;transform:rotate(-4deg)}
+#lolita-backup-proposal [data-skin="sweet"] .lp-archive:before{width:28px;height:10px;top:-7px;border:2px solid var(--lp-accent);border-radius:50%;background:var(--lp-surface)}
+#lolita-backup-proposal [data-skin="gothic"] .lp-archive{border-radius:50% 50% 4px 4px;border-width:2px 3px 3px}
+#lolita-backup-proposal [data-skin="gothic"] .lp-archive:before{inset:5px;border:1px solid var(--lp-accent);border-radius:50% 50% 0 0;opacity:.4}
+#lolita-backup-proposal [data-skin="chinese"] .lp-archive{height:46px;margin-top:8px;border-radius:2px}
+#lolita-backup-proposal [data-skin="chinese"] .lp-archive:before{width:58px;height:12px;top:-12px;border-bottom:3px solid var(--lp-accent);border-radius:0 0 50% 50%}
+#lolita-backup-proposal [data-skin="classic"] .lp-archive{border-radius:3px 3px 8px 8px;border-top-width:5px}
+#lolita-backup-proposal [data-skin="classic"] .lp-archive:after{bottom:5px;left:7px;right:7px;border-top:1px solid var(--lp-accent)}
+#lolita-backup-proposal [data-skin="navy"] .lp-archive{border-radius:50%;border:4px double var(--lp-accent)}
+#lolita-backup-proposal [data-skin="navy"] .lp-archive:before{width:20px;top:-8px;border-top:3px solid var(--lp-accent)}
+#lolita-backup-proposal [data-skin="country"] .lp-archive{border-radius:6px 6px 18px 18px;height:43px;margin-top:11px}
+#lolita-backup-proposal [data-skin="country"] .lp-archive:before{width:28px;height:18px;top:-16px;border:2px solid var(--lp-accent);border-radius:50% 50% 0 0}
+#lolita-backup-proposal [data-skin="victorian"] .lp-archive{border-radius:17px 17px 3px 3px;border:4px double var(--lp-accent)}
+#lolita-backup-proposal [data-skin="victorian"] .lp-archive:after{width:34px;bottom:-6px;border-bottom:3px solid var(--lp-accent)}
+body{margin:0;background:#f5f1ed;color:#342b2b;font-family:-apple-system,'PingFang SC',sans-serif}#lolita-backup-proposal{padding:28px}.board-grid{display:grid;grid-template-columns:repeat(7,390px);gap:24px}h1{text-align:center;font-family:'Songti SC',serif;font-weight:600;font-size:36px;margin:0 0 10px}.board-note{text-align:center;margin:0 0 30px!important;font-size:17px!important}.board-cell>h2{text-align:center;font:500 19px/30px -apple-system,'PingFang SC',sans-serif;margin:0 0 12px!important}.lp-phone{box-shadow:none!important}.lp-top{pointer-events:none}</style><body><div id="lolita-backup-proposal"><h1>我的 Lolita · 备份与恢复</h1><p class="board-note">七套皮肤浅暗布局提案 · 文字可核对 · 非 Compose 截图</p><div class="board-grid"><section class="board-cell"><h2>甜美 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="sweet" style="--lp-bg: #fff7f8; --lp-surface: #fffdfd; --lp-text: #34262d; --lp-muted: #6c5963; --lp-accent: #ad3f62; --lp-on: #ffffff; --lp-line: #efdce3; --lp-soft: #f9e8ee; --lp-radius: 20px; --lp-button: 18px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>哥特 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="gothic" style="--lp-bg: #f5f1f7; --lp-surface: #fefcff; --lp-text: #302438; --lp-muted: #695b73; --lp-accent: #64457f; --lp-on: #ffffff; --lp-line: #ddd0e5; --lp-soft: #eee5f4; --lp-radius: 5px; --lp-button: 5px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>中华 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="chinese" style="--lp-bg: #fff8ef; --lp-surface: #fffdf7; --lp-text: #332a28; --lp-muted: #75635c; --lp-accent: #a63643; --lp-on: #ffffff; --lp-line: #e5d7c5; --lp-soft: #f7e7de; --lp-radius: 10px; --lp-button: 10px; --lp-title: &quot;Songti SC&quot;,serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>古典 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="classic" style="--lp-bg: #f6f2eb; --lp-surface: #fffdf8; --lp-text: #352e2c; --lp-muted: #72645e; --lp-accent: #7b3f4b; --lp-on: #ffffff; --lp-line: #ded3c4; --lp-soft: #eee3df; --lp-radius: 8px; --lp-button: 6px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>海军 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="navy" style="--lp-bg: #f0f6fa; --lp-surface: #fcfeff; --lp-text: #243747; --lp-muted: #5e7281; --lp-accent: #265c85; --lp-on: #ffffff; --lp-line: #cedde8; --lp-soft: #e0edf5; --lp-radius: 12px; --lp-button: 8px; --lp-title: sans-serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>田园 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="country" style="--lp-bg: #f8f7ed; --lp-surface: #fffef8; --lp-text: #333e30; --lp-muted: #677060; --lp-accent: #4c6d44; --lp-on: #ffffff; --lp-line: #dce1cf; --lp-soft: #edf0df; --lp-radius: 18px; --lp-button: 16px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>维多利亚 · 浅色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="victorian" style="--lp-bg: #f7f0e4; --lp-surface: #fffaf0; --lp-text: #3d3029; --lp-muted: #78634f; --lp-accent: #7d4937; --lp-on: #ffffff; --lp-line: #d9c4a0; --lp-soft: #efe2ca; --lp-radius: 7px; --lp-button: 7px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>甜美 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="sweet" style="--lp-bg: #271d25; --lp-surface: #362832; --lp-text: #f8edf2; --lp-muted: #d3bbc9; --lp-accent: #f0a3be; --lp-on: #34202b; --lp-line: #59414f; --lp-soft: #48303d; --lp-radius: 20px; --lp-button: 18px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>哥特 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="gothic" style="--lp-bg: #201925; --lp-surface: #2e2436; --lp-text: #f4edf9; --lp-muted: #cdbcd8; --lp-accent: #c5a7e3; --lp-on: #24182e; --lp-line: #51405f; --lp-soft: #41304e; --lp-radius: 5px; --lp-button: 5px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>中华 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="chinese" style="--lp-bg: #251e1c; --lp-surface: #342a25; --lp-text: #f8efe2; --lp-muted: #d0bcaa; --lp-accent: #edab98; --lp-on: #32201b; --lp-line: #5c483b; --lp-soft: #49332c; --lp-radius: 10px; --lp-button: 10px; --lp-title: &quot;Songti SC&quot;,serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>古典 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="classic" style="--lp-bg: #242021; --lp-surface: #322c2c; --lp-text: #f6eee5; --lp-muted: #cabcb4; --lp-accent: #dba8b2; --lp-on: #302126; --lp-line: #524544; --lp-soft: #453036; --lp-radius: 8px; --lp-button: 6px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>海军 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="navy" style="--lp-bg: #142430; --lp-surface: #203543; --lp-text: #edf7fe; --lp-muted: #b7ccda; --lp-accent: #9acbed; --lp-on: #122d40; --lp-line: #385466; --lp-soft: #294759; --lp-radius: 12px; --lp-button: 8px; --lp-title: sans-serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>田园 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="country" style="--lp-bg: #20291f; --lp-surface: #2d382b; --lp-text: #f2f5e7; --lp-muted: #c4cfb8; --lp-accent: #bdd5a4; --lp-on: #26351f; --lp-line: #4a5a41; --lp-soft: #3c4a32; --lp-radius: 18px; --lp-button: 16px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section><section class="board-cell"><h2>维多利亚 · 暗色</h2><article class="lp-phone" aria-label="备份与恢复设计预览" data-skin="victorian" style="--lp-bg: #2a211c; --lp-surface: #3a2e25; --lp-text: #fff1d9; --lp-muted: #d6bfa0; --lp-accent: #e1bd7c; --lp-on: #302416; --lp-line: #70593b; --lp-soft: #4b3a28; --lp-radius: 7px; --lp-button: 7px; --lp-title: serif; --lp-scale: 1;">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article></section></div></div></body></html>

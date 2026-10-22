@@ -1,0 +1,86 @@
+<div id="lolita-backup-proposal" class="viz-dotted-background">
+  <div class="lp-caption">备份与恢复 · 七皮肤概念稿</div>
+  <article class="lp-phone" aria-label="备份与恢复设计预览">
+    <header class="lp-top"><span aria-hidden="true">‹</span><h2>备份与恢复</h2><span></span></header>
+    <main>
+      <section class="lp-hero">
+        <div class="lp-heading"><div class="lp-archive" aria-hidden="true"><span>ZIP</span></div><div><h3>完整备份 · ZIP <small>推荐</small></h3><p>包含记录和图片</p></div></div>
+        <button type="button" class="lp-primary" data-action="ZIP">导出完整备份</button>
+      </section>
+      <section><h3 class="lp-section">其他导出方式</h3><div class="lp-group">
+        <button type="button" class="lp-row" data-action="JSON"><span><strong>数据备份 · JSON</strong><small>不含图片</small></span><span aria-hidden="true">›</span></button>
+        <button type="button" class="lp-row" data-action="CSV"><span><strong>表格导出 · CSV</strong><small>仅供查看，不能恢复</small></span><span aria-hidden="true">›</span></button>
+      </div></section>
+      <section><h3 class="lp-section">恢复备份</h3><p class="lp-warning">恢复会替换当前资料，<br>请先导出备份。</p><button type="button" class="lp-outline" data-action="restore">选择备份文件</button></section>
+      <div class="lp-feedback" role="status" aria-live="polite">概念预览 · 不读写真实资料</div>
+    </main>
+    <nav class="lp-nav" aria-label="底部导航示意"><span>首页</span><span>穿搭</span><span>统计</span><strong aria-current="page">个人</strong></nav>
+  </article>
+</div>
+<style>
+#lolita-backup-proposal{padding:18px 8px 24px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+#lolita-backup-proposal *{box-sizing:border-box}
+#lolita-backup-proposal .lp-caption{text-align:center;margin:0 0 14px;color:light-dark(#4e4649,#e9dce0);font-size:14px;line-height:22px}
+#lolita-backup-proposal .lp-phone{--lp-scale:1;max-width:390px;width:100%;margin:auto;overflow:hidden;background:var(--lp-bg);color:var(--lp-text);border:1px solid var(--lp-line);border-radius:26px;box-shadow:0 12px 38px #00000014;font-size:calc(16px * var(--lp-scale));line-height:1.5;position:relative}
+#lolita-backup-proposal .lp-top{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;padding:22px 18px 14px;gap:4px;background:var(--lp-bg)}
+#lolita-backup-proposal .lp-top>span{font-size:30px;line-height:1}
+#lolita-backup-proposal h2{font-family:var(--lp-title);font-size:calc(18px * var(--lp-scale));line-height:1.45;font-weight:500;margin:0;text-align:center}
+#lolita-backup-proposal h3{font-size:inherit;line-height:1.5;margin:0;font-weight:600;overflow-wrap:anywhere}
+#lolita-backup-proposal main{padding:12px 18px 0;display:grid;gap:24px}
+#lolita-backup-proposal button{font:inherit;line-height:1.5;color:inherit;cursor:pointer;min-height:48px}
+#lolita-backup-proposal button:focus-visible{outline:3px solid var(--lp-accent);outline-offset:4px}
+#lolita-backup-proposal .lp-hero{border:1px solid var(--lp-line);border-radius:var(--lp-radius);padding:20px 16px 16px;background:var(--lp-surface)}
+#lolita-backup-proposal .lp-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+#lolita-backup-proposal p{margin:6px 0 0;font-size:calc(14px * var(--lp-scale));line-height:1.6;color:var(--lp-muted)}
+#lolita-backup-proposal h3 small{display:inline-block;font-size:calc(12px * var(--lp-scale));font-weight:500;padding:2px 7px;background:var(--lp-soft);color:var(--lp-accent);border-radius:5px}
+#lolita-backup-proposal .lp-primary,#lolita-backup-proposal .lp-outline{width:100%;border:1px solid var(--lp-accent);border-radius:var(--lp-button);padding:11px 10px;font-size:calc(15px * var(--lp-scale));font-weight:500}
+#lolita-backup-proposal .lp-primary{background:var(--lp-accent);color:var(--lp-on)}
+#lolita-backup-proposal .lp-outline{background:var(--lp-surface);color:var(--lp-accent)}
+#lolita-backup-proposal .lp-section{font-family:var(--lp-title);font-size:calc(18px * var(--lp-scale));line-height:1.5;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+#lolita-backup-proposal .lp-section:before{content:"";width:3px;height:18px;background:var(--lp-accent);flex-shrink:0;border-radius:2px}
+#lolita-backup-proposal .lp-group{background:var(--lp-surface);border:1px solid var(--lp-line);border-radius:var(--lp-radius);overflow:hidden}
+#lolita-backup-proposal .lp-row{background:transparent;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;border:0;padding:14px 15px}
+#lolita-backup-proposal .lp-row+.lp-row{border-top:1px solid var(--lp-line)}
+#lolita-backup-proposal .lp-row strong{font-weight:500;font-size:calc(16px * var(--lp-scale))}
+#lolita-backup-proposal .lp-row small{display:block;font-size:calc(13px * var(--lp-scale));color:var(--lp-muted);margin-top:4px}
+#lolita-backup-proposal .lp-warning{margin:0 0 14px;padding:12px 14px;color:var(--lp-text);background:var(--lp-soft);border-left:3px solid var(--lp-accent);border-radius:4px}
+#lolita-backup-proposal .lp-nav{display:flex;justify-content:space-around;gap:8px;flex-wrap:wrap;border-top:1px solid var(--lp-line);padding:16px 12px 22px;font-size:calc(12px * var(--lp-scale));background:var(--lp-surface);color:var(--lp-muted)}
+#lolita-backup-proposal .lp-nav strong{color:var(--lp-accent);font-weight:600}
+#lolita-backup-proposal .lp-feedback{min-height:36px;font-size:calc(12px * var(--lp-scale));color:var(--lp-muted);padding-bottom:14px}
+#lolita-backup-proposal .lp-archive{width:52px;height:54px;position:relative;display:flex;align-items:center;justify-content:center;border:2px solid var(--lp-accent);color:var(--lp-accent);background:var(--lp-soft);flex-shrink:0;font-size:12px;letter-spacing:1px}
+#lolita-backup-proposal .lp-archive:before,#lolita-backup-proposal .lp-archive:after{content:"";position:absolute}
+#lolita-backup-proposal [data-skin="sweet"] .lp-archive{border-radius:15px 15px 20px 20px;transform:rotate(-4deg)}
+#lolita-backup-proposal [data-skin="sweet"] .lp-archive:before{width:28px;height:10px;top:-7px;border:2px solid var(--lp-accent);border-radius:50%;background:var(--lp-surface)}
+#lolita-backup-proposal [data-skin="gothic"] .lp-archive{border-radius:50% 50% 4px 4px;border-width:2px 3px 3px}
+#lolita-backup-proposal [data-skin="gothic"] .lp-archive:before{inset:5px;border:1px solid var(--lp-accent);border-radius:50% 50% 0 0;opacity:.4}
+#lolita-backup-proposal [data-skin="chinese"] .lp-archive{height:46px;margin-top:8px;border-radius:2px}
+#lolita-backup-proposal [data-skin="chinese"] .lp-archive:before{width:58px;height:12px;top:-12px;border-bottom:3px solid var(--lp-accent);border-radius:0 0 50% 50%}
+#lolita-backup-proposal [data-skin="classic"] .lp-archive{border-radius:3px 3px 8px 8px;border-top-width:5px}
+#lolita-backup-proposal [data-skin="classic"] .lp-archive:after{bottom:5px;left:7px;right:7px;border-top:1px solid var(--lp-accent)}
+#lolita-backup-proposal [data-skin="navy"] .lp-archive{border-radius:50%;border:4px double var(--lp-accent)}
+#lolita-backup-proposal [data-skin="navy"] .lp-archive:before{width:20px;top:-8px;border-top:3px solid var(--lp-accent)}
+#lolita-backup-proposal [data-skin="country"] .lp-archive{border-radius:6px 6px 18px 18px;height:43px;margin-top:11px}
+#lolita-backup-proposal [data-skin="country"] .lp-archive:before{width:28px;height:18px;top:-16px;border:2px solid var(--lp-accent);border-radius:50% 50% 0 0}
+#lolita-backup-proposal [data-skin="victorian"] .lp-archive{border-radius:17px 17px 3px 3px;border:4px double var(--lp-accent)}
+#lolita-backup-proposal [data-skin="victorian"] .lp-archive:after{width:34px;bottom:-6px;border-bottom:3px solid var(--lp-accent)}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('lolita-backup-proposal'),phone=root.querySelector('.lp-phone');
+const themes={
+sweet:{label:'甜美',radius:20,button:18,title:'serif',light:['#fff7f8','#fffdfd','#34262d','#6c5963','#ad3f62','#ffffff','#efdce3','#f9e8ee'],dark:['#271d25','#362832','#f8edf2','#d3bbc9','#f0a3be','#34202b','#59414f','#48303d']},
+gothic:{label:'哥特',radius:5,button:5,title:'serif',light:['#f5f1f7','#fefcff','#302438','#695b73','#64457f','#ffffff','#ddd0e5','#eee5f4'],dark:['#201925','#2e2436','#f4edf9','#cdbcd8','#c5a7e3','#24182e','#51405f','#41304e']},
+chinese:{label:'中华',radius:10,button:10,title:'"Songti SC",serif',light:['#fff8ef','#fffdf7','#332a28','#75635c','#a63643','#ffffff','#e5d7c5','#f7e7de'],dark:['#251e1c','#342a25','#f8efe2','#d0bcaa','#edab98','#32201b','#5c483b','#49332c']},
+classic:{label:'古典',radius:8,button:6,title:'serif',light:['#f6f2eb','#fffdf8','#352e2c','#72645e','#7b3f4b','#ffffff','#ded3c4','#eee3df'],dark:['#242021','#322c2c','#f6eee5','#cabcb4','#dba8b2','#302126','#524544','#453036']},
+navy:{label:'海军',radius:12,button:8,title:'sans-serif',light:['#f0f6fa','#fcfeff','#243747','#5e7281','#265c85','#ffffff','#cedde8','#e0edf5'],dark:['#142430','#203543','#edf7fe','#b7ccda','#9acbed','#122d40','#385466','#294759']},
+country:{label:'田园',radius:18,button:16,title:'serif',light:['#f8f7ed','#fffef8','#333e30','#677060','#4c6d44','#ffffff','#dce1cf','#edf0df'],dark:['#20291f','#2d382b','#f2f5e7','#c4cfb8','#bdd5a4','#26351f','#4a5a41','#3c4a32']},
+victorian:{label:'维多利亚',radius:7,button:7,title:'serif',light:['#f7f0e4','#fffaf0','#3d3029','#78634f','#7d4937','#ffffff','#d9c4a0','#efe2ca'],dark:['#2a211c','#3a2e25','#fff1d9','#d6bfa0','#e1bd7c','#302416','#70593b','#4b3a28']}
+};
+const state={skin:'chinese',dark:false,large:false};
+function render(){const t=themes[state.skin]||themes.chinese,p=t[state.dark?'dark':'light'];['bg','surface','text','muted','accent','on','line','soft'].forEach((k,i)=>phone.style.setProperty('--lp-'+k,p[i]));phone.style.setProperty('--lp-radius',t.radius+'px');phone.style.setProperty('--lp-button',t.button+'px');phone.style.setProperty('--lp-title',t.title);phone.style.setProperty('--lp-scale',state.large?'2':'1');phone.dataset.skin=state.skin;root.querySelector('.lp-caption').textContent=t.label+' · '+(state.dark?'暗色':'浅色')+' · '+(state.large?'两倍字号':'标准字号')+' · 概念稿';}
+render();
+root.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>{root.querySelector('.lp-feedback').textContent=b.dataset.action==='restore'?'正式流程：选择文件 → 校验预览 → 明确确认替换':'正式流程：导出'+b.dataset.action+' → 显示文件名与本机位置。此处仅预览。';}));
+if(globalThis.Tweak){const t=new Tweak({container:phone,onChange:render});t.addSelect(state,'skin',{label:'皮肤',options:Object.entries(themes).map(([value,t])=>({value,label:t.label}))});t.addToggle(state,'dark',{label:'暗色模式'});t.addToggle(state,'large',{label:'两倍字号'});}
+window.lolitaBackupPreview={state,render,themes};
+})();
+</script>

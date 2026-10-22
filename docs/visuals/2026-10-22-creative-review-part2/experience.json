@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-22",
+  "device": "emulator-5598 / Lolita_Material_Release_20261021",
+  "appVersion": "2.66.4 / 141",
+  "baseline": {
+    "skin": "CHINESE",
+    "resolution": "1170x2532",
+    "density": 480,
+    "fontScale": 1.0,
+    "night": "no"
+  },
+  "temporaryChecks": {
+    "resolution": "960x2100",
+    "logicalWidthDp": 320,
+    "fontScale": 2.0,
+    "night": "yes"
+  },
+  "export": {
+    "format": "ZIP",
+    "fileName": "lolita_backup_20261022_155423.zip",
+    "pickerSize": "14.37 MB",
+    "preview": {
+      "items": 3,
+      "images": 14,
+      "totalRecords": 285
+    },
+    "restoreConfirmed": false,
+    "sharedOrCommitted": false
+  },
+  "businessSaves": 0,
+  "appAiRequests": 0,
+  "designImagegenCalls": 4,
+  "limitations": [
+    "No database byte comparison",
+    "No restore roundtrip",
+    "Payment editor and item editor code inspection only",
+    "Only Chinese skin tested on current Android app this round",
+    "Concept previews do not prove native implementation correctness"
+  ],
+  "finalDeviceState": {
+    "size": "Physical size: 1080x2400\nOverride size: 1170x2532",
+    "density": "Physical density: 420\nOverride density: 480",
+    "font": "1.0",
+    "night": "Night mode: no"
+  }
+}

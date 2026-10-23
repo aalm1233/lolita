@@ -67,12 +67,16 @@ IME初次仅可见性断言不足，实际截图暴露金额更新后焦点可�
 
 正式包从本次已提交源码的git archive隔离目录clean构建，沿用原签名；项目素材／七背景与依赖素材分别验证。独立正式AVD保全2.67.0的36张旧表、14张原图及3份设置基准；覆盖安装、两次启动、逐字段／SHA和应用版本核验以最终发布回执为准。
 
-正式源码、双渠道附件、匿名下载／HEAD／SHA、公开版本接口与应用实际检查分别记录于本轮发布回执。发布页或API可读不代表应用检查成功，遇外部403如实保留，不改网络逻辑绕过。本轮未删除旧发布附件，应用AI付费调用0次。
+正式源码、双渠道附件、匿名下载／HEAD／SHA、公开版本接口与应用实际检查分别记录于本轮发布回执。发布页或API可读不代表应用检查成功，遇外部403如实保留，不改网络逻辑绕过。本轮按明确授权仅清理Gitee 2.60.2旧APK，旧发布页／校验／GitHub／本机备份保留；应用AI付费调用0次。
 
 ### 本轮交付结果
 
 源码`fa7797c3`与`v2.68.0`已推送。43项去重设备方法通过，Debug与提交归档clean原签名Release通过；2.67.0同签名覆盖并两次启动，36旧表逐字段、14原图SHA及3份设置SHA保持，Room33／42表。37主包assets、7背景RGBA、依赖和profile与已提交源码核验通过；正式App导入入口与Debug主NavHost原物品补充入口已操作。
 
-[GitHub 2.68.0正式版](https://github.com/aalm1233/lolita/releases/tag/v2.68.0)的同一APK／校验文件匿名完整下载、SHA／HEAD和源码标签通过。Gitee上传实际返回HTTP400“文件大小已超出仓库附件配额：1 GB”；新发布保持预发布、没有上传APK，尚未进行正式后的公开版本与App手动检查。已向本轮用户申请仅清理Gitee的2.60.2旧APK，未获得答复前不执行；旧GitHub、本机原包和原Gitee匿名下载副本SHA均为`7044094e…`且一致。不能把GitHub交付描述为双平台全部发布完成。
+[GitHub 2.68.0正式版](https://github.com/aalm1233/lolita/releases/tag/v2.68.0)与[Gitee 2.68.0正式版](https://gitee.com/aalm1233/lolita/releases/tag/v2.68.0)已同步发布同一83,612,053字节原签名APK；APK／校验文件匿名完整下载、SHA256和HEAD跳转通过，三份本地／GitHub／Gitee APK逐字节摘要一致。GitHub源码标签保持指向`fa7797c3`，Gitee标签仅对应分发说明。
+
+Gitee最初因1GB配额返回HTTP400；本轮用户明确回复“同意，仅删除 2.60.2 旧 APK”后，仅删除附件3440824，释放80,947,492字节。删除前核验旧GitHub正式附件摘要与HEAD、本机原包和旧匿名下载副本；删除后确认旧发布内容及SHA256SUMS未改。其他旧附件未删除，不自动授权未来清理；[清理回执](gitee-apk-cleanup-2026-10-23.json)。
+
+完成上传后先保持预发布，匿名完整核验后再转正式，正式状态重新核验。公开版本查询3页后选中最高正式`v2.68.0`；正式App独立AVD一次手动检查显示当前／最新均2.68.0和“已是最新版本”，六条说明可滚动完整查看。本轮接口与App检查成功，不抹除2.67.0等阶段实际403记录；[实际检查](visuals/2026-10-23-order-import-implementation/release-update-success.png)与[说明后半段](visuals/2026-10-23-order-import-implementation/release-update-notes-tail.png)。
 
 [正式发布回执](order-import-release-2.68.0-verification.json)、[正式包入口](visuals/2026-10-23-order-import-implementation/release-import-entry.png)、[实际原物品绑定补充入口](visuals/2026-10-23-order-import-implementation/navhost-supplement.png)。

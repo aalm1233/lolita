@@ -1,0 +1,26 @@
+{
+  "tag": "v2.60.2",
+  "release_id": 1221116,
+  "attachment_id": 3440824,
+  "name": "lolita-2.60.2.apk",
+  "bytes": 80947492,
+  "sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+  "authorization": "2026-10-23 direct human reply: 同意，仅删除 2.60.2 旧 APK",
+  "new_source_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+  "at_utc": "2026-10-23T03:55:07.564465+00:00",
+  "http_status": 204,
+  "old_release_and_other_attachments_retained": true,
+  "github_and_local_backups_verified": true,
+  "old_github_head": [
+    {
+      "host": "github.com",
+      "status": 302
+    },
+    {
+      "host": "release-assets.githubusercontent.com",
+      "status": 200
+    }
+  ],
+  "scope": "仅Gitee 2.60.2的单个APK；保留发布页、SHA256SUMS、GitHub、本机原包与先前匿名下载副本",
+  "future_cleanup_authorized": false
+}

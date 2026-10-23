@@ -1,0 +1,215 @@
+{
+  "version": "2.68.0",
+  "version_code": 143,
+  "source_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+  "implementation_complete": true,
+  "release_status": "GitHub正式版已验证；Gitee因1GB附件配额停在预发布，等待本轮清理授权",
+  "apk": {
+    "package": "com.lolita.app",
+    "version_code": 143,
+    "version": "2.68.0",
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "ff7078b5cea74ab661a22a19b1e666854ba1a2e786fb2405f3e4bcea5a611f35",
+    "bytes": 83612053,
+    "source_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+    "build_log": "logs/clean-release-build.log"
+  },
+  "packaging": {
+    "source_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 37,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "upgrade": {
+    "passed": true,
+    "serial": "emulator-5598",
+    "avd": "Lolita_Material_Release_20261021",
+    "baseline": "2.67.0/142",
+    "target": "2.68.0/143",
+    "same_signature": true,
+    "install_r": true,
+    "uninstall_or_clear_data": false,
+    "old_tables_compared": 36,
+    "old_columns_and_rows_preserved": true,
+    "original_images_sha256_preserved": 14,
+    "settings_files_sha256_preserved": 3,
+    "room_version": 33,
+    "table_count": 42,
+    "launches": 2
+  },
+  "tests": {
+    "distinct_device_methods": 43,
+    "device_methods": [
+      "com.lolita.app.data.ItemDraftBaselineTest#aFreshEditorCanStillSaveWithoutInventingAConflict",
+      "com.lolita.app.data.ItemDraftBaselineTest#aLiveObservedItemAndOwnCoverActionCannotLaunderTheOldEditableBaseline",
+      "com.lolita.app.data.ItemDraftBaselineTest#legacyPreviewAppendRecordsAppearanceOnlyProvenanceInTheSameTransaction",
+      "com.lolita.app.data.ItemDraftBaselineTest#reopeningAnOldDraftBlocksOverwriteAndRetainsBothTheDraftAndLatestPhotosAndLocation",
+      "com.lolita.app.data.ItemDraftBaselineTest#repositoryCommitRejectsAStaleDraftEvenWithoutTheEditor",
+      "com.lolita.app.data.ItemDraftBaselineTest#savingAnAlreadyOpenEditorRejectsAConcurrentChangeWithoutReplacingItsBaseline",
+      "com.lolita.app.data.ItemDraftDeletionRaceTest#deletingFromTheEditorSerializesAutosaveAndClosesKeepDraftBeforeReturning",
+      "com.lolita.app.data.ItemDraftDeletionRaceTest#externallyDeletedItemClosesTheEditorAndKeepDraftCannotRestoreItsOldIdentity",
+      "com.lolita.app.data.ItemDraftDeletionRaceTest#lateSaveCannotRecreateADeletedTargetsDraftAndBackupStillWorks",
+      "com.lolita.app.data.LegacyDraftBackupTest#copiedAndEditedLegacyItemDraftsSurviveJsonExportPreviewAndRestore",
+      "com.lolita.app.data.LegacyDraftBackupTest#copiedAndEditedLegacyItemDraftsSurviveZipExportPreviewAndRestore",
+      "com.lolita.app.data.OrderImportSessionMigrationTest#upgrade32To33PreservesEveryOldTableColumnRelationshipAndImageByte",
+      "com.lolita.app.ui.screen.import.ItemSourceSupplementTest#appendDeduplicatesBytesKeepsCoverAndNeverChangesIdentityOwnershipLocationOrLedger",
+      "com.lolita.app.ui.screen.import.ItemSourceSupplementTest#existingDraftIsTheOnlyWriterAndEvidenceIsAddedOnlyWhenThatDraftCommits",
+      "com.lolita.app.ui.screen.import.ItemSourceSupplementTest#pendingSupplementSurvivesZipRestoreWithExplicitImageReferences",
+      "com.lolita.app.ui.screen.import.ItemSourceSupplementTest#staleItemAndUnconfirmedSkuCannotOverwriteCurrentData",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#allChangedPagesRenderWithSevenRealSkinsInLightAndDark",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#detailUsesFinalTitleWithSevenSkinsAndSmallFontPagesKeepPrimaryAction",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#paidDatePickerKeepsSelectedLocalDayAndIncompleteMoneyCannotBeConfirmed",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#searchPreservesHiddenSelectionAndPrivacyChangesImmediately",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#smallScreenTwoTimesFontKeepsFinanceInputAndSaveAboveRealKeyboard",
+      "com.lolita.app.ui.screen.import.OrderImportExperienceScreenTest#supplementPhotosAndLongDetailsOpenFullFitWithoutChangingOriginalBytes",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#backup14IncludesSessionsReceiptsSourcesAndRejectsDuplicateReceiptGraph",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#committedOperationRecoversResultWithoutReplayingAndDeletedSourceRequiresExplicitGeneration",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#concurrentSessionsHaveOneSourceReceiptAndOneActualPayment",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#draftPhotoZipRoundTripRemapsEveryReferenceAndDiscardProtectsSharedImage",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#failedFinalWriteRollsBackWholeBatchAndKeepsDraft",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#fileConflictIsVisibleAndMoneyIsNotAcceptedAsZero",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#partialCommitRestoresAndRepeatedSourcesDoNotDuplicateItemsOrPayments",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#rawIncompleteInputAndUnknownDateSurviveNewViewModelWithoutWritingBusinessRows",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#sourceReplacementPreservesEditedInputsAndRemovalReportsExactUnsubmittedScope",
+      "com.lolita.app.ui.screen.import.OrderImportSessionTest#staleSessionCannotOverwriteOrResurrectDiscardedDraft",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#clearingViewModelDeletesOnlyItsMasterCacheAndKeepsEditorAndUnrelatedFiles",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#colorStyleOptInKeepsTwoChoicesAndSeparateQuotesAcrossToggleAndSerializedRestore",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#discardingSecondPiecePausesAndContinuingPreservesFirstEditorsFiles",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#failedEditorHandoffDeletesOnlyUntransferredCopiesAndRetryKeepsTheSamePiece",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#missingRestoredMasterFileShowsErrorAndCannotSilentlyRestartTheBatch",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#savedResultAfterRestoringMissingCacheCountsTheSaveButNeverRecreatesNextPiece",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#savingFirstPieceAutomaticallyHandsOffSecondWithAllIndependentDetailImages",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#serializedRestoreKeepsActiveTokenAndContinuesAtTheNextUnsavedPiece",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#sizedChoicesAndQuotesSurviveSelectionRestoreAndBothSequentialEditorHandoffs",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#skuSelectionLimitAndInvalidPricePreventExtraItemsOrDownloads",
+      "com.lolita.app.ui.screen.import.TaobaoProductViewModelTest#staleResultsAndRepeatedEditDoNotDuplicateAnActiveSecondPiece"
+    ],
+    "unit": [
+      "OrderImportReliabilityTest (6)",
+      "TaobaoOrderParserTest (6)",
+      "BackupFormatTest",
+      "WardrobeBackupFormatTest",
+      "ImportAccountingTest"
+    ],
+    "native_screenshots": 184,
+    "seven_skins_light_dark": true,
+    "real_320dp_font2_ime_focus_geometry": true
+  },
+  "github": {
+    "tag": "v2.68.0",
+    "source_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+    "release_id": 421333620,
+    "prerelease": false,
+    "files": {
+      "lolita-2.68.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.68.0/lolita-2.68.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83612053,
+        "sha256": "ff7078b5cea74ab661a22a19b1e666854ba1a2e786fb2405f3e4bcea5a611f35",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.68.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "5eec4d5db9c9b06cb12570ddc080344ba6f4285f3a950e459e8280dc5b11e72e",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83612053,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "formal": false,
+    "upload_rejected_http": 400,
+    "reason": "文件大小已超出仓库附件配额：1 GB",
+    "new_release_prerelease": true,
+    "apk_uploaded": false,
+    "cleanup_authorized": false,
+    "proposed_cleanup": {
+      "tag": "v2.60.2",
+      "release_id": 1221116,
+      "attachment_id": 3440824,
+      "name": "lolita-2.60.2.apk",
+      "bytes": 80947492,
+      "sha256": "7044094e119d78166caf42f2e8cc9fdff3aa3c679e67b79acba0fa34d8c547a7",
+      "other_attachments": [
+        {
+          "id": 3440825,
+          "name": "SHA256SUMS",
+          "size": 84
+        }
+      ],
+      "execution_authorized": false,
+      "reason": "New 2.68.0 upload rejected: repository attachment quota 1GB"
+    },
+    "public_update_api_checked_after_formalization": false
+  },
+  "application_manual_update": {
+    "performed": false,
+    "reason": "等待Gitee正式发布后单独检查，不用GitHub下载结果冒充应用检查成功"
+  },
+  "native_navigation": {
+    "debug_main_navhost_import_entry": true,
+    "debug_main_navhost_bound_item_supplement": true,
+    "formal_main_navhost_import_entry": true
+  },
+  "paid_application_calls": 0,
+  "old_attachments_deleted_this_turn": [],
+  "user_data_cleared_or_uninstalled": false
+}

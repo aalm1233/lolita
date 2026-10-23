@@ -56,6 +56,10 @@ Room33、42实体、备份14不变；BudgetEntry身份只用于查询投影。�
 
 [GitHub正式版](https://github.com/aalm1233/lolita/releases/tag/v2.69.0)已发布；匿名完整下载APK与SHA256SUMS及HEAD、源码标签核验通过。APK共83,644,821字节，SHA256为`cfe97d8bc64b8f7318c8a9a28eef763c1413c9137aff8f3062310490a2c786cd`。
 
-Gitee实际上传返回HTTP400：附件总配额1 GB已满。2.69.0保持预发布，不成为正常更新候选；本轮未删除旧附件。已请求仅删除2.61.0旧APK（80,963,876字节），其发布说明／校验／GitHub及本机副本保留，等待本轮明确许可。尚未完成国内正式发布和对应App更新验收，不能宣称双渠道交付完成。
+Gitee初次上传因附件总配额1 GB返回HTTP400。用户本轮明确同意“仅删除2.61.0旧APK”，已仅删除附件3442860（80,963,876字节），逐项核验该版本发布说明、校验和其他附件未变，GitHub与本机旧包仍保留。[清理回执](gitee-apk-cleanup-2.61.0-2026-10-23.json)仅适用于本次明确目标，不授权未来清理。
+
+[Gitee正式版](https://gitee.com/aalm1233/lolita/releases/tag/v2.69.0)已完成上传，先以预发布执行匿名完整下载APK／SHA256SUMS并核对摘要与HEAD，再改为正式版；转正式后再次匿名完整下载核验同一APK与校验文件，HEAD通过。公开更新接口确认最高正式版本为2.69.0。
+
+正式AVD的一次手动“检查更新”正确显示“已是最新版本”、当前与最新均为v2.69.0，六项更新说明已载入；[实际截图](visuals/2026-10-23-price-implementation/release-update-check.png)。本次没有把同版本检查冒充旧版升级提示或系统安装器交互测试，覆盖安装已由前述adb install -r独立验证。
 
 结构化回执：[2.69.0发布验证](price-experience-release-2.69.0-verification.json)。

@@ -1,0 +1,24 @@
+{
+  "tag": "v2.61.0",
+  "release_id": 1221774,
+  "attachment_id": 3442860,
+  "name": "lolita-2.61.0.apk",
+  "bytes": 80963876,
+  "sha256": "c269469868e6637934db13d728dc0f9522cd9e67bf7e8b1b2c69b029abfd9b9c",
+  "authorization": "2026-10-23 用户明确授权：同意，仅删除2.61.0旧APK",
+  "new_source_commit": "6dc28e928983bccd921b006c9f54e227e7c04768",
+  "at_utc": "2026-10-23T08:48:19.457351+00:00",
+  "http_status": 204,
+  "old_release_and_other_attachments_retained": true,
+  "github_and_local_backups_verified": true,
+  "old_github_head": [
+    {
+      "host": "github.com",
+      "status": 302
+    },
+    {
+      "host": "release-assets.githubusercontent.com",
+      "status": 200
+    }
+  ]
+}

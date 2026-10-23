@@ -25,6 +25,8 @@
 - 上述两轮提案于2.67.0开始实施，最终采用范围与原生验收以 `docs/creative-design-implementation-2026-10-22.md` 为准；前两条保留原设计阶段记录。实施计划为 `docs/plans/2026-10-22-creative-design-implementation.md`。
 - 第三轮功能体验见 `docs/plans/2026-10-22-order-import-experience-review.md`：2.67.0独立AVD实测淘宝订单重复导入、金额解析归零、多文件金额冲突、草稿回收、部分导入续办与320dp两倍字体问题，并提出核对/收纳衔接建议。本轮仅审查，未实现；截图与虚构订单证据在 `docs/visuals/2026-10-22-order-import-review/`，实施前仍须归档界面设计与七皮肤浅暗方案。
 
+- 价格专项体验见 `docs/plans/2026-10-23-price-experience-review.md`：2.68.0独立AVD复现付款旋转丢输入、年历金额隐私遗漏、心愿录价转待付款及超额禁用缺反馈，并审查年历日期、历史补录和预算衔接；四场景提案与七皮肤浅暗归档在 `docs/visuals/2026-10-23-price-review/`。本轮仅审查／设计，未改应用；浏览器原型检查不替代原生验收。
+
 ## 架构与实现约定
 
 - 新 DAO 必须同步接到三处：`LolitaDatabase`、对应 `Repository`、`AppModule`。

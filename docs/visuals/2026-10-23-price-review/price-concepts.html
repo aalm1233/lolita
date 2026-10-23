@@ -1,0 +1,118 @@
+<div id="lolita-price-proposal">
+  <div class="viz-controls" aria-label="价格界面提案预览设置">
+    <label class="form-label">场景<select class="form-select" id="lp-scene"><option value="overview">订单总览</option><option value="payment">记录付款</option><option value="price">设置价格</option><option value="review">历史核对</option></select></label>
+    <label class="form-label">外观<select class="form-select" id="lp-mode"><option value="light">浅色</option><option value="dark">暗色</option></select></label>
+    <label class="form-check"><input class="form-check-input" type="checkbox" id="lp-large"><span class="form-check-label">两倍字体</span></label>
+  </div>
+  <div class="text-small text-muted">界面提案 · 虚构订单 · 尚未实现</div>
+  <div class="viz-carousel viz-dotted-background" id="lp-carousel" aria-label="七套皮肤方案" data-previous-label="上一套" data-next-label="下一套">
+    <section data-variant="甜美 · 柔软手账"><div class="lp-phone" data-skin="sweet"><div class="lp-top"><span aria-hidden="true">‹</span><b class="lp-title">价格与付款</b><span class="lp-emblem" aria-hidden="true">✿</span></div><div class="lp-body"></div><div class="lp-nav"><span>首页</span><span>穿搭</span><span>统计</span><span>个人</span></div></div></section>
+    <section data-variant="哥特 · 尖拱账册" hidden><div class="lp-phone" data-skin="gothic"></div></section>
+    <section data-variant="中华 · 折页笺纸" hidden><div class="lp-phone" data-skin="chinese"></div></section>
+    <section data-variant="古典 · 对称藏书" hidden><div class="lp-phone" data-skin="classic"></div></section>
+    <section data-variant="海军 · 航行手册" hidden><div class="lp-phone" data-skin="navy"></div></section>
+    <section data-variant="田园 · 布面日记" hidden><div class="lp-phone" data-skin="country"></div></section>
+    <section data-variant="维多利亚 · 拱形账簿" hidden><div class="lp-phone" data-skin="victorian"></div></section>
+  </div>
+</div>
+<style>
+#lolita-price-proposal{max-width:736px;margin:auto}
+#lp-carousel{margin-top:12px;padding:16px 0 54px}
+#lp-carousel>section{min-height:940px}
+#lolita-price-proposal .lp-phone{--bg:#fff4f7;--paper:#fffdfd;--ink:#40353e;--muted:#74636e;--accent:#b52c70;--line:#e9d6df;--soft:#fae9f1;--danger:#b02d3c;--radius:22px;width:min(390px,100%);margin:0 auto;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;border-radius:28px;overflow:hidden;box-shadow:0 12px 40px #00000012;--scale:1}
+#lolita-price-proposal .lp-phone[data-skin=gothic]{--bg:#f2eef5;--paper:#fcfaff;--ink:#30293d;--muted:#6e6279;--accent:#74459a;--line:#d4c6df;--soft:#ece3f2;--radius:4px}
+#lolita-price-proposal .lp-phone[data-skin=chinese]{--bg:#f5eee1;--paper:#fffaf1;--ink:#443930;--muted:#756b5c;--accent:#a13c36;--line:#decdb3;--soft:#f4e5d7;--radius:10px}
+#lolita-price-proposal .lp-phone[data-skin=classic]{--bg:#f3ece9;--paper:#fffaf7;--ink:#473b38;--muted:#796b64;--accent:#874c59;--line:#d9c7bc;--soft:#f0e3df;--radius:6px}
+#lolita-price-proposal .lp-phone[data-skin=navy]{--bg:#edf4f8;--paper:#fbfeff;--ink:#233d50;--muted:#617788;--accent:#286b92;--line:#cadce7;--soft:#e1eef5;--radius:17px}
+#lolita-price-proposal .lp-phone[data-skin=country]{--bg:#f1f3e8;--paper:#fffef7;--ink:#3f4938;--muted:#6b765f;--accent:#737c3f;--line:#d4d9bd;--soft:#ebeedb;--radius:28px 28px 12px 12px}
+#lolita-price-proposal .lp-phone[data-skin=victorian]{--bg:#f5edf0;--paper:#fffbf5;--ink:#493d43;--muted:#7c6b74;--accent:#955d72;--line:#ddc7b7;--soft:#f3e5e7;--radius:30px 30px 8px 8px}
+#lolita-price-proposal .lp-phone[data-mode=dark]{--bg:#231f25;--paper:#302b32;--ink:#f4eaf0;--muted:#c6b7c1;--accent:#eda5c6;--line:#564651;--soft:#45303e;--danger:#ffadb3;box-shadow:none}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=gothic]{--bg:#17151e;--paper:#262230;--accent:#c6a0e7;--line:#51415f;--soft:#382b49}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=chinese]{--bg:#231e1c;--paper:#342a25;--accent:#e7a291;--line:#60463c;--soft:#4b312b;--ink:#f4e9d9;--muted:#c6b4a3}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=classic]{--bg:#272022;--paper:#372e30;--accent:#e0abb6;--line:#624c51;--soft:#4a353b}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=navy]{--bg:#172531;--paper:#243644;--ink:#e8f3fa;--muted:#b1c7d5;--accent:#9bcee9;--line:#456071;--soft:#2f4b60}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=country]{--bg:#24291f;--paper:#333a2c;--ink:#f1f1df;--muted:#c2c6ac;--accent:#c7d396;--line:#586145;--soft:#444e34}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=victorian]{--bg:#2a2028;--paper:#3a2b35;--accent:#e8b2c7;--line:#715461;--soft:#523746}
+#lolita-price-proposal .lp-top{display:flex;gap:16px;align-items:center;padding:23px 20px 17px;background:var(--soft);border-bottom:1px solid var(--line)}
+#lolita-price-proposal .lp-title{flex:1;text-align:center;font-size:calc(18px * var(--scale));font-weight:500;line-height:1.45}
+#lolita-price-proposal .lp-emblem{color:var(--accent)}
+#lolita-price-proposal .lp-body{padding:18px;display:flex;flex-direction:column;gap:16px;font-size:calc(16px * var(--scale))}
+#lolita-price-proposal .lp-context{display:flex;gap:10px;align-items:center}
+#lolita-price-proposal .lp-context b{font-size:calc(16px * var(--scale));font-weight:500}
+#lolita-price-proposal .lp-context small{display:block;color:var(--muted);font-size:calc(13px * var(--scale))}
+#lolita-price-proposal .lp-medallion{color:var(--accent);background:var(--soft);padding:8px 12px;border-radius:14px;font-size:21px;flex-shrink:0}
+#lolita-price-proposal .lp-panel{padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}
+#lolita-price-proposal .lp-hero{position:relative;padding:22px 20px 18px;background:var(--paper);border-radius:var(--radius);border:1px solid var(--line)}
+#lolita-price-proposal .lp-hero:before{content:"";display:block;width:44px;height:4px;background:var(--accent);margin-bottom:16px;border-radius:4px}
+#lolita-price-proposal .lp-phone[data-skin=gothic] .lp-hero{border-radius:42px 42px 3px 3px;border-top:3px solid var(--accent)}
+#lolita-price-proposal .lp-phone[data-skin=gothic] .lp-hero:before{width:24px;transform:rotate(-45deg);height:3px;border-radius:0}
+#lolita-price-proposal .lp-phone[data-skin=chinese] .lp-hero{border-left:5px solid var(--accent);border-radius:2px 16px 16px 2px}
+#lolita-price-proposal .lp-phone[data-skin=chinese] .lp-hero:before{width:58px;height:2px;border-radius:0;border-top:3px double var(--accent);background:transparent;transform:skewX(-25deg)}
+#lolita-price-proposal .lp-phone[data-skin=classic] .lp-hero:before{margin-left:auto;margin-right:auto;border-radius:0;width:64px;height:1px}
+#lolita-price-proposal .lp-phone[data-skin=navy] .lp-hero{border-top:5px solid var(--accent);border-bottom:3px double var(--line)}
+#lolita-price-proposal .lp-phone[data-skin=navy] .lp-hero:before{height:14px;width:14px;border:2px solid var(--accent);border-radius:50%;background:transparent}
+#lolita-price-proposal .lp-phone[data-skin=country] .lp-hero{border-top:7px solid var(--soft)}
+#lolita-price-proposal .lp-phone[data-skin=country] .lp-hero:before{border-radius:0 12px 0 12px;width:26px;height:10px}
+#lolita-price-proposal .lp-phone[data-skin=victorian] .lp-hero{border:3px double var(--line);border-radius:48px 48px 10px 10px}
+#lolita-price-proposal .lp-phone[data-skin=victorian] .lp-hero:before{border-radius:50% 50% 0 0;width:30px;height:9px;background:transparent;border-top:2px solid var(--accent);margin-left:auto;margin-right:auto}
+#lolita-price-proposal .lp-eyebrow{color:var(--muted);font-size:calc(13px * var(--scale));margin-bottom:4px}
+#lolita-price-proposal .lp-amount{font-size:calc(30px * var(--scale));font-weight:600;line-height:1.3;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;margin:4px 0 10px}
+#lolita-price-proposal .lp-meta{font-size:calc(13px * var(--scale));color:var(--muted)}
+#lolita-price-proposal .lp-split{display:flex;flex-wrap:wrap;gap:8px 22px;padding-top:12px;margin-top:14px;border-top:1px solid var(--line);font-size:calc(14px * var(--scale))}
+#lolita-price-proposal .lp-split span{flex:1;min-width:100px}
+#lolita-price-proposal .lp-split b{display:block;font-weight:500;font-variant-numeric:tabular-nums}
+#lolita-price-proposal .lp-phone button,#lolita-price-proposal .lp-phone input,#lolita-price-proposal .lp-phone select{font:inherit;color:inherit;max-width:100%;box-sizing:border-box}
+#lolita-price-proposal .lp-phone button{min-height:44px;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:9px 14px;cursor:default;white-space:normal;overflow-wrap:anywhere}
+#lolita-price-proposal .lp-phone button.lp-primary{background:var(--accent);color:var(--paper);border-color:var(--accent);font-weight:500;width:100%}
+#lolita-price-proposal .lp-phone[data-mode=dark] button.lp-primary{color:var(--bg)}
+#lolita-price-proposal .lp-phone button.lp-link{border:0;background:transparent;color:var(--accent);padding:6px 0;text-align:left}
+#lolita-price-proposal .lp-phone button:disabled{opacity:.5;cursor:default}
+#lolita-price-proposal .lp-phone button:focus-visible,#lolita-price-proposal .lp-phone input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#lolita-price-proposal .lp-phone h3{font-size:calc(18px * var(--scale));font-weight:600;margin:0 0 12px}
+#lolita-price-proposal .lp-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+#lolita-price-proposal .lp-heading h3{margin:0}
+#lolita-price-proposal .lp-timeline{list-style:none;padding:0;margin:16px 0 0}
+#lolita-price-proposal .lp-timeline li{position:relative;margin-left:6px;padding:0 0 22px 19px;border-left:1px solid var(--line)}
+#lolita-price-proposal .lp-timeline li:last-child{padding-bottom:0}
+#lolita-price-proposal .lp-timeline li:before{content:"";width:9px;height:9px;position:absolute;left:-5px;top:8px;border-radius:50%;background:var(--accent)}
+#lolita-price-proposal .lp-timeline b{font-weight:500;display:block}
+#lolita-price-proposal .lp-note{padding:12px;background:var(--soft);border-radius:10px;font-size:calc(14px * var(--scale));color:var(--ink)}
+#lolita-price-proposal .lp-phone label{display:block;margin-bottom:14px}
+#lolita-price-proposal .lp-phone input:not([type=checkbox]),#lolita-price-proposal .lp-phone select{display:block;width:100%;padding:13px 12px;margin-top:7px;border:1px solid var(--line);border-radius:10px;background:var(--paper);min-width:0}
+#lolita-price-proposal .lp-phone input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);vertical-align:middle}
+#lolita-price-proposal .lp-phone summary{cursor:default;color:var(--accent);padding:8px 0}
+#lolita-price-proposal .lp-phone details p{font-size:calc(14px * var(--scale));margin:8px 0}
+#lolita-price-proposal .lp-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:8px 0}
+#lolita-price-proposal .lp-row b{font-weight:500;font-variant-numeric:tabular-nums}
+#lolita-price-proposal .lp-error{color:var(--danger);font-size:calc(14px * var(--scale));margin:10px 0}
+#lolita-price-proposal .lp-nav{display:flex;justify-content:space-around;gap:8px;padding:18px 12px 24px;background:var(--paper);border-top:1px solid var(--line);font-size:calc(12px * var(--scale));flex-wrap:wrap;color:var(--muted)}
+#lolita-price-proposal .lp-nav span:first-child{color:var(--accent)}
+#lolita-price-proposal .lp-phone.lp-large{--scale:2}
+#lolita-price-proposal .lp-phone.lp-large .lp-split span{min-width:100%}
+@media(max-width:420px){#lp-carousel{padding:12px 0 54px}#lolita-price-proposal .lp-body{padding:14px}#lolita-price-proposal .lp-panel,#lolita-price-proposal .lp-hero{padding:16px}}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('lolita-price-proposal');
+const base=root.querySelector('.lp-phone').innerHTML;
+const state={scene:'overview',mode:'light',large:false,amount:'',date:'2026-10-23',paid:false,recorded:0};
+const remaining=()=>Math.max(0,492-state.recorded);
+const titles={overview:'价格与付款',payment:'记录实际付款',price:'设置订单价格',review:'核对购买资料'};
+const emblems={sweet:'✿',gothic:'✝',chinese:'云',classic:'♠',navy:'⚓',country:'❦',victorian:'⚜'};
+root.querySelectorAll('.lp-phone').forEach(p=>{if(!p.innerHTML.trim())p.innerHTML=base;p.querySelector('.lp-emblem').textContent=emblems[p.dataset.skin]});
+const context=(historical=false)=>`<div class="lp-context"><span class="lp-medallion" aria-hidden="true">${historical?'簿':'单'}</span><div><b>${historical?'白蕾丝 JSK':'蔷薇长裙 JSK'}</b><small>${historical?'已确认拥有 · 付款资料待补':'蓝色 / M · 含邮费 ¥12.00'}</small></div></div>`;
+const overview=()=>`${context()}<section class="lp-hero"><div class="lp-eyebrow">${state.paid?'这笔订单已付清':'下一笔 · 尾款'}</div><div class="lp-amount">¥${remaining().toFixed(2)}</div><div class="lp-meta">${state.paid?'实付已保存 · '+state.date:'11月1日到期 · 还有9天'}</div><div class="lp-split"><span>订单总额<b>¥692.00</b></span><span>实际已付<b>¥${(200+state.recorded).toFixed(2)}</b></span></div></section>${state.paid?'<div class="lp-note" role="status">已记录付款；物品及共价小物已拥有。</div>':'<button class="lp-primary" data-go="payment">记一笔付款</button>'}<section class="lp-panel"><div class="lp-heading"><h3>付款进度</h3><button class="lp-link" data-go="price">调整计划</button></div><ol class="lp-timeline"><li><b>定金 ¥200.00</b><span class="lp-meta">10月1日实际付出 · 已付清</span></li><li><b>尾款 ¥492.00</b><span class="lp-meta">${state.paid?state.date+'实际付出 · 已付清':'11月1日应付 · 已录实付 ¥'+state.recorded.toFixed(2)}</span></li></ol></section><details class="lp-panel"><summary>订单明细与管理</summary><div class="lp-row"><span>商品金额</span><b>¥680.00</b></div><div class="lp-row"><span>邮费</span><b>¥12.00</b></div><p>归档保留原始账目，会改变当前订单统计范围。</p><button class="lp-link" data-go="review">历史购买资料核对</button></details>`;
+const payment=()=>`${context()}<div class="lp-note">本次记录真实付出的钱；不会发起支付。</div><section class="lp-panel"><label>本次实付金额（元）<input inputmode="decimal" autocomplete="off" class="lp-payment-amount" placeholder="请输入实际付款金额" value="${/^\d{0,10}(\.\d{0,2})?$/.test(state.amount)?state.amount:''}"></label><button class="lp-link lp-fill">填入尾款余额 ¥${remaining().toFixed(2)}</button><div class="lp-meta">最多可记录 ¥${remaining().toFixed(2)}</div><div class="lp-error" role="alert"></div><label>实际付款日期<input type="date" class="lp-date" value="${state.date}"></label><div class="lp-meta">默认今天；补记以前的付款请修改日期。</div></section><details class="lp-panel"><summary>关联阶段：尾款 · 查看订单参考</summary><div class="lp-row"><span>订单总额</span><b>¥692.00</b></div><div class="lp-row"><span>此前实际已付</span><b>¥${(200+state.recorded).toFixed(2)}</b></div><p>示例从尾款进入，预选该阶段；实际应用可更改或不指定。</p></details><div class="lp-note lp-outcome">填写金额后查看保存结果</div><button class="lp-primary lp-save-payment" disabled>保存付款记录</button><button class="lp-link" data-go="overview">返回订单，保留本次输入</button>`;
+const price=()=>`${context()}<section class="lp-panel"><label>商品金额（元）<input inputmode="decimal" value="680.00" class="lp-goods"></label><label>邮费（元）<input inputmode="decimal" value="12.00" class="lp-shipping"></label><div class="lp-row"><span>含邮费总额</span><b class="lp-total">¥692.00</b></div></section><section class="lp-panel"><h3>付款方式</h3><select class="lp-type" aria-label="付款方式"><option>定金尾款</option><option>全款</option><option>多段</option></select><div class="lp-plan-preview"><div class="lp-row"><span>定金</span><b>¥200.00</b></div><div class="lp-row"><span>尾款 · 11月1日</span><b>¥492.00</b></div></div><details><summary>编辑阶段和提醒</summary><p>阶段名称、金额、日期和提前天数在对应行展开。切换方式前展示重拆差异，手动金额优先。</p></details></section><div class="lp-note">这是购买订单。保存后按实付计算待付，不会自动记为已付款。</div><button class="lp-primary lp-save-price">预览保存结果</button><div class="lp-price-result" role="status"></div>`;
+const review=()=>`${context(true)}<section class="lp-hero"><div class="lp-eyebrow">拥有状态已确认</div><h3>还需核对付款资料</h3><div class="lp-row"><span>订单总价</span><b>¥888.00</b></div><div class="lp-row"><span>实际已付</span><b>记录未补全</b></div><div class="lp-row"><span>未付余额</span><b>未知</b></div></section><section class="lp-panel"><h3>先做一件事</h3><button class="lp-primary lp-history">补录记得的实际付款</button><div class="lp-history-form" hidden><label>实际付款金额（元）<input inputmode="decimal" placeholder="只填写能确认的金额"></label><label><input type="checkbox"> 付款日期记不清</label><div class="lp-note">未知日期保持未知，补录后仍需核对余额。本提案不写入应用。</div></div><p class="lp-meta">补录只增加真实付款证据，仍保留“历史已购”。</p></section><section class="lp-panel"><h3>再确认是否补齐</h3><div class="lp-note">真实付款全部录入、计算余额与实际待付一致后，才启用跟踪。</div><button class="lp-link lp-check">查看核对条件</button><div class="lp-check-detail" hidden>订单总价 − 全部实付 = 实际待付；日期未知的付款仍单独待补。不得根据订单总价补造付款。</div></section>`;
+function validate(p){const v=state.amount.trim();const valid=/^\d+(\.\d{1,2})?$/.test(v)&&Number(v)>0&&Number(v)<=remaining()&&state.date;const e=p.querySelector('.lp-error');if(!e)return;e.textContent=!v?'':Number(v)>remaining()?'超出可记录余额 ¥'+(Number(v)-remaining()).toFixed(2)+'，请核对本次金额。':!/^\d+(\.\d{1,2})?$/.test(v)||Number(v)<=0?'请填写大于0、最多两位小数的金额。':!state.date?'请选择实际付款日期。':'';p.querySelector('.lp-save-payment').disabled=!valid;p.querySelector('.lp-outcome').textContent=valid?`保存后：累计已付 ¥${(200+state.recorded+Number(v)).toFixed(2)}，待付 ¥${(remaining()-Number(v)).toFixed(2)}${Number(v)===remaining()?'；物品及共价小物变为已拥有。':'。'}`:'填写金额后查看保存结果'}
+function persist(){window.openai?.setWidgetState?.({modelContent:{scene:state.scene,mode:state.mode},privateContent:{amount:state.amount,date:state.date,large:state.large,paid:state.paid,recorded:state.recorded}})?.catch(()=>{})}
+function render(){root.querySelector('#lp-scene').value=state.scene;root.querySelector('#lp-mode').value=state.mode;root.querySelector('#lp-large').checked=state.large;root.querySelectorAll('.lp-phone').forEach(p=>{p.dataset.mode=state.mode;p.classList.toggle('lp-large',state.large);p.querySelector('.lp-title').textContent=titles[state.scene];p.querySelector('.lp-body').innerHTML=({overview,payment,price,review}[state.scene])();validate(p)});}
+function restore(s){if(!s)return;const m=s.modelContent||{},q=s.privateContent||{};if(titles[m.scene])state.scene=m.scene;if(['light','dark'].includes(m.mode))state.mode=m.mode;if(typeof q.amount==='string'&&/^\d{0,10}(\.\d{0,2})?$/.test(q.amount))state.amount=q.amount;if(typeof q.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(q.date))state.date=q.date;state.large=!!q.large;state.recorded=Number.isFinite(q.recorded)&&q.recorded>=0&&q.recorded<=492?q.recorded:0;state.paid=remaining()===0;render()}
+root.querySelector('#lp-scene').addEventListener('change',e=>{state.scene=e.target.value;render();persist()});root.querySelector('#lp-mode').addEventListener('change',e=>{state.mode=e.target.value;render();persist()});root.querySelector('#lp-large').addEventListener('change',e=>{state.large=e.target.checked;render();persist()});
+root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=b.closest('.lp-phone');if(b.dataset.go){state.scene=b.dataset.go;render();persist()}else if(b.classList.contains('lp-fill')){state.amount=remaining().toFixed(2);p.querySelector('.lp-payment-amount').value=state.amount;validate(p);persist()}else if(b.classList.contains('lp-save-payment')){state.recorded+=Number(state.amount);state.paid=remaining()===0;state.amount='';state.scene='overview';render();persist()}else if(b.classList.contains('lp-history')){p.querySelector('.lp-history-form').hidden=!p.querySelector('.lp-history-form').hidden}else if(b.classList.contains('lp-check')){p.querySelector('.lp-check-detail').hidden=!p.querySelector('.lp-check-detail').hidden}else if(b.classList.contains('lp-save-price')){p.querySelector('.lp-price-result').textContent='方案演示：保存价格与计划，保留原实付。应用尚未修改。'}});
+root.addEventListener('input',e=>{const p=e.target.closest('.lp-phone');if(!p)return;if(e.target.classList.contains('lp-payment-amount')){state.amount=e.target.value;validate(p);persist()}if(e.target.classList.contains('lp-date')){state.date=e.target.value;validate(p);persist()}if(e.target.matches('.lp-goods,.lp-shipping')){const n=Number(p.querySelector('.lp-goods').value)+Number(p.querySelector('.lp-shipping').value);p.querySelector('.lp-total').textContent=Number.isFinite(n)?'¥'+n.toFixed(2):'请核对金额';p.querySelector('.lp-plan-preview').textContent='金额变化后请核对阶段合计；提案不自动改写原计划。'}});
+root.addEventListener('change',e=>{if(e.target.classList.contains('lp-type'))e.target.closest('.lp-phone').querySelector('.lp-plan-preview').textContent='已选'+e.target.value+'；正式实现需先确认拆分变化，再替换原阶段。'});
+window.addEventListener('openai:set_globals',e=>restore(e.detail?.globals?.widgetState));render();restore(window.openai?.widgetState);
+})();
+</script>

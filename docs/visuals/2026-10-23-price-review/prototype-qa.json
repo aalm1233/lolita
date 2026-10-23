@@ -1,0 +1,908 @@
+{
+  "checks": [
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "price",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "light",
+      "scene": "review",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "sweet",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "gothic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "chinese",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "classic",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "navy",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "country",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 736,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "victorian",
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "overview",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "payment",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "price",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "light",
+      "scene": "review",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "overview",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "payment",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "price",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "sweet",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "gothic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "chinese",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "classic",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "navy",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "country",
+      "client": 288,
+      "scroll": 288
+    },
+    {
+      "width": 320,
+      "mode": "dark",
+      "scene": "review",
+      "skin": "victorian",
+      "client": 288,
+      "scroll": 288
+    }
+  ],
+  "errors": [],
+  "interactions": [
+    "overpayment blocked with exact difference",
+    "partial payment 100 leaves392",
+    "quickfill392",
+    "full payment total692"
+  ],
+  "scope": "Browser mockup only; does not verify Android Compose"
+}

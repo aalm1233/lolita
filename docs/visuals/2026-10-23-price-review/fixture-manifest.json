@@ -1,0 +1,25 @@
+{
+  "items": [
+    [
+      9001,
+      "体验01 星夜花园 · 新建价格",
+      "WISHED"
+    ],
+    [
+      9002,
+      "体验02 蔷薇长裙 · 定金尾款",
+      "PENDING_BALANCE"
+    ],
+    [
+      9003,
+      "体验03 白蕾丝 · 历史已购",
+      "OWNED"
+    ],
+    [
+      9004,
+      "体验04 雾蓝发带 · 共用主件",
+      "PENDING_BALANCE"
+    ]
+  ],
+  "note": "Synthetic fixtures appended to a copy of the dedicated creative test AVD database. Existing records retained. UI interactions are recorded separately."
+}

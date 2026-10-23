@@ -1,0 +1,400 @@
+{
+  "kind": "UX review; native screenshots separate from concept mockups",
+  "files": [
+    {
+      "name": "concept-chinese-dark.png",
+      "bytes": 47287,
+      "sha256": "52c9ced96ab1e426527ece13866bfc544c1b0f8bde0bf9d6092a62edf5ec8700"
+    },
+    {
+      "name": "concept-chinese-light.png",
+      "bytes": 46338,
+      "sha256": "14c527dd1c39fca0d9b7e9ee8cca84c9bd0724852778048dc014e731fce8a39d"
+    },
+    {
+      "name": "concept-classic-dark.png",
+      "bytes": 46248,
+      "sha256": "03b496cecba3b1269597fd9a899244c872656c096f0a54f5f3037957cddab36b"
+    },
+    {
+      "name": "concept-classic-light.png",
+      "bytes": 45371,
+      "sha256": "a4856ee51c47b585bf189f94a65ed724e25df4a0e4853b2929fe8518663812b8"
+    },
+    {
+      "name": "concept-country-dark.png",
+      "bytes": 48613,
+      "sha256": "bbd31f8d32d71bcbfe03611f12734950ad6a8f034ce72d8667e9c0b526dfcf4d"
+    },
+    {
+      "name": "concept-country-light.png",
+      "bytes": 48366,
+      "sha256": "a97cc44658dae7675b2c1bc1da60861ec6e6053df16868e8b3850814f60cdb32"
+    },
+    {
+      "name": "concept-gothic-dark.png",
+      "bytes": 47189,
+      "sha256": "b7300f9cb26c248bf4f8dd39b72b14681eb5f9395705fc4b0079ecc89539d623"
+    },
+    {
+      "name": "concept-gothic-light.png",
+      "bytes": 46623,
+      "sha256": "8bee67a3c06a38893b5d5f56c5544a885cc62ed4f688859c3ba6bb758a4bc007"
+    },
+    {
+      "name": "concept-main.jpg",
+      "bytes": 159505,
+      "sha256": "15219b5e0ec3025ec422d2ac0e83ffbacee1c54362bdd52c8a79db7b28d91a81"
+    },
+    {
+      "name": "concept-navy-dark.png",
+      "bytes": 48609,
+      "sha256": "e12ca7a6494b39019f1f4e9821829140fa2401222bb544b23338a8b062fd0662"
+    },
+    {
+      "name": "concept-navy-light.png",
+      "bytes": 48455,
+      "sha256": "09b7289536bcc7d4f4e904bbb2735aa97864f69189215b5a892e27b647d5fcc0"
+    },
+    {
+      "name": "concept-overview.png",
+      "bytes": 47767,
+      "sha256": "a4909170a3b9e90ffe2702b1cce013ecd4efe9c802d43cae212acee4cafa49f2"
+    },
+    {
+      "name": "concept-payment.png",
+      "bytes": 61878,
+      "sha256": "d3cab3319587526caa0fda5915d0448e556d1cd0f88d221bb207a5cfd90cbf51"
+    },
+    {
+      "name": "concept-price.png",
+      "bytes": 51071,
+      "sha256": "7ec464f8f2cd3ba956675f93a8cbb4b86b1f425b6affddacbb3655c1ac6ae4f8"
+    },
+    {
+      "name": "concept-review.png",
+      "bytes": 57470,
+      "sha256": "6088332fda683d0ba325f891187fada621b2dce6676890f2492f9fca72bff1e8"
+    },
+    {
+      "name": "concept-seven-skins.jpg",
+      "bytes": 329764,
+      "sha256": "f431f4f2e82052baf7987d0652d4b6af8555ee5443092dbbfc24461ed4e2a838"
+    },
+    {
+      "name": "concept-small-overview-dark.png",
+      "bytes": 83218,
+      "sha256": "15c407aeb21a4c604d12b51b6119a03a9688263361f60613622f0ec986ca94ac"
+    },
+    {
+      "name": "concept-small-overview-light.png",
+      "bytes": 81153,
+      "sha256": "f498e74f9d9b992d7f1c286c46b398ca09db409154491bb8e49055e0c01a75d7"
+    },
+    {
+      "name": "concept-small-payment-dark.png",
+      "bytes": 97960,
+      "sha256": "72ba28dfabde97d0b35fe0fa25b5c057d628acbd4942611e2d7c1a7365dfdc50"
+    },
+    {
+      "name": "concept-small-payment-light.png",
+      "bytes": 96811,
+      "sha256": "90738b699b1150e5c6408297a0060a35157e82ae3a1c2902f623910a1c75fd3c"
+    },
+    {
+      "name": "concept-small-price-dark.png",
+      "bytes": 86945,
+      "sha256": "36f8aea7f20ca4343fd7ad95600b16e123a6410f80b2c6e27925b893631ac4bb"
+    },
+    {
+      "name": "concept-small-price-light.png",
+      "bytes": 84177,
+      "sha256": "1667d970b2bdc2e4af4439f60c272a62b2a8689b8aac4259de13a0342b61c2ce"
+    },
+    {
+      "name": "concept-small-review-dark.png",
+      "bytes": 96523,
+      "sha256": "3e9b401d73744c04449594ddc3bcca302a04d52c9897772b80097f944e9873c2"
+    },
+    {
+      "name": "concept-small-review-light.png",
+      "bytes": 94483,
+      "sha256": "a12658c9274b63e1f07bf727cbae54907d9629498570363cef86e2419f185e8b"
+    },
+    {
+      "name": "concept-sweet-dark.png",
+      "bytes": 48618,
+      "sha256": "860f6d39aa67e03526fd96fe1028d61b0b48c65bbca01742df7f55048740cdcb"
+    },
+    {
+      "name": "concept-sweet-light.png",
+      "bytes": 47767,
+      "sha256": "a4909170a3b9e90ffe2702b1cce013ecd4efe9c802d43cae212acee4cafa49f2"
+    },
+    {
+      "name": "concept-victorian-dark.png",
+      "bytes": 48313,
+      "sha256": "b8820a6631f7c5b42ef3071f037c8673aaa42f75250a6c8855929dccbd102492"
+    },
+    {
+      "name": "concept-victorian-light.png",
+      "bytes": 49209,
+      "sha256": "1cd2dda65b2aeb926865523f83dd9b8da1bff662d5b0687d78dbfef77ec4f733"
+    },
+    {
+      "name": "fixture-manifest.json",
+      "bytes": 545,
+      "sha256": "7f012170fd8abd808d2bb138b7c01335cf28ffac1eba93aea24f5337dc28eaa4"
+    },
+    {
+      "name": "native-05-price.png",
+      "bytes": 748867,
+      "sha256": "7d9963b5fb700359c577615b64b565ecfad7e918067f90494bb0bb0088fedae5"
+    },
+    {
+      "name": "native-05-price.xml",
+      "bytes": 17878,
+      "sha256": "3161c06ea424779e8da4a7a6b00a302b41952026b4adec6242bc5b6e0e74f20a"
+    },
+    {
+      "name": "native-06-ledger.png",
+      "bytes": 556654,
+      "sha256": "51e3289487eb06a953d5c13b447e85a7724e20510a14be4a3b0a47ee5671f28c"
+    },
+    {
+      "name": "native-06-ledger.xml",
+      "bytes": 22248,
+      "sha256": "21a0ec32c62f6914c8bb48da26745782f12bf45d701ca93c2cc1bc751159f454"
+    },
+    {
+      "name": "native-07-payment.png",
+      "bytes": 668379,
+      "sha256": "706409bdb4fd2649a25dde58ef6e94914a867c8471375162ef8568a15b03bb8b"
+    },
+    {
+      "name": "native-07-payment.xml",
+      "bytes": 20443,
+      "sha256": "29e99565b27baaf8ce16fb5161f0c7dabc4d8daf77f9b0eadfd34d95fbfb56bd"
+    },
+    {
+      "name": "native-09-overpayment.png",
+      "bytes": 477607,
+      "sha256": "0123c121596b95a6fb9c82567416da5481bc6dd05a7c0b3ad5acbfabb7ca8b3e"
+    },
+    {
+      "name": "native-09-overpayment.xml",
+      "bytes": 17714,
+      "sha256": "beac8aaf4ccb500db444994a635bb50a977e60cec3bd1239640d981a0f57eabe"
+    },
+    {
+      "name": "native-10-overpayment-no-ime.png",
+      "bytes": 667529,
+      "sha256": "79f9d6746599fdeaad3b2781b89a69de403a881a772ded9a40b8b2d18edd265a"
+    },
+    {
+      "name": "native-10-overpayment-no-ime.xml",
+      "bytes": 21079,
+      "sha256": "9b8b8840d998328be15db1eea4a710236954b4b3d16d999601ec3d4b991da1b1"
+    },
+    {
+      "name": "native-11-rotation.png",
+      "bytes": 272863,
+      "sha256": "fdfc71d73b2b10b421fb094ac0b259ad12424cbe67f96ebc271624025b445961"
+    },
+    {
+      "name": "native-11-rotation.xml",
+      "bytes": 14297,
+      "sha256": "a408ac25c53af1c37fb925d9a8757aaf62c74c0ceadcb9cb73c6c4d9cb55ac39"
+    },
+    {
+      "name": "native-12-rotation-return.png",
+      "bytes": 669750,
+      "sha256": "0f1f0af40fd92fedbd9e353d8a1d6c871e392ab41082d630084d14f5282dd17a"
+    },
+    {
+      "name": "native-12-rotation-return.xml",
+      "bytes": 20442,
+      "sha256": "e2dec7f8910537237e55153ba94162f95605b02998afe87e9c2f364a129cb9aa"
+    },
+    {
+      "name": "native-15-paid.png",
+      "bytes": 554078,
+      "sha256": "4b0bc8c45941105e8f19bd747c59322a40a8938ef95b0697b68f42d42fd37900"
+    },
+    {
+      "name": "native-15-paid.xml",
+      "bytes": 22242,
+      "sha256": "333780995aa10e3c1ac9f50b700cad3ce62cb229fef9978ef1440aa814451ed6"
+    },
+    {
+      "name": "native-18-revoke-confirm.png",
+      "bytes": 478994,
+      "sha256": "5ead09a22cd12732f40d83ad621180a5862ab1f1ce00d7088f5390bead4e72f1"
+    },
+    {
+      "name": "native-18-revoke-confirm.xml",
+      "bytes": 5411,
+      "sha256": "eba722e9b700b346e11cd4e0fe5385e464a9d173a0c7fb92e18774dc1eff241f"
+    },
+    {
+      "name": "native-24-new-price.png",
+      "bytes": 594443,
+      "sha256": "377b8f66440662866e4881daced393d4f5b77e5da60d0b3ae39d33cbc9ea392d"
+    },
+    {
+      "name": "native-24-new-price.xml",
+      "bytes": 22592,
+      "sha256": "871902dc3770b669d08cdcf3d11b2620839c52a5175fff764d29e714d11f63e2"
+    },
+    {
+      "name": "native-27-price-created.png",
+      "bytes": 746856,
+      "sha256": "d7e7a350e2fa8af5b1016da7e051ed93791d9fa7397ebaeacc5ca5dff6358c18"
+    },
+    {
+      "name": "native-27-price-created.xml",
+      "bytes": 17873,
+      "sha256": "6df162970678eb1a1f6fe96852fde1fb2e593fcb11eb22df42e8f51ec5c812ea"
+    },
+    {
+      "name": "native-28-wish-became-order.png",
+      "bytes": 748114,
+      "sha256": "f176373d848046e80559ff2e17bfe766efb00fab06c6ca9e4954564b1ccf09a2"
+    },
+    {
+      "name": "native-28-wish-became-order.xml",
+      "bytes": 23380,
+      "sha256": "c692622350f9c01f6b7af47cfd821933d65af6d5e376f88d743540a29edfcdc5"
+    },
+    {
+      "name": "native-30-calendar.png",
+      "bytes": 879135,
+      "sha256": "7aaccbcb317d8dc20d7be34b36faa37cc18cfb8653cad233a13a83a8694bcf02"
+    },
+    {
+      "name": "native-30-calendar.xml",
+      "bytes": 26339,
+      "sha256": "00e70c7db50f9679740c3e4a35d544ebc4242228566882b4e2ad17dce8c5b0f9"
+    },
+    {
+      "name": "native-32-settings-money.png",
+      "bytes": 830401,
+      "sha256": "32470956feaa19d03d8b3c93845ec88acfc3ba55a29b2912b5534c4312594cc0"
+    },
+    {
+      "name": "native-32-settings-money.xml",
+      "bytes": 21515,
+      "sha256": "91434e057366cf379583812eb1292fa969af93459afaaaa5210885e0b215ebb4"
+    },
+    {
+      "name": "native-36-calendar-pay-confirm.png",
+      "bytes": 673420,
+      "sha256": "66f09b80348616c1a8348940fc6e17038a03257ef26ca3ccd88940cf7eac53f6"
+    },
+    {
+      "name": "native-36-calendar-pay-confirm.xml",
+      "bytes": 5364,
+      "sha256": "56f99e33a0e3d6a20cddb63145bd23c32389349e9caa0174116bc30906893d80"
+    },
+    {
+      "name": "native-39-budget-hidden.png",
+      "bytes": 864076,
+      "sha256": "23e5b42948585f8efff931ae0da7e74f688d12a12ea6c8b3d94d0786d57a2d87"
+    },
+    {
+      "name": "native-39-budget-hidden.xml",
+      "bytes": 18077,
+      "sha256": "2aca3e6aa6e87f9bc77686565bfb1ab542277de6f0a18932f32d8508d3ce7105"
+    },
+    {
+      "name": "native-42-budget.png",
+      "bytes": 619931,
+      "sha256": "9801bbbb783996fd68ec1aa0db0bbbd70e7024855b6207ac623a7e8859a6787b"
+    },
+    {
+      "name": "native-42-budget.xml",
+      "bytes": 25362,
+      "sha256": "3f396c6712dfbcc7ad0f2efc653b8ba796ad928e8e56512427bb2dc894da2e0e"
+    },
+    {
+      "name": "native-47-history-price.png",
+      "bytes": 620797,
+      "sha256": "9121910b30f3bbfe32952ee2893a16fb66b318d111c593680540767f938528c9"
+    },
+    {
+      "name": "native-47-history-price.xml",
+      "bytes": 21332,
+      "sha256": "5b91a0047862a8f89206b3bfbdf33bf85b9d677bb49660fb99866471f452b9ad"
+    },
+    {
+      "name": "native-49-history-edit.png",
+      "bytes": 625644,
+      "sha256": "a62463327ac8cbb4b5bd2a39f562dab8ee7c117c40ef60ce8fc335607c0ba75f"
+    },
+    {
+      "name": "native-49-history-edit.xml",
+      "bytes": 21236,
+      "sha256": "a40d7618dbd14e4c67ce09759ea1919511c56dfe537563eefd9c84af137e71cb"
+    },
+    {
+      "name": "native-50-small-history.png",
+      "bytes": 645023,
+      "sha256": "36fdcac9ff07f3a56e1933efb83af5b580f21ab83edeb6f47672a53dc038c16b"
+    },
+    {
+      "name": "native-50-small-history.xml",
+      "bytes": 15373,
+      "sha256": "5c7310f6c170db8ada172821b718475c544c5ad9c65aec685db58d3467fd388c"
+    },
+    {
+      "name": "native-53-small-scrolled.png",
+      "bytes": 493962,
+      "sha256": "0a62150e801ce20689b4b7703c197634aaa5c73ad997d486356b360ec661fdaf"
+    },
+    {
+      "name": "native-53-small-scrolled.xml",
+      "bytes": 16555,
+      "sha256": "5be9d59c848f49f7d0bd20683e6e1ec45c6664aad700c6dcfbda41717bf75710"
+    },
+    {
+      "name": "native-62-history-keyboard-stable.png",
+      "bytes": 354249,
+      "sha256": "6e6ebb2810213b498f201a06bdce5bcc1040ae0ca7d265f011d2c3bff0e63265"
+    },
+    {
+      "name": "native-62-history-keyboard-stable.xml",
+      "bytes": 19301,
+      "sha256": "fbf09decc1d1841e09aace5eeada1017f97ac7d67f4bdccab4a9ed7c517b0065"
+    },
+    {
+      "name": "native-flow.jpg",
+      "bytes": 123906,
+      "sha256": "b5262e5f62042633708cf1c0e45a0a8d8daf057c25e67c46f9ff7086f3c15f22"
+    },
+    {
+      "name": "native-friction.jpg",
+      "bytes": 143158,
+      "sha256": "d212ae6b0bde6b07c80c5e52f2234171b8fd771afe58bec5b2c65ac52690c275"
+    },
+    {
+      "name": "native-results.json",
+      "bytes": 1964,
+      "sha256": "46a29930e1f27ab7b8007e7a2a60936b5a4c23439a811477689635224529bf92"
+    },
+    {
+      "name": "price-concepts.html",
+      "bytes": 22369,
+      "sha256": "9a2914f1505fe707654358bbed752cb33551ab0b1a9719209162587e929387a9"
+    },
+    {
+      "name": "prototype-qa.json",
+      "bytes": 16662,
+      "sha256": "eaf414ab56b4e9a237126f3286d6337c325e9f70c0a09fde5d73aec4ede304cd"
+    },
+    {
+      "name": "restoration.json",
+      "bytes": 274,
+      "sha256": "dc782a2eefcbec118955640c632234e6274faaac5dd186a21260976effcf0e35"
+    }
+  ]
+}

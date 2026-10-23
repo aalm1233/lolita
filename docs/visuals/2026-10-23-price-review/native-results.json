@@ -1,0 +1,91 @@
+{
+  "prices": [
+    {
+      "created_at": 1792738465125,
+      "id": 9002,
+      "item_id": 9002,
+      "type": "DEPOSIT_BALANCE",
+      "total_price": 692.0,
+      "shipping": 12.0,
+      "deposit": 200.0,
+      "balance": 492.0,
+      "purchase_record_status": "TRACKED"
+    },
+    {
+      "created_at": 1792738465125,
+      "id": 9003,
+      "item_id": 9003,
+      "type": "FULL",
+      "total_price": 888.0,
+      "shipping": 0.0,
+      "deposit": null,
+      "balance": null,
+      "purchase_record_status": "HISTORICAL_OWNED"
+    },
+    {
+      "created_at": 1792738708146,
+      "id": 9004,
+      "item_id": 9001,
+      "type": "FULL",
+      "total_price": 680.0,
+      "shipping": 0.0,
+      "deposit": null,
+      "balance": null,
+      "purchase_record_status": "TRACKED"
+    }
+  ],
+  "payments": [
+    {
+      "amount": 200.0,
+      "stage_id": 90021,
+      "calendar_event_id": null,
+      "created_at": 1792738465125,
+      "custom_reminder_days": null,
+      "due_date": 1790784000000,
+      "is_paid": 1,
+      "id": 90021,
+      "paid_date": 1790784000000,
+      "price_id": 9002,
+      "reminder_set": 0
+    }
+  ],
+  "order_bindings": [
+    {
+      "item_id": 9001,
+      "price_id": 9004,
+      "purchase_record_status": "TRACKED"
+    },
+    {
+      "item_id": 9002,
+      "price_id": 9002,
+      "purchase_record_status": "TRACKED"
+    },
+    {
+      "item_id": 9003,
+      "price_id": 9003,
+      "purchase_record_status": "HISTORICAL_OWNED"
+    }
+  ],
+  "itemStatuses": [
+    {
+      "id": 9001,
+      "name": "体验01 星夜花园 · 新建价格",
+      "status": "PENDING_PAYMENT"
+    },
+    {
+      "id": 9002,
+      "name": "体验02 蔷薇长裙 · 定金尾款",
+      "status": "PENDING_BALANCE"
+    },
+    {
+      "id": 9003,
+      "name": "体验03 白蕾丝 · 历史已购",
+      "status": "OWNED"
+    },
+    {
+      "id": 9004,
+      "name": "体验04 雾蓝发带 · 共用主件",
+      "status": "PENDING_BALANCE"
+    }
+  ]
+}

@@ -40,14 +40,18 @@ Room33→34仅追加ItemReferencePrice、OrderRefund、OrderCancellation，共45
 
 原生证据采用无损WebP，逐像素核验与PNG相同；截图及manifest位于前述原生目录。详细测试迭代：修复加载完毕与恢复核验的时序、退款默认值、未知约定；测试宿主返回后焦点重新唤起键盘时改用真实顶栏返回校验；弹窗截图取系统窗口避免多根节点；主题切换截图等待动画稳定。这些测试适配未改变业务断言。
 
-## 发布状态（待续办）
+## 正式发布与更新入口（2026-10-24）
 
-本地源码提交`4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d`，本地标签`v2.70.0`。该提交的独立归档clean Release通过，APK为83,726,741字节，SHA256 `b673d8a118bb505c59668309e465046d868f06982ab7b11b281a1e56e0ab7b02`。37份项目assets、7背景RGBA及依赖/profile核验通过，没有未跟踪素材或私有照片进入APK。
+源码提交`4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d`与标签`v2.70.0`已普通推送，远端master包含该提交，标签仍指向正式构建源码。此前GitHub网络失败已恢复，未强推或改写标签。
+
+该提交的独立归档clean Release通过，APK为83,726,741字节，SHA256 `b673d8a118bb505c59668309e465046d868f06982ab7b11b281a1e56e0ab7b02`。37份项目assets、7背景RGBA及依赖/profile核验通过，没有未跟踪素材或私有照片进入APK。
 
 独立正式AVD从2.69.0／144原签名覆盖到2.70.0／145，两次启动成功；42张旧表全部原字段/行、14张原图片SHA、3份设置SHA保全，Room34／45实体、外键与完整性正常。
 
-GitHub推送遇HTTP408、TLS错误／API EOF；HTTP/1.1、系统现有代理及SSH443均未完成推送，最后一次成功读取远端master仍为`eb852ade`，无2.70.0标签。没有强推或改写远端；GitHub正式Release与附件未创建。
+[GitHub 2.70.0](https://github.com/aalm1233/lolita/releases/tag/v2.70.0)与[Gitee 2.70.0](https://gitee.com/aalm1233/lolita/releases/tag/v2.70.0)已正式发布同一APK及SHA256SUMS。两站匿名完整下载、文件长度／摘要、稳定地址及HEAD通过；GitHub标签核对源码提交，Gitee标签只对应分发说明。Gitee先保持预发布，附件完整验证后才转正式，正式状态再次下载核验。
 
-Gitee 2.70.0已创建预发布（无新附件），实际上传HTTP400：文件大小超出仓库1GB附件配额。已准备仅删除2.61.1旧APK（80,963,876字节）的具体方案，三个本机副本与GitHub附件摘要已核验，原发布／SHA256SUMS／GitHub均保留；本轮尚待用户明确授权，没有删除任何旧附件，也不沿用2.61.0旧授权。
+按2026-10-24本轮明确授权，仅删除Gitee的`lolita-2.61.1.apk`（80,963,876字节、附件3445736）。操作前再次核验旧GitHub附件摘要／HEAD及本机备份，操作后确认旧发布说明、SHA256SUMS和其余附件均未改变；未删除其他APK。记录：[单文件清理回执](gitee-apk-cleanup-2.61.1-2026-10-24.json)。
 
-双渠道正式附件下载、HEAD与公开最高版本、正式App内更新检查尚未完成，不宣称提交发布完成。结构化回执：[2.70.0当前发布验证](price-phase3-release-2.70.0-verification.json)。
+Gitee公开版本API首次与延时复核均HTTP403，诊断响应为`Rate Limit Exceeded`。正式App一次手动检查实际显示“Gitee 暂时拒绝访问或请求过于频繁，请稍后重试”，没有取得最新版本与更新正文；未把认证owner元数据或附件成功当作更新入口通过，也未修改网络逻辑绕过限流。App检查后3份原设置摘要仍一致。[实际检查截图](visuals/2026-10-23-price-phase3-native/release-update-check.png)保留失败证据。
+
+可直接下载已验证的[Gitee APK](https://gitee.com/aalm1233/lolita/releases/download/v2.70.0/lolita-2.70.0.apk)或[GitHub APK](https://github.com/aalm1233/lolita/releases/download/v2.70.0/lolita-2.70.0.apk)进行同签名覆盖安装。完整结构化结果：[2.70.0发布验证](price-phase3-release-2.70.0-verification.json)。

@@ -314,51 +314,207 @@
     "table_count": 45,
     "launches": 2
   },
-  "github": null,
-  "gitee": null,
-  "gitee_public_update": null,
-  "app_update": null,
-  "cleanup": null,
+  "github": {
+    "tag": "v2.70.0",
+    "source_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "release_id": 422391084,
+    "prerelease": false,
+    "files": {
+      "lolita-2.70.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.70.0/lolita-2.70.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83726741,
+        "sha256": "b673d8a118bb505c59668309e465046d868f06982ab7b11b281a1e56e0ab7b02",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.70.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "9f93d890a7a1f2e27bae075892dc2cc7a682fad2152d6361a8c3aedd519a4860",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83726741,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.70.0",
+    "source_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "release_id": 1234398,
+    "prerelease": false,
+    "files": {
+      "lolita-2.70.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.70.0/lolita-2.70.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83726741,
+        "sha256": "b673d8a118bb505c59668309e465046d868f06982ab7b11b281a1e56e0ab7b02",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.70.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "9f93d890a7a1f2e27bae075892dc2cc7a682fad2152d6361a8c3aedd519a4860",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83726741,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "gitee_public_update": {
+    "passed": false,
+    "checked_at_utc": "2026-10-23T23:31:35.877030+00:00",
+    "http_status": 403,
+    "reason": "403 Forbidden (Rate Limit Exceeded)",
+    "initial_and_delayed_recheck_failed": true,
+    "highest_formal_version_verified": false,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.70.0/lolita-2.70.0.apk",
+    "stable_apk_full_download_and_head_verified_separately": true,
+    "authenticated_owner_metadata_not_used_as_public_update_result": true
+  },
+  "app_update": {
+    "passed": false,
+    "checked_at_utc": "2026-10-23T23:30:41.278540+00:00",
+    "serial": "emulator-5598",
+    "installed_version": "2.70.0/145",
+    "result_title": "检查失败",
+    "message": "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+    "anonymous_host_api_status": 403,
+    "avd": "Lolita_Material_Release_20261021",
+    "trigger": "one manual check in the signed release App",
+    "current_version": "v2.70.0",
+    "latest_version": null,
+    "manual_attempts": 1,
+    "all_six_update_notes_present_in_ui_tree": false,
+    "screenshot": "visuals/2026-10-23-price-phase3-native/release-update-check.png",
+    "screenshot_sha256": "b60146d0dba31f596591a05a20d7adbe12be93715cb8f86e2423d3e41b0c6de0",
+    "ui_tree_sha256": "1d8b00c719545ff7a56c12100577ef3d7a77f7aad35f81de3d36edaee64b6e7c",
+    "newer_version_offer_or_system_installer_tested": false,
+    "original_settings_sha256_preserved": 3
+  },
+  "cleanup": {
+    "tag": "v2.61.1",
+    "release_id": 1223006,
+    "attachment_id": 3445736,
+    "name": "lolita-2.61.1.apk",
+    "bytes": 80963876,
+    "sha256": "f0f8b09c932a0a9b7a78fe6d674e91321670d705fd8625212c9c046b1852a029",
+    "authorization": "2026-10-24 用户明确授权：同意，仅删除2.61.1旧APK",
+    "new_source_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "at_utc": "2026-10-23T23:29:05.741096+00:00",
+    "http_status": 204,
+    "old_release_and_other_attachments_retained": true,
+    "github_and_local_backups_verified": true,
+    "old_github_head": [
+      {
+        "host": "github.com",
+        "status": 302
+      },
+      {
+        "host": "release-assets.githubusercontent.com",
+        "status": 200
+      }
+    ]
+  },
   "github_release": "https://github.com/aalm1233/lolita/releases/tag/v2.70.0",
   "gitee_release": "https://gitee.com/aalm1233/lolita/releases/tag/v2.70.0",
   "physical_device": false,
   "paid_service_calls": 0,
-  "release_status": "本地源码提交、验收与正式包完成；GitHub网络错误尚未推送；Gitee因1GB附件配额保持预发布，等待本轮2.61.1旧APK删除许可",
-  "source_push_verified": false,
-  "github_network_errors": [
-    "HTTP408 during HTTPS push",
-    "TLS SSL_ERROR_SYSCALL",
-    "GitHub API EOF",
-    "SSH443 repository connections closed; authentication handshake succeeded separately"
+  "release_status": "published_with_gitee_public_update_rate_limit",
+  "formal_distribution_verified": true,
+  "normal_app_update_path_verified": false,
+  "source_push_verified": true,
+  "source_push": {
+    "source_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "tag_commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+    "master_commit": "51072576a8bf625cda83d148617632442a1d0292",
+    "branch_contains_source": true,
+    "normal_push": true,
+    "checked_at_utc": "2026-10-23T23:22:35.219422+00:00"
+  },
+  "app_update_check_status": "正式App一次手动检查显示Gitee暂时拒绝访问或请求频繁；公开API及延时复核HTTP403；直接APK完整下载与HEAD通过",
+  "limitations": [
+    "Gitee公开最高版本查询与App内更新检查未通过；没有把owner元数据或附件下载成功替代公开查询结果"
   ],
-  "gitee_pending": {
-    "tag": "v2.70.0",
-    "release_id": 1234398,
-    "prerelease": true,
-    "asset_names": [
-      "v2.70.0.zip",
-      "v2.70.0.tar.gz"
-    ],
-    "body_sha256": "2c6850e0bb80b2de00a2b18f2bcf210952cda7fe50f7cbe1a4e480a1ca9d7eed",
-    "apk_upload_error": "HTTP400: repository attachment quota 1 GB exceeded",
-    "old_attachments_deleted": false
-  },
-  "cleanup_proposal": {
-    "tag": "v2.61.1",
-    "name": "lolita-2.61.1.apk",
-    "release_id": 1223006,
-    "attachment_id": 3445736,
-    "bytes": 80963876,
-    "sha256": "f0f8b09c932a0a9b7a78fe6d674e91321670d705fd8625212c9c046b1852a029",
-    "local_copies_verified": 3,
-    "github_asset_digest_verified": true,
-    "gitee_other_assets": [
-      {
-        "name": "SHA256SUMS",
-        "id": 3445737
-      }
-    ],
-    "deletion_executed": false
-  },
-  "app_update_check_status": "未运行：国内正式2.70.0尚未发布，不能以本地结果冒充更新检查成功"
+  "resolved_distribution_blockers": [
+    "GitHub源码与标签普通推送成功",
+    "按2026-10-24明确授权仅删除Gitee 2.61.1旧APK；发布说明、SHA256SUMS、GitHub和本机副本保留"
+  ]
 }

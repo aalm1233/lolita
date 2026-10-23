@@ -61,6 +61,9 @@ import androidx.navigation.navArgument
 import com.lolita.app.ui.screen.coordinate.CoordinateDetailScreen
 import com.lolita.app.ui.screen.coordinate.CoordinateEditScreen
 import com.lolita.app.ui.screen.price.PriceEditScreen
+import com.lolita.app.ui.screen.price.AfterSaleScreen
+import com.lolita.app.ui.screen.price.AfterSaleEditorScreen
+import com.lolita.app.ui.screen.price.AfterSaleEditorMode
 import com.lolita.app.ui.screen.price.PriceManageScreen
 import com.lolita.app.ui.screen.price.PaymentManageScreen
 import com.lolita.app.ui.screen.price.PaymentEditScreen
@@ -426,6 +429,8 @@ fun LolitaNavHost(
                 val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
                 PriceManageScreen(
                     itemId = itemId,
+                    onNavigateToReference = { navController.navigate(Screen.ReferencePrice.createRoute(itemId)) },
+                    onNavigateToAfterSale = { navController.navigate(Screen.AfterSale.createRoute(it)) },
                     onBack = { navController.popBackStack() },
                     onNavigateToItemEdit = { id ->
                         navController.navigate(Screen.ItemEdit.createRoute(id))
@@ -441,6 +446,29 @@ fun LolitaNavHost(
                         navController.navigate(Screen.PriceManage.createRoute(parentId))
                     }
                 )
+            }
+
+            composable(Screen.ReferencePrice.route, arguments = listOf(navArgument("itemId") { type = NavType.LongType })) { entry ->
+                AfterSaleEditorScreen(AfterSaleEditorMode.REFERENCE, entry.arguments?.getLong("itemId") ?: return@composable,
+                    onBack = { navController.popBackStack() }, onSaved = {
+                        android.widget.Toast.makeText(AppModule.context(), "参考价已更新", android.widget.Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    })
+            }
+            composable(Screen.AfterSale.route, arguments = listOf(navArgument("priceId") { type = NavType.LongType })) { entry ->
+                val id = entry.arguments?.getLong("priceId") ?: return@composable
+                AfterSaleScreen(id, onBack = { navController.popBackStack() }, onEdit = { mode ->
+                    navController.navigate(if (mode == AfterSaleEditorMode.REFUND) Screen.RefundEdit.createRoute(id) else Screen.CancelOrder.createRoute(id))
+                }, onLedger = { navController.navigate(Screen.PaymentManage.createRoute(id)) })
+            }
+            listOf(Screen.RefundEdit.route to AfterSaleEditorMode.REFUND, Screen.CancelOrder.route to AfterSaleEditorMode.CANCEL).forEach { (route, mode) ->
+                composable(route, arguments = listOf(navArgument("priceId") { type = NavType.LongType })) { entry ->
+                    AfterSaleEditorScreen(mode, entry.arguments?.getLong("priceId") ?: return@composable,
+                        onBack = { navController.popBackStack() }, onSaved = {
+                            android.widget.Toast.makeText(AppModule.context(), if (mode == AfterSaleEditorMode.REFUND) "退款到账已保存" else "订单取消与约定退款已更新", android.widget.Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
+                        })
+                }
             }
 
             // Price Edit
@@ -469,6 +497,7 @@ fun LolitaNavHost(
                 val priceId = backStackEntry.arguments?.getLong("priceId") ?: return@composable
                 PaymentManageScreen(
                     priceId = priceId,
+                    onNavigateToAfterSale = { navController.navigate(Screen.AfterSale.createRoute(priceId)) },
                     onBack = { navController.popBackStack() },
                     onNavigateToPaymentEdit = { paymentId ->
                         navController.navigate(Screen.PaymentEdit.createRoute(priceId, paymentId))

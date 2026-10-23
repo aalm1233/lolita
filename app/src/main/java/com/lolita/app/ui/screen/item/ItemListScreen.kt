@@ -988,7 +988,7 @@ internal fun ItemCard(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (data.showPrice && data.itemPrice != null && data.itemPrice > 0) {
+                    if (item.status != ItemStatus.WISHED && data.showPrice && data.itemPrice != null && data.itemPrice > 0) {
                         Text(
                             text = "¥%.0f".format(data.itemPrice),
                             style = MaterialTheme.typography.labelMedium,
@@ -1015,6 +1015,10 @@ internal fun ItemCard(
                             )
                         }
                     }
+                }
+                if (item.status == ItemStatus.WISHED && data.showPrice && data.itemPrice != null) {
+                    Text("参考 ¥%.2f".format(data.itemPrice), style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary)
                 }
                 data.brandName?.let { brand ->
                     Row(
@@ -1236,7 +1240,7 @@ internal fun ItemGridCard(
                             )
                         }
                     }
-                    if (showPrice && itemPrice != null && itemPrice > 0) {
+                    if (showPrice && itemPrice != null && (itemPrice > 0 || item.status == ItemStatus.WISHED)) {
                         Surface(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
@@ -1245,7 +1249,7 @@ internal fun ItemGridCard(
                             shape = RoundedCornerShape(6.dp)
                         ) {
                             Text(
-                                text = "¥%.0f".format(itemPrice),
+                                text = if (item.status == ItemStatus.WISHED) "参考 ¥%.2f".format(itemPrice) else "¥%.0f".format(itemPrice),
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.metadata,
                                 fontWeight = FontWeight.Bold,

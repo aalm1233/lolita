@@ -12,12 +12,16 @@ data class OrderDetails(
     val stages: List<PaymentStage>,
     val payments: List<Payment>,
     val legacyUnpaidPayments: List<Payment> = emptyList(),
-    val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED
+    val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
+    val refunds: List<OrderRefund> = emptyList(),
+    val cancellation: OrderCancellation? = null
 ) {
+    val refundedAmount: Double get() = OrderAccounting.sum(refunds.filter { it.voidedAt == null }.map { it.amount })
+    val netAmount: Double get() = (OrderAccounting.cents(paidAmount) - OrderAccounting.cents(refundedAmount)) / 100.0
     val stagePaidAmounts: Map<Long, Double> get() = com.lolita.app.domain.usecase.StageAccounting.effectivePaid(stages, payments)
     val paidAmount: Double get() = OrderAccounting.sum(payments.filter { it.isPaid }.map { it.amount })
     /** The recording limit is not proof of a debt when historical payment records are missing. */
-    val remainingAmount: Double get() = OrderAccounting.remaining(price.totalPrice, paidAmount)
+    val remainingAmount: Double get() = if (cancellation != null) 0.0 else OrderAccounting.remaining(price.totalPrice, paidAmount)
     val isPaymentRecordComplete: Boolean get() = purchaseRecordStatus == PurchaseRecordStatus.TRACKED
     val needsPurchaseReview: Boolean get() = purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW
     val knownRemainingAmount: Double? get() = remainingAmount.takeIf { isPaymentRecordComplete }
@@ -39,11 +43,12 @@ class OrderRepository(private val database: LolitaDatabase, private val context:
     }.distinctUntilChanged().flatMapLatest { id -> if (id == null) flowOf(null) else getOrder(id) }
 
     fun getOrder(priceId: Long): Flow<OrderDetails?> = combine(
-        prices.getPriceWithPayments(priceId), dao.observeStages(priceId), dao.observeBindingByPrice(priceId)
-    ) { order, stages, binding ->
+        prices.getPriceWithPayments(priceId), dao.observeStages(priceId), dao.observeBindingByPrice(priceId),
+        database.afterSaleDao().refunds(priceId), database.afterSaleDao().cancellation(priceId)
+    ) { order, stages, binding, refunds, cancellation ->
         order?.let {
             OrderDetails(it.price, stages, it.payments.filter { p -> p.isPaid }, it.payments.filter { p -> !p.isPaid },
-                binding?.purchaseRecordStatus ?: it.price.purchaseRecordStatus)
+                binding?.purchaseRecordStatus ?: it.price.purchaseRecordStatus, refunds, cancellation)
         }
     }
 
@@ -52,6 +57,8 @@ class OrderRepository(private val database: LolitaDatabase, private val context:
         orders.filter { it.price.id != active }
     }
 
+    suspend fun referencePrice(itemId: Long) = database.afterSaleDao().getReference(itemId)
+    fun observeReferencePrice(itemId: Long) = database.afterSaleDao().reference(itemId)
     suspend fun getStage(id: Long): PaymentStage? = dao.getStage(id)
     suspend fun getPayment(id: Long): Payment? = payments.getPaymentById(id)
     suspend fun getOrderItem(priceId: Long): Item? = prices.getPriceById(priceId)?.let {

@@ -64,6 +64,11 @@ fun PriceEditScreen(itemId: Long, priceId: Long?, onBack: () -> Unit, onSaveSucc
                     "保存后建立购买订单并开始付款跟踪；不会自动记实付。", style = MaterialTheme.typography.bodySmall)
                 EditingMoneyNotice()
                 if (!tracked) PurchaseRecordNotice(state.purchaseRecordStatus, isWorking = state.isSaving, onReturnToReview = requestBack)
+                if (priceId == null && state.independentReference != null) LolitaSection("已记录的参考价") { row {
+                    Text(formatPriceAmount(state.independentReference!!.amount))
+                    Text("含已知邮费，采用后邮费先填0；请按本次实际购买情况核对。保存订单才开始付款跟踪。", style = MaterialTheme.typography.bodySmall)
+                    OutlinedButton(onClick = viewModel::useIndependentReference, enabled = canEdit && state.totalPrice.isBlank() && state.stages.none { it.amount.isNotBlank() }) { Text("采用到建单草稿") }
+                } }
                 if (priceId == null && state.referenceQuote != null) {
                     val quote = state.referenceQuote!!
                     LolitaSection("淘宝参考报价") { row {

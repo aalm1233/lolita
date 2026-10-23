@@ -60,7 +60,8 @@ data class PriceManageUiState(
     val parentItemId: Long? = null,
     val needsPurchaseReview: Boolean = false,
     val itemName: String = "",
-    val itemSpecification: String = ""
+    val itemSpecification: String = "",
+    val reference: ItemReferencePrice? = null
 )
 
 data class PriceEditUiState(
@@ -76,6 +77,7 @@ data class PriceEditUiState(
     val hasRecordedPayments: Boolean = false,
     val loadFailed: Boolean = false,
     val referenceQuote: com.lolita.app.data.file.TaobaoProductQuote? = null,
+    val independentReference: ItemReferencePrice? = null,
     val autoFilledTotal: Boolean = false,
     val autoFilledStageIndex: Int? = null,
     val itemName: String = "",
@@ -104,7 +106,9 @@ data class PaymentManageUiState(
     val errorMessage: String? = null,
     val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
     val isWorking: Boolean = false,
-    val itemName: String = ""
+    val itemName: String = "",
+    val cancellation: OrderCancellation? = null,
+    val refundedAmount: Double = 0.0
 )
 
 data class PaymentEditUiState(
@@ -148,14 +152,14 @@ class PriceManageViewModel(
                 combine(
                     orderRepository.currentOrder(parentId ?: itemId),
                     orderRepository.historicalOrders(itemId),
-                    itemRepository.getPurchaseReviews()
-                ) { order, history, reviews ->
+                    itemRepository.getPurchaseReviews(), orderRepository.observeReferencePrice(parentId ?: itemId)
+                ) { order, history, reviews, reference ->
                     PriceManageUiState(
                         order, history, parentId != null, parent?.name, false,
                         parentItemId = parentId,
                         needsPurchaseReview = reviews.any { it.item.id == itemId },
                         itemName = item?.name.orEmpty(),
-                        itemSpecification = listOfNotNull(item?.size?.takeIf { it.isNotBlank() }).joinToString(" / ")
+                        itemSpecification = listOfNotNull(item?.size?.takeIf { it.isNotBlank() }).joinToString(" / "), reference = reference
                     )
                 }.collect { state ->
                     _uiState.update { state.copy(isUpdating = it.isUpdating, error = it.error) }
@@ -220,7 +224,9 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
                 loadJob = viewModelScope.launch {
                     try {
                         val item = itemRepository.getItemById(itemId) ?: error("物品不存在，请返回核对")
-                        _uiState.update { it.copy(itemName = item.name, isWish = item.status == ItemStatus.WISHED, isLoading = false) }
+                        _uiState.update { it.copy(itemName = item.name, isWish = item.status == ItemStatus.WISHED, isLoading = true) }
+                        val reference = orderRepository.referencePrice(itemId)
+                        _uiState.update { it.copy(independentReference = reference, isLoading = false) }
                         offerReferenceQuote(item.description)
                     } catch (e: Exception) {
                         if (e is CancellationException) throw e
@@ -285,6 +291,13 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
     fun offerReferenceQuote(description: String) {
         if (originalPrice != null || _uiState.value.isLoading || _uiState.value.isSaving || _uiState.value.isSaved) return
         _uiState.update { it.copy(referenceQuote = com.lolita.app.data.file.TaobaoProductQuotes.fromDescription(description)) }
+    }
+
+    fun useIndependentReference() {
+        val state = _uiState.value
+        val reference = state.independentReference ?: return
+        if (originalPrice != null || state.totalPrice.isNotBlank() || state.stages.any { it.amount.isNotBlank() }) return
+        change { it.copy(totalPrice = moneyText(reference.amount), shipping = "0", autoFilledTotal = false) }
     }
 
     fun useReferenceQuote() {
@@ -370,7 +383,8 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
                     PaymentManageUiState(stages = order.stages, payments = order.payments,
                         legacyUnpaidPayments = order.legacyUnpaidPayments, isCurrent = current?.price?.id == priceId,
                         totalPrice = order.price.totalPrice, paidAmount = order.paidAmount, unpaidAmount = order.remainingAmount,
-                        purchaseRecordStatus = order.purchaseRecordStatus, isLoading = false, itemName = item?.name.orEmpty())
+                        purchaseRecordStatus = order.purchaseRecordStatus, isLoading = false, itemName = item?.name.orEmpty(),
+                        cancellation = order.cancellation, refundedAmount = order.refundedAmount)
                     }
                 }
             }.catch { error ->

@@ -141,6 +141,8 @@ data class ItemEditUiState(
     val allItems: List<Item> = emptyList(),
     val children: List<Item> = emptyList(),
     val legacyPriceCount: Int = 0,
+    val cancelledOrderCount: Int = 0,
+    val referencePrice: com.lolita.app.data.local.entity.ItemReferencePrice? = null,
     val status: ItemStatus = ItemStatus.OWNED,
     val priority: ItemPriority = ItemPriority.MEDIUM,
     val imageUrls: List<String> = emptyList(),
@@ -1232,9 +1234,12 @@ class ItemEditViewModel(
                     }
                     observeHierarchy(effectiveItemId)
                     priceJob = viewModelScope.launch {
-                        priceRepository.getPricesWithPaymentsByItem(effectiveItemId).collect { prices ->
-                            val historicalCount = priceRepository.getPricesByItemList(effectiveItemId).size - prices.size
-                            _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount.coerceAtLeast(0)) }
+                        combine(priceRepository.getPricesWithPaymentsByItem(effectiveItemId), priceRepository.observeOrderHistory(effectiveItemId), priceRepository.observeReference(effectiveItemId)) { prices, all, reference ->
+                            Triple(prices, all, reference)
+                        }.collect { (prices, all, reference) ->
+                            val historicalCount = all.count { it.cancellation == null && it.price.id !in prices.map { p -> p.price.id } }
+                            _uiState.update { it.copy(pricesWithPayments = prices, legacyPriceCount = historicalCount,
+                                cancelledOrderCount = all.count { p -> p.cancellation != null }, referencePrice = reference) }
                         }
                     }
                     // Opening the form is safe only after draft/conflict and recognition recovery finish.

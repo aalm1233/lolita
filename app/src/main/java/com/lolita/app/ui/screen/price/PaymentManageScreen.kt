@@ -39,7 +39,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEdit: (Long?) -> Unit,
-    viewModel: PaymentManageViewModel = viewModel(factory = PaymentManageViewModelFactory(priceId))) {
+    viewModel: PaymentManageViewModel = viewModel(factory = PaymentManageViewModelFactory(priceId)),
+    onNavigateToAfterSale: () -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     val skin = LolitaSkin.current
     val scope = rememberCoroutineScope()
@@ -78,7 +79,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                 }
                 item { LolitaSection(if (tracked) "订单余额" else "已录付款资料") {
                     row {
-                        OrderStatusText(state.purchaseRecordStatus, state.unpaidAmount)
+                        if (state.cancellation != null) Text("已取消 · 待付与提醒已停止") else OrderStatusText(state.purchaseRecordStatus, state.unpaidAmount)
                         if (!state.isCurrent) Text("历史订单，原始记录只读", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if (showMoney) OrderSummaryAmount(if (tracked) "应付总额" else "订单总价", formatPriceAmount(state.totalPrice))
                         if (tracked && showMoney) {
@@ -94,7 +95,12 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         if (canEditPayments && state.unpaidAmount > 0.005) Button(onClick = { onNavigateToPaymentEdit(null) }, enabled = canEditPayments && state.unpaidAmount > 0.005, modifier = Modifier.fillMaxWidth()) {
                             SkinIcon(IconKey.Add); Spacer(Modifier.width(skin.spacingSmall)); Text(if (state.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED) "补录真实付款" else "记录实际付款")
                         }
-                        if (!state.isCurrent) Text("要调整账目，请先在价格页将此订单设为当前订单。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        TextButton(onClick = onNavigateToAfterSale, modifier = Modifier.fillMaxWidth()) { Text("退款、退差价与取消") }
+                        if (showMoney) {
+                            PricingValueRow("已退回", formatPriceAmount(state.refundedAmount))
+                            PricingValueRow("净支出", formatPriceAmount((com.lolita.app.domain.usecase.OrderAccounting.cents(state.paidAmount) - com.lolita.app.domain.usecase.OrderAccounting.cents(state.refundedAmount)) / 100.0))
+                        }
+                        if (!state.isCurrent && state.cancellation == null) Text("要调整账目，请先在价格页将此订单设为当前订单。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         TextButton(onClick = { explanationExpanded = !explanationExpanded }, modifier = Modifier.fillMaxWidth()) {
                             Text(if (explanationExpanded) "收起记账说明" else "查看记账说明")
                             Spacer(Modifier.width(skin.spacingSmall))
@@ -112,7 +118,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                 item {
                     Spacer(Modifier.height(skin.cardGap))
                     PaymentRecordGroupPart(isFirst = true, isLast = state.stages.isEmpty()) {
-                        SectionHeader(if (tracked) "付款计划" else "原付款计划", action = {
+                        SectionHeader(if (tracked && state.cancellation == null) "付款计划" else "原付款计划（已停止）", action = {
                             TextButton(enabled = canEditStages, onClick = {
                                 val planned = state.stages.sumOf { it.amount }
                                 editingStage = StageDraft(name = "第${state.stages.size + 1}段", amount = (state.totalPrice - planned).takeIf { it > 0.005 }?.let(::moneyText) ?: "")
@@ -120,7 +126,7 @@ fun PaymentManageScreen(priceId: Long, onBack: () -> Unit, onNavigateToPaymentEd
                         })
                         if (state.stages.isEmpty()) Text(if (tracked) "尚未安排阶段，可直接记录实付，或新增阶段。" else "未保留付款阶段，资料缺失不代表仍未付款。")
                         else if (showMoney) PricingValueRow(if (tracked) "已安排应付" else "原阶段金额", formatPriceAmount(state.stages.sumOf { it.amount }))
-                        if (tracked && state.stages.sumOf { it.amount } + 0.005 < state.totalPrice) Text("部分金额尚未安排阶段，仍计入未付余额。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (tracked && state.cancellation == null && state.stages.sumOf { it.amount } + 0.005 < state.totalPrice) Text("部分金额尚未安排阶段，仍计入未付余额。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if (state.stages.sumOf { it.amount } > state.totalPrice + 0.005) Text("历史计划金额超过订单总额，请核对原始记录。", color = MaterialTheme.colorScheme.error)
                     }
                 }

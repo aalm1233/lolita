@@ -169,6 +169,8 @@ object AppModule {
 
     private val _orderRepository by lazy { OrderRepository(database, appContext) }
     fun orderRepository() = _orderRepository
+    private val _afterSaleRepository by lazy { com.lolita.app.data.repository.AfterSaleRepository(database, appContext) }
+    fun afterSaleRepository() = _afterSaleRepository
 
     private val _priceRepository by lazy {
         PriceRepository(database.priceDao(), database.paymentDao(), appContext, database)

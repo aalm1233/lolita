@@ -1,0 +1,251 @@
+{
+  "version": "2.70.0/145",
+  "native_matrix": {
+    "pages": 11,
+    "skins": 7,
+    "modes": 2,
+    "sizes": 2,
+    "captures": 308,
+    "form_bottom_captures": 42,
+    "small_screen": "960x2100 density480 =320dp",
+    "font_scale": 2,
+    "normal_screen": "1080x2400 density420; content400dp"
+  },
+  "native_manifest": "manifest.json",
+  "device_methods_passed": 38,
+  "method_results": {
+    "com.lolita.app.data.AfterSaleBusinessTest#boundsStaleConcurrentAndDuplicateOperationAreAtomic": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#savedStateRestoresInputsAndRejectsStaleSnapshotAndDuplicateSave": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#multipleRefundsCrossMonthGrossPaymentsPreservedAndNoNewDebt": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#noPaymentAndNonRefundableCancellationNeverInventRefund": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#referenceAndUnknownCancellationDraftsRestoreWithoutWriting": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#referenceAdoptionOnlyChangesPriceDraft": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#jsonZipCsvPreviewOldFormatAndInvalidBackupProtection": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#cancellationStopsCommitmentsKeepsEvidenceAndSupportsLaterRefundAndRepurchase": 0,
+    "com.lolita.app.data.AfterSaleBusinessTest#referenceIsIndependentCasAndWishlistUsesOnlyExplicitQuotes": 0,
+    "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+    "com.lolita.app.ui.screen.price.AfterSaleScreenTest#privacyHidesReferenceRefundNetAmountsAndNotesLive": 0,
+    "com.lolita.app.ui.screen.price.AfterSaleScreenTest#backProtectsDraftAndExplicitDiscardDoesNotWrite": 0,
+    "com.lolita.app.data.OrderBusinessTest#backupRestoresOrdersStagesAccessoriesAndPaidRecordsIntoAnAlreadyPopulatedDatabase": 0,
+    "com.lolita.app.data.OrderBusinessTest#deletingPricedStandaloneItemCleansTheBindingAndKeepsOtherItems": 0,
+    "com.lolita.app.data.OrderBusinessTest#oneItemHasOneActivePriceAndPaidStatusCannotBeOverriddenByItemEditor": 0,
+    "com.lolita.app.data.OrderBusinessTest#shippingAndSeveralPartialPaymentsSettleInCentsAndUnknownDueDatesStayUnknown": 0,
+    "com.lolita.app.data.OrderBusinessTest#hierarchyRejectsCyclesNestedAccessoriesAndDeletionOfAParentStillInUse": 0,
+    "com.lolita.app.data.OrderBusinessTest#oversizedHistoricalPlansDoNotDuplicateCalendarOrOverdueDebt": 0,
+    "com.lolita.app.data.OrderBusinessTest#unallocatedActualPaymentsDoNotDuplicateCalendarDebt": 0,
+    "com.lolita.app.data.OrderBusinessTest#sharedAccessoriesFollowTheParentWhileIndependentlyPricedOnesKeepTheirOwnState": 0,
+    "com.lolita.app.data.OrderBusinessTest#changingTotalAndBalancePreservesTheActualDepositWithoutDuplicatingIt": 0,
+    "com.lolita.app.data.OrderBusinessTest#deletingAnUnpaidStageDoesNotEraseTheOutstandingDebt": 0,
+    "com.lolita.app.data.OrderBusinessTest#invalidMoneyAndInsufficientRepricedTotalsRollBackEveryLedgerTable": 0,
+    "com.lolita.app.data.OrderBusinessTest#monthlyStatisticsUseActualDatesAndNeverInventDatesForLegacyPayments": 0,
+    "com.lolita.app.data.OutfitBudgetFeatureTest#budgetsSurviveJsonAndZipRestorePreviewAndCsv": 0,
+    "com.lolita.app.data.OutfitBudgetFeatureTest#budgetUsesPartialStageBalanceAndIncludesArchivedCashPayments": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#templatesFillBothWaysAndManualOverrideIsNeverRewritten": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#missingOrderAndHistoricalUnknownDateNeverBecomeOrdinaryNewPayments": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#paymentInputsSurviveReloadAndSavedStateWithFreshLedgerValidation": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney": 0,
+    "com.lolita.app.ui.screen.price.AfterSaleScreenTest#referenceAndRefundActionsNavigateWithoutWriting": 0,
+    "com.lolita.app.ui.screen.price.AfterSaleScreenTest#realImeOverRefundInlineFeedbackAndSave": 0,
+    "com.lolita.app.data.AfterSaleMigrationTest#upgrade33To34PreservesEveryOldTableAndAddsOnlyEmptyAfterSaleTables": 0
+  },
+  "runs": [
+    {
+      "log": "final-added.log",
+      "sha256": "551087ac14f1aa56cccbc6bb7e6d5c085a51c19958a70457ac1f4ddf3471612f",
+      "methods": {
+        "com.lolita.app.data.AfterSaleBusinessTest#boundsStaleConcurrentAndDuplicateOperationAreAtomic": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#savedStateRestoresInputsAndRejectsStaleSnapshotAndDuplicateSave": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#multipleRefundsCrossMonthGrossPaymentsPreservedAndNoNewDebt": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#noPaymentAndNonRefundableCancellationNeverInventRefund": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#referenceAndUnknownCancellationDraftsRestoreWithoutWriting": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#referenceAdoptionOnlyChangesPriceDraft": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#jsonZipCsvPreviewOldFormatAndInvalidBackupProtection": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#cancellationStopsCommitmentsKeepsEvidenceAndSupportsLaterRefundAndRepurchase": 0,
+        "com.lolita.app.data.AfterSaleBusinessTest#referenceIsIndependentCasAndWishlistUsesOnlyExplicitQuotes": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#privacyHidesReferenceRefundNetAmountsAndNotesLive": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#backProtectsDraftAndExplicitDiscardDoesNotWrite": -2
+      }
+    },
+    {
+      "log": "final-small.log",
+      "sha256": "9e378c1ff3db3f19cc00d65685f211b817ebc0587f7c2c77df68f927a6388983",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#backProtectsDraftAndExplicitDiscardDoesNotWrite": -2
+      }
+    },
+    {
+      "log": "final-small-passed.log",
+      "sha256": "75645d53efbcf8fe4ae3ac78858dfa10deedb643872fb7ef11fc2319297489a3",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#backProtectsDraftAndExplicitDiscardDoesNotWrite": 0
+      }
+    },
+    {
+      "log": "final-normal.log",
+      "sha256": "1452e757838febae14eb70789122c40133ee7ec0efc72865c17d3df55e9458f9",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0
+      }
+    },
+    {
+      "log": "related-regression.log",
+      "sha256": "4c644d87a3bff223a8e49edb41c0b662a471114352e6112f468bd2f74dcc655b",
+      "methods": {
+        "com.lolita.app.data.OrderBusinessTest#backupRestoresOrdersStagesAccessoriesAndPaidRecordsIntoAnAlreadyPopulatedDatabase": 0,
+        "com.lolita.app.data.OrderBusinessTest#deletingPricedStandaloneItemCleansTheBindingAndKeepsOtherItems": 0,
+        "com.lolita.app.data.OrderBusinessTest#oneItemHasOneActivePriceAndPaidStatusCannotBeOverriddenByItemEditor": 0,
+        "com.lolita.app.data.OrderBusinessTest#shippingAndSeveralPartialPaymentsSettleInCentsAndUnknownDueDatesStayUnknown": 0,
+        "com.lolita.app.data.OrderBusinessTest#hierarchyRejectsCyclesNestedAccessoriesAndDeletionOfAParentStillInUse": 0,
+        "com.lolita.app.data.OrderBusinessTest#oversizedHistoricalPlansDoNotDuplicateCalendarOrOverdueDebt": 0,
+        "com.lolita.app.data.OrderBusinessTest#unallocatedActualPaymentsDoNotDuplicateCalendarDebt": 0,
+        "com.lolita.app.data.OrderBusinessTest#sharedAccessoriesFollowTheParentWhileIndependentlyPricedOnesKeepTheirOwnState": 0,
+        "com.lolita.app.data.OrderBusinessTest#changingTotalAndBalancePreservesTheActualDepositWithoutDuplicatingIt": 0,
+        "com.lolita.app.data.OrderBusinessTest#deletingAnUnpaidStageDoesNotEraseTheOutstandingDebt": 0,
+        "com.lolita.app.data.OrderBusinessTest#invalidMoneyAndInsufficientRepricedTotalsRollBackEveryLedgerTable": 0,
+        "com.lolita.app.data.OrderBusinessTest#monthlyStatisticsUseActualDatesAndNeverInventDatesForLegacyPayments": 0,
+        "com.lolita.app.data.OutfitBudgetFeatureTest#budgetsSurviveJsonAndZipRestorePreviewAndCsv": 0,
+        "com.lolita.app.data.OutfitBudgetFeatureTest#budgetUsesPartialStageBalanceAndIncludesArchivedCashPayments": 0,
+        "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#templatesFillBothWaysAndManualOverrideIsNeverRewritten": 0,
+        "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate": 0,
+        "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts": 0,
+        "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#missingOrderAndHistoricalUnknownDateNeverBecomeOrdinaryNewPayments": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#paymentInputsSurviveReloadAndSavedStateWithFreshLedgerValidation": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney": 0
+      }
+    },
+    {
+      "log": "reviewed-normal.log",
+      "sha256": "6164eda4e63c2e8289bfbe6c8f2ff09790f5c2d822cc822a2760b5a5d051a40d",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0
+      }
+    },
+    {
+      "log": "reviewed-small.log",
+      "sha256": "9d468c27f86ac6f59a6e6ab3f4b9ecbd788bef9e713f19a3f6a0dbfa8a4c00e3",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#referenceAndRefundActionsNavigateWithoutWriting": 0,
+        "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney": 0
+      }
+    },
+    {
+      "log": "settled-normal.log",
+      "sha256": "2358f2d6cb8845f80003a47f033ba43b168003ae2765cbdb38e831d74602225f",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0
+      }
+    },
+    {
+      "log": "settled-small.log",
+      "sha256": "b36650b1893a04a1a69308ed435d1020cebd2ebde05d76f83249adf8db185fa3",
+      "methods": {
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#sevenSkinsLightDarkAndSmallLargeText": 0,
+        "com.lolita.app.ui.screen.price.AfterSaleScreenTest#realImeOverRefundInlineFeedbackAndSave": 0
+      }
+    }
+  ],
+  "migration_passed_log": "business-ui-final2.log",
+  "jvm_passed": 56,
+  "manual_app": {
+    "reference": {
+      "amount": 680.12,
+      "status": "WISHED",
+      "orders_created": 0
+    },
+    "refund": {
+      "type": "PRICE_DIFFERENCE",
+      "amount": 75.25,
+      "rows": 1,
+      "original_payment": 200,
+      "original_payment_rows": 1
+    },
+    "cancel": {
+      "expected_refund_total": null,
+      "original_order_retained": true
+    },
+    "repurchase": {
+      "new_price_id": 9103,
+      "amount": 400,
+      "actual_payments": 0,
+      "shared_child_status": "PENDING_PAYMENT"
+    },
+    "existing_45_tables_rows_preserved": true,
+    "foreign_keys_valid": true,
+    "process_recreation": {
+      "rotation_restored_amount": "75.25",
+      "type": "PRICE_DIFFERENCE",
+      "process_killed_in_background": true,
+      "pid_changed": true,
+      "restored_amount": "75.25",
+      "explicit_save": true,
+      "privacy_setting_unchanged": true
+    }
+  },
+  "data_restored": {
+    "task_baseline_room": 33,
+    "current_room": 34,
+    "original_42_tables_preserved": true,
+    "manual_fixture_removed": true,
+    "restored_tables_compared": 45,
+    "settings_identical": 2,
+    "foreign_keys_valid": true,
+    "uninstall_or_clear_data": false
+  },
+  "physical_device": false,
+  "actual_paid_calls": 0,
+  "prototype_layout_checks": 112,
+  "manual_screenshots": [
+    {
+      "file": "app-cancel-confirm-unknown.webp",
+      "sha256": "769279da9a5cc84cf8065d60825d11807fe49ce9b57494e8f3227016c4f9865e"
+    },
+    {
+      "file": "app-order-cancelled.webp",
+      "sha256": "306c4744dee861b7e5bc1873bd3a7115b02038af3e21a7d21cff6168181bacc0"
+    },
+    {
+      "file": "app-reference-input-ime.webp",
+      "sha256": "68c278994e2d45009a26bdebe6567517c4b2fb1815e936028c9dafe295254e23"
+    },
+    {
+      "file": "app-reference-saved.webp",
+      "sha256": "65939e8643e8503d5bd43daf5f03c5726a8685f588cf13ed3c285a7b6378a03b"
+    },
+    {
+      "file": "app-refund-before-rotation.webp",
+      "sha256": "74b230e4fd162240e165e131fae920f87fd134f0f96eaf8935669753574aae61"
+    },
+    {
+      "file": "app-refund-landscape.webp",
+      "sha256": "5a180364002c74373dde426a98a6991895ab0194d4cd44280ab6ba7422fbafc6"
+    },
+    {
+      "file": "app-refund-process-restored.webp",
+      "sha256": "0cf2e47f9c4a56e701242b64be9cd948010feaf36af88c59fbcd5a4725e99d1c"
+    },
+    {
+      "file": "app-refund-restored-rotation.webp",
+      "sha256": "8c5da1aea43dd177076f50ba1765f5221df1698f01e551564894dca5996f2f74"
+    },
+    {
+      "file": "app-refund-saved.webp",
+      "sha256": "67d59872775636476713c3a2cd27d016ef6556c973861183baf6f135dd84f36e"
+    },
+    {
+      "file": "app-repurchase-saved.webp",
+      "sha256": "87eefec01e382d0b291b8123b5891482eac2d7c3c00ae27a6e8591f17442c39e"
+    }
+  ]
+}

@@ -267,6 +267,7 @@ internal fun BackupRestoreConfirmation(p: BackupPreview, onConfirm: () -> Unit, 
                 Text("房间 ${p.locationCount} · 来源 ${p.sourceCount}")
                 Text("套装 ${p.coordinateCount} · 价格 ${p.priceCount} · 付款 ${p.paymentCount}")
                 Text("当前订单 ${p.orderBindingCount} · 付款阶段 ${p.paymentStageCount} · 归档订单 ${p.archivedOrderCount}")
+                Text("参考价 ${p.referencePriceCount} · 退款记录 ${p.refundCount} · 已取消订单 ${p.cancelledOrderCount}")
                 Text("穿搭日记 ${p.outfitLogCount} · 历史图鉴 ${p.archiveCount} · 月度预算 ${p.monthlyBudgetCount}")
                 Text("试衣历史 ${p.tryOnResultCount} · 图像任务 ${p.imageTaskCount} · 模特 ${p.personalModelCount}")
                 Text("导入会话 ${p.orderImportSessionCount} · 导入资料 ${p.orderImportRowCount} · 来源回执 ${p.orderImportReceiptCount} · 商品来源 ${p.itemSourceRecordCount}")

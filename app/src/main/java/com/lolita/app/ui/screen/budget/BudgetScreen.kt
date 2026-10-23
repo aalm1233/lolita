@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.*
+import com.lolita.app.ui.theme.numericReading
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.rememberSkinFlingBehavior
@@ -70,12 +71,14 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                     onEditor(); editing = true
                 }, enabled = !state.saving && state.summary != null) { Text(if (state.limitCents == null) "设置" else "修改") }
             }) { row {
-                Text(state.limitCents?.let(::budgetMoney) ?: "尚未设置预算", style = MaterialTheme.typography.headlineSmall)
+                Text(state.limitCents?.let(::budgetMoney) ?: "尚未设置预算", style = if (state.limitCents != null) MaterialTheme.typography.headlineSmall.numericReading else MaterialTheme.typography.headlineSmall)
 
             } } }
             state.summary?.let { summary ->
                 item { LolitaSection("本月付款") {
-                    row { BudgetAmount("本月已录实付", summary.paidCents) }
+                    row { BudgetAmount("本月已录实付", summary.entries.filter { it.isPaid && it.amount > 0 }.sumOf { com.lolita.app.domain.usecase.OrderAccounting.cents(it.amount) }) }
+                    row { BudgetAmount("本月退款到账", -summary.entries.filter { it.isPaid && it.amount < 0 }.sumOf { com.lolita.app.domain.usecase.OrderAccounting.cents(it.amount) }) }
+                    row { BudgetAmount("本月净支出", summary.paidCents) }
                     row { BudgetAmount("本月剩余待付", summary.pendingCents) }
                     row { BudgetAmount("此前剩余待付", summary.earlierPendingCents) }
                     row {
@@ -83,7 +86,7 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                         Text(if (remaining == null) "设置预算后可查看预计余额" else if (remaining < 0) "预计超支 ${budgetMoney(-remaining)}" else "预计余额 ${budgetMoney(remaining)}",
                             style = MaterialTheme.typography.titleMedium,
                             color = if (remaining != null && remaining < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
-                        com.lolita.app.ui.screen.common.ExpandableInfo("计算方式") { Text("预计余额 = 预算 − 本月实付 − 本月待付 − 此前待付。实付按实际付款日期归月，待付只计算当前跟踪订单的剩余阶段。", style = MaterialTheme.typography.bodySmall) }
+                        com.lolita.app.ui.screen.common.ExpandableInfo("计算方式") { Text("预计余额 = 预算 − 本月净支出 − 本月待付 − 此前待付。净支出 = 实付 − 已到账退款（含归档或取消订单），各按实际发生日期归月；跨月退款可使本月净支出为负。待付只计算当前跟踪订单。", style = MaterialTheme.typography.bodySmall) }
                     }
                 } }
                 if (summary.undatedPendingCents > 0 || summary.undatedPaidCents != 0L) item {
@@ -109,7 +112,7 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                     LolitaCard(variant = CardVariant.COMPACT, onClick = { if (entry.isPaid) onNavigateToLedger(entry.priceId) else onNavigateToOrder(entry.itemId) }) {
                         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             Text(entry.itemName, style = MaterialTheme.typography.titleSmall)
-                            Text("${if (entry.isPaid) "已付" else "待付"} · ${entry.date?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE) }.orEmpty()}")
+                            Text("${if (entry.isPaid && entry.amount < 0) "退款到账" else if (entry.isPaid) "已付" else "待付"} · ${entry.date?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE) }.orEmpty()}")
                             Text(budgetMoney(com.lolita.app.domain.usecase.OrderAccounting.cents(entry.amount)))
                         }
                     }
@@ -134,6 +137,6 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
 private fun BudgetAmount(label: String, cents: Long) {
     Column(Modifier.fillMaxWidth().padding(vertical = LolitaSkin.current.spacingSmall)) {
         Text(label, style = MaterialTheme.typography.bodyMedium)
-        Text(budgetMoney(cents), style = MaterialTheme.typography.titleLarge)
+        Text(budgetMoney(cents), style = MaterialTheme.typography.titleLarge.numericReading)
     }
 }

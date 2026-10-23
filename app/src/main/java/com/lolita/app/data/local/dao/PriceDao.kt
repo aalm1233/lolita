@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PriceDao {
+    @Query("SELECT * FROM item_reference_prices WHERE item_id=:itemId")
+    fun observeReference(itemId: Long): Flow<com.lolita.app.data.local.entity.ItemReferencePrice?>
     @Query("SELECT * FROM prices WHERE item_id = :itemId")
     fun getPricesByItem(itemId: Long): Flow<List<Price>>
 
@@ -93,7 +95,14 @@ interface PriceDao {
     @Query("SELECT COALESCE(SUM(total_price), 0.0) FROM prices WHERE item_id IN (:itemIds) AND id IN (SELECT price_id FROM order_bindings)")
     fun getTotalPriceByItemIds(itemIds: List<Long>): Flow<Double>
 
-    @Query("SELECT item_id, COALESCE(SUM(total_price), 0.0) as totalPrice FROM prices WHERE id IN (SELECT price_id FROM order_bindings) GROUP BY item_id")
+    @Query("""
+        SELECT p.item_id, p.total_price AS totalPrice FROM prices p
+        JOIN order_bindings b ON b.price_id=p.id JOIN items i ON i.id=p.item_id
+        WHERE i.status!='WISHED'
+        UNION ALL
+        SELECT r.item_id, r.amount AS totalPrice FROM item_reference_prices r
+        JOIN items i ON i.id=r.item_id WHERE i.status='WISHED' AND i.included_in_parent_price=0
+    """)
     fun getItemPriceSums(): Flow<List<ItemPriceSum>>
 
     @Query("""
@@ -173,25 +182,18 @@ interface PriceDao {
     """)
     fun getSpendingBySeasonRaw(): Flow<List<StyleSpending>>
 
-    @Query("""
-        SELECT COALESCE(SUM(p.total_price), 0.0)
-        FROM prices p
-        INNER JOIN items i ON p.item_id = i.id
-        WHERE i.status = 'WISHED' AND i.included_in_parent_price=0
-          AND (SELECT COUNT(*) FROM prices candidate WHERE candidate.item_id=i.id)=1
-    """)
+    @Query("""SELECT COALESCE(SUM(CAST(ROUND(r.amount*100) AS INTEGER)),0)/100.0
+        FROM item_reference_prices r JOIN items i ON i.id=r.item_id WHERE i.status='WISHED' AND i.included_in_parent_price=0""")
     fun getWishlistTotalBudget(): Flow<Double>
 
-    @Query("""
-        SELECT i.priority AS priority, COUNT(DISTINCT i.id) AS itemCount,
-               COALESCE(SUM(p.total_price), 0.0) AS totalBudget
-        FROM items i
-        LEFT JOIN prices p ON p.item_id = i.id AND i.included_in_parent_price=0
-          AND (SELECT COUNT(*) FROM prices candidate WHERE candidate.item_id=i.id)=1
-        WHERE i.status = 'WISHED'
-        GROUP BY i.priority
-    """)
+    @Query("""SELECT i.priority AS priority, COUNT(DISTINCT i.id) AS itemCount,
+        COALESCE(SUM(CAST(ROUND(r.amount*100) AS INTEGER)),0)/100.0 AS totalBudget
+        FROM items i LEFT JOIN item_reference_prices r ON r.item_id=i.id AND i.included_in_parent_price=0
+        WHERE i.status='WISHED' GROUP BY i.priority""")
     fun getWishlistByPriorityStats(): Flow<List<PriorityStats>>
+
+    @Query("SELECT COALESCE(SUM(CAST(ROUND(amount*100) AS INTEGER)),0)/100.0 FROM order_refunds WHERE voided_at IS NULL")
+    fun getAllRefunds(): Flow<Double>
 
     @Query("""
         SELECT DISTINCT i.* FROM items i
@@ -251,6 +253,10 @@ data class PriceWithPayments(
     )
     val payments: List<Payment>,
     @Relation(parentColumn = "id", entityColumn = "price_id")
-    val binding: com.lolita.app.data.local.entity.OrderBinding? = null
+    val binding: com.lolita.app.data.local.entity.OrderBinding? = null,
+    @Relation(parentColumn = "id", entityColumn = "price_id")
+    val cancellation: com.lolita.app.data.local.entity.OrderCancellation? = null,
+    @Relation(parentColumn = "id", entityColumn = "price_id")
+    val refunds: List<com.lolita.app.data.local.entity.OrderRefund> = emptyList()
 )
 

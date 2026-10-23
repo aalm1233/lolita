@@ -81,7 +81,10 @@ data class BackupData(
     val orderImportRows: List<OrderImportRow> = emptyList(),
     val orderImportCommits: List<OrderImportCommit> = emptyList(),
     val orderImportReceipts: List<OrderImportReceipt> = emptyList(),
-    val itemSourceRecords: List<ItemSourceRecord> = emptyList()
+    val itemSourceRecords: List<ItemSourceRecord> = emptyList(),
+    val referencePrices: List<ItemReferencePrice> = emptyList(),
+    val orderRefunds: List<OrderRefund> = emptyList(),
+    val orderCancellations: List<OrderCancellation> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -155,7 +158,10 @@ class BackupManager(
             remoteCoordinates = sync.getAllCoordinatesList(), remoteItems = sync.getAllItemsList(),
             remotePricePlans = sync.getAllPricePlansList(),
             orderBindings = database.orderDao().getAllBindings(),
-            paymentStages = database.orderDao().getAllStages()
+            paymentStages = database.orderDao().getAllStages(),
+            referencePrices = database.afterSaleDao().references(),
+            orderRefunds = database.afterSaleDao().allRefunds(),
+            orderCancellations = database.afterSaleDao().cancellations()
         ).also { BackupFormat.validate(it); validateWardrobeImages(it,context) }
     }
 
@@ -181,6 +187,7 @@ class BackupManager(
         // DAO converters have display fallbacks. Backups must never persist those fallbacks as data.
         val db = database.openHelper.readableDatabase
         val enums = listOf(
+            Triple("order_refunds", "kind", RefundKind.entries.map { it.name }),
             Triple("image_tasks", "kind", ImageTaskKind.entries.map { it.name }),
             Triple("image_tasks", "status", ImageTaskStatus.entries.map { it.name }),
             Triple("image_tasks", "provider", ImageGenerationProvider.entries.map { it.name }),
@@ -311,6 +318,15 @@ class BackupManager(
                 sb.appendLine("${s.id},${escapeCsv(s.name)},${s.isPreset},${s.createdAt}")
             }
 
+            sb.appendLine("[参考价]")
+            sb.appendLine("itemId,amount,note,revision,updatedAt")
+            backupData.referencePrices.forEach { sb.appendLine("${it.itemId},${it.amount},${escapeCsv(it.note)},${it.revision},${it.updatedAt}") }
+            sb.appendLine("[退款与退差价]")
+            sb.appendLine("id,priceId,amount,kind,receivedAt,note,createdAt,voidedAt")
+            backupData.orderRefunds.forEach { sb.appendLine("${it.id},${it.priceId},${it.amount},${it.kind},${it.receivedAt},${escapeCsv(it.note)},${it.createdAt},${it.voidedAt ?: ""}") }
+            sb.appendLine("[取消订单]")
+            sb.appendLine("priceId,expectedRefundTotal,cancelledAt,note,revision")
+            backupData.orderCancellations.forEach { sb.appendLine("${it.priceId},${it.expectedRefundTotal ?: "待确认"},${it.cancelledAt},${escapeCsv(it.note)},${it.revision}") }
             // Prices
             sb.appendLine("\n=== PRICES ===")
             sb.appendLine("id,item_id,type,total_price,deposit,balance,created_at,shipping,purchase_record_status")
@@ -516,6 +532,9 @@ class BackupManager(
                     importedData.orderBindings.forEach { database.orderDao().insertBinding(it) }
                     importedData.paymentStages.forEach { database.orderDao().insertStage(it.copy(calendarEventId = null)) }
                     importedData.payments.forEach { database.paymentDao().insertPayment(it.copy(calendarEventId = null)) }
+                    importedData.referencePrices.forEach { database.afterSaleDao().insertReference(it) }
+                    importedData.orderRefunds.forEach { database.afterSaleDao().insertRefund(it) }
+                    importedData.orderCancellations.forEach { database.afterSaleDao().insertCancellation(it) }
                     importedData.outfitLogs.forEach { database.outfitLogDao().insertOutfitLog(it) }
                     importedData.outfitItemCrossRefs.forEach { database.outfitLogDao().insertOutfitItemCrossRef(it) }
                     database.legacyCatalogArchiveDao().insertAll(importedData.legacyCatalogArchives)
@@ -681,6 +700,7 @@ class BackupManager(
     }
 
     private fun recordCount(data: BackupData): Int = listOf(
+        data.referencePrices, data.orderRefunds, data.orderCancellations,
         data.orderImportSessions, data.orderImportFiles, data.orderImportRows, data.orderImportCommits, data.orderImportReceipts, data.itemSourceRecords,
         data.itemTryOnMaterials, data.storageNodes, data.itemDrafts, data.recognitionTasks, data.itemEvidence, data.imageProvenance,
         data.brands, data.categories, data.coordinates, data.items, data.prices, data.payments,
@@ -694,7 +714,10 @@ class BackupManager(
         val actual = snapshot()
         // Sort by stable keys; compare every business field, including image order and timestamps.
         fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
-        check(equal(actual.orderImportSessions, expected.orderImportSessions) { it.id } &&
+        check(equal(actual.referencePrices, expected.referencePrices) { it.itemId.toString() } &&
+            equal(actual.orderRefunds, expected.orderRefunds) { it.id.toString() } &&
+            equal(actual.orderCancellations, expected.orderCancellations) { it.priceId.toString() } &&
+            equal(actual.orderImportSessions, expected.orderImportSessions) { it.id } &&
             equal(actual.orderImportFiles, expected.orderImportFiles) { it.id } &&
             equal(actual.orderImportRows, expected.orderImportRows) { it.id } &&
             equal(actual.orderImportCommits, expected.orderImportCommits) { it.id } &&
@@ -838,6 +861,9 @@ class BackupManager(
                 archivedHistoricalOwnedCount = archivedOrders.count { it.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED },
                 archivedNeedsReviewCount = archivedOrders.count { it.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW },
                 paymentStageCount = backupData.paymentStages.size,
+                referencePriceCount = backupData.referencePrices.size,
+                refundCount = backupData.orderRefunds.size,
+                cancelledOrderCount = backupData.orderCancellations.size,
                 outfitLogCount = backupData.outfitLogs.size,
                 styleCount = backupData.styles.size,
                 seasonCount = backupData.seasons.size,
@@ -891,6 +917,9 @@ class BackupManager(
         database.legacyCatalogArchiveDao().deleteAll()
         database.outfitLogDao().deleteAllOutfitItemCrossRefs()
         database.outfitLogDao().deleteAllOutfitLogs()
+        database.afterSaleDao().clearRefunds()
+        database.afterSaleDao().clearCancellations()
+        database.afterSaleDao().clearReferences()
         database.paymentDao().deleteAllPayments()
         database.orderDao().clearStages()
         database.orderDao().clearBindings()
@@ -1268,6 +1297,10 @@ data class BackupPreview(
     val archivedHistoricalOwnedCount: Int = 0,
     val archivedNeedsReviewCount: Int = 0,
     val paymentStageCount: Int = 0,
+    // Included in additionalRecordCount; these are explicit preview labels, not added twice.
+    val referencePriceCount: Int = 0,
+    val refundCount: Int = 0,
+    val cancelledOrderCount: Int = 0,
     val missingImageCount: Int = 0,
     val imageCount: Int = 0,
     val backupDate: Long,

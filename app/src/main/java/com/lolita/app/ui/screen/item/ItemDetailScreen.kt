@@ -49,6 +49,7 @@ import com.lolita.app.ui.screen.common.CardVariant
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
+import com.lolita.app.ui.theme.numericReading
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
@@ -756,7 +757,7 @@ internal fun ItemOrderSummary(
         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
             SectionHeader(title = "价格与付款", action = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "建立订单" else "查看",
+                    Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "设置价格" else "查看",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(skin.spacingSmall))
@@ -799,11 +800,21 @@ internal fun ItemOrderSummary(
                                 else MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
+                currentOrder == null && uiState.referencePrice != null -> {
+                    Text("独立参考价 · 不计入待付", style = MaterialTheme.typography.bodySmall)
+                    if (showMoney) Text(com.lolita.app.ui.screen.price.formatPriceAmount(uiState.referencePrice!!.amount), style = MaterialTheme.typography.titleLarge.numericReading)
+                }
                 else -> Text(
-                    if (uiState.legacyPriceCount > 0) "历史价格待核对" else "尚未录入价格",
+                    if (uiState.legacyPriceCount > 0) "历史价格待核对" else if (uiState.cancelledOrderCount > 0) "原订单已取消，可记参考价或重新购买" else "尚未记录参考价或订单",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            if (uiState.cancelledOrderCount > 0) Text("${uiState.cancelledOrderCount} 笔已取消订单及退款记录保留", style = MaterialTheme.typography.bodySmall)
+            if (showMoney && currentOrder != null && currentOrder.refunds.any { it.voidedAt == null }) {
+                val refunded = OrderAccounting.sum(currentOrder.refunds.filter { it.voidedAt == null }.map { it.amount })
+                val paid = OrderAccounting.sum(currentOrder.payments.filter { it.isPaid }.map { it.amount })
+                Text("已退回 ${com.lolita.app.ui.screen.price.formatPriceAmount(refunded)} · 净支出 ${com.lolita.app.ui.screen.price.formatPriceAmount((OrderAccounting.cents(paid) - OrderAccounting.cents(refunded)) / 100.0)}", style = MaterialTheme.typography.bodySmall)
             }
             if (uiState.legacyPriceCount > 0) Text("另有 ${uiState.legacyPriceCount} 笔历史订单，可在账本查看。", style = MaterialTheme.typography.bodySmall)
             currentOrder?.takeIf { showMoney }?.let { order ->

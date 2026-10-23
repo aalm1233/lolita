@@ -1,0 +1,84 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><title>价格第三批 · 前置设计</title><style>body{margin:0;background:#e8e5e6;padding:20px}*{box-sizing:border-box}
+#lolita-price-proposal{max-width:736px;margin:auto}
+#lp-carousel{margin-top:12px;padding:16px 0 54px}
+#lp-carousel>section{min-height:940px}
+#lolita-price-proposal .lp-phone{--bg:#fff4f7;--paper:#fffdfd;--ink:#40353e;--muted:#74636e;--accent:#b52c70;--line:#e9d6df;--soft:#fae9f1;--danger:#b02d3c;--radius:22px;width:min(390px,100%);margin:0 auto;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;border-radius:28px;overflow:hidden;box-shadow:0 12px 40px #00000012;--scale:1}
+#lolita-price-proposal .lp-phone[data-skin=gothic]{--bg:#f2eef5;--paper:#fcfaff;--ink:#30293d;--muted:#6e6279;--accent:#74459a;--line:#d4c6df;--soft:#ece3f2;--radius:4px}
+#lolita-price-proposal .lp-phone[data-skin=chinese]{--bg:#f5eee1;--paper:#fffaf1;--ink:#443930;--muted:#756b5c;--accent:#a13c36;--line:#decdb3;--soft:#f4e5d7;--radius:10px}
+#lolita-price-proposal .lp-phone[data-skin=classic]{--bg:#f3ece9;--paper:#fffaf7;--ink:#473b38;--muted:#796b64;--accent:#874c59;--line:#d9c7bc;--soft:#f0e3df;--radius:6px}
+#lolita-price-proposal .lp-phone[data-skin=navy]{--bg:#edf4f8;--paper:#fbfeff;--ink:#233d50;--muted:#617788;--accent:#286b92;--line:#cadce7;--soft:#e1eef5;--radius:17px}
+#lolita-price-proposal .lp-phone[data-skin=country]{--bg:#f1f3e8;--paper:#fffef7;--ink:#3f4938;--muted:#6b765f;--accent:#737c3f;--line:#d4d9bd;--soft:#ebeedb;--radius:28px 28px 12px 12px}
+#lolita-price-proposal .lp-phone[data-skin=victorian]{--bg:#f5edf0;--paper:#fffbf5;--ink:#493d43;--muted:#7c6b74;--accent:#955d72;--line:#ddc7b7;--soft:#f3e5e7;--radius:30px 30px 8px 8px}
+#lolita-price-proposal .lp-phone[data-mode=dark]{--bg:#231f25;--paper:#302b32;--ink:#f4eaf0;--muted:#c6b7c1;--accent:#eda5c6;--line:#564651;--soft:#45303e;--danger:#ffadb3;box-shadow:none}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=gothic]{--bg:#17151e;--paper:#262230;--accent:#c6a0e7;--line:#51415f;--soft:#382b49}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=chinese]{--bg:#231e1c;--paper:#342a25;--accent:#e7a291;--line:#60463c;--soft:#4b312b;--ink:#f4e9d9;--muted:#c6b4a3}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=classic]{--bg:#272022;--paper:#372e30;--accent:#e0abb6;--line:#624c51;--soft:#4a353b}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=navy]{--bg:#172531;--paper:#243644;--ink:#e8f3fa;--muted:#b1c7d5;--accent:#9bcee9;--line:#456071;--soft:#2f4b60}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=country]{--bg:#24291f;--paper:#333a2c;--ink:#f1f1df;--muted:#c2c6ac;--accent:#c7d396;--line:#586145;--soft:#444e34}
+#lolita-price-proposal .lp-phone[data-mode=dark][data-skin=victorian]{--bg:#2a2028;--paper:#3a2b35;--accent:#e8b2c7;--line:#715461;--soft:#523746}
+#lolita-price-proposal .lp-top{display:flex;gap:16px;align-items:center;padding:23px 20px 17px;background:var(--soft);border-bottom:1px solid var(--line)}
+#lolita-price-proposal .lp-title{flex:1;text-align:center;font-size:calc(18px * var(--scale));font-weight:500;line-height:1.45}
+#lolita-price-proposal .lp-emblem{color:var(--accent)}
+#lolita-price-proposal .lp-body{padding:18px;display:flex;flex-direction:column;gap:16px;font-size:calc(16px * var(--scale))}
+#lolita-price-proposal .lp-context{display:flex;gap:10px;align-items:center}
+#lolita-price-proposal .lp-context b{font-size:calc(16px * var(--scale));font-weight:500}
+#lolita-price-proposal .lp-context small{display:block;color:var(--muted);font-size:calc(13px * var(--scale))}
+#lolita-price-proposal .lp-medallion{color:var(--accent);background:var(--soft);padding:8px 12px;border-radius:14px;font-size:21px;flex-shrink:0}
+#lolita-price-proposal .lp-panel{padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}
+#lolita-price-proposal .lp-hero{position:relative;padding:22px 20px 18px;background:var(--paper);border-radius:var(--radius);border:1px solid var(--line)}
+#lolita-price-proposal .lp-hero:before{content:"";display:block;width:44px;height:4px;background:var(--accent);margin-bottom:16px;border-radius:4px}
+#lolita-price-proposal .lp-phone[data-skin=gothic] .lp-hero{border-radius:42px 42px 3px 3px;border-top:3px solid var(--accent)}
+#lolita-price-proposal .lp-phone[data-skin=gothic] .lp-hero:before{width:24px;transform:rotate(-45deg);height:3px;border-radius:0}
+#lolita-price-proposal .lp-phone[data-skin=chinese] .lp-hero{border-left:5px solid var(--accent);border-radius:2px 16px 16px 2px}
+#lolita-price-proposal .lp-phone[data-skin=chinese] .lp-hero:before{width:58px;height:2px;border-radius:0;border-top:3px double var(--accent);background:transparent;transform:skewX(-25deg)}
+#lolita-price-proposal .lp-phone[data-skin=classic] .lp-hero:before{margin-left:auto;margin-right:auto;border-radius:0;width:64px;height:1px}
+#lolita-price-proposal .lp-phone[data-skin=navy] .lp-hero{border-top:5px solid var(--accent);border-bottom:3px double var(--line)}
+#lolita-price-proposal .lp-phone[data-skin=navy] .lp-hero:before{height:14px;width:14px;border:2px solid var(--accent);border-radius:50%;background:transparent}
+#lolita-price-proposal .lp-phone[data-skin=country] .lp-hero{border-top:7px solid var(--soft)}
+#lolita-price-proposal .lp-phone[data-skin=country] .lp-hero:before{border-radius:0 12px 0 12px;width:26px;height:10px}
+#lolita-price-proposal .lp-phone[data-skin=victorian] .lp-hero{border:3px double var(--line);border-radius:48px 48px 10px 10px}
+#lolita-price-proposal .lp-phone[data-skin=victorian] .lp-hero:before{border-radius:50% 50% 0 0;width:30px;height:9px;background:transparent;border-top:2px solid var(--accent);margin-left:auto;margin-right:auto}
+#lolita-price-proposal .lp-eyebrow{color:var(--muted);font-size:calc(13px * var(--scale));margin-bottom:4px}
+#lolita-price-proposal .lp-amount{font-size:calc(30px * var(--scale));font-weight:600;line-height:1.3;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;margin:4px 0 10px}
+#lolita-price-proposal .lp-meta{font-size:calc(13px * var(--scale));color:var(--muted)}
+#lolita-price-proposal .lp-split{display:flex;flex-wrap:wrap;gap:8px 22px;padding-top:12px;margin-top:14px;border-top:1px solid var(--line);font-size:calc(14px * var(--scale))}
+#lolita-price-proposal .lp-split span{flex:1;min-width:100px}
+#lolita-price-proposal .lp-split b{display:block;font-weight:500;font-variant-numeric:tabular-nums}
+#lolita-price-proposal .lp-phone button,#lolita-price-proposal .lp-phone input,#lolita-price-proposal .lp-phone select{font:inherit;color:inherit;max-width:100%;box-sizing:border-box}
+#lolita-price-proposal .lp-phone button{min-height:44px;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:9px 14px;cursor:default;white-space:normal;overflow-wrap:anywhere}
+#lolita-price-proposal .lp-phone button.lp-primary{background:var(--accent);color:var(--paper);border-color:var(--accent);font-weight:500;width:100%}
+#lolita-price-proposal .lp-phone[data-mode=dark] button.lp-primary{color:var(--bg)}
+#lolita-price-proposal .lp-phone button.lp-link{border:0;background:transparent;color:var(--accent);padding:6px 0;text-align:left}
+#lolita-price-proposal .lp-phone button:disabled{opacity:.5;cursor:default}
+#lolita-price-proposal .lp-phone button:focus-visible,#lolita-price-proposal .lp-phone input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#lolita-price-proposal .lp-phone h3{font-size:calc(18px * var(--scale));font-weight:600;margin:0 0 12px}
+#lolita-price-proposal .lp-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+#lolita-price-proposal .lp-heading h3{margin:0}
+#lolita-price-proposal .lp-timeline{list-style:none;padding:0;margin:16px 0 0}
+#lolita-price-proposal .lp-timeline li{position:relative;margin-left:6px;padding:0 0 22px 19px;border-left:1px solid var(--line)}
+#lolita-price-proposal .lp-timeline li:last-child{padding-bottom:0}
+#lolita-price-proposal .lp-timeline li:before{content:"";width:9px;height:9px;position:absolute;left:-5px;top:8px;border-radius:50%;background:var(--accent)}
+#lolita-price-proposal .lp-timeline b{font-weight:500;display:block}
+#lolita-price-proposal .lp-note{padding:12px;background:var(--soft);border-radius:10px;font-size:calc(14px * var(--scale));color:var(--ink)}
+#lolita-price-proposal .lp-phone label{display:block;margin-bottom:14px}
+#lolita-price-proposal .lp-phone input:not([type=checkbox]),#lolita-price-proposal .lp-phone select{display:block;width:100%;padding:13px 12px;margin-top:7px;border:1px solid var(--line);border-radius:10px;background:var(--paper);min-width:0}
+#lolita-price-proposal .lp-phone input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);vertical-align:middle}
+#lolita-price-proposal .lp-phone summary{cursor:default;color:var(--accent);padding:8px 0}
+#lolita-price-proposal .lp-phone details p{font-size:calc(14px * var(--scale));margin:8px 0}
+#lolita-price-proposal .lp-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:8px 0}
+#lolita-price-proposal .lp-row b{font-weight:500;font-variant-numeric:tabular-nums}
+#lolita-price-proposal .lp-error{color:var(--danger);font-size:calc(14px * var(--scale));margin:10px 0}
+#lolita-price-proposal .lp-nav{display:flex;justify-content:space-around;gap:8px;padding:18px 12px 24px;background:var(--paper);border-top:1px solid var(--line);font-size:calc(12px * var(--scale));flex-wrap:wrap;color:var(--muted)}
+#lolita-price-proposal .lp-nav span:first-child{color:var(--accent)}
+#lolita-price-proposal .lp-phone.lp-large{--scale:2}
+#lolita-price-proposal .lp-phone.lp-large .lp-split span{min-width:100%}
+@media(max-width:420px){#lp-carousel{padding:12px 0 54px}#lolita-price-proposal .lp-body{padding:14px}#lolita-price-proposal .lp-panel,#lolita-price-proposal .lp-hero{padding:16px}}
+</style><div id="lolita-price-proposal"><p>前置界面设计 · 虚构资料 · 非应用截图</p><label>场景 <select id="scene"><option value="reference">独立参考价</option><option value="aftersale">退款与取消</option><option value="refund">记录到账</option><option value="cancel">取消订单</option></select></label><label>皮肤 <select id="skin"><option value="sweet">甜美</option><option value="gothic">哥特</option><option value="chinese">中华</option><option value="classic">古典</option><option value="navy">海军</option><option value="country">田园</option><option value="victorian">维多利亚</option></select></label><label>外观 <select id="mode"><option>light</option><option>dark</option></select></label><label><input id="large" type="checkbox">两倍字体</label><div class="lp-phone" data-skin="sweet" data-mode="light"><div class="lp-top"><span>‹</span><b class="lp-title"></b><span>✿</span></div><main class="lp-body"></main></div></div><script>
+const titles={reference:'仅记参考价',aftersale:'退款与取消',refund:'记录退款到账',cancel:'取消购买订单'};
+const context='<div class="lp-context"><div><b>蔷薇花园连衣裙</b><small>莓粉 / M · 独立计价</small></div></div>';
+const scenes={
+reference:`<section class="lp-hero"><div class="lp-eyebrow">参考价格 · 不计入待付</div><h3>留在心愿，慢慢考虑</h3><p class="lp-meta">保存不会建立订单、改变拥有状态或产生付款提醒。</p></section><section class="lp-panel"><label>参考金额（含已知邮费）<input value="680.00" style="width:100%;padding:12px"></label><label>来源与备注（可选）<input value="店铺标价，活动前再核对" style="width:100%;padding:12px"></label><p class="lp-meta">金额隐藏时，主动编辑会临时显示本页金额。</p></section><button class="lp-primary">保存参考价</button><p class="lp-meta">购买时可主动采用到建单草稿，确认保存后才开始跟踪。</p>`,
+aftersale:`<section class="lp-hero"><div class="lp-eyebrow">已取消 · 物品已回到心愿</div><div class="lp-amount">待退款 ¥150.00</div><div class="lp-split"><span>原实付<b>¥200.00</b></span><span>已退回<b>¥50.00</b></span><span>净支出<b>¥150.00</b></span></div></section><button class="lp-primary">记录退款到账</button><section class="lp-panel"><h3>退款记录</h3><ul class="lp-timeline"><li><b>退款到账 · ¥50.00</b><span class="lp-meta">实际到账 2026-10-23</span></li></ul><button class="lp-link">更正误记（撤销此条）</button><p class="lp-meta">撤销只纠正记账，不代表向商家付款。</p></section><section class="lp-panel"><h3>取消记录</h3><p>双方确认不再付款，原订单和实付保留。未到账金额不计入退款。</p><button class="lp-link">调整约定退款总额</button></section>`,
+refund:`<section class="lp-hero"><div class="lp-eyebrow">真实资金退回</div><div class="lp-amount">可记录 ¥200.00</div><p class="lp-meta">原实付保持不变，到账后计入本月退款与净支出。</p></section><section class="lp-panel"><label>类型<select style="width:100%;padding:12px"><option>退款</option><option>退差价</option></select></label><label>实际到账金额<input value="50.00" style="width:100%;padding:12px"></label><label>实际到账日期<button style="width:100%">2026-10-23　修改</button></label><label>备注（可选）<input value="已核对到账" style="width:100%;padding:12px"></label><div class="lp-note">保存后：累计退回 ¥50.00，净支出 ¥150.00。仅记录到账，不向商家发起退款。</div></section><button class="lp-primary">保存退款到账</button>`,
+cancel:`<section class="lp-hero"><div class="lp-eyebrow">停止这次购买</div><h3>确认双方不再付款</h3><p>取消后停止剩余 ¥492.00 的待付与提醒。物品和共价小物回到心愿，原照片、订单及实付保留。</p></section><section class="lp-panel"><p class="lp-meta">□ 约定退款金额待确认（保持未知，不记成0）</p><label>约定退款总额（含已到账）<input value="200.00" style="width:100%;padding:12px"></label><p class="lp-meta">已退回 ¥0.00；取消后待退 ¥200.00。若定金不退请填 0，保留净支出；不自动记退款。</p><label>取消原因（可选）<input value="与店铺协商取消" style="width:100%;padding:12px"></label><div class="lp-note">☑ 已确认取消整笔订单并让物品回到心愿</div></section><button class="lp-primary">确认取消订单</button>`};
+function render(){const phone=document.querySelector('.lp-phone');phone.dataset.skin=skin.value;phone.dataset.mode=mode.value;phone.style.setProperty('--scale',large.checked?2:1);document.querySelector('.lp-title').textContent=titles[scene.value];document.querySelector('main').innerHTML=context+scenes[scene.value]};for(const id of ['scene','skin','mode','large'])document.getElementById(id).onchange=render;render();</script></html>

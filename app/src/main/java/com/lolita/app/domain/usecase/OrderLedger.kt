@@ -72,6 +72,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
     }
     private suspend fun requireActive(priceId: Long, trackedOnly: Boolean = false): Price {
         val price = prices.getPriceById(priceId) ?: error("订单不存在")
+        require(database.afterSaleDao().getCancellation(priceId) == null) { "订单已取消，不能继续付款或调整计划" }
         val binding = dao.getBinding(price.itemId) ?: error("请先核对并选择当前订单")
         require(binding.priceId == priceId) { "请先核对并选择当前订单" }
         require(binding.purchaseRecordStatus != PurchaseRecordStatus.NEEDS_REVIEW) {
@@ -87,7 +88,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         validatePrice(price); validateStages(price, stages)
         val item = database.itemDao().getItemById(price.itemId) ?: error("服饰不存在")
         require(!item.includedInParentPrice) { "小物已包含在主件价格中" }
-        require(dao.getBinding(item.id) == null && prices.getPricesByItemList(item.id).isEmpty()) { "已有价格，请编辑或核对历史价格" }
+        require(dao.getBinding(item.id) == null && prices.getPricesByItemList(item.id).all { database.afterSaleDao().getCancellation(it.id) != null }) { "已有价格，请编辑或核对历史价格" }
         val id = prices.insertPrice(price.copy(id = 0, purchaseRecordStatus = PurchaseRecordStatus.TRACKED))
         dao.insertBinding(OrderBinding(item.id, id))
         val ids = stages.map { dao.insertStage(it.copy(id = 0, priceId = id, calendarEventId = null)) }
@@ -127,6 +128,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         require(!item.includedInParentPrice) { "小物已共用主件价格" }
         val price = prices.getPriceById(priceId) ?: error("价格不存在")
         require(price.itemId == itemId) { "价格不属于当前服饰" }
+        require(database.afterSaleDao().getCancellation(priceId) == null) { "已取消订单不能设为当前，请重新建立购买订单" }
         validatePrice(price)
         val historicalPayments = payments.getPaymentsByPriceList(priceId)
         val historicalStages = dao.getStages(priceId)
@@ -213,6 +215,7 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
         val price = requireActive(payment.priceId); OrderAccounting.validateAmount(payment.amount, true)
         val historical = dao.getBinding(price.itemId)?.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED
         require(payment.isPaid && (payment.paidDate != null || historical || old.paidDate == null)) { "请填写实付日期" }
+        requireRefundCoverage(price.id, payments.getPaymentsByPriceList(price.id).filter { it.isPaid && it.id != payment.id }.map { it.amount } + payment.amount)
         validateActual(price, payments.getPaymentsByPriceList(price.id).filter { it.isPaid && it.id != payment.id }, payment.amount, payment.stageId)
         val dueDate = if (payment.paidDate == null && old.paidDate != null) 0L else payment.dueDate
         payments.updatePayment(payment.copy(dueDate = dueDate, reminderSet = false, calendarEventId = null))
@@ -220,8 +223,69 @@ class OrderLedger(private val database: LolitaDatabase, private val context: Con
     suspend fun deletePayment(id: Long) = mutate(paymentId = id) {
         val old = payments.getPaymentById(id) ?: error("付款不存在")
         requireActive(old.priceId); require(old.isPaid) { "历史计划请在付款阶段中管理" }
+        requireRefundCoverage(old.priceId, payments.getPaymentsByPriceList(old.priceId).filter { it.isPaid && it.id != id }.map { it.amount })
         payments.deletePayment(old)
     }
+    private suspend fun afterSaleSnapshot(priceId: Long): AfterSaleSnapshot {
+        val price = prices.getPriceById(priceId) ?: error("订单不存在")
+        val item = database.itemDao().getItemById(price.itemId) ?: error("物品不存在")
+        return AfterSaleSnapshot(item, price, payments.getPaymentsByPriceList(priceId), dao.getStages(priceId),
+            dao.getBinding(item.id), database.afterSaleDao().getRefunds(priceId), database.afterSaleDao().getCancellation(priceId))
+    }
+    private suspend fun requireRefundCoverage(priceId: Long, amounts: List<Double>) {
+        val refunded = OrderAccounting.sum(database.afterSaleDao().getRefunds(priceId).filter { it.voidedAt == null }.map { it.amount })
+        require(OrderAccounting.cents(OrderAccounting.sum(amounts)) >= OrderAccounting.cents(refunded)) {
+            "更正后实付低于已退回金额，请先核对退款记录"
+        }
+    }
+    suspend fun recordRefund(value: OrderRefund, fingerprint: String): Long = mutate(priceId = value.priceId) {
+        val after = database.afterSaleDao()
+        require(value.operationId.isNotBlank() && value.operationId.length <= 100) { "退款操作标识无效" }
+        after.byOperation(value.operationId)?.let { old ->
+            require(old.priceId == value.priceId && old.amount == value.amount && old.kind == value.kind &&
+                old.receivedAt == value.receivedAt && old.note == value.note.trim()) { "退款操作内容已变化，请重新核对" }
+            return@mutate old.id
+        }
+        val snapshot = afterSaleSnapshot(value.priceId)
+        require(snapshot.fingerprint == fingerprint) { "账目已变化，请返回重新核对" }
+        OrderAccounting.validateAmount(value.amount, true)
+        require(value.receivedAt > 0 && value.receivedAt <= System.currentTimeMillis()) { "请填写已经发生的实际到账日期" }
+        require(value.note.length <= 500) { "备注最多500字" }
+        require(OrderAccounting.cents(value.amount) <= OrderAccounting.cents(snapshot.net)) { "退款超过尚未退回的原实付" }
+        after.insertRefund(value.copy(id = 0, note = value.note.trim(), voidedAt = null))
+    }
+    suspend fun voidRefund(id: Long, fingerprint: String) {
+        val old = database.afterSaleDao().getRefund(id) ?: error("退款记录不存在")
+        mutate(priceId = old.priceId) {
+            val snapshot = afterSaleSnapshot(old.priceId)
+            require(snapshot.fingerprint == fingerprint) { "账目已变化，请返回重新核对" }
+            val current = snapshot.refunds.firstOrNull { it.id == id } ?: error("退款记录不存在")
+            require(current.voidedAt == null) { "退款记录已经撤销" }
+            database.afterSaleDao().updateRefund(current.copy(voidedAt = System.currentTimeMillis()))
+        }
+    }
+    suspend fun cancelOrder(priceId: Long, expected: Double?, note: String, fingerprint: String, confirmed: Boolean) = mutate(priceId = priceId) {
+        require(confirmed) { "请确认取消整笔订单及物品去向" }
+        val snapshot = afterSaleSnapshot(priceId)
+        require(snapshot.fingerprint == fingerprint) { "账目或物品已变化，请返回重新核对" }
+        expected?.let { OrderAccounting.validateAmount(it) }
+        require(note.length <= 500) { "备注最多500字" }
+        require(expected == null || OrderAccounting.cents(expected) in OrderAccounting.cents(snapshot.refunded)..OrderAccounting.cents(snapshot.paid)) {
+            "约定退款总额须介于已退回金额和原实付之间"
+        }
+        val old = snapshot.cancellation
+        if (old != null) {
+            database.afterSaleDao().updateCancellation(old.copy(expectedRefundTotal = expected, note = note.trim(), revision = old.revision + 1))
+        } else {
+            require(snapshot.isCurrent && snapshot.binding?.purchaseRecordStatus == PurchaseRecordStatus.TRACKED) {
+                "仅资料已核对的当前订单可取消，请先完成购买资料核对"
+            }
+            database.afterSaleDao().insertCancellation(OrderCancellation(priceId, expected, note = note.trim()))
+            dao.deleteBinding(snapshot.item.id)
+            database.itemDao().updateItem(snapshot.item.copy(status = ItemStatus.WISHED, updatedAt = System.currentTimeMillis()))
+        }
+    }
+
     suspend fun reconcileReminders() {
         database.withTransaction {
             dao.refreshStatuses()

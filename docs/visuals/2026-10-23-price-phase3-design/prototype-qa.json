@@ -1,0 +1,789 @@
+{
+  "checks": [
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "sweet",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "gothic",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "chinese",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "classic",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "navy",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "country",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "light",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "reference",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "aftersale",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "refund",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "skin": "victorian",
+      "mode": "dark",
+      "scene": "cancel",
+      "width": 320,
+      "scroll": 320
+    }
+  ],
+  "scope": "Design prototype only; native tests required"
+}

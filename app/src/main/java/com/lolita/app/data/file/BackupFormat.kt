@@ -12,11 +12,14 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 14
-    const val SCHEMA_VERSION = 33
+    const val VERSION = 15
+    const val SCHEMA_VERSION = 34
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
+        "referencePrices" to ItemReferencePrice::class.java,
+        "orderRefunds" to OrderRefund::class.java,
+        "orderCancellations" to OrderCancellation::class.java,
         "orderImportSessions" to OrderImportSession::class.java,
         "orderImportFiles" to OrderImportFile::class.java,
         "orderImportRows" to OrderImportRow::class.java,
@@ -55,10 +58,13 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion", "wigHeadTemplatePreferenceJson")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { (version >= 14 || it !in setOf("orderImportSessions","orderImportFiles","orderImportRows","orderImportCommits","orderImportReceipts","itemSourceRecords")) && (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 11 || it != "itemTryOnMaterials") && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 15 || it !in setOf("referencePrices", "orderRefunds", "orderCancellations")) && (version >= 14 || it !in setOf("orderImportSessions","orderImportFiles","orderImportRows","orderImportCommits","orderImportReceipts","itemSourceRecords")) && (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 11 || it != "itemTryOnMaterials") && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
+        if (version < 15) listOf("referencePrices", "orderRefunds", "orderCancellations").forEach {
+            require(!root.has(it) || (root[it].isJsonArray && root[it].asJsonArray.size() == 0)) { "旧格式不能包含新版参考价或售后记录" }
+        }
         if (version == 1) migratePurchaseDates(root)
         if (version < 3) migrateOrders(root)
         if (version < 4) migratePurchaseRecordStatuses(root)
@@ -137,6 +143,9 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "referencePrices" -> setOf("itemId", "amount", "note", "revision", "updatedAt")
+                    "orderRefunds" -> setOf("id", "priceId", "amount", "kind", "receivedAt", "note", "operationId", "createdAt")
+                    "orderCancellations" -> setOf("priceId", "cancelledAt", "note", "revision")
                     "orderImportSessions" -> setOf("id","version","revision","state","dataJson","createdAt","updatedAt")
                     "orderImportFiles" -> setOf("id","sessionId","name","sha256","state","dataJson")
                     "orderImportRows" -> setOf("id","sessionId","position","sourceKey","dataJson","imagePaths")
@@ -316,6 +325,7 @@ internal object BackupFormat {
     }
 
     fun validate(data: BackupData) {
+        AfterSaleBackupValidation.validate(data)
         OrderImportBackupValidation.validate(data)
         WardrobeBackupValidation.validate(data)
         val taskIds = data.imageTasks.map { it.id }

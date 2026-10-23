@@ -51,6 +51,23 @@ sealed interface Screen {
         }
     }
 
+    data object ReferencePrice : Screen {
+        override val route = "reference_price/{itemId}"
+        fun createRoute(itemId: Long) = "reference_price/$itemId"
+    }
+    data object AfterSale : Screen {
+        override val route = "after_sale/{priceId}"
+        fun createRoute(priceId: Long) = "after_sale/$priceId"
+    }
+    data object RefundEdit : Screen {
+        override val route = "refund_edit/{priceId}"
+        fun createRoute(priceId: Long) = "refund_edit/$priceId"
+    }
+    data object CancelOrder : Screen {
+        override val route = "cancel_order/{priceId}"
+        fun createRoute(priceId: Long) = "cancel_order/$priceId"
+    }
+
     data object PriceManage : Screen {
         override val route = "price_manage/{itemId}"
         fun createRoute(itemId: Long) = "price_manage/$itemId"

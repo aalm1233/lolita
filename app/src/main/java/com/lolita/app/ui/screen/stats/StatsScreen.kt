@@ -55,6 +55,7 @@ data class StatsUiState(
     val outfitLogCount: Int = 0,
     val totalSpending: Double = 0.0,
     val allRecordedSpending: Double = 0.0,
+    val allRefunds: Double = 0.0,
     val incompleteCurrentOrderCount: Int = 0,
     val showTotalPrice: Boolean = false,
     val isLoading: Boolean = true,
@@ -102,6 +103,7 @@ class StatsViewModel(
             }) { state, counts -> state.copy(wardrobeCounts = counts)
             }.combine(priceRepository.getAllRecordedSpending()) { state, allRecorded ->
                 state.copy(allRecordedSpending = allRecorded)
+            }.combine(priceRepository.getAllRefunds()) { state, refunds -> state.copy(allRefunds = refunds)
             }.combine(priceRepository.getIncompleteCurrentOrderCount()) { state, incompleteCount ->
                 state.copy(incompleteCurrentOrderCount = incompleteCount)
             }.combine(itemRepository.getPurchaseReviews()) { state, reviews ->
@@ -238,7 +240,9 @@ private fun SpendingOverview(state: StatsUiState) {
             }
         }
         row {
-            SpendingDetail("全部已录实付", state.allRecordedSpending, "含归档订单")
+            SpendingDetail("全部已录实付", state.allRecordedSpending, "含归档与取消订单")
+            SpendingDetail("全部退款到账", state.allRefunds, "不含未到账约定")
+            SpendingDetail("全部净支出", (com.lolita.app.domain.usecase.OrderAccounting.cents(state.allRecordedSpending) - com.lolita.app.domain.usecase.OrderAccounting.cents(state.allRefunds)) / 100.0, "已录实付减退款到账")
         }
         if (state.ownedCount > 0) row {
             SpendingDetail("订单参考均价", state.averagePrice, "")

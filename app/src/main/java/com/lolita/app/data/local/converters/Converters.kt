@@ -10,6 +10,9 @@ import com.lolita.app.domain.model.ImageTaskKind
 import com.lolita.app.domain.model.ImageTaskStatus
 
 class Converters {
+    @TypeConverter fun refundKind(value: String): com.lolita.app.data.local.entity.RefundKind = com.lolita.app.data.local.entity.RefundKind.valueOf(value)
+    @TypeConverter fun refundKind(value: com.lolita.app.data.local.entity.RefundKind): String = value.name
+
     private val gson = Gson()
 
     // ItemStatus

@@ -19,7 +19,9 @@ interface BudgetDao {
     suspend fun deleteAll()
     // All recorded cash payments count, including payments on archived orders. Missing dates stay unknown.
     @Query("""SELECT p.id,pr.id AS priceId,i.id AS itemId,i.name AS itemName,p.amount,p.paid_date AS date,1 AS isPaid
-        FROM payments p JOIN prices pr ON pr.id=p.price_id JOIN items i ON i.id=pr.item_id WHERE p.is_paid=1""")
+        FROM payments p JOIN prices pr ON pr.id=p.price_id JOIN items i ON i.id=pr.item_id WHERE p.is_paid=1
+        UNION ALL SELECT -r.id,pr.id,i.id,i.name,-r.amount,r.received_at,1
+        FROM order_refunds r JOIN prices pr ON pr.id=r.price_id JOIN items i ON i.id=pr.item_id WHERE r.voided_at IS NULL""")
     fun actualPayments(): Flow<List<BudgetEntry>>
     @Query(STAGE_BALANCES + "SELECT -id AS id,price_id AS priceId,item_id AS itemId,item_name AS itemName,remaining AS amount,due_date AS date,0 AS isPaid FROM balances WHERE remaining>0")
     fun commitments(): Flow<List<BudgetEntry>>

@@ -21,6 +21,9 @@ class PriceRepository(
     private val context: Context,
     private val database: LolitaDatabase? = null
 ) {
+    fun observeReference(itemId: Long) = priceDao.observeReference(itemId)
+    fun observeOrderHistory(itemId: Long) = priceDao.observeAllPricesWithPaymentsByItem(itemId)
+
     fun getPricesByItem(itemId: Long): Flow<List<Price>> =
         priceDao.getPricesByItem(itemId)
 
@@ -55,6 +58,8 @@ class PriceRepository(
         priceDao.getPricesWithPaymentsByItem(itemId)
 
     fun getTotalSpending(): Flow<Double> = priceDao.getTotalSpending()
+
+    fun getAllRefunds() = priceDao.getAllRefunds()
 
     fun getAllRecordedSpending(): Flow<Double> = priceDao.getAllRecordedSpending()
 

@@ -326,7 +326,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=143, versionName="2.68.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=144, versionName="2.69.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -374,6 +374,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 历史颜色/图片单值转换使用 `MigrationJsonLists`，通过 JSON 编码保留引号、反斜线和换行，禁止手工拼接 JSON 或全局去除合法转义。
 
 ## 服饰、小物与付款业务
+
+- 2.69.0价格体验前两批：价格／实付编辑使用导航条目的SavedStateHandle保存紧凑草稿及账本指纹，幂等加载、恢复重读、变化拒绝、ViewModel持有保存且完成后防重复。PriceEditorFactory／PaymentEditorFactory通过createSavedStateHandle接线；金额上限、阶段合计差值与真实日期就地反馈，保持原账本事务与ID。Room33／42实体、备份14不变。
+- 订单总览突出下一笔，直接记付款，付款进度使用StageAccounting投影并区分实付与应付日期；历史资料按确认拥有、补录、核对跟踪推进。详情可直接记账，低频管理展开；新建入口明确“建立购买订单”及移出心愿后果，普通全款简化，手动计划切换不静默重拆。
+- 金额隐私覆盖详情、订单／原账本、付款年历摘要／月份／明细及语义。主动编辑／核对临时显示金额并预告，返回不改设置。年历只导航到实付编辑并预选阶段，不直接写付款；预算待付按itemId进入当前订单，实付按priceId进入所属账本，含日期待定和归档记录。BudgetEntry新增仅查询投影的身份，不改实体或备份。年历玻璃底色使用当前surface，月份保留四列与正常48dp，随fontScale自然增高并显式微型行高；预算月份用皮肤箭头与可换行居中标题，避免两倍字挤压。GlassSurface新增可选glassTint，其他调用默认保持原样。
+- 本次设计见`docs/plans/2026-10-23-price-experience-implementation.md`，原生对照与最终测试／发布结果见`docs/price-experience-implementation-2026-10-23.md`；定向用例`PricingExperienceTest`及既有价格补算／历史核对／付款／预算回归，使用独立Room与DataStore。
 
 - `OrderBinding` 对 itemId 和 priceId 唯一约束，仅绑定一个当前订单；旧 Price/Payment 原记录完整保留，多价格与异常金额等待核对。愿望单无实付证据的历史预算不自动绑定。
 - `Price.shipping` 已包含在 totalPrice 中；阶段金额与实际付款分离。新输入最多两位小数，计算使用 `OrderAccounting` 整数分，历史 Double 原值不改写。

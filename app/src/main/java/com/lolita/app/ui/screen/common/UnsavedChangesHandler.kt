@@ -7,11 +7,14 @@ import androidx.compose.runtime.*
 @Composable
 fun UnsavedChangesHandler(
     hasUnsavedChanges: Boolean,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    blocked: Boolean = false
 ): () -> Unit {
     var showDialog by remember { mutableStateOf(false) }
     val requestBack: () -> Unit = {
-        if (hasUnsavedChanges) {
+        if (blocked) {
+            // A committed save must finish before leaving the editor.
+        } else if (hasUnsavedChanges) {
             showDialog = true
         } else {
             onBack()
@@ -25,7 +28,7 @@ fun UnsavedChangesHandler(
             title = { Text("放弃未保存的修改？") },
             text = { Text("返回后，本次未保存的修改将丢失。") },
             confirmButton = {
-                TextButton(onClick = {
+                TextButton(enabled = !blocked, onClick = {
                     showDialog = false
                     onBack()
                 }) { Text("放弃并返回") }

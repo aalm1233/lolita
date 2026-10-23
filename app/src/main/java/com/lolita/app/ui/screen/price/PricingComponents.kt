@@ -9,6 +9,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
+import com.lolita.app.ui.theme.numericReading
+import kotlinx.coroutines.delay
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.theme.LolitaSkin
@@ -26,9 +34,21 @@ internal fun formatPriceDate(date: Long?): String = date?.let { SimpleDateFormat
 
 @Composable
 internal fun PricingValueRow(label: String, value: String, color: Color = MaterialTheme.colorScheme.onSurface) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = LolitaSkin.current.spacingSmall), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = color)
+    val skin = LolitaSkin.current
+    val density = LocalDensity.current
+    val measurer = rememberTextMeasurer()
+    val labelStyle = MaterialTheme.typography.bodyMedium
+    val valueStyle = MaterialTheme.typography.bodyMedium.numericReading.copy(fontWeight = FontWeight.Medium)
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(vertical = skin.spacingSmall)) {
+        val required = measurer.measure(label, labelStyle, softWrap = false).size.width +
+            measurer.measure(value, valueStyle, softWrap = false).size.width + with(density) { skin.spacingLarge.roundToPx() }
+        if (required <= with(density) { maxWidth.roundToPx() }) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(label, style = labelStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = valueStyle, color = color)
+        } else Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+            Text(label, style = labelStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = valueStyle, color = color, modifier = Modifier.fillMaxWidth())
+        }
     }
 }
 
@@ -39,11 +59,22 @@ internal fun PricingSkeleton() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun PriceMoneyField(value: String, onValueChange: (String) -> Unit, label: String, enabled: Boolean = true, modifier: Modifier = Modifier) {
+internal fun PriceMoneyField(value: String, onValueChange: (String) -> Unit, label: String, enabled: Boolean = true,
+    modifier: Modifier = Modifier, error: String? = null) {
+    val requester = remember { BringIntoViewRequester() }
+    var focused by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
+    val imeBottom = WindowInsets.ime.getBottom(density)
+    LaunchedEffect(focused, value, error, imeBottom) {
+        if (focused) { delay(120); requester.bringIntoView() }
+    }
     OutlinedTextField(value = value, onValueChange = onValueChange, label = { Text(label) }, placeholder = { Text("0.00") },
         prefix = { Text("¥") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-        singleLine = true, enabled = enabled, modifier = modifier.fillMaxWidth())
+        isError = error != null, supportingText = error?.let { { Text(it) } },
+        singleLine = true, enabled = enabled, modifier = modifier.fillMaxWidth().bringIntoViewRequester(requester)
+            .onFocusChanged { focused = it.isFocused })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

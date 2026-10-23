@@ -3,11 +3,11 @@ package com.lolita.app.domain.usecase
 import java.math.BigDecimal
 import java.time.*
 
-data class BudgetEntry(val id: Long, val itemName: String, val amount: Double, val date: Long?, val isPaid: Boolean)
+data class BudgetEntry(val id: Long, val itemName: String, val amount: Double, val date: Long?, val isPaid: Boolean, val itemId: Long = 0, val priceId: Long = 0)
 data class BudgetSummary(
     val paidCents: Long, val pendingCents: Long, val earlierPendingCents: Long,
     val undatedPendingCents: Long, val undatedPaidCents: Long, val projectedRemainingCents: Long?,
-    val entries: List<BudgetEntry>
+    val entries: List<BudgetEntry>, val undatedEntries: List<BudgetEntry> = emptyList()
 )
 object BudgetAccounting {
     fun parseAmount(text: String): Long {
@@ -34,6 +34,6 @@ object BudgetAccounting {
         return BudgetSummary(paid, pending, carried, sum(rows.filter { !it.isPaid && it.date == null }),
             sum(rows.filter { it.isPaid && it.date == null }),
             limit?.let { Math.subtractExact(Math.subtractExact(Math.subtractExact(it, paid), pending), carried) },
-            (dated + earlier).sortedWith(compareBy<BudgetEntry> { it.date }.thenBy { it.id }))
+            (dated + earlier).sortedWith(compareBy<BudgetEntry> { it.date }.thenBy { it.id }), rows.filter { it.date == null }.sortedBy { it.itemName })
     }
 }

@@ -2,6 +2,7 @@ package com.lolita.app.ui.screen.price
 
 import com.lolita.app.ui.screen.common.uiErrorText
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.local.dao.PriceWithPayments
@@ -57,7 +58,9 @@ data class PriceManageUiState(
     val isUpdating: Boolean = false,
     val loadFailed: Boolean = false,
     val parentItemId: Long? = null,
-    val needsPurchaseReview: Boolean = false
+    val needsPurchaseReview: Boolean = false,
+    val itemName: String = "",
+    val itemSpecification: String = ""
 )
 
 data class PriceEditUiState(
@@ -74,7 +77,10 @@ data class PriceEditUiState(
     val loadFailed: Boolean = false,
     val referenceQuote: com.lolita.app.data.file.TaobaoProductQuote? = null,
     val autoFilledTotal: Boolean = false,
-    val autoFilledStageIndex: Int? = null
+    val autoFilledStageIndex: Int? = null,
+    val itemName: String = "",
+    val isWish: Boolean = false,
+    val isSaved: Boolean = false
 ) {
     val payableTotal: Double? get() = parseMoney(totalPrice, true)?.let { amount -> parseMoney(shipping, true)?.let { moneySum(amount, it) } }
     val calculationHint: String? get() = when {
@@ -97,7 +103,8 @@ data class PaymentManageUiState(
     val exists: Boolean = true,
     val errorMessage: String? = null,
     val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
-    val isWorking: Boolean = false
+    val isWorking: Boolean = false,
+    val itemName: String = ""
 )
 
 data class PaymentEditUiState(
@@ -117,7 +124,11 @@ data class PaymentEditUiState(
     val isSaving: Boolean = false,
     val error: String? = null,
     val purchaseRecordStatus: PurchaseRecordStatus = PurchaseRecordStatus.TRACKED,
-    val loadFailed: Boolean = false
+    val loadFailed: Boolean = false,
+    val suggestedAmount: Double = 0.0,
+    val originalAmount: Double = 0.0,
+    val stageRemaining: Map<Long, Double> = emptyMap(),
+    val isSaved: Boolean = false
 )
 
 class PriceManageViewModel(
@@ -142,7 +153,9 @@ class PriceManageViewModel(
                     PriceManageUiState(
                         order, history, parentId != null, parent?.name, false,
                         parentItemId = parentId,
-                        needsPurchaseReview = reviews.any { it.item.id == itemId }
+                        needsPurchaseReview = reviews.any { it.item.id == itemId },
+                        itemName = item?.name.orEmpty(),
+                        itemSpecification = listOfNotNull(item?.size?.takeIf { it.isNotBlank() }).joinToString(" / ")
                     )
                 }.collect { state ->
                     _uiState.update { state.copy(isUpdating = it.isUpdating, error = it.error) }
@@ -177,34 +190,83 @@ class PriceManageViewModel(
 }
 
 class PriceEditViewModel(private val orderRepository: OrderRepository = AppModule.orderRepository(),
-    private val itemRepository: com.lolita.app.data.repository.ItemRepository = AppModule.itemRepository()) : ViewModel() {
-    private val _uiState = MutableStateFlow(PriceEditUiState())
+    private val itemRepository: com.lolita.app.data.repository.ItemRepository = AppModule.itemRepository(),
+    private val savedStateHandle: SavedStateHandle = SavedStateHandle()) : ViewModel() {
+    private val _uiState = MutableStateFlow(PriceEditUiState(isSaved = savedStateHandle["priceSaved"] ?: false))
     val uiState: StateFlow<PriceEditUiState> = _uiState.asStateFlow()
     var hasUnsavedChanges: Boolean = false
         private set
     private var originalPrice: Price? = null
 
-    fun loadPrice(priceId: Long?) {
-        if (priceId == null) return
+    private var loadKey: String? = null
+    private var loadJob: kotlinx.coroutines.Job? = null
+    private var baseline: String = ""
+
+    fun loadPrice(priceId: Long?, itemId: Long = 0L) {
+        val key = "${priceId ?: 0}:$itemId"
+        if (loadKey == key || _uiState.value.isSaving || _uiState.value.isSaved) return
+        loadKey = key
+        loadJob?.cancel()
+        if (priceId == null) {
+            baseline = "new:$itemId"
+            try {
+                restoreDraft(key)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(loadFailed = true, error = uiErrorText(e, "草稿暂时无法恢复，请返回后重新编辑")) }
+                return
+            }
+            if (itemId != 0L) {
+                _uiState.update { it.copy(isLoading = true) }
+                loadJob = viewModelScope.launch {
+                    try {
+                        val item = itemRepository.getItemById(itemId) ?: error("物品不存在，请返回核对")
+                        _uiState.update { it.copy(itemName = item.name, isWish = item.status == ItemStatus.WISHED, isLoading = false) }
+                        offerReferenceQuote(item.description)
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "物品暂时无法读取")) }
+                    }
+                }
+            }
+            return
+        }
         _uiState.update { it.copy(isLoading = true, loadFailed = false, error = null) }
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             try {
                 val order = orderRepository.getOrder(priceId).first() ?: throw IllegalStateException("订单不存在")
                 originalPrice = order.price
+                baseline = pricingFingerprint(order)
+                val item = orderRepository.getOrderItem(priceId)
                 _uiState.value = PriceEditUiState(
                     priceType = order.price.type,
                     totalPrice = moneyText(BigDecimal.valueOf(order.price.totalPrice).subtract(BigDecimal.valueOf(order.price.shipping)).toDouble()),
-                    shipping = moneyText(order.price.shipping),
-                    stages = order.stages.map { it.draft() },
-                    paidAmount = order.paidAmount,
-                    purchaseRecordStatus = order.purchaseRecordStatus,
-                    hasRecordedPayments = order.payments.isNotEmpty()
+                    shipping = moneyText(order.price.shipping), stages = order.stages.map { it.draft() },
+                    paidAmount = order.paidAmount, purchaseRecordStatus = order.purchaseRecordStatus,
+                    hasRecordedPayments = order.payments.isNotEmpty(), itemName = item?.name.orEmpty(), isLoading = true
                 )
+                restoreDraft(key)
+                _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "加载失败")) }
             }
         }
+    }
+
+    private fun restoreDraft(key: String) {
+        val draft = readPricingDraft<PriceEditorDraft>(savedStateHandle, "priceDraft") ?: return
+        if (draft.key != key) return
+        hasUnsavedChanges = true
+        check(draft.baseline == baseline) { "原订单已变更，请返回核对后重新编辑；原付款记录保留。" }
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(priceType = draft.type, totalPrice = draft.total, shipping = draft.shipping,
+            stages = draft.stages, autoFilledTotal = draft.autoTotal, autoFilledStageIndex = draft.autoStage) }
+    }
+
+    private fun rememberDraft() {
+        val state = _uiState.value
+        savedStateHandle["priceDraft"] = pricingJson.toJson(PriceEditorDraft(loadKey ?: "0:0", baseline.ifBlank { "new:0" },
+            state.priceType, state.totalPrice, state.shipping, state.stages, state.autoFilledTotal, state.autoFilledStageIndex))
     }
 
     fun loadReferenceQuote(itemId: Long) {
@@ -221,7 +283,7 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
     }
 
     fun offerReferenceQuote(description: String) {
-        if (originalPrice != null || _uiState.value.isLoading || _uiState.value.isSaving) return
+        if (originalPrice != null || _uiState.value.isLoading || _uiState.value.isSaving || _uiState.value.isSaved) return
         _uiState.update { it.copy(referenceQuote = com.lolita.app.data.file.TaobaoProductQuotes.fromDescription(description)) }
     }
 
@@ -234,9 +296,9 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
     }
 
     private fun change(transform: (PriceEditUiState) -> PriceEditUiState) {
-        if (_uiState.value.purchaseRecordStatus != PurchaseRecordStatus.TRACKED || _uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadFailed) return
+        if (_uiState.value.purchaseRecordStatus != PurchaseRecordStatus.TRACKED || _uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadFailed || _uiState.value.isSaved) return
         hasUnsavedChanges = true
-        _uiState.update { autofillPriceDraft(transform(it)) }
+        _uiState.update { autofillPriceDraft(transform(it)) }; rememberDraft()
     }
     fun updateTotalPrice(value: String) = change { it.copy(totalPrice = value, autoFilledTotal = false) }
     fun updateShipping(value: String) = change { it.copy(shipping = value) }
@@ -258,18 +320,7 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
     fun applyTemplate() = change { it.copy(stages = priceStageTemplate(it.priceType), autoFilledTotal = false, autoFilledStageIndex = null) }
     fun clearError() { _uiState.update { it.copy(error = null) } }
 
-    fun isValid(): Boolean {
-        val state = _uiState.value
-        val total = state.payableTotal ?: return false
-        if (state.isLoading || state.loadFailed || state.purchaseRecordStatus != PurchaseRecordStatus.TRACKED || total <= 0 || total + 0.005 < state.paidAmount) return false
-        if (state.stages.any { it.name.isBlank() || parseMoney(it.amount) == null || (it.reminderSet && it.dueDate != null && (it.reminderDays.toIntOrNull() ?: 0) < 1) }) return false
-        if (state.stages.isEmpty()) return false
-        if (state.priceType == PriceType.FULL && state.stages.size != 1) return false
-        if (state.priceType == PriceType.DEPOSIT_BALANCE && state.stages.size != 2) return false
-        if (state.priceType == PriceType.MULTI_STAGE && state.stages.size < 2) return false
-        val sum = state.stages.fold(BigDecimal.ZERO) { acc, stage -> acc.add(BigDecimal.valueOf(parseMoney(stage.amount)!!)) }
-        return sum.compareTo(BigDecimal.valueOf(total)) == 0
-    }
+    fun isValid(): Boolean = !_uiState.value.isSaved && priceValidation(_uiState.value) == null
 
     suspend fun save(itemId: Long): Result<Long> = saving {
         val (price, stages) = build(itemId)
@@ -293,9 +344,14 @@ class PriceEditViewModel(private val orderRepository: OrderRepository = AppModul
         return price to state.stages.map { it.entity(price.id) }
     }
     private suspend fun <T> saving(block: suspend () -> T): Result<T> {
-        if (_uiState.value.isSaving) return Result.failure(IllegalStateException("正在保存"))
+        if (_uiState.value.isSaving || _uiState.value.isSaved) return Result.failure(IllegalStateException("正在保存或已保存，请返回查看结果"))
         _uiState.update { it.copy(isSaving = true) }
-        return try { val result = block(); hasUnsavedChanges = false; _uiState.update { it.copy(isSaving = false) }; Result.success(result) }
+        return try {
+            val result = block()
+            hasUnsavedChanges = false
+            savedStateHandle.remove<String>("priceDraft"); savedStateHandle["priceSaved"] = true
+            _uiState.update { it.copy(isSaving = false, isSaved = true) }; Result.success(result)
+        }
         catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = uiErrorText(e, "保存失败")) }; Result.failure(e) }
     }
 }
@@ -308,11 +364,14 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
         viewModelScope.launch {
             orderRepository.getOrder(priceId).flatMapLatest { order ->
                 if (order == null) flowOf(PaymentManageUiState(isLoading = false, exists = false))
-                else orderRepository.currentOrder(order.price.itemId).map { current ->
+                else {
+                    val item = orderRepository.getOrderItem(priceId)
+                    orderRepository.currentOrder(order.price.itemId).map { current ->
                     PaymentManageUiState(stages = order.stages, payments = order.payments,
                         legacyUnpaidPayments = order.legacyUnpaidPayments, isCurrent = current?.price?.id == priceId,
                         totalPrice = order.price.totalPrice, paidAmount = order.paidAmount, unpaidAmount = order.remainingAmount,
-                        purchaseRecordStatus = order.purchaseRecordStatus, isLoading = false)
+                        purchaseRecordStatus = order.purchaseRecordStatus, isLoading = false, itemName = item?.name.orEmpty())
+                    }
                 }
             }.catch { error ->
                 if (error is CancellationException) throw error
@@ -353,17 +412,25 @@ class PaymentManageViewModel(private val orderRepository: OrderRepository = AppM
     fun clearError() { _uiState.update { it.copy(errorMessage = null) } }
 }
 
-class PaymentEditViewModel(private val orderRepository: OrderRepository = AppModule.orderRepository()) : ViewModel() {
-    private val _uiState = MutableStateFlow(PaymentEditUiState())
+class PaymentEditViewModel(private val orderRepository: OrderRepository = AppModule.orderRepository(),
+    private val savedStateHandle: SavedStateHandle = SavedStateHandle()) : ViewModel() {
+    private val _uiState = MutableStateFlow(PaymentEditUiState(isSaved = savedStateHandle["paymentSaved"] ?: false))
     val uiState: StateFlow<PaymentEditUiState> = _uiState.asStateFlow()
     private var originalPayment: Payment? = null
     private var loadedPriceId: Long? = null
     var hasUnsavedChanges: Boolean = false
         private set
-    fun loadPayment(priceId: Long, paymentId: Long?) {
+    private var loadKey: String? = null
+    private var baseline = ""
+    private var loadJob: kotlinx.coroutines.Job? = null
+    fun loadPayment(priceId: Long, paymentId: Long?, suggestedStageId: Long? = null) {
+        val key = "$priceId:${paymentId ?: 0}"
+        if (loadKey == key || _uiState.value.isSaving || _uiState.value.isSaved) return
+        loadKey = key
+        loadJob?.cancel()
         loadedPriceId = null
         _uiState.update { it.copy(isLoading = true, loadFailed = false, error = null) }
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             try {
                 val order = orderRepository.getOrder(priceId).first() ?: throw IllegalStateException("订单不存在")
                 val payment = paymentId?.let { orderRepository.getPayment(it) ?: throw IllegalStateException("付款记录不存在") }
@@ -372,6 +439,11 @@ class PaymentEditViewModel(private val orderRepository: OrderRepository = AppMod
                 val item = orderRepository.getOrderItem(priceId)
                 originalPayment = payment
                 loadedPriceId = priceId
+                baseline = pricingFingerprint(order)
+                val suggested = order.stages.firstOrNull { it.id == suggestedStageId }
+                val remainingByStage = com.lolita.app.domain.usecase.StageAccounting.remainingByStage(order.stages, order.payments, order.price.totalPrice)
+                val suggestedRemaining = suggested?.let { remainingByStage[it.id] ?: 0.0 }
+                require(suggestedStageId == null || (suggested != null && suggestedRemaining!! > 0.005)) { "该付款阶段已变更或付清，请返回核对订单。" }
                 _uiState.value = PaymentEditUiState(
                     amount = payment?.amount?.let(::moneyText) ?: "",
                     paidDate = if (payment != null) payment.paidDate
@@ -382,38 +454,53 @@ class PaymentEditViewModel(private val orderRepository: OrderRepository = AppMod
                     itemName = item?.name.orEmpty(), purchaseSource = item?.source?.takeIf { it.isNotBlank() },
                     purchaseDescription = item?.description?.takeIf { it.contains("淘宝订单") || it.contains("订单号") },
                     orderTotal = order.price.totalPrice, recordedPaidAmount = order.paidAmount,
-                    stageId = payment?.stageId, stages = order.stages,
-                    remainingAmount = order.remainingAmount + (payment?.amount ?: 0.0), isLoading = false,
+                    stageId = payment?.stageId ?: suggested?.id, stages = order.stages,
+                    stageRemaining = remainingByStage, suggestedAmount = suggestedRemaining ?: order.remainingAmount.coerceAtLeast(0.0), originalAmount = payment?.amount ?: 0.0,
+                    remainingAmount = order.remainingAmount + (payment?.amount ?: 0.0), isLoading = true,
                     purchaseRecordStatus = order.purchaseRecordStatus
                 )
+                restoreDraft(key)
+                _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 _uiState.update { it.copy(isLoading = false, loadFailed = true, error = uiErrorText(e, "加载失败")) }
             }
         }
     }
-    private fun changePayment(transform: (PaymentEditUiState) -> PaymentEditUiState) {
-        if (_uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadFailed || _uiState.value.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW) return
+    private fun restoreDraft(key: String) {
+        val draft = readPricingDraft<PaymentEditorDraft>(savedStateHandle, "paymentDraft") ?: return
+        if (draft.key != key) return
         hasUnsavedChanges = true
-        _uiState.update(transform)
+        check(draft.baseline == baseline) { "付款资料已变更，请返回核对是否已记账，再重新编辑。" }
+        require(draft.stageId == null || _uiState.value.stages.any { it.id == draft.stageId }) { "付款阶段已变更，请返回核对。" }
+        hasUnsavedChanges = true
+        _uiState.update { it.copy(amount = draft.amount, paidDate = draft.date, isPaidDateUnknown = draft.unknown, stageId = draft.stageId,
+            suggestedAmount = draft.stageId?.let { id -> it.stageRemaining[id] ?: 0.0 } ?: it.remainingAmount) }
+    }
+
+    private fun rememberDraft() {
+        val state = _uiState.value
+        savedStateHandle["paymentDraft"] = pricingJson.toJson(PaymentEditorDraft(loadKey.orEmpty(), baseline,
+            state.amount, state.paidDate, state.isPaidDateUnknown, state.stageId))
+    }
+    private fun changePayment(transform: (PaymentEditUiState) -> PaymentEditUiState) {
+        if (_uiState.value.isSaving || _uiState.value.isLoading || _uiState.value.loadFailed || _uiState.value.purchaseRecordStatus == PurchaseRecordStatus.NEEDS_REVIEW || _uiState.value.isSaved) return
+        hasUnsavedChanges = true
+        _uiState.update(transform); rememberDraft()
     }
     fun updateAmount(value: String) = changePayment { it.copy(amount = value) }
     fun fillUnrecordedAmount() {
-        if (originalPayment != null || _uiState.value.purchaseRecordStatus != PurchaseRecordStatus.HISTORICAL_OWNED) return
-        changePayment { it.copy(amount = it.remainingAmount.takeIf { value -> value > 0 }?.let(::moneyText).orEmpty()) }
+        if (originalPayment != null) return
+        changePayment { it.copy(amount = it.suggestedAmount.takeIf { value -> value > 0 }?.let(::moneyText).orEmpty()) }
     }
     fun updatePaidDate(value: Long?) = changePayment { it.copy(paidDate = value, isPaidDateUnknown = false) }
     fun updatePaidDateUnknown(unknown: Boolean) {
         if (!_uiState.value.canRecordUnknownDate) return
         changePayment { it.copy(isPaidDateUnknown = unknown, paidDate = if (unknown) null else it.paidDate) }
     }
-    fun updateStageId(value: Long?) = changePayment { it.copy(stageId = value) }
+    fun updateStageId(value: Long?) = changePayment { it.copy(stageId = value, suggestedAmount = value?.let { id -> it.stageRemaining[id] ?: 0.0 } ?: it.remainingAmount) }
     fun clearError() { _uiState.update { it.copy(error = null) } }
-    fun isValid(): Boolean = _uiState.value.let {
-        !it.isLoading && !it.loadFailed && it.purchaseRecordStatus != PurchaseRecordStatus.NEEDS_REVIEW &&
-            (it.paidDate != null || (it.canRecordUnknownDate && it.isPaidDateUnknown)) &&
-            parseMoney(it.amount)?.let { amount -> amount <= it.remainingAmount + 0.005 } == true
-    }
+    fun isValid(): Boolean = !_uiState.value.isSaved && paymentValidation(_uiState.value) == null
     suspend fun save(priceId: Long): Result<Long> = saving { amount, state ->
         require(loadedPriceId == priceId && originalPayment == null) { "付款订单不匹配，请返回后重试" }
         if (state.purchaseRecordStatus == PurchaseRecordStatus.HISTORICAL_OWNED)
@@ -426,13 +513,15 @@ class PaymentEditViewModel(private val orderRepository: OrderRepository = AppMod
         orderRepository.editPayment(payment.copy(amount = amount, paidDate = state.paidDate, stageId = state.stageId))
     }
     private suspend fun <T> saving(block: suspend (Double, PaymentEditUiState) -> T): Result<T> {
-        if (_uiState.value.isSaving) return Result.failure(IllegalStateException("正在保存"))
+        if (_uiState.value.isSaving || _uiState.value.isSaved) return Result.failure(IllegalStateException("正在保存或已保存，请返回查看结果"))
         _uiState.update { it.copy(isSaving = true) }
         return try {
             require(isValid()) { "请核对实付金额与可记录金额上限，并选择实际付款日期；历史日期记不清时请明确勾选。" }
             val state = _uiState.value
             val result = block(parseMoney(state.amount)!!, state)
-            hasUnsavedChanges = false; _uiState.update { it.copy(isSaving = false) }; Result.success(result)
+            hasUnsavedChanges = false
+            savedStateHandle.remove<String>("paymentDraft"); savedStateHandle["paymentSaved"] = true
+            _uiState.update { it.copy(isSaving = false, isSaved = true) }; Result.success(result)
         } catch (e: Exception) { _uiState.update { it.copy(isSaving = false, error = uiErrorText(e, "保存失败")) }; Result.failure(e) }
     }
 }

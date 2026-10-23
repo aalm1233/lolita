@@ -9,6 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.ui.screen.common.*
@@ -22,14 +24,14 @@ import java.time.format.DateTimeFormatter
 fun budgetMoney(cents: Long): String = "¥" + BigDecimal.valueOf(cents, 2).toPlainString()
 
 @Composable
-fun BudgetContent(viewModel: BudgetViewModel = viewModel()) {
+fun BudgetContent(viewModel: BudgetViewModel = viewModel(), onNavigateToOrder: (Long) -> Unit = {}, onNavigateToLedger: (Long) -> Unit = {}) {
     val state by viewModel.state.collectAsState()
-    BudgetBody(state, viewModel::changeMonth, viewModel::resetEditor, viewModel::save, viewModel::remove, viewModel::retry)
+    BudgetBody(state, viewModel::changeMonth, viewModel::resetEditor, viewModel::save, viewModel::remove, viewModel::retry, onNavigateToOrder, onNavigateToLedger)
 }
 
 @Composable
 fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Unit,
-    onSave: (String) -> Unit, onRemove: () -> Unit, onRetry: () -> Unit = {}) {
+    onSave: (String) -> Unit, onRemove: () -> Unit, onRetry: () -> Unit = {}, onNavigateToOrder: (Long) -> Unit = {}, onNavigateToLedger: (Long) -> Unit = {}) {
     val skin = LolitaSkin.current
     val scroll = rememberLazyListState()
     ObserveSkinScroll(scroll)
@@ -39,10 +41,17 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
     LaunchedEffect(state.showMoney) { if (!state.showMoney) editing = false }
     LazyColumn(state = scroll, modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(skin.spacingLarge),
         verticalArrangement = Arrangement.spacedBy(skin.cardGap), flingBehavior = rememberSkinFlingBehavior()) {
-        item { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(onClick = { onMonth(-1) }, enabled = !state.saving) { Text("上一月") }
-            Text("${state.month.year}年${state.month.monthValue}月", modifier = Modifier.padding(top = skin.spacingMedium), style = MaterialTheme.typography.titleMedium)
-            TextButton(onClick = { onMonth(1) }, enabled = !state.saving) { Text("下一月") }
+        item { Row(Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            IconButton(onClick = { onMonth(-1) }, enabled = !state.saving) {
+                com.lolita.app.ui.theme.skin.icon.SkinIcon(com.lolita.app.ui.theme.skin.icon.IconKey.KeyboardArrowLeft,
+                    Modifier.semantics { contentDescription = "上一月" })
+            }
+            Text("${state.month.year}年${state.month.monthValue}月", modifier = Modifier.weight(1f),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center, style = MaterialTheme.typography.titleMedium)
+            IconButton(onClick = { onMonth(1) }, enabled = !state.saving) {
+                com.lolita.app.ui.theme.skin.icon.SkinIcon(com.lolita.app.ui.theme.skin.icon.IconKey.KeyboardArrowRight,
+                    Modifier.semantics { contentDescription = "下一月" })
+            }
         } }
         if (state.loading) {
             items(3) { LolitaCard { Column(verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
@@ -84,10 +93,20 @@ fun BudgetBody(state: BudgetUiState, onMonth: (Long) -> Unit, onEditor: () -> Un
                         row { Text("以上金额未计入任何月份或预计余额；请补齐日期后再安排预算。", style = MaterialTheme.typography.bodySmall) }
                     }
                 }
+                items(summary.undatedEntries, key = { "undated-${it.isPaid}-${it.id}" }) { entry ->
+                    LolitaCard(variant = CardVariant.COMPACT, onClick = { if (entry.isPaid) onNavigateToLedger(entry.priceId) else onNavigateToOrder(entry.itemId) }) {
+                        Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
+                            Text(entry.itemName, style = MaterialTheme.typography.titleSmall)
+                            Text(if (entry.isPaid) "实付日期待补" else "应付日期待定", style = MaterialTheme.typography.bodyMedium)
+                            Text(budgetMoney(com.lolita.app.domain.usecase.OrderAccounting.cents(entry.amount)))
+                            Text("查看订单并核对日期", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                }
                 item { SectionHeader("付款明细") }
                 if (summary.entries.isEmpty()) item { Text("本月暂无付款记录或待付阶段。") }
                 items(summary.entries, key = { "${it.isPaid}-${it.id}" }) { entry ->
-                    LolitaCard(variant = CardVariant.COMPACT) {
+                    LolitaCard(variant = CardVariant.COMPACT, onClick = { if (entry.isPaid) onNavigateToLedger(entry.priceId) else onNavigateToOrder(entry.itemId) }) {
                         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                             Text(entry.itemName, style = MaterialTheme.typography.titleSmall)
                             Text("${if (entry.isPaid) "已付" else "待付"} · ${entry.date?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE) }.orEmpty()}")

@@ -351,6 +351,7 @@ fun LolitaNavHost(
                     onEdit = { navController.navigate(Screen.ItemEdit.createRoute(it)) },
                     onNavigateToItem = { navController.navigate(Screen.ItemDetail.createRoute(it)) },
                     onCreateChild = { navController.navigate(Screen.ItemEdit.createRoute(parentId = it)) },
+                    onNavigateToRecordPayment = { priceId -> navController.navigate(Screen.PaymentEdit.createRoute(priceId)) },
                     onNavigateToPriceManage = {
                         navController.navigate(Screen.PriceManage.createRoute(itemId))
                     },
@@ -432,6 +433,7 @@ fun LolitaNavHost(
                     onNavigateToPriceEdit = { priceId ->
                         navController.navigate(Screen.PriceEdit.createRoute(itemId, priceId))
                     },
+                    onNavigateToPaymentEdit = { priceId, stageId -> navController.navigate(Screen.PaymentEdit.createRoute(priceId, stageId = stageId)) },
                     onNavigateToPaymentManage = { priceId ->
                         navController.navigate(Screen.PaymentManage.createRoute(priceId))
                     },
@@ -478,7 +480,8 @@ fun LolitaNavHost(
                 route = Screen.PaymentEdit.route,
                 arguments = listOf(
                     navArgument("priceId") { type = NavType.LongType },
-                    navArgument("paymentId") { type = NavType.LongType; defaultValue = 0L }
+                    navArgument("paymentId") { type = NavType.LongType; defaultValue = 0L },
+                    navArgument("stageId") { type = NavType.LongType; defaultValue = 0L }
                 )
             ) { backStackEntry ->
                 val priceId = backStackEntry.arguments?.getLong("priceId") ?: return@composable
@@ -486,8 +489,12 @@ fun LolitaNavHost(
                 PaymentEditScreen(
                     priceId = priceId,
                     paymentId = if (paymentId == 0L) null else paymentId,
+                    suggestedStageId = backStackEntry.arguments?.getLong("stageId")?.takeIf { it != 0L },
                     onBack = { navController.popBackStack() },
-                    onSaveSuccess = { navController.popBackStack() }
+                    onSaveSuccess = {
+                        android.widget.Toast.makeText(AppModule.context(), "付款记录已保存，可在订单查看结果", android.widget.Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }
                 )
             }
 
@@ -584,6 +591,9 @@ fun LolitaNavHost(
             composable(Screen.Stats.route) {
                 CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 StatsPageScreen(
+                    onNavigateToLedger = { priceId -> navController.navigate(Screen.PaymentManage.createRoute(priceId)) },
+                    onNavigateToOrder = { itemId -> navController.navigate(Screen.PriceManage.createRoute(itemId)) },
+                    onNavigateToPayment = { priceId, stageId -> navController.navigate(Screen.PaymentEdit.createRoute(priceId, stageId = stageId)) },
                     onNavigateToFilteredList = { filterType, filterValue, title ->
                         navController.navigate(Screen.FilteredItemList.createRoute(filterType, filterValue, title))
                     },

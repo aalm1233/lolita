@@ -81,7 +81,8 @@ fun ItemDetailScreen(
     currentMaterial: com.lolita.app.data.local.entity.ItemTryOnMaterial? = null,
     onNavigateToMaterial: (Long) -> Unit = {},
     onSupplement: (Long) -> Unit = {},
-    onViewMaterial: (Long) -> Unit = onNavigateToMaterial
+    onViewMaterial: (Long) -> Unit = onNavigateToMaterial,
+    onNavigateToRecordPayment: (Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val sourceRecords by viewModel.sourceRecords.collectAsState()
@@ -417,6 +418,7 @@ fun ItemDetailScreen(
                             item = item,
                             uiState = uiState,
                             onNavigateToPriceManage = onNavigateToPriceManage,
+                            onNavigateToRecordPayment = onNavigateToRecordPayment,
                             onNavigateToItem = onNavigateToItem,
                             onNavigateToParentPriceManage = onNavigateToParentPriceManage
                         )
@@ -720,8 +722,10 @@ internal fun ItemOrderSummary(
     uiState: ItemEditUiState,
     onNavigateToPriceManage: () -> Unit,
     onNavigateToItem: (Long) -> Unit,
-    onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem
+    onNavigateToParentPriceManage: (Long) -> Unit = onNavigateToItem,
+    onNavigateToRecordPayment: (Long) -> Unit = {}
 ) {
+    val showMoney = com.lolita.app.ui.screen.price.pricingMoneyVisible()
     val skin = LolitaSkin.current
     val currentOrder = uiState.pricesWithPayments.singleOrNull()
     val sharedParentId = item.parentItemId.takeIf { item.includedInParentPrice }
@@ -752,7 +756,7 @@ internal fun ItemOrderSummary(
         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
             SectionHeader(title = "价格与付款", action = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "录入价格" else "查看",
+                    Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "建立订单" else "查看",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(skin.spacingSmall))
@@ -769,7 +773,7 @@ internal fun ItemOrderSummary(
                 currentOrder != null -> {
                     val paidAmount = OrderAccounting.sum(currentOrder.payments.filter { it.isPaid }.map { it.amount })
                     val remainingAmount = OrderAccounting.remaining(currentOrder.price.totalPrice, paidAmount)
-                    Text("¥${String.format("%.2f", currentOrder.price.totalPrice)}",
+                    if (showMoney) Text("¥${String.format("%.2f", currentOrder.price.totalPrice)}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary)
@@ -780,9 +784,9 @@ internal fun ItemOrderSummary(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        if (paidAmount > 0) Text("已录实付 ¥${String.format("%.2f", paidAmount)}",
+                        if (showMoney && paidAmount > 0) Text("已录实付 ¥${String.format("%.2f", paidAmount)}",
                             style = MaterialTheme.typography.bodySmall)
-                    } else FlowRow(
+                    } else if (showMoney) FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(skin.spacingLarge),
                         verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
                     ) {
@@ -802,11 +806,18 @@ internal fun ItemOrderSummary(
                 )
             }
             if (uiState.legacyPriceCount > 0) Text("另有 ${uiState.legacyPriceCount} 笔历史订单，可在账本查看。", style = MaterialTheme.typography.bodySmall)
-            currentOrder?.let { order ->
+            currentOrder?.takeIf { showMoney }?.let { order ->
                 com.lolita.app.ui.screen.common.ExpandableInfo("订单明细") {
                     Text("订单总价（含邮费） ¥${String.format("%.2f", order.price.totalPrice)}", style = MaterialTheme.typography.bodyMedium)
                     Text("付款形式：${when (order.price.type) { PriceType.FULL -> "全款"; PriceType.DEPOSIT_BALANCE -> "定金尾款"; PriceType.MULTI_STAGE -> "多段付款" }}", style = MaterialTheme.typography.bodySmall)
                     Text("邮费 ¥${String.format("%.2f", order.price.shipping)}", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            if (currentOrder != null && orderStatus == PurchaseRecordStatus.TRACKED &&
+                OrderAccounting.remaining(currentOrder.price.totalPrice, OrderAccounting.sum(currentOrder.payments.filter { it.isPaid }.map { it.amount })) > 0.005) {
+                if (!showMoney) Text("记付款时将显示金额。", style = MaterialTheme.typography.bodySmall)
+                Button(onClick = { onNavigateToRecordPayment(currentOrder.price.id) }, modifier = Modifier.fillMaxWidth().testTag("itemRecordPayment")) {
+                    Text(if (sharedParentId == null) "记一笔付款" else "为主件记一笔付款")
                 }
             }
             if (purchaseReview != null) {

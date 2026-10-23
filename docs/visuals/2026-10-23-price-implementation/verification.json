@@ -1,0 +1,2940 @@
+{
+  "native_matrix": {
+    "pages": 9,
+    "skins": 7,
+    "modes": 2,
+    "sizes": 2,
+    "captures": 252,
+    "normal_content_dp": 400,
+    "small_system_resolution": "960x2100",
+    "small_density": 480,
+    "small_width_dp": 320,
+    "small_font_scale": 2
+  },
+  "native_files": [
+    {
+      "file": "budget-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "2c9815ac539ba1cab390e8e4d09e6685fe305c5211ceec82afb715805cf062cf",
+      "webp_sha256": "534736700f049ba45acaf4a589d7b05b069397a07f13344fef552882a071e2df",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a5d28d38cf4394d774e4c2b5702e96ab71a224e89bdce13f58c5685bc05296d3",
+      "webp_sha256": "6ca7661859ad04619ffd911d16cfda1179ff0226872e9d61476704415d05d3f8",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "55d5e6f679aa47b2145c5b81af345f816e59711a6739007bdfd43065a93f48e7",
+      "webp_sha256": "78e15f2e487bc110ed85a26b2b6d8dda705e655cae2bdb8064a4bcd7bfdea048",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "e4d68c67aca34e3277dfd9e657feb200e58d7752d6194ce5529a60a64145cf0d",
+      "webp_sha256": "64628de358c891d04f6bd8fec746e98fb6b68bdd6ad875887ec0124a2567b174",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a04704c8f9e9312158a2c61191f7764c592c4cbeccbff390925eec2ee75a5ed4",
+      "webp_sha256": "42346060f2558f50b3e59646d2f4a4ea09fd71944d5580cf2b67f42f78a9ab54",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "29e5d22c790509fd26a8820ca5a32ef650b6c80f23ba3fe289f63df7d8510072",
+      "webp_sha256": "106da35ba2452536cedcf27a699524800eaa8c80f35bc99c0f0daba6c964c091",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "705d234ade23552bf6f30ec329f219ca00518e2c6bb72aa035a5d8cc4a001b69",
+      "webp_sha256": "e4329b5eb60e0597eba1a7383b91675d9a2e6b4567c8480bcdd9ccfdf0b73b15",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "9f293fb037f5e97d22bf6228b346ed8e4cc6b7eef81987a276d30e10d31d20a2",
+      "webp_sha256": "b9f8567279b0cbd9dbdc854e446a5f6cb8e7af030a10af4ff50918f527f17814",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "925779b6df48a246e3ea257cc6c9669f09a59297836e271053ab9338a3ae6e20",
+      "webp_sha256": "315abfeb6a39116940f4d5c88cb75557cd279e8dda7df712882d02fd54556590",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6378cfdc5ace63240c4748bb7ecaa9b7818aa369b80d6111c6863ba425b600c4",
+      "webp_sha256": "0f6297dad0e2a5dc0b07121b3aabe42ce53c25ea5f0cebcdc3e2f15c2e5eeb24",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5d3914b21cbf54e224c4da04282dc4a860a3fcbe7c54297803e3632e68467e52",
+      "webp_sha256": "607c78eda0e77039eb9778405ef515c7fd323a0fadcb1e9a4cb3d2faded4e05d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "540aa9efa7ff6f59ef2e5fb8fba4c9ce4fec2dc31f5ed94c5d4add940a3e3626",
+      "webp_sha256": "7362a8298654c59895d2af87436488d6d4f08047a82aa0332007358bb80d616e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "6d94ccb9f60b756f8df7f420c2944c0402d471c332fd09b56c8cac850333a2d3",
+      "webp_sha256": "5f6e73a02221dbb63400edfe6d96b4c44cd78753eb4d845bf072ce276fd6732d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "7cd48bc9ba3bad19099ace4059386214b692ace79c70be7b0c0b573c1b5ab9ef",
+      "webp_sha256": "32494dce1ad9bf8d5fa9721fd211e379c2711fe1141af2bac6962f2091c77bbe",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "22cd354c9bb62d61853812565e201dbc244f99e2e915d0f07395d6305879f486",
+      "webp_sha256": "da619fca3dd98cf1e3ae1972d1c409a4797c9046742e74ec344a6ac40731f907",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "c5b65443a39eed8c3c47556ec2f9f1ba42b376e0b0e2dcb338437cfd9b484979",
+      "webp_sha256": "ca0d35cd35b6b3881549afd84729748e8c19e58e9917a6e2a8ddd1a7462a9951",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "b966c98abc015508a69eaee9e45c813eaba4bc209dad34cd1cd36392a2a3840d",
+      "webp_sha256": "3c9168324082cb7db9a0da826459859ce90adbff0fcc9d41b6f1145f6a90c4b0",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "8ea078640d3feaf76ea5182a8ee5f0ccf0f7f9caba5b520629efbce887a00db8",
+      "webp_sha256": "28a759a4e199ccf4677a6de0aafdbc21faf54853da42c4d48269f2f4ae193302",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1bf21867703ef73cca08a82bc8f7a78292b7f246cd96e5e2ddc83f9715a96cf8",
+      "webp_sha256": "a242b2546d581112edf0adf61757eec007925d49db408c4c3a8593e8f41bb143",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6984e7c156afe46f228d93860b73c09632efefba95299750abbb84b70ecf9827",
+      "webp_sha256": "cae19b67aa009f9ec470bccd4d905f9cda0e0fb5934733917f7c79c6992f50ad",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "acb24c15e1f357236921aefdb0fcee39fc1eb22a5fe4fb1673312f4f290ce6d6",
+      "webp_sha256": "9c609a3d9a29c4c5614438e4035b56f165b7e60d0d413513cf0adfb60847b583",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "05c5f7fac7a18d5a0c37609217cb971bd4f7998a9d25d5ed16398c0c784ba300",
+      "webp_sha256": "8b48166e557a93168d9a7d24c8f971d5861b1ab2448603fae2c7426fad5f5d9a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "8df07a36f59b21f8c6ab61a4901d162c8a402f661575715d77009c8d4544b5cc",
+      "webp_sha256": "18746b956f1760b7f3ae69f4a0805c0eb1f6f3c67eaa673478e0d9bbc093279b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "1a59462136f292357f43104f3f2e6e0cee3d8766a72456bd2f5af6347e6f23ba",
+      "webp_sha256": "2ea612f7e0191ce11023302953093fe855c70ca988b754980897b4026cf1fd9b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d2eeec546d0d15318a08f25112e74dc94be4162ef4761e59da733550d837133f",
+      "webp_sha256": "e3b3afd8c9723c9f9fd4a1215688f2d5d5265a271b6916cab0d9804301df2182",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2e3849432516172cd8e6a5fc8cba59a6e8454af4d75cd9f4972280ce38d4dbda",
+      "webp_sha256": "8e0c3670461b15380d2c2f68df9d19e76ea70d1a0ca68fb4c322a492ebf006da",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4cae54f20cf39944cd048d5cef7b6de6d449b2d9acc85aab3ea2fb01c7e37d0e",
+      "webp_sha256": "2bf8d62fcc59b47aa7cdb91abf1347fda55d04adf7f007ec6d57f488aabc03e7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "budget-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "4b96f7d0f89caab2dba29b32e94e213bb98582c890f8c8fda408305bc4e4bbed",
+      "webp_sha256": "87b8c107e625c86ca5b076fd787f99db94cdb3e88b1048db08b569ab794d5417",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a7c6fed1605d211c98f664b6c366d8a984209f5776af0425ef71e03c43b90975",
+      "webp_sha256": "686c428363a3d836b7d8be591aa92a2dc2e5ed43234527f48f018ac89a7dc410",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "87d20210eaa3b81ff0d4bcde3cb3cf2d504df70d93d74be11dc9dee4751c16ed",
+      "webp_sha256": "5c6fa51f88516b021ad84f979c760071075404a88f1d303b9d4d012c7e8bbded",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "e2be536514657a331ef44598ed3f65d09adf215332745ccaaa995ab3e9f2fef7",
+      "webp_sha256": "e3afd2940b41ece5e892c524d4bd33e62736e690c77b8e921bf7ceef4be002b6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a9a38253f6aeb2720861fc1efa2235d98571211b6dc8c6e5ed7ea6edf6008fb2",
+      "webp_sha256": "c084c067edd01393c255e1ecb41fde089b8a25f9eb14af5daeed6a75455f307a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5dd170efb0852674484939a8ea7262a76add485d31a6e9d08ad6381963e60715",
+      "webp_sha256": "ec89b8b8be1bb4925905618c0261d776c42c8b264f1ed95df22117c13b39f074",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "022662ac619dcc222aea299edcee301abcfc192c20f151bf54717c6a8006a74a",
+      "webp_sha256": "c235f9f3993b32cd84438d865f2f7c76cfd62c1b54d6e5c72d9e898e4871d659",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4355859a623d2dd355494db31f4b4df078ac6e1389a2e1addfd4ddb71d70aa61",
+      "webp_sha256": "63385a6dd9e07e4009a489b945f4f565033cb68bb5a43674665905a5fab436fb",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "658b1ca7a9001eb2ff583dcfdcedc98202bf58b59ba1abafdfe1e5e8a098c0c7",
+      "webp_sha256": "1bca3b806fcd313ce9981ead672f7e18842181bb227f2e3304e5da331db7d657",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "631e538433968e954ccc8ec641652d3edbaaa9589699ee1835ec0416d8c9dcdb",
+      "webp_sha256": "34cde83477ed12cad6d588bfd482e3b0b05fd460df6ec415ac2ab41069ea5d4f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "31c1852109ef7c3a98bf5e8921a63edeaf4905edecab77de58bcfc6e6b5e4c58",
+      "webp_sha256": "26a3a992779c3b7f640137ff4c473f0f26de6b77d3c897ffa5c8982a5924099a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4ed6e1f7d6ef6cf0daf8a0712daaef4acc7659b50345c6135554c4881d44d6d5",
+      "webp_sha256": "9896afeef0ba6c699c6ceeef6d23a874b33ae4ad860d5bb14f39b6a11501bd1a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ce9b5170233148e880b232183842653a2158ebe2cccea3c0eabc0eb338e8144c",
+      "webp_sha256": "e91818a818f4f3d0adfe65424a6bd23614ada6e08ee1160c83cbd43e085250e7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "844677a5668c0aeae1bf9ed64996d81c65b50ad9aca508a0a508b731984557b4",
+      "webp_sha256": "c7b7021a266ac4a4c8916b6dae6874cc36c6f5d7a065b9294e1cbf7727e4376d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "c3bc3dda1b8847c12b82e4693475e8157f1f7ddcda34192ff37d5e9012d43223",
+      "webp_sha256": "4477126f4e90400b29ae7877b61fe38278146690e326e72dfa92b3a29763af66",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "bb1673ec6d1100abd4b60b757dde1bb4d9edb087347957c01699a0a3f1db793c",
+      "webp_sha256": "da39deff90266887ce894d151e887699ddfb504d907d2e6f8c97fdf81e0e79b1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "5117cbe8905bc7f6c90057b4d99ae8fee7131aa9604d27ed987cf770e78d01a6",
+      "webp_sha256": "54b44b1917d901e8de41a6a3a03d08bc2329684ad22323aaef0e8f64e9517cdd",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1b7e94e55d2693ad26f68faf7c7e01364b38b3aee27c9f94b9a0d70ba5b67254",
+      "webp_sha256": "0d7c33ed2e1448b9032db5bdb4cc53b3fb54e835c6e7106c737dd9dde27296a1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "692034992598898d74ce520b270bc613512ac5628bdef2309c24b9387b534895",
+      "webp_sha256": "e2373bbbdc36b73503e136f25fbbb1ffd216a5ff19cd84f6f2c58b34c74b5f17",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "566f487dfa51ac71edaa79dbc0bd38a4fc1f4f880bce35dadb6fb4bc5c579432",
+      "webp_sha256": "1b69ee3e0014cad1c0b5337a46ad5275d969e896e7c62f11417d7fb632d65f30",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "f493cffcd79f38b51f6095b34034f742e24c706cb868beb72da41339b628efed",
+      "webp_sha256": "0f549c006b34187ee47666a07ec44e58863adf979c4d55f73201a03d2c60eae0",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "55d0fbd9118b8f31a9d28ee9a9f17b44d9adc6c7fd77d0ea76f94f6a86af2a69",
+      "webp_sha256": "4142eef3bce1cdae5a9be65f64421e5a0e226416bedba7cccd946293df20f50c",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "e4440b389ae1f8ea2dadf4f3a096e0f90c80480a85039ee71d561d737f060a5a",
+      "webp_sha256": "e66fb7c2a8c16aa9f6fe000da20fad27a1243cfc939f65ad8c4e4ad0123aa9cc",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "b66472a920fba6e2b8c2b949bf276074f3b2501cb1503578be11bf318e144807",
+      "webp_sha256": "ba80ef0b77c557f9f7c88c5a69cc7ca1320c9e697e54d129a339eabf84d35cc3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "0c8f36a7bec75f4ce5cea1d4a296a460d91c9a2bfb5b4c523d7840ecef8c259d",
+      "webp_sha256": "a932776be611fd3494820c6646dfc6069d1255fb14f39b4bb3b3e9672a837663",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d83d38ae7cc9619908debcba81dc9b3771e0afd31c7b972d2614e3f35b090582",
+      "webp_sha256": "df78a1ed7b8e9291d722043f6762fef7de214893126dcbcdd7396b72b158d430",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "841555ce3b424692b4da8714c8a7093fd78beac5ac4e59695d1f089d0b858b11",
+      "webp_sha256": "cb8dd4058311ddf91c67252e2781a3cfb1caa936e73816ea79f98097a68239f6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7b4f015a8c835f581ddbf9f366984f07004e66700628ecd27b351b1e0290fcf1",
+      "webp_sha256": "a2e40de7ed46376c457a1103f2fec7f5e8a612c1304f4ab824a02202126576e3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "calendar-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "e40588a5f931656aa3f669a1be538d19fca7db2c5952a10b316de8337a26ef2c",
+      "webp_sha256": "8d10bd1cf318143ea5ee190b422ba4ccb91efdeb040805cdcb751b9a0ae28b38",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "e5d07df623e8353f61476452faf72a1b73ecbfb2bdfef042fe0abfdd9250e22f",
+      "webp_sha256": "0aab6abec7896af13c44486f8c1985cd20a1b9345163349346898dad649c7756",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "158ada364b5422695d144d1dcad85ae0c16fd8229d4d3267775b35638ae5f188",
+      "webp_sha256": "bc8af29f54efd916f8b751ab1349f8f7adf5c81e0965fa98a9e25b648601707d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "019a0f663ae89a764a98cfddc0aeb615a41b1d06646e219d3b440fa2d63b458e",
+      "webp_sha256": "e44ccfa98d1ad079384b17f37a928b5b95b5891f3865b4bfba044a5fd4ebcdec",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ddc3321fa1da9d5f935771736b03f5e2459c79c520d22c84d592b65f275b1d7a",
+      "webp_sha256": "5970cd4a68013ed90aa17edd89821e2ea46a08be1f25d720a515e929ace29584",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d85df8d635899bb508eada5269f10f2b9310489cb3d1f82c6f749fb029da8016",
+      "webp_sha256": "435b96238a15120402466a130fe7468db6ff75e7131693fa0aeec97d5ea3a8a4",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "73308b031ae369030629cd5ec06c5b693578af1241020a74b77d19c068ee6278",
+      "webp_sha256": "87fbaec2b6d043c19e8d7343f79505468a73880ddc9271dfaece052926347458",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "f1f83939c9cda35614198f45e2695da178aaf166aa8743dbe7a9fd6f189ad623",
+      "webp_sha256": "219e46f54a30ca10449cc98703103937ef70b6373b4cd71468eb3b462aae1a85",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "824c436c4c443d87f6dd473f0a0fc7f27d71dd5b59971123ecc2e6015e270e46",
+      "webp_sha256": "37becd93a72bd384e1b356f4cc5bb1d40113b37199fd635e501e7fae56264909",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "734d104673ddd452a45b459d4c802083fa6be4bcbffdd0899196fbcfc92425f7",
+      "webp_sha256": "796a15393367afb853d106f93f9b4145ba1b92b94290c56753a63bdf5fef98fa",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "f8d6763e6b8e4b70df0351a116fd25b2dc8cbc1b0fc84fe299f25191d37c51c8",
+      "webp_sha256": "220ee1836fd52b50f176ee5f4c2a5997e269e57c453289be0987605478d36d17",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "27c2017230d912c65b652b2910b65bcab96c326215bf53949859cc3ea9561b1b",
+      "webp_sha256": "cc9588f93e3d5c919dc4ec0fcc14d0bdf45dc4e13e813fb251fd3c2977ece2b4",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "78b9d35ace4567853588b709cffd3477f620587dc77899eb3909307e7227e678",
+      "webp_sha256": "f54ead6d3652a18890b6c74a6b49f91de421f9b03ef6fd32536b76c2d2737d09",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "faf2c680364b812f6d7655a3b4601990b2a31bb189053c5d7dd0c553a44811c8",
+      "webp_sha256": "506690e6fe3ec73f532aa76f04556aeeb4ba2c4557f13be62c24869d37e11c0e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ecd8d595b70ba526748a3b2a0301ef18b59201a45c88d89255972abff1c99e07",
+      "webp_sha256": "2ddcca3f2bd7667cceebefcbaa7c359891dc42edc2f7ef6fb658096cd3f5f2d5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "2bd5717ac14239ac986147f85a5afc358c8bc8ae1ff2757bf89433cfa6d7cbe9",
+      "webp_sha256": "8f7d56ebcb93430690a1c028b5ffc0b4126304015f821b5fb7f29aeb78d7292b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "7a3c542041bfce9ee3a23d2e47a346b57b3b4b91de8abdd39fd0051d117370b3",
+      "webp_sha256": "8869fdbd5204c2f9eb9754ee1369194e85f5627122f22598dcc2e7bd3bf6ea8c",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "f1d53abd20b62fbc6251933d48d2cf107d7fd1b7c85cbb5255ad5a3c23aafb66",
+      "webp_sha256": "1096aa2fe5f9cf45dadd1eae6ffa0ec6293cd9d4c32551da7f63aab25c269985",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "aee0c982e84fa30ab4cad5dd9440cc0a80b08ba556100e7f6ef3f7c963f98e0d",
+      "webp_sha256": "1b64046f924fbc1a02b85f2630effc7d72519d562ff2ecc62adf2c92c1fb447d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "ef876eeeb101d260f25174aa6f08c8d1a6638dd78c91c0f2bec23041d09da514",
+      "webp_sha256": "27dd8549c9f56132e7c32a0bbb219448f8ffa022bebafdcf36a9b83dc8e7d1f3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "874f3205f14c3a75cab083765ae3a8ea2b8de424d7c4fb9ed819518293928dd2",
+      "webp_sha256": "ade873affb716fdc1b086e3c69516096ae2d056a6ac310b3608592f9b7b77dc5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "b6af559ab8d1f4fdc579691e26672c7131c2bc18ab6559837beec74c348f406e",
+      "webp_sha256": "5225320d7dc1e037d793fa66ae70d330a39018f502ed247aece17bd4d8b7bdc1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "dc5e68e976dd88d8aa78cbf6506cbf14efdc6661a06443ae45402db0b17b20c6",
+      "webp_sha256": "9f0d5f0460b277b5a495aa19472f9b6422f918a99058343eafb69d0794778886",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "26d5d25a3f08edebfe74a3ab42326767283f445f910b0872a7c45fcb41b70a34",
+      "webp_sha256": "4d71d5e2506d23bcbd2a25ffa7e81ebcd061626d9ec2917c49e5bcf642ca9aff",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "3d206c36adf8e0116ce18f389a3ce680fb4c109e658329391928ed0df26e8a2c",
+      "webp_sha256": "44f6c278c5a06a76c5859f3075fcd3618434ff812020e9c848fa12bcaf993917",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "470d00a79941f9067368eeae36d6dcc17f45c4a758dd49fdeb8143cbf22686ae",
+      "webp_sha256": "f44db837b7187195477292b9b6996e919c178be6f8708979b5031e16181099aa",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "cf463c2af61d2eace926911608c85ff599f13f47a859430bfda495a96cb98fa8",
+      "webp_sha256": "47d9cc55cada30ebfc7cb67e4fa8a7db3904e735ae0e17b2d3f57cf41ca422df",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "32b6e6b5ffba9e4c3d081c29b16c167f8054856b43999543b67d18aa15fcf9ec",
+      "webp_sha256": "840473be068ed0e189c2839789bb026d06fd3bcc0ed5488121f3200d4d851e71",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "detail-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "9665e7290f5f4bbf88df4e278b82c4e630412686bf530263c402b08a9bbbd90e",
+      "webp_sha256": "d6d0ee9a41565e665480d163c4345c915ee99efa3e1c912f18d71f30cad0760f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a9a27dde1a5c840860ba0362a17cd40bbdff6320c71f3e53d077ebc64a79bd13",
+      "webp_sha256": "c85113e0469011d988338485fdff0a76471e4c6d018bf41cff08a76eb32cbe97",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "95077d81f84604a606b9578336e21a6eeb1264997f421235070d22c4f407e7c0",
+      "webp_sha256": "7f54a68b2b947e5ca511366c176f021479782176614f12bb111eeae681753cdd",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5317bb4e7b0c059094d92f969e3a43588f2437e7873fe45cf10bf03075417054",
+      "webp_sha256": "914ae4cc4630ec782f3897611c6b61c85244a2c6d88578fb3aa05f83b47ffca8",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "c6400628934c9b97003c20ab659e0ce30f7436016a22d7d5adc9c7ba04fb121a",
+      "webp_sha256": "5024b8653a9a38221e1c1c5b6a08d08f969f044664041b0bb8a8c411e3412487",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "31c253a2fbed0543759f59a40515963f21473f57a691d8b5c2e15ee39cffd7a7",
+      "webp_sha256": "1da1598ba0b8fee7f384b7d4f1798e3234ff746e99216c4f921dfbe4b7d8a411",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "14c4107e3951961356e6f169ab2e73782787e04f48b71286c748d4d6def9bdab",
+      "webp_sha256": "c43ef663f842be24598a742962b843cf6d8d59da917f87a61781448421c36463",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "0e52db959c732e821a67d5a82ae042072a706fa5047110ad0592209d5ceba6b8",
+      "webp_sha256": "aba34c7fc4e3b5ba7e20bbb4d3fd15ab385354adce11465893a1f82493ff2589",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "b68a13a27bad2defc69520844aeff8e2e28f7e86788611c20169dcb4c85acb93",
+      "webp_sha256": "62d1d938dbcc3109618c24ca408bd27b7d7a40b727b3ada6054b16dc409fd2fc",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5a7d7b6d57ad1347509c1465e8b6c567a47f91a2768faec000c58e975e3a10eb",
+      "webp_sha256": "254fa22ca6f2702d85e5b70016b68f821170d6fe3b4c0730d1bcaaf2d66c7456",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "fa9651182fdad47fd6c9528bc6eb65e3bfa07e661be597aacf2c86a6d2d7ae71",
+      "webp_sha256": "02dd47804267687cc1f1fee0a45634e3ef78a7ebc409e08f5d2b91b830bf974d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "c655e9ed7c2a40ee96b95e6635684038c79dd0672de8ce1f489f5d40e53b45de",
+      "webp_sha256": "7b15058eb9273807491e7cb9f7b47107d18d2366a6776279248669aa83f9d3dc",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "82082d093d4fdabbe1059fc31aa8ef96362d05bd082e3acef6030f73fb54de01",
+      "webp_sha256": "418fb8c824529892682e909f3294833b437f01cddf6d4ba88e7a10312e58a4f3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "b7201e1073ab318b9e9f0c157b784de2317780a33d94eb797dea59cecdcb4435",
+      "webp_sha256": "4690da5917f992d5ee488760114f71e3c281b16e35c0656873915cdc7456017b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "471c9bd2d5a608a32be2556df967dadab7b1d342d7ca542ecb129bd21e40ded5",
+      "webp_sha256": "ac9cc7bfdad991c865542fd6b75a105cef4239036fc1aab50b38b1a2337d9490",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a085aa69c5b3a6f42edc4a4b83584248121341f9647263c28a9a9ac1b1482320",
+      "webp_sha256": "395f3bb1d5d1f376061ec709a7b10e2f180e57a1ef21adaf7ac4bfb84c3ffc2e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "914879e57cd4f5fbc52f9e75332f08444d5a3f707f2b35f62776283418a54111",
+      "webp_sha256": "b5a0d439f4780d3b640549858f04c57aeabe508397266a6545e6940a648d64ee",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "f46c3ac05810d2c11de7f67046d0506b9654f1c7e71e95793d200f873649d747",
+      "webp_sha256": "2b8b4f2337d327247649f6ae9333adce949c707e832a5f8fc2634146fade8d81",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "fed74df18a16dad941a9fc93e0e49200678d533474792f8a5fbbfd4f5401c9bd",
+      "webp_sha256": "e432c0a8982bd0abd380c4ebd7d705318ae47db0eb5cc67ecddcdb174723d912",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "80f77e7286e4cca4e6699781c1940f0e3afffd1e87540a0c7383ec744e103157",
+      "webp_sha256": "96363e4552bd668fb9373349226348d6e5f0199c49d98a0824a31f75a86ae1a3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "7e40b20275d98deb3f3d1c1f0d8335542674217fd028178c0d770512a56be6de",
+      "webp_sha256": "a6ad335eb15335c6d359341ead5dd72ff5778a04a72740ab8076ba668e2b446b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4aa91023f35783ede137937888bbe57560b8c1eb8e4635847c6a197d7891b8a1",
+      "webp_sha256": "132a22c558d40d83fd3f3df1b0423e9279ccbbef8790d72b5285e70802df098c",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a02a99d0e3e702cf4345ced392fda5404581ddc7a74e455e1871494311714d6e",
+      "webp_sha256": "6d37fa5ef249863d44b26f6f05d14e7b8452b4aed9694d19f7d3e5ad9774b6f5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7d394d9130317479fcdb428f1d06fb769bff2144485a48faaf2e2b54ab996efd",
+      "webp_sha256": "8f4213056f631e472787b6193376ba6379789dbb1f972d71cb29d6a8ae97b41f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "7b8c6a710e4faf194aa940f9c3b4c879ceab97e2d75985c3720ccde1a6fcf822",
+      "webp_sha256": "ed72ace01369d222b6157bcbfe59ea93b13242ef529bb634a347b87ff475dfdb",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "baa822430ea9673f9fda6a6a39b7d35bba96a3ce8d89ecdc4ed10029001a907b",
+      "webp_sha256": "75cf2a67fd20e039d419a55e4eaafed075f6a3b42a9f7678e1c086ff1ed0dc60",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "8d62e8c442bb8542b0e23bef48e1e1af3ba52dd4dd59e3ee71261cdecfc46720",
+      "webp_sha256": "94e77e0214f77fb1aade20b43548afaf6974af69420652dd6ea07fb411b7ec08",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "957d913920c397c3eed3d43dd91c9228baf7e2dba650bfa4c81c2756c718094a",
+      "webp_sha256": "2afb9c631a48cff96583a9cd840210757e9df2967ef01cba5448408277c3c567",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "history-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6d0a076fcbbe17fd284fe49010dbfa98f136ac79664d90673a7f35605897917a",
+      "webp_sha256": "4a3f937b3f4bdc8a4c6eabfdec917641113cfc12264d359fb160e3fba28bfd45",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7b25f7613b855268c14ab7aa86187c6306bed964026c0fce60589b7a0e913df7",
+      "webp_sha256": "b150b4e06269eddf1a8c39101ace1ce1781e1f8057335cccf59cbdd80d260ee5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "b24c1d0fa0b06df9d8b36b3d78bb45f8c818cd043ea4451758e7417c178abde7",
+      "webp_sha256": "527a7ee1a233a5b49356c9e92d8041505103a426f43fbb6b7b24c2079d629444",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "3fce822c7f42ed3c97b51ce6a17041633d17645dd5b82825c99dde73d1a687b5",
+      "webp_sha256": "187ae525cb85f9f132fdb88f0457187efc84a0b2e4dd70b87c9c05804523cec7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "74096bc56420f5d1c7e1f68bc6b600cb3bf4ceb36871c14d4c65ef57e22f9e41",
+      "webp_sha256": "f487b0340c8b9e1b6cf506a48890a0839e38ae7284c635bcef3299f775561f30",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9e291099feb8ba6c297dbc1d9bc1852ac6f2c3707a805809dabb56bea86073a7",
+      "webp_sha256": "592891a3225a82d3cd16cf37b694c807b187c55c7930dcc16b77aec37c6ba5a7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "f4510b9a076549d89edbc9041c1b81212287d196c5e8503bc7a51b63a113470a",
+      "webp_sha256": "9cf1a9151ab61a441b20301c79db3c014b61b56c061f0578f154aa273f5911f8",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "998688219e6e3fec006e1a0c954c71514b127a4a59311dda902a64f6824300d0",
+      "webp_sha256": "8daec133db3672ff109f19b1a359b9b65749cf5bd8f63684ce9d65591140ddf1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "026002bbe2c6072c682a4fafa0862ad29b79d2425fae40306a29dd2fc38e3046",
+      "webp_sha256": "41bf054b237f7fda3d85e99e6807af6722419c82d88f871e033eda3dab39fdd2",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "12bd9da1d2e438875e672e6c01edc46ae82010bfe981e43ac4e3ddaaececc53d",
+      "webp_sha256": "794e9dadc9dcd5e32d1843e806c5f11d16f5129e182eb8c92afd886fb6e0af04",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "b009684c0cd604f13c9f528edf8237294af6c3c7a6c4551f8c29b0a0491f5c55",
+      "webp_sha256": "ba8527b890a1ff0494d5da2a24f6cacd19308a69fef2e78f5ec81a23a5538228",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "b909ebbc46ab192bccf66227d9c0712fefc7e0780bf78fcbd86c8f05df862fac",
+      "webp_sha256": "8963bacc786af550f1d498b9d0699d10e7a897b9176e3b3a82a1f41745c25283",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "158fc41f2e94f7fd71751337382bd0cb86bef6c0f623948d83066b1fc695ca8f",
+      "webp_sha256": "184c998f6d0d8a3a5faa1b3e0be7338e2d2eed51da8b03d03b8ae0717d330309",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1245395521e66fc43bc61eed8eba28a9576a72bc918b193aa48e350c27ac45e5",
+      "webp_sha256": "ee87ff459e22e5bd1d561203d8af43e67b821ca50582d05956d39eb16cfd6e07",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "f10e70ba9ca20f60c46395b673e28352a75fcb1408f397e82faa815df3b3d4a4",
+      "webp_sha256": "439536187b737cda8f7b1b796d53e4eee7fea93180477c9e12db562be0d9fbc3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d087afa4d4a9045562a019d3e32d24ff9e94dc4c98915413a89dda8e5ac58a10",
+      "webp_sha256": "1d8645707d330a8689e294e109f91f9fcaeb29a5adccee4d0dc62f6eab407153",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6d4283268a300011ba30c6b0451a0bc0e86df59b7c6911a53eac57eb4f16e487",
+      "webp_sha256": "f866518808c359d7d8dfa6e6e8e89ae669c117a4710ba02889b65867446115aa",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "73100ce6cefa4b08e7389820e527b5767960eeeafccc4f9bfb7132ee822a9e0a",
+      "webp_sha256": "28f67b78f99b6ffb0df16f8d50d2ce8aa343e6f7e114b933859395a9d0c6e33e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a23bda364dc758b0b8ce8a5576d00b04cfd0c38df078b0f20fe45fd74f37ea75",
+      "webp_sha256": "0132f2e74957f6e8570920dca2937fe262c6f1592b75633f7087cac033d924e7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9e096ce307d6aae395345a706a6b67fcb17e2fa48448f57bfb4387854a062463",
+      "webp_sha256": "f93fd7c9e7f1f088a3f1efc8e79ee857fe56d2285c504582ea4eb32dfa1757d1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "21cec49663936a81c4200f491aa6cc03ab839663ed3a84d0ba0120b6f6fa9a45",
+      "webp_sha256": "0a85828e497b7781c8625754ce7b8c26dee9e0cb6e67367a1bab12fb14447b18",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9fe28a5aa5ff7ae0d1817c0732910ec81cac8d865304c107390eebc0c928c65a",
+      "webp_sha256": "904d82c8f57e8887171d4bf0027b8058ce1ea2ab33d82b9386a3b869f239f91f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "fe1d5f98d753b208c81b53cc7d857e1157fb3aa49c5d610a16ff71c2a8b0d29f",
+      "webp_sha256": "e6eaec8b6cae9dcd263cf6287a442dabb885697ef25ca4904de1634703db8d85",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "e919eeef8e7a6c3d82d0f02727deb5b7eaecf88d1b2c2c9506768074d9b30b96",
+      "webp_sha256": "c24eadc79596fc80693fa15082f411fb127e497e4916215a058c317d420f4c66",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "5ae8a1910206f028c94ab776dd37e2b8c9218904fbf59dec749b626e9e630da9",
+      "webp_sha256": "208384f9f8aeb1a9c2bcd17fb16f23da1e6efb5803aa650c41bc680cdf9b6b78",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "ddb2b5fb45bef29c62978deadee7aef0250e53437910242de08f7d71474e412c",
+      "webp_sha256": "8a7f0327321a99dfcc5df2ff993549008ab643259708afb9786d4264d3561675",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ad2d296851961eecca9de8e012907fa3aee580183cd98a37d1e073aca80926ca",
+      "webp_sha256": "e447f6a3261e2165607572f4a2a7d3b9bd06d47bd36b40e3a1ca466fe8b503ec",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5ff14cc849e3da5b191f72f2b3190bf8a26d7fc281da9c02505e5df758603bcf",
+      "webp_sha256": "553eae3d3b174fcdfefda4e1dd9c3fde5be39e9f9dc9669615786a69c7e6ed15",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "ledger-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "da7f502a35c98149d9912768b96a875b5838451bbfd8ff6b998e826b42d0f62c",
+      "webp_sha256": "f7e95e3cef8934874be5c111fb9df3adccf68b976dd389185f0bde84ad263ba1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "67926b94546db2713667d6cbf381ef27f124e5a17183ec234c06153ca6c4322b",
+      "webp_sha256": "1fba828e6a7ed70db47e99dc15ec25c956a2367b18928b0e34c82780be7b6022",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "fe2b43afd0cfc8df664ca776f6a462768829c5fed788258f45002013141bac33",
+      "webp_sha256": "ddc04457d719fb7f1429ccb535ef7943a28df76e638924f857af7e653cd8a3ae",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "ff15a5bf6623f9873e08e0fc9e7c7e5cf2c2b18dbd2af11ea65ad79f0381beac",
+      "webp_sha256": "d33d656bd2afc12f0bbb3aa16aa617c680a284627cc0213da4b7ef1c5ff4cbca",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2a2b97edceaaeff8110cb91baf787c2f20a996a977adb2fa8a3ab234ffccf48e",
+      "webp_sha256": "746e733cbe89e2029cbb213978fa97b02974127448d1897b45b2ce7f57137a58",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9d78d3051e3e7c1a9ccbc1206ce78f7c42f6a6b48e5e24e4cabb2b4aed2c7037",
+      "webp_sha256": "f70a2ed202edd00063cedfd359aea7fd6bf36885ef4cb68b1ae760c70487c125",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "d524a61b2597bb9d0ab36e2735866290a0aee3f550318e38e1136d16a1bf8448",
+      "webp_sha256": "5bace36903ef95b5f544feed6740437c2684f317f18491c688fcb29289cc1d0a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1b8bf544c27a32decc521a81457001087c720d2a9d3edd0bdd4da205a689c9ff",
+      "webp_sha256": "5b2c410f3d68dd221d14717ff2669748f023e00c4b80227c4cdc15ee5b113e76",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "bf407503a547e261406014216ea6dd66525833427390bd7d58c2e2a57b3c3ec9",
+      "webp_sha256": "b4cf00c1caf8195dd88af9553e9b16cbe5a8e501700c80212d4efa665d8f0f8e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "c3a5cdb68adbc6f11729383d544e37ccdb936f232855a32620891ac1c2776133",
+      "webp_sha256": "398b954e384a5efce13273d67854628f4df80b940934e059fa9617382df1ad97",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "636cc262d90bedcff361e6c7c521e2651750c450b2a68356da6e7029bb843b5e",
+      "webp_sha256": "f5f1576ab5fc2dc354ec3173e6d330d9151217f7dadf071f4bfce804bd3e7352",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "61caafd4666a5f471ee8a3c30f69373cb3e0e79f0f907f0049de710fc466c262",
+      "webp_sha256": "cad31324491a5497d3f0dcd560789be726d162e7e7de7787d876bf9e9a6d3295",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "8a888cf00c3e096c6be4ea4f7207064fc3789f09cabe2bc40833d7dd262bf345",
+      "webp_sha256": "678f766cf988ba2a7093e93bc6557e1e45c4a2f931156050830d4a14656a4c02",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9229581f4b9a22e7acb69e8bc49317a55fca6231ab8afff855af2e57846d9301",
+      "webp_sha256": "cc5082d881c9e44702f5e85c13caa118199497a0d98ac5a36b843a6e88e195bf",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "dea2cc37bbc0d902ea393ed0d30d10ca5aeac7029a8dc0573b1a075c43d03d9a",
+      "webp_sha256": "4fe4cac6b949d5e64462101b45cf140ea8afba55306ec2ca1377ca0da162a8ed",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "bab7c8ad635bd071558827a34b9029a1b367fe7d24fc21675dd6032bac3a9cb0",
+      "webp_sha256": "cf0ffaee6b2dcbf64b0249ed241a8c24354e64a2f445f7eefd97939b33e90065",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "86fdda76c1b0a3a7006fbc4d9ad664448ade259b41b55834b1f2c5a0a1570808",
+      "webp_sha256": "87f1985fd68cef76fd56f0959cbf8cbf8cdfb9e13146873cd8210a4968d052f1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "de52b75e149d4d8336eced05fb3bb5a94f1c163d2374c03a19c3f3b557052767",
+      "webp_sha256": "5c629d8b614a0193a8aa534740f05a56c341b6c78afab26b9242a2145d4cfab6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2f480bb702e9467ede95edf64f07389aab5c5758fd20d2ca2bc93776d246007d",
+      "webp_sha256": "165bfb8da2946533340bc0dcd1ecc0aa06e70ae258ee3646faf2ce7d2c54aeb7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "db6d628ea50a816453bc65a24dcd6acd86245dee25ac5697d056dc9c0ea150e5",
+      "webp_sha256": "1a3789f9ddb313e308a6baabc7267a2b23fbaee95c6dc1d4733d9147d776676e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "31be7e3aeb8ceee03006acb2ffa872dd1759441a67a51e657fdbfa124efa2d22",
+      "webp_sha256": "51ff218d5fd22ab7da826aecef7011904ce9c1616b0eeceab2b8293d92aac6ca",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "aa0323b9ebc7eae3e42e1b9feb38e08b30afa7506fdf604ffd9e3833f19127f1",
+      "webp_sha256": "d5f2ffb159b5c592298f4a1b4f6ebf8b26766e8bc36003c802136913dc338eef",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "62711eea3a662997a63a68acdde3eb0959e362e6382663e794e35be1b5e59fdf",
+      "webp_sha256": "8879e023033394e6f44b2ac3efdb7eae904aebfd3091daf0cd013832ea0a8657",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5f51fe23d5111067d3ead353e1573a68ea82ae92c55dc517fc1438638989f693",
+      "webp_sha256": "10ef81c0cdc2d98e35d762963395bd98fe0a084c52b62562a6a1d0f0586c728e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "f93fe43f8a4d2b08fb59cc69a7cc6c092e30f9b4090a6f6c3bc34cbdce50635e",
+      "webp_sha256": "bfb0db8c1306612fe683008d1b3d6e1c7be013552b082c501307a5e3f7e7075b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "c8df3d95cf6149b4d7837ceada1ff3deacb97e566ccf161c7b85b8f17bbb078c",
+      "webp_sha256": "a6dae6e0c5c6a4223ff7aaffb2eaf6e86973fab1ba047eec5cea8953e18bda4b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6ea8ccbe0567713328c5e0f4385d49052593f6889cc79e37faddbf16113f77a0",
+      "webp_sha256": "2df33d6ebec44e5d3d1a977cf83b61d854ed92e9ccb8d66ee554ef9d0a007c37",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "32d01d51170bb0810e90fdb9ee8410388b57f32adffad71bff9dcfe4e815357a",
+      "webp_sha256": "c5eaa7608256de0562524e3245af9aaf398f2a3ee9d35f8d41c6c12720879132",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "overview-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "bc537829ca0909c63edc0a3997d8da5cf6b83f95fde338d61da3a7f6d73b6846",
+      "webp_sha256": "06fb2d79ec80ffc0127456aae9be5afb8aeb02ba8dc77f7eef08bb3e87cd3c58",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "8edc3606aaa039de53d8bf8d4acb3447dddf4d5fe95bd9330bd7becc4db542c8",
+      "webp_sha256": "aeda6d88dad28ffe6281eebbd6ad963cc84b247d1295c1b7a3f17405fc5a568c",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "89a87fc6ecf0d829cb1bfebb1dd81ffb70607b6eeca45a24cadc8b7bbfeed60c",
+      "webp_sha256": "3934271eb9fd001eb78ca1329c5275abfbe28a5919e5f263e80dc4b1e0db2e3a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "20f7ce1a7f6bba65c288c9d4d07a3b0eceeaa91a34aa706687de32192dd0f5d1",
+      "webp_sha256": "2f0fb3c597273bdb415beb89a3b374a83be6f8b92ff34a12a6d6070d2c8279d9",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "787978ab76aafd37ce0e9444a34020fac0768788c73ac8cf75c3c13860ed4b53",
+      "webp_sha256": "7ae63ca759228b727465813e99abd40a4f441caf1b5c121e5deff1385b4304f6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7b6fd4d75ac8a3225532921a501c7a020a1843065a546d4346d7f4d405702b6d",
+      "webp_sha256": "3215157693b34e3fabd5050af78ec71f2a6b1ded3d34875012abc994ed79fb54",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "aa0296b00109650d342e7a03b26adb743c9640e87bf81aac1ada4a39c4bc0392",
+      "webp_sha256": "db8098fd8f3a0a3b98eded23bc04f8f93f712fb5c3b65b8579cb3b8913c6e271",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "c795ae93b7575856c1c3725cbfef7db6539eb4a784d6511ab7edd477365ffb0e",
+      "webp_sha256": "d21b249019afd683b869d21c0aa2da44b3827f9b10dcde1f05da6c823208217d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "fcd43c2edcc4ca742307003fb20eb7b8d39d1a1de572459a0953ba45910c39ee",
+      "webp_sha256": "c1ea398bd8e1eaa3cf855f93530187060362f2c7ba5f73f1ca2c31045d4a090d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "0ef87bda0051e471a6200bf112214dff337eee0aa7303d07f56eba78f45d5a9f",
+      "webp_sha256": "e4bdf2596b3aff9a73c8f9258339ce26aed86ad2ab8aaaf20d7794fa29e034c3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2111bc1c6fd969c525068de836fdc193854a3ba1a7801b26e0543c294923693f",
+      "webp_sha256": "7b3be05de88ba6018184cc08dd041f52ae7c9824b78d82be6059cf80bbd7ee6b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "3bb8608c027c68ef577677bd2a5688fb6d7e94918eacb7c484b982bf09f8480f",
+      "webp_sha256": "bf3c6b4b5758bf7253c13f2a1254721b979e90b4bc29c7cff2b97a321dc0e524",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "5536836ec084bb04fe77bf79703fb6b30bd97757d265302096125496d95d3a63",
+      "webp_sha256": "40f09fecc876d877533f6fbb8e58ba05446c3e2e9cc8430a86490fb92244c567",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "118433055f9e74734096275648a402e4b9951a27734b097185b48025b00bcc90",
+      "webp_sha256": "c4f72419e802b96b36aec59c0436702a9bec97e80aeb3a391fef1cf4cbd74190",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a0becd4160450f71364ec60240a6b3f524a7c0d0879f9b483f845ae04931ad2c",
+      "webp_sha256": "6333e0544f5a186dd46b103696c27fa40281e0854f53e0bffc9cfcefdc5be2d6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "04f1f1051cdad40e38cf0b7d21b46db5177fb768f9b48d747f2dd5eed922abb1",
+      "webp_sha256": "ccb382247840d35a17a30a968164133e927c147ab06bc367ed48ba4ec27a436f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2cd32bd00062d8b4a13d057ec67c3e47005814d16351b64f89ebcc31f5c2f3f3",
+      "webp_sha256": "17dcb14ba712900212e422cb14823f9e7d0d461f65f9acbbcd2628a4e893c10f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "0f35ab7c998acdac41157ff3d1d9da9b7d29987a7220e99899b8caf15294ac5a",
+      "webp_sha256": "15b53298966bd942ffcdc77d55aaaf82622e2a1089b02792ead97b916dfb3fc6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "5be7dcc7f7f2e44b8d11674f0034093f27367245a4df2dcd52d4d4f452d95c47",
+      "webp_sha256": "b8f03db94beda75f6c55a7ba2361cf15c0f06e2780f210bbb327dae7d201d11d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7e345e519e48c0d384001bc61ecffb2fb639eae324f9c1b46bdb92973076448f",
+      "webp_sha256": "83fb6d0738d7984a025bab120563e348e32d77794a88d8ea563cb6f4a409e255",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "93d5b307fcec75dec13c8d8e008a041c447283d41b1bd603295e6a12f4e6ffe6",
+      "webp_sha256": "46b418d007cacc0ca65102cd54d1a1439b5d796b2b18cf08d1a3180b2086f7d2",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-large-ime.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a88ec08eb67b7b45017f12e3a0fcfc5b322aa1961501de222336eb588cfc9744",
+      "webp_sha256": "29cfefd2bd48b5c5e9168935f69758bf9b31c6918b2c1cc9ff616a3879a2f1bb",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "989f8924657dc051d92ae4ec8cebaab209b1dd10078bb47e8b9601172d6df40f",
+      "webp_sha256": "d32e39bbaeca354247e008f69aa8a2b1d4ac374c9969e83e4a8f14aabf48f411",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2370b818ec4df917bbc2fd689ff1e02bc019fc209086a3e3084df0637086ff15",
+      "webp_sha256": "df0c9e89351bf6052993497f7ed760218addae64fd6cfcb74472441358e6a458",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9345ea36566492b0e649b7727dd5660cd7ece3454287bb58c688efd482341a57",
+      "webp_sha256": "998c9ce738dcbe19f85d2eab6d09077fb165d5c36bef8ae37d412bba8cc7c08a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "110944b7910462e32013f0b69c2491c13740a868a830be3061ca5d578166f2c7",
+      "webp_sha256": "304b09371094fbe7e1e54484277f97365a9b4a2996d9fe57a3a30bfbadb3a15d",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-system-ime.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "6d6a37cac5d89b6ecebcca5d48a29e2c7d4e0b6f49834dee4c5b94c86eea31ef",
+      "webp_sha256": "b3d0aa9ad350044d77a713ee6f5261eba925c9cdf903303960e3be344523ee63",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "2889f5365de2624716b215123dcd7e4ef5f637e90fca13daad190ac38a7ccd45",
+      "webp_sha256": "d04b7833922c63b15dc16f117f45dfb9d64149e47962fc9b5a9f1ea5d9ae5f01",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a43b6b29672db74193462189b91aa8a157e791708c53b135a822d8c9efaeb588",
+      "webp_sha256": "a043044612c4b382b8e49a210c97daeb5ca2fca6b448343ca0e11225dc692482",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "ec4b97e3888744396158410811c6be2ba4716e86dbb94d66564f00c44024cbf9",
+      "webp_sha256": "539c458e7a1aebb0983157cc6de54082336bd749c99307408ce5e96dc0fe960a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "payment-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ea3d68033d0461515c3d3718b5353ac10851ff3461ed864b9344f9cec92397e5",
+      "webp_sha256": "d8d7901056e3f7fe7d2956071dd615927e672a6c555689cdf35d60dd9bd48b3e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4b206d4745fefc753a3e904dfdfaf902a4ffe739fdc2d22837b107b026d40850",
+      "webp_sha256": "3fc5a3a89049629d98583cd46e45eefef332750ae0c0915c23b20012377a1f61",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "918ee1f4c264949b88b16e867242743cf326451f6677df9bbad78361c522994e",
+      "webp_sha256": "dd260bbce7be1858f48a2d39e596e4299b41ecd489573f74f07ece4dc5bb7831",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "213faacf9d9352ccf963fc7587002d2d05947549d9a1d956996d384f4670a821",
+      "webp_sha256": "5dd7e43406fd307419b65e7609ce48d368cc089827dec1e7a49162dbbc470ae5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "e3cfce04ef85f8b65ef66306b2ab91421b9ffc5b938feb4e1df62eea8a02eff0",
+      "webp_sha256": "1103aea1291780ba111a10927db908f8dfb330cc29a2c9f23671d1d8f7c8c608",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "6b0e168b12a9bfe13f657306527946def57b2586a93193aaa6b0e2706413b519",
+      "webp_sha256": "a4751f703d97f35bef97c0de46380e128bd67dae48f103a296950d11a88d6d9a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2d2f814150b00e1a932538afe4987a0a69a977206606f27c5f523324038b53ef",
+      "webp_sha256": "e6abc4fbfabf7ad0f8400631c804fc322445bd0c65af37feca8d869644822372",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d4642e73d6d5b6b35518bfcb2df9c8316d1461f6b2003087d710f0b34509588e",
+      "webp_sha256": "b898662f65dc8ad32c2d8bc069b2ea6152b4f37397df836bd270b0c1c70a7d93",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "6116d982e99b27e17d7fe0f4da8266c27114dd75fbe198265490425b64912349",
+      "webp_sha256": "e3aa20381081a95ee0367448e1552840bd97f4cea1a89613dc02128fec8996bb",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "f0747aa7a8a222eed0ff8a764eb3e863f8b59a3bdd7446d37c1ffed990126979",
+      "webp_sha256": "9a08447b8541f1c7ac8f124d5f153e4746cb022d6fdd3b5c17d0c9fa16b3580a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "035e0e17ccb25a68eb36599fb81e2922870dd7bdba0fea878ac99c272c5c2e5b",
+      "webp_sha256": "e2a7454fbe9fdf373d5d6ca6dcba99e21de13dadb9a79836c9c6b8a5ae17c72b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "7d26ce3a2e807771774cb6944159665f47c3c9067c4522229ab9771e9ebaa4ac",
+      "webp_sha256": "ad66fdf97b88198c40e835e040a829267551a17fd3ac1f49e90ee8ad0ba6e397",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "3835ca53642f648557469043e26344be8398b444fa79279d1a1881fc57f8775b",
+      "webp_sha256": "325e487e8e2af2c7bd8255fbe473389b43498d010c680e81c47add20cf89c06a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1b494d26a065003a3b4f355136da674ff0e19fd1804dd36ce81d01cc14632ea1",
+      "webp_sha256": "af68846f6d78f33fc4014610b52410efb69fa7bea878c0040b87bf1cfa390d99",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a3b3e72345953f84f12bbedc5a3a9d4f0124b906521ab873c4a6d66f366afa6d",
+      "webp_sha256": "9597ea3bcf2dea9a7893dcc85cba1a6abaa107dcca159c2d26bee6baa0769ba7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "debcd5ba1182694a133edc539ee24a2cb17dbe8469840653dc5947c3db50be7a",
+      "webp_sha256": "a97628ce1e8c81785fd504a7bd4a3a2e94a2a2fb1671d3af6ad2969e711fd979",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "19caf6b62037a14c361054eee827d59098f71e94a6a0bc921620177fd14fa680",
+      "webp_sha256": "e32e706c5bc6ddae1ec06267f64069f9ce323e5aa746cc769e310c8a7cb3e2ad",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "3cf72214c2e3920f472a2dca6791d626c0d7823309d5d1f572f7fb543a770d3b",
+      "webp_sha256": "eec88a303062a0971458006a2ce745c5d5b34cc995fc129771b4e874939a5d4f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "309e67c79e0ef66dd8dc171145dae2129e7bb38690d0918f50b06fb8649d6a0e",
+      "webp_sha256": "9b6e4faea94e7eddec5d4fcdc1167d59b064b74b9e1cac8d5cc15062aa16cc7e",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "fc55a5cb53b2531c6e33d6fc44fa88de413a6dd8e11c495f0f9a8250f8ff9e7d",
+      "webp_sha256": "8dfe55e78410f6c0349b875aad37ea3dc38dec5093381a20d2abbd012d34ee37",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "9af2b47556462f16824e45c59cce789d0803277382c6b79b71add98f52ea0dd4",
+      "webp_sha256": "7817afae1943703979a2e689be5fd63b710f6604d4ce688c8d7ddfb8d1df5499",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "3a604d870f30d4bfb86b72a1fbd987fd5b0dcdd19fe6c7e70d467245ebd17ddb",
+      "webp_sha256": "2927a6021334d79183b4cb66c7d502a57c1ef280b6a65e88f20c0cc4044a8750",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "460b007a794e05e2bc3d3b8265631a2225ea4b67cbded7cd74ce546d48c02cf3",
+      "webp_sha256": "eb9ea59fc4f85fb33057978c086d98575c1b2c70eb3226d44b406e75a37d5c48",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9289c5056537edb04bb94d4a96adee32862ee85be90e3d8c0c961a5b9b857fda",
+      "webp_sha256": "aefcfe443b511f7c40e9624c11b161e94657c9bbff433c1fee16107482a298df",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "1e3b847187381be25f0f5afe917ec59c8241a247c8957ef2f3f6a5b9abb28344",
+      "webp_sha256": "7d1c1d977193c8926d5928fb75022f5526c0f961ad962843a7354e29d6282b21",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a310ebf597bce2ab6c1b1517aec25ecd3df6f9c7910c1243056bf4196a2690fd",
+      "webp_sha256": "b023aeb89424bdcfcef3ac85379cd4cc02e9095c21c91fbb701c82d72f1b5682",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "49e2c1a1edf7c8c6c526156cb82f277eb47cbd917ba814b800ec2b001b1a2fe1",
+      "webp_sha256": "3611e15b7eb2997b082e758227fc7484540f59e31a57192e9c91e74ab501bdb9",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "59c6b0aff5aebdda132b45b3f02a530568400ffcd542e181f10621413d9a4d90",
+      "webp_sha256": "1a4902269f04b9477c3a89d9616d6876153c90337a2baec6c179ec68b14094a3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "price-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "d81cff0682431f913a426c3e782ee045770111c3bb3fffb371109c0d5f55a1de",
+      "webp_sha256": "d0484a4f45d990df0a52742ef5175adfafdd1c9c260d5ae4882f14a1fc46ac49",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "privacy-calendar.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "28c4d66423f25f2f52c963a1e5943acfdada9780f5f739f680af6587974c43bb",
+      "webp_sha256": "684896393df2caae46a252ec4f0836ed5323b0a8e4124c80e0fc06848075b1b3",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "privacy-detail.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "ae23f25cd74a9b5a25bd1177bfe24b21f370f32b035d30aec012a9f62cc16911",
+      "webp_sha256": "4d9f24a14840bd97c2f47397a83c2221396b77c0aa5100522a27e8100726d38a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "privacy-ledger.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "b05bb2538ba85056a2888e92e0715a6a0e719f3c661b7671d385e8627514672f",
+      "webp_sha256": "18eb82bad652fc5ef7fe1a0c49a1a7071d080907fa1d9a8a85004b14eb4d5fb5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "privacy-overview.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "b78ae60ec7b3775b0bcdd9ff520ca24e6fb1b15e7a39ce1fa12b135a2989ca75",
+      "webp_sha256": "5586009d17330db6770082fe25a4e3e7bc81fe89c34214aa4ca712250c8bb87f",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-chinese-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "756cd87d29b47c27998a75ff0474fd9e18f76cd6b4a5e5913b629e0f3878d858",
+      "webp_sha256": "0ca0026cc8e79724c3a448c5c420b5c8ebf2261cdc1afe3ae8f1a9aea397841b",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-chinese-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "2d43a14d3c28713386acc88a2f53af8e659d321ec209a277747df367b0378487",
+      "webp_sha256": "12ece6bca9faa1e4a759cd705e5a35b15ace66299043da9d9a03d4e4ae0af9f7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-chinese-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "9dd941bab4b7f97a9a07a1d934cb52cec83235ad23af8e303badb55d6f8b6b3b",
+      "webp_sha256": "3da6df22e18977502f369095b103159fe1b774e94cad6a4ca7ba750f505d946c",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-chinese-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "36f475295106e21d91ae6a187917299ef7cb5ba841eccbaf7a0af818ce09ae17",
+      "webp_sha256": "045541bfc7c80cb35ea90c4ac398508b4135d1ff185c73fabcb379dfb0f7b1b9",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-classic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "f19161f082a2bdcce8ae1a28ace1e2e57c274d0ce7759346b3df98ed5815b3b8",
+      "webp_sha256": "17959e93fd6ffe34f1c74351951985831dbfd769a0c61e39c8a771e130fc3f17",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-classic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "99c7b4e34e0501081dbda93d599645972b9d93b630bc9801d32a71257d45c88b",
+      "webp_sha256": "07db671ef9f25834e82766836b386c712a67fdd545c907f70e2b6e19af76a4e8",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-classic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "d341707eea38d8a9f94566b2ae83cc39588152c71f868d9f2aa66d39a9d19c14",
+      "webp_sha256": "887dc4f1363adfd63a65f36a0be404788cc7f3da844a54c91df6ac1b29512955",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-classic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "cd78f0cb6259570cce7935df4df77fa354d3fb9619f174c9b5ca5c435da00095",
+      "webp_sha256": "f1a09fc94cce3310e42f50de2de4c65776c884bfb48ab77f32a3118800acf821",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-country-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "1b46fe0483d9cab52981b3943b8cc02ecc818763985add940d40294fa41f135f",
+      "webp_sha256": "ae3b6b7d4765e73972c8281f2a0f93f4cabcf9debbbeb2897033858c807c7fe6",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-country-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "5078a6dd6c7ab97853e02bc23e8f5a63cd40f04037a4896853e312d3cf92eb63",
+      "webp_sha256": "8d5bb5046c87c0602403e8a888c2f6d51e1c612f6e298ab02352472c375ecff7",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-country-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4f59bebf544a9c2486646d9ce67ab1871e59889ca24a0312eec0342b028c83b1",
+      "webp_sha256": "a6c897c4cfb5901bf693a4e074fc957490492ae5799c531d38d9fa367e96362a",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-country-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "1499560a3b9c1ecfb984aa060096cc1de7c1861252e0c086f5745249f3ac9532",
+      "webp_sha256": "8f561be59eb012a2570c0c462b9a4808363a7378f37e92fb480962eebe2b3bcf",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-default-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "81424e08f0aab4f3d6b3141d10c796f9e415e6a597bca07e48550b56f6e63400",
+      "webp_sha256": "6e9715c6d4ffc6bda9a0d4e12db57e69078fa6791b088cf61d9d2da4e8ecf300",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-default-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "a7c5693e44685ba04bc1fa77270eaec3a48d92e88f80b8eb23e41b8397dc54c9",
+      "webp_sha256": "1ae14b244053c8ced5ddaadf5ddf2f156b699907a2d42659acaa29276aa58257",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-default-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "a29037480ae58b7d712475fe575ef96a33f1371d9334e481459a76bf11fbc6f2",
+      "webp_sha256": "e3993cb17099d66885479fa8cab6913c77305580ba939d76e30f921f62b05763",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-default-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "9dcd8524514166dacd8d907a2307c1c0c685393996a5699600db0620e47c380a",
+      "webp_sha256": "ea73e3bd664c7dab237dfccaa9574f446be8b58163ba2f6ff2790f02feb01ddd",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-gothic-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "58f6e759e3d45c4b48c090b99f2cf96c37860b77b5002d6422462b577da809f8",
+      "webp_sha256": "b44f1cbb81d8b078b57bebfa073d1a30dd7de81ec4bf229a1deab70a64154e37",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-gothic-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "18e032f6898636f8b98f0af9dd1d2df253f0515ffa1a1da98e946b8fdf7961ff",
+      "webp_sha256": "33d01f2c262e6308bb64dcefb976b011b8744be076f736d3ba1294f4d574a956",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-gothic-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "2c7f8c9bc5152a9f21e752dfea8fc2d5f788eee7444c6033784d80551cae2ebd",
+      "webp_sha256": "04ee5cffd49e0098aa6851950046ab47ff0fa131a42c8472c7e54cdf8165e8ec",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-gothic-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "7e98b949cd417785ffcab3a212874cd354f67eeef33d97ac3dfd58adbd0c3158",
+      "webp_sha256": "d50098e1158c6e84e5162528dfb637b048cd9c4b5c39cf9103245dd397ab45b9",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-navy-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "392849ccdda48d52e321e5e7ed12c8a47defa708654cbe808aedbad64eb4fae8",
+      "webp_sha256": "46060adc0c4c7b41abed2975ba558b7c7aee08a9160638a0c595ec5722c580dc",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-navy-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "c3565e001bb137614633f03f1951abb303af479285606e9f5947986dd5b80a08",
+      "webp_sha256": "1b00615d15344c664f7b54f3b54ce83d9cefb2345e7087e4873355039ee159a4",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-navy-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "0d5a061770ceaf89355c79c9a37bd51497aaf4339c58f797cbfe7870b6431e90",
+      "webp_sha256": "1fe1c7f1284940a0d01806400148638915ba9f321f254f04f20e3f42dc7509f8",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-navy-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "961680060ebbb87565a239cd9790e82cd85c0e340dac92696e72e883472083a3",
+      "webp_sha256": "65faf04ebcc02f1f272e732a4bb369cb3a606eeda4262db8687b12c3a0f1b1d5",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-victorian-dark-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "4d95375518c118f04c11af88c296521c4b9b3493c54fe8de0f66acfffd760402",
+      "webp_sha256": "172e74eb5d37b39bd776b456d55bf5daef83718d1c4a04384e5dc75868d357a1",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-victorian-dark-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "86add82defd177a8708bb864d1a69d11a51eb880fe15fa84a1011c0b5123d054",
+      "webp_sha256": "5e52c2c1b323087b4ce2ebab5bebd7e86534c498b0fe1bd3d19a59a933198f77",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-victorian-light-320-large.webp",
+      "size": [
+        960,
+        2100
+      ],
+      "source_png_sha256": "5b1fb8f67b4f495c708ec7bf41dfb847c067b44bc5d734ec78bcc590aef013b2",
+      "webp_sha256": "dd58b755bc88f2c86054907f19a041eec98ac7f976a505263375bfffc47cb204",
+      "lossless_pixels_verified": true
+    },
+    {
+      "file": "supplement-victorian-light-normal.webp",
+      "size": [
+        1080,
+        2400
+      ],
+      "source_png_sha256": "0f1658732b3c5525739e97f1fa9d43828d93bdca8fb4b6517bc30e3828e017ff",
+      "webp_sha256": "a0e4ca281bcfff97ab80db7305097f2e5ba5011e7d6b5b6cffad5fa4028140ea",
+      "lossless_pixels_verified": true
+    }
+  ],
+  "device_passed_distinct": 33,
+  "device_method_final_results": {
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#privacyRemovesAmountsAndSemanticsAcrossOverviewLedgerAndCalendarLive": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#missingOrderAndHistoricalUnknownDateNeverBecomeOrdinaryNewPayments": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#paymentInputsSurviveReloadAndSavedStateWithFreshLedgerValidation": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke": 0,
+    "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#unpricedWishlistHidesPurchaseStateReviewButKeepsSettingItsPrice": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#correctingTheLastUnknownParentDateRemovesTheSharedAccessoryReviewEntry": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#unpricedReviewOpensItemEditorWithoutCreatingAnOrderOrPayment": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#historicalConfirmationPreservesPartialActualPaymentsAndTheirDates": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#completeParentLedgerHidesSharedAccessoryReviewButKeepsOrdinaryPaymentAccess": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#trackingRequiresExplicitVerificationAndCancelKeepsEveryOriginalRecord": 0,
+    "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#sharedAccessoryReviewNavigatesToParentWithoutChangingEitherLedger": 0,
+    "com.lolita.app.ui.screen.price.PaymentManageScreenTest#stagesAndActualPaymentsWithMatchingIdsRenderAndScrollWithoutCrashing": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#templatesFillBothWaysAndManualOverrideIsNeverRewritten": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment": 0,
+    "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#actualPriceAndTaskBarSevenSkinsLightDarkAndLargeText": 0,
+    "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#oldListingNotesDoNotBecomeAConfirmedQuote": 0,
+    "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#referenceCannotOverwriteManualAmount": 0,
+    "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#quoteNeedsExplicitAdoptionAndSavingNeverCreatesAnActualPayment": 0,
+    "com.lolita.app.ui.screen.calendar.PaymentCalendarClockTest#elapsedDueTimeIsRecomputedOnRoomEmissionInsteadOfCapturedAtLoad": 0,
+    "com.lolita.app.ui.screen.calendar.PaymentCalendarClockTest#explicitClockRefreshUpdatesMonthAndYearWithoutRestartingRoom": 0,
+    "com.lolita.app.data.HistoricalPurchaseTest#historicalPaymentEntryRequiresAnExplicitRealDate": 0,
+    "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest#budgetSetsEditsRemovesAndHonorsLivePrivacy": 0,
+    "com.lolita.app.data.HistoricalPurchaseTest#trackedNewPaymentEditorCannotChooseAnUnknownDate": 0,
+    "com.lolita.app.data.HistoricalPurchaseTest#existingUnknownPaymentEditorPreservesItsDateWithoutCreatingAnotherRecord": 0,
+    "com.lolita.app.data.HistoricalPurchaseTest#historicalEditorRequiresAnExplicitUnknownChoiceAndNeverAutoFillsReferences": 0,
+    "com.lolita.app.data.OrderBusinessTest#oversizedHistoricalPlansDoNotDuplicateCalendarOrOverdueDebt": 0,
+    "com.lolita.app.data.OrderBusinessTest#sharedAccessoriesFollowTheParentWhileIndependentlyPricedOnesKeepTheirOwnState": 0
+  },
+  "runs": [
+    {
+      "log": "device-tests-round2.txt",
+      "sha256": "b0926fea130d4cbf3f73ac08b421de1bb09ab9e55824bd1b807ca5b1bded4ea4",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#privacyRemovesAmountsAndSemanticsAcrossOverviewLedgerAndCalendarLive",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#missingOrderAndHistoricalUnknownDateNeverBecomeOrdinaryNewPayments",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#paymentInputsSurviveReloadAndSavedStateWithFreshLedgerValidation",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "related-device-tests.txt",
+      "sha256": "6215025bde753c4c0cfeb974b0a1e6cb95e345e8cddcb8bdb78616a59d9c432f",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#unpricedWishlistHidesPurchaseStateReviewButKeepsSettingItsPrice",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#correctingTheLastUnknownParentDateRemovesTheSharedAccessoryReviewEntry",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#unpricedReviewOpensItemEditorWithoutCreatingAnOrderOrPayment",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#historicalConfirmationPreservesPartialActualPaymentsAndTheirDates",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#completeParentLedgerHidesSharedAccessoryReviewButKeepsOrdinaryPaymentAccess",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#trackingRequiresExplicitVerificationAndCancelKeepsEveryOriginalRecord",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceManageScreenReviewTest#sharedAccessoryReviewNavigatesToParentWithoutChangingEitherLedger",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PaymentManageScreenTest#stagesAndActualPaymentsWithMatchingIdsRenderAndScrollWithoutCrashing",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#templatesFillBothWaysAndManualOverrideIsNeverRewritten",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#changingPlanTypeDoesNotDiscardManualIdsDatesOrAmounts",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#actualPriceAndTaskBarSevenSkinsLightDarkAndLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#oldListingNotesDoNotBecomeAConfirmedQuote",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#referenceCannotOverwriteManualAmount",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.TaobaoReferencePriceTest#quoteNeedsExplicitAdoptionAndSavingNeverCreatesAnActualPayment",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.calendar.PaymentCalendarClockTest#elapsedDueTimeIsRecomputedOnRoomEmissionInsteadOfCapturedAtLoad",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.calendar.PaymentCalendarClockTest#explicitClockRefreshUpdatesMonthAndYearWithoutRestartingRoom",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.HistoricalPurchaseTest#historicalPaymentEntryRequiresAnExplicitRealDate",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest#budgetSetsEditsRemovesAndHonorsLivePrivacy",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "small-device-tests.txt",
+      "sha256": "3d85bc85d1552087c9ac8562319634b9562027f23d520ecec0ec72c008f5d470",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.HistoricalPurchaseTest#trackedNewPaymentEditorCannotChooseAnUnknownDate",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.HistoricalPurchaseTest#existingUnknownPaymentEditorPreservesItsDateWithoutCreatingAnotherRecord",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.HistoricalPurchaseTest#historicalEditorRequiresAnExplicitUnknownChoiceAndNeverAutoFillsReferences",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.OrderBusinessTest#oversizedHistoricalPlansDoNotDuplicateCalendarOrOverdueDebt",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.data.OrderBusinessTest#sharedAccessoriesFollowTheParentWhileIndependentlyPricedOnesKeepTheirOwnState",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "final-normal-visuals.txt",
+      "sha256": "c2bcd2763637d624bb1dec3fd446f5edc1124766f355f67d61be97cc73e67d79",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#privacyRemovesAmountsAndSemanticsAcrossOverviewLedgerAndCalendarLive",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "final-detail-calendar.txt",
+      "sha256": "1c9d075f6d56dfe24d3a2332d30fcc0391ddd727726c398ebf6fca66cf0d423f",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#privacyRemovesAmountsAndSemanticsAcrossOverviewLedgerAndCalendarLive",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState",
+          "status": -2
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "final-regression.txt",
+      "sha256": "b1f8613bae62fbe06e5e578861bb5b9dde437d04d440cb18ebd7c150d1712cba",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#privacyRemovesAmountsAndSemanticsAcrossOverviewLedgerAndCalendarLive",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#priceDraftRetainsIdsDatesManualAmountsAndSavedState",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#missingOrderAndHistoricalUnknownDateNeverBecomeOrdinaryNewPayments",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#paymentInputsSurviveReloadAndSavedStateWithFreshLedgerValidation",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#historicalOrderRemainsReadOnlyAndLoadingDoesNotCalculate",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#persistedOrderEditsPreserveActualPaymentsAndOnlySaveOnExplicitSubmit",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PriceAutofillIntegrationTest#paymentHasOneSaveAboveRealKeyboardAndOnlyExplicitSaveWritesPayment",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.OutfitBudgetScreenTest#initializationError",
+          "status": -2
+        }
+      ]
+    },
+    {
+      "log": "final-small.txt",
+      "sha256": "9739af399a4c1d57af6fa87daeca73c3334921f792e73f894bc8af854e7ce157",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#affectedScreensSevenSkinsLightDarkAndSmallLargeText",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#realImeOverpaymentFeedbackPartialPaymentSaveAndRevoke",
+          "status": 0
+        },
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney",
+          "status": -2
+        },
+        {
+          "method": "com.lolita.app.ui.screen.features.OutfitBudgetScreenTest#budgetSetsEditsRemovesAndHonorsLivePrivacy",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "log": "final-small-navigation.txt",
+      "sha256": "b4ad772d043357d73dca509a86d624eda83c8a8d1dede94abfa37a0b9dc88bd1",
+      "results": [
+        {
+          "method": "com.lolita.app.ui.screen.price.PricingExperienceTest#directPaymentCalendarAndBudgetNavigateWithoutWritingMoney",
+          "status": 0
+        }
+      ]
+    }
+  ],
+  "jvm_tests": 22,
+  "jvm_failures": 0,
+  "test_iteration_notes": [
+    "First test setup returned Long instead of Unit; fixed before testing.",
+    "Initial 320dp fixture inherited parent minimum width; final small matrix uses real system320dp override and corrected host.",
+    "Draft restore loading flag was cleared before restored fields; final implementation keeps loading true through restore, targeted rerun passed.",
+    "Small-screen budget navigation test now scrolls the lazy list to compose the offscreen target; final rerun passed.",
+    "One command misspelled OutfitBudgetScreenTest package; the correct class was run in final-small.txt."
+  ],
+  "manual_app": {
+    "pid_before": "13099",
+    "process_absent_after_am_kill": true,
+    "input": "125",
+    "rotation_and_process_restored": true,
+    "paid_date_preserved": true,
+    "discard_confirmation_and_continue": true,
+    "date_picker_open_and_cancel": true,
+    "save_returned_to_detail": true,
+    "actual_paid_after": 325,
+    "remaining_after": 367,
+    "payment_count": 2
+  },
+  "main_data_restored": {
+    "databases/lolita_database-wal": true,
+    "databases/lolita_database-shm": true,
+    "databases/lolita_database": true,
+    "databases/order-import-upgrade-1c12f9b2-ea85-44cc-ab46-222a3e57ac9d.lck": true
+  },
+  "physical_device": false,
+  "paid_service_calls": 0
+}

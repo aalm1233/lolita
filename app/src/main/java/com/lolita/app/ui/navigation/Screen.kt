@@ -67,8 +67,8 @@ sealed interface Screen {
     }
 
     data object PaymentEdit : Screen {
-        override val route = "payment_edit/{priceId}/{paymentId}"
-        fun createRoute(priceId: Long, paymentId: Long? = null) = if (paymentId != null) "payment_edit/$priceId/$paymentId" else "payment_edit/$priceId/0"
+        override val route = "payment_edit/{priceId}/{paymentId}?stageId={stageId}"
+        fun createRoute(priceId: Long, paymentId: Long? = null, stageId: Long? = null) = "payment_edit/$priceId/${paymentId ?: 0}?stageId=${stageId ?: 0}"
     }
 
     data object CoordinateDetail : Screen {

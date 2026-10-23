@@ -26,7 +26,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun StatsPageScreen(
     onNavigateToFilteredList: (filterType: String, filterValue: String, title: String) -> Unit = { _, _, _ -> },
-    onNavigateToItemDetail: (Long) -> Unit = {}
+    onNavigateToItemDetail: (Long) -> Unit = {},
+    onNavigateToOrder: (Long) -> Unit = {},
+    onNavigateToLedger: (Long) -> Unit = {},
+    onNavigateToPayment: (Long, Long?) -> Unit = { _, _ -> }
 ) {
     val tabs = listOf("总览", "付款年历", "消费分布", "消费趋势", "心愿", "预算")
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -111,14 +114,14 @@ fun StatsPageScreen(
                     onNavigateToFilteredList = onNavigateToFilteredList,
                     onNavigateToItemDetail = onNavigateToItemDetail
                 )
-                1 -> PaymentCalendarContent()
+                1 -> PaymentCalendarContent(onRecordPayment = onNavigateToPayment, onViewUndated = { coroutineScope.launch { pagerState.animateScrollToPage(5) } })
                 2 -> SpendingDistributionContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
                 3 -> SpendingTrendContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )
-                5 -> com.lolita.app.ui.screen.budget.BudgetContent()
+                5 -> com.lolita.app.ui.screen.budget.BudgetContent(onNavigateToOrder = onNavigateToOrder, onNavigateToLedger = onNavigateToLedger)
                 4 -> WishlistAnalysisContent(
                     onNavigateToFilteredList = onNavigateToFilteredList
                 )

@@ -223,10 +223,10 @@ class PriceManageScreenReviewTest {
         showPriceScreen(itemId, expectOrder = false,
             onNavigateToPriceEdit = { priceDestinations += it }, onNavigateToItemEdit = { editDestinations += it })
 
-        compose.onNodeWithTag("priceManageList").performScrollToNode(hasText("设置价格"))
+        compose.onNodeWithTag("priceManageList").performScrollToNode(hasText("建立购买订单"))
         compose.onNodeWithTag("reviewUnpricedItemEntry").assertDoesNotExist()
         compose.onNodeWithText("没有价格时可先核对服饰状态，价格和真实付款可稍后补全。").assertDoesNotExist()
-        compose.onNodeWithText("设置价格").assertIsDisplayed().assertIsEnabled().performClick()
+        compose.onNodeWithText("建立购买订单").assertIsDisplayed().assertIsEnabled().performClick()
         compose.runOnIdle {
             assertEquals(listOf<Long?>(null), priceDestinations)
             assertTrue(editDestinations.isEmpty())

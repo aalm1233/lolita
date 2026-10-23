@@ -32,11 +32,12 @@ fun GlassSurface(
     elevation: Dp = 2.dp,
     hazeState: HazeState? = null,
     contentPadding: PaddingValues = PaddingValues(12.dp),
+    glassTint: Color = Color.White,
     content: @Composable () -> Unit
 ) {
 
     // Base glass color — semi-transparent white
-    val glassColor = Color.White.copy(alpha = glassAlpha)
+    val glassColor = glassTint.copy(alpha = glassTint.alpha * glassAlpha)
 
     // Specular highlight: bright top edge fading to transparent bottom
     val highlightBrush = Brush.verticalGradient(

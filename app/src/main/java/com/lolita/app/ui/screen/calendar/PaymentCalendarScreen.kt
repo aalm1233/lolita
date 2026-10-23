@@ -198,24 +198,6 @@ class PaymentCalendarViewModel(
         )
     }
 
-    fun markAsPaid(payment: PaymentWithItemInfo) {
-        viewModelScope.launch {
-            val price = priceRepository.getPriceById(payment.priceId)
-            val item = price?.let { itemRepository.getItemById(it.itemId) }
-            val itemName = item?.name ?: "服饰"
-
-            try {
-                if (payment.paymentId < 0) {
-                    val stage = AppModule.orderRepository().getStage(-payment.paymentId) ?: return@launch
-                    AppModule.orderRepository().recordPayment(stage.priceId, payment.amount, System.currentTimeMillis(), stage.id)
-                }
-            } catch (e: Exception) {
-                android.util.Log.w("PaymentCalendar", "Payment changed; reload before marking paid", e)
-            }
-
-        }
-    }
-
     private fun buildMonthStatsMap(
         payments: List<PaymentWithItemInfo>,
         year: Int,
@@ -252,8 +234,11 @@ class PaymentCalendarViewModel(
 @Composable
 fun PaymentCalendarContent(
     viewModel: PaymentCalendarViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecordPayment: (Long, Long?) -> Unit = { _, _ -> },
+    onViewUndated: () -> Unit = {}
 ) {
+    val showMoney = com.lolita.app.ui.screen.price.pricingMoneyVisible()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -383,6 +368,7 @@ fun PaymentCalendarContent(
         ) {
             item {
                 YearHeader(
+                    showMoney = showMoney,
                     year = uiState.currentYear,
                     yearPaidTotal = uiState.yearPaidTotal,
                     yearUnpaidTotal = uiState.yearUnpaidTotal,
@@ -395,6 +381,7 @@ fun PaymentCalendarContent(
             }
             item {
                 MonthCardGrid(
+                    showMoney = showMoney,
                     monthStatsMap = uiState.monthStatsMap,
                     selectedMonth = uiState.selectedMonth,
                     currentYear = uiState.currentYear,
@@ -404,6 +391,12 @@ fun PaymentCalendarContent(
                 )
             }
 
+            item {
+                Text("按实际付款日期统计已付，按应付日期统计待付。", style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                TextButton(onClick = onViewUndated) { Text("查看日期待定金额与预算") }
+                if (!showMoney) Text("金额已隐藏；记付款时将显示金额。", style = MaterialTheme.typography.bodySmall)
+            }
             val selectedPayments = uiState.selectedMonth?.let { month ->
                 getPaymentsForMonth(uiState.yearPayments, uiState.currentYear, month)
             } ?: emptyList()
@@ -419,6 +412,7 @@ fun PaymentCalendarContent(
                 if (selectedPayments.isEmpty()) {
                     item {
                         GlassSurface(
+                            glassTint = MaterialTheme.colorScheme.surface,
                             modifier = Modifier.fillMaxWidth(),
                             shape = SquircleShape(16.dp),
                             hazeState = if (hasBackground) hazeState else null,
@@ -436,7 +430,8 @@ fun PaymentCalendarContent(
                         PaymentInfoCard(
                             payment = payment,
                             now = uiState.observedAtMillis,
-                            onMarkPaid = if (!payment.isPaid) {{ viewModel.markAsPaid(payment) }} else null,
+                            showMoney = showMoney,
+                            onMarkPaid = if (!payment.isPaid && payment.paymentId < 0) {{ onRecordPayment(payment.priceId, -payment.paymentId) }} else null,
                             frosted = hasBackground,
                             hazeState = hazeState
                         )
@@ -534,11 +529,13 @@ internal fun YearHeader(
     onNext: () -> Unit,
     modifier: Modifier = Modifier,
     frosted: Boolean = false,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    showMoney: Boolean = true
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
 
     GlassSurface(
+        glassTint = MaterialTheme.colorScheme.surface,
         modifier = modifier.fillMaxWidth(),
         shape = SquircleShape(20.dp),
         hazeState = if (frosted) hazeState else null,
@@ -558,18 +555,18 @@ internal fun YearHeader(
                     SkinIcon(IconKey.KeyboardArrowRight, Modifier.semantics { contentDescription = "下一年" })
                 }
             }
-            FlowRow(
+            if (showMoney) FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(skin.spacingMedium, Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)
             ) {
-                Text("已付 ¥${formatAmount(yearPaidTotal)}", style = MaterialTheme.typography.labelMedium,
+                Text("本年已付 ¥${formatAmount(yearPaidTotal)}", style = MaterialTheme.typography.labelMedium,
                     color = paidColor())
-                Text("待付 ¥${formatAmount(yearUnpaidTotal)}", style = MaterialTheme.typography.labelMedium,
+                Text("本年有日期待付 ¥${formatAmount(yearUnpaidTotal)}", style = MaterialTheme.typography.labelMedium,
                     color = primaryColor)
             }
 
-            if (yearOverdueAmount > 0) {
+            if (showMoney && yearOverdueAmount > 0) {
                 Surface(
                     color = overdueColor().copy(alpha = 0.1f),
                     shape = RoundedCornerShape(4.dp)
@@ -594,7 +591,7 @@ internal fun YearHeader(
 }
 
 private fun formatAmount(amount: Double): String {
-    return "%,.0f".format(amount)
+    return "%,.2f".format(amount)
 }
 
 @Composable
@@ -604,7 +601,8 @@ private fun MonthCardGrid(
     currentYear: Int,
     onMonthClick: (Int) -> Unit,
     frosted: Boolean = false,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    showMoney: Boolean = true
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         repeat(3) { row ->
@@ -615,6 +613,7 @@ private fun MonthCardGrid(
                 repeat(4) { col ->
                     val month = row * 4 + col
                     MonthCard(
+                        showMoney = showMoney,
                         month = month,
                         stats = monthStatsMap[month],
                         isSelected = month == selectedMonth,
@@ -637,7 +636,8 @@ private fun MonthCard(
     modifier: Modifier,
     onClick: () -> Unit,
     frosted: Boolean = false,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    showMoney: Boolean = true
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val hasPayments = stats != null
@@ -655,8 +655,9 @@ private fun MonthCard(
     } else Modifier
 
     GlassSurface(
+        glassTint = MaterialTheme.colorScheme.surface,
         onClick = onClick,
-        modifier = modifier.height(48.dp).then(selectedOverlay),
+        modifier = modifier.height((48 * androidx.compose.ui.platform.LocalDensity.current.fontScale.coerceAtLeast(1f)).dp).then(selectedOverlay),
         shape = SquircleShape(12.dp),
         hazeState = if (frosted) hazeState else null,
         contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
@@ -670,17 +671,19 @@ private fun MonthCard(
             Text(
                 "${month + 1}月",
                 fontSize = 10.sp,
+                lineHeight = 11.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (hasPayments) MaterialTheme.colorScheme.onSurface
-                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
+                else MaterialTheme.colorScheme.onSurfaceVariant
             )
             // Reserve consistent 2-line space for amounts so all cards
             // have the same layout regardless of data
-            if (hasPayments) {
+            if (hasPayments && showMoney) {
                 if (stats.paidTotal > 0) {
                     Text(
                         "已 ¥${formatCompactAmount(stats.paidTotal)}",
                         fontSize = 8.sp,
+                        lineHeight = 9.sp,
                         color = paidColor(),
                         maxLines = 1
                     )
@@ -690,6 +693,7 @@ private fun MonthCard(
                     Text(
                         "待 ¥${formatCompactAmount(stats.unpaidTotal)}",
                         fontSize = 8.sp,
+                        lineHeight = 9.sp,
                         color = unpaidColor,
                         maxLines = 1
                     )
@@ -698,6 +702,7 @@ private fun MonthCard(
                     Text(
                         "逾期",
                         fontSize = 7.sp,
+                        lineHeight = 8.sp,
                         color = overdueColor(),
                         fontWeight = FontWeight.SemiBold
                     )
@@ -745,7 +750,8 @@ private fun PaymentInfoCard(
     onMarkPaid: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     frosted: Boolean = false,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    showMoney: Boolean = true
 ) {
     val typeLabel = when (payment.priceType) {
         PriceType.DEPOSIT_BALANCE -> "定金尾款"
@@ -754,28 +760,8 @@ private fun PaymentInfoCard(
     }
     val isOverdue = !payment.isPaid && payment.dueDate < now
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    var showConfirmDialog by remember { mutableStateOf(false) }
-
-    if (showConfirmDialog && onMarkPaid != null) {
-        AlertDialog(
-            onDismissRequest = { showConfirmDialog = false },
-            title = { Text("确认付款") },
-            text = {
-                Text("确认将 ${payment.itemName} 的 ¥${String.format("%.2f", payment.amount)} 标记为已付款？")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showConfirmDialog = false
-                    onMarkPaid()
-                }) { Text("记录付款") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showConfirmDialog = false }) { Text("取消") }
-            }
-        )
-    }
-
     GlassSurface(
+        glassTint = MaterialTheme.colorScheme.surface,
         modifier = modifier.fillMaxWidth(),
         shape = SquircleShape(16.dp),
         hazeState = if (frosted) hazeState else null,
@@ -812,22 +798,18 @@ private fun PaymentInfoCard(
                 }
             }
             Spacer(Modifier.height(4.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column(Modifier.fillMaxWidth()) {
                 Text(
-                    "$typeLabel ¥${String.format("%.2f", payment.amount)}  ${if (payment.isPaid) "实付" else "应付"}: ${sdf.format(Date(payment.dueDate))}",
+                    typeLabel + (if (showMoney) " ¥${String.format("%.2f", payment.amount)}" else "") + "  ${if (payment.isPaid) "实付" else "应付"}: ${sdf.format(Date(payment.dueDate))}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (onMarkPaid != null) {
                     TextButton(
-                        onClick = { showConfirmDialog = true },
+                        onClick = onMarkPaid,
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                     ) {
-                        Text("标记已付", style = MaterialTheme.typography.labelSmall)
+                        Text("记付款", style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }

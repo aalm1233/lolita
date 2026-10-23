@@ -12,11 +12,18 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 13
-    const val SCHEMA_VERSION = 32
+    const val VERSION = 14
+    const val SCHEMA_VERSION = 33
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT
     private val entities = linkedMapOf(
+        "orderImportSessions" to OrderImportSession::class.java,
+        "orderImportFiles" to OrderImportFile::class.java,
+        "orderImportRows" to OrderImportRow::class.java,
+        "orderImportCommits" to OrderImportCommit::class.java,
+        "orderImportReceipts" to OrderImportReceipt::class.java,
+        "itemSourceRecords" to ItemSourceRecord::class.java,
+
         "itemTryOnMaterials" to ItemTryOnMaterial::class.java,
         "storageNodes" to StorageNode::class.java, "itemDrafts" to ItemDraft::class.java,
         "recognitionTasks" to RecognitionTask::class.java, "itemEvidence" to ItemEvidence::class.java,
@@ -48,7 +55,7 @@ internal object BackupFormat {
         require(schema in 0..SCHEMA_VERSION) { "备份来自更新的数据库版本：$schema" }
         val allowedRoot = entities.keys + setOf("backupDate", "appVersion", "formatVersion", "schemaVersion", "wigHeadTemplatePreferenceJson")
         require(root.keySet().all { it in allowedRoot }) { "备份包含未支持的数据类型，无法无损导入" }
-        if (version >= 2) require(entities.keys.filter { (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 11 || it != "itemTryOnMaterials") && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
+        if (version >= 2) require(entities.keys.filter { (version >= 14 || it !in setOf("orderImportSessions","orderImportFiles","orderImportRows","orderImportCommits","orderImportReceipts","itemSourceRecords")) && (version >= 3 || it !in setOf("orderBindings", "paymentStages")) && (version >= 6 || it != "monthlyBudgets") && (version >= 7 || it != "tryOnResults") && (version >= 8 || it != "imageTasks") && (version >= 9 || it !in setOf("personalModels", "personalModelDrafts")) && (version >= 11 || it != "itemTryOnMaterials") && (version >= 10 || it !in setOf("storageNodes","itemDrafts","recognitionTasks","itemEvidence","imageProvenance")) }.all { root.has(it) && root[it].isJsonArray }) {
             "完整备份缺少数据表"
         }
         requiredArrays.forEach { require(root.has(it) && root[it].isJsonArray) { "备份缺少 $it" } }
@@ -130,6 +137,13 @@ internal object BackupFormat {
                     }
                 }
                 val required = when (name) {
+                    "orderImportSessions" -> setOf("id","version","revision","state","dataJson","createdAt","updatedAt")
+                    "orderImportFiles" -> setOf("id","sessionId","name","sha256","state","dataJson")
+                    "orderImportRows" -> setOf("id","sessionId","position","sourceKey","dataJson","imagePaths")
+                    "orderImportCommits" -> setOf("id","revision","snapshotHash","itemIds","mergedCount","linkedItemIds","createdAt")
+                    "orderImportReceipts" -> setOf("id","sourceKey","generation","orderId","groupKey","unitOrdinal","sourceSnapshot","commitId","paidCents","shippingCents","createdAt")
+                    "itemSourceRecords" -> setOf("id","itemId","kind","snapshotJson","appliedFields","imagePaths","createdAt")
+
                     "itemTryOnMaterials" -> setOf("id","itemId","imagePath","sourceImagePath","inputImagePath","resultSha256","sourceTaskId","requestJson","createdAt","confirmedAt")
                     "storageNodes" -> setOf("id","locationId","name","normalizedName","siblingScopeId","description","sortOrder","createdAt","updatedAt")
                     "itemDrafts" -> setOf("id","dataJson","imagePaths","sizeChartImagePaths","evidenceImagePaths","appearanceOnlyImagePaths","updatedAt")
@@ -302,6 +316,7 @@ internal object BackupFormat {
     }
 
     fun validate(data: BackupData) {
+        OrderImportBackupValidation.validate(data)
         WardrobeBackupValidation.validate(data)
         val taskIds = data.imageTasks.map { it.id }
         require(taskIds.distinct().size == taskIds.size) { "图像任务标识重复" }

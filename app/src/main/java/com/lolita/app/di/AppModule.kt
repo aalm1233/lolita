@@ -32,6 +32,8 @@ object AppModule {
     private val _storageRepository by lazy { StorageRepository(database, appContext) }
     fun storageRepository() = _storageRepository
     private val _itemDraftRepository by lazy { ItemDraftRepository(database, _itemRepository, beforeDiscard = { _recognitionCoordinator.cancelForDraft(it) }) }
+    private val _orderImportRepository by lazy { OrderImportRepository(database) }
+    fun orderImportRepository() = _orderImportRepository
     fun itemDraftRepository() = _itemDraftRepository
 
     private val _recognitionSettings by lazy { com.lolita.app.data.recognition.RecognitionSettings(appContext) }

@@ -10,7 +10,10 @@ data class TaobaoOrder(
     val shopName: String,
     val totalPaid: Double,
     val shipping: Double,
-    val items: List<TaobaoOrderItem>
+    val items: List<TaobaoOrderItem>,
+    val rawPaid: String? = null,
+    val rawShipping: String? = null,
+    val sourceFileName: String = ""
 )
 
 /**
@@ -32,5 +35,7 @@ data class TaobaoOrderItem(
     val shopName: String,
     val requestedRoomName: String? = null,
     val requestedStoragePath: String? = null,
-    val specificationsJson: String = ""
+    val specificationsJson: String = "",
+    val rawPrice: String? = null,
+    val actualPaidDate: String? = null
 )

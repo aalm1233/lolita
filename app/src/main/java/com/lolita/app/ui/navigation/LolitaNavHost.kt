@@ -365,6 +365,7 @@ fun LolitaNavHost(
                     },
                     onNavigateToMannequin = { id -> navController.navigate(Screen.Mannequin.createRoute(id)) },
                     onNavigateToLocation = { id -> navController.navigate(Screen.LocationDetail.createRoute(id)) },
+                    onSupplement = { id -> navController.navigate(Screen.ItemSourceSupplement.createRoute(id)) },
                     onCopyToNew = { id -> navController.navigate(Screen.ItemEdit.createRoute(draftId = id)) }
                 )
                 } // LocalNavAnimatedVisibilityScope
@@ -693,6 +694,10 @@ fun LolitaNavHost(
                 )
             }
 
+            composable(Screen.ItemSourceSupplement.route,arguments=listOf(navArgument("itemId"){type=NavType.LongType})) { entry ->
+                com.lolita.app.ui.screen.`import`.ItemSourceSupplementScreen(entry.arguments!!.getLong("itemId"),
+                    onBack={navController.popBackStack()},onEditDraft={ id -> navController.navigate(Screen.ItemEdit.createRoute(itemId=entry.arguments!!.getLong("itemId"),draftId=id)) })
+            }
             // Taobao Import
             composable(Screen.TaobaoImport.route) {
                 TaobaoImportScreen(
@@ -701,6 +706,7 @@ fun LolitaNavHost(
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },
                     onNavigateToProduct = { navController.navigate(Screen.TaobaoProductImport.route) },
+                    onSupplement = { id -> navController.navigate(Screen.ItemSourceSupplement.createRoute(id)) },
                     onNavigateToGuide = { navController.navigate(Screen.TaobaoImportGuide.route) }
                 )
             }
@@ -907,6 +913,11 @@ fun LolitaNavHost(
                     filterType = filterType,
                     filterValue = filterValue,
                     onBack = { navController.popBackStack() },
+                    onReviewOrder = { review ->
+                        if(review.priceId!=null && !review.needsRecordVerification && review.hasUnknownPaymentDates)
+                            navController.navigate(Screen.PaymentManage.createRoute(review.priceId))
+                        else navController.navigate(Screen.PriceManage.createRoute(review.orderItemId))
+                    },
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },

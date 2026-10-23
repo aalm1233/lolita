@@ -51,6 +51,13 @@ class ItemDraftRepository(private val database: LolitaDatabase, private val item
         }
         val appearancePaths=knownAppearancePaths(item.imageUrls+listOfNotNull(item.sizeChartImageUrl)+item.sizeChartImageUrls)+draft.appearanceOnlyImagePaths
         val id = if (item.id > 0) { itemRepository.updateItem(item); item.id } else itemRepository.insertItem(item)
+        draft.data().sourceSupplementJson?.let(com.lolita.app.data.model.ProductSupplementPayload::decode)?.let { supplement ->
+            if (supplement.appliedFields.isNotEmpty()) {
+                database.orderImportDao().insertSources(listOf(ItemSourceRecord(itemId=id,kind="PRODUCT_SUPPLEMENT",
+                    publicUrl=supplement.candidate.productUrl,
+                    snapshotJson=com.google.gson.Gson().toJson(supplement.candidate),appliedFields=supplement.appliedFields)))
+            }
+        }
         val staged=database.recognitionDao().getEvidence().filter { it.draftId==draftId && it.itemId==null }
         val origins=staged.mapNotNull { evidence ->
             val payload=RecognitionEvidencePayload.decode(evidence.candidateJson)

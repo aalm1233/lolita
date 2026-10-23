@@ -36,7 +36,7 @@
 
 ## 数据库
 
-- Room 数据库版本32，36个实体；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
+- Room 数据库版本33，42个实体；32→33仅追加六张订单导入会话／来源表，迁移在`OrderImportSessionMigration.kt`，备份格式14；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -75,7 +75,7 @@
 - 首页今日穿搭入口仅在“位置”Tab显示，服饰/套装/心愿及其他页面不重复展示；使用 `TodayOutfitShortcut`：紧凑卡片、穿搭图标/单张缩略图、标题与状态副文案、记录/查看操作；两种状态共享布局，颜色/圆角/内边距消费皮肤令牌，并合并无障碍语义。
 - 快捷穿搭记录支持名称/品牌搜索、分类筛选和已选缩略图移除；筛选不得清除隐藏的已选物品。控制区随网格滚动，底部保留数量保存按钮。编辑已有记录时保留照片、原日期及创建时间，读取失败或未完成时禁止保存。
 - 完整穿搭编辑的日期、备注和关联服饰通栏，只有照片采用两列；卡片仅一层内边距，照片使用皮肤圆角。底部提供唯一“保存穿搭”按钮，消费 Scaffold Insets 后应用 IME padding，键盘打开时保存仍可达；保存条件和原照片、日期、关联、放弃更改逻辑保持。网格注册 `ObserveSkinScroll`。 完整编辑保留原记录并复制可编辑字段，创建时间不变、修改时间由 Repository 更新；读取原记录期间通过 `isLoading` 禁用保存，ViewModel 同时拒绝原记录未读取完成的提交。回归为 `OutfitLogEditViewModelTest`（独立内存 Room、真实照片，覆盖已有/新建/读取中/已删除）。
-- 淘宝订单导入及后续整理完整设计（**尚未实施**）见 `docs/plans/2026-10-22-order-import-complete-design.md`，14页交互稿、八组效果板及七皮肤浅暗/小屏大字位于 `docs/visuals/2026-10-22-order-import-design/`。覆盖来源查重/冲突、金额原值、持久会话与续办、搜索计数/原因核对、品牌映射、导入后收纳、购买核对和绑定原物品补资料；新导入付款日期未知留草稿，不借历史补录接口放宽。拟议Room33/备份14仅为实施方案，当前仍Room32/36实体/备份13/2.67.0；浏览器稿不替代后续Compose、迁移、备份或真实IME验收。
+- 淘宝订单导入及后续整理已按 `docs/plans/2026-10-22-order-import-complete-design.md` 实施，前置14页交互稿与七皮肤浅暗保留在 `docs/visuals/2026-10-22-order-import-design/`，原生验收及最终差异见 `docs/order-import-implementation-2026-10-23.md`。Room33/42实体/备份14/2.68.0；新导入付款日期未知留草稿，不能借历史补录接口放宽。
 - 淘宝导入指南按“获取订单文件 / 回到应用导入”分组，完整保留七步正文及四项注意事项；使用皮肤卡片与 `SectionHeader`，没有真实截图时不绘制截图占位框。月份的紧凑布局保持既定设计。
 - 服饰详情主图完整 Fit 预览，高度随屏幕受限，标题后优先展示当前订单价格/实付/待付摘要；无小物时显示紧凑新增/挂入操作，已有小物管理完整保留。`ImageGalleryPager` 支持可选 `contentScale`、`imageShape` 与 `imageBackgroundColor`，默认展示保持兼容。
 - 服饰页三列网格中，无真实品牌的假发（稳定品类语义`family=WIG`，包含发片）省略整行品牌文字和图标，不留品牌占位空间。`ItemListUiState.unsetBrandId`来自`Brand.isUnsetBrand`系统身份，不按中文名称判断；同名真实品牌仍显示。其他品类、单列/两列与画廊保持现有显示，不改品牌记录或物品引用。
@@ -92,6 +92,17 @@
 - 商品款式放在「颜色分类」时，可主动开启「按颜色分类分别导入」并勾选需要的款式；默认关闭、初始不全选；旧颜色模式不展开尺码，选择尺码时按下文使用组合模式。`colorVariants`只保留导入会话候选，现有明确拆分优先；选中项按原顺序逐件编辑、默认心愿，名称包含规格原文，每件独立图片副本且完整保留详情。选择、逐款报价和开关随SavedState恢复，普通颜色不开关仍按单件；已保存记录不迁移。只有完整选中的实际SKU报价关联对应颜色项，其他报价留空。Room30/备份10不变，测试为`TaobaoProductColorStylesTest`、`TaobaoProductColorStylesScreenTest`及扩展的ViewModel/ItemImportRecovery回归。设计见`docs/plans/2026-10-19-taobao-color-styles.md`。
 
 - 淘宝链接可主动开启「按颜色和尺码分别导入」，按颜色／款式分组勾选具体尺码组合，同色可选多码，支持搜索且保留隐藏选择；默认关闭／零预选，没有尺码时继续旧颜色模式；组合模式以所选完整规格为准，关闭时保留原明确部件拆分。公开SKU路径存在时只用完整路径，缺路径时仅提供公开规格候选，不断言库存；超过1000个候选或资料不完整时明确回退单件核对，不截取部分规格。每次最多30件。每件写入明确Item.size、独立报价和importToken；完整SKU报价不能下放同色其他码或其他款式。`selectedSkuId`和逐件尺码随紧凑SavedState恢复，新增元数据可空以兼容旧Gson会话；旧队列继续共享原尺码。Room30／备份10／原图片与默认心愿不变。设计与定向回归见`docs/plans/2026-10-20-taobao-size-combinations.md`。
+
+## 订单导入会话与原物品补充（2.68.0）
+
+- `OrderImportDao → OrderImportRepository → TaobaoImportViewModel` 保存版本化会话、文件和逐件原始输入；会话递增revision做CAS，旧写入不能覆盖新输入或复活已删除草稿。离页flush，恢复只查本机回执，不自动联网或提交。移除文件先冻结并确认影响范围，已保存物品与永久来源回执保留。
+- `OrderImportSource` 保留金额原值并区分有效0/空白/异常，来源使用公开商品ID、原规格和规范件号；行重排不改变已识别单元的整数分分摊。完全相同来源合并，不同完整快照必须明确选用；历史无回执不按名称自动判重。同来源已删除时必须明确确认重新登记。
+- 单次导入冻结操作ID／会话revision，Item、账本、来源与提交回执在同一事务写入。并发查重、金额累计范围、日期、配对与图片在事务内复核，失败整批回滚；成功未返回可按回执恢复。来源关联原物品只记来源，不新建Item或账本。本次新增与关联原物品分列，已删除新增保留历史数量。
+- 订单文件最多10份、每份20MiB／10000行、数量1—100、会话展开2000件；表头显式匹配，长订单号保留文本，拒绝公式和精度已损失的数值订单号。POI前先验证ZIP条目、总解压量和压缩比例，不静默截断。
+- 导入选择支持搜索、状态／店铺／日期与日期未知筛选；隐藏选择保留。逐件／列表与批量品牌／类型操作分开，财务确认不可批量跳过。金额、日期与尾款独立通栏；键盘弹出及金额更新后主动保持焦点字段可见，唯一底部主动作复用`EditorSaveBar`。
+- 购买核对使用原`ItemPurchaseReview`投影，原因计数重叠，共享订单只处理一次；只跳转原价格／实付页面，不推算付款。收纳只使用本次新增且当前已拥有ID，状态或更新时间变化时拒绝陈旧批量移动。
+- `Screen.ItemSourceSupplement`绑定原Item，复用现有公开网页提取；不开逐规格新建队列。候选保存在同一`ItemDraft`，图片列显式存储、JSON仅用索引。默认保留原字段，主动确认SKU后合并所选字段，图片按SHA追加且保留封面；已有编辑草稿只合并到草稿，正式保存才写`ItemSourceRecord`。CAS拒绝陈旧覆盖；候选价格只留证据，不写账本。材质等网页参数通过明确勾选追加备注，不擅自映射结构化规格。
+- 六张新表与补充候选同步进入JSON／ZIP／预览、严格引用校验和图片保护；旧1—13备份新增集合为空。CSV只增加可读公开链接及来源明细，不输出内部来源键。定向用例：`OrderImportReliabilityTest`、`OrderImportSessionTest`、`ItemSourceSupplementTest`、`OrderImportSessionMigrationTest`、`OrderImportExperienceScreenTest`，以及原ItemDraft／商品队列／备份回归。真实淘宝账号、TalkBack人工朗读与付费服务不由受控测试冒充验证。
 
 ## 内置店铺图标与默认房间
 
@@ -313,7 +324,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=142, versionName="2.67.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=143, versionName="2.68.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

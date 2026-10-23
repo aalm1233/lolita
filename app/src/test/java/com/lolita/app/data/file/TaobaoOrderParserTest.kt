@@ -58,6 +58,7 @@ class TaobaoOrderParserTest {
         XSSFWorkbook().use { workbook ->
             val sheet = workbook.createSheet()
             val header = sheet.createRow(0)
+            listOf("订单号","订单提交时间","订单状态","店铺名称","商品名称","商品链接","型号款式","商品数量","商品金额","实付金额","运费").forEachIndexed { i,name->header.createCell(i).setCellValue(name) }
             listOf("物品类型", "房间", "收纳路径", "专属规格JSON").forEachIndexed { index, text -> header.createCell(11 + index).setCellValue(text) }
             val row = sheet.createRow(1)
             listOf("order-2", "2026-10-14", "交易成功", "测试品牌", "长卷", "", "EU 37.5", "1", "100", "110", "10",
@@ -76,7 +77,7 @@ class TaobaoOrderParserTest {
         val bytes = ByteArrayOutputStream()
         XSSFWorkbook().use { workbook ->
             val sheet = workbook.createSheet()
-            sheet.createRow(0)
+            sheet.createRow(0).also { header -> listOf("订单号","订单提交时间","订单状态","店铺名称","商品名称","商品链接","型号款式","商品数量","商品金额","实付金额","运费").forEachIndexed { i,name->header.createCell(i).setCellValue(name) } }
             val row = sheet.createRow(1)
             listOf("order-1", "2026-10-14", "卖家已发货", "测试品牌", "裙子", "", spec, "1", "100", "110", "10")
                 .forEachIndexed { index, value -> row.createCell(index).setCellValue(value) }

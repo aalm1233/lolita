@@ -51,10 +51,12 @@ fun FilteredItemListScreen(
     viewModel: FilteredItemListViewModel = viewModel(
         factory = FilteredItemListViewModelFactory(filterType, filterValue)
     ),
+    onReviewOrder: (ItemPurchaseReview) -> Unit = { onNavigateToDetail(it.orderItemId) },
     onAddItem: ((WardrobeFamily) -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isReviewList = filterType == "status_review"
+    if(isReviewList) { PurchaseReviewContent(uiState.purchaseReviews,uiState.isLoading,onBack,onNavigateToDetail,onReviewOrder);return }
     val visibleItems = if (isReviewList) uiState.purchaseReviews.map { it.item } else uiState.items
     val reviewsByItem = uiState.purchaseReviews.associateBy { it.item.id }
     val family = if (filterType == "family") WardrobeFamily.entries.find { it.name == filterValue } else null

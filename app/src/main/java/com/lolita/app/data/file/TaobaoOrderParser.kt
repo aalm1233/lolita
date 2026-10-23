@@ -4,6 +4,8 @@ import com.lolita.app.data.model.TaobaoOrder
 import com.lolita.app.data.model.TaobaoOrderItem
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.InputStream
+import com.lolita.app.domain.model.OrderImportSource
+import com.lolita.app.domain.model.ImportMoney
 
 /**
  * 解析淘宝订单导出的 Excel 文件 (.xlsx)
@@ -22,16 +24,28 @@ object TaobaoOrderParser {
             allOrders.addAll(parse(stream))
         }
         val totalBeforeDedup = allOrders.size
+        require(allOrders.groupBy { it.orderId }.values.all { versions -> versions.map(OrderImportSource::snapshot).distinct().size == 1 }) { "同订单存在不同来源，请分别读取并比较资料" }
         val deduped = allOrders.distinctBy { it.orderId }
         val dupCount = totalBeforeDedup - deduped.size
         return Triple(deduped, inputStreams.size, dupCount)
     }
 
     fun parse(inputStream: InputStream): List<TaobaoOrder> = inputStream.use { stream ->
-        XSSFWorkbook(stream).use { workbook ->
+        org.apache.poi.openxml4j.util.ZipSecureFile.setMaxEntrySize(80L*1024*1024)
+        org.apache.poi.openxml4j.util.ZipSecureFile.setMaxTextSize(20L*1024*1024)
+        val bytes=OrderFilePreflight.read(stream)
+        XSSFWorkbook(java.io.ByteArrayInputStream(bytes)).use { workbook ->
         val sheet = workbook.getSheetAt(0)
         val header = sheet.getRow(0)
-        val extraColumns = (11 until (header?.lastCellNum?.toInt() ?: 11)).associateBy { getCellString(header?.getCell(it)).trim() }
+        require(sheet.lastRowNum <= 10_000) { "文件超过10000行，请拆分后导入" }
+        val columns = (0 until (header?.lastCellNum?.toInt() ?: 0)).groupBy { getCellString(header?.getCell(it)).trim() }
+        val aliases = listOf(listOf("订单号","订单编号"),listOf("订单提交时间","下单时间"),listOf("订单状态"),listOf("店铺名称","店铺"),listOf("商品名称","宝贝名称"),listOf("商品链接","宝贝链接"),listOf("型号款式","商品规格"),listOf("商品数量","数量"),listOf("商品金额","商品价格"),listOf("实付金额","订单实付"),listOf("运费","邮费"))
+        val mapped = aliases.map { names ->
+            val matches = names.flatMap { columns[it].orEmpty() }
+            require(matches.size == 1) { "缺少或重复“${names.first()}”列，请重新导出订单文件" }
+            matches.single()
+        }
+        val extraColumns = columns.filterValues { it.size == 1 }.mapValues { it.value.single() }
 
         // 按订单号分组的临时结构
         val orderMap = linkedMapOf<String, OrderBuilder>()
@@ -42,7 +56,9 @@ object TaobaoOrderParser {
             val row = sheet.getRow(i) ?: continue
 
             // 读取订单号 — 如果本行有值则更新当前订单号
-            val rawOrderId = getCellString(row.getCell(0))
+            val idCell=row.getCell(mapped[0])
+            require(idCell?.cellType!=org.apache.poi.ss.usermodel.CellType.NUMERIC || idCell.numericCellValue<1_000_000_000_000_000.0) { "订单号已被Excel转成长数值，请以文本格式重新导出，避免号码失真" }
+            val rawOrderId = getCellString(row.getCell(mapped[0]))
             if (rawOrderId.isNotBlank()) {
                 currentOrderId = rawOrderId
             }
@@ -52,25 +68,35 @@ object TaobaoOrderParser {
             if (currentOrderId !in orderMap) {
                 orderMap[currentOrderId] = OrderBuilder(
                     orderId = currentOrderId,
-                    orderTime = getCellString(row.getCell(1)),
-                    orderStatus = getCellString(row.getCell(2)),
-                    shopName = getCellString(row.getCell(3)),
-                    totalPaid = parsePrice(getCellString(row.getCell(9))),
-                    shipping = parsePrice(getCellString(row.getCell(10)))
+                    orderTime = getCellString(row.getCell(mapped[1])),
+                    orderStatus = getCellString(row.getCell(mapped[2])),
+                    shopName = getCellString(row.getCell(mapped[3])),
+                    totalPaid = parsePrice(getCellString(row.getCell(mapped[9]))),
+                    rawPaid = getCellString(row.getCell(mapped[9])),
+                    rawShipping = getCellString(row.getCell(mapped[10])),
+                    shipping = parsePrice(getCellString(row.getCell(mapped[10])))
                 )
             }
+            if(rawOrderId.isNotBlank()) {
+                val original=orderMap.getValue(currentOrderId)
+                listOf(1 to original.orderTime,2 to original.orderStatus,3 to original.shopName,9 to original.rawPaid,10 to original.rawShipping).forEach { (column,first) ->
+                    val next=getCellString(row.getCell(mapped[column])).trim()
+                    val equivalent=if(column in setOf(9,10)) OrderImportSource.money(next)==OrderImportSource.money(first.orEmpty()) else next==first
+                    require(next.isBlank() || equivalent) { "订单 $currentOrderId 的多行来源信息有差异，请重新导出后比较" }
+                }
+            }
             // 读取商品级字段
-            val itemName = getCellString(row.getCell(4))
+            val itemName = getCellString(row.getCell(mapped[4]))
             if (itemName.isBlank()) continue
 
-            val productUrl = getCellString(row.getCell(5))
-            val styleSpec = getCellString(row.getCell(6))
-            val quantityText = getCellString(row.getCell(7)).trim()
+            val productUrl = OrderImportSource.publicUrl(getCellString(row.getCell(mapped[5]))).orEmpty()
+            val styleSpec = getCellString(row.getCell(mapped[6]))
+            val quantityText = getCellString(row.getCell(mapped[7])).trim()
             val quantity = if (quantityText.isBlank()) 1 else runCatching {
                 quantityText.toBigDecimalOrNull()?.intValueExact()
             }.getOrNull() ?: throw IllegalArgumentException("订单 $currentOrderId 的商品数量无效，请填写1至100的整数")
             require(quantity in 1..100) { "订单 $currentOrderId 的商品数量无效，请填写1至100的整数" }
-            val price = parsePrice(getCellString(row.getCell(8)))
+            val price = parsePrice(getCellString(row.getCell(mapped[8])))
 
             val parsed = parseStyleSpec(styleSpec)
             fun extra(vararg names: String): String? = names.firstNotNullOfOrNull { name ->
@@ -94,7 +120,9 @@ object TaobaoOrderParser {
                     orderTime = builder.orderTime,
                     shopName = builder.shopName,
                     requestedRoomName = extra("房间"), requestedStoragePath = extra("收纳路径", "收纳位置"),
-                    specificationsJson = specifications
+                    specificationsJson = specifications,
+                    rawPrice = getCellString(row.getCell(mapped[8])),
+                    actualPaidDate = extra("实际付款时间", "付款时间", "实际付款日期")
                 )
             )
         }
@@ -104,7 +132,7 @@ object TaobaoOrderParser {
     } // inputStream.use
 
     private fun parsePrice(raw: String): Double {
-        return raw.replace("￥", "").replace(",", "").trim().toDoubleOrNull() ?: 0.0
+        return (OrderImportSource.money(raw) as? ImportMoney.Valid)?.let { java.math.BigDecimal.valueOf(it.cents, 2).toDouble() } ?: 0.0
     }
 
     /**
@@ -304,6 +332,7 @@ object TaobaoOrderParser {
 
     private fun getCellString(cell: org.apache.poi.ss.usermodel.Cell?): String {
         if (cell == null) return ""
+        require(cell.cellType != org.apache.poi.ss.usermodel.CellType.FORMULA) { "订单文件包含公式，请导出为普通数值后重试" }
         return when (cell.cellType) {
             org.apache.poi.ss.usermodel.CellType.STRING -> cell.stringCellValue.trim()
             org.apache.poi.ss.usermodel.CellType.NUMERIC -> {
@@ -331,6 +360,8 @@ object TaobaoOrderParser {
         val orderStatus: String,
         val shopName: String,
         val totalPaid: Double,
+        val rawPaid: String,
+        val rawShipping: String,
         val shipping: Double,
         val items: MutableList<TaobaoOrderItem> = mutableListOf()
     ) {
@@ -341,7 +372,7 @@ object TaobaoOrderParser {
             shopName = shopName,
             totalPaid = totalPaid,
             shipping = shipping,
-            items = items.toList()
+            items = items.toList(), rawPaid = rawPaid, rawShipping = rawShipping
         )
     }
 }

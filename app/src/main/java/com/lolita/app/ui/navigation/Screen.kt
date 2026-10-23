@@ -7,6 +7,11 @@ sealed interface Screen {
         override val route = "item_list"
     }
 
+    data object ItemSourceSupplement : Screen {
+        override val route = "item_source_supplement/{itemId}"
+        fun createRoute(itemId: Long) = "item_source_supplement/$itemId"
+    }
+
     data object ItemDetail : Screen {
         override val route = "item_detail/{itemId}"
         fun createRoute(itemId: Long) = "item_detail/$itemId"

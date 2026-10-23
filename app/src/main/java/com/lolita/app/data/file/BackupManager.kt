@@ -75,7 +75,13 @@ data class BackupData(
     val itemEvidence: List<ItemEvidence> = emptyList(),
     val imageProvenance: List<ImageProvenance> = emptyList(),
     val wigHeadTemplatePreferenceJson: String? = null,
-    val itemTryOnMaterials: List<ItemTryOnMaterial> = emptyList()
+    val itemTryOnMaterials: List<ItemTryOnMaterial> = emptyList(),
+    val orderImportSessions: List<OrderImportSession> = emptyList(),
+    val orderImportFiles: List<OrderImportFile> = emptyList(),
+    val orderImportRows: List<OrderImportRow> = emptyList(),
+    val orderImportCommits: List<OrderImportCommit> = emptyList(),
+    val orderImportReceipts: List<OrderImportReceipt> = emptyList(),
+    val itemSourceRecords: List<ItemSourceRecord> = emptyList()
 )
 
 private data class PreparedBackup(
@@ -115,6 +121,12 @@ class BackupManager(
         val sync = database.sharedLibrarySyncDao()
         BackupData(
             wigHeadTemplatePreferenceJson = com.lolita.app.data.mannequin.WigHeadTemplateCatalog.readPreference(context)?.let { gson.toJson(it) },
+            orderImportSessions = database.orderImportDao().sessions(),
+            orderImportFiles = database.orderImportDao().files(),
+            orderImportRows = database.orderImportDao().rows(),
+            orderImportCommits = database.orderImportDao().commits(),
+            orderImportReceipts = database.orderImportDao().receipts(),
+            itemSourceRecords = database.orderImportDao().sources(),
             storageNodes = database.storageNodeDao().getAll(),
             itemDrafts = database.itemDraftDao().getAll(),
             recognitionTasks = database.recognitionDao().getAll(),
@@ -187,7 +199,7 @@ class BackupManager(
                 while (cursor.moveToNext()) require(!cursor.isNull(0) && cursor.getString(0) in allowed) { "$table.$column 包含未知值，无法无损备份" }
             }
         }
-        val arrays = listOf("item_drafts" to "image_paths", "item_drafts" to "size_chart_image_paths", "item_drafts" to "evidence_image_paths", "item_drafts" to "appearance_only_image_paths", "recognition_tasks" to "region_image_paths", "item_evidence" to "region_image_paths", "personal_models" to "source_image_paths", "personal_model_drafts" to "source_image_paths", "image_tasks" to "source_image_paths", "items" to "image_urls", "items" to "colors", "coordinates" to "image_urls",
+        val arrays = listOf("order_import_rows" to "image_paths", "item_source_records" to "image_paths", "item_drafts" to "image_paths", "item_drafts" to "size_chart_image_paths", "item_drafts" to "evidence_image_paths", "item_drafts" to "appearance_only_image_paths", "recognition_tasks" to "region_image_paths", "item_evidence" to "region_image_paths", "personal_models" to "source_image_paths", "personal_model_drafts" to "source_image_paths", "image_tasks" to "source_image_paths", "items" to "image_urls", "items" to "colors", "coordinates" to "image_urls",
             "outfit_logs" to "image_urls", "remote_shared_coordinates" to "image_urls",
             "remote_shared_items" to "image_urls", "remote_shared_items" to "colors")
         arrays.forEach { (table, column) ->
@@ -245,9 +257,9 @@ class BackupManager(
 
             // Items
             sb.appendLine("\n=== ITEMS ===")
-            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order,parent_item_id,included_in_parent_price,size_chart_image_urls,storage_node_id,storage_path,specifications_json,composition")
+            sb.appendLine("id,name,description,brand_id,category_id,coordinate_id,status,priority,image_urls,colors,season,style,size,size_chart_image_url,created_at,updated_at,location_id,source,coordinate_order,parent_item_id,included_in_parent_price,size_chart_image_urls,storage_node_id,storage_path,specifications_json,composition,public_product_url")
             backupData.items.forEach { i ->
-                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder},${i.parentItemId ?: ""},${i.includedInParentPrice},${escapeCsv(i.sizeChartImageUrls.joinToString(";"))},${i.storageNodeId ?: ""},${escapeCsv(com.lolita.app.domain.model.StorageTree.pathFor(i.locationId,i.storageNodeId,backupData.locations,backupData.storageNodes))},${escapeCsv(i.specificationsJson)},${i.composition}")
+                sb.appendLine("${i.id},${escapeCsv(i.name)},${escapeCsv(i.description)},${i.brandId},${i.categoryId},${i.coordinateId},${i.status},${i.priority},${escapeCsv(i.imageUrls.joinToString(";"))},${escapeCsv(i.colors.joinToString(";"))},${escapeCsv(i.season)},${escapeCsv(i.style)},${escapeCsv(i.size)},${escapeCsv(i.sizeChartImageUrl)},${i.createdAt},${i.updatedAt},${i.locationId ?: ""},${escapeCsv(i.source)},${i.coordinateOrder},${i.parentItemId ?: ""},${i.includedInParentPrice},${escapeCsv(i.sizeChartImageUrls.joinToString(";"))},${i.storageNodeId ?: ""},${escapeCsv(com.lolita.app.domain.model.StorageTree.pathFor(i.locationId,i.storageNodeId,backupData.locations,backupData.storageNodes))},${escapeCsv(i.specificationsJson)},${i.composition},${escapeCsv(backupData.itemSourceRecords.firstOrNull { source -> source.itemId==i.id }?.publicUrl)}")
             }
 
             // Coordinates
@@ -283,11 +295,14 @@ class BackupManager(
             backupData.storageNodes.forEach { n -> sb.appendLine("${n.id},${n.locationId},${n.parentNodeId ?: ""},${escapeCsv(n.name)},${escapeCsv(n.description)},${escapeCsv(n.imageUrl)},${n.sortOrder},${escapeCsv(com.lolita.app.domain.model.StorageTree.pathFor(n.locationId,n.id,backupData.locations,backupData.storageNodes))},${n.createdAt},${n.updatedAt}") }
             sb.appendLine("\n=== IMAGE SOURCES ===")
             sb.appendLine("item_id,image_path,source_type,mode")
+            backupData.imageProvenance.forEach { image -> sb.appendLine("${image.itemId},${escapeCsv(image.imagePath)},${image.sourceType},${escapeCsv(image.mode)}") }
             sb.appendLine("试衣素材")
             sb.appendLine("物品ID,素材图片文件,确认时间")
             backupData.itemTryOnMaterials.forEach { material -> sb.appendLine("${material.itemId},${escapeCsv(File(material.imagePath).name)},${material.confirmedAt}") }
             sb.appendLine()
-            backupData.imageProvenance.forEach { image -> sb.appendLine("${image.itemId},${escapeCsv(image.imagePath)},${image.sourceType},${escapeCsv(image.mode)}") }
+            sb.appendLine("\n物品来源明细")
+            sb.appendLine("物品ID,来源类型,公开商品链接,记录时间")
+            backupData.itemSourceRecords.forEach { source -> sb.appendLine("${source.itemId},${escapeCsv(source.kind)},${escapeCsv(source.publicUrl)},${source.createdAt}") }
 
             // Sources
             sb.appendLine("\n=== SOURCES ===")
@@ -490,6 +505,12 @@ class BackupManager(
                     importedData.items.sortedBy { it.parentItemId != null }.forEach { database.itemDao().insertItem(it) }
                     importedData.itemEvidence.forEach { database.recognitionDao().insertEvidence(it) }
                     importedData.imageProvenance.forEach { database.imageProvenanceDao().upsert(it) }
+                    importedData.orderImportSessions.forEach { database.orderImportDao().saveSession(it) }
+                    database.orderImportDao().saveFiles(importedData.orderImportFiles)
+                    database.orderImportDao().saveRows(importedData.orderImportRows)
+                    importedData.orderImportCommits.forEach { database.orderImportDao().insertCommit(it) }
+                    database.orderImportDao().insertReceipts(importedData.orderImportReceipts)
+                    database.orderImportDao().insertSources(importedData.itemSourceRecords)
                     importedData.itemTryOnMaterials.forEach { database.itemTryOnMaterialDao().insert(it) }
                     importedData.prices.forEach { database.priceDao().insertPrice(it) }
                     importedData.orderBindings.forEach { database.orderDao().insertBinding(it) }
@@ -580,6 +601,7 @@ class BackupManager(
         data.storageNodes.mapNotNull { it.imageUrl }.forEach { readable(it) }
         // Editors and registration copies reuse historical album/size-chart filenames.
         // Appearance-only references are validated as a subset of those same product images.
+        (data.orderImportRows.flatMap { it.imagePaths } + data.itemSourceRecords.flatMap { it.imagePaths }).distinct().forEach { readable(it, productImage = true) }
         data.itemDrafts.flatMap { it.imagePaths + it.sizeChartImagePaths }.distinct().forEach { readable(it, productImage = true) }
         data.itemDrafts.flatMap { it.evidenceImagePaths }.distinct().forEach { readable(it) }
         data.itemEvidence.flatMap { it.regionImagePaths }.distinct().forEach { readable(it) }
@@ -659,6 +681,7 @@ class BackupManager(
     }
 
     private fun recordCount(data: BackupData): Int = listOf(
+        data.orderImportSessions, data.orderImportFiles, data.orderImportRows, data.orderImportCommits, data.orderImportReceipts, data.itemSourceRecords,
         data.itemTryOnMaterials, data.storageNodes, data.itemDrafts, data.recognitionTasks, data.itemEvidence, data.imageProvenance,
         data.brands, data.categories, data.coordinates, data.items, data.prices, data.payments,
         data.outfitLogs, data.outfitItemCrossRefs, data.styles, data.seasons, data.locations, data.sources,
@@ -671,7 +694,13 @@ class BackupManager(
         val actual = snapshot()
         // Sort by stable keys; compare every business field, including image order and timestamps.
         fun <T> equal(a: List<T>, b: List<T>, key: (T) -> String) = a.sortedBy(key) == b.sortedBy(key)
-        check(equal(actual.itemTryOnMaterials, expected.itemTryOnMaterials) { it.id } && equal(actual.storageNodes, expected.storageNodes) { it.id.toString() } &&
+        check(equal(actual.orderImportSessions, expected.orderImportSessions) { it.id } &&
+            equal(actual.orderImportFiles, expected.orderImportFiles) { it.id } &&
+            equal(actual.orderImportRows, expected.orderImportRows) { it.id } &&
+            equal(actual.orderImportCommits, expected.orderImportCommits) { it.id } &&
+            equal(actual.orderImportReceipts, expected.orderImportReceipts) { it.id } &&
+            equal(actual.itemSourceRecords, expected.itemSourceRecords) { it.id } &&
+            equal(actual.itemTryOnMaterials, expected.itemTryOnMaterials) { it.id } && equal(actual.storageNodes, expected.storageNodes) { it.id.toString() } &&
             equal(actual.itemDrafts, expected.itemDrafts) { it.id } &&
             equal(actual.recognitionTasks, expected.recognitionTasks) { it.id } &&
             equal(actual.itemEvidence, expected.itemEvidence) { it.id } &&
@@ -822,6 +851,7 @@ class BackupManager(
                 imageTaskCount = backupData.imageTasks.size,
                 personalModelCount = backupData.personalModels.size,
                 personalModelDraftCount = backupData.personalModelDrafts.size,
+                orderImportSessionCount=backupData.orderImportSessions.size, orderImportRowCount=backupData.orderImportRows.size, orderImportReceiptCount=backupData.orderImportReceipts.size, itemSourceRecordCount=backupData.itemSourceRecords.size,
                 storageNodeCount = backupData.storageNodes.size,itemDraftCount = backupData.itemDrafts.size,
                 recognitionTaskCount = backupData.recognitionTasks.size,itemEvidenceCount = backupData.itemEvidence.size,imageProvenanceCount = backupData.imageProvenance.size, itemTryOnMaterialCount = backupData.itemTryOnMaterials.size,
                 additionalRecordCount = recordCount(backupData) - (backupData.brands.size + backupData.categories.size + backupData.coordinates.size + backupData.items.size + backupData.prices.size + backupData.payments.size + backupData.outfitLogs.size + backupData.styles.size + backupData.seasons.size + backupData.locations.size + backupData.sources.size + backupData.legacyCatalogArchives.size + backupData.orderBindings.size + backupData.paymentStages.size + backupData.monthlyBudgets.size + backupData.tryOnResults.size + backupData.imageTasks.size + backupData.personalModels.size + backupData.personalModelDrafts.size + backupData.storageNodes.size + backupData.itemDrafts.size + backupData.recognitionTasks.size + backupData.itemEvidence.size + backupData.imageProvenance.size + backupData.itemTryOnMaterials.size),
@@ -835,6 +865,10 @@ class BackupManager(
     }
 
     private suspend fun clearAllTables() {
+        database.orderImportDao().clearReceipts()
+        database.orderImportDao().clearSources()
+        database.orderImportDao().clearCommits()
+        database.orderImportDao().clearSessions()
         database.recognitionDao().deleteAllEvidence()
         database.recognitionDao().deleteAll()
         database.itemDraftDao().deleteAll()
@@ -929,6 +963,8 @@ class BackupManager(
         val mapped = data.copy(
             itemTryOnMaterials = data.itemTryOnMaterials.map { it.copy(imagePath=business(it.imagePath), sourceImagePath=business(it.sourceImagePath), inputImagePath=business(it.inputImagePath)) },
             storageNodes = data.storageNodes.map { it.copy(imageUrl=nullable(it.imageUrl)) },
+            orderImportRows = data.orderImportRows.map { it.copy(imagePaths=it.imagePaths.map(::business)) },
+            itemSourceRecords = data.itemSourceRecords.map { it.copy(imagePaths=it.imagePaths.map(::business)) },
             itemDrafts = data.itemDrafts.map { it.copy(imagePaths=it.imagePaths.map(::business),sizeChartImagePaths=it.sizeChartImagePaths.map(::business),evidenceImagePaths=it.evidenceImagePaths.map(::business),appearanceOnlyImagePaths=it.appearanceOnlyImagePaths.map(::business)) },
             recognitionTasks = data.recognitionTasks.map { it.copy(regionImagePaths=it.regionImagePaths.map(::business)) },
             itemEvidence = data.itemEvidence.map { it.copy(regionImagePaths=it.regionImagePaths.map(::business)) },
@@ -1222,6 +1258,7 @@ data class BackupPreview(
     val imageTaskCount: Int = 0,
     val personalModelCount: Int = 0,
     val personalModelDraftCount: Int = 0,
+    val orderImportSessionCount:Int=0,val orderImportRowCount:Int=0,val orderImportReceiptCount:Int=0,val itemSourceRecordCount:Int=0,
     val storageNodeCount:Int=0,val itemDraftCount:Int=0,val recognitionTaskCount:Int=0,val itemEvidenceCount:Int=0,val imageProvenanceCount:Int=0,val itemTryOnMaterialCount:Int=0,
     val additionalRecordCount: Int = 0,
     val orderBindingCount: Int = 0,

@@ -323,6 +323,17 @@ class TaobaoProductViewModel(
         }
     }
 
+    fun prepareSupplement(onReady: (TaobaoProductDraft) -> Unit) {
+        val draft=state.value.draft ?: return
+        if(state.value.busy) return
+        mutable.update { it.copy(busy=true,error=null) }
+        job=viewModelScope.launch {
+            try { onReady(masterDraft?.takeIf(::hasMasterFiles) ?: downloadMaster(draft,revision)) }
+            catch(failure: Exception) { mutable.update { it.copy(error=uiErrorText(failure,"图片读取未完成，请重试")) } }
+            finally { mutable.update { it.copy(busy=false) } }
+        }
+    }
+
     private suspend fun downloadMaster(draft: TaobaoProductDraft, generation: Int): TaobaoProductDraft {
         val heads = draft.remoteImages.orEmpty().distinct()
         val details = draft.remoteDetailImages.orEmpty().distinct()

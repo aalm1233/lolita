@@ -54,6 +54,9 @@ class ItemRepository(
 
     fun observeItem(id: Long): Flow<Item?> = itemDao.observeItem(id)
 
+    fun observeSourceRecords(id: Long): Flow<List<com.lolita.app.data.local.entity.ItemSourceRecord>> =
+        database?.orderImportDao()?.observeSources(id) ?: kotlinx.coroutines.flow.flowOf(emptyList())
+
     fun getChildren(parentId: Long): Flow<List<Item>> = itemDao.getChildren(parentId)
 
     suspend fun getChildrenList(parentId: Long): List<Item> = itemDao.getChildrenList(parentId)
@@ -195,6 +198,7 @@ class ItemRepository(
                 cleanupPaths.addAll(listOfNotNull(latest.sizeChartImageUrl) + latest.sizeChartImageUrls)
             }
             if (database != null) {
+                cleanupPaths.addAll(database.orderImportDao().sources().filter { it.itemId==item.id }.flatMap { it.imagePaths })
                 database.itemTryOnMaterialDao().getForItem(item.id)?.let { cleanupPaths.addAll(it.protectedImagePaths()) }
                 val drafts=database.itemDraftDao().getAll().filter { it.targetItemId==item.id }
                 val draftIds=drafts.map { it.id }.toMutableSet()

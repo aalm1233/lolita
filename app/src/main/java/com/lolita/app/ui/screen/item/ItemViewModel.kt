@@ -54,6 +54,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -812,6 +816,11 @@ class ItemEditViewModel(
     private val _uiState = MutableStateFlow(ItemEditUiState())
     val uiState: StateFlow<ItemEditUiState> = _uiState.asStateFlow()
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    val sourceRecords = uiState.map { it.item?.id }.distinctUntilChanged().flatMapLatest { id ->
+        if(id==null) kotlinx.coroutines.flow.flowOf(emptyList()) else itemRepository.observeSourceRecords(id)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     private val _pendingImageDeletions = MutableStateFlow(emptySet<String>())
     private var locationJob: Job? = null
     private var hierarchyJob: Job? = null
@@ -890,7 +899,8 @@ class ItemEditViewModel(
             val snapshot = snapshotDraft(state)
             val previous = repository.get(snapshot.id)
             repository.save(snapshot.copy(evidenceImagePaths = previous?.evidenceImagePaths.orEmpty(),
-                dataJson = snapshot.data().copy(recognitionSessionIds = previous?.data()?.recognitionSessionIds.orEmpty()).encode()))
+                dataJson = snapshot.data().copy(recognitionSessionIds = previous?.data()?.recognitionSessionIds.orEmpty(),
+                    sourceSupplementJson = previous?.data()?.sourceSupplementJson).encode()))
         }
     }
 

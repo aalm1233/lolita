@@ -30,7 +30,9 @@ import com.lolita.app.ui.theme.skin.icon.*
 @Composable
 fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
     editorResult: String? = null, onConsumeEditorResult: () -> Unit = {},
-    vm: TaobaoProductViewModel = viewModel()) {
+    vm: TaobaoProductViewModel = viewModel(),
+    supplementTargetName: String? = null,
+    onSupplementReady: (com.lolita.app.data.file.TaobaoProductDraft) -> Unit = {}) {
     val state by vm.state.collectAsState()
     LaunchedEffect(editorResult) {
         if (editorResult != null) {
@@ -44,13 +46,14 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
     val scroll = rememberScrollState()
     ObserveSkinScroll(scroll)
     BackHandler(enabled = web?.canGoBack() == true && state.draft == null) { web?.goBack() }
-    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text("淘宝商品导入（试用）") }, navigationIcon = {
+    Scaffold(containerColor = Color.Transparent, topBar = { GradientTopAppBar(title = { Text(if(supplementTargetName==null) "淘宝商品导入（试用）" else "补全本件商品资料") }, navigationIcon = {
         IconButton(onClick = onBack) { SkinIcon(IconKey.ArrowBack) }
     }) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).imePadding()) {
             if (state.url == null) {
                 Column(Modifier.verticalScroll(scroll).padding(skin.spacingLarge), verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)) {
                     LolitaSection("粘贴商品链接") {
+                        if(supplementTargetName!=null) row { Text("绑定物品：$supplementTargetName。读取后比较字段，不会另建物品或修改账本。") }
                         row { Text("复制淘宝商品分享内容，在这里粘贴。首次读取可能需要在网页登录淘宝。") }
                         row { OutlinedTextField(value = state.input, onValueChange = vm::input, label = { Text("分享内容或商品链接") }, modifier = Modifier.fillMaxWidth(), minLines = 3) }
                         row { Button(onClick = vm::open, enabled = state.input.isNotBlank()) { Text("打开商品网页") } }
@@ -101,7 +104,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                         row { Text("类别：${draft.category.ifBlank { "待填写" }}${if (draft.categoryCandidates.size > 1) "（商品含多种款式，请核对）" else ""}") }
                         row { Text("将导入 ${draft.remoteImages.size} 张商品图和 ${draft.remoteDetailImages.size} 张资料图。") }
                     }
-                    if (state.batchTotal == 0 && draft.skuVariants.orEmpty().isNotEmpty()) {
+                    if (supplementTargetName==null && state.batchTotal == 0 && draft.skuVariants.orEmpty().isNotEmpty()) {
                         LolitaSection("分别导入") {
                             row {
                                 Row(Modifier.fillMaxWidth().toggleable(state.splitSkuVariants,
@@ -113,7 +116,7 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                             }
                             row { Text("每个勾选组合保存一件物品，同色可选多个尺码。") }
                         }
-                    } else if (state.batchTotal == 0 && draft.variants.orEmpty().isEmpty() && draft.colorVariants.orEmpty().size > 1) {
+                    } else if (supplementTargetName==null && state.batchTotal == 0 && draft.variants.orEmpty().isEmpty() && draft.colorVariants.orEmpty().size > 1) {
                         LolitaSection("分别导入") {
                             row {
                                 Row(Modifier.fillMaxWidth().toggleable(state.splitColorVariants,
@@ -163,11 +166,12 @@ fun TaobaoProductScreen(onBack: () -> Unit, onEdit: (String) -> Unit,
                     LolitaCard { ExpandableInfo("报价与来源说明") { Text(draft.description) } }
                     Text("编辑时核对资料。参考报价可在物品详情录价时采用，实付另行记录。", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Button(onClick = { if (state.completed) onBack() else vm.edit(onEdit) },
-                    enabled = !state.busy && (state.batchTotal > 0 || !requiresSelection || selectedCount > 0), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
+                Button(onClick = { if(supplementTargetName!=null) vm.prepareSupplement(onSupplementReady) else if (state.completed) onBack() else vm.edit(onEdit) },
+                    enabled = !state.busy && (supplementTargetName!=null || state.batchTotal > 0 || !requiresSelection || selectedCount > 0), modifier = Modifier.fillMaxWidth().padding(skin.spacingMedium)) {
                     if (state.busy) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
                     Text(when {
                         state.busy -> "读取图片中…"
+                        supplementTargetName!=null -> "读取图片并比较本件资料"
                         state.completed -> "完成并返回"
                         state.batchTotal > 0 -> "继续核对第 ${state.batchIndex + 1} / ${state.batchTotal} 件"
                         state.splitSkuVariants && selectedCount == 0 -> "请至少选择一个组合"

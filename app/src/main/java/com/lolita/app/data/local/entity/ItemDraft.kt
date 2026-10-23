@@ -28,6 +28,7 @@ data class ItemDraft(
         require(UUID.fromString(id).toString() == id && (targetItemId == null || targetItemId > 0)) { "物品草稿标识无效" }
         require(updatedAt >= 0 && protectedImagePaths().all(String::isNotBlank)) { "物品草稿图片或时间无效" }
         require(appearanceOnlyImagePaths.all { it in imagePaths || it in sizeChartImagePaths }) { "草稿图片来源引用无效" }
+        data().sourceSupplementJson?.let { com.lolita.app.data.model.ProductSupplementPayload.decode(it).validate(evidenceImagePaths.size) }
         data()
     }
 }
@@ -38,7 +39,7 @@ data class ItemDraftData(val version: Int = 1, val name: String = "", val descri
     val colors: List<String> = emptyList(), val seasons: List<String> = emptyList(), val style: String? = null,
     val size: String? = null, val source: String? = null, val locationId: Long? = null, val storageNodeId: Long? = null,
     val specificationsJson: String = "", val composition: ItemComposition = ItemComposition.UNCONFIRMED,
-    val importToken: String? = null, val baselineUpdatedAt: Long? = null, val recognitionSessionIds: List<String> = emptyList()) {
+    val sourceSupplementJson: String? = null, val importToken: String? = null, val baselineUpdatedAt: Long? = null, val recognitionSessionIds: List<String> = emptyList()) {
     fun encode(): String = Gson().toJson(this)
     companion object {
         fun decode(json: String): ItemDraftData = try {

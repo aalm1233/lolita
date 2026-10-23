@@ -308,7 +308,7 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 - [项目协作与技术约定](../AGENTS.md)：架构、皮肤组件、数据完整性、测试及交付细节。
 - [两轮体验设计实施](creative-design-implementation-2026-10-22.md)：已归档艺术图稿到原生界面的采用范围、七皮肤浅暗、小屏大字、真实IME与数据边界。
 - [淘宝订单导入体验审查](plans/2026-10-22-order-import-experience-review.md)：2.67.0真实流程中的重复导入、源金额异常、续办和小屏问题；体验证据与待实施问题，后续完整设计见下一项。
-- [淘宝订单导入与后续整理完整设计](plans/2026-10-22-order-import-complete-design.md)：14页原型、七皮肤浅暗、小屏大字、来源回执/续办、购买核对/收纳/原物品补图及升级备份方案；已完成前置设计，应用实施和真实页面验收尚未进行，拟议版本不代表已上线。
+- [淘宝订单导入与后续整理完整设计](plans/2026-10-22-order-import-complete-design.md)：14页原型、七皮肤浅暗、小屏大字、来源回执/续办、购买核对/收纳/原物品补图及升级备份方案；前置设计已先于实现归档；最终实现、真实Compose验收及差异见[实施记录](order-import-implementation-2026-10-23.md)，升级与发布以该记录的正式回执为准。
 - [服饰部件与付款改造](plans/2026-10-11-item-pricing-redesign.md)：主件小物、当前订单、付款与历史资料规则。
 - [数据完整性验收](data-integrity-test-plan.md)：迁移、备份、关联和图片核对要求。
 - [七套皮肤图标个性](superpowers/specs/2026-10-12-icon-personality-design.md)与[非导航图标个性](superpowers/specs/2026-10-12-icon-details-design.md)：各皮肤造型与功能辨认。
@@ -319,3 +319,5 @@ Lolita 服务于日常个人衣橱管理：知道有什么、找得到位置、�
 - [服饰与小物素材](plans/2026-10-21-material-all-categories.md)：混合品类、类型与组合冻结、筛选及旧协议兼容；[实施记录](material-categories-implementation-2026-10-21.md)。
 - [专属模特](superpowers/specs/2026-10-16-personal-model-design.md)：照片与参数语义、人物保真及资料保护。
 - [完整衣橱与物品登记](superpowers/specs/2026-10-18-complete-wardrobe-design.md)：品类、收纳、识图、头模及分期方案；具体能力以相应任务实现和验证记录为准。
+
+订单文件会话与网页补充来源分开保存；未知金额／日期不能当作0或今天，离页恢复不能自动提交。补充原物品复用同一编辑草稿与并发基线，永久来源只在正式保存时落库。图片的待选证据和业务相册分别显式引用，收纳与批量提交按本次确认ID及最新状态复核。具体约定见AGENTS.md的2.68.0章节。

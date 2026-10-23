@@ -80,9 +80,12 @@ fun ItemDetailScreen(
     viewModel: ItemEditViewModel = viewModel(),
     currentMaterial: com.lolita.app.data.local.entity.ItemTryOnMaterial? = null,
     onNavigateToMaterial: (Long) -> Unit = {},
+    onSupplement: (Long) -> Unit = {},
     onViewMaterial: (Long) -> Unit = onNavigateToMaterial
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val sourceRecords by viewModel.sourceRecords.collectAsState()
+    val sourceUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val skin = LolitaSkin.current
     val heroHeight = (LocalConfiguration.current.screenHeightDp * 0.36f).dp.coerceIn(240.dp, 320.dp)
     val heroShape = (skin.cardShape as? CornerBasedShape)?.copy(
@@ -491,6 +494,14 @@ fun ItemDetailScreen(
                             }
                         }
 
+                        LolitaSection("商品来源") {
+                            sourceRecords.mapNotNull { it.publicUrl }.distinct().forEach { url -> row {
+                                Text(url,style=MaterialTheme.typography.bodySmall)
+                                TextButton(onClick={runCatching { sourceUriHandler.openUri(url) }.onFailure { showError="商品链接无法打开，请稍后重试" }}){Text("查看公开商品链接")}
+                            } }
+                            row {
+                            TextButton(onClick={onSupplement(item.id)},modifier=Modifier.fillMaxWidth()){Text("补全本件商品资料")}
+                        } }
                         TextButton(onClick = { coroutineScope.launch {
                             runCatching { viewModel.copyToNewDraft() }.onSuccess(onCopyToNew).onFailure { showError = uiErrorText(it) }
                         } }, modifier = Modifier.fillMaxWidth()) { Text("复制资料为新物品") }

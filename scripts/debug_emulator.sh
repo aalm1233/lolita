@@ -13,13 +13,39 @@ cleanup() {
     trap - EXIT INT TERM
     if [[ -n "$EMULATOR_PID" ]]; then
         echo "关闭本次启动的模拟器……"
-        # Signal only our child, never a pre-existing device or a reused adb port.
-        kill -TERM "$EMULATOR_PID" 2>/dev/null || true
-        for ((stop_attempt=0; stop_attempt<20; stop_attempt++)); do
+        # Only address the console after checking both our child and its AVD.
+        # Bound adb calls: an offline device must not hang EXIT cleanup.
+        if kill -0 "$EMULATOR_PID" 2>/dev/null; then
+            python3 - "$ADB" "$DEVICE" "$AVD_NAME" <<'PY_STOP' || true
+import subprocess, sys
+adb, device, expected = sys.argv[1:]
+try:
+    result = subprocess.run([adb, '-s', device, 'emu', 'avd', 'name'],
+                            capture_output=True, text=True, timeout=3)
+    lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    if result.returncode == 0 and lines and lines[0] == expected:
+        subprocess.run([adb, '-s', device, 'emu', 'kill'],
+                       capture_output=True, timeout=5)
+except (OSError, subprocess.TimeoutExpired):
+    pass
+PY_STOP
+        fi
+        # The emulator itself allows 20 seconds for orderly teardown/snapshot save.
+        # Give it 30 seconds before escalating; TERM is only a fallback.
+        for ((stop_attempt=0; stop_attempt<60; stop_attempt++)); do
             kill -0 "$EMULATOR_PID" 2>/dev/null || break
             sleep 0.5
         done
         if kill -0 "$EMULATOR_PID" 2>/dev/null; then
+            echo "模拟器未响应正常退出，尝试终止本次进程……" >&2
+            kill -TERM "$EMULATOR_PID" 2>/dev/null || true
+            for ((stop_attempt=0; stop_attempt<60; stop_attempt++)); do
+                kill -0 "$EMULATOR_PID" 2>/dev/null || break
+                sleep 0.5
+            done
+        fi
+        if kill -0 "$EMULATOR_PID" 2>/dev/null; then
+            echo "模拟器退出超时，强制结束本次进程；日志：$LOG_FILE" >&2
             kill -KILL "$EMULATOR_PID" 2>/dev/null || true
         fi
         wait "$EMULATOR_PID" 2>/dev/null || true

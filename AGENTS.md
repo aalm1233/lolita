@@ -259,7 +259,7 @@
 
 - Apple Silicon 本机 AVD：`Lolita_API_35`（Android 15 / API 35，Google APIs ARM64，Pixel 7）。
 - `bash scripts/debug_emulator.sh` 启动模拟器、等待系统就绪、构建 Debug APK、安装并打开应用；默认使用 `emulator-5554`，保留模拟器数据；安装前核对 AVD 名称、包名、签名和版本，拒绝降版且不卸载/清数据。
-- 启动脚本直接管理本次模拟器子进程；可追加测试命令，命令结束／失败或脚本中断时自动关闭。无命令时终端等待回车结束调试，非交互运行完成即关闭；复用已有模拟器时不关闭它。
+- 启动脚本直接管理本次模拟器子进程；可追加测试命令，命令结束／失败或脚本中断时自动关闭；先核对本次进程与 AVD 后通过控制台正常退出，等待30秒后才用TERM回退，再等待30秒仍未退出才强制结束并提示日志。无命令时终端等待回车结束调试，非交互运行完成即关闭；复用已有模拟器时不关闭它。
 - SDK 默认路径 `~/Library/Android/sdk`，可用 `ANDROID_HOME` 覆盖；AVD 名可用 `LOLITA_AVD` 覆盖，端口用 `LOLITA_EMULATOR_PORT`，序列号用 `LOLITA_EMULATOR_SERIAL`（回退 `ANDROID_SERIAL`）；配置必须一致。日志默认 `/tmp/lolita-emulator-5554.log`，端口变化时同步变化。
 - Android Studio 的 Device Manager 可启动同一 AVD，再选择它运行/调试 app。
 - 模拟器禁止配置后台自动重启（包括 launchd KeepAlive 或保活循环）。测试结束后关闭本次启动的模拟器，清理本次创建的后台服务，并确认进程退出；保留 AVD 数据，不关闭用户原先运行的设备。使用 host GPU 和冷启动。

@@ -2,7 +2,34 @@
 # Build/install/launch Debug on a verified AVD; existing app data is preserved.
 # LOLITA_AVD, LOLITA_EMULATOR_PORT, LOLITA_EMULATOR_SERIAL (or ANDROID_SERIAL)
 # select the target. A mismatched AVD, signer or downgrade stops before install.
+# Usage: bash scripts/debug_emulator.sh [test-command [args...]]
+# With no command, a terminal waits for Enter; noninteractive runs clean up on exit.
 set -euo pipefail
+
+EMULATOR_PID=""
+WORK_DIR=""
+cleanup() {
+    local result=$?
+    trap - EXIT INT TERM
+    if [[ -n "$EMULATOR_PID" ]]; then
+        echo "关闭本次启动的模拟器……"
+        # Signal only our child, never a pre-existing device or a reused adb port.
+        kill -TERM "$EMULATOR_PID" 2>/dev/null || true
+        for ((stop_attempt=0; stop_attempt<20; stop_attempt++)); do
+            kill -0 "$EMULATOR_PID" 2>/dev/null || break
+            sleep 0.5
+        done
+        if kill -0 "$EMULATOR_PID" 2>/dev/null; then
+            kill -KILL "$EMULATOR_PID" 2>/dev/null || true
+        fi
+        wait "$EMULATOR_PID" 2>/dev/null || true
+    fi
+    [[ -z "$WORK_DIR" ]] || rm -rf "$WORK_DIR"
+    exit "$result"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SDK_DIR="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
@@ -61,14 +88,11 @@ with socket.socket() as s:
 PY
     then abort "端口 $PORT 已被占用，但 adb 未报告目标；请换专用端口"; fi
     echo "启动 ${AVD_NAME}（${DEVICE}），日志：$LOG_FILE"
-    if [[ "$(uname -s)" == Darwin ]]; then
-        # Never remove an existing launchctl job or kill a user's emulator.
-        launchctl submit -l "com.lolita.debug-emulator.$PORT" -o "$LOG_FILE" -e "$LOG_FILE.error" \
-            -- "$EMULATOR" -avd "$AVD_NAME" -port "$PORT" -gpu host -no-boot-anim -no-snapshot-load
-    else
-        nohup "$EMULATOR" -avd "$AVD_NAME" -port "$PORT" -gpu auto -no-boot-anim \
-            > "$LOG_FILE" 2>&1 < /dev/null &
-    fi
+    GPU=auto
+    [[ "$(uname -s)" != Darwin ]] || GPU=host
+    "$EMULATOR" -avd "$AVD_NAME" -port "$PORT" -gpu "$GPU" -no-boot-anim -no-snapshot-load \
+        > "$LOG_FILE" 2>&1 < /dev/null &
+    EMULATOR_PID=$!
 fi
 
 echo "等待 $DEVICE 系统就绪……"
@@ -100,7 +124,6 @@ APKSIGNER="${APKSIGNER:-$(build_tool apksigner)}" || abort "未找到 apksigner"
 AAPT="${AAPT:-$(build_tool aapt)}" || abort "未找到 aapt"
 [[ -x "$APKSIGNER" && -x "$AAPT" ]] || abort "缺少可执行的 apksigner 或 aapt"
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/lolita-debug-signature.XXXXXX")"
-trap 'rm -rf "$WORK_DIR"' EXIT
 APK="$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk"
 
 # Preserve pre-build package/signature evidence and verify it again immediately
@@ -152,3 +175,9 @@ d install -r "$APK"
 LAUNCH_OUTPUT="$(d shell am start -W -n "$PKG/.ui.MainActivity" 2>&1)" || abort "启动应用失败"
 printf '%s\n' "$LAUNCH_OUTPUT"
 if grep -Eq 'Error:|Error type|Exception' <<< "$LAUNCH_OUTPUT"; then abort "启动应用失败"; fi
+
+if (( $# > 0 )); then
+    ANDROID_SERIAL="$DEVICE" "$@"
+elif [[ -t 0 ]]; then
+    read -r -p "调试结束后按回车退出（关闭本次启动的模拟器）……" || true
+fi

@@ -726,3 +726,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 新批次复用MANNEQUIN v4冻结实际商品输入、必要人台模板、提示词、服务、类型／组合及SHA。发送前逐件展示真实模板和商品图；集中三项核对后原子追加物品相册及AI来源，不自动设封面。保存重读类型／组合／状态，陈旧输入拒绝；已保存图可主动设封面。
 - 旧SINGLE_ITEM_MATERIAL v5/v6批次、透明素材与原分层确认继续兼容，不重写历史请求或重发付费任务。Room34／备份15结构不变，新批次沿原JSON／ZIP任务与相册清单校验和映射。
 - 前置图稿、七皮肤浅暗与实施范围见`docs/plans/2026-10-27-batch-display.md`；定向验证为`DisplayBatchWorkflowTest`、`MaterialBatchViewModelTest`、`MaterialBatchScreenTest`及受影响原任务／备份／导航回归。本轮无真实付费请求，受控结果不代表生图质量验证。
+
+- 2.71.0／146源码`e6bfa6d9`及标签`v2.71.0`已普通推送；31项去重设备方法、七皮肤浅暗／320dp两倍字和真实IME、Debug与提交源码归档clean原签名Release通过。2.70.0覆盖两次启动保留本次相关6表原字段及17份图片／设置SHA；37项目assets／7背景／依赖及profile核验通过。GitHub正式同一APK和SHA256SUMS匿名完整下载、摘要与HEAD通过，正式App新批次入口实拍核对。Gitee上传HTTP400触及1GB配额，当前仅预发布、未传APK；待用户另行明确授权仅清理2.62.0旧APK，本轮尚未删除旧附件。App一次实际检查显示当前2.71.0较新、国内最新仍2.70.0，不能宣称国内更新入口完成；可通过GitHub已核验APK覆盖安装。本轮付费生成0次、Room34／备份15不变，详见`docs/batch-display-implementation-2026-10-27.md`和`docs/batch-display-release-2.71.0-verification.json`。

@@ -1,0 +1,138 @@
+{
+  "version": "2.71.0",
+  "version_code": 146,
+  "source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+  "source_and_tag_pushed": true,
+  "apk": "lolita-2.71.0.apk",
+  "sha256": "345ac4e4708dc1b1dd2059483fd49953e3b1c3b9b1c0a052f24768b5859d2c04",
+  "bytes": 83726741,
+  "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+  "unique_device_methods_passed": 31,
+  "paid_generation_calls": 0,
+  "room_version": 34,
+  "backup_format": 15,
+  "upgrade": {
+    "passed": true,
+    "baseline": "2.70.0/145",
+    "target": "2.71.0/146",
+    "serial": "emulator-5582",
+    "avd": "Lolita_Material_Release_20261021",
+    "same_signature_install_r": true,
+    "launches": 2,
+    "scoped_tables_preserved": [
+      "image_provenance",
+      "image_tasks",
+      "try_on_results",
+      "items",
+      "categories",
+      "item_try_on_materials"
+    ],
+    "images_and_settings_sha256_preserved": 17,
+    "room_version": 34,
+    "paid_calls": 0,
+    "uninstall_or_clear_data": false,
+    "release_entry_verified": "Settings -> Laboratory -> Batch display; no transparent-layer tab; existing waist item uses main view, existing dress uses mannequin"
+  },
+  "packaging": {
+    "source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 37,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "github": {
+    "tag": "v2.71.0",
+    "source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+    "release_id": 425611306,
+    "prerelease": false,
+    "files": {
+      "lolita-2.71.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.71.0/lolita-2.71.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83726741,
+        "sha256": "345ac4e4708dc1b1dd2059483fd49953e3b1c3b9b1c0a052f24768b5859d2c04",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.71.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "129dfb3c853c47ab6fa7b883ad182aa6ae6b6fc1f1ad4fc187663d8f091d56b4",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83726741,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "status": "prerelease_only_upload_blocked",
+    "http_status": 400,
+    "reason": "1 GB attachment quota exceeded",
+    "formal_release": false,
+    "old_attachments_deleted": false,
+    "cleanup_awaiting_explicit_user_authorization": "Only Gitee lolita-2.62.0.apk; GitHub/local verified backups, old release and checksum retained"
+  },
+  "in_app_update": {
+    "manual_requests": 1,
+    "gitee_release_formal": false,
+    "note": "Gitee upload blocked by quota; cleanup awaiting user authorization. GitHub released separately.",
+    "result": "\u5f53\u524d\u7248\u672c\u8f83\u65b0\uff1b\u5f53\u524dv2.71.0\uff0c\u56fd\u5185\u6700\u65b0\u53d1\u5e03v2.70.0",
+    "new_version_visible_via_in_app_update": false
+  },
+  "full_native_evidence": "artifacts/releases/2.71.0/native/",
+  "limitations": [
+    "Controlled image tests do not establish generated product fidelity or compositing quality",
+    "Gitee and in-app update do not yet offer 2.71.0; use verified GitHub APK directly"
+  ]
+}

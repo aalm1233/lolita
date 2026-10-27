@@ -33,7 +33,7 @@ class MaterialCategoriesScreenTest {
     private val context=InstrumentationRegistry.getInstrumentation().targetContext
     private lateinit var host:android.view.View
     @Before fun setup(){
-        f=MaterialTestFixture();runBlocking{f.init();f.categoryItems();f.echoCategoryImages()}
+        f=MaterialTestFixture();runBlocking{f.init();f.categoryItems();f.echoCategoryImages();f.displayOutput={f.receivedImages.last()}}
         InstrumentationRegistry.getInstrumentation().runOnMainSync{vm=f.batchViewModel(SavedStateHandle());store.put("vm",vm)}
         compose.setContent{
             val view=androidx.compose.ui.platform.LocalView.current
@@ -62,7 +62,7 @@ class MaterialCategoriesScreenTest {
                 bitmap.recycle();foreground>=4
             }
         }
-        val dir=File(context.filesDir,"material-category-native").apply{mkdirs()};node.captureToImage().asAndroidBitmap().let{im->File(dir,"$name.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
+        val dir=File(context.filesDir,"batch-display-categories-native-20261027").apply{mkdirs()};node.captureToImage().asAndroidBitmap().let{im->File(dir,"$name.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
     }
     private fun skins(stage:String){for(night in listOf(false,true))for(type in SkinType.entries){compose.runOnIdle{skin.value=type;dark.value=night};compose.onNodeWithTag("batchPrimary").assertIsDisplayed();screenshot("$stage-${type.name.lowercase()}-${if(night)"dark" else "light"}")}}
     private fun feeSend(){
@@ -90,12 +90,10 @@ class MaterialCategoriesScreenTest {
         compose.waitUntil(10000){vm.uiState.value.fee!=null && !vm.uiState.value.busy};assertEquals(10,vm.uiState.value.fee!!.rows.size);screenshot("fee-front");feeSend()
         assertEquals(0,f.frontCalls);runBlocking{f.runner.runQueue()}
         compose.waitUntil(10000){vm.uiState.value.rows.all{it.task?.status==ImageTaskStatus.AWAITING_CONFIRMATION}}
-        compose.runOnIdle{vm.selectReady();vm.prepareFee()};compose.waitUntil(10000){vm.uiState.value.fee!=null && !vm.uiState.value.busy};screenshot("fee-layers");feeSend();runBlocking{f.runner.runQueue()}
-        compose.waitUntil(10000){vm.uiState.value.phase==MaterialBatchPhase.LAYERS && vm.uiState.value.rows.all{it.task?.status==ImageTaskStatus.AWAITING_CONFIRMATION}}
         for(night in listOf(false,true))for(type in SkinType.entries){
             compose.runOnIdle{skin.value=type;dark.value=night}
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("batchRow${f.itemId}"))
-            screenshot("layers-${type.name.lowercase()}-${if(night)"dark" else "light"}")
+            screenshot("review-${type.name.lowercase()}-${if(night)"dark" else "light"}")
         }
         compose.runOnIdle{skin.value=SkinType.DEFAULT;dark.value=false}
         for(family in listOf(WardrobeFamily.WIG,WardrobeFamily.HOSIERY,WardrobeFamily.FOOTWEAR,WardrobeFamily.ACCESSORY,WardrobeFamily.BAG,WardrobeFamily.HANDHELD)){
@@ -103,11 +101,11 @@ class MaterialCategoriesScreenTest {
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("batchRow${vm.uiState.value.visibleRows.first().itemId}"));screenshot("family-${family.name.lowercase()}")
         }
         compose.runOnIdle{vm.family(null);vm.selectReady()}
-        for(label in listOf("组成与附属部件完整","颜色、造型与数量正确","无多余人台、文字或其他物品")){
+        for(label in listOf("组成与附属部件完整","颜色、造型与数量正确","无多余文字或其他物品，人台符合所选类型")){
             compose.onNodeWithTag("materialBatch").performScrollToNode(hasText(label));compose.onNodeWithText(label).performClick()
         }
         compose.onNodeWithTag("batchPrimary").assertIsEnabled().performClick();compose.waitUntil(10000){vm.uiState.value.phase==MaterialBatchPhase.SAVED && !vm.uiState.value.busy}
-        assertEquals(10,runBlocking{f.db.itemTryOnMaterialDao().getAll().size});assertEquals(0,f.fusionCalls);screenshot("saved-default-light")
+        assertEquals(10,runBlocking{f.db.imageProvenanceDao().getAll().size});assertTrue(runBlocking{f.db.itemTryOnMaterialDao().getAll().isEmpty()});assertEquals(10,f.displayCalls);assertEquals(0,f.layerCalls);assertEquals(0,f.fusionCalls);screenshot("saved-default-light")
     }
     @Test fun realSmallDeviceLargeFontCategorySearchKeepsHiddenInputsAndKeyboardAction(){
         val config=context.resources.configuration;Assume.assumeTrue(config.screenWidthDp<=320 && config.fontScale>=1.99f)
@@ -117,7 +115,7 @@ class MaterialCategoriesScreenTest {
         compose.onNodeWithTag("batchSearch").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("batchSearch").assertTextContains("玛丽珍鞋")
         assertEquals(10,vm.uiState.value.selectedRows.size);compose.onNodeWithTag("batchPrimary").assertIsDisplayed()
-        val dir=File(context.filesDir,"material-category-native");InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot().let{im->File(dir,"small-ime.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)};im.recycle()}
+        val dir=File(context.filesDir,"batch-display-categories-native-20261027");InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot().let{im->File(dir,"small-ime.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)};im.recycle()}
         compose.onNodeWithTag("batchPrimary").performClick();compose.waitUntil(10000){vm.uiState.value.fee!=null && !vm.uiState.value.busy};assertEquals(10,vm.uiState.value.fee!!.rows.size)
         compose.onNodeWithTag("batchFeeSend").assertIsDisplayed().assertIsNotEnabled();screenshot("small-fee");compose.runOnIdle{vm.dismissFee()}
     }

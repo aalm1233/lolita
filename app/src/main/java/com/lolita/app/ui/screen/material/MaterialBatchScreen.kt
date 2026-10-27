@@ -43,9 +43,9 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
     var darkChecker by rememberSaveable{mutableStateOf(false)}
     val selected=s.selectedRows
     val retryLayers=s.phase==MaterialBatchPhase.LAYERS && selected.isNotEmpty() && selected.all{it.canRetry}
-    val saving=s.phase==MaterialBatchPhase.LAYERS && !retryLayers
+    val saving=if(s.displayBatch)s.phase==MaterialBatchPhase.FRONT else s.phase==MaterialBatchPhase.LAYERS && !retryLayers
     val needsService=s.phase!=MaterialBatchPhase.SAVED && !saving
-    val configured=s.keyLoaded && s.hasKey && s.provider==ImageGenerationProvider.SEEDREAM
+    val configured=s.keyLoaded && s.hasKey && s.serviceSupported
     val canSubmit=!s.busy && !s.loading && !s.loadFailed && when {
         s.phase==MaterialBatchPhase.SAVED->true
         selected.isEmpty() || selected.any{!s.selectable(it)}->false
@@ -54,16 +54,16 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
     }
     val primary=when {
         s.phase==MaterialBatchPhase.SAVED->"继续整理其他物品"
-        needsService && !configured->if(s.provider==ImageGenerationProvider.SEEDREAM)"配置即梦服务" else "切换到即梦服务"
-        saving->"确认并保存${selected.size}份素材"
-        s.phase==MaterialBatchPhase.INPUTS->"核对${selected.size}件主视输入与费用"
+        needsService && !configured->if(s.displayBatch)"配置${s.provider.label}服务" else if(s.provider==ImageGenerationProvider.SEEDREAM)"配置即梦服务" else "切换到即梦服务"
+        saving->if(s.displayBatch)"确认并保存${selected.size}张展示图" else "确认并保存${selected.size}份素材"
+        s.phase==MaterialBatchPhase.INPUTS->"核对${selected.size}件输入与费用"
         else->"核对${selected.size}件分层输入与费用"
     }
     Scaffold(containerColor=Color.Transparent,contentWindowInsets=WindowInsets(0,0,0,0),topBar={
         GradientTopAppBar(title={Text("批量展示图")},navigationIcon={IconButton(onClick=onBack){SkinIcon(IconKey.ArrowBack,Modifier.semantics{contentDescription="返回"})}},
             actions={IconButton(onClick=onConfigure){SkinIcon(IconKey.Settings,Modifier.semantics{contentDescription="图像服务配置"})};IconButton(onClick=onTasks){SkinIcon(IconKey.ViewAgenda,Modifier.semantics{contentDescription="任务中心"})}})
     },bottomBar={Surface(color=MaterialTheme.colorScheme.surface){Column(Modifier.fillMaxWidth().imePadding().padding(horizontal=skin.spacingLarge,vertical=skin.spacingMedium)){
-        Text(if(s.busy)"正在处理 · 已准备 ${s.prepared} 件图片" else if(saving)"勾选后核对三项；本地保存不计费。" else "主视与分层分别确认费用，可离页处理。",style=MaterialTheme.typography.bodySmall)
+        Text(if(s.busy)"正在处理 · 已准备 ${s.prepared} 件图片" else if(saving)"勾选后核对三项；本地保存不计费。" else if(s.displayBatch)"每件一张，发送前核对图片与费用。" else "主视与分层分别确认费用，可离页处理。",style=MaterialTheme.typography.bodySmall)
         Button(onClick={when{ s.phase==MaterialBatchPhase.SAVED->onNewBatch();needsService && !configured->onConfigure();saving->{viewModel.saveSnapshot()?.let{if(it.any{r->r.expectedMaterialId!=null})saveRows=it else viewModel.save(it)}};else->viewModel.prepareFee()}},enabled=canSubmit,modifier=Modifier.fillMaxWidth().testTag("batchPrimary")){
             if(s.busy){CircularProgressIndicator(Modifier.size(18.dp),strokeWidth=2.dp);Spacer(Modifier.width(skin.spacingMedium))};Text(if(s.busy)"正在处理…" else primary)
         }
@@ -72,12 +72,12 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
             val columns=if(maxWidth<360.dp || LocalDensity.current.fontScale>1.3f)1 else 2
             LazyColumn(state=scroll,modifier=Modifier.fillMaxSize().testTag("materialBatch"),contentPadding=PaddingValues(skin.spacingLarge),verticalArrangement=Arrangement.spacedBy(skin.cardGap)){
                 item("phases"){FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
-                    MaterialBatchPhase.entries.forEach{phase->FilterChip(selected=s.phase==phase,onClick={viewModel.phase(phase)},enabled=!s.busy,label={Text(phase.label)})}
+                    s.phases.forEach{phase->FilterChip(selected=s.phase==phase,onClick={viewModel.phase(phase)},enabled=!s.busy,label={Text(if(s.displayBatch)when(phase){MaterialBatchPhase.FRONT->"核对结果";MaterialBatchPhase.SAVED->"已保存";else->phase.label} else phase.label)})}
                 }}
                 if(s.loading)item("loading"){LolitaCard{Column{ShimmerRect(160.dp,180.dp,modifier=Modifier.fillMaxWidth());ShimmerLine(0.8f,18.dp)}}}
                 s.error?.let{item("error"){LolitaSection(title="操作提示"){row{Text(it,color=MaterialTheme.colorScheme.error)}}}}
                 s.message?.let{item("message"){Text(it,style=MaterialTheme.typography.bodyMedium)}}
-                if(!s.draft)item("queue-actions"){
+                if(!s.draft && !s.displayBatch)item("queue-actions"){
                     ImageTaskQueueActions(s.jobs,s.busy || s.loading || s.loadFailed,viewModel::stopQueued,viewModel::discardPending)
                 }
                 if(!s.draft)item("summary"){LolitaSection(title=s.name){row{
@@ -85,21 +85,21 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                     val pending=s.jobs.count{it.status==ImageTaskStatus.AWAITING_CONFIRMATION}
                     Text("本批${count}件 · ${s.active.size}个排队或执行 · ${pending}个待核对",style=MaterialTheme.typography.bodyMedium)
                     val latest=s.latestJobs
-                    Text("${latest.count{it.materialId!=null}}份已确认 · ${latest.count{it.status in setOf(ImageTaskStatus.FAILED,ImageTaskStatus.INTERRUPTED,ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
-                    if(s.active.isNotEmpty()){LinearProgressIndicator(Modifier.fillMaxWidth());TextButton(onClick={cancelIds=s.active.map{it.id}},enabled=!s.busy){Text("停止本批未完成任务")}}
-                    Text("单件失败不阻塞其他结果；不会自动重试或连续付费。",style=MaterialTheme.typography.bodySmall)
+                    Text("${latest.count{it.materialId!=null || it.kind==ImageTaskKind.MANNEQUIN && it.status==ImageTaskStatus.COMPLETED}}份已确认 · ${latest.count{it.status in setOf(ImageTaskStatus.FAILED,ImageTaskStatus.INTERRUPTED,ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
+                    if(s.active.isNotEmpty() && !s.displayBatch){LinearProgressIndicator(Modifier.fillMaxWidth());TextButton(onClick={cancelIds=s.active.map{it.id}},enabled=!s.busy){Text("停止本批未完成任务")}}
+                    if(!s.displayBatch)Text("单件失败不阻塞其他结果；不会自动重试或连续付费。",style=MaterialTheme.typography.bodySmall)
                 }}}
-                item("instructions"){LolitaSection(title=when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"选择物品" else "待处理物品";MaterialBatchPhase.FRONT->"核对主视图";MaterialBatchPhase.LAYERS->"核对透明单品";else->"已保存"}){row{
-                    Text(when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"每批主动选择1至30件已拥有或心愿服饰和小物，逐卡可换图和框选。" else "只选择失败、中断或取消的主视图重新处理。成功结果继续保留。";MaterialBatchPhase.FRONT->"勾选已查看且主视结构正确的结果，一次确认进入分层。原透视摆正后对称可以合理。";MaterialBatchPhase.LAYERS->"每件选择包含完整附属部件的一层，勾选并完成三项核对后整批保存。失败项可单独重新确认分层。";else->"已保存，可从物品详情用于试衣。"},style=MaterialTheme.typography.bodyMedium)
+                item("instructions"){LolitaSection(title=when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)"选择物品" else "待处理物品";MaterialBatchPhase.FRONT->if(s.displayBatch)"核对展示图" else "核对主视图";MaterialBatchPhase.LAYERS->"核对透明单品";else->"已保存"}){row{
+                    Text(when(s.phase){MaterialBatchPhase.INPUTS->if(s.draft)if(s.displayBatch)"每批1至30件。裙装、衬衫使用人台，其他物品用主视图；可逐件换图或框选。" else "每批主动选择1至30件已拥有或心愿服饰和小物，逐卡可换图和框选。" else "只选择失败、中断或取消的任务重新处理。成功结果继续保留。";MaterialBatchPhase.FRONT->if(s.displayBatch)"勾选已查看的结果，完成下方三项核对后追加到物品相册。原图和封面保留。" else "勾选已查看且主视结构正确的结果，一次确认进入分层。原透视摆正后对称可以合理。";MaterialBatchPhase.LAYERS->"每件选择包含完整附属部件的一层，勾选并完成三项核对后整批保存。失败项可单独重新确认分层。";else->if(s.displayBatch)"已追加到物品相册，可用于试衣或主动设为封面。" else "已保存，可从物品详情用于试衣。"},style=MaterialTheme.typography.bodyMedium)
                     OutlinedTextField(value=s.query,onValueChange=viewModel::query,label={Text("搜索物品")},placeholder={Text("名称／品牌／类型")},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("batchSearch"))
                     OutlinedButton(onClick={familyPicker=true},enabled=!s.busy,modifier=Modifier.fillMaxWidth().testTag("batchFamily")){Text(s.family?.label ?: "全部品类")}
-                    if(s.phase==MaterialBatchPhase.INPUTS && s.draft)BatchCheck("只看尚无确认素材",s.onlyMissing,!s.busy,viewModel::onlyMissing)
+                    if(s.phase==MaterialBatchPhase.INPUTS && s.draft)BatchCheck(if(s.displayBatch)"只看尚无展示图" else "只看尚无确认素材",s.onlyMissing,!s.busy,viewModel::onlyMissing)
                     Text("已选 ${selected.size} 件${selected.count { it !in s.visibleRows }.takeIf { it > 0 }?.let { " · 另有 $it 件在筛选外" }.orEmpty()}",style=MaterialTheme.typography.bodySmall)
                     if(!s.draft)FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                         if(s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS))TextButton(onClick=viewModel::selectReady,enabled=!s.busy){Text("仅选择待核对项")}
                         if(s.phase in setOf(MaterialBatchPhase.INPUTS,MaterialBatchPhase.LAYERS))TextButton(onClick=viewModel::selectFailed,enabled=!s.busy){Text("仅选择失败项")}
                     }
-                    if(s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED))FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
+                    if(!s.displayBatch && s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED))FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                         FilterChip(selected=!darkChecker,onClick={darkChecker=false},label={Text("浅底检查")});FilterChip(selected=darkChecker,onClick={darkChecker=true},label={Text("深底检查")})
                     }
                 }}}
@@ -107,9 +107,10 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                 items(s.visibleRows.chunked(columns),key={rows->s.phase.name+rows.joinToString{it.key}}){rows->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(skin.spacingMedium)){
                     rows.forEach{row->Column(Modifier.weight(1f).testTag("batchRow${row.itemId}")){LolitaCard{Column(verticalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                         Text(row.name,style=MaterialTheme.typography.titleSmall)
-                        val path=if(s.phase==MaterialBatchPhase.SAVED)row.material?.imagePath else row.image
-                        path?.takeIf(String::isNotBlank)?.let{MaterialPhoto(it,"放大第${row.position+1}件：${row.name}",{zoom=it},if(columns==1)210 else 135,checker=s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED),darkChecker=darkChecker)}
+                        val path=if(s.phase==MaterialBatchPhase.SAVED) { if(s.displayBatch)row.task?.resultImagePath?.takeIf{it in row.item?.imageUrls.orEmpty()} else row.material?.imagePath } else row.image
+                        path?.takeIf(String::isNotBlank)?.let{MaterialPhoto(it,"放大第${row.position+1}件：${row.name}",{zoom=it},if(columns==1)210 else 135,checker=!s.displayBatch && s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED),darkChecker=darkChecker)}
                         Text(listOf(row.categoryName, row.item?.composition?.label.orEmpty()).filter(String::isNotBlank).joinToString(" · "),style=MaterialTheme.typography.bodySmall)
+                        if(s.displayBatch)row.displaySubject?.let{Text(it.batchDisplayLabel,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)}
                         if(row.brand.isNotBlank())Text(row.brand,style=MaterialTheme.typography.bodySmall)
                         row.task?.let{task->Text(task.status.label,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary);task.error?.let{Text(it,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.error)}}
                         if((!row.eligible || !row.matchesTask && s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)) && s.phase!=MaterialBatchPhase.SAVED)Text("原物品已删除或类型／组合／状态已改变",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
@@ -118,22 +119,27 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                         }
                         if(s.phase==MaterialBatchPhase.LAYERS && row.layers.size>1)OutlinedButton(onClick={layerRow=row},enabled=!s.busy,modifier=Modifier.fillMaxWidth()){Text("选择单品层（${row.layers.size}层）")}
                         if(s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)){
-                            TextButton(onClick={row.task?.let{ImageTaskRequest.decode(it.requestJson).materialSpec?.originalInputPath}?.let{zoom=it}},modifier=Modifier.fillMaxWidth()){Text("对照原输入")}
+                            TextButton(onClick={row.task?.let{ImageTaskRequest.decode(it.requestJson).let{request->request.productOriginalImagePath ?: request.materialSpec?.originalInputPath}}?.let{zoom=it}},modifier=Modifier.fillMaxWidth()){Text("对照原输入")}
                         }
-                        if(s.phase==MaterialBatchPhase.SAVED) {
+                        if(s.phase==MaterialBatchPhase.SAVED && s.displayBatch) {
+                            val isCover = path!=null && row.item?.imageUrls?.firstOrNull()==path
+                            Text(if(path==null)"展示图已移除，任务记录仍保留" else "已追加到物品相册 · AI生成",style=MaterialTheme.typography.bodySmall)
+                            OutlinedButton(onClick={row.task?.let{viewModel.setCover(row.itemId,it.id)}},enabled=!s.busy && path!=null && !isCover,modifier=Modifier.fillMaxWidth().testTag("batchSetCover${row.itemId}")){Text(if(isCover)"当前封面" else "设为封面")}
+                        } else if(s.phase==MaterialBatchPhase.SAVED) {
                             Text(if(row.material?.sourceTaskId in s.jobs.map{it.id})"本批已确认 · AI整理" else "当前素材 · 新候选未保存",style=MaterialTheme.typography.bodySmall)
                             row.material?.let { material ->
                                 val isCover = row.item?.imageUrls?.firstOrNull() == material.imagePath
                                 OutlinedButton(onClick={viewModel.setCover(row.itemId,material.id)},enabled=!s.busy && !isCover && material.matchesSource(row.semantic,row.item?.composition ?: ItemComposition.UNCONFIRMED),modifier=Modifier.fillMaxWidth().testTag("batchSetCover${row.itemId}")){Text(if(isCover)"当前封面" else "设为封面")}
                             }
-                        } else BatchCheck(if(s.phase==MaterialBatchPhase.FRONT)"主视结构正确" else if(row.canRetry)"重新处理此项" else "本次处理",row.key in s.selected,!s.busy && s.selectable(row)){viewModel.toggle(row.key,it)}
+                        } else BatchCheck(if(s.phase==MaterialBatchPhase.FRONT)if(s.displayBatch)"已查看此结果" else "主视结构正确" else if(row.canRetry)"重新处理此项" else "本次处理",row.key in s.selected,!s.busy && s.selectable(row)){viewModel.toggle(row.key,it)}
                         row.task?.let{task->TextButton(onClick={onOpenTask(task.id)},modifier=Modifier.fillMaxWidth()){Text("任务详情")}}
                     }}}}
                     if(rows.size<columns)Spacer(Modifier.weight(1f))
                 }}
+                if(!s.draft && s.displayBatch)item("display-queue-actions"){ImageTaskQueueActions(s.jobs,s.busy || s.loading || s.loadFailed,viewModel::stopQueued,viewModel::discardPending)}
                 if(s.phase==MaterialBatchPhase.INPUTS)item("requirements"){LolitaSection(title="本批整理要求"){row{MaterialInstructions(s.instructions,!s.busy,viewModel::instructions);Text("仅用于本次新请求，已提交任务保持原要求。",style=MaterialTheme.typography.bodySmall)}}}
-                if(s.phase==MaterialBatchPhase.LAYERS && !retryLayers)item("checks"){LolitaSection(title="核对本次勾选的${selected.size}件"){row{
-                    listOf("组成与附属部件完整","颜色、造型与数量正确","无多余人台、文字或其他物品").forEachIndexed{index,label->BatchCheck(label,index in s.checks,!s.busy){viewModel.check(index,it)}}
+                if(saving)item("checks"){LolitaSection(title="核对本次勾选的${selected.size}件"){row{
+                    listOf("组成与附属部件完整","颜色、造型与数量正确",if(s.displayBatch)"无多余文字或其他物品，人台符合所选类型" else "无多余人台、文字或其他物品").forEachIndexed{index,label->BatchCheck(label,index in s.checks,!s.busy){viewModel.check(index,it)}}
                     if(selected.any{it.canRetry})Text("待核对结果与失败项请分开选择；可用上方按钮明确选择一组。",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
                     Text("请按原组成核对单件、成双或成组及附属部件。",style=MaterialTheme.typography.bodySmall)
                 }}}
@@ -167,17 +173,18 @@ private fun BatchLayerPicker(row:MaterialBatchRow,onPick:(String)->Unit,onDismis
 
 @Composable
 private fun MaterialBatchFeeDialog(fee:MaterialBatchFee,busy:Boolean,onDismiss:()->Unit,onSend:()->Unit,onZoom:(String)->Unit){
+    val display=fee.rows.all{it.display!=null}
     val skin=LolitaSkin.current;val list=rememberLazyListState();ObserveSkinScroll(list);var checked by remember(fee){mutableStateOf(false)}
     Dialog(onDismissRequest={if(!busy)onDismiss()},properties=DialogProperties(usePlatformDefaultWidth=false)){
         Scaffold(modifier=Modifier.testTag("batchFeeRoot"),containerColor=MaterialTheme.colorScheme.surface,contentWindowInsets=WindowInsets(0,0,0,0),topBar={GradientTopAppBar(title={Text("本批发送前确认")},navigationIcon={IconButton(onClick={if(!busy)onDismiss()}){SkinIcon(IconKey.ArrowBack)}})},bottomBar={Column(Modifier.fillMaxWidth().padding(skin.spacingLarge)){
             Button(onClick=onSend,enabled=checked && !busy,modifier=Modifier.fillMaxWidth().testTag("batchFeeSend")){Text("确认发送（${fee.rows.size} 次请求）")};TextButton(onClick=onDismiss,enabled=!busy,modifier=Modifier.fillMaxWidth()){Text("返回修改")}
         }}){padding->LazyColumn(state=list,modifier=Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding).testTag("batchFeeInputs"),contentPadding=PaddingValues(skin.spacingLarge),verticalArrangement=Arrangement.spacedBy(skin.cardGap)){
             item{LolitaSection(title="${fee.provider.recipient} · ${fee.provider.label}"){row{
-                Text("${fee.rows.size}件物品 · ${fee.rows.size}次${if(fee.phase==MaterialBatchPhase.INPUTS)"主视生成" else "分层"}请求",style=MaterialTheme.typography.titleMedium)
-                Text(if(fee.phase==MaterialBatchPhase.INPUTS)"本次最多输出${fee.rows.size}张主视图。返回后集中核对，再另行确认分层费用。" else "每次含底图和最多16个透明层，本批最多${fee.rows.size*17}张成功输出。按实际输出张数计费，不能预先确认金额。")
-                Text("API按服务资费计费。未选相册、订单、价格、位置与身体参数不发送。",style=MaterialTheme.typography.bodySmall)
+                Text("${fee.rows.size}件物品 · ${fee.rows.size}次${if(display)"展示图生成" else if(fee.phase==MaterialBatchPhase.INPUTS)"主视生成" else "分层"}请求",style=MaterialTheme.typography.titleMedium)
+                Text(if(display)"每件生成1张展示图，本批最多${fee.rows.size}张；返回后集中核对并追加相册，不自动设为封面。" else if(fee.phase==MaterialBatchPhase.INPUTS)"本次最多输出${fee.rows.size}张主视图。返回后集中核对，再另行确认分层费用。" else "每次含底图和最多16个透明层，本批最多${fee.rows.size*17}张成功输出。按实际输出张数计费，不能预先确认金额。")
+                Text("AI可能改绘商品细节，请核对后保存。API单独按服务资费计费。未选相册、订单、价格、位置与身体参数不发送。",style=MaterialTheme.typography.bodySmall)
             }}}
-            itemsIndexed(fee.rows,key={_,row->row.itemId}){index,row->LolitaSection(title="将发送的图片 ${index+1} · ${row.name}"){row{MaterialPhoto(row.input.imagePath,"放大实际输入${index+1}",{onZoom(row.input.imagePath)},190)}}}
+            itemsIndexed(fee.rows,key={_,row->row.itemId}){index,row->LolitaSection(title="将发送的图片 ${index+1} · ${row.name}"){row{row.display?.let{prepared->Text(prepared.subject.batchDisplayLabel);prepared.templatePath?.let{template->Text("将发送的固定人台模板");MaterialPhoto(template,"放大实际人台模板${index+1}",{onZoom(template)},190)}};MaterialPhoto(row.input.imagePath,"放大实际输入${index+1}",{onZoom(row.input.imagePath)},190)}}}
             item{LolitaSection(title="费用与结果"){row{if(fee.instructions.isNotBlank())Text("本批补充要求：${fee.instructions}");Text("全部验证并入队后才开始。单件失败不阻塞其他任务，不自动重试，也不自动进入下一次付费阶段。取消或超时后服务仍可能计费。")}}}
             item{BatchCheck("已核对本批全部实际输入、接收方和费用范围",checked,!busy){checked=it}}
         }}

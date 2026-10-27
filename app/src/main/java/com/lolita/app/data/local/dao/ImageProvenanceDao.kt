@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ImageProvenanceDao {
+    @Query("SELECT * FROM image_provenance") fun observeAll(): Flow<List<ImageProvenance>>
     @Query("SELECT * FROM image_provenance") suspend fun getAll(): List<ImageProvenance>
     @Query("SELECT * FROM image_provenance WHERE item_id=:id") suspend fun getForItem(id: Long): List<ImageProvenance>
     @Query("SELECT * FROM image_provenance WHERE item_id=:id") fun observe(id: Long): Flow<List<ImageProvenance>>

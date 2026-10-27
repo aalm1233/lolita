@@ -67,7 +67,7 @@ fun ImageTaskScreen(onNavigateBack: () -> Unit, onOpenTask: (String) -> Unit, vi
                     val count=batch.map{it.garmentId}.distinct().size
                     Text("${count}件物品 · ${batch.count{it.status.retainsSourceImages}}个排队或执行 · ${batch.count{it.status==com.lolita.app.domain.model.ImageTaskStatus.AWAITING_CONFIRMATION}}个待核对")
                     val latest=batch.groupBy{it.batchPosition}.values.map{rows->rows.maxWith(compareBy<ImageTask>{it.createdAt}.thenBy{it.id})}
-                    Text("${latest.count{it.materialId!=null}}份已确认 · ${latest.count{it.status in setOf(com.lolita.app.domain.model.ImageTaskStatus.FAILED,com.lolita.app.domain.model.ImageTaskStatus.INTERRUPTED,com.lolita.app.domain.model.ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
+                    Text("${latest.count{it.materialId!=null || it.kind==com.lolita.app.domain.model.ImageTaskKind.MANNEQUIN && it.status==com.lolita.app.domain.model.ImageTaskStatus.COMPLETED}}份已确认 · ${latest.count{it.status in setOf(com.lolita.app.domain.model.ImageTaskStatus.FAILED,com.lolita.app.domain.model.ImageTaskStatus.INTERRUPTED,com.lolita.app.domain.model.ImageTaskStatus.CANCELLED)}}件失败或中断",style=MaterialTheme.typography.bodySmall)
                     TextButton(onClick={onOpenMaterialBatch(requireNotNull(batch.first().batchId))},modifier=Modifier.fillMaxWidth()){Text("查看批次")}
                 }}
             }

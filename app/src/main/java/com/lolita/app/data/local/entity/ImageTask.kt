@@ -45,8 +45,11 @@ data class ImageTask(
         if (batchId == null) require(batchName == null && batchPosition == null) { "批次元数据不完整" }
         else {
             com.lolita.app.domain.model.MaterialBatchIdentity(batchId, requireNotNull(batchName))
-            require(batchPosition in 0 until com.lolita.app.domain.model.MaterialBatchIdentity.MAX_ITEMS && request.version in 5..6 &&
-                kind == ImageTaskKind.SINGLE_ITEM_MATERIAL) { "批次用途或顺序无效" }
+            val material = request.version in 5..6 && kind == ImageTaskKind.SINGLE_ITEM_MATERIAL
+            val display = request.version == 4 && kind == ImageTaskKind.MANNEQUIN && request.mannequinSubject != null &&
+                request.mannequinSubject.presentation != com.lolita.app.domain.model.MannequinPresentation.WIG_HEAD
+            require(batchPosition in 0 until com.lolita.app.domain.model.MaterialBatchIdentity.MAX_ITEMS &&
+                (material || display)) { "批次用途或顺序无效" }
         }
         require(!sourceResourcesMissing || keepSourceImages && request.version >= 4) { "仅不可变输入任务可标记资源缺失" }
         require(keepSourceImages == (request.version >= 4)) { "任务输入保留策略与协议不匹配" }

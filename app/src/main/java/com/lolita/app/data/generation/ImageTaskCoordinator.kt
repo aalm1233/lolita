@@ -135,6 +135,47 @@ class ImageTaskCoordinator(
         enqueueBatch(jobs)
     }
 
+    suspend fun prepareDisplayInput(itemId: Long, path: String): PreparedDisplayInput {
+        val item = requireNotNull(db.itemDao().getItemById(itemId)) { "物品已删除" }
+        val subject = batchDisplaySubject(requireNotNull(db.categoryDao().getCategoryById(item.categoryId)))
+        val product = prepareMaterialInput(path, false)
+        var template: String? = null
+        return try {
+            if (subject.presentation == MannequinPresentation.DRESS_FORM)
+                template = snapshotBuiltInImage(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET)
+            PreparedDisplayInput(product, subject, item.composition, template, template?.let(::imageSha256))
+        } catch (failure: Throwable) {
+            withContext(NonCancellable) { cleanup(listOfNotNull(product.imagePath, template)) }
+            throw failure
+        }
+    }
+
+    suspend fun submitDisplayBatch(batch: MaterialBatchIdentity, operationId: String, rows: List<BatchDisplayInput>,
+        provider: ImageGenerationProvider): List<String> = acceptedMaterial(rows.flatMap {
+            it.prepared.paths + listOf(it.prepared.product.sourcePath, it.originalPath)
+        }) {
+        validateBatchRows(rows.map { it.itemId }, rows.map { it.position })
+        val jobs = rows.map { row ->
+            val item = requireNotNull(db.itemDao().getItemById(row.itemId)) { "物品已删除" }
+            val prepared = row.prepared
+            val category = requireNotNull(db.categoryDao().getCategoryById(item.categoryId))
+            val subject = batchDisplaySubject(category)
+            require(subject == prepared.subject && item.composition == prepared.composition && item.status.supportsVirtualTryOn && row.originalPath in item.productReferenceImages) { "物品或原图已改变" }
+            require(validateProductImage(prepared.product.sourcePath) && imageSha256(prepared.product.sourcePath) == prepared.product.sourceSha256 &&
+                imageSha256(prepared.product.imagePath) == prepared.product.sha256) { "实际输入已改变" }
+            require((subject.presentation == MannequinPresentation.DRESS_FORM) == (prepared.templatePath != null)) { "实际人台输入不完整" }
+            prepared.templatePath?.let { require(validateSourceImage(it) && imageSha256(it) == prepared.templateSha256) { "人台模板已改变" } }
+            val prompt = if (subject.presentation == MannequinPresentation.DRESS_FORM)
+                MannequinRequest(item.id, prepared.product.imagePath, row.instructions, subject).prompt()
+            else TryOnMaterialPrompts.front(category.categorySemantic, item.composition, row.instructions)
+            val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
+                row.instructions, version = 4, mannequinSubject = subject, promptVersion = 1, promptSnapshot = prompt,
+                serviceModel = provider.model, inputSha256s = prepared.paths.map(::imageSha256), productOriginalImagePath = row.originalPath)
+            batchTask(batch, operationId, row.position, ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.batchDisplayLabel}", request, prepared.paths)
+        }
+        enqueueBatch(jobs)
+    }
+
     suspend fun submitLayerBatch(batch: MaterialBatchIdentity, operationId: String, rows: List<BatchLayerInput>): List<String> =
         acceptedMaterial(rows.flatMap { listOf(it.input.imagePath, it.input.sourcePath) }) {
             val parents = mutableListOf<ImageTask>()
@@ -170,6 +211,7 @@ class ImageTaskCoordinator(
         }
         val previous = dao.getAll().filter { it.batchId == jobs.first().batchId }
         require(previous.all { it.batchName == jobs.first().batchName }) { "批次名称已改变" }
+        require(previous.all { it.kind == jobs.first().kind }) { "旧素材批次不能改为展示图批次，请新建" }
         jobs.forEach { job ->
             job.validate()
             val request = ImageTaskRequest.decode(job.requestJson)
@@ -194,7 +236,11 @@ class ImageTaskCoordinator(
                 val request = ImageTaskRequest.decode(job.requestJson)
                 val item = requireNotNull(db.itemDao().getItemById(request.garments.single().itemId)) { "批次中有物品已删除" }
                 require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic &&
-                    (request.version < 6 || item.composition == request.garments.single().composition)) { "批次中有物品类型、组合或状态已改变" }
+                    (request.version < 6 && job.kind != ImageTaskKind.MANNEQUIN || item.composition == request.garments.single().composition)) { "批次中有物品类型、组合或状态已改变" }
+                if (job.kind == ImageTaskKind.MANNEQUIN) {
+                    require(batchDisplaySubject(requireNotNull(db.categoryDao().getCategoryById(item.categoryId))) == request.mannequinSubject &&
+                        request.productOriginalImagePath in item.productReferenceImages) { "本批展示方式或原参考图已改变" }
+                }
                 if (request.materialSpec?.stage == MaterialStage.FRONT_VIEW) {
                     require(request.productOriginalImagePath in item.productReferenceImages &&
                         db.itemTryOnMaterialDao().getForItem(item.id)?.id == request.materialSpec.expectedMaterialId) { "原图或当前素材已改变" }
@@ -638,6 +684,10 @@ class ImageTaskCoordinator(
             db.withTransaction {
                 val task = requireNotNull(dao.get(id)) { "任务已删除" }
                 require(task.kind == ImageTaskKind.MANNEQUIN) { "此任务不是展示图" }
+                if (task.batchId != null) {
+                    confirmDisplayLocked(task, requireNotNull(task.resultImagePath))
+                    return@withTransaction
+                }
                 if (task.status == ImageTaskStatus.COMPLETED) return@withTransaction
                 require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION) { "此任务没有待确认的图片" }
                 val request = ImageTaskRequest.decode(task.requestJson)
@@ -649,6 +699,47 @@ class ImageTaskCoordinator(
                 dao.update(task.copy(status = ImageTaskStatus.COMPLETED, updatedAt = System.currentTimeMillis(), error = null))
             }
         }
+    }
+
+    suspend fun confirmDisplayBatch(batchId: String, rows: List<BatchMaterialConfirmation>, checked: Boolean) = accepted {
+        require(checked && rows.size in 1..MaterialBatchIdentity.MAX_ITEMS && rows.map { it.taskId }.distinct().size == rows.size)
+        state.withLock { db.withTransaction {
+            rows.forEach { row ->
+                val task = requireNotNull(dao.get(row.taskId)) { "任务已删除" }
+                require(task.batchId == batchId && row.expectedMaterialId == null) { "批次已改变" }
+                confirmDisplayLocked(task, row.imagePath)
+            }
+        } }
+    }
+
+    private suspend fun confirmDisplayLocked(task: ImageTask, expectedPath: String) {
+        require(task.kind == ImageTaskKind.MANNEQUIN && task.batchId != null && task.resultImagePath == expectedPath) { "展示图已改变" }
+        val request = ImageTaskRequest.decode(task.requestJson)
+        val garment = request.garments.single()
+        val item = requireNotNull(db.itemDao().getItemById(garment.itemId)) { "原物品已删除" }
+        if (task.status == ImageTaskStatus.COMPLETED) {
+            require(expectedPath in item.imageUrls) { "原展示图已移除" }
+            return
+        }
+        require(task.status == ImageTaskStatus.AWAITING_CONFIRMATION && item.status.supportsVirtualTryOn &&
+            item.composition == garment.composition && batchDisplaySubject(requireNotNull(db.categoryDao().getCategoryById(item.categoryId))) == request.mannequinSubject) { "物品类型、组合或状态已改变，请重新核对" }
+        require(validateImage(expectedPath)) { "展示图片已丢失" }
+        val now = System.currentTimeMillis()
+        db.itemDao().updateImages(item.id, if (expectedPath in item.imageUrls) item.imageUrls else item.imageUrls + expectedPath, now)
+        appendImageProvenance(item.id, expectedPath, requireNotNull(request.mannequinSubject).presentation.name, task.id)
+        dao.update(task.copy(status = ImageTaskStatus.COMPLETED, updatedAt = now, error = null))
+    }
+
+    suspend fun setDisplayCover(itemId: Long, taskId: String) = accepted {
+        state.withLock { db.withTransaction {
+            val task = requireNotNull(dao.get(taskId))
+            require(task.kind == ImageTaskKind.MANNEQUIN && task.status == ImageTaskStatus.COMPLETED &&
+                ImageTaskRequest.decode(task.requestJson).garments.single().itemId == itemId)
+            val item = requireNotNull(db.itemDao().getItemById(itemId))
+            val path = requireNotNull(task.resultImagePath)
+            require(path in item.imageUrls && validateImage(path)) { "展示图已移除或丢失" }
+            db.itemDao().updateImages(item.id, listOf(path) + item.imageUrls.filter { it != path }, System.currentTimeMillis())
+        } }
     }
 
     suspend fun confirmPersonalModel(id: String): Long = accepted {

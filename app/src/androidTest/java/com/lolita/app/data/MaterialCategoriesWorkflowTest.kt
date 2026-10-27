@@ -37,7 +37,7 @@ class MaterialCategoriesWorkflowTest {
         f.db.itemDao().updateItem(items[1].copy(categoryId=items[0].categoryId))
         assertTrue(runCatching{f.coordinator.confirmMaterialBatch(batch.id,save,true)}.isFailure);assertTrue(f.db.itemTryOnMaterialDao().getAll().isEmpty())
     }}
-    @Test fun familyAndTypeSearchKeepHiddenSelectionAndReopenLayerQueueAtItsActualStage()=runBlocking{fixture{f->
+    @Test fun familyAndTypeSearchKeepHiddenSelectionAndReopenDisplayQueueAtItsActualStage()=runBlocking{fixture{f->
         val items=f.categoryItems();val store=ViewModelStore()
         try{
             val vm=withContext(Dispatchers.Main){f.batchViewModel(SavedStateHandle()).also{store.put("draft",it)}}
@@ -48,10 +48,10 @@ class MaterialCategoriesWorkflowTest {
             assertEquals(10,fee.rows.size);assertEquals(0,f.frontCalls)
             withContext(Dispatchers.Main){vm.submitFee(fee)};withTimeout(10000){vm.uiState.first{it.jobs.size==10 && !it.busy}}
             f.runner.runQueue();val jobs=f.db.imageTaskDao().getAll();val batch=vm.uiState.value.identity
-            f.coordinator.submitLayerBatch(batch,UUID.randomUUID().toString(),f.batchLayers(jobs.map{it.id}))
+            assertTrue(jobs.all{it.kind==ImageTaskKind.MANNEQUIN});assertEquals(10,f.displayCalls)
             val reopened=withContext(Dispatchers.Main){f.batchViewModel(SavedStateHandle(mapOf("batchId" to batch.id))).also{store.put("reopened",it)}}
             withTimeout(10000){reopened.uiState.first{!it.loading && it.rows.size==10}}
-            assertEquals(MaterialBatchPhase.LAYERS,reopened.uiState.value.phase);assertEquals(0,f.layerCalls)
+            assertEquals(MaterialBatchPhase.FRONT,reopened.uiState.value.phase);assertEquals(0,f.layerCalls)
         }finally{withContext(Dispatchers.Main){store.clear()}}
     }}
     @Test fun savedClothingAndFootwearMaterialsReuseExistingFullTryOnAndRejectChangedComposition()=runBlocking{fixture{f->

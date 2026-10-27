@@ -30,6 +30,7 @@ class ItemRepository(
     private val context: Context? = null
 ) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAllItems()
+    fun getImageProvenance() = database?.imageProvenanceDao()?.observeAll() ?: kotlinx.coroutines.flow.flowOf(emptyList())
     fun getCategories() = database?.categoryDao()?.getAllCategories() ?: kotlinx.coroutines.flow.flowOf(emptyList())
 
     fun getSizes(): Flow<List<String>> = itemDao.getSizes()

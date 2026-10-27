@@ -1039,7 +1039,7 @@ internal fun ItemDisplaySection(item: Item, category: com.lolita.app.data.local.
         material?.let {
             com.lolita.app.ui.screen.material.MaterialPhoto(it.imagePath, "查看已确认展示图", onClick = { onView(item.id) }, height = 150, checker = true)
             Text("AI 生成 · 已确认", style = MaterialTheme.typography.bodySmall)
-        } ?: Text("生成透明单品图，可作封面或用于试衣。", style = MaterialTheme.typography.bodyMedium)
+        } ?: Text("按类型生成人台或主视图，核对后保存到相册，可作封面或用于试衣。", style = MaterialTheme.typography.bodyMedium)
         OutlinedButton(onClick = { onGenerate(item.id) }, modifier = Modifier.fillMaxWidth()) { Text("生成展示图") }
     } }
 }

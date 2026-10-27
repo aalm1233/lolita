@@ -14,6 +14,20 @@ import java.util.UUID
 class MaterialBatchViewModelTest {
     private suspend fun fixture(block:suspend(MaterialTestFixture,ViewModelStore)->Unit){val f=MaterialTestFixture();val store=ViewModelStore();try{f.init();withTimeout(45000){block(f,store)}}finally{withContext(Dispatchers.Main){store.clear()};f.close()}}
     private suspend fun MaterialBatchViewModel.await(predicate:(MaterialBatchState)->Boolean)=withTimeout(10000){uiState.first(predicate)}
+    @Test fun missingDisplayFilterUsesAlbumProvenanceAfterTaskDeletion()=runBlocking{fixture{f,store->
+        val items=f.batchItems(2);val item=items.first();val b=MaterialBatchIdentity(UUID.randomUUID().toString(),"已保存展示图")
+        val prepared=f.coordinator.prepareDisplayInput(item.id,item.imageUrls.first())
+        val id=f.coordinator.submitDisplayBatch(b,UUID.randomUUID().toString(),listOf(BatchDisplayInput(item.id,prepared,item.imageUrls.first(),"",0)),ImageGenerationProvider.SEEDREAM).single()
+        f.runner.runQueue();val path=f.db.imageTaskDao().get(id)!!.resultImagePath!!
+        f.coordinator.confirmDisplayBatch(b.id,listOf(BatchMaterialConfirmation(id,path,null)),true)
+        f.coordinator.delete(id);assertTrue(java.io.File(path).isFile)
+        val vm=withContext(Dispatchers.Main){f.batchViewModel(SavedStateHandle()).also{store.put("vm",it)}}
+        vm.await{!it.loading && it.rows.size==2 && it.rows.first{row->row.itemId==item.id}.hasDisplay}
+        withContext(Dispatchers.Main){vm.toggle(item.id.toString(),true);vm.onlyMissing(true)}
+        assertEquals(listOf(items.last().id),vm.uiState.value.visibleRows.map{it.itemId});assertEquals(1,vm.uiState.value.selectedRows.size)
+        f.db.itemDao().updateImages(item.id,item.imageUrls,System.currentTimeMillis())
+        vm.await{it.visibleRows.size==2}
+    }}
     @Test fun hiddenSelectionsAndItemsBeyondFirstThirtyUseAllChosenInputsWithoutPaidCalls()=runBlocking{fixture{f,store->
         val items=f.batchItems(35)
         val vm=withContext(Dispatchers.Main){f.batchViewModel(SavedStateHandle()).also{store.put("vm",it)}}
@@ -35,8 +49,11 @@ class MaterialBatchViewModelTest {
         val fee=vm.await{it.fee!=null && !it.busy}.fee!!
         provider=ImageGenerationProvider.OPENAI;changes.value++
         vm.await{it.provider==provider && it.keyLoaded && it.fee==null}
-        withContext(Dispatchers.Main){vm.submitFee(fee);vm.prepareFee()}
+        withContext(Dispatchers.Main){vm.submitFee(fee)}
         assertNull(vm.uiState.value.fee);assertEquals(0,f.serviceStarts)
+        withContext(Dispatchers.Main){vm.prepareFee()}
+        val refreshed=vm.await{it.fee!=null && !it.busy}.fee!!
+        assertEquals(ImageGenerationProvider.OPENAI,refreshed.provider);assertEquals(0,f.serviceStarts)
     }}
     @Test fun pendingReviewSelectionRequiresAllChecksAndLayerChangeClearsThem()=runBlocking{fixture{f,store->
         val batch=MaterialBatchIdentity(UUID.randomUUID().toString(),"集中核对")

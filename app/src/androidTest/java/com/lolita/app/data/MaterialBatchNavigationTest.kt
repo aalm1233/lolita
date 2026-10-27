@@ -30,7 +30,7 @@ class MaterialBatchNavigationTest {
     @After fun close(){runBlocking{f.close()}}
     @Test fun taskCenterGroupsBatchAndOpensOneWorkspaceWithIndependentNewBatchEntry(){
         val batch=MaterialBatchIdentity(UUID.randomUUID().toString(),"导航批次")
-        runBlocking{f.coordinator.submitMaterialBatch(batch,UUID.randomUUID().toString(),f.batchInputs(f.db.itemDao().getAllItemsList()),ImageGenerationProvider.SEEDREAM);f.runner.runQueue()}
+        runBlocking{f.coordinator.submitDisplayBatch(batch,UUID.randomUUID().toString(),f.db.itemDao().getAllItemsList().mapIndexed{index,item->BatchDisplayInput(item.id,f.coordinator.prepareDisplayInput(item.id,item.imageUrls.first()),item.imageUrls.first(),"",index)},ImageGenerationProvider.SEEDREAM);f.runner.runQueue()}
         compose.setContent{LolitaTheme{
             val controller=rememberNavController();SideEffect{nav=controller};val skin=LolitaSkin.current
             val still=remember(skin){skin.copy(topBarBlurEnabled=false,navBarBlurEnabled=false,animations=object:SkinAnimationProvider by skin.animations{override val ambientAnimation=skin.animations.ambientAnimation.copy(backgroundEnabled=false)})}
@@ -46,11 +46,20 @@ class MaterialBatchNavigationTest {
         compose.onNodeWithText("查看批次").performClick()
         compose.waitUntil(10000){batchVm?.uiState?.value?.let{!it.loading && it.jobs.size==3}==true}
         compose.onNodeWithTag("batchPrimary").assertIsDisplayed().assertIsNotEnabled()
+        assertTrue(batchVm!!.uiState.value.displayBatch);compose.onNodeWithText("透明层").assertDoesNotExist()
         compose.onNodeWithText("首页").assertIsDisplayed()
-        val dir=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"material-batch-native").apply{mkdirs()}
+        val taskId=batchVm!!.uiState.value.jobs.first().id
+        compose.runOnIdle{nav.navigate(Screen.ImageTaskDetail.createRoute(taskId))}
+        compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasText("核对本批展示图"))
+        compose.onNodeWithText("核对本批展示图").performClick()
+        compose.waitUntil(10000){nav.currentDestination?.route==Screen.MaterialBatch.route}
+        compose.onNodeWithContentDescription("返回").performClick()
+        compose.runOnIdle{nav.popBackStack()}
+        compose.waitUntil(10000){nav.currentDestination?.route==Screen.MaterialBatch.route}
+        val dir=File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir,"batch-display-native-20261027").apply{mkdirs()}
         compose.onRoot().captureToImage().asAndroidBitmap().let{im->File(dir,"nav-workspace.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
         compose.onNodeWithContentDescription("返回").performClick()
-        compose.onNodeWithTag("imageTasks").performScrollToNode(hasText("新建展示图批次"));compose.onNodeWithText("新建展示图批次").performClick()
+        compose.onNodeWithContentDescription("新建展示图批次").assertIsDisplayed().performClick()
         compose.waitUntil(10000){batchVm?.uiState?.value?.let{!it.loading && it.draft}==true}
         assertTrue(batchVm!!.uiState.value.selected.isEmpty());assertEquals(3,runBlocking{f.db.imageTaskDao().getAll().size});assertEquals(0,f.layerCalls)
     }

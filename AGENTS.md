@@ -327,7 +327,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=145, versionName="2.70.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=146, versionName="2.71.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -718,3 +718,11 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.69.0／144价格体验前两批：源码`6dc28e92`与标签已推送；输入草稿／恢复核验、金额隐私、记账反馈、订单总览／实付／建单及年历预算衔接落地。33项去重设备方法、22项JVM、252张七皮肤浅暗／320dp两倍字及真实IME／完整App旋转和进程恢复通过。Debug及提交归档clean原签名Release通过，2.68.0覆盖两次启动保留6张相关表原字段和3份设置SHA，37项目assets／7背景及依赖/profile核验。GitHub／Gitee同一正式APK及校验文件匿名完整下载／SHA／HEAD、源码标签与公开最高正式版本通过；正式App一次手动检查正确显示最新2.69.0及六项更新说明。Gitee初次1GB配额HTTP400后，仅按本轮用户明确授权删除2.61.0旧APK（80,963,876字节），原发布／校验／GitHub和本机副本保留；清理回执`docs/gitee-apk-cleanup-2.61.0-2026-10-23.json`，不授权未来清理。Room33／42实体／备份14不变，应用付费调用0次。实施与当前回执见`docs/price-experience-implementation-2026-10-23.md`、`docs/price-experience-release-2.69.0-verification.json`。
 
 - 2.70.0／145价格第三批：源码`4d2a71c7`与标签`v2.70.0`已普通推送，独立参考价、真实退款／退差价、取消与待退款、净支出及备份15已实现。38项去重设备方法、56项JVM、308主矩阵＋42表单滚动区＋11隐私/IME/返回截图及完整App旋转/进程恢复通过。提交归档clean原签名Release通过，2.69.0覆盖两次启动保全42旧表、14图SHA和3份设置；37项目assets／7背景／依赖/profile通过。2026-10-24完成GitHub/Gitee正式同一APK和SHA256SUMS发布，匿名完整下载、摘要及HEAD通过；按本轮明确授权仅删除Gitee2.61.1旧APK，旧发布／校验／GitHub／本机备份保留。Gitee公开API及延时复核403限流，正式App一次手动检查显示拒绝访问/请求频繁，更新入口未通过、直接APK可用，未冒充检查成功。Room34／45实体，付费调用0次。回执`docs/price-phase3-release-2.70.0-verification.json`，清理`docs/gitee-apk-cleanup-2.61.1-2026-10-24.json`，实现`docs/price-phase3-implementation-2026-10-23.md`。
+
+
+## 批量主视与人台（2.71.0）
+
+- 新建批次按稳定类型自动选择：现有支持的裙装／衬衫使用固定无杆人台，其他类型生成浅灰底主视图；全头假发在本批次不带头模，原独立假发头模入口保留。每件一张，不再强制透明分层。一次1—30件，原搜索／隐藏选择／换图／框选与失败重试保留。
+- 新批次复用MANNEQUIN v4冻结实际商品输入、必要人台模板、提示词、服务、类型／组合及SHA。发送前逐件展示真实模板和商品图；集中三项核对后原子追加物品相册及AI来源，不自动设封面。保存重读类型／组合／状态，陈旧输入拒绝；已保存图可主动设封面。
+- 旧SINGLE_ITEM_MATERIAL v5/v6批次、透明素材与原分层确认继续兼容，不重写历史请求或重发付费任务。Room34／备份15结构不变，新批次沿原JSON／ZIP任务与相册清单校验和映射。
+- 前置图稿、七皮肤浅暗与实施范围见`docs/plans/2026-10-27-batch-display.md`；定向验证为`DisplayBatchWorkflowTest`、`MaterialBatchViewModelTest`、`MaterialBatchScreenTest`及受影响原任务／备份／导航回归。本轮无真实付费请求，受控结果不代表生图质量验证。

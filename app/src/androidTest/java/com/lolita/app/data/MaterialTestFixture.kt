@@ -37,6 +37,8 @@ internal class MaterialTestFixture {
     var frontCalls = 0
     var layerCalls = 0
     var fusionCalls = 0
+    var displayCalls = 0
+    var displayOutput: suspend () -> ByteArray = { opaque }
     var serviceStarts = 0
     var frontOutput: suspend () -> ByteArray = { opaque }
     var layerOutput: (suspend () -> GeneratedImageLayers) = { GeneratedImageLayers(listOf(GeneratedImageLayer(transparent,1,"腰饰","含细链和独立绳端",listOf(100,100,900,900))),2) }
@@ -48,6 +50,8 @@ internal class MaterialTestFixture {
         { ImageFileHelper.isOwnedGeneratedImage(context,it) },
         validateSourceImage = { ImageFileHelper.isOwnedReadableImage(context,it) },
         validateProductImage = { ImageFileHelper.isOwnedReadableProductImage(context,it) },
+        snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(context,it) },
+        appendImageProvenance = { itemId,path,mode,taskId -> db.imageProvenanceDao().upsert(ImageProvenance(path,itemId,ImageSourceType.AI_GENERATED,mode,taskId)) },
         snapshotMaterialInput = { path,alpha -> ImageFileHelper.saveGeneratedImage(context,images.prepareMaterialSnapshot(path,alpha)) },
         validateMaterialImage = { ImageFileHelper.isOwnedGeneratedImage(context,it) && MaterialImageValidation.hasTransparentForeground(it) },
         pinMaterialInputs = { paths -> val lease = ImageFileHelper.pinImageReferences(context,paths); val release: suspend () -> Unit = { lease.release() }; release })
@@ -55,6 +59,7 @@ internal class MaterialTestFixture {
         images::prepare,images::prepareMannequin,
         { _,inputs,_ -> fusionCalls++; receivedImages=inputs; opaque },
         prepareSnapshotImages=images::prepareSnapshots,
+        generateMannequin={ _,inputs,_ -> displayCalls++; receivedImages=inputs; displayOutput() },
         generateMaterial={ _,inputs,_ -> frontCalls++; receivedImages=inputs; frontOutput() },
         decomposeMaterial={ _,inputs,_ -> layerCalls++; receivedImages=inputs; layerOutput() })
     val runner = ImageTaskRunner(coordinator,executor::execute)

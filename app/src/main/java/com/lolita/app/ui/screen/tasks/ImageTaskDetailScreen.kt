@@ -93,9 +93,14 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                                 OutlinedButton(onClick = { onRetry(task) }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Text("调整后另存") }
                             }
                             ImageTaskKind.MANNEQUIN -> {
+                                if(task.batchId!=null) {
+                                    Text("请进入批次，对照原图核对后保存到物品相册。", style = MaterialTheme.typography.bodySmall)
+                                    Button(onClick={onOpenMaterial(task)},enabled=!busy,modifier=Modifier.fillMaxWidth()){Text("核对本批展示图")}
+                                } else {
                                 Text("核对花纹、版型与细节后再添加。离开页面和重启均保留此预览。", style = MaterialTheme.typography.bodySmall)
                                 if (!state.canAppend(task)) Text("原物品已删除，可查看或舍弃预览。", color = MaterialTheme.colorScheme.error)
                                 Button(onClick = { confirmation = "append" }, enabled = !busy && path != null && state.canAppend(task), modifier = Modifier.fillMaxWidth()) { Text("添加到原物品图片") }
+                                }
                             }
                             ImageTaskKind.SINGLE_ITEM_MATERIAL -> {
                                 Text("请进入核对页检查主视角或透明单品；保存不会追加到商品相册。", style = MaterialTheme.typography.bodySmall)

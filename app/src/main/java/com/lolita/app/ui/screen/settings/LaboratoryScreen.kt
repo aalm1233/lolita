@@ -69,7 +69,7 @@ fun LaboratoryScreen(onBack: () -> Unit, onBatch: () -> Unit, onTryOn: () -> Uni
                     TextButton(onClick = onConfigure) { Text("去配置") }
                 }
             } }
-            item("batch") { LaboratoryPurposeCard("批量生成展示图", "整理商品图，用作封面或试衣。一次最多 30 件。",
+            item("batch") { LaboratoryPurposeCard("批量生成展示图", "按类型生成人台或主视图。一次最多 30 件。",
                 "选择物品", "laboratoryBatch", onBatch, tryOn = false) }
             item("try-on") { LaboratoryPurposeCard("虚拟试衣", "先选人物，再选这次要穿的物品。",
                 "开始搭配", "laboratoryTryOn", onTryOn, tryOn = true) }

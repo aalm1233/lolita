@@ -914,7 +914,7 @@ fun LolitaNavHost(
                                 if (base != null) Screen.AddAccessory.createRoute(task.garmentId ?: 0L, base.id.takeIf { base.type == com.lolita.app.domain.model.AccessoryBaseType.TRY_ON_RESULT }, task.id)
                                 else Screen.TryOnRetry.createRoute(task.id)
                             }
-                            ImageTaskKind.MANNEQUIN -> Screen.MannequinRetry.createRoute(task.garmentId ?: 0L, task.id)
+                            ImageTaskKind.MANNEQUIN -> if(task.batchId!=null)Screen.MaterialBatch.createRoute(task.batchId,phase="INPUTS") else Screen.MannequinRetry.createRoute(task.garmentId ?: 0L, task.id)
                             ImageTaskKind.PERSONAL_MODEL -> Screen.PersonalModelEdit.createRoute(retryTaskId = task.id)
                         }
                         navController.navigate(route)

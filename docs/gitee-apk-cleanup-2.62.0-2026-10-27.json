@@ -1,0 +1,21 @@
+{
+  "tag": "v2.62.0",
+  "release_id": 1223901,
+  "attachment_id": 3448612,
+  "name": "lolita-2.62.0.apk",
+  "bytes": 81094948,
+  "sha256": "1a8f6fe388d096be36a3ac138c3e2b994014761cca6b9737aa9bac580b6040e4",
+  "authorization": "2026-10-27 explicit user correction: delete only Gitee lolita-2.62.0.apk, continue domestic release",
+  "new_source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+  "at_utc": "2026-10-27T15:51:58.264963+00:00",
+  "http_status": 204,
+  "old_release_and_other_attachments_retained": true,
+  "github_and_local_backups_verified": true,
+  "old_github_head": [
+    {
+      "status": "live recheck unavailable: TLS/EOF",
+      "backup_evidence": "same-session public GitHub SHA256 preflight plus freshly verified complete local copies"
+    }
+  ],
+  "scope": "Only the pinned Gitee APK attachment was deleted. Old release metadata and checksum unchanged; GitHub and complete local copies retained."
+}

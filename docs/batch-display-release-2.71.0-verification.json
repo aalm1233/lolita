@@ -116,23 +116,114 @@
     "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
   },
   "gitee": {
-    "status": "prerelease_only_upload_blocked",
-    "http_status": 400,
-    "reason": "1 GB attachment quota exceeded",
-    "formal_release": false,
-    "old_attachments_deleted": false,
-    "cleanup_awaiting_explicit_user_authorization": "Only Gitee lolita-2.62.0.apk; GitHub/local verified backups, old release and checksum retained"
+    "tag": "v2.71.0",
+    "source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+    "release_id": 1246938,
+    "prerelease": false,
+    "files": {
+      "lolita-2.71.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.0/lolita-2.71.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83726741,
+        "sha256": "345ac4e4708dc1b1dd2059483fd49953e3b1c3b9b1c0a052f24768b5859d2c04",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "129dfb3c853c47ab6fa7b883ad182aa6ae6b6fc1f1ad4fc187663d8f091d56b4",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83726741,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
   },
   "in_app_update": {
-    "manual_requests": 1,
-    "gitee_release_formal": false,
-    "note": "Gitee upload blocked by quota; cleanup awaiting user authorization. GitHub released separately.",
-    "result": "\u5f53\u524d\u7248\u672c\u8f83\u65b0\uff1b\u5f53\u524dv2.71.0\uff0c\u56fd\u5185\u6700\u65b0\u53d1\u5e03v2.70.0",
-    "new_version_visible_via_in_app_update": false
+    "manual_requests_this_followup": 1,
+    "after_gitee_formal": true,
+    "new_version_visible_via_in_app_update": true,
+    "result": "Current and latest are both v2.71.0; full batch-display release notes shown"
   },
   "full_native_evidence": "artifacts/releases/2.71.0/native/",
   "limitations": [
-    "Controlled image tests do not establish generated product fidelity or compositing quality",
-    "Gitee and in-app update do not yet offer 2.71.0; use verified GitHub APK directly"
-  ]
+    "Controlled image tests do not establish generated product fidelity or compositing quality"
+  ],
+  "gitee_public_update": {
+    "latest_tag": "v2.71.0",
+    "pages": 3,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.0/lolita-2.71.0.apk",
+    "source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0"
+  },
+  "authorized_cleanup": {
+    "tag": "v2.62.0",
+    "release_id": 1223901,
+    "attachment_id": 3448612,
+    "name": "lolita-2.62.0.apk",
+    "bytes": 81094948,
+    "sha256": "1a8f6fe388d096be36a3ac138c3e2b994014761cca6b9737aa9bac580b6040e4",
+    "authorization": "2026-10-27 explicit user correction: delete only Gitee lolita-2.62.0.apk, continue domestic release",
+    "new_source_commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+    "at_utc": "2026-10-27T15:51:58.264963+00:00",
+    "http_status": 204,
+    "old_release_and_other_attachments_retained": true,
+    "github_and_local_backups_verified": true,
+    "old_github_head": [
+      {
+        "status": "live recheck unavailable: TLS/EOF",
+        "backup_evidence": "same-session public GitHub SHA256 preflight plus freshly verified complete local copies"
+      }
+    ]
+  },
+  "in_app_update_before_mirror": {
+    "manual_requests": 1,
+    "gitee_release_formal": false,
+    "note": "Gitee upload blocked by quota; cleanup awaiting user authorization. GitHub released separately.",
+    "result": "当前版本较新；当前v2.71.0，国内最新发布v2.70.0",
+    "new_version_visible_via_in_app_update": false
+  }
 }

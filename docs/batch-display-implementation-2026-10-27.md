@@ -48,6 +48,10 @@ Debug应用及仪器化APK构建通过。正式包构建、覆盖启动、素材
 
 源码`e6bfa6d9`与`v2.71.0`已普通推送。隔离git archive执行clean assembleRelease成功，原正式签名、非debug、版本146与37份主包素材／7背景RGBA及依赖profile核对通过。2.70.0同签名覆盖、两次启动保全相关6表及17份原图片／设置SHA；[正式包入口实拍](visuals/2026-10-27-batch-display/release-batch.png)确认腰饰主视／裙装人台的自动映射。
 
-[GitHub正式发布](https://github.com/aalm1233/lolita/releases/tag/v2.71.0)的APK与校验文件完成匿名完整下载、SHA及HEAD验证。Gitee上传触及1GB附件配额，目前仅预发布，旧附件未删，等待用户另行授权清理指定2.62.0旧APK；GitHub与本机副本已核验。App一次实际检查显示当前2.71.0较新、国内最新仍2.70.0，未将GitHub发布冒充国内更新入口已完成。GitHub第一次附件上传连接中断，保留草稿后经本机既有代理重传同一文件，再核对服务端SHA及公开下载，未改签名或包内容。
+[GitHub正式发布](https://github.com/aalm1233/lolita/releases/tag/v2.71.0)与[Gitee国内正式发布](https://gitee.com/aalm1233/lolita/releases/tag/v2.71.0)的同一APK和校验文件均完成匿名完整下载、SHA及HEAD验证。GitHub第一次附件上传连接中断，保留草稿后经本机既有代理重传同一文件，再核对服务端SHA及公开下载，未改签名或包内容。
 
-发布回执：[2.71.0验证记录](batch-display-release-2.71.0-verification.json)。国内同步尚待明确清理授权；本轮没有删除历史附件或增加付费生成。
+Gitee初次上传触及1GB附件配额；用户随后纠正误选，明确授权仅删除Gitee的`lolita-2.62.0.apk`，释放81,094,948字节。按固定发布／附件ID执行一次删除，并核对旧发布页及其余附件不变；旧GitHub副本和三份本机完整SHA已核验，下载域名临时TLS／EOF故障没有被冒充为新的HEAD成功。详见[清理回执](gitee-apk-cleanup-2.62.0-2026-10-27.json)。该授权不包含其他旧附件。
+
+新包先保留预发布，匿名完整下载与HEAD核对成功后转正式；正式附件再核对通过，公开版本API选中2.71.0。授权后的App一次实际检查显示当前与最新均为2.71.0，并展示完整批量展示图说明：[真实更新结果](visuals/2026-10-27-batch-display/release-domestic-update.png)。首次国内尚未发布时显示2.70.0的结果仅作为历史保留。
+
+发布回执：[2.71.0验证记录](batch-display-release-2.71.0-verification.json)。本次后续只完成授权清理、发布和记录，不改应用源码、不重新构建、不增加付费生成。

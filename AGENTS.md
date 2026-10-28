@@ -362,6 +362,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 数据完整性验证
 
+- 2026-10-28起，真实资料走查、备份恢复和升级回归默认使用用户新提供的 `lolita_backup_20261028_131534.zip`。本机固定入口为 `/Users/dengtong/Documents/img/测试基准/current.json`，按其中 `backupPath` 与 `sha256` 取已核验原包，不按文件修改时间选择，也不继续使用旧140件资料作为当前基准。使用方法与范围见 [测试数据基准](docs/test-data-baseline.md)；原包和个人图片仅留本机，测试使用工作副本和独立AVD。隔离单元／Room／Compose用例仍保留必要的合成边界夹具，旧备份仅用于明确的兼容性场景。
 - 审计报告：`docs/data-integrity-audit-2026-10-11.md`；升级与备份用例：`docs/data-integrity-test-plan.md`。
 - 运行 `python3 scripts/audit_data_integrity.py` 可用临时 SQLite 复现迁移与 WAL 快照问题；退出码 1 表示数据保留断言失败，2 表示工具错误。不能代替 Android Room 和图片恢复测试。
 - 升级与备份验收需独立基准逐字段、关联、图片 SHA256 核对；USB G13 仅验证文件选择器，不证明无损恢复。

@@ -1,0 +1,256 @@
+{
+  "date": "2026-10-28",
+  "version": "2.71.1",
+  "version_code": 147,
+  "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+  "tag": "v2.71.1",
+  "source_and_tag_pushed": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.71.1",
+    "version_code": 147,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "apk_sha256": "4840bc34039b572fccedced218e944bb23a8793c756fee884c1b3a4b04676c0c",
+    "bytes": 83759509
+  },
+  "clean_build": "git archive of exact committed source, clean assembleRelease passed",
+  "tests": {
+    "date": "2026-10-28",
+    "version": "2.71.1",
+    "version_code": 147,
+    "unique_device_methods_passed": 6,
+    "normal_device": "1440x3200 / density560 / fontScale1.0",
+    "small_device": "1440x3200 / density720 / 320dp / fontScale2.0",
+    "real_ime": true,
+    "room_version": 34,
+    "backup_format": 15,
+    "paid_generation_calls": 0,
+    "native_matrix": "review + saved + decoded comparison viewer, 7 skins x 2 modes",
+    "scope": "Local display comparison UI, affected batch save and navigation; no persistence or image-reference mutation",
+    "final_pass_logs": [
+      "batch-final.log",
+      "viewer-navigation-decoded.log",
+      "viewer-final.log",
+      "small-final.log"
+    ],
+    "resolved_issues": [
+      "Dialog assertions scoped to dialog root",
+      "Advance Compose frames and invalidate host for decoded-image screenshots",
+      "Fullscreen Coil ImageRequest handled by SubcomposeAsyncImage; actual input and result pixels asserted"
+    ],
+    "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+    "method_names": [
+      "DisplayComparisonScreenTest.frozenProductInputSkipsTemplateAndMissingResultNeverFallsBackToInput",
+      "DisplayComparisonScreenTest.compareModesSynchronizeZoomAndPanAndRestoreAcrossSevenSkins",
+      "DisplayComparisonScreenTest.smallScreenLargeFontKeepsBothImagesAndControlsVisible",
+      "MaterialBatchScreenTest.batchWholeFlowAcrossSevenSkinsKeepsEachItemIndependentAndSavesTogether",
+      "MaterialBatchScreenTest.realSmallDeviceLargeFontSearchKeyboardAndFeeRemainReachable",
+      "MaterialBatchNavigationTest.taskCenterGroupsBatchAndOpensOneWorkspaceWithIndependentNewBatchEntry"
+    ]
+  },
+  "upgrade": {
+    "passed": true,
+    "previous_version": "2.71.0/146",
+    "version": "2.71.1/147",
+    "same_original_certificate": true,
+    "install_replace": true,
+    "launches": 2,
+    "installed_apk_sha256": "4840bc34039b572fccedced218e944bb23a8793c756fee884c1b3a4b04676c0c",
+    "settings_sha256_preserved": true,
+    "settings_file_count": 3,
+    "scope": "UI copy/presentation only; original settings on dedicated release AVD. No unrelated full database/image/backup audit repeated.",
+    "owned_emulator_host_recovery": "Host emulator exited before upgrade; restarted same AVD without clearing data, host GLES with Vulkan disabled and crash reports never; upgrade and all setting digests then passed",
+    "release_entry_verified": "Personal -> Laboratory -> Batch display, original type-specific generation labels and no forced transparent layer"
+  },
+  "packaging": {
+    "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+    "build_directory": "git archive of exact committed source",
+    "packaged_source_assets": 37,
+    "all_project_asset_bytes_match_git": true,
+    "dependency_assets_verified": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "generated_profiles_verified": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ],
+    "private_photos_or_test_fixture_in_main_apk": false,
+    "untracked_assets_included": false,
+    "drawable_rgba_alpha_and_visible_rgb_preserved": [
+      "bg_art_chinese.png",
+      "bg_art_classic.png",
+      "bg_art_country.png",
+      "bg_art_gothic.png",
+      "bg_art_navy.png",
+      "bg_art_sweet.png",
+      "bg_art_victorian.png"
+    ]
+  },
+  "github": {
+    "tag": "v2.71.1",
+    "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+    "release_id": 426200311,
+    "prerelease": false,
+    "files": {
+      "lolita-2.71.1.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.71.1/lolita-2.71.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83759509,
+        "sha256": "4840bc34039b572fccedced218e944bb23a8793c756fee884c1b3a4b04676c0c",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.71.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "58d36508061447da37b3d82d059eb889ea117b883445d0cd66d71cf327e23334",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83759509,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.71.1",
+    "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+    "release_id": 1247862,
+    "prerelease": false,
+    "files": {
+      "lolita-2.71.1.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.1/lolita-2.71.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83759509,
+        "sha256": "4840bc34039b572fccedced218e944bb23a8793c756fee884c1b3a4b04676c0c",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "58d36508061447da37b3d82d059eb889ea117b883445d0cd66d71cf327e23334",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83759509,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "public_update": {
+    "latest_tag": "v2.71.1",
+    "pages": 3,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.71.1/lolita-2.71.1.apk",
+    "source_commit": "a2a03b32179221ae3883b02e53794a138f18302f"
+  },
+  "actual_app_update": {
+    "checked_once": true,
+    "current_version": "2.71.1",
+    "ui_text": [
+      "已是最新版本",
+      "当前版本：v2.71.1",
+      "最新发布：v2.71.1",
+      "本版更新",
+      "批量展示图现在可以直接与原图对照：",
+      "- 核对结果与已保存页每件独占一行，并排完整显示本次原图和生成图。\n- 新增放大对比，支持同步缩放、拖动、还原，以及原图／生成图快速切换。\n- 任务详情也能直接对比；使用本次实际发送的商品图，避免相册后续变化导致对错图片。\n- 缺失结果明确提示，继续保留批量核对、追加相册和主动设封面的原有规则。",
+      "GitHub 源码提交：a2a03b32179221ae3883b02e53794a138f18302f。\nGitee 标签对应分发说明，完整应用源码以 GitHub 为准。",
+      "关闭"
+    ],
+    "latest_2711_confirmed": true,
+    "release_notes_visible": true,
+    "public_api_is_not_a_substitute": true
+  },
+  "gitee_cleanup": {
+    "tag": "v2.63.0",
+    "name": "lolita-2.63.0.apk",
+    "bytes": 81193252,
+    "old_release_and_other_attachments_retained": true,
+    "github_and_local_backups_verified": true,
+    "receipt": "docs/gitee-apk-cleanup-2.63.0-2026-10-28.json"
+  },
+  "room_version": 34,
+  "backup_format": 15,
+  "paid_generation_calls": 0,
+  "limitations": "Controlled image transport and native UI verification; no new real generation quality evaluation. Formal app navigation entry and manual update verified; comparison pages covered by real Compose instrumentation.",
+  "owned_emulators_closed": true,
+  "user_devices_or_data_cleared": false,
+  "temporary_signing_config_symlinks_removed": true
+}

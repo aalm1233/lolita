@@ -1,0 +1,48 @@
+{
+  "tag": "v2.63.0",
+  "release_id": 1224905,
+  "attachment_id": 3451867,
+  "name": "lolita-2.63.0.apk",
+  "bytes": 81193252,
+  "sha256": "6943d73ab140f885539f10d8bb78e19b02bbce41046d4910038a83ce008684c5",
+  "authorization": "2026-10-28 user: gitee你随便删; ongoing necessary old APK quota cleanup; pinned oldest remaining APK 2.63.0",
+  "new_source_commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+  "at_utc": "2026-10-28T02:33:34.918004+00:00",
+  "http_status": 204,
+  "old_release_and_other_attachments_retained": true,
+  "github_and_local_backups_verified": true,
+  "old_github_head": [
+    {
+      "host": "github.com",
+      "status": 302
+    },
+    {
+      "host": "release-assets.githubusercontent.com",
+      "status": 200
+    }
+  ],
+  "old_backup_preflight": {
+    "tag": "v2.63.0",
+    "name": "lolita-2.63.0.apk",
+    "bytes": 81193252,
+    "sha256": "6943d73ab140f885539f10d8bb78e19b02bbce41046d4910038a83ce008684c5",
+    "github_asset_digest_verified": true,
+    "github_anonymous_head": [
+      {
+        "host": "github.com",
+        "status": 302
+      },
+      {
+        "host": "release-assets.githubusercontent.com",
+        "status": 200
+      }
+    ],
+    "local_complete_copies_verified": [
+      "lolita-2.63.0.apk",
+      "github-anonymous-lolita-2.63.0.apk",
+      "gitee-anonymous-lolita-2.63.0.apk"
+    ],
+    "gitee_release_id": 1224905,
+    "gitee_attachment_id": 3451867
+  }
+}

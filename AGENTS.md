@@ -724,6 +724,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 ## 批量主视与人台（2.71.0）
 
 - 2.71.1同屏对照：新MANNEQUIN批次核对／已保存阶段一件一行，并排完整Fit展示冻结商品输入与实际结果，任务详情共用。`DisplayImageComparison`只用任务最后一张商品输入，不把固定模板或当前相册当历史原图；缺图明确显示，无结果不回退输入。`DisplayComparisonViewer`共享缩放／相对平移，支持并排与单图切换、还原、裁切前完整原图和旋转恢复；仅本地展示，不改变原核对保存、费用、封面、Room34／备份15或旧分层。前置图稿与范围见`docs/plans/2026-10-28-display-comparison.md`；定向真实Compose为`DisplayComparisonScreenTest`、`MaterialBatchScreenTest`及`MaterialBatchNavigationTest`。
+- 2.71.1／147源码`a2a03b32`与标签`v2.71.1`已普通推送；6项去重设备方法、七皮肤浅暗及实际解码像素／320dp两倍字和真实IME、Debug与提交归档clean原签名Release通过。2.71.0覆盖及两次启动保留3份设置SHA；37项目assets／7背景RGBA／依赖及profile核验通过，纯本地UI不重复无关全库审计。GitHub／Gitee同一正式APK和SHA256SUMS匿名完整下载、摘要／HEAD／源码标签与公开最高正式版本通过；正式App一次手动检查显示当前和最新均为2.71.1及完整更新说明。Gitee初次1GB配额400后依2026-10-28持续授权仅清理最旧的2.63.0 APK（81,193,252字节），旧发布页／校验／GitHub及三份本机完整副本保留。独立AVD宿主退出后保留数据、host GLES禁用Vulkan恢复验证，结束已关闭。Room34／备份15及真实付费0次；回执`docs/display-comparison-release-2.71.1-verification.json`与`docs/gitee-apk-cleanup-2.63.0-2026-10-28.json`。
 
 - 新建批次按稳定类型自动选择：现有支持的裙装／衬衫使用固定无杆人台，其他类型生成浅灰底主视图；全头假发在本批次不带头模，原独立假发头模入口保留。每件一张，不再强制透明分层。一次1—30件，原搜索／隐藏选择／换图／框选与失败重试保留。
 - 新批次复用MANNEQUIN v4冻结实际商品输入、必要人台模板、提示词、服务、类型／组合及SHA。发送前逐件展示真实模板和商品图；集中三项核对后原子追加物品相册及AI来源，不自动设封面。保存重读类型／组合／状态，陈旧输入拒绝；已保存图可主动设封面。

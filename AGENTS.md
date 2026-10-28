@@ -327,7 +327,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=146, versionName="2.71.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=147, versionName="2.71.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -352,6 +352,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 7. 验证两个平台的正式 Release、附件版本与摘要一致，再反馈发布页和 APK 链接。令牌仅通过本机环境或仓库外临时文件使用，不打印、不写入源码或 APK；任务结束清理临时凭据。
 
 - 经用户授权，Gitee 发布令牌持久存放于仓库外 `/Users/dengtong/.config/lolita/gitee-release-token`（目录 700、文件 600）。发布脚本从该文件读取，不打印内容，不复制到仓库、APK 或附件；只清理临时凭据副本，保留此本机配置。
+- 2026-10-28用户追加授权：发布遇Gitee配额不足可直接清理所需旧APK，不再逐版询问；先核验GitHub与本机完整副本及SHA，保留旧发布页、校验附件和清理回执，优先从最旧APK释放必要空间。历史逐版授权记录保留，不再限制此后本范围清理。此授权不扩大到源码、用户数据或其他平台附件。
 
 ## AGENTS.md 维护
 
@@ -721,6 +722,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 
 ## 批量主视与人台（2.71.0）
+
+- 2.71.1同屏对照：新MANNEQUIN批次核对／已保存阶段一件一行，并排完整Fit展示冻结商品输入与实际结果，任务详情共用。`DisplayImageComparison`只用任务最后一张商品输入，不把固定模板或当前相册当历史原图；缺图明确显示，无结果不回退输入。`DisplayComparisonViewer`共享缩放／相对平移，支持并排与单图切换、还原、裁切前完整原图和旋转恢复；仅本地展示，不改变原核对保存、费用、封面、Room34／备份15或旧分层。前置图稿与范围见`docs/plans/2026-10-28-display-comparison.md`；定向真实Compose为`DisplayComparisonScreenTest`、`MaterialBatchScreenTest`及`MaterialBatchNavigationTest`。
 
 - 新建批次按稳定类型自动选择：现有支持的裙装／衬衫使用固定无杆人台，其他类型生成浅灰底主视图；全头假发在本批次不带头模，原独立假发头模入口保留。每件一张，不再强制透明分层。一次1—30件，原搜索／隐藏选择／换图／框选与失败重试保留。
 - 新批次复用MANNEQUIN v4冻结实际商品输入、必要人台模板、提示词、服务、类型／组合及SHA。发送前逐件展示真实模板和商品图；集中三项核对后原子追加物品相册及AI来源，不自动设封面。保存重读类型／组合／状态，陈旧输入拒绝；已保存图可主动设封面。

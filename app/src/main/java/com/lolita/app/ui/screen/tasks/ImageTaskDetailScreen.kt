@@ -17,6 +17,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lolita.app.data.local.entity.ImageTask
 import com.lolita.app.domain.model.*
 import com.lolita.app.ui.component.FullScreenImageViewer
+import com.lolita.app.ui.component.DisplayImageComparison
+import com.lolita.app.ui.component.DisplayComparisonPreview
+import com.lolita.app.ui.component.DisplayComparisonViewer
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
@@ -35,7 +38,9 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
     var confirmation by remember(taskId) { mutableStateOf<String?>(null) }
     var makeDefault by rememberSaveable(taskId) { mutableStateOf(true) }
     var zoom by remember(taskId) { mutableStateOf(false) }
+    var compare by rememberSaveable(taskId) { mutableStateOf(false) }
     val path = task?.let(state::resultPath)?.takeIf { File(it).isFile }
+    val comparison = task?.let { DisplayImageComparison.from(it, path) }
     val busy = taskId in state.mutating
     Scaffold(containerColor = Color.Transparent, contentWindowInsets = WindowInsets(0, 0, 0, 0), topBar = {
         GradientTopAppBar(title = { Text("图像任务详情") }, navigationIcon = {
@@ -69,7 +74,10 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
                         Text("请求可能已发送，停止本地等待不代表远端取消，服务可能仍会计费。", Modifier.padding(top = skin.spacingSmall), style = MaterialTheme.typography.bodySmall)
                     }
                 } } }
-                if (path != null) item("result") { LolitaSection(title = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) "待确认${task.displayTypeLabel}" else "生成结果") { row {
+                if (comparison != null) item("comparison") { LolitaSection(title = "原图与生成图") { row {
+                    DisplayComparisonPreview(comparison) { compare = true }
+                } } }
+                else if (path != null) item("result") { LolitaSection(title = if (task.status == ImageTaskStatus.AWAITING_CONFIRMATION) "待确认${task.displayTypeLabel}" else "生成结果") { row {
                     Spacer(Modifier.height(skin.spacingMedium))
                     ImageFrame(Modifier.fillMaxWidth()) {
                         LolitaShimmerImage(model = path, contentDescription = "放大生成结果", contentScale = ContentScale.Fit,
@@ -139,6 +147,7 @@ fun ImageTaskDetailScreen(taskId: String, onNavigateBack: () -> Unit, onRetry: (
         }
     }
     if (zoom && path != null) FullScreenImageViewer(listOf(path), onDismiss = { zoom = false })
+    if (compare && comparison != null) DisplayComparisonViewer(comparison, task.title) { compare = false }
     confirmation?.let { action ->
         AlertDialog(onDismissRequest = { confirmation = null }, title = { Text(when (action) { "save-personal" -> "保存个人模特？"; "append" -> "添加到原物品图片？"; "discard" -> "舍弃此预览？"; "cancel" -> "停止等待？"; else -> "删除任务记录？" }) },
             text = { Text(when (action) {

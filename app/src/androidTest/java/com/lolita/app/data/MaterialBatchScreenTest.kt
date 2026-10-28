@@ -49,21 +49,36 @@ class MaterialBatchScreenTest {
         compose.waitForIdle();val fee=vm.uiState.value.fee!=null
         val node=if(fee)compose.onNodeWithTag("batchFeeRoot") else compose.onRoot()
         // Coil's local file decode runs outside Compose idling. Wait for visible fixture foregrounds.
-        if(!dark.value)compose.waitUntil(10000){
+        var captureDetails=""
+        try{if(!dark.value)compose.waitUntil(10000){
+            compose.mainClock.advanceTimeByFrame()
+            InstrumentationRegistry.getInstrumentation().runOnMainSync{host.invalidate()}
             val bounds=node.fetchSemanticsNode().boundsInRoot
             val prefix=if(fee)"放大实际输入" else "放大第"
-            val images=compose.onAllNodes(SemanticsMatcher("fixture image"){it.config.getOrNull(SemanticsProperties.ContentDescription)?.any{s->s.startsWith(prefix)}==true})
+            val firstRow=vm.uiState.value.visibleRows.firstOrNull()
+            val imageMatcher=SemanticsMatcher("fixture image"){it.config.getOrNull(SemanticsProperties.ContentDescription)?.any{s->s.startsWith(prefix) || !fee && s in setOf("本次原图完整预览","生成图完整预览")}==true}
+            val images=compose.onAllNodes(if(!fee && firstRow!=null)imageMatcher and hasAnyAncestor(hasTestTag("batchRow${firstRow.itemId}")) else imageMatcher)
             val nodes=images.fetchSemanticsNodes()
-            nodes.indices.filter{nodes[it].boundsInRoot.let{r->r.top>=bounds.top && r.bottom<=bounds.bottom && r.height>=nodes[it].size.height-1 && r.width>=nodes[it].size.width-1}}.all{index->
+            val visible=nodes.indices.filter{nodes[it].boundsInRoot.let{r->r.top>=bounds.top && r.bottom<=bounds.bottom && r.height>=nodes[it].size.height-1 && r.width>=nodes[it].size.width-1}}
+            val counts=visible.map{index->
                 // Capture the image node itself: root/window origins differ with system insets.
                 val bitmap=images[index].captureToImage().asAndroidBitmap()
                 var foreground=0
-                for(y in 2..8)for(x in 2..8){val color=bitmap.getPixel(bitmap.width*x/10,bitmap.height*y/10)
+                for(y in 2..18)for(x in 2..18){val color=bitmap.getPixel(bitmap.width*x/20,bitmap.height*y/20)
                     val channels=listOf(android.graphics.Color.red(color),android.graphics.Color.green(color),android.graphics.Color.blue(color));if(channels.max()-channels.min()>15 || channels.min()<150)foreground++}
-                bitmap.recycle();foreground>=4
+                bitmap.recycle();foreground
             }
+            captureDetails="nodes=${nodes.size}, visible=$visible, foreground=$counts"
+            counts.all{it>=10}
+        }}catch(e:androidx.compose.ui.test.ComposeTimeoutException){
+            val fail=File(context.filesDir,"display-comparison-native-20261028").apply{mkdirs()}
+            node.captureToImage().asAndroidBitmap().let{im->File(fail,"failed-$name.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)};im.recycle()}
+            val source=vm.uiState.value.visibleRows.firstOrNull()?.source
+            val sourceBitmap=source?.let(android.graphics.BitmapFactory::decodeFile)
+            val center=sourceBitmap?.getPixel(sourceBitmap.width/2,sourceBitmap.height/2);sourceBitmap?.recycle()
+            throw AssertionError("Image capture not ready: $name $captureDetails source=${source?.let{File(it).exists()}} center=$center",e)
         }
-        val dir=File(context.filesDir,"batch-display-native-20261027").apply{mkdirs()};node.captureToImage().asAndroidBitmap().let{im->File(dir,"$name.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
+        val dir=File(context.filesDir,"display-comparison-native-20261028").apply{mkdirs()};node.captureToImage().asAndroidBitmap().let{im->File(dir,"$name.png").outputStream().use{im.compress(Bitmap.CompressFormat.PNG,100,it)}}
     }
     private fun skins(stage:String){for(night in listOf(false,true))for(type in SkinType.entries){compose.runOnIdle{skin.value=type;dark.value=night};compose.onNodeWithTag("batchPrimary").assertIsDisplayed();screenshot("$stage-${type.name.lowercase()}-${if(night)"dark" else "light"}");vm.uiState.value.visibleRows.firstOrNull()?.let{row->compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("batchRow${row.itemId}"));screenshot("$stage-images-${type.name.lowercase()}-${if(night)"dark" else "light"}")}}}
     private fun feeSend(){
@@ -84,6 +99,15 @@ class MaterialBatchScreenTest {
         f.displayOutput={if(f.displayCalls==2)throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL) else f.receivedImages.last()}
         runBlocking{f.runner.runQueue()};compose.waitUntil(10000){vm.uiState.value.rows.count{it.task?.status==ImageTaskStatus.AWAITING_CONFIRMATION}==2}
         skins("review")
+        val first=vm.uiState.value.visibleRows.first{it.task?.status==ImageTaskStatus.AWAITING_CONFIRMATION}
+        val oldSelection=vm.uiState.value.selected
+        compose.onNodeWithTag("materialBatch").performScrollToNode(hasTestTag("compareOpen${first.task!!.id}"))
+        compose.onNodeWithTag("compareOpen${first.task!!.id}").performClick()
+        compose.onNodeWithTag("displayComparison").assertIsDisplayed()
+        compose.onNode(hasContentDescription("本次原图完整预览") and hasAnyAncestor(hasTestTag("displayComparison"))).assertIsDisplayed()
+        compose.onNode(hasContentDescription("生成图完整预览") and hasAnyAncestor(hasTestTag("displayComparison"))).assertIsDisplayed()
+        compose.onNodeWithContentDescription("关闭对比").performClick()
+        assertEquals(oldSelection,vm.uiState.value.selected)
         compose.runOnIdle{skin.value=SkinType.DEFAULT;dark.value=false;vm.selectReady()}
         compose.onNodeWithTag("batchPrimary").assertIsNotEnabled()
         for(label in listOf("组成与附属部件完整","颜色、造型与数量正确","无多余文字或其他物品，人台符合所选类型")){

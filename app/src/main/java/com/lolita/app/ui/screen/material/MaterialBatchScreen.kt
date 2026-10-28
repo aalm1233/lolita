@@ -19,6 +19,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.lolita.app.domain.model.*
 import com.lolita.app.ui.component.FullScreenImageViewer
+import com.lolita.app.ui.component.DisplayImageComparison
+import com.lolita.app.ui.component.DisplayComparisonPreview
+import com.lolita.app.ui.component.DisplayComparisonViewer
 import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.screen.tasks.label
 import com.lolita.app.ui.screen.tasks.ImageTaskQueueActions
@@ -34,6 +37,7 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
     val scroll=rememberLazyListState();ObserveSkinScroll(scroll)
     var familyPicker by remember{mutableStateOf(false)}
     var zoom by remember{mutableStateOf<String?>(null)}
+    var compareTaskId by rememberSaveable{mutableStateOf<String?>(null)}
     var sourcePicker by remember{mutableStateOf<MaterialBatchRow?>(null)}
     var referenceRow by remember{mutableStateOf<MaterialBatchRow?>(null)}
     var cropRow by remember{mutableStateOf<MaterialBatchRow?>(null)}
@@ -69,7 +73,8 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
         }
     }}}){padding->
         BoxWithConstraints(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)){
-            val columns=if(maxWidth<360.dp || LocalDensity.current.fontScale>1.3f)1 else 2
+            val comparing=s.displayBatch && s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.SAVED)
+            val columns=if(comparing || maxWidth<360.dp || LocalDensity.current.fontScale>1.3f)1 else 2
             LazyColumn(state=scroll,modifier=Modifier.fillMaxSize().testTag("materialBatch"),contentPadding=PaddingValues(skin.spacingLarge),verticalArrangement=Arrangement.spacedBy(skin.cardGap)){
                 item("phases"){FlowRow(horizontalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                     s.phases.forEach{phase->FilterChip(selected=s.phase==phase,onClick={viewModel.phase(phase)},enabled=!s.busy,label={Text(if(s.displayBatch)when(phase){MaterialBatchPhase.FRONT->"核对结果";MaterialBatchPhase.SAVED->"已保存";else->phase.label} else phase.label)})}
@@ -108,7 +113,10 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                     rows.forEach{row->Column(Modifier.weight(1f).testTag("batchRow${row.itemId}")){LolitaCard{Column(verticalArrangement=Arrangement.spacedBy(skin.spacingSmall)){
                         Text(row.name,style=MaterialTheme.typography.titleSmall)
                         val path=if(s.phase==MaterialBatchPhase.SAVED) { if(s.displayBatch)row.task?.resultImagePath?.takeIf{it in row.item?.imageUrls.orEmpty()} else row.material?.imagePath } else row.image
-                        path?.takeIf(String::isNotBlank)?.let{MaterialPhoto(it,"放大第${row.position+1}件：${row.name}",{zoom=it},if(columns==1)210 else 135,checker=!s.displayBatch && s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED),darkChecker=darkChecker)}
+                        val comparison=if(comparing)row.task?.let{task->DisplayImageComparison.from(task,
+                            if(s.phase==MaterialBatchPhase.SAVED)path else task.resultImagePath)} else null
+                        if(comparison!=null)DisplayComparisonPreview(comparison){compareTaskId=comparison.taskId}
+                        else path?.takeIf(String::isNotBlank)?.let{MaterialPhoto(it,"放大第${row.position+1}件：${row.name}",{zoom=it},if(columns==1)210 else 135,checker=!s.displayBatch && s.phase in setOf(MaterialBatchPhase.LAYERS,MaterialBatchPhase.SAVED),darkChecker=darkChecker)}
                         Text(listOf(row.categoryName, row.item?.composition?.label.orEmpty()).filter(String::isNotBlank).joinToString(" · "),style=MaterialTheme.typography.bodySmall)
                         if(s.displayBatch)row.displaySubject?.let{Text(it.batchDisplayLabel,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)}
                         if(row.brand.isNotBlank())Text(row.brand,style=MaterialTheme.typography.bodySmall)
@@ -118,7 +126,7 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
                             TextButton(onClick={referenceRow=row},enabled=!s.busy && row.item!=null && (s.draft || row.canRetry),modifier=Modifier.fillMaxWidth()){Text("调整参考图")}
                         }
                         if(s.phase==MaterialBatchPhase.LAYERS && row.layers.size>1)OutlinedButton(onClick={layerRow=row},enabled=!s.busy,modifier=Modifier.fillMaxWidth()){Text("选择单品层（${row.layers.size}层）")}
-                        if(s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)){
+                        if(!comparing && s.phase in setOf(MaterialBatchPhase.FRONT,MaterialBatchPhase.LAYERS)){
                             TextButton(onClick={row.task?.let{ImageTaskRequest.decode(it.requestJson).let{request->request.productOriginalImagePath ?: request.materialSpec?.originalInputPath}}?.let{zoom=it}},modifier=Modifier.fillMaxWidth()){Text("对照原输入")}
                         }
                         if(s.phase==MaterialBatchPhase.SAVED && s.displayBatch) {
@@ -159,6 +167,10 @@ fun MaterialBatchScreen(viewModel: MaterialBatchViewModel,onBack:()->Unit,onTask
     saveRows?.let{rows->AlertDialog(onDismissRequest={saveRows=null},title={Text("保存并替换本次素材？")},text={Text("本次保存${rows.size}份，其中${rows.count{it.expectedMaterialId!=null}}份会替换当前确认素材。请在卡片中对照新结果；原商品照片与已提交任务仍保留。")},confirmButton={TextButton(onClick={saveRows=null;viewModel.save(rows)}){Text("确认批量保存")}},dismissButton={TextButton(onClick={saveRows=null}){Text("返回核对")}})}
     cancelIds?.let{ids->AlertDialog(onDismissRequest={cancelIds=null},title={Text("停止本批${ids.size}个未完成任务？")},text={Text("已完成预览和已确认素材保留。已发送的请求可能仍处理或计费，停止后不会自动重发。")},confirmButton={TextButton(onClick={cancelIds=null;viewModel.cancel(ids)}){Text("停止本批")}},dismissButton={TextButton(onClick={cancelIds=null}){Text("继续等待")}})}
     zoom?.let{FullScreenImageViewer(listOf(it),0,{zoom=null})}
+    compareTaskId?.let{id->s.rows.firstOrNull{it.task?.id==id}?.let{row->
+        val available= row.task?.resultImagePath?.takeIf{s.phase!=MaterialBatchPhase.SAVED || it in row.item?.imageUrls.orEmpty()}
+        row.task?.let{DisplayImageComparison.from(it,available)}?.let{DisplayComparisonViewer(it,row.name){compareTaskId=null}}
+    }}
 }
 
 @Composable

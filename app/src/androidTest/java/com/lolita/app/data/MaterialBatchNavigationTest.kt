@@ -50,6 +50,10 @@ class MaterialBatchNavigationTest {
         compose.onNodeWithText("首页").assertIsDisplayed()
         val taskId=batchVm!!.uiState.value.jobs.first().id
         compose.runOnIdle{nav.navigate(Screen.ImageTaskDetail.createRoute(taskId))}
+        compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasTestTag("compareOpen$taskId"))
+        compose.onNodeWithTag("compareOpen$taskId").performClick()
+        compose.onNodeWithTag("displayComparison").assertIsDisplayed()
+        compose.onNodeWithContentDescription("关闭对比").performClick()
         compose.onNodeWithTag("imageTaskDetail").performScrollToNode(hasText("核对本批展示图"))
         compose.onNodeWithText("核对本批展示图").performClick()
         compose.waitUntil(10000){nav.currentDestination?.route==Screen.MaterialBatch.route}

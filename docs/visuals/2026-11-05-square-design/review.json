@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-05",
+  "scope": "local HTML concept only; no Compose, native IME or real wardrobe writes",
+  "externalRequests": 0,
+  "errors": [],
+  "checks": [
+    "interactive: local assets and panel bounds",
+    "overview: local assets and panel bounds",
+    "flow: local assets and panel bounds",
+    "skins-light: local assets and panel bounds",
+    "skins-dark: local assets and panel bounds",
+    "states: local assets and panel bounds",
+    "edge: local assets and panel bounds",
+    "tail has no add/save/payment action",
+    "exact SKU -> confirmed category -> optional reference -> simulated wish save",
+    "selection retained; repeated add prompts instead of silent duplicate",
+    "unavailable SKU retains factual stock while allowing wish",
+    "real chart; full fit, zoom and close",
+    "search-empty reset restores complete event list"
+  ]
+}

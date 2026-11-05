@@ -11,11 +11,19 @@
     "skins-dark: local assets and panel bounds",
     "states: local assets and panel bounds",
     "edge: local assets and panel bounds",
+    "information: local assets and panel bounds",
+    "bundles: local assets and panel bounds",
+    "attributes-light: local assets and panel bounds",
+    "attributes-dark: local assets and panel bounds",
     "tail has no add/save/payment action",
     "exact SKU -> confirmed category -> optional reference -> simulated wish save",
     "selection retained; repeated add prompts instead of silent duplicate",
     "unavailable SKU retains factual stock while allowing wish",
     "real chart; full fit, zoom and close",
-    "search-empty reset restores complete event list"
+    "search-empty reset restores complete event list",
+    "all actual dimensions select exact SET and cross-link shirt SKU; old choice cleared",
+    "split group preserves unknown accessory specs; optional coordinate and accessory link; zero duplicated reference",
+    "colour/style/form intersection is per SKU; explicit style provenance visible",
+    "included collar is distinct from conditional gift; zero-selection split cannot save"
   ]
 }

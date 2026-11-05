@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 from PIL import Image
+from product_attributes import enrich_sku, product_info
 
 HERE = Path(__file__).resolve().parent
 PROJECT = HERE.parents[2]
@@ -61,10 +62,11 @@ def main():
             skus = []
             for sku in p["skus"]:
                 props = sku.get("props") or {v["prop"]: v["name"] for v in sku.get("values", [])}
-                skus.append({"id": sku["skuId"], "props": props, "price": sku.get("price"),
-                             "priceType": p["priceType"], "stock": sku.get("stockText") or sku.get("quantityText") or "库存未知"})
+                skus.append(enrich_sku(p, {"id": sku["skuId"], "props": props, "price": sku.get("price"),
+                             "priceType": p["priceType"], "stock": sku.get("stockText") or sku.get("quantityText") or "库存未知"}))
             products[p["itemId"]] = {"id": p["itemId"], "title": p["title"], "url": p["url"],
                                       "capturedAt": p["capturedAt"], "priceType": p["priceType"], "skus": skus,
+                                      "isDeposit": p["linkType"] == "deposit", "info": product_info(p),
                                       "previews": previews, "imageCount": sum(e["role"] != "promo" for e in entries), "mainCount": sum(e["role"] == "main" for e in entries)}
     # Only preview resources and public fields; never raw SSR or inferred old dates.
     for event in EVENTS:

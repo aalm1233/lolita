@@ -47,7 +47,37 @@ window.SQUARE_DATA = {
           },
           "price": 550.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624221",
+          "itemId": "1088022205740",
+          "content": "内搭",
+          "color": "白色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色 内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624245",
@@ -57,7 +87,37 @@ window.SQUARE_DATA = {
           },
           "price": 550.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624245",
+          "itemId": "1088022205740",
+          "content": "内搭",
+          "color": "白色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色 内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624269",
@@ -67,7 +127,37 @@ window.SQUARE_DATA = {
           },
           "price": 550.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624269",
+          "itemId": "1088022205740",
+          "content": "内搭",
+          "color": "白色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色 内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624275",
@@ -77,7 +167,37 @@ window.SQUARE_DATA = {
           },
           "price": 310.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624275",
+          "itemId": "1088022205740",
+          "content": "KC",
+          "color": "蓝色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "蓝色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6307177683356",
@@ -87,7 +207,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683356",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307177683357",
@@ -97,7 +247,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683357",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307177683358",
@@ -107,7 +287,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683358",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6307177683359",
@@ -117,7 +327,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683359",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307177683360",
@@ -127,7 +367,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683360",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307177683361",
@@ -137,7 +407,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683361",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624206",
@@ -147,7 +447,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624206",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624230",
@@ -157,7 +497,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624230",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624254",
@@ -167,7 +547,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624254",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624207",
@@ -177,7 +597,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624207",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624231",
@@ -187,7 +647,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624231",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624255",
@@ -197,7 +697,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624255",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624208",
@@ -207,7 +747,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624208",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624232",
@@ -217,7 +807,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624232",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624256",
@@ -227,7 +867,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624256",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624209",
@@ -237,7 +927,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624209",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624233",
@@ -247,7 +987,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624233",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624257",
@@ -257,7 +1047,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624257",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624300",
@@ -267,7 +1107,37 @@ window.SQUARE_DATA = {
           },
           "price": 310.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624300",
+          "itemId": "1088022205740",
+          "content": "KC",
+          "color": "黄色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "黄色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147611624205",
@@ -277,7 +1147,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624205",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624229",
@@ -287,7 +1187,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624229",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624253",
@@ -297,7 +1227,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624253",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6307177683362",
@@ -307,7 +1267,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683362",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307177683363",
@@ -317,7 +1307,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683363",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307177683364",
@@ -327,7 +1347,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683364",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624203",
@@ -337,7 +1387,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624203",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624227",
@@ -347,7 +1437,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624227",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624251",
@@ -357,7 +1487,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624251",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624210",
@@ -367,7 +1537,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624210",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624234",
@@ -377,7 +1587,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624234",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624258",
@@ -387,7 +1637,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624258",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624211",
@@ -397,7 +1687,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624211",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624235",
@@ -407,7 +1747,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624235",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624259",
@@ -417,7 +1807,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624259",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624212",
@@ -427,7 +1867,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624212",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624236",
@@ -437,7 +1927,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624236",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624260",
@@ -447,7 +1987,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624260",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624273",
@@ -457,7 +2047,37 @@ window.SQUARE_DATA = {
           },
           "price": 310.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624273",
+          "itemId": "1088022205740",
+          "content": "KC",
+          "color": "粉色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "粉色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6307177683350",
@@ -467,7 +2087,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683350",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307177683351",
@@ -477,7 +2127,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683351",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307177683352",
@@ -487,7 +2167,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683352",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624222",
@@ -497,7 +2207,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624222",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624246",
@@ -507,7 +2247,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624246",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624270",
@@ -517,7 +2287,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624270",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624202",
@@ -527,7 +2327,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624202",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624226",
@@ -537,7 +2377,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624226",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624250",
@@ -547,7 +2427,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624250",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624213",
@@ -557,7 +2477,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624213",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624237",
@@ -567,7 +2527,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624237",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624261",
@@ -577,7 +2577,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624261",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624214",
@@ -587,7 +2627,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624214",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624238",
@@ -597,7 +2687,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624238",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624262",
@@ -607,7 +2747,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624262",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624215",
@@ -617,7 +2807,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624215",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624239",
@@ -627,7 +2867,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624239",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624263",
@@ -637,7 +2927,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624263",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624296",
@@ -647,7 +2987,37 @@ window.SQUARE_DATA = {
           },
           "price": 310.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624296",
+          "itemId": "1088022205740",
+          "content": "KC",
+          "color": "黑色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "黑色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6307177683353",
@@ -657,7 +3027,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683353",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307177683354",
@@ -667,7 +3067,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683354",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307177683355",
@@ -677,7 +3107,37 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6307177683355",
+          "itemId": "1088022205740",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624219",
@@ -687,7 +3147,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624219",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624243",
@@ -697,7 +3187,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624243",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624267",
@@ -707,7 +3227,37 @@ window.SQUARE_DATA = {
           },
           "price": 839.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624267",
+          "itemId": "1088022205740",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624204",
@@ -717,7 +3267,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624204",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624228",
@@ -727,7 +3317,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624228",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624252",
@@ -737,7 +3367,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624252",
+          "itemId": "1088022205740",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624216",
@@ -747,7 +3417,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624216",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624240",
@@ -757,7 +3467,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624240",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624264",
@@ -767,7 +3517,47 @@ window.SQUARE_DATA = {
           },
           "price": 999.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624264",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624217",
@@ -777,7 +3567,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624217",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624241",
@@ -787,7 +3627,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624241",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624265",
@@ -797,7 +3687,57 @@ window.SQUARE_DATA = {
           },
           "price": 1359.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624265",
+          "itemId": "1088022205740",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147611624218",
@@ -807,7 +3747,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624218",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147611624242",
@@ -817,7 +3807,57 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624242",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147611624266",
@@ -827,9 +3867,179 @@ window.SQUARE_DATA = {
           },
           "price": 1299.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088022205740:6147611624266",
+          "itemId": "1088022205740",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "L"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春夏,春季",
+        "components": [
+          {
+            "name": "JSK（棉版）",
+            "listPrice": 1488,
+            "activityPrice": 899,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、镂空提花棉布、双宫竹节布；里：机械弹平纹；辅：狗牙花边、棉线花边、蛇腹线、织带、包布扣、四眼贝扣、菊花金属纽扣、YKK 隐形拉链、织金菊花花朵。",
+            "cut": "小微高腰无袖连衣裙；肩带可用背后纽扣调节；后背素鸡穿织带；右侧 YKK 隐形拉链；裙摆定位花型、后摆蛋糕叠层；两侧摆缝口袋、前裙摆贴袋；织带蝴蝶结不可拆；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "背带裙（棉版）",
+            "listPrice": 1388,
+            "activityPrice": 839,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、星星皱、高密无光纱、双宫竹节布；里：机械弹平纹；辅：狗牙花边、8 字带、棉线花边、蛇腹线、织带、包布扣、YKK 隐形拉链、镂空鸭嘴夹、CP LOGO 四合扣、CP LOGO 滚筒日字扣、CP LOGO 挂镀葫芦扣、织金菊花花朵。",
+            "cut": "低腰中长款背带裙；肩带日字扣可调长短；右侧 YKK 隐形拉链；裙摆定位花型；两侧口袋；胸口织带蝴蝶结不可拆；前后腰间蝴蝶结可拆；前胸调节绑带可拆。"
+          },
+          {
+            "name": "KC（棉版）",
+            "listPrice": 388,
+            "activityPrice": 310.4,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、星星皱、高密无光纱、双宫竹节布；辅：狗牙花边、8 字带、织带、铝芯线、钢发箍、织金菊花花朵。",
+            "cut": "织带蝴蝶结不可拆；内穿铝芯线可凹造型；定位花型裁剪。"
+          },
+          {
+            "name": "内搭（棉版）",
+            "listPrice": 688,
+            "activityPrice": 550.4,
+            "fabric": "表：提花棉布；辅：狗牙花边、8 字带、包布扣、贝壳料两眼平扣、YKK 隐形拉链、水滴形天然珍珠。",
+            "cut": "单层无里；微立领；后中 YKK 隐形拉链；袖口/下摆内穿系带绳；领结可拆。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "全款/定尾买棉版单裙或 2 点组合：蓝黄提花袜短款 1 双。",
+          "买 3 点组合：蓝黄提花袜短款 1 双 + 暴力 A 南瓜裤白色 1 条。",
+          "1 元意向金另可选黑白条纹袜大腿款或蓝黄提花袜长款 1 双；意向金为独立活动，不计入本商品 SKU。"
+        ],
+        "care": {
+          "JSK（棉版）/背带裙（棉版）": "建议手洗、干洗；不建议机洗。单件反面轻柔洗涤，不与其它衣物混洗，不可长时间浸泡；清洗时摘除后系带、肩带、后素鸡调节绑带等配件；局部用软湿布蘸清洗液轻擦，自然晾干，忌暴晒。",
+          "KC（棉版）": "不可水洗。",
+          "内搭（棉版）": "建议手洗、机洗；不建议干洗。单件反面轻柔洗涤，不与其它衣物混洗，不可长时间浸泡；清洗时摘除领结；局部轻擦，自然晾干，忌暴晒。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "JSK（棉版）": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 93,
+              "摆围(cm)": 246
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 94,
+              "摆围(cm)": 246
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 95,
+              "摆围(cm)": 246
+            }
+          },
+          "背带裙（棉版）": {
+            "S": {
+              "低腰围(cm)": 94,
+              "裙长(cm，肩带可调节)": "80-85",
+              "摆围(cm)": 296
+            },
+            "M": {
+              "低腰围(cm)": 99,
+              "裙长(cm，肩带可调节)": "82-87",
+              "摆围(cm)": 296
+            },
+            "L": {
+              "低腰围(cm)": 104,
+              "裙长(cm，肩带可调节)": "84-89",
+              "摆围(cm)": 296
+            }
+          },
+          "KC（棉版）": {
+            "均码": {
+              "长(cm)": 46,
+              "宽(cm)": 11
+            }
+          },
+          "内搭（棉版）": {
+            "S": {
+              "胸围(cm)": 98,
+              "衣长(cm)": 63,
+              "袖长(cm)": 25
+            },
+            "M": {
+              "胸围(cm)": 103,
+              "衣长(cm)": 65,
+              "袖长(cm)": 26
+            },
+            "L": {
+              "胸围(cm)": 108,
+              "衣长(cm)": 67,
+              "袖长(cm)": 27
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1088022205740-1.webp",
         "assets/1088022205740-2.webp"
@@ -852,7 +4062,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872349",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872373",
@@ -862,7 +4102,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872373",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872397",
@@ -872,7 +4142,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872397",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872367",
@@ -882,7 +4182,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872367",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872391",
@@ -892,7 +4222,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872391",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872415",
@@ -902,7 +4262,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872415",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872354",
@@ -912,7 +4302,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872354",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872378",
@@ -922,7 +4352,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872378",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872402",
@@ -932,7 +4402,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872402",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872355",
@@ -942,7 +4452,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872355",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872379",
@@ -952,7 +4502,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872379",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872403",
@@ -962,7 +4552,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872403",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872356",
@@ -972,7 +4602,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872356",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872380",
@@ -982,7 +4662,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872380",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872404",
@@ -992,7 +4722,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872404",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 JSK+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872357",
@@ -1002,7 +4782,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872357",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872381",
@@ -1012,7 +4842,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872381",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872405",
@@ -1022,7 +4902,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872405",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 背带裙+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872353",
@@ -1032,7 +4962,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872353",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872377",
@@ -1042,7 +5002,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872377",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872401",
@@ -1052,7 +5042,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872401",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872370",
@@ -1062,7 +5082,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872370",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872394",
@@ -1072,7 +5122,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872394",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872418",
@@ -1082,7 +5162,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872418",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872351",
@@ -1092,7 +5202,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872351",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872375",
@@ -1102,7 +5252,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872375",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872399",
@@ -1112,7 +5302,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872399",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872358",
@@ -1122,7 +5352,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872358",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872382",
@@ -1132,7 +5402,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872382",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872406",
@@ -1142,7 +5452,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872406",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872359",
@@ -1152,7 +5502,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872359",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872383",
@@ -1162,7 +5562,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872383",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872407",
@@ -1172,7 +5622,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872407",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 JSK+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872360",
@@ -1182,7 +5682,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872360",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872384",
@@ -1192,7 +5742,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872384",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872408",
@@ -1202,7 +5802,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872408",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 背带裙+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872347",
@@ -1212,7 +5862,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872347",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872371",
@@ -1222,7 +5902,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872371",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872395",
@@ -1232,7 +5942,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872395",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872369",
@@ -1242,7 +5982,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872369",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872393",
@@ -1252,7 +6022,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872393",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872417",
@@ -1262,7 +6062,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872417",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872350",
@@ -1272,7 +6102,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872350",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872374",
@@ -1282,7 +6152,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872374",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872398",
@@ -1292,7 +6202,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872398",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872361",
@@ -1302,7 +6252,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872361",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872385",
@@ -1312,7 +6302,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872385",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872409",
@@ -1322,7 +6352,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872409",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872362",
@@ -1332,7 +6402,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872362",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872386",
@@ -1342,7 +6462,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872386",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872410",
@@ -1352,7 +6522,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872410",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 JSK+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872363",
@@ -1362,7 +6582,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872363",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872387",
@@ -1372,7 +6642,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872387",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872411",
@@ -1382,7 +6702,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872411",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "粉色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "粉色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "粉色 背带裙+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872348",
@@ -1392,7 +6762,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872348",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872372",
@@ -1402,7 +6802,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872372",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872396",
@@ -1412,7 +6842,37 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872396",
+          "itemId": "1090713386610",
+          "content": "JSK",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872368",
@@ -1422,7 +6882,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872368",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872392",
@@ -1432,7 +6922,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872392",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872416",
@@ -1442,7 +6962,37 @@ window.SQUARE_DATA = {
           },
           "price": 170.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872416",
+          "itemId": "1090713386610",
+          "content": "背带裙",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872352",
@@ -1452,7 +7002,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872352",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872376",
@@ -1462,7 +7052,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872376",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872400",
@@ -1472,7 +7102,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872400",
+          "itemId": "1090713386610",
+          "content": "JSK+KC",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872364",
@@ -1482,7 +7152,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872364",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872388",
@@ -1492,7 +7202,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872388",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872412",
@@ -1502,7 +7252,47 @@ window.SQUARE_DATA = {
           },
           "price": 200.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872412",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872365",
@@ -1512,7 +7302,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872365",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872389",
@@ -1522,7 +7362,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872389",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872413",
@@ -1532,7 +7422,57 @@ window.SQUARE_DATA = {
           },
           "price": 270.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872413",
+          "itemId": "1090713386610",
+          "content": "JSK+KC+内搭",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "JSK",
+              "name": "JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 JSK+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872366",
@@ -1542,7 +7482,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872366",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872390",
@@ -1552,7 +7542,57 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872390",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147666872414",
@@ -1562,9 +7602,179 @@ window.SQUARE_DATA = {
           },
           "price": 260.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090713386610:6147666872414",
+          "itemId": "1090713386610",
+          "content": "背带裙+KC+内搭",
+          "color": "黑色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "背带裙",
+              "name": "背带裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "内搭",
+              "name": "内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色 背带裙+KC+内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         }
       ],
+      "isDeposit": true,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋,春夏",
+        "components": [
+          {
+            "name": "JSK（棉版）",
+            "listPrice": 1488,
+            "activityPrice": 899,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、镂空提花棉布、双宫竹节布；里：机械弹平纹；辅：狗牙花边、棉线花边、蛇腹线、织带、包布扣、四眼贝扣、菊花金属纽扣、YKK 隐形拉链、织金菊花花朵。",
+            "cut": "小微高腰无袖连衣裙；肩带可用背后纽扣调节；后背素鸡穿织带；右侧 YKK 隐形拉链；裙摆定位花型、后摆蛋糕叠层；两侧摆缝口袋、前裙摆贴袋；织带蝴蝶结不可拆；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "背带裙（棉版）",
+            "listPrice": 1388,
+            "activityPrice": 839,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、星星皱、高密无光纱、双宫竹节布；里：机械弹平纹；辅：狗牙花边、8 字带、棉线花边、蛇腹线、织带、包布扣、YKK 隐形拉链、镂空鸭嘴夹、CP LOGO 四合扣、CP LOGO 滚筒日字扣、CP LOGO 挂镀葫芦扣、织金菊花花朵。",
+            "cut": "低腰中长款背带裙；肩带日字扣可调长短；右侧 YKK 隐形拉链；裙摆定位花型；两侧口袋；胸口织带蝴蝶结不可拆；前后腰间蝴蝶结可拆；前胸调节绑带可拆。"
+          },
+          {
+            "name": "KC（棉版）",
+            "listPrice": 388,
+            "activityPrice": 310.4,
+            "fabric": "表：KOKKA 定制款印花竹节棉布、星星皱、高密无光纱、双宫竹节布；辅：狗牙花边、8 字带、织带、铝芯线、钢发箍、织金菊花花朵。",
+            "cut": "织带蝴蝶结不可拆；内穿铝芯线可凹造型；定位花型裁剪。"
+          },
+          {
+            "name": "内搭（棉版）",
+            "listPrice": 688,
+            "activityPrice": 550.4,
+            "fabric": "表：提花棉布；辅：狗牙花边、8 字带、包布扣、贝壳料两眼平扣、YKK 隐形拉链、水滴形天然珍珠。",
+            "cut": "单层无里；微立领；后中 YKK 隐形拉链；袖口/下摆内穿系带绳；领结可拆。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "全款/定尾买棉版单裙或 2 点组合：蓝黄提花袜短款 1 双。",
+          "买 3 点组合：蓝黄提花袜短款 1 双 + 暴力 A 南瓜裤白色 1 条。",
+          "1 元意向金另可选黑白条纹袜大腿款或蓝黄提花袜长款 1 双；意向金为独立活动，不计入本商品 SKU。"
+        ],
+        "care": {
+          "JSK（棉版）/背带裙（棉版）": "建议手洗、干洗；不建议机洗。单件反面轻柔洗涤，不与其它衣物混洗，不可长时间浸泡；清洗时摘除后系带、肩带、后素鸡调节绑带等配件；局部用软湿布蘸清洗液轻擦，自然晾干，忌暴晒。",
+          "KC（棉版）": "不可水洗。",
+          "内搭（棉版）": "建议手洗、机洗；不建议干洗。单件反面轻柔洗涤，不与其它衣物混洗，不可长时间浸泡；清洗时摘除领结；局部轻擦，自然晾干，忌暴晒。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "JSK（棉版）": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 93,
+              "摆围(cm)": 246
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 94,
+              "摆围(cm)": 246
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 95,
+              "摆围(cm)": 246
+            }
+          },
+          "背带裙（棉版）": {
+            "S": {
+              "低腰围(cm)": 94,
+              "裙长(cm，肩带可调节)": "80-85",
+              "摆围(cm)": 296
+            },
+            "M": {
+              "低腰围(cm)": 99,
+              "裙长(cm，肩带可调节)": "82-87",
+              "摆围(cm)": 296
+            },
+            "L": {
+              "低腰围(cm)": 104,
+              "裙长(cm，肩带可调节)": "84-89",
+              "摆围(cm)": 296
+            }
+          },
+          "KC（棉版）": {
+            "均码": {
+              "长(cm)": 46,
+              "宽(cm)": 11
+            }
+          },
+          "内搭（棉版）": {
+            "S": {
+              "胸围(cm)": 98,
+              "衣长(cm)": 63,
+              "袖长(cm)": 25
+            },
+            "M": {
+              "胸围(cm)": 103,
+              "衣长(cm)": 65,
+              "袖长(cm)": 26
+            },
+            "L": {
+              "胸围(cm)": 108,
+              "衣长(cm)": 67,
+              "袖长(cm)": 27
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1090713386610-1.webp",
         "assets/1090713386610-2.webp"
@@ -1587,7 +7797,37 @@ window.SQUARE_DATA = {
           },
           "price": 134.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800780",
+          "itemId": "1087061914876",
+          "content": "发圈",
+          "color": "蓝色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发圈",
+              "name": "发圈",
+              "category": "发圈",
+              "isAccessory": true,
+              "color": "蓝色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 发圈",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800761",
@@ -1597,7 +7837,37 @@ window.SQUARE_DATA = {
           },
           "price": 230.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800761",
+          "itemId": "1087061914876",
+          "content": "KC",
+          "color": "蓝色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "蓝色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800707",
@@ -1607,7 +7877,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800707",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800727",
@@ -1617,7 +7917,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800727",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800747",
@@ -1627,7 +7957,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800747",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800703",
@@ -1637,7 +7997,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800703",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800723",
@@ -1647,7 +8037,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800723",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800743",
@@ -1657,7 +8077,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800743",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800708",
@@ -1667,7 +8117,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800708",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800728",
@@ -1677,7 +8167,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800728",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800748",
@@ -1687,7 +8217,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800748",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800705",
@@ -1697,7 +8267,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800705",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800725",
@@ -1707,7 +8317,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800725",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800745",
@@ -1717,7 +8367,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800745",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800781",
@@ -1727,7 +8417,37 @@ window.SQUARE_DATA = {
           },
           "price": 134.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800781",
+          "itemId": "1087061914876",
+          "content": "发圈",
+          "color": "橘色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发圈",
+              "name": "发圈",
+              "category": "发圈",
+              "isAccessory": true,
+              "color": "橘色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 发圈",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800767",
@@ -1737,7 +8457,37 @@ window.SQUARE_DATA = {
           },
           "price": 230.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800767",
+          "itemId": "1087061914876",
+          "content": "KC",
+          "color": "橘色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "橘色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800709",
@@ -1747,7 +8497,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800709",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800729",
@@ -1757,7 +8537,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800729",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800749",
@@ -1767,7 +8577,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800749",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800710",
@@ -1777,7 +8617,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800710",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800730",
@@ -1787,7 +8657,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800730",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800750",
@@ -1797,7 +8697,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800750",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800711",
@@ -1807,7 +8737,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800711",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800731",
@@ -1817,7 +8787,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800731",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800751",
@@ -1827,7 +8837,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800751",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800712",
@@ -1837,7 +8887,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800712",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800732",
@@ -1847,7 +8937,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800732",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800752",
@@ -1857,7 +8987,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800752",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800782",
@@ -1867,7 +9037,37 @@ window.SQUARE_DATA = {
           },
           "price": 134.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800782",
+          "itemId": "1087061914876",
+          "content": "发圈",
+          "color": "黄色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发圈",
+              "name": "发圈",
+              "category": "发圈",
+              "isAccessory": true,
+              "color": "黄色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 发圈",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800783",
@@ -1877,7 +9077,37 @@ window.SQUARE_DATA = {
           },
           "price": 230.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800783",
+          "itemId": "1087061914876",
+          "content": "KC",
+          "color": "黄色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "黄色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800713",
@@ -1887,7 +9117,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800713",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800733",
@@ -1897,7 +9157,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800733",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800753",
@@ -1907,7 +9197,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800753",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800704",
@@ -1917,7 +9237,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800704",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800724",
@@ -1927,7 +9277,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800724",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800744",
@@ -1937,7 +9317,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800744",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800714",
@@ -1947,7 +9357,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800714",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800734",
@@ -1957,7 +9407,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800734",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800754",
@@ -1967,7 +9457,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800754",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800715",
@@ -1977,7 +9507,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800715",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800735",
@@ -1987,7 +9557,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800735",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800755",
@@ -1997,7 +9607,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800755",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800765",
@@ -2007,7 +9657,37 @@ window.SQUARE_DATA = {
           },
           "price": 134.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800765",
+          "itemId": "1087061914876",
+          "content": "发圈",
+          "color": "紫色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发圈",
+              "name": "发圈",
+              "category": "发圈",
+              "isAccessory": true,
+              "color": "紫色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 发圈",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800762",
@@ -2017,7 +9697,37 @@ window.SQUARE_DATA = {
           },
           "price": 230.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800762",
+          "itemId": "1087061914876",
+          "content": "KC",
+          "color": "紫色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "紫色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6147614800716",
@@ -2027,7 +9737,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800716",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800736",
@@ -2037,7 +9777,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800736",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800756",
@@ -2047,7 +9817,37 @@ window.SQUARE_DATA = {
           },
           "price": 969.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800756",
+          "itemId": "1087061914876",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800700",
@@ -2057,7 +9857,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800700",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800720",
@@ -2067,7 +9897,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800720",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800740",
@@ -2077,7 +9937,37 @@ window.SQUARE_DATA = {
           },
           "price": 569.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800740",
+          "itemId": "1087061914876",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800717",
@@ -2087,7 +9977,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800717",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800737",
@@ -2097,7 +10027,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800737",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800757",
@@ -2107,7 +10077,47 @@ window.SQUARE_DATA = {
           },
           "price": 1059.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800757",
+          "itemId": "1087061914876",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6147614800718",
@@ -2117,7 +10127,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800718",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6147614800738",
@@ -2127,7 +10177,47 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800738",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6147614800758",
@@ -2137,9 +10227,166 @@ window.SQUARE_DATA = {
           },
           "price": 659.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1087061914876:6147614800758",
+          "itemId": "1087061914876",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "L"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋,春夏",
+        "components": [
+          {
+            "name": "长OP（雪纺版）",
+            "listPrice": 1288,
+            "activityPrice": 969,
+            "fabric": "表：印花珠地雪纺；里：机械弹平纹；辅：YKK 隐形拉链、锦纶直条网布、橡筋。",
+            "cut": "正腰长款连衣裙；露肩灯笼袖；前胸立裁荡领；腰侧两个口袋；后背 YKK 隐形拉链；全身定位花型；腰带可拆。"
+          },
+          {
+            "name": "娃娃裙（雪纺版）",
+            "listPrice": 788,
+            "activityPrice": 569,
+            "fabric": "表：印花珠地雪纺；里：机械弹平纹；辅：水滴形天然珍珠、贝壳料两眼平扣、包布扣胚、YKK 隐形拉链、锦纶直条定型网布、橡筋。",
+            "cut": "超高腰短款连衣裙；前胸双层荷叶边；腰侧两个口袋；后背 YKK 隐形拉链；全身定位花型；后系带可拆、挂脖带可拆；蝴蝶结不可拆。"
+          },
+          {
+            "name": "KC（雪纺版）",
+            "listPrice": 288,
+            "activityPrice": 230.4,
+            "fabric": "表：印花珠地雪纺；辅：锦纶直条定型网布、钢发箍。",
+            "cut": "定位花型；手工蝴蝶结，不可拆。"
+          },
+          {
+            "name": "发圈（雪纺版）",
+            "listPrice": 168,
+            "activityPrice": 134.4,
+            "fabric": "表：印花珠地雪纺；辅：锦纶直条定型网布、橡筋。",
+            "cut": "定位花型；蝴蝶结不可拆。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "买雪纺版单裙：黑白条纹袜及膝款 1 双。",
+          "买 2 点组合：黑白条纹袜及膝款 1 双 + 雪纺版发圈 1 对（详情卡原文）。"
+        ],
+        "care": {
+          "长OP（雪纺版）": "建议手洗、机洗；不建议干洗。洗涤前拆下腰带；冷水，深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "娃娃裙（雪纺版）": "建议手洗、机洗；不建议干洗。洗涤前拆下腰带、挂脖带；冷水，深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "KC（雪纺版）/发圈（雪纺版）": "KC 建议局部手洗；发圈建议手洗。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "长OP（雪纺版）": {
+            "S": {
+              "胸围(cm)": 88,
+              "腰围(cm)": 72,
+              "裙长(cm)": 121,
+              "摆围(cm)": 570,
+              "袖长(cm)": 45
+            },
+            "M": {
+              "胸围(cm)": 93,
+              "腰围(cm)": 77,
+              "裙长(cm)": 122,
+              "摆围(cm)": 570,
+              "袖长(cm)": 45.5
+            },
+            "L": {
+              "胸围(cm)": 98,
+              "腰围(cm)": 82,
+              "裙长(cm)": 123,
+              "摆围(cm)": 570,
+              "袖长(cm)": 46
+            }
+          },
+          "娃娃裙（雪纺版）": {
+            "S": {
+              "胸围(cm)": 86,
+              "腰围(cm)": 84,
+              "裙长(cm)": 83,
+              "摆围(cm)": 280,
+              "袖长(cm)": 23
+            },
+            "M": {
+              "胸围(cm)": 91,
+              "腰围(cm)": 89,
+              "裙长(cm)": 84,
+              "摆围(cm)": 280,
+              "袖长(cm)": 24
+            },
+            "L": {
+              "胸围(cm)": 96,
+              "腰围(cm)": 94,
+              "裙长(cm)": 85,
+              "摆围(cm)": 280,
+              "袖长(cm)": 25
+            }
+          },
+          "KC（雪纺版）": {
+            "均码": {
+              "长(cm)": 32,
+              "宽(cm)": 16
+            }
+          },
+          "发圈（雪纺版）": {
+            "均码": {
+              "宽(cm)": 5,
+              "内周长(cm，橡筋不拉伸)": 15
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1087061914876-1.webp",
         "assets/1087061914876-2.webp"
@@ -2162,7 +10409,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065165",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065181",
@@ -2172,7 +10449,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065181",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065197",
@@ -2182,7 +10489,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065197",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065162",
@@ -2192,7 +10529,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065162",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065178",
@@ -2202,7 +10569,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065178",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065194",
@@ -2212,7 +10609,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065194",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065166",
@@ -2222,7 +10649,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065166",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065182",
@@ -2232,7 +10699,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065182",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065198",
@@ -2242,7 +10749,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065198",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长OP+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065164",
@@ -2252,7 +10799,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065164",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065180",
@@ -2262,7 +10849,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065180",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065196",
@@ -2272,7 +10899,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065196",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 娃娃裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065167",
@@ -2282,7 +10949,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065167",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065183",
@@ -2292,7 +10989,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065183",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065199",
@@ -2302,7 +11029,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065199",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "橘色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065168",
@@ -2312,7 +11069,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065168",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065184",
@@ -2322,7 +11109,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065184",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065200",
@@ -2332,7 +11149,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065200",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "橘色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065169",
@@ -2342,7 +11189,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065169",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065185",
@@ -2352,7 +11239,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065185",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065201",
@@ -2362,7 +11289,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065201",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "橘色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 长OP+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065170",
@@ -2372,7 +11339,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065170",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065186",
@@ -2382,7 +11389,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065186",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065202",
@@ -2392,7 +11439,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065202",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "橘色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "橘色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "橘色 娃娃裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065171",
@@ -2402,7 +11489,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065171",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065187",
@@ -2412,7 +11529,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065187",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065203",
@@ -2422,7 +11569,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065203",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065163",
@@ -2432,7 +11609,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065163",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065179",
@@ -2442,7 +11649,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065179",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065195",
@@ -2452,7 +11689,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065195",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065172",
@@ -2462,7 +11729,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065172",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065188",
@@ -2472,7 +11779,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065188",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065204",
@@ -2482,7 +11829,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065204",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 长OP+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065173",
@@ -2492,7 +11879,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065173",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065189",
@@ -2502,7 +11929,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065189",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065205",
@@ -2512,7 +11979,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065205",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "黄色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黄色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黄色 娃娃裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065174",
@@ -2522,7 +12029,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065174",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065190",
@@ -2532,7 +12069,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065190",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065206",
@@ -2542,7 +12109,37 @@ window.SQUARE_DATA = {
           },
           "price": 190.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065206",
+          "itemId": "1092851076916",
+          "content": "长OP",
+          "color": "紫色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065161",
@@ -2552,7 +12149,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065161",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065177",
@@ -2562,7 +12189,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065177",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065193",
@@ -2572,7 +12229,37 @@ window.SQUARE_DATA = {
           },
           "price": 110.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065193",
+          "itemId": "1092851076916",
+          "content": "娃娃裙",
+          "color": "紫色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065175",
@@ -2582,7 +12269,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065175",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065191",
@@ -2592,7 +12319,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065191",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065207",
@@ -2602,7 +12369,47 @@ window.SQUARE_DATA = {
           },
           "price": 210.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065207",
+          "itemId": "1092851076916",
+          "content": "长OP+KC",
+          "color": "紫色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长OP",
+              "name": "长OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 长OP+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065176",
@@ -2612,7 +12419,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065176",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065192",
@@ -2622,7 +12469,47 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065192",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6148266065208",
@@ -2632,9 +12519,166 @@ window.SQUARE_DATA = {
           },
           "price": 130.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092851076916:6148266065208",
+          "itemId": "1092851076916",
+          "content": "娃娃裙+KC",
+          "color": "紫色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "娃娃裙",
+              "name": "娃娃裙",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "紫色 娃娃裙+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         }
       ],
+      "isDeposit": true,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋,春夏",
+        "components": [
+          {
+            "name": "长OP（雪纺版）",
+            "listPrice": 1288,
+            "activityPrice": 969,
+            "fabric": "表：印花珠地雪纺；里：机械弹平纹；辅：YKK 隐形拉链、锦纶直条网布、橡筋。",
+            "cut": "正腰长款连衣裙；露肩灯笼袖；前胸立裁荡领；腰侧两个口袋；后背 YKK 隐形拉链；全身定位花型；腰带可拆。"
+          },
+          {
+            "name": "娃娃裙（雪纺版）",
+            "listPrice": 788,
+            "activityPrice": 569,
+            "fabric": "表：印花珠地雪纺；里：机械弹平纹；辅：水滴形天然珍珠、贝壳料两眼平扣、包布扣胚、YKK 隐形拉链、锦纶直条定型网布、橡筋。",
+            "cut": "超高腰短款连衣裙；前胸双层荷叶边；腰侧两个口袋；后背 YKK 隐形拉链；全身定位花型；后系带可拆、挂脖带可拆；蝴蝶结不可拆。"
+          },
+          {
+            "name": "KC（雪纺版）",
+            "listPrice": 288,
+            "activityPrice": 230.4,
+            "fabric": "表：印花珠地雪纺；辅：锦纶直条定型网布、钢发箍。",
+            "cut": "定位花型；手工蝴蝶结，不可拆。"
+          },
+          {
+            "name": "发圈（雪纺版）",
+            "listPrice": 168,
+            "activityPrice": 134.4,
+            "fabric": "表：印花珠地雪纺；辅：锦纶直条定型网布、橡筋。",
+            "cut": "定位花型；蝴蝶结不可拆。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "买雪纺版单裙：黑白条纹袜及膝款 1 双。",
+          "买 2 点组合：黑白条纹袜及膝款 1 双 + 雪纺版发圈 1 对（详情卡原文）。"
+        ],
+        "care": {
+          "长OP（雪纺版）": "建议手洗、机洗；不建议干洗。洗涤前拆下腰带；冷水，深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "娃娃裙（雪纺版）": "建议手洗、机洗；不建议干洗。洗涤前拆下腰带、挂脖带；冷水，深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "KC（雪纺版）/发圈（雪纺版）": "KC 建议局部手洗；发圈建议手洗。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "长OP（雪纺版）": {
+            "S": {
+              "胸围(cm)": 88,
+              "腰围(cm)": 72,
+              "裙长(cm)": 121,
+              "摆围(cm)": 570,
+              "袖长(cm)": 45
+            },
+            "M": {
+              "胸围(cm)": 93,
+              "腰围(cm)": 77,
+              "裙长(cm)": 122,
+              "摆围(cm)": 570,
+              "袖长(cm)": 45.5
+            },
+            "L": {
+              "胸围(cm)": 98,
+              "腰围(cm)": 82,
+              "裙长(cm)": 123,
+              "摆围(cm)": 570,
+              "袖长(cm)": 46
+            }
+          },
+          "娃娃裙（雪纺版）": {
+            "S": {
+              "胸围(cm)": 86,
+              "腰围(cm)": 84,
+              "裙长(cm)": 83,
+              "摆围(cm)": 280,
+              "袖长(cm)": 23
+            },
+            "M": {
+              "胸围(cm)": 91,
+              "腰围(cm)": 89,
+              "裙长(cm)": 84,
+              "摆围(cm)": 280,
+              "袖长(cm)": 24
+            },
+            "L": {
+              "胸围(cm)": 96,
+              "腰围(cm)": 94,
+              "裙长(cm)": 85,
+              "摆围(cm)": 280,
+              "袖长(cm)": 25
+            }
+          },
+          "KC（雪纺版）": {
+            "均码": {
+              "长(cm)": 32,
+              "宽(cm)": 16
+            }
+          },
+          "发圈（雪纺版）": {
+            "均码": {
+              "宽(cm)": 5,
+              "内周长(cm，橡筋不拉伸)": 15
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1092851076916-1.webp",
         "assets/1092851076916-2.webp"
@@ -2657,7 +12701,37 @@ window.SQUARE_DATA = {
           },
           "price": 230.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151515",
+          "itemId": "1088131401518",
+          "content": "KC",
+          "color": "蓝色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": "蓝色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6307180747071",
@@ -2667,7 +12741,37 @@ window.SQUARE_DATA = {
           },
           "price": 390.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6307180747071",
+          "itemId": "1088131401518",
+          "content": "短袖内搭",
+          "color": "浅蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 短袖内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6307180747072",
@@ -2677,7 +12781,37 @@ window.SQUARE_DATA = {
           },
           "price": 390.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6307180747072",
+          "itemId": "1088131401518",
+          "content": "短袖内搭",
+          "color": "浅蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 短袖内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6307180747073",
@@ -2687,7 +12821,37 @@ window.SQUARE_DATA = {
           },
           "price": 390.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6307180747073",
+          "itemId": "1088131401518",
+          "content": "短袖内搭",
+          "color": "浅蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 短袖内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151494",
@@ -2697,7 +12861,37 @@ window.SQUARE_DATA = {
           },
           "price": 470.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151494",
+          "itemId": "1088131401518",
+          "content": "长袖内搭",
+          "color": "浅蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 长袖内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151501",
@@ -2707,7 +12901,37 @@ window.SQUARE_DATA = {
           },
           "price": 470.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151501",
+          "itemId": "1088131401518",
+          "content": "长袖内搭",
+          "color": "浅蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 长袖内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151508",
@@ -2717,7 +12941,37 @@ window.SQUARE_DATA = {
           },
           "price": 470.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151508",
+          "itemId": "1088131401518",
+          "content": "长袖内搭",
+          "color": "浅蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "浅蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "浅蓝色 长袖内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151495",
@@ -2727,7 +12981,37 @@ window.SQUARE_DATA = {
           },
           "price": 739.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151495",
+          "itemId": "1088131401518",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151502",
@@ -2737,7 +13021,37 @@ window.SQUARE_DATA = {
           },
           "price": 739.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151502",
+          "itemId": "1088131401518",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151509",
@@ -2747,7 +13061,37 @@ window.SQUARE_DATA = {
           },
           "price": 739.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151509",
+          "itemId": "1088131401518",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151496",
@@ -2757,7 +13101,37 @@ window.SQUARE_DATA = {
           },
           "price": 809.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151496",
+          "itemId": "1088131401518",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151503",
@@ -2767,7 +13141,37 @@ window.SQUARE_DATA = {
           },
           "price": 809.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151503",
+          "itemId": "1088131401518",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151510",
@@ -2777,7 +13181,37 @@ window.SQUARE_DATA = {
           },
           "price": 809.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151510",
+          "itemId": "1088131401518",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151497",
@@ -2787,7 +13221,47 @@ window.SQUARE_DATA = {
           },
           "price": 829.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151497",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151504",
@@ -2797,7 +13271,47 @@ window.SQUARE_DATA = {
           },
           "price": 829.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151504",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151511",
@@ -2807,7 +13321,47 @@ window.SQUARE_DATA = {
           },
           "price": 829.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151511",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151498",
@@ -2817,7 +13371,47 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151498",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151505",
@@ -2827,7 +13421,47 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151505",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151512",
@@ -2837,7 +13471,47 @@ window.SQUARE_DATA = {
           },
           "price": 899.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151512",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151499",
@@ -2847,7 +13521,57 @@ window.SQUARE_DATA = {
           },
           "price": 1089.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151499",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151506",
@@ -2857,7 +13581,57 @@ window.SQUARE_DATA = {
           },
           "price": 1089.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151506",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151513",
@@ -2867,7 +13641,57 @@ window.SQUARE_DATA = {
           },
           "price": 1089.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151513",
+          "itemId": "1088131401518",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "L"
+          }
         },
         {
           "id": "6312386151500",
@@ -2877,7 +13701,57 @@ window.SQUARE_DATA = {
           },
           "price": 1199.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151500",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "S"
+          }
         },
         {
           "id": "6312386151507",
@@ -2887,7 +13761,57 @@ window.SQUARE_DATA = {
           },
           "price": 1199.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151507",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "M"
+          }
         },
         {
           "id": "6312386151514",
@@ -2897,9 +13821,217 @@ window.SQUARE_DATA = {
           },
           "price": 1199.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1088131401518:6312386151514",
+          "itemId": "1088131401518",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "L"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋,春夏",
+        "components": [
+          {
+            "name": "短JSK",
+            "listPrice": 1088,
+            "activityPrice": 739,
+            "fabric": "表：格子布；里：机械弹平纹；辅：菱格镂空水溶花边、织带、包布扣、四眼贝扣、菊花金属纽扣。",
+            "cut": "小微高腰无袖连衣裙；后背素鸡穿织带；右侧 YKK 隐形拉链；两侧摆缝口袋；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "长JSK",
+            "listPrice": 1188,
+            "activityPrice": 809,
+            "fabric": "表：格子布；里：机械弹平纹；辅：菱格镂空水溶花边、织带、包布扣、四眼贝扣、菊花金属纽扣。",
+            "cut": "小微高腰无袖连衣裙；后背素鸡穿织带；右侧 YKK 隐形拉链；两侧摆缝口袋；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "短袖内搭",
+            "listPrice": 488,
+            "activityPrice": 390.4,
+            "fabric": "表：格子布；辅：S 型 8 字带、包布扣、YKK 隐形拉链。",
+            "cut": "单层无里；立领；后中 YKK 隐形拉链；袖口开衩装袖克夫。"
+          },
+          {
+            "name": "长袖内搭",
+            "listPrice": 588,
+            "activityPrice": 470.4,
+            "fabric": "表：格子布；辅：狗牙花边、包布扣、贝壳料两眼平扣、水滴形天然珍珠、YKK 隐形拉链。",
+            "cut": "单层无里；立领；前中开襟锁眼钉扣；袖口装橡筋；下摆通道内穿系带绳。"
+          },
+          {
+            "name": "KC",
+            "listPrice": 288,
+            "activityPrice": 230.4,
+            "fabric": "表：格子布；辅：支撑网带、铝芯线、钢发箍。",
+            "cut": "内穿支撑网带 + 铝芯线，可硬凹造型。"
+          },
+          {
+            "name": "边夹",
+            "listPrice": 268,
+            "activityPrice": null,
+            "fabric": "表：格子布；辅：支撑网带、铝芯线、镂空鸭嘴夹。",
+            "cut": "内穿支撑网带 + 铝芯线，可硬凹造型。",
+            "note": "本轮淘宝全款链接未把边夹列为单独 SKU；268 元是详情图原价，边夹仅作为 3 点组合的活动赠品出现。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "买单裙或 2 点组合：黑白条纹袜及膝款 1 双。",
+          "买 3 点组合：黑白条纹袜及膝款 1 双 + 纯色版边夹 1 对。"
+        ],
+        "care": {
+          "短JSK/长JSK": "建议干洗、手洗；不建议机洗。单件反面轻柔洗涤，不混洗、不久泡；摘除后系带、肩带、后素鸡调节绑带；局部软湿布轻擦，自然晾干，忌暴晒；建议专业干洗维护。",
+          "短袖内搭/长袖内搭": "建议手洗；不建议机洗、干洗。单件反面轻柔洗涤，不混洗、不久泡；局部轻擦，自然晾干，忌暴晒。",
+          "KC/边夹": "不可水洗。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "短JSK": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 99,
+              "摆围(cm)": 400
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 101,
+              "摆围(cm)": 400
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 103,
+              "摆围(cm)": 400
+            }
+          },
+          "长JSK": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 120,
+              "摆围(cm)": 400
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 122,
+              "摆围(cm)": 400
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 124,
+              "摆围(cm)": 400
+            }
+          },
+          "短袖内搭": {
+            "S": {
+              "胸围(cm)": 92,
+              "衣长(cm)": 56,
+              "袖长(cm)": 24
+            },
+            "M": {
+              "胸围(cm)": 97,
+              "衣长(cm)": 58,
+              "袖长(cm)": 25
+            },
+            "L": {
+              "胸围(cm)": 102,
+              "衣长(cm)": 60,
+              "袖长(cm)": 26
+            }
+          },
+          "长袖内搭": {
+            "S": {
+              "胸围(cm)": 94,
+              "衣长(cm)": 62,
+              "袖长(cm)": 66
+            },
+            "M": {
+              "胸围(cm)": 99,
+              "衣长(cm)": 64,
+              "袖长(cm)": 67
+            },
+            "L": {
+              "胸围(cm)": 104,
+              "衣长(cm)": 66,
+              "袖长(cm)": 68
+            }
+          },
+          "KC": {
+            "均码": {
+              "宽(cm)": 5
+            }
+          },
+          "边夹": {
+            "均码": {
+              "宽(cm)": 5
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1088131401518-1.webp",
         "assets/1088131401518-2.webp"
@@ -2922,7 +14054,37 @@ window.SQUARE_DATA = {
           },
           "price": 150.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232047",
+          "itemId": "1092848472915",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232053",
@@ -2932,7 +14094,37 @@ window.SQUARE_DATA = {
           },
           "price": 150.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232053",
+          "itemId": "1092848472915",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232059",
@@ -2942,7 +14134,37 @@ window.SQUARE_DATA = {
           },
           "price": 150.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232059",
+          "itemId": "1092848472915",
+          "content": "短JSK",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232048",
@@ -2952,7 +14174,37 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232048",
+          "itemId": "1092848472915",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232054",
@@ -2962,7 +14214,37 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232054",
+          "itemId": "1092848472915",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232060",
@@ -2972,7 +14254,37 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232060",
+          "itemId": "1092848472915",
+          "content": "长JSK",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232049",
@@ -2982,7 +14294,47 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232049",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232055",
@@ -2992,7 +14344,47 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232055",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232061",
@@ -3002,7 +14394,47 @@ window.SQUARE_DATA = {
           },
           "price": 160.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232061",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232050",
@@ -3012,7 +14444,47 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232050",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232056",
@@ -3022,7 +14494,47 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232056",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232062",
@@ -3032,7 +14544,47 @@ window.SQUARE_DATA = {
           },
           "price": 180.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232062",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232051",
@@ -3042,7 +14594,57 @@ window.SQUARE_DATA = {
           },
           "price": 220.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232051",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232057",
@@ -3052,7 +14654,57 @@ window.SQUARE_DATA = {
           },
           "price": 220.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232057",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232063",
@@ -3062,7 +14714,57 @@ window.SQUARE_DATA = {
           },
           "price": 220.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232063",
+          "itemId": "1092848472915",
+          "content": "短JSK+KC+短袖内搭",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "短JSK",
+              "name": "短JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "短袖内搭",
+              "name": "短袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 短JSK+KC+短袖内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232052",
@@ -3072,7 +14774,57 @@ window.SQUARE_DATA = {
           },
           "price": 240.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232052",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "S【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232058",
@@ -3082,7 +14834,57 @@ window.SQUARE_DATA = {
           },
           "price": 240.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232058",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "M【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         },
         {
           "id": "6147660232064",
@@ -3092,9 +14894,217 @@ window.SQUARE_DATA = {
           },
           "price": 240.0,
           "priceType": "定金（不含尾款）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1092848472915:6147660232064",
+          "itemId": "1092848472915",
+          "content": "长JSK+KC+长袖内搭",
+          "color": "蓝色",
+          "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "长JSK",
+              "name": "长JSK",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长袖内搭",
+              "name": "长袖内搭",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "古典",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色 长JSK+KC+长袖内搭",
+            "尺码": "L【点击则同意定金发收藏卡片一张，定金须先确认收货，请勿与全款预售混拍】"
+          }
         }
       ],
+      "isDeposit": true,
+      "info": {
+        "styles": [
+          {
+            "value": "古典",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋,春夏",
+        "components": [
+          {
+            "name": "短JSK",
+            "listPrice": 1088,
+            "activityPrice": 739,
+            "fabric": "表：格子布；里：机械弹平纹；辅：菱格镂空水溶花边、织带、包布扣、四眼贝扣、菊花金属纽扣。",
+            "cut": "小微高腰无袖连衣裙；后背素鸡穿织带；右侧 YKK 隐形拉链；两侧摆缝口袋；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "长JSK",
+            "listPrice": 1188,
+            "activityPrice": 809,
+            "fabric": "表：格子布；里：机械弹平纹；辅：菱格镂空水溶花边、织带、包布扣、四眼贝扣、菊花金属纽扣。",
+            "cut": "小微高腰无袖连衣裙；后背素鸡穿织带；右侧 YKK 隐形拉链；两侧摆缝口袋；后系带、肩带、后素鸡调节绑带可拆。"
+          },
+          {
+            "name": "短袖内搭",
+            "listPrice": 488,
+            "activityPrice": 390.4,
+            "fabric": "表：格子布；辅：S 型 8 字带、包布扣、YKK 隐形拉链。",
+            "cut": "单层无里；立领；后中 YKK 隐形拉链；袖口开衩装袖克夫。"
+          },
+          {
+            "name": "长袖内搭",
+            "listPrice": 588,
+            "activityPrice": 470.4,
+            "fabric": "表：格子布；辅：狗牙花边、包布扣、贝壳料两眼平扣、水滴形天然珍珠、YKK 隐形拉链。",
+            "cut": "单层无里；立领；前中开襟锁眼钉扣；袖口装橡筋；下摆通道内穿系带绳。"
+          },
+          {
+            "name": "KC",
+            "listPrice": 288,
+            "activityPrice": 230.4,
+            "fabric": "表：格子布；辅：支撑网带、铝芯线、钢发箍。",
+            "cut": "内穿支撑网带 + 铝芯线，可硬凹造型。"
+          },
+          {
+            "name": "边夹",
+            "listPrice": 268,
+            "activityPrice": null,
+            "fabric": "表：格子布；辅：支撑网带、铝芯线、镂空鸭嘴夹。",
+            "cut": "内穿支撑网带 + 铝芯线，可硬凹造型。",
+            "note": "本轮淘宝全款链接未把边夹列为单独 SKU；268 元是详情图原价，边夹仅作为 3 点组合的活动赠品出现。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "买单裙或 2 点组合：黑白条纹袜及膝款 1 双。",
+          "买 3 点组合：黑白条纹袜及膝款 1 双 + 纯色版边夹 1 对。"
+        ],
+        "care": {
+          "短JSK/长JSK": "建议干洗、手洗；不建议机洗。单件反面轻柔洗涤，不混洗、不久泡；摘除后系带、肩带、后素鸡调节绑带；局部软湿布轻擦，自然晾干，忌暴晒；建议专业干洗维护。",
+          "短袖内搭/长袖内搭": "建议手洗；不建议机洗、干洗。单件反面轻柔洗涤，不混洗、不久泡；局部轻擦，自然晾干，忌暴晒。",
+          "KC/边夹": "不可水洗。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "短JSK": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 99,
+              "摆围(cm)": 400
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 101,
+              "摆围(cm)": 400
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 103,
+              "摆围(cm)": 400
+            }
+          },
+          "长JSK": {
+            "S": {
+              "胸围(cm，素鸡可拉伸)": "80-90",
+              "腰围(cm，素鸡可拉伸)": "62-72",
+              "裙长(cm)": 120,
+              "摆围(cm)": 400
+            },
+            "M": {
+              "胸围(cm，素鸡可拉伸)": "85-95",
+              "腰围(cm，素鸡可拉伸)": "67-77",
+              "裙长(cm)": 122,
+              "摆围(cm)": 400
+            },
+            "L": {
+              "胸围(cm，素鸡可拉伸)": "90-100",
+              "腰围(cm，素鸡可拉伸)": "72-82",
+              "裙长(cm)": 124,
+              "摆围(cm)": 400
+            }
+          },
+          "短袖内搭": {
+            "S": {
+              "胸围(cm)": 92,
+              "衣长(cm)": 56,
+              "袖长(cm)": 24
+            },
+            "M": {
+              "胸围(cm)": 97,
+              "衣长(cm)": 58,
+              "袖长(cm)": 25
+            },
+            "L": {
+              "胸围(cm)": 102,
+              "衣长(cm)": 60,
+              "袖长(cm)": 26
+            }
+          },
+          "长袖内搭": {
+            "S": {
+              "胸围(cm)": 94,
+              "衣长(cm)": 62,
+              "袖长(cm)": 66
+            },
+            "M": {
+              "胸围(cm)": 99,
+              "衣长(cm)": 64,
+              "袖长(cm)": 67
+            },
+            "L": {
+              "胸围(cm)": 104,
+              "衣长(cm)": 66,
+              "袖长(cm)": 68
+            }
+          },
+          "KC": {
+            "均码": {
+              "宽(cm)": 5
+            }
+          },
+          "边夹": {
+            "均码": {
+              "宽(cm)": 5
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1092848472915-1.webp",
         "assets/1092848472915-2.webp"
@@ -3117,7 +15127,37 @@ window.SQUARE_DATA = {
           },
           "price": 3110.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539395",
+          "itemId": "1089865027952",
+          "content": "正腰OP",
+          "color": null,
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6317020539402",
@@ -3127,7 +15167,37 @@ window.SQUARE_DATA = {
           },
           "price": 3110.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539402",
+          "itemId": "1089865027952",
+          "content": "正腰OP",
+          "color": null,
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6317020539409",
@@ -3137,7 +15207,37 @@ window.SQUARE_DATA = {
           },
           "price": 3110.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539409",
+          "itemId": "1089865027952",
+          "content": "正腰OP",
+          "color": null,
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6317020539390",
@@ -3147,7 +15247,37 @@ window.SQUARE_DATA = {
           },
           "price": 3430.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539390",
+          "itemId": "1089865027952",
+          "content": "低腰OP",
+          "color": null,
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP",
+            "尺码": "S"
+          }
         },
         {
           "id": "6317020539397",
@@ -3157,7 +15287,37 @@ window.SQUARE_DATA = {
           },
           "price": 3430.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539397",
+          "itemId": "1089865027952",
+          "content": "低腰OP",
+          "color": null,
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP",
+            "尺码": "M"
+          }
         },
         {
           "id": "6317020539404",
@@ -3167,7 +15327,37 @@ window.SQUARE_DATA = {
           },
           "price": 3430.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539404",
+          "itemId": "1089865027952",
+          "content": "低腰OP",
+          "color": null,
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP",
+            "尺码": "L"
+          }
         },
         {
           "id": "6317020539412",
@@ -3177,7 +15367,37 @@ window.SQUARE_DATA = {
           },
           "price": 390.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539412",
+          "itemId": "1089865027952",
+          "content": "KC",
+          "color": null,
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "KC",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6317020539413",
@@ -3187,7 +15407,37 @@ window.SQUARE_DATA = {
           },
           "price": 710.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539413",
+          "itemId": "1089865027952",
+          "content": "BNT",
+          "color": null,
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "BNT",
+              "name": "BNT",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": null,
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "BNT",
+            "尺码": "均码"
+          }
         },
         {
           "id": "6317020539389",
@@ -3197,7 +15447,37 @@ window.SQUARE_DATA = {
           },
           "price": 710.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539389",
+          "itemId": "1089865027952",
+          "content": "长南瓜裤",
+          "color": null,
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "长南瓜裤",
+            "尺码": "S"
+          }
         },
         {
           "id": "6317020539396",
@@ -3207,7 +15487,37 @@ window.SQUARE_DATA = {
           },
           "price": 710.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539396",
+          "itemId": "1089865027952",
+          "content": "长南瓜裤",
+          "color": null,
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "长南瓜裤",
+            "尺码": "M"
+          }
         },
         {
           "id": "6317020539403",
@@ -3217,7 +15527,37 @@ window.SQUARE_DATA = {
           },
           "price": 710.4,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539403",
+          "itemId": "1089865027952",
+          "content": "长南瓜裤",
+          "color": null,
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "长南瓜裤",
+            "尺码": "L"
+          }
         },
         {
           "id": "6317020539393",
@@ -3227,7 +15567,47 @@ window.SQUARE_DATA = {
           },
           "price": 3188.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539393",
+          "itemId": "1089865027952",
+          "content": "正腰OP+KC",
+          "color": null,
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP+KC",
+            "尺码": "S"
+          }
         },
         {
           "id": "6317020539400",
@@ -3237,7 +15617,47 @@ window.SQUARE_DATA = {
           },
           "price": 3188.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539400",
+          "itemId": "1089865027952",
+          "content": "正腰OP+KC",
+          "color": null,
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP+KC",
+            "尺码": "M"
+          }
         },
         {
           "id": "6317020539407",
@@ -3247,7 +15667,47 @@ window.SQUARE_DATA = {
           },
           "price": 3188.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539407",
+          "itemId": "1089865027952",
+          "content": "正腰OP+KC",
+          "color": null,
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "正腰OP",
+              "name": "正腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "KC",
+              "name": "KC",
+              "category": "KC",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "正腰OP+KC",
+            "尺码": "L"
+          }
         },
         {
           "id": "6317020539394",
@@ -3257,7 +15717,57 @@ window.SQUARE_DATA = {
           },
           "price": 3988.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539394",
+          "itemId": "1089865027952",
+          "content": "低腰OP+BNT+长南瓜裤",
+          "color": null,
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "BNT",
+              "name": "BNT",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP+BNT+长南瓜裤",
+            "尺码": "S"
+          }
         },
         {
           "id": "6317020539401",
@@ -3267,7 +15777,57 @@ window.SQUARE_DATA = {
           },
           "price": 3988.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539401",
+          "itemId": "1089865027952",
+          "content": "低腰OP+BNT+长南瓜裤",
+          "color": null,
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "BNT",
+              "name": "BNT",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP+BNT+长南瓜裤",
+            "尺码": "M"
+          }
         },
         {
           "id": "6317020539408",
@@ -3277,9 +15837,194 @@ window.SQUARE_DATA = {
           },
           "price": 3988.0,
           "priceType": "全款/活动价",
-          "stock": "有货(限购5件)"
+          "stock": "有货(限购5件)",
+          "key": "1089865027952:6317020539408",
+          "itemId": "1089865027952",
+          "content": "低腰OP+BNT+长南瓜裤",
+          "color": null,
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "低腰OP",
+              "name": "低腰OP",
+              "category": "OP",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "BNT",
+              "name": "BNT",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "长南瓜裤",
+              "name": "长南瓜裤",
+              "category": "裤装",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "洛丽塔风",
+              "source": "商品参数",
+              "field": "attributes.风格"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "低腰OP+BNT+长南瓜裤",
+            "尺码": "L"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "洛丽塔风",
+            "source": "商品参数",
+            "field": "attributes.风格"
+          }
+        ],
+        "season": "春秋",
+        "components": [
+          {
+            "name": "低腰OP",
+            "listPrice": 4288,
+            "activityPrice": 3430.4,
+            "fabric": "表：镂空绣花雪纺、提花印花棉布、花环绣花布、小香玉纱、绒面布、织金布；里：直条网、机械弹平纹；辅：织金狗牙花边、细线小网眼花边、双边蕾丝花边、玫瑰网纱花边、波浪花叶蕾丝花边、YKK 隐形拉链、人字带、刺绣绒带、支撑网带、包布扣、贝壳料两眼平扣、软纽襻、镶钻蝴蝶结圆形日字扣、铝芯线、水滴形天然珍珠、橡筋。",
+            "cut": "低腰泡泡袖连身裙；前胸/后背小香玉纱透视；领口可抽；后中隐形拉链；裙摆叠层荷叶边；手工钉绒带蝴蝶结；腰带、前腰蝴蝶结、后腰大蝴蝶结、袖环可拆。"
+          },
+          {
+            "name": "正腰OP",
+            "listPrice": 3888,
+            "activityPrice": 3110.4,
+            "fabric": "表：镂空绣花雪纺、提花印花棉布、花环绣花布、小香玉纱、绒面布、织金布；里：直条网、机械弹平纹；辅：织金狗牙花边、细线小网眼花边、双边蕾丝花边、玫瑰网纱花边、波浪花叶蕾丝花边、YKK 隐形拉链、人字带、刺绣绒带、织带、支撑网带、包布扣、贝壳料两眼平扣、软纽襻、水滴形天然珍珠、天然淡水珍珠、橡筋。",
+            "cut": "正腰泡泡袖长款连身裙；前胸/后背小香玉纱透视；领口可抽紧；后中隐形拉链；裙摆叠层荷叶边；手工钉绒带蝴蝶结、领系带不可拆；腰带、袖环可拆。"
+          },
+          {
+            "name": "KC",
+            "listPrice": 488,
+            "activityPrice": 390.4,
+            "fabric": "表：镂空绣花雪纺、提花印花棉布、花环绣花布、小香玉纱、绒面布、织金布；里：机械弹平纹；辅：织金狗牙花边、细线小网眼花边、玫瑰网纱花边、刺绣绒带、支撑网带、钢发箍、铝芯线、镶钻蝴蝶结圆形日字扣。",
+            "cut": "内穿铝芯线可凹造型。"
+          },
+          {
+            "name": "BNT",
+            "listPrice": 888,
+            "activityPrice": 710.4,
+            "fabric": "表：镂空绣花雪纺、提花印花棉布、花环绣花布、小香玉纱、绒面布、织金布；里：机械弹平纹；辅：织金狗牙花边、玫瑰网纱花边、波浪花叶蕾丝花边、人字带、刺绣绒带、织带、支撑网带、钢发箍、铝芯线、铁丝、镶钻蝴蝶结圆形日字扣、发插、硬衬、棉铺。",
+            "cut": "帽檐内穿铁丝可凹造型。"
+          },
+          {
+            "name": "长南瓜裤",
+            "listPrice": 888,
+            "activityPrice": 710.4,
+            "fabric": "表：提花印花棉布；里：机械弹平纹（口袋布）；辅：双边蕾丝花边、玫瑰网纱花边、波浪花叶蕾丝花边、人字带、绒带、织带、橡筋。",
+            "cut": "腰头内穿抽绳；裤腿收风琴褶；裤脚扣装橡筋；脚口叠层荷叶边；两侧插袋；织带蝴蝶结不可拆；腰调节绑带可拆。"
+          }
+        ],
+        "included": [],
+        "excluded": [
+          "模特搭配不等于购买内容；裙撑、鞋袜等未明确包含的物品不自动登记。"
+        ],
+        "gifts": [
+          "详情页未列赠品。"
+        ],
+        "care": {
+          "低腰OP": "建议手洗、干洗；不建议机洗。冷水；清洗前取下腰带、前腰蝴蝶结、后腰蝴蝶结、袖环；深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "正腰OP": "建议手洗、干洗；不建议机洗。冷水；清洗前取下腰系带、袖环；深色分开洗，中性洗涤剂，自然晾干，忌暴晒。",
+          "长南瓜裤": "建议手洗、干洗；不建议机洗。冷水；深色分开洗；注意腰内穿绳、脚口穿绳；中性洗涤剂，自然晾干，忌暴晒。",
+          "BNT/KC": "建议局部手洗。"
+        },
+        "materials": null,
+        "craft": null,
+        "sizes": {
+          "低腰OP": {
+            "S": {
+              "裙长(cm)": 87,
+              "胸围(cm)": 90,
+              "低腰围(cm)": "85-90",
+              "袖长(cm)": 54
+            },
+            "M": {
+              "裙长(cm)": 89,
+              "胸围(cm)": 95,
+              "低腰围(cm)": "90-95",
+              "袖长(cm)": 55
+            },
+            "L": {
+              "裙长(cm)": 91,
+              "胸围(cm)": 100,
+              "低腰围(cm)": "95-100",
+              "袖长(cm)": 56
+            }
+          },
+          "正腰OP": {
+            "S": {
+              "裙长(cm)": 127,
+              "胸围(cm)": 85,
+              "腰围(cm)": 72,
+              "袖长(cm)": 72
+            },
+            "M": {
+              "裙长(cm)": 129,
+              "胸围(cm)": 90,
+              "腰围(cm)": 77,
+              "袖长(cm)": 73
+            },
+            "L": {
+              "裙长(cm)": 131,
+              "胸围(cm)": 95,
+              "腰围(cm)": 82,
+              "袖长(cm)": 74
+            }
+          },
+          "长南瓜裤": {
+            "S": {
+              "裤长(cm)": 72,
+              "腰围(cm)": "62-70",
+              "臀围(cm)": 118
+            },
+            "M": {
+              "裤长(cm)": 74,
+              "腰围(cm)": "66-74",
+              "臀围(cm)": 123
+            },
+            "L": {
+              "裤长(cm)": 76,
+              "腰围(cm)": "70-78",
+              "臀围(cm)": 128
+            }
+          },
+          "BNT": {
+            "均码": {
+              "高(cm)": 16,
+              "宽(cm)": 40
+            }
+          },
+          "KC": {
+            "均码": {
+              "长(cm)": 50,
+              "宽(cm)": 14
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1089865027952-1.webp",
         "assets/1089865027952-2.webp"
@@ -3302,7 +16047,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872836",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "紫色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款紫色",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6022449872841",
@@ -3312,7 +16087,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872841",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "紫色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款紫色",
+            "尺码": "S"
+          }
         },
         {
           "id": "6022449872846",
@@ -3322,7 +16127,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872846",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "紫色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款紫色",
+            "尺码": "M"
+          }
         },
         {
           "id": "6022449872851",
@@ -3332,7 +16167,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872851",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "紫色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款紫色",
+            "尺码": "L"
+          }
         },
         {
           "id": "6022449872856",
@@ -3342,7 +16207,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872856",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "紫色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款紫色",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6022449872837",
@@ -3352,7 +16247,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1016937432843:6022449872837",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "黑色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款黑色",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6022449872842",
@@ -3362,7 +16287,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872842",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款黑色",
+            "尺码": "S"
+          }
         },
         {
           "id": "6022449872847",
@@ -3372,7 +16327,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1016937432843:6022449872847",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款黑色",
+            "尺码": "M"
+          }
         },
         {
           "id": "6022449872852",
@@ -3382,7 +16367,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1016937432843:6022449872852",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款黑色",
+            "尺码": "L"
+          }
         },
         {
           "id": "6022449872857",
@@ -3392,7 +16407,37 @@ window.SQUARE_DATA = {
           },
           "price": 625.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872857",
+          "itemId": "1016937432843",
+          "content": "十字OP长款",
+          "color": "黑色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP长款",
+              "name": "十字OP长款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op长款黑色",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6022449872838",
@@ -3402,7 +16447,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872838",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "紫色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款紫色",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6022449872843",
@@ -3412,7 +16487,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872843",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "紫色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款紫色",
+            "尺码": "S"
+          }
         },
         {
           "id": "6022449872848",
@@ -3422,7 +16527,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872848",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "紫色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款紫色",
+            "尺码": "M"
+          }
         },
         {
           "id": "6022449872853",
@@ -3432,7 +16567,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872853",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "紫色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款紫色",
+            "尺码": "L"
+          }
         },
         {
           "id": "6022449872858",
@@ -3442,7 +16607,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872858",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "紫色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "紫色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款紫色",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6022449872839",
@@ -3452,7 +16647,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872839",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "黑色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款黑色",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6022449872844",
@@ -3462,7 +16687,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1016937432843:6022449872844",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款黑色",
+            "尺码": "S"
+          }
         },
         {
           "id": "6022449872849",
@@ -3472,7 +16727,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1016937432843:6022449872849",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款黑色",
+            "尺码": "M"
+          }
         },
         {
           "id": "6022449872854",
@@ -3482,7 +16767,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1016937432843:6022449872854",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款黑色",
+            "尺码": "L"
+          }
         },
         {
           "id": "6022449872859",
@@ -3492,7 +16807,37 @@ window.SQUARE_DATA = {
           },
           "price": 610.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1016937432843:6022449872859",
+          "itemId": "1016937432843",
+          "content": "十字OP短款",
+          "color": "黑色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "十字OP短款",
+              "name": "十字OP短款",
+              "category": "OP",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "十字op短款黑色",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6022449872835",
@@ -3502,7 +16847,37 @@ window.SQUARE_DATA = {
           },
           "price": 175.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872835",
+          "itemId": "1016937432843",
+          "content": "袖套",
+          "color": null,
+          "size": "XS",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "袖套",
+              "name": "袖套",
+              "category": "手袖",
+              "isAccessory": true,
+              "color": null,
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "袖套",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6022449872840",
@@ -3512,7 +16887,37 @@ window.SQUARE_DATA = {
           },
           "price": 175.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1016937432843:6022449872840",
+          "itemId": "1016937432843",
+          "content": "袖套",
+          "color": null,
+          "size": "S",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "袖套",
+              "name": "袖套",
+              "category": "手袖",
+              "isAccessory": true,
+              "color": null,
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "袖套",
+            "尺码": "S"
+          }
         },
         {
           "id": "6022449872845",
@@ -3522,7 +16927,37 @@ window.SQUARE_DATA = {
           },
           "price": 175.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872845",
+          "itemId": "1016937432843",
+          "content": "袖套",
+          "color": null,
+          "size": "M",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "袖套",
+              "name": "袖套",
+              "category": "手袖",
+              "isAccessory": true,
+              "color": null,
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "袖套",
+            "尺码": "M"
+          }
         },
         {
           "id": "6022449872850",
@@ -3532,7 +16967,37 @@ window.SQUARE_DATA = {
           },
           "price": 175.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872850",
+          "itemId": "1016937432843",
+          "content": "袖套",
+          "color": null,
+          "size": "L",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "袖套",
+              "name": "袖套",
+              "category": "手袖",
+              "isAccessory": true,
+              "color": null,
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "袖套",
+            "尺码": "L"
+          }
         },
         {
           "id": "6022449872855",
@@ -3542,9 +17007,143 @@ window.SQUARE_DATA = {
           },
           "price": 175.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1016937432843:6022449872855",
+          "itemId": "1016937432843",
+          "content": "袖套",
+          "color": null,
+          "size": "XL",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "袖套",
+              "name": "袖套",
+              "category": "手袖",
+              "isAccessory": true,
+              "color": null,
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "袖套",
+            "尺码": "XL"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "哥特",
+            "source": "商品标题",
+            "field": "title"
+          }
+        ],
+        "season": null,
+        "components": [
+          {
+            "name": "十字OP长款",
+            "type": "连衣裙",
+            "listPrice": 625,
+            "reservationFull": 597,
+            "deposit": 119,
+            "balance": 478
+          },
+          {
+            "name": "十字OP短款",
+            "type": "连衣裙",
+            "listPrice": 610,
+            "reservationFull": 582,
+            "deposit": 116,
+            "balance": 466
+          },
+          {
+            "name": "袖套",
+            "type": "配件",
+            "listPrice": 175,
+            "reservationFull": 155,
+            "deposit": 31,
+            "balance": 124
+          }
+        ],
+        "included": [
+          "十字OP连衣裙（长款或短款，按SKU）",
+          "袖套为单独SKU，不含在OP内"
+        ],
+        "excluded": [
+          "模特图搭配的裙撑、鞋袜、帽子等未注明包含"
+        ],
+        "gifts": [
+          "飞机盒为免费赠送包装，不纳入售后；无其他赠品说明"
+        ],
+        "care": "优先手洗，可机洗；机洗翻到背面装入洗衣袋，勿长时间浸泡，冷水/温水随泡随洗；勿拧绞；深色有浮色，勿与浅色混洗；八成干时熨烫，温度勿过高；袖套建议手洗。",
+        "materials": "十字OP：暗格纹 79%涤纶/21%人棉（粘纤），提花 100%涤纶，猫抓纹 56%PET纤维/44%粘纤；里布 100%聚酯纤维。袖套：90%锦纶/10%氨纶，条纹料 100%聚酯纤维；蕾丝料 90%锦纶/10%氨纶，条纹料 100%聚酯纤维。",
+        "craft": "前胸十字设计分割裁片夹木耳花边；收腰修身，侧拉链，腰部抽绳；短款多层蛋糕摆。",
+        "sizes": {
+          "十字OP": {
+            "XS": {
+              "长款裙长(cm)": 88,
+              "短款裙长(cm)": 81,
+              "胸围(cm)": "<84",
+              "腰围(cm)": "<70",
+              "肩宽(cm)": 32
+            },
+            "S": {
+              "长款裙长(cm)": 89,
+              "短款裙长(cm)": 82,
+              "胸围(cm)": "<88",
+              "腰围(cm)": "<74",
+              "肩宽(cm)": 33
+            },
+            "M": {
+              "长款裙长(cm)": 90,
+              "短款裙长(cm)": 83,
+              "胸围(cm)": "<92",
+              "腰围(cm)": "<78",
+              "肩宽(cm)": 34
+            },
+            "L": {
+              "长款裙长(cm)": 91,
+              "短款裙长(cm)": 84,
+              "胸围(cm)": "<96",
+              "腰围(cm)": "<82",
+              "肩宽(cm)": 35
+            },
+            "XL": {
+              "长款裙长(cm)": 92,
+              "短款裙长(cm)": 85,
+              "胸围(cm)": "<100",
+              "腰围(cm)": "<86",
+              "肩宽(cm)": 36
+            }
+          },
+          "袖套": {
+            "S": {
+              "推荐臂围(cm)": "小于25",
+              "袖长(cm)": 47
+            },
+            "M": {
+              "推荐臂围(cm)": "25-28",
+              "袖长(cm)": 49
+            },
+            "L": {
+              "推荐臂围(cm)": "大于28",
+              "袖长(cm)": 50
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1016937432843-1.webp",
         "assets/1016937432843-2.webp"
@@ -3567,7 +17166,37 @@ window.SQUARE_DATA = {
           },
           "price": 253.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6197698654990",
+          "itemId": "1022012881368",
+          "content": "马甲",
+          "color": null,
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "马甲",
+              "name": "马甲",
+              "category": "其他服装",
+              "isAccessory": false,
+              "color": null,
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "马甲",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6197698654991",
@@ -3577,7 +17206,37 @@ window.SQUARE_DATA = {
           },
           "price": 253.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654991",
+          "itemId": "1022012881368",
+          "content": "马甲",
+          "color": null,
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "马甲",
+              "name": "马甲",
+              "category": "其他服装",
+              "isAccessory": false,
+              "color": null,
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "马甲",
+            "尺码": "S"
+          }
         },
         {
           "id": "6197698654992",
@@ -3587,7 +17246,37 @@ window.SQUARE_DATA = {
           },
           "price": 253.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654992",
+          "itemId": "1022012881368",
+          "content": "马甲",
+          "color": null,
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "马甲",
+              "name": "马甲",
+              "category": "其他服装",
+              "isAccessory": false,
+              "color": null,
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "马甲",
+            "尺码": "M"
+          }
         },
         {
           "id": "6197698654993",
@@ -3597,7 +17286,37 @@ window.SQUARE_DATA = {
           },
           "price": 253.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654993",
+          "itemId": "1022012881368",
+          "content": "马甲",
+          "color": null,
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "马甲",
+              "name": "马甲",
+              "category": "其他服装",
+              "isAccessory": false,
+              "color": null,
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "马甲",
+            "尺码": "L"
+          }
         },
         {
           "id": "6197698654994",
@@ -3607,7 +17326,37 @@ window.SQUARE_DATA = {
           },
           "price": 253.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6197698654994",
+          "itemId": "1022012881368",
+          "content": "马甲",
+          "color": null,
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "马甲",
+              "name": "马甲",
+              "category": "其他服装",
+              "isAccessory": false,
+              "color": null,
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "马甲",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6197698654995",
@@ -3617,7 +17366,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654995",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "黑色",
+          "size": "XS",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XS",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色衬衫+领花",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6197698654996",
@@ -3627,7 +17416,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654996",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "黑色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色衬衫+领花",
+            "尺码": "S"
+          }
         },
         {
           "id": "6197698654997",
@@ -3637,7 +17466,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6197698654997",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "黑色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色衬衫+领花",
+            "尺码": "M"
+          }
         },
         {
           "id": "6197698654998",
@@ -3647,7 +17516,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6197698654998",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "黑色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色衬衫+领花",
+            "尺码": "L"
+          }
         },
         {
           "id": "6197698654999",
@@ -3657,7 +17566,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6197698654999",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "黑色",
+          "size": "XL",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XL",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色衬衫+领花",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6197698655000",
@@ -3667,7 +17616,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6197698655000",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "黑色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色短半裙",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6033310733001",
@@ -3677,7 +17656,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733001",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色短半裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6033310733002",
@@ -3687,7 +17696,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733002",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色短半裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6033310733003",
@@ -3697,7 +17736,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6033310733003",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色短半裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6033310733004",
@@ -3707,7 +17776,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733004",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "黑色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色短半裙",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6033310733005",
@@ -3717,7 +17816,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733005",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "黑色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色长半裙",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6033310733006",
@@ -3727,7 +17856,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733006",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "黑色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色长半裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6033310733007",
@@ -3737,7 +17896,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733007",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "黑色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色长半裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6033310733008",
@@ -3747,7 +17936,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733008",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "黑色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色长半裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6033310733009",
@@ -3757,7 +17976,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733009",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "黑色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色长半裙",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6033310733010",
@@ -3767,7 +18016,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733010",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "红色",
+          "size": "XS",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XS",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色衬衫+领花",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6033310733011",
@@ -3777,7 +18066,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733011",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "红色",
+          "size": "S",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "S",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色衬衫+领花",
+            "尺码": "S"
+          }
         },
         {
           "id": "6033310733012",
@@ -3787,7 +18116,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733012",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "红色",
+          "size": "M",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "M",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色衬衫+领花",
+            "尺码": "M"
+          }
         },
         {
           "id": "6033310733013",
@@ -3797,7 +18166,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6033310733013",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "红色",
+          "size": "L",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "L",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色衬衫+领花",
+            "尺码": "L"
+          }
         },
         {
           "id": "6033310733014",
@@ -3807,7 +18216,47 @@ window.SQUARE_DATA = {
           },
           "price": 417.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733014",
+          "itemId": "1022012881368",
+          "content": "衬衫+领花",
+          "color": "红色",
+          "size": "XL",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "衬衫",
+              "name": "衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XL",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "领花",
+              "name": "领花",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色衬衫+领花",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6033310733015",
@@ -3817,7 +18266,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733015",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "红色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色短半裙",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6033310733016",
@@ -3827,7 +18306,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1022012881368:6033310733016",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "红色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色短半裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6033310733017",
@@ -3837,7 +18346,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6033310733017",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "红色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色短半裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6033310733018",
@@ -3847,7 +18386,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "即将售罄"
+          "stock": "即将售罄",
+          "key": "1022012881368:6033310733018",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "红色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色短半裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6033310733019",
@@ -3857,7 +18426,37 @@ window.SQUARE_DATA = {
           },
           "price": 473.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733019",
+          "itemId": "1022012881368",
+          "content": "短半裙",
+          "color": "红色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "短半裙",
+              "name": "短半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色短半裙",
+            "尺码": "XL"
+          }
         },
         {
           "id": "6033310733020",
@@ -3867,7 +18466,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733020",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "红色",
+          "size": "XS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色长半裙",
+            "尺码": "XS"
+          }
         },
         {
           "id": "6033310733021",
@@ -3877,7 +18506,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733021",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "红色",
+          "size": "S",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "S",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色长半裙",
+            "尺码": "S"
+          }
         },
         {
           "id": "6033310733022",
@@ -3887,7 +18546,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733022",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "红色",
+          "size": "M",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "M",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色长半裙",
+            "尺码": "M"
+          }
         },
         {
           "id": "6033310733023",
@@ -3897,7 +18586,37 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733023",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "红色",
+          "size": "L",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "L",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色长半裙",
+            "尺码": "L"
+          }
         },
         {
           "id": "6033310733024",
@@ -3907,9 +18626,196 @@ window.SQUARE_DATA = {
           },
           "price": 536.0,
           "priceType": "现货价",
-          "stock": "无货"
+          "stock": "无货",
+          "key": "1022012881368:6033310733024",
+          "itemId": "1022012881368",
+          "content": "长半裙",
+          "color": "红色",
+          "size": "XL",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "长半裙",
+              "name": "长半裙",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "红色",
+              "size": "XL",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "哥特",
+              "source": "商品标题",
+              "field": "title"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "红色长半裙",
+            "尺码": "XL"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [
+          {
+            "value": "哥特",
+            "source": "商品标题",
+            "field": "title"
+          }
+        ],
+        "season": null,
+        "components": [
+          {
+            "name": "衬衫+领花",
+            "type": "上衣",
+            "listPrice": 417,
+            "reservationFull": 389,
+            "deposit": 90,
+            "balance": 299
+          },
+          {
+            "name": "马甲",
+            "type": "上衣",
+            "listPrice": 253,
+            "reservationFull": 225,
+            "deposit": 68,
+            "balance": 157
+          },
+          {
+            "name": "长半裙",
+            "type": "半裙",
+            "listPrice": 536,
+            "reservationFull": 508,
+            "deposit": 119,
+            "balance": 389
+          },
+          {
+            "name": "短半裙",
+            "type": "半裙",
+            "listPrice": 473,
+            "reservationFull": 445,
+            "deposit": 96,
+            "balance": 349
+          }
+        ],
+        "included": [
+          "衬衫+领花：衬衫与领结/胸花配套",
+          "马甲、长半裙、短半裙均为独立SKU"
+        ],
+        "excluded": [
+          "人台图裙撑：长款为60cm长裙撑+短螃蟹纱撑/屁股撑叠加；短款为30cm暴力撑；裙撑不含",
+          "模特图其他搭配未注明包含"
+        ],
+        "gifts": [
+          "购买本系列任意2件，赠裙摆胸花1个（详情图）",
+          "衬衫领结胸花为购买衬衫时的配套，不是额外赠品"
+        ],
+        "care": "优先手洗，可机洗；机洗翻面装洗衣袋，温柔模式，勿长时间浸泡，随泡随洗；勿用力拧绞搓洗；深色有浮色，勿与浅色混洗。",
+        "materials": "衬衫：玫瑰提花布 100%涤纶；暗条纹布 78%涤纶/20%人棉/2%氨纶。马甲：蕨纹提花布 80%涤纶/20%人棉，里布 100%涤纶；竖条纹布 66%涤纶/30%人棉/3%氨纶。半裙：提花布 96%涤纶/4%氨纶，条纹提花布 100%涤纶，里布 100%涤纶。",
+        "craft": "衬衫立领、领花/胸花配套；马甲收腰、后背抽绳+素鸡；半裙侧拉链，长短两款。",
+        "sizes": {
+          "衬衫": {
+            "XS": {
+              "胸围(cm)": 84,
+              "腰围(cm)": 70,
+              "袖长(cm)": 57,
+              "肩宽(cm)": 34
+            },
+            "S": {
+              "胸围(cm)": 88,
+              "腰围(cm)": 74,
+              "袖长(cm)": 58,
+              "肩宽(cm)": 35
+            },
+            "M": {
+              "胸围(cm)": 92,
+              "腰围(cm)": 78,
+              "袖长(cm)": 59,
+              "肩宽(cm)": 36
+            },
+            "L": {
+              "胸围(cm)": 96,
+              "腰围(cm)": 82,
+              "袖长(cm)": 60,
+              "肩宽(cm)": 37
+            },
+            "XL": {
+              "胸围(cm)": 100,
+              "腰围(cm)": 86,
+              "袖长(cm)": 61,
+              "肩宽(cm)": 38
+            }
+          },
+          "马甲": {
+            "XS": {
+              "腰围(cm)": 66,
+              "衣长(cm)": 45
+            },
+            "S": {
+              "腰围(cm)": 70,
+              "衣长(cm)": 46
+            },
+            "M": {
+              "腰围(cm)": 74,
+              "衣长(cm)": 47
+            },
+            "L": {
+              "腰围(cm)": 78,
+              "衣长(cm)": 48
+            },
+            "XL": {
+              "腰围(cm)": 82,
+              "衣长(cm)": 49
+            }
+          },
+          "长半裙": {
+            "S": {
+              "腰围(cm，最大拉伸)": "63-76",
+              "裙长(cm)": 97
+            },
+            "M": {
+              "腰围(cm，最大拉伸)": "67-80",
+              "裙长(cm)": 98
+            },
+            "L": {
+              "腰围(cm，最大拉伸)": "71-84",
+              "裙长(cm)": 99
+            },
+            "XL": {
+              "腰围(cm，最大拉伸)": "75-88",
+              "裙长(cm)": 100
+            }
+          },
+          "短半裙": {
+            "S": {
+              "腰围(cm，最大拉伸)": "63-76",
+              "前裙长(cm)": 42,
+              "后裙长(cm)": 82
+            },
+            "M": {
+              "腰围(cm，最大拉伸)": "67-80",
+              "前裙长(cm)": 43,
+              "后裙长(cm)": 83
+            },
+            "L": {
+              "腰围(cm，最大拉伸)": "71-84",
+              "前裙长(cm)": 44,
+              "后裙长(cm)": 84
+            },
+            "XL": {
+              "腰围(cm，最大拉伸)": "75-88",
+              "前裙长(cm)": 45,
+              "后裙长(cm)": 85
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1022012881368-1.webp",
         "assets/1022012881368-2.webp"
@@ -3933,7 +18839,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125536",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125537",
@@ -3944,7 +18891,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125537",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125538",
@@ -3955,7 +18943,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125538",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125543",
@@ -3966,7 +18979,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125543",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125544",
@@ -3977,7 +19031,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125544",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125550",
@@ -3988,7 +19083,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125550",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125551",
@@ -3999,7 +19135,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125551",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125552",
@@ -4010,7 +19187,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125552",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125557",
@@ -4021,7 +19223,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125557",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125558",
@@ -4032,7 +19275,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125558",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125564",
@@ -4043,7 +19327,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125564",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125565",
@@ -4054,7 +19379,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125565",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125566",
@@ -4065,7 +19431,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125566",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125592",
@@ -4076,7 +19467,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125592",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125593",
@@ -4087,7 +19519,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125593",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125594",
@@ -4098,7 +19571,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125594",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125595",
@@ -4109,7 +19607,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125595",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6103376125599",
@@ -4120,7 +19643,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125599",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125600",
@@ -4131,7 +19695,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125600",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125606",
@@ -4142,7 +19747,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125606",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125607",
@@ -4153,7 +19799,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125607",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125608",
@@ -4164,7 +19851,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125608",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125609",
@@ -4175,7 +19887,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125609",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6103376125613",
@@ -4186,7 +19923,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125613",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125614",
@@ -4197,7 +19975,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125614",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125620",
@@ -4208,7 +20027,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125620",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125621",
@@ -4219,7 +20079,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125621",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125622",
@@ -4230,7 +20131,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125622",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125623",
@@ -4241,7 +20167,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125623",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6103376125648",
@@ -4252,7 +20203,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125648",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125649",
@@ -4263,7 +20255,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125649",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125650",
@@ -4274,7 +20307,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125650",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125651",
@@ -4285,7 +20343,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125651",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6103376125655",
@@ -4296,7 +20379,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125655",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125656",
@@ -4307,7 +20431,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125656",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125662",
@@ -4318,7 +20483,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125662",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125663",
@@ -4329,7 +20535,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125663",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125664",
@@ -4340,7 +20587,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125664",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125665",
@@ -4351,7 +20623,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125665",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6103376125669",
@@ -4362,7 +20659,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125669",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125670",
@@ -4373,7 +20711,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125670",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125676",
@@ -4384,7 +20763,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125676",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6103376125677",
@@ -4395,7 +20815,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125677",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6103376125678",
@@ -4406,7 +20867,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125678",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6103376125679",
@@ -4417,7 +20903,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6103376125679",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6102612948659",
@@ -4428,7 +20939,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948659",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6102612948660",
@@ -4439,7 +20991,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948660",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6102612948661",
@@ -4450,7 +21043,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948661",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6102612948658",
@@ -4461,7 +21079,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948658",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6102612948675",
@@ -4472,7 +21115,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948675",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "蓝色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6102612948676",
@@ -4483,7 +21167,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948676",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "蓝色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6102612948677",
@@ -4494,7 +21219,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948677",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "蓝色",
+          "size": "Lady75",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady75",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady75",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6102612948674",
@@ -4505,7 +21255,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948674",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady75",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady75",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady75",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6102612948663",
@@ -4516,7 +21291,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948663",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6102612948664",
@@ -4527,7 +21343,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948664",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6102612948665",
@@ -4538,7 +21395,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948665",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6102612948662",
@@ -4549,7 +21431,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948662",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6102612948667",
@@ -4560,7 +21467,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948667",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "蓝色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6102612948668",
@@ -4571,7 +21519,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948668",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "蓝色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6102612948669",
@@ -4582,7 +21571,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948669",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "蓝色",
+          "size": "Lady85",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady85",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady85",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6102612948666",
@@ -4593,7 +21607,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948666",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady85",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady85",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady85",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6102612948671",
@@ -4604,7 +21643,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948671",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（长款）",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6102612948672",
@@ -4615,7 +21695,48 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948672",
+          "itemId": "1057768531418",
+          "content": "帝政风SET（短款）",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6102612948673",
@@ -4626,7 +21747,32 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948673",
+          "itemId": "1057768531418",
+          "content": "印花SK",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6102612948670",
@@ -4637,9 +21783,202 @@ window.SQUARE_DATA = {
           },
           "price": 1000.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1057768531418:6102612948670",
+          "itemId": "1057768531418",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [],
+        "season": null,
+        "components": [
+          {
+            "name": "帝政风SET（长款）",
+            "type": "套装（内裙+可拆外裙）",
+            "fullPrice": 598,
+            "deposit": 110,
+            "balance": 488
+          },
+          {
+            "name": "帝政风SET（短款）",
+            "type": "套装（内裙+可拆外裙）",
+            "fullPrice": 598,
+            "deposit": 110,
+            "balance": 488
+          },
+          {
+            "name": "印花SK",
+            "type": "半裙",
+            "fullPrice": 215,
+            "deposit": 40,
+            "balance": 175
+          },
+          {
+            "name": "背带罩裙",
+            "type": "罩裙",
+            "fullPrice": 150,
+            "deposit": 30,
+            "balance": 120
+          }
+        ],
+        "included": [
+          "帝政风SET：内裙+可拆外裙",
+          "印花SK：单条半裙",
+          "背带罩裙：单件罩裙"
+        ],
+        "excluded": [
+          "模特图裙撑、鞋、袜子、头饰等搭配未注明包含",
+          "SET赠品手工背链仅指帝政SET，其他SKU不含"
+        ],
+        "gifts": [
+          "帝政风SET赠手工背链1条（详情图）"
+        ],
+        "care": "公开详情未列具体洗护方式；仅注明面料/辅料存在缸差、批次差异，手工制作有误差。",
+        "materials": "主题印花、定织暗纹提花布料，有衬里；背带罩裙主体为莱赛尔混纺面料。页面未公开纤维百分比。",
+        "craft": "帝政SET：内裙为方领背带JSK，肩带可微调，有钢骨，背后抽带；外裙为可拆雪纺罩裙，背带纽扣固定，腰部主题印花，前开抽带，罩裙略长于内裙。印花SK：腰部钢骨、正面抽带、背后松紧，下摆双层荷叶边，侧拉链。背带罩裙：半透明莱赛尔混纺，前后不可合拢，前开襟，胸口抽带，不规则前短后长下摆，后腰绑带。",
+        "sizes": {
+          "帝政SET长款": {
+            "Lady70": {
+              "内裙全长(cm)": 137,
+              "胸围(cm)": "80-85",
+              "高腰围(cm)": "65-70",
+              "高腰线到底边(cm)": 106,
+              "外裙全长(cm)": 139,
+              "外裙高腰围最小值(cm)": 64
+            },
+            "Lady75": {
+              "内裙全长(cm)": 138,
+              "胸围(cm)": "85-90",
+              "高腰围(cm)": "70-75",
+              "高腰线到底边(cm)": 106,
+              "外裙全长(cm)": 140,
+              "外裙高腰围最小值(cm)": 69
+            },
+            "Lady80": {
+              "内裙全长(cm)": 139,
+              "胸围(cm)": "90-95",
+              "高腰围(cm)": "75-80",
+              "高腰线到底边(cm)": 106,
+              "外裙全长(cm)": 141,
+              "外裙高腰围最小值(cm)": 74
+            },
+            "Lady85": {
+              "内裙全长(cm)": 140,
+              "胸围(cm)": "95-100",
+              "高腰围(cm)": "80-85",
+              "高腰线到底边(cm)": 106,
+              "外裙全长(cm)": 142,
+              "外裙高腰围最小值(cm)": 79
+            },
+            "Lady90": {
+              "内裙全长(cm)": 141,
+              "胸围(cm)": "100-105",
+              "高腰围(cm)": "85-90",
+              "高腰线到底边(cm)": 106,
+              "外裙全长(cm)": 143,
+              "外裙高腰围最小值(cm)": 84
+            }
+          },
+          "帝政SET短款": {
+            "Lady70": {
+              "内裙全长(cm)": 125,
+              "胸围(cm)": "80-85",
+              "高腰围(cm)": "65-70",
+              "高腰线到底边(cm)": 97,
+              "外裙全长(cm)": 127,
+              "外裙高腰围最小值(cm)": 64
+            },
+            "Lady75": {
+              "内裙全长(cm)": 126,
+              "胸围(cm)": "85-90",
+              "高腰围(cm)": "70-75",
+              "高腰线到底边(cm)": 97,
+              "外裙全长(cm)": 128,
+              "外裙高腰围最小值(cm)": 69
+            },
+            "Lady80": {
+              "内裙全长(cm)": 127,
+              "胸围(cm)": "90-95",
+              "高腰围(cm)": "75-80",
+              "高腰线到底边(cm)": 97,
+              "外裙全长(cm)": 129,
+              "外裙高腰围最小值(cm)": 74
+            },
+            "Lady85": {
+              "内裙全长(cm)": 128,
+              "胸围(cm)": "95-100",
+              "高腰围(cm)": "80-85",
+              "高腰线到底边(cm)": 97,
+              "外裙全长(cm)": 130,
+              "外裙高腰围最小值(cm)": 79
+            },
+            "Lady90": {
+              "内裙全长(cm)": 129,
+              "胸围(cm)": "100-105",
+              "高腰围(cm)": "85-90",
+              "高腰线到底边(cm)": 97,
+              "外裙全长(cm)": 131,
+              "外裙高腰围最小值(cm)": 84
+            }
+          },
+          "印花SK": {
+            "Lady70": {
+              "腰围(cm)": "58-67",
+              "全长(cm)": 66
+            },
+            "Lady80": {
+              "腰围(cm)": "68-77",
+              "全长(cm)": 66
+            },
+            "Lady90": {
+              "腰围(cm)": "78-87",
+              "全长(cm)": 66
+            }
+          },
+          "背带罩裙": {
+            "Lady70": {
+              "建议胸围(cm)": "<86",
+              "建议腰围(cm)": "64-70",
+              "前长全长(cm)": 78
+            },
+            "Lady80": {
+              "建议胸围(cm)": "<96",
+              "建议腰围(cm)": "74-80",
+              "前长全长(cm)": 80
+            },
+            "Lady90": {
+              "建议胸围(cm)": "<106",
+              "建议腰围(cm)": "84-90",
+              "前长全长(cm)": 82
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1057768531418-1.webp",
         "assets/1057768531418-2.webp"
@@ -4663,7 +22002,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021848",
+          "itemId": "1060482620961",
+          "content": "发带头饰（不单售）",
+          "color": "地中海色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "地中海色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6103377021849",
@@ -4674,7 +22038,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021849",
+          "itemId": "1060482620961",
+          "content": "Bonnet（不单售）",
+          "color": "地中海色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "地中海色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6102601176524",
@@ -4685,7 +22074,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176524",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "白色",
+          "size": "lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "lady70",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176542",
@@ -4696,7 +22110,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176542",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "白色",
+          "size": "lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "lady80",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176554",
@@ -4707,7 +22146,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176554",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "白色",
+          "size": "lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "lady90",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176566",
@@ -4718,7 +22182,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176566",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "白色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "ManS",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176512",
@@ -4729,7 +22218,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176512",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "白色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "ManM",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6103377021850",
@@ -4740,7 +22254,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021850",
+          "itemId": "1060482620961",
+          "content": "发带头饰（不单售）",
+          "color": "白色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "白色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6103377021851",
@@ -4751,7 +22290,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021851",
+          "itemId": "1060482620961",
+          "content": "Bonnet（不单售）",
+          "color": "白色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "白色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6102601176526",
@@ -4762,7 +22326,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176526",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "黑色",
+          "size": "lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "lady70",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176544",
@@ -4773,7 +22362,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176544",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "黑色",
+          "size": "lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "lady80",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176556",
@@ -4784,7 +22398,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176556",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "黑色",
+          "size": "lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "lady90",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176568",
@@ -4795,7 +22434,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176568",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "黑色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "ManS",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176514",
@@ -4806,7 +22470,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176514",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "黑色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "ManM",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6103377021852",
@@ -4817,7 +22506,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021852",
+          "itemId": "1060482620961",
+          "content": "发带头饰（不单售）",
+          "color": "黑色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "黑色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6103377021853",
@@ -4828,7 +22542,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6103377021853",
+          "itemId": "1060482620961",
+          "content": "Bonnet（不单售）",
+          "color": "黑色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "黑色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6102601176525",
@@ -4839,7 +22578,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176525",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "蓝色",
+          "size": "lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "lady70",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176543",
@@ -4850,7 +22614,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176543",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "蓝色",
+          "size": "lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "lady80",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176555",
@@ -4861,7 +22650,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176555",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "蓝色",
+          "size": "lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "lady90",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176567",
@@ -4872,7 +22686,32 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176567",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "蓝色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "ManS",
+            "套装": "中性立领衬衫"
+          }
         },
         {
           "id": "6102601176513",
@@ -4883,9 +22722,116 @@ window.SQUARE_DATA = {
           },
           "price": 500.0,
           "priceType": "页面标价（全SKU同价，已下架；不是单件全款）",
-          "stock": " "
+          "stock": " ",
+          "key": "1060482620961:6102601176513",
+          "itemId": "1060482620961",
+          "content": "中性立领衬衫",
+          "color": "蓝色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性立领衬衫",
+              "name": "中性立领衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "ManM",
+            "套装": "中性立领衬衫"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [],
+        "season": null,
+        "components": [
+          {
+            "name": "中性立领衬衫",
+            "type": "衬衫",
+            "fullPrice": 398,
+            "deposit": 70,
+            "balance": 328
+          },
+          {
+            "name": "发带头饰",
+            "type": "头饰",
+            "fullPrice": 50,
+            "deposit": 10,
+            "balance": 40
+          },
+          {
+            "name": "Bonnet（草帽型）",
+            "type": "帽子",
+            "fullPrice": 158,
+            "deposit": 30,
+            "balance": 128
+          }
+        ],
+        "included": [
+          "中性立领衬衫：单件衬衫",
+          "发带头饰：单件",
+          "Bonnet：单件"
+        ],
+        "excluded": [
+          "模特图其他搭配未注明包含"
+        ],
+        "gifts": [
+          "本页未列额外赠品"
+        ],
+        "care": "公开详情未列具体洗护方式；小物为手工制作，存在手工痕迹。",
+        "materials": "中性立领衬衫：质感拼色长袖衬衫，页面未给纤维百分比；发带：印花本布、珍珠吊坠、人造宝石；Bonnet：拉菲草编织带镂空、荷叶边、蕾丝、印花本布蝴蝶结、多褶衬里。",
+        "craft": "中性衬衫：半开小立领、荷叶边蕾丝大V、胸前系带、宽松中性版型、半透明多层长姬袖、右肩希腊披肩袖及垂坠装饰。发带：印花本布蝴蝶结+十字结，珍珠吊坠/人造宝石珠链，背后扁嘴夹。Bonnet：拉菲草编镂空，外部荷叶边/蕾丝/印花蝴蝶结，内部多褶衬里，系带穿脱。",
+        "sizes": {
+          "中性立领衬衫": {
+            "lady70": {
+              "全前长(cm)": 72,
+              "全后长(cm)": 82,
+              "胸围(cm)": 90,
+              "肩线宽(cm)": 34,
+              "袖长(cm)": 90
+            },
+            "lady80": {
+              "全前长(cm)": 72,
+              "全后长(cm)": 82,
+              "胸围(cm)": 100,
+              "肩线宽(cm)": 37,
+              "袖长(cm)": 90
+            },
+            "lady90": {
+              "全前长(cm)": 72,
+              "全后长(cm)": 82,
+              "胸围(cm)": 110,
+              "肩线宽(cm)": 40,
+              "袖长(cm)": 90
+            },
+            "ManS": {
+              "全前长(cm)": 80,
+              "全后长(cm)": 90,
+              "胸围(cm)": 102,
+              "肩线宽(cm)": 42,
+              "袖长(cm)": 95
+            },
+            "ManM": {
+              "全前长(cm)": 84,
+              "全后长(cm)": 94,
+              "胸围(cm)": 112,
+              "肩线宽(cm)": 48,
+              "袖长(cm)": 98
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1060482620961-1.webp",
         "assets/1060482620961-2.webp"
@@ -4908,7 +22854,51 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697437",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70"
+          }
         },
         {
           "id": "6103383697438",
@@ -4918,7 +22908,51 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697438",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80"
+          }
         },
         {
           "id": "6103383697439",
@@ -4928,7 +22962,51 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697439",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90"
+          }
         },
         {
           "id": "6103383697440",
@@ -4938,7 +23016,51 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697440",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70"
+          }
         },
         {
           "id": "6103383697441",
@@ -4948,7 +23070,51 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697441",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80"
+          }
         },
         {
           "id": "6103383697442",
@@ -4958,9 +23124,107 @@ window.SQUARE_DATA = {
           },
           "price": 278.0,
           "priceType": "页面标价（全SKU同价，已下架）",
-          "stock": " "
+          "stock": " ",
+          "key": "1058557934909:6103383697442",
+          "itemId": "1058557934909",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [],
+        "season": null,
+        "components": [
+          {
+            "name": "双层姬袖衬衫+托领",
+            "type": "衬衫（含可拆托领、胸针）",
+            "fullPrice": 278,
+            "deposit": 50,
+            "balance": 228
+          }
+        ],
+        "included": [
+          "双层姬袖衬衫1件",
+          "可拆托领1个",
+          "胸针1枚"
+        ],
+        "excluded": [
+          "模特图其他搭配未注明包含"
+        ],
+        "gifts": [
+          "托领和胸针为衬衫配套，不是额外赠品"
+        ],
+        "care": "公开详情未列具体洗护方式。",
+        "materials": "棉混纺面料；袖口水溶蕾丝。页面未公开纤维百分比。",
+        "craft": "立领长袖，领口小荷叶边；双层姬袖；胸前单排扣；两侧褶边；背后抽带；托领与胸针均可拆。",
+        "sizes": {
+          "双层姬袖衬衫": {
+            "Lady70": {
+              "全长(cm)": 57,
+              "袖长(cm)": 65,
+              "胸围(cm)": "80-88",
+              "腰围(cm)": "59-67",
+              "肩线宽(cm)": 33
+            },
+            "Lady80": {
+              "全长(cm)": 59,
+              "袖长(cm)": 66,
+              "胸围(cm)": "90-98",
+              "腰围(cm)": "69-77",
+              "肩线宽(cm)": 36
+            },
+            "Lady90": {
+              "全长(cm)": 61,
+              "袖长(cm)": 67,
+              "胸围(cm)": "100-108",
+              "腰围(cm)": "79-87",
+              "肩线宽(cm)": 40
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1058557934909-1.webp",
         "assets/1058557934909-2.webp"
@@ -4984,7 +23248,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623172",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623173",
@@ -4995,7 +23300,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623173",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623174",
@@ -5006,7 +23352,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623174",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623179",
@@ -5017,7 +23388,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623179",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623180",
@@ -5028,7 +23440,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623180",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623186",
@@ -5039,7 +23492,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623186",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623187",
@@ -5050,7 +23544,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623187",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623188",
@@ -5061,7 +23596,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623188",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623193",
@@ -5072,7 +23632,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623193",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623194",
@@ -5083,7 +23684,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623194",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623200",
@@ -5094,7 +23736,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623200",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623201",
@@ -5105,7 +23788,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623201",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623202",
@@ -5116,7 +23840,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623202",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "地中海色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "地中海色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623212",
@@ -5127,7 +23876,32 @@ window.SQUARE_DATA = {
           },
           "price": 39.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623212",
+          "itemId": "1089219231672",
+          "content": "发带头饰（不单售）",
+          "color": "地中海色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "地中海色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6310874623213",
@@ -5138,7 +23912,32 @@ window.SQUARE_DATA = {
           },
           "price": 126.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623213",
+          "itemId": "1089219231672",
+          "content": "Bonnet（不单售）",
+          "color": "地中海色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "地中海色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "地中海色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6310874623228",
@@ -5149,7 +23948,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623228",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623229",
@@ -5160,7 +24000,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623229",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623230",
@@ -5171,7 +24052,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623230",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623231",
@@ -5182,7 +24088,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623231",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623232",
@@ -5193,7 +24124,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623232",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623235",
@@ -5204,7 +24160,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623235",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623236",
@@ -5215,7 +24212,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623236",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623242",
@@ -5226,7 +24264,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623242",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623243",
@@ -5237,7 +24316,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623243",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623244",
@@ -5248,7 +24368,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623244",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623245",
@@ -5259,7 +24404,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623245",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623246",
@@ -5270,7 +24440,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623246",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623249",
@@ -5281,7 +24476,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623249",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623250",
@@ -5292,7 +24528,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623250",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623256",
@@ -5303,7 +24580,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623256",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623257",
@@ -5314,7 +24632,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623257",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623258",
@@ -5325,7 +24684,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623258",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623259",
@@ -5336,7 +24720,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623259",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623260",
@@ -5347,7 +24756,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623260",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623268",
@@ -5358,7 +24792,32 @@ window.SQUARE_DATA = {
           },
           "price": 39.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623268",
+          "itemId": "1089219231672",
+          "content": "发带头饰（不单售）",
+          "color": "白色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "白色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6310874623269",
@@ -5369,7 +24828,32 @@ window.SQUARE_DATA = {
           },
           "price": 126.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623269",
+          "itemId": "1089219231672",
+          "content": "Bonnet（不单售）",
+          "color": "白色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "白色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6310874623274",
@@ -5380,7 +24864,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623274",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "白色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "ManS",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623281",
@@ -5391,7 +24900,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623281",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "白色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "ManM",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623284",
@@ -5402,7 +24936,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623284",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623285",
@@ -5413,7 +24988,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623285",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623286",
@@ -5424,7 +25040,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623286",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623287",
@@ -5435,7 +25076,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623287",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623288",
@@ -5446,7 +25112,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623288",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623291",
@@ -5457,7 +25148,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623291",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623292",
@@ -5468,7 +25200,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623292",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady75",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady75",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady75",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623298",
@@ -5479,7 +25252,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623298",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623299",
@@ -5490,7 +25304,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623299",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623300",
@@ -5501,7 +25356,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623300",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623301",
@@ -5512,7 +25392,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623301",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623302",
@@ -5523,7 +25428,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623302",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623305",
@@ -5534,7 +25464,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623305",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623306",
@@ -5545,7 +25516,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623306",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady85",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady85",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady85",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623312",
@@ -5556,7 +25568,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623312",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（长款）",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（长款）"
+          }
         },
         {
           "id": "6310874623313",
@@ -5567,7 +25620,48 @@ window.SQUARE_DATA = {
           },
           "price": 478.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623313",
+          "itemId": "1089219231672",
+          "content": "帝政风SET（短款）",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "套装",
+          "parts": [
+            {
+              "key": "内裙",
+              "name": "内裙",
+              "category": "JSK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "可拆外裙",
+              "name": "可拆外裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [
+            {
+              "value": "帝政风",
+              "source": "款式名",
+              "field": "skus[].props.套装"
+            }
+          ],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "帝政风SET（短款）"
+          }
         },
         {
           "id": "6310874623314",
@@ -5578,7 +25672,32 @@ window.SQUARE_DATA = {
           },
           "price": 172.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623314",
+          "itemId": "1089219231672",
+          "content": "印花SK",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "印花SK",
+              "name": "印花SK",
+              "category": "SK",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "印花SK"
+          }
         },
         {
           "id": "6310874623315",
@@ -5589,7 +25708,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623315",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623316",
@@ -5600,7 +25744,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623316",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623324",
@@ -5611,7 +25780,32 @@ window.SQUARE_DATA = {
           },
           "price": 39.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623324",
+          "itemId": "1089219231672",
+          "content": "发带头饰（不单售）",
+          "color": "黑色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "发带头饰（不单售）",
+              "name": "发带头饰（不单售）",
+              "category": "发带",
+              "isAccessory": true,
+              "color": "黑色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "均码",
+            "套装": "发带头饰（不单售）"
+          }
         },
         {
           "id": "6310874623325",
@@ -5622,7 +25816,32 @@ window.SQUARE_DATA = {
           },
           "price": 126.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623325",
+          "itemId": "1089219231672",
+          "content": "Bonnet（不单售）",
+          "color": "黑色",
+          "size": "均码",
+          "form": "小物",
+          "parts": [
+            {
+              "key": "Bonnet（不单售）",
+              "name": "Bonnet（不单售）",
+              "category": "Bonnet",
+              "isAccessory": true,
+              "color": "黑色",
+              "size": "均码",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": true,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "均码",
+            "套装": "Bonnet（不单售）"
+          }
         },
         {
           "id": "6310874623330",
@@ -5633,7 +25852,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623330",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "黑色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "ManS",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623337",
@@ -5644,7 +25888,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623337",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "黑色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "ManM",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623343",
@@ -5655,7 +25924,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623343",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623344",
@@ -5666,7 +25960,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623344",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "蓝色",
+          "size": "Lady70",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady70",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady70",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623357",
@@ -5677,7 +25996,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623357",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623358",
@@ -5688,7 +26032,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623358",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "蓝色",
+          "size": "Lady80",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady80",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady80",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623371",
@@ -5699,7 +26068,32 @@ window.SQUARE_DATA = {
           },
           "price": 120.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623371",
+          "itemId": "1089219231672",
+          "content": "背带罩裙",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "背带罩裙",
+              "name": "背带罩裙",
+              "category": "罩裙",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "背带罩裙"
+          }
         },
         {
           "id": "6310874623372",
@@ -5710,7 +26104,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623372",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "蓝色",
+          "size": "Lady90",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "Lady90",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "Lady90",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623386",
@@ -5721,7 +26140,32 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623386",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "蓝色",
+          "size": "ManS",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "ManS",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "ManS",
+            "套装": "中性款衬衫"
+          }
         },
         {
           "id": "6310874623393",
@@ -5732,9 +26176,101 @@ window.SQUARE_DATA = {
           },
           "price": 318.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1089219231672:6310874623393",
+          "itemId": "1089219231672",
+          "content": "中性款衬衫",
+          "color": "蓝色",
+          "size": "ManM",
+          "form": "单品",
+          "parts": [
+            {
+              "key": "中性款衬衫",
+              "name": "中性款衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "蓝色",
+              "size": "ManM",
+              "relation": "独立SKU",
+              "uncertainty": null
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "蓝色",
+            "尺码": "ManM",
+            "套装": "中性款衬衫"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [],
+        "season": null,
+        "components": [
+          {
+            "name": "帝政风SET（长款）",
+            "type": "套装",
+            "tailPrice": 478,
+            "detailTailPrice": 488
+          },
+          {
+            "name": "帝政风SET（短款）",
+            "type": "套装",
+            "tailPrice": 478,
+            "detailTailPrice": 488
+          },
+          {
+            "name": "印花SK",
+            "type": "半裙",
+            "tailPrice": 172,
+            "detailTailPrice": 175
+          },
+          {
+            "name": "发带头饰",
+            "type": "头饰",
+            "tailPrice": 39,
+            "detailTailPrice": 40
+          },
+          {
+            "name": "Bonnet",
+            "type": "帽子",
+            "tailPrice": 126,
+            "detailTailPrice": 128
+          },
+          {
+            "name": "背带罩裙",
+            "type": "罩裙",
+            "tailPrice": 120,
+            "detailTailPrice": 120
+          },
+          {
+            "name": "中性款衬衫",
+            "type": "衬衫",
+            "tailPrice": 318,
+            "detailTailPrice": 328
+          }
+        ],
+        "included": [
+          "按所选SKU：SET长/短、印花SK、发带、Bonnet、背带罩裙、中性衬衫"
+        ],
+        "excluded": [
+          "裙撑、鞋袜等搭配不含"
+        ],
+        "gifts": [
+          "第一批次帝政SET是否含手工背链未在本页重复说明；第二批次详情写SET赠手工背链，不能直接推定第一批次同样有赠品。"
+        ],
+        "care": "公开详情未列具体洗护方式。",
+        "materials": "同系列第二批次详情：主题印花/定织暗纹提花布、有衬里；罩裙莱赛尔混纺；中性衬衫拼色面料。纤维百分比未公开。",
+        "craft": "同系列第二批次详情。",
+        "sizes": {
+          "帝政SET长/短款": "见第二批次裙装页尺码表（同系列同版型）",
+          "印花SK/罩裙": "见第二批次裙装页尺码表",
+          "中性款衬衫": "见第二批次中性衬衫页尺码表"
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1089219231672-1.webp",
         "assets/1089219231672-2.webp"
@@ -5757,7 +26293,51 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365607",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady70",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady70"
+          }
         },
         {
           "id": "6146708365608",
@@ -5767,7 +26347,51 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365608",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady80",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady80"
+          }
         },
         {
           "id": "6146708365609",
@@ -5777,7 +26401,51 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365609",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "白色",
+          "size": "Lady90",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "白色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "白色",
+            "尺码": "Lady90"
+          }
         },
         {
           "id": "6146708365610",
@@ -5787,7 +26455,51 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365610",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady70",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady70",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady70"
+          }
         },
         {
           "id": "6146708365611",
@@ -5797,7 +26509,51 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365611",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady80",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady80",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady80"
+          }
         },
         {
           "id": "6146708365612",
@@ -5807,9 +26563,108 @@ window.SQUARE_DATA = {
           },
           "price": 222.0,
           "priceType": "尾款（不含定金）",
-          "stock": "有货"
+          "stock": "有货",
+          "key": "1090134478903:6146708365612",
+          "itemId": "1090134478903",
+          "content": "双层姬袖衬衫＋托领＋胸针",
+          "color": "黑色",
+          "size": "Lady90",
+          "form": "组合",
+          "parts": [
+            {
+              "key": "双层姬袖衬衫",
+              "name": "双层姬袖衬衫",
+              "category": "衬衫",
+              "isAccessory": false,
+              "color": "黑色",
+              "size": "Lady90",
+              "relation": "同一SKU包含",
+              "uncertainty": null
+            },
+            {
+              "key": "托领",
+              "name": "托领",
+              "category": "其他配饰",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            },
+            {
+              "key": "胸针",
+              "name": "胸针",
+              "category": "胸针",
+              "isAccessory": true,
+              "color": null,
+              "size": null,
+              "relation": "同一SKU包含",
+              "uncertainty": "颜色和尺码未分别标注"
+            }
+          ],
+          "styleFacts": [],
+          "notSoldAlone": false,
+          "rawProperties": {
+            "颜色分类": "黑色",
+            "尺码": "Lady90"
+          }
         }
       ],
+      "isDeposit": false,
+      "info": {
+        "styles": [],
+        "season": null,
+        "components": [
+          {
+            "name": "双层姬袖衬衫+托领",
+            "type": "衬衫",
+            "fullPrice": 278,
+            "deposit": 50,
+            "tailPrice": 222,
+            "detailTailPrice": 228
+          }
+        ],
+        "included": [
+          "衬衫1件",
+          "可拆托领1个",
+          "胸针1枚"
+        ],
+        "excluded": [
+          "其他搭配不含"
+        ],
+        "gifts": [
+          "托领/胸针为配套，不是额外赠品"
+        ],
+        "care": "公开详情未列具体洗护方式。",
+        "materials": "棉混纺面料；袖口水溶蕾丝。纤维百分比未公开。",
+        "craft": "立领长袖、双层姬袖、单排扣、两侧褶边、背后抽带；可拆托领+胸针。",
+        "sizes": {
+          "双层姬袖衬衫": {
+            "Lady70": {
+              "全长(cm)": 57,
+              "袖长(cm)": 65,
+              "胸围(cm)": "80-88",
+              "腰围(cm)": "59-67",
+              "肩线宽(cm)": 33
+            },
+            "Lady80": {
+              "全长(cm)": 59,
+              "袖长(cm)": 66,
+              "胸围(cm)": "90-98",
+              "腰围(cm)": "69-77",
+              "肩线宽(cm)": 36
+            },
+            "Lady90": {
+              "全长(cm)": 61,
+              "袖长(cm)": 67,
+              "胸围(cm)": "100-108",
+              "腰围(cm)": "79-87",
+              "肩线宽(cm)": 40
+            }
+          }
+        },
+        "source": "products.json + 对应SKU原文/详情图；样本映射"
+      },
       "previews": [
         "assets/1090134478903-1.webp",
         "assets/1090134478903-2.webp"

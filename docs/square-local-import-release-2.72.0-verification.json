@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-05",
+  "version": "2.72.0",
+  "version_code": 148,
+  "source_commit": "4a4bf3fa94703ef1b4ff7cd6f6dcf9037f263b80",
+  "tag": "v2.72.0",
+  "source_and_tag_pushed": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.72.0",
+    "version_code": 148,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "4a4bf3fa94703ef1b4ff7cd6f6dcf9037f263b80",
+    "apk_sha256": "67989240e668227c6d3807fa25f3fb256c4b980bbed5a39d92ffbee0a1da581e",
+    "bytes": 83841429
+  },
+  "clean_build": "git archive of committed source; clean assembleRelease passed",
+  "project_assets_byte_verified": 37,
+  "compiled_backgrounds_byte_identical_to_prior_official_release": 7,
+  "tests": {
+    "jvm_methods": 9,
+    "unique_device_methods": 7,
+    "seven_skins_light_dark": true,
+    "small_320dp_double_font_real_ime": true,
+    "all_53_icons_seven_providers": true,
+    "real_first_zip": true,
+    "draft_and_full_detail_zip_roundtrip": true
+  },
+  "upgrade": {
+    "passed": true,
+    "from_version": "2.71.1",
+    "to_version": "2.72.0",
+    "same_official_signature": true,
+    "baseline_id": "lolita-personal-2026-10-28",
+    "baseline_items": 160,
+    "baseline_zip_images": 619,
+    "preserved_private_image_files": 629,
+    "tables_preserved": 45,
+    "all_table_rows_equal": true,
+    "all_image_sha256_equal": true,
+    "all_preferences_sha256_equal": true,
+    "cold_launches": 2,
+    "avd": "Lolita_Square_Release_20261105",
+    "room": 34,
+    "backup_format": 15
+  },
+  "real_import": {
+    "passed": true,
+    "release": "2.72.0",
+    "system_file_picker": true,
+    "package_sha256": "f5337d221789b7db6f87153097faf711bf8a3ca3e34fbb594b4e6265e6fd64ec",
+    "catalog_shops": 3,
+    "catalog_events": 10,
+    "catalog_products": 14,
+    "catalog_skus": 542,
+    "catalog_images": 421,
+    "saved_items": 1,
+    "new_item_status": "WISHED",
+    "selected_size": "M",
+    "detail_images_copied": 54,
+    "original_image_sha_preserved": true,
+    "prices_and_payments_unchanged": true
+  },
+  "platforms": {
+    "github": {
+      "url": "https://github.com/aalm1233/lolita/releases/tag/v2.72.0",
+      "formal": true,
+      "anonymous_full_apk_and_checksum_sha256": true,
+      "head": true,
+      "source_tag_verified": true
+    },
+    "gitee": {
+      "url": "https://gitee.com/aalm1233/lolita/releases/tag/v2.72.0",
+      "formal": true,
+      "anonymous_full_apk_and_checksum_sha256": true,
+      "head": true,
+      "highest_public_version": "2.72.0",
+      "actual_app_manual_update_check": "current and latest 2.72.0; already latest"
+    }
+  },
+  "package_delivery": "local ZIP; 270998822 bytes; 3 shops / 10 events / 14 links / 542 SKUs / 421 deduplicated original images",
+  "package_sha256": "f5337d221789b7db6f87153097faf711bf8a3ca3e34fbb594b4e6265e6fd64ec",
+  "room_version": 34,
+  "backup_format": 15,
+  "paid_calls": 0,
+  "taobao_access_by_main_assistant": false
+}

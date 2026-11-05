@@ -18,4 +18,10 @@
 
 既有CreativeNavigationScreenTest的旧订单指南文案断言尝试时失败（未找到其期待的「如何获取订单文件」），未修改该无关页面；本轮改用新增的真实广场导航/系统选择器定向用例并通过。早期测试的坏ZIP异常类别、未组成的Lazy项定位及图标尖顶问题均已纠正并复测。
 
-正式构建、覆盖升级和发布回执将在完成后补充。
+正式交付：源码`4a4bf3fa`和标签`v2.72.0`已普通推送。提交归档clean Release、原正式签名及37项目素材字节核验通过，七背景编译PNG与2.71.1逐字节一致（aapt对源码PNG有原有透明RGB量化，未冒充源码RGBA完全相等）。APK83,841,429字节，SHA256 `67989240e668227c6d3807fa25f3fb256c4b980bbed5a39d92ffbee0a1da581e`。
+
+独立正式AVD从2.71.1原签名覆盖，使用current.json指向的160物品/619图片基准，通过原备份页实际恢复。两次冷启动保全45张表全部行、629个实际私有图片文件SHA（含恢复前内置图片）和全部SharedPreferences。正式包系统选择器导入本次ZIP并保存真实M码心愿，物品160→161，54张完整详情图独立保留，原图、原Price和Payment均不变。重启仍可浏览目录。[正式广场](visuals/2026-11-05-square-import/native-release-square.jpg)、[正式导入预览](visuals/2026-11-05-square-import/native-release-import-preview.jpg)、[原编辑器核对](visuals/2026-11-05-square-import/native-release-editor.jpg)。
+
+GitHub/Gitee正式APK与SHA256SUMS匿名完整下载、摘要及HEAD一致，GitHub源码标签和Gitee公开最高版本2.72.0通过；正式App一次手动检查显示当前/最新均为2.72.0。首次Gitee上传触及1GB配额后，按持续授权仅清理最旧2.64.0 APK，核验GitHub及三份本机完整副本和SHA后删除，保留旧发布页与校验；回执见[清理记录](gitee-apk-cleanup-2.64.0-2026-11-05.json)。首包按本地ZIP交付，不包含在APK内，未提供云端同步；GitHub额外资料ZIP上传很慢，已停止并撤去未完成的附件/链接，不将其当作线上交付。
+
+汇总见[发布回执](square-local-import-release-2.72.0-verification.json)。所有本轮启动模拟器在验证后关闭并保留数据，无用户设备清理。真实付费调用0次。

@@ -14,6 +14,7 @@ fun SkinIcon(
 ) {
     val icons = LolitaSkin.current.icons
     when (key) {
+        IconKey.Square -> icons.navigation.Square(modifier, tint)
         // Navigation
         IconKey.Home -> icons.navigation.Home(modifier, tint)
         IconKey.Wishlist -> icons.navigation.Wishlist(modifier, tint)

@@ -339,14 +339,15 @@ class SkinIconVisualTest {
         IconKey.SwapVert to "交换", IconKey.OpenInNew to "外部打开",
         IconKey.CheckCircle to "完成", IconKey.Warning to "警告", IconKey.Error to "错误",
         IconKey.Info to "信息", IconKey.Visibility to "显示", IconKey.VisibilityOff to "隐藏",
-        IconKey.Help to "帮助"
+        IconKey.Help to "帮助",
+        IconKey.Square to "广场"
     )
 
     private val overviewSkinLabels = listOf("甜美", "哥特", "中华", "古典", "海军", "田园", "维多利亚")
 
     private fun saveFamilySheets(raw: Bitmap, name: String, background: Int, foreground: Int) {
         val families = listOf(
-            "navigation" to keys.filter { it.ordinal <= IconKey.Settings.ordinal },
+            "navigation" to keys.filter { it.ordinal <= IconKey.Settings.ordinal || it == IconKey.Square },
             "actions" to keys.filter { it.ordinal in IconKey.Add.ordinal..IconKey.Gallery.ordinal },
             "content" to keys.filter { it.ordinal in IconKey.Star.ordinal..IconKey.Location.ordinal || it == IconKey.Laboratory },
             "arrows" to keys.filter { it.ordinal in IconKey.ArrowBack.ordinal..IconKey.OpenInNew.ordinal },

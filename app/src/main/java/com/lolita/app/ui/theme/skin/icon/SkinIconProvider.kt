@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 interface NavigationIcons {
+    @Composable fun Square(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Home(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Wishlist(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)
     @Composable fun Outfit(modifier: Modifier = Modifier, tint: Color = LocalContentColor.current)

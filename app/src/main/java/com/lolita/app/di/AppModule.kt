@@ -23,6 +23,9 @@ object AppModule {
 
     fun database() = database
 
+    private val _squareRepository by lazy { SquareRepository(appContext, database, _itemDraftRepository) }
+    fun squareRepository() = _squareRepository
+
     private val _itemTryOnMaterialRepository by lazy { ItemTryOnMaterialRepository(database.itemTryOnMaterialDao()) }
     fun itemTryOnMaterialRepository() = _itemTryOnMaterialRepository
 

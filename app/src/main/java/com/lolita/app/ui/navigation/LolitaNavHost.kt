@@ -121,6 +121,11 @@ data object BottomNavItems {
             override val label = "首页"
         },
         object : BottomNavItem {
+            override val screen = Screen.Square
+            override val iconKey = IconKey.Square
+            override val label = "广场"
+        },
+        object : BottomNavItem {
             override val screen = Screen.OutfitLogList
             override val iconKey = IconKey.Outfit
             override val label = "穿搭"
@@ -299,6 +304,13 @@ fun LolitaNavHost(
                 popExitTransition = { navSpec.popExitTransition }
             ) {
             // Item List
+            composable(Screen.Square.route) { entry ->
+                val factory = viewModelFactory { initializer { com.lolita.app.ui.screen.square.SquareViewModel(saved = createSavedStateHandle()) } }
+                val square: com.lolita.app.ui.screen.square.SquareViewModel = viewModel(entry, factory = factory)
+                com.lolita.app.ui.screen.square.SquareScreen(
+                    onEditDraft = { id -> navController.navigate(Screen.ItemEdit.createRoute(defaultStatus = "WISHED", draftId = id)) },
+                    onOpenItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }, viewModel = square)
+            }
             composable(Screen.ItemList.route) {
                 CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 ItemListScreen(

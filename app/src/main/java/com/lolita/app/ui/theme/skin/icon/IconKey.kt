@@ -13,5 +13,5 @@ enum class IconKey {
     // Status
     CheckCircle, Warning, Error, Info, Visibility, VisibilityOff, Help,
     // Appended to preserve the original keys and contact-sheet positions.
-    Laboratory
+    Laboratory, Square
 }

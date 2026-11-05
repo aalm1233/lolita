@@ -3,6 +3,8 @@ package com.lolita.app.ui.navigation
 sealed interface Screen {
     val route: String
 
+    data object Square : Screen { override val route = "square" }
+
     data object ItemList : Screen {
         override val route = "item_list"
     }

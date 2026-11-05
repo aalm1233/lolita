@@ -14,6 +14,8 @@ internal class PolishedSkinIconProvider(style: SkinIconStyle) : SkinIconProvider
 }
 
 private class PolishedNavigationIcons(private val style: SkinIconStyle) : NavigationIcons {
+    @Composable override fun Square(modifier: Modifier, tint: Color) =
+        PolishedSkinIcon(IconKey.Square, style, modifier, tint)
     @Composable override fun Home(modifier: Modifier, tint: Color) =
         PolishedSkinIcon(IconKey.Home, style, modifier, tint)
     @Composable override fun Wishlist(modifier: Modifier, tint: Color) =

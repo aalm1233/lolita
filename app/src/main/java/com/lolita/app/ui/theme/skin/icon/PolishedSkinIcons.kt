@@ -49,6 +49,7 @@ internal fun PolishedSkinIcon(
 ) {
     SkinIconCanvas(modifier) {
         when (key) {
+            IconKey.Square -> drawSquareIcon(style, tint)
             IconKey.Home, IconKey.Wishlist, IconKey.Outfit, IconKey.Stats, IconKey.Settings ->
                 drawPolishedNavigationIcon(key, style, tint)
             IconKey.Star, IconKey.StarBorder, IconKey.Image, IconKey.Camera, IconKey.AddPhoto,

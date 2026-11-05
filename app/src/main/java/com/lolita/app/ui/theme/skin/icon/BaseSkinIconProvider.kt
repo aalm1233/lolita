@@ -55,6 +55,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 open class BaseNavigationIcons : NavigationIcons {
+    @Composable override fun Square(modifier: Modifier, tint: Color) =
+        PolishedSkinIcon(IconKey.Square, SkinIconStyle.CLASSIC, modifier, tint)
     @Composable override fun Home(modifier: Modifier, tint: Color) =
         Icon(Icons.Filled.Home, null, modifier, tint)
     @Composable override fun Wishlist(modifier: Modifier, tint: Color) =

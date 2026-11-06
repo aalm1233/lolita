@@ -1,0 +1,339 @@
+{
+  "version": "2.75.1",
+  "versionCode": 153,
+  "verifiedAt": "2026-11-07T00:18:37.248503+08:00",
+  "sourceCommit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+  "sourceTag": "v2.75.1",
+  "sourcePushed": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.75.1",
+    "version_code": 153,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+    "apk_sha256": "b44cf4a8bf0058c81653dc393363e6140477160d2f81bad2f2b22fe7cf29af6f",
+    "bytes": 83972501
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "dependencyAssets": {
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties": true,
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000": true
+    },
+    "compiledProfiles": {
+      "assets/dexopt/baseline.prof": {
+        "bytes": 10751,
+        "magic": "70726f0030313000"
+      },
+      "assets/dexopt/baseline.profm": {
+        "bytes": 586,
+        "magic": "70726d0030303200"
+      }
+    }
+  },
+  "tests": {
+    "jvm": 25,
+    "collectorOffline": 16,
+    "deviceUniqueMethods": 4,
+    "deviceNormalInvocations": 3,
+    "deviceSmallInvocations": 2,
+    "finalMergeGuardDeviceRerun": 1,
+    "sevenSkinsLightDark": true,
+    "small320dpDoubleFontAndRealIme": true
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.75.0",
+    "toVersion": "2.75.1",
+    "independentAvd": "Lolita_Square_Collector_20261106",
+    "coldStarts": 2,
+    "unchangedRows": {
+      "items": true,
+      "item_source_records": true,
+      "prices": true,
+      "payments": true,
+      "payment_stages": true,
+      "item_reference_prices": true
+    },
+    "unchangedPrivateImageAndSettingsFiles": 18,
+    "publicCatalogByteIdentical": true,
+    "privateUserDeviceTouched": false,
+    "publicOriginalImagesShaVerified": 986
+  },
+  "github": {
+    "tag": "v2.75.1",
+    "source_commit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+    "release_id": 436711296,
+    "prerelease": false,
+    "files": {
+      "lolita-2.75.1.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.75.1/lolita-2.75.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "b44cf4a8bf0058c81653dc393363e6140477160d2f81bad2f2b22fe7cf29af6f",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.75.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "1a9270ac4f13ed7370578a113a44b6e60063d5fe481ce956e2edaf8bb0fd94fd",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "giteeFormal": {
+    "tag": "v2.75.1",
+    "source_commit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+    "release_id": 1281499,
+    "prerelease": false,
+    "files": {
+      "lolita-2.75.1.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.1/lolita-2.75.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "b44cf4a8bf0058c81653dc393363e6140477160d2f81bad2f2b22fe7cf29af6f",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "1a9270ac4f13ed7370578a113a44b6e60063d5fe481ce956e2edaf8bb0fd94fd",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "giteePublicUpdateApi": {
+    "passed": false,
+    "httpStatus": 403
+  },
+  "appManualUpdateCheck": {
+    "passed": false,
+    "currentVersion": "2.75.1",
+    "observed": "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+    "attempts": 1,
+    "directApkDownloadVerified": true
+  },
+  "data": {
+    "catalogProductsRetained": 28,
+    "catalogSkusRetained": 777,
+    "originalImagesRetained": 986,
+    "hiddenLegacyProductIds": [
+      "1057768531418",
+      "1060482620961",
+      "1058557934909"
+    ],
+    "hiddenLegacyEvents": [
+      "pilgrim-repeat",
+      "sleeve-repeat"
+    ],
+    "openTailEventsRetained": true,
+    "museumEntryImplemented": false,
+    "roomVersion": 34,
+    "entities": 45,
+    "backupVersion": 16
+  },
+  "mainTaobaoAccess": false,
+  "paidCalls": 0,
+  "avds": {
+    "test": "Lolita_Square_Archive_Test_20261106",
+    "releaseUpgrade": "Lolita_Square_Collector_20261106",
+    "bothClosed": true,
+    "dataRetained": true
+  },
+  "quotaCleanup": {
+    "tag": "v2.66.4",
+    "onlyOldestGiteeApkRemoved": true,
+    "githubAndThreePreviousLocalCopiesRetained": true,
+    "oldReleaseAndChecksumRetained": true,
+    "receipt": "gitee-apk-cleanup-2.66.4-2026-11-07.json"
+  },
+  "screenshots": [
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/after-black-normal.png",
+      "sha256": "09414a1f8cbd64f18aca761c1106a0186862f3c9bb6af0af0fa8eb7697081f86"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-chinese-dark.png",
+      "sha256": "57f84a4c78f5e9cf9b260ce80002690a00faf8f03fda4e4afe6d5be3736a62ba"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-chinese-light.png",
+      "sha256": "47b6230b958284037f092e65bb27e10387f86182d8c60641dfa399c0e6d913b2"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-classic-dark.png",
+      "sha256": "4869317e94ed8d471f791561a0b286960f9e0f9be6531bf6fe1bef8db7c44116"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-classic-light.png",
+      "sha256": "4571adcef62b550808606c6986e5926636a80b521edc53d53d7966c3d31b5655"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-country-dark.png",
+      "sha256": "ca8ae6df5bcb01e5f1d6a7794fa43d57da61538bd04c4a78ccc3bce7cabfc758"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-country-light.png",
+      "sha256": "d0cb1f77feb8b65a84f582bb30fc727529be0b9450ed81e409463362637ae07c"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-default-dark.png",
+      "sha256": "d65aa2702489bb6da0a87ccc1c572ef6af7e98a8148863bd810372c7f19a3b5c"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-default-light.png",
+      "sha256": "671a234b042b3f5cc6fa2f9e6f016c0563dee46fb6322baed169c8875ee07ef4"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-gothic-dark.png",
+      "sha256": "187e43e68e2a643da58b755ca057694bd5addaf12c7d0ce7beb999f88fde0537"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-gothic-light.png",
+      "sha256": "4b8af31c25b8a1d00a0d0aaf9183ab858ff3643094a3db64bfa3fff9eb4c0682"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-navy-dark.png",
+      "sha256": "1d0788c46fee21768cfa8d72f6a5a992ca1080ab81e2466bfbf91713df47322c"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-navy-light.png",
+      "sha256": "2af16b38ab3bf22a7713db4897f090355c1012e7ec70617d5108ae33d03f5684"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-victorian-dark.png",
+      "sha256": "65076e90297334672df4c17c6f1ee2226b5b71aecd63f9378ddfa4e2ebb6d5b9"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-feed-victorian-light.png",
+      "sha256": "fdf5ba2695225475b052cacb2eff221b511ca74f3ac301db8737dcbe723a2eb2"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-reactivated-product.png",
+      "sha256": "4d95ead6106908e75e65fb48186b045098318df074721a00b03cef9061ab13fb"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/archive-tail-stays-readonly.png",
+      "sha256": "144727fad40954175a1fbdafbc1511292b141211917bd873ce237c9bda822262"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-normal/kc-parameters.png",
+      "sha256": "1c615e6d4c0f3024c111ad29ad28bdc019041e967af96f16e22022ec55c186dc"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-small/archive-reactivated-product.png",
+      "sha256": "d2be19e981308d563e246afb414dd5c2dee5f4eec0a0ef49da777c56aa0ff40a"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-small/archive-tail-stays-readonly.png",
+      "sha256": "566115cb172da2053b9195bf89e2488d87cfdda3ba8887d94bdabff276c7ea23"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-small/small-multi-primary.png",
+      "sha256": "8f059a8f830a10b63f685189b264f03fdc7bdf320ed2aa43330ba34d4847e36f"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/native-small/small-real-ime-search.png",
+      "sha256": "2d713bdaf94bf782f16e26557b6caf4eb4f93272c781a933feba21340474251e"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/release/app-update-check.png",
+      "sha256": "25a99e6424307d7237b47cf712e285cd217d71f8dffebc3dccfa8cabe9e963e2"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/release/release-square.png",
+      "sha256": "e9efae95bb02d84835ec9b588c5e8191b59c3b287160b0d11d4aba9ea22a13c4"
+    },
+    {
+      "file": "docs/visuals/2026-11-06-square-archive/release/release-tails.png",
+      "sha256": "7a4a9176c01a573424dc9983c79c0564d40970ec34a0885fc23261489928fde0"
+    }
+  ]
+}

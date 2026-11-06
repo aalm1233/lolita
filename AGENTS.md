@@ -32,6 +32,8 @@
 
 - 广场2.73.1单品资料改造：实际SKU部件可多选分件或自主合组，各输出独立名称/主图/资料/封面；公开目录可选`photoPaths/materials`绑定经核验的原规格图与部件明文，旧v1无映射进入人工选图，不把整链接图默认下放。逐件复用原ItemDraft/Item.importToken与编辑器，SavedState保留紧凑选择和进度，已准备草稿持久保存；非原子多件登记、不自动录价或建关系。标准顶栏、受限Fit主图与来源折叠应用到物品详情，原购买/封面/小物管理保留。Room34/45实体/备份15不变；设计与艺术七皮肤稿见`docs/plans/2026-11-06-square-refinement.md`，原生与发布结果见本轮实施记录。
 
+- 2.73.1／150广场单品资料最终交付：源码`2479f718`及标签已普通推送；12项JVM、17项去重设备方法、七皮肤浅暗/320dp两倍字/真实IME与完整App逐件保存推进、KC独立图片和未知规格、暂停草稿通过。提交源码归档clean原签名Release、37项目assets/24图片资源与两段覆盖启动保全通过；GitHub/Gitee同APK/SHA256SUMS匿名全量下载、SHA/HEAD、源码标签及正式App手动检查当前/最新2.73.1通过。2.73.0整App走查发现回执未接线，由2.73.1修正并补真实NavHost测试。Room34/备份15、原衣橱与账本、0付费/0主助手淘宝访问；最终回执`docs/square-refinement-release-2.73.1-verification.json`，实施说明`docs/square-refinement-implementation-2026-11-06.md`。
+
 ## 架构与实现约定
 
 - 新 DAO 必须同步接到三处：`LolitaDatabase`、对应 `Repository`、`AppModule`。

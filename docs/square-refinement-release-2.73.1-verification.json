@@ -1,0 +1,231 @@
+{
+  "version": "2.73.1",
+  "versionCode": 150,
+  "sourceCommit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+  "design": "docs/plans/2026-11-06-square-refinement.md",
+  "unitTests": {
+    "count": 12,
+    "passed": true
+  },
+  "deviceMethods": {
+    "uniqueCount": 17,
+    "passed": true,
+    "normalAnd320dpDoubleFont": true,
+    "realIme": true
+  },
+  "signedApk": {
+    "package": "com.lolita.app",
+    "version": "2.73.1",
+    "version_code": 150,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+    "apk_sha256": "86251351a58d83f062f83c6505ec6bfef3152f6dd176c2970eec09ed318a92c0",
+    "bytes": 83874197
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "upgrade2730": {
+    "passed": true,
+    "from": "2.72.0",
+    "to": "2.73.0",
+    "starts": 2,
+    "tables": 45,
+    "items": 161,
+    "privateImages": 714,
+    "preferences": 2,
+    "allTableRowsImagesAndPreferencesUnchanged": true
+  },
+  "upgrade2731": {
+    "passed": true,
+    "from": "2.73.0",
+    "to": "2.73.1",
+    "starts": 2,
+    "tables": 45,
+    "items": 162,
+    "privateImages": 716,
+    "preferences": 2,
+    "allTableRowsImagesAndPreferencesUnchanged": true
+  },
+  "actualSignedAppFlow": {
+    "passed": true,
+    "firstItemSaved": true,
+    "nativeReceiptAdvancedToSecond": true,
+    "secondEditorHasOwnKcPhoto": true,
+    "secondaryColorAndSizeUnset": true,
+    "pauseKeepsSecondDraft": true,
+    "itemsBefore": 162,
+    "itemsAfter": 163,
+    "allOriginalRowsAndImagesPreserved": true,
+    "ledgerTablesUnchanged": true,
+    "imageCopiesAdded": 4
+  },
+  "package": {
+    "file": "三店广场资料-单品修订包-20261106.zip",
+    "bytes": 271066968,
+    "sha256": "a58c611f01ae5ba181df9ec374cd7f615b2178a870ec6fb633598eb44281484e",
+    "shops": 3,
+    "events": 10,
+    "products": 14,
+    "skus": 542,
+    "imageReferences": 732,
+    "uniqueOriginalImages": 421,
+    "sourceManifests": [
+      {
+        "shopId": "puppets",
+        "canonicalSha256": "74fb638110a9bd3eabeefdaa7b0e97f6bc5f26a4899064100e484e7b2dd6b69a"
+      },
+      {
+        "shopId": "lilizi",
+        "canonicalSha256": "19ba3a1769e3ed55c53ba601993bc6c5c456c17fbe34644c1918eb421d0466c5"
+      },
+      {
+        "shopId": "neo",
+        "canonicalSha256": "bcd72535d7d957539440e011a3c2b5de8d8d1579cf3733e108e2d33ce03605da"
+      }
+    ],
+    "oldAssetsAndSkuIdentityUnchanged": true,
+    "skuWithExplicitPhotos": 375,
+    "partsWithDocuments": 47,
+    "bindingsSha256": "843a06e71f458203ff60cad5715e42cf2e77104bfb3018304519c35855c5b485"
+  },
+  "roomVersion": 34,
+  "backupVersion": 15,
+  "taobaoAccessByMainAssistant": false,
+  "paidCalls": 0,
+  "knownBoundaries": [
+    "未知部件规格和独立图片由用户核对，不按外观猜测",
+    "原目录图全部保全；登记仅复制每件选中的图片",
+    "旧物品不自动换图",
+    "非原子多件保存；关闭整个任务后未准备的后续件不承诺恢复",
+    "云端同步未实现"
+  ],
+  "github": {
+    "tag": "v2.73.1",
+    "source_commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+    "source_tag_commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+    "release_id": 436041388,
+    "prerelease": false,
+    "files": {
+      "lolita-2.73.1.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.73.1/lolita-2.73.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83874197,
+        "sha256": "86251351a58d83f062f83c6505ec6bfef3152f6dd176c2970eec09ed318a92c0"
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.73.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "07b527529602e91e1f0775e1f0daf7ab7720742e56223d081a8fad5447578f4b"
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83874197,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously",
+    "verificationResumedAtHeadAfterTransientNetworkFailure": true
+  },
+  "gitee": {
+    "tag": "v2.73.1",
+    "source_commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+    "release_id": 1278508,
+    "prerelease": false,
+    "files": {
+      "lolita-2.73.1.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.73.1/lolita-2.73.1.apk",
+        "anonymous_full_download": true,
+        "bytes": 83874197,
+        "sha256": "86251351a58d83f062f83c6505ec6bfef3152f6dd176c2970eec09ed318a92c0",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.73.1/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "07b527529602e91e1f0775e1f0daf7ab7720742e56223d081a8fad5447578f4b",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83874197,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "publicUpdate": {
+    "latest_tag": "v2.73.1",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.73.1/lolita-2.73.1.apk",
+    "source_commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d"
+  },
+  "quotaCleanupReceipt": "docs/gitee-apk-cleanup-2026-11-06.json",
+  "correctiveRelease": "2.73.0 saving succeeded but queue did not advance; 2.73.1 is the final delivered version",
+  "manualAppUpdateCheck": {
+    "performed": true,
+    "current": "2.73.1",
+    "latest": "2.73.1",
+    "result": "已是最新版本",
+    "completeNotesShown": true
+  },
+  "taskCreatedEmulatorsClosed": true,
+  "avdDataRetained": true
+}

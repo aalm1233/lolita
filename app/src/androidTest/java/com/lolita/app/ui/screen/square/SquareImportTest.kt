@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.room.Room
+import androidx.navigation.compose.composable
 import androidx.test.platform.app.InstrumentationRegistry
 import com.lolita.app.data.file.BackupManager
 import com.lolita.app.data.file.ImageFileHelper
@@ -241,6 +243,38 @@ class SquareImportTest {
         compose.onNodeWithText("查看完整来源与购买快照").performScrollTo().performClick()
         compose.onNode(hasText("资料标识：",substring=true)).assertExists();screenshot("refined-item-source-expanded")
         assertEquals(0,io{db.priceDao().getAllPricesList().size})
+    }
+
+    @Test fun actualNavEntryReceiptAdvancesSeparateViewModelStateAndPauseKeepsNextUnit(){
+        val c=refined();val sku=c.products.first{it.id=="1088022205740"}.skus.first{it.content=="JSK+KC"&&it.color=="蓝色"&&it.size=="L"}
+        lateinit var model:SquareViewModel
+        inst.runOnMainSync{model=SquareViewModel(repo,SavedStateHandle());store.put("nav-receipt",model)}
+        compose.waitUntil(10000){model.busy.value==null}
+        compose.runOnIdle{model.open("dorothy-cotton");model.choose();model.selectSku(sku.key);model.next();model.next();model.next();model.prepare()}
+        compose.waitUntil(10000){model.registration.value!=null}
+        val draft=model.registration.value!!.draftId!!;compose.runOnIdle{model.consumedRegistration()}
+        lateinit var nav:androidx.navigation.NavHostController
+        compose.setContent{
+            val n=androidx.navigation.compose.rememberNavController();SideEffect{nav=n}
+            androidx.navigation.compose.NavHost(n,startDestination="square"){
+                composable("square"){entry->SquareEditorResult(entry,model);Text("广场回执测试")}
+                composable("editor"){Text("编辑回执测试")}
+            }
+        }
+        compose.runOnIdle{nav.navigate("editor")}
+        compose.runOnIdle{nav.previousBackStackEntry!!.savedStateHandle["square_editor_result"]="$draft:saved";nav.popBackStack()}
+        compose.waitUntil(5000){model.unitIndex.value==1};assertEquals("KC",model.units()[1].name)
+        compose.runOnIdle{model.prepare()};compose.waitUntil(10000){model.registration.value!=null}
+        val next=model.registration.value!!.draftId!!;compose.runOnIdle{model.consumedRegistration();nav.navigate("editor")}
+        compose.runOnIdle{nav.previousBackStackEntry!!.savedStateHandle["square_editor_result"]="$draft:saved";nav.popBackStack()}
+        compose.waitForIdle();assertEquals(1,model.unitIndex.value)
+        compose.runOnIdle{nav.navigate("editor")}
+        compose.runOnIdle{nav.previousBackStackEntry!!.savedStateHandle["square_editor_result"]="$next:paused";nav.popBackStack()}
+        compose.waitUntil(5000){model.editorResult.value==null};assertEquals(1,model.unitIndex.value)
+        assertNotNull(io{drafts.get(next)})
+        compose.runOnIdle{nav.navigate("editor")}
+        compose.runOnIdle{nav.previousBackStackEntry!!.savedStateHandle["square_editor_result"]="$draft:saved";nav.popBackStack()}
+        compose.waitForIdle();assertEquals(1,model.unitIndex.value)
     }
 
 }

@@ -1,0 +1,56 @@
+{
+  "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+  "trigger": "two sequential upload attempts returned HTTP 400 attachment quota exceeded (1 GB)",
+  "records": [
+    {
+      "tag": "v2.65.0",
+      "release_id": 1225821,
+      "attachment_id": 3454286,
+      "name": "lolita-2.65.0.apk",
+      "bytes": 81226020,
+      "sha256": "ec7ac65f1e794b1c6368dca94fa968eb28af923b7d4a6c0220ae6017acd85a69",
+      "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+      "new_source_commit": "4d44347351197086810457390f2b9053a52d36b8",
+      "at_utc": "2026-11-06T02:15:17.403434+00:00",
+      "github_digest_and_head_verified": true,
+      "github_and_three_local_complete_copies_verified": true,
+      "head_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ],
+      "http_status": 204,
+      "old_release_and_other_attachments_retained": true
+    },
+    {
+      "tag": "v2.66.0",
+      "release_id": 1226094,
+      "attachment_id": 3455050,
+      "name": "lolita-2.66.0.apk",
+      "bytes": 81242404,
+      "sha256": "9fbea5a70634c0dba24e5e1e65ee778a5759703fbe5ebba4dcac3fd141e4ab50",
+      "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+      "new_source_commit": "4d44347351197086810457390f2b9053a52d36b8",
+      "at_utc": "2026-11-06T02:20:06.300945+00:00",
+      "github_digest_and_head_verified": true,
+      "github_and_three_local_complete_copies_verified": true,
+      "head_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ],
+      "http_status": 204,
+      "old_release_and_other_attachments_retained": true
+    }
+  ]
+}

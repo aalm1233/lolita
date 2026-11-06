@@ -307,6 +307,7 @@ fun LolitaNavHost(
             composable(Screen.Square.route) { entry ->
                 val factory = viewModelFactory { initializer { com.lolita.app.ui.screen.square.SquareViewModel(saved = createSavedStateHandle()) } }
                 val square: com.lolita.app.ui.screen.square.SquareViewModel = viewModel(entry, factory = factory)
+                com.lolita.app.ui.screen.square.SquareEditorResult(entry,square)
                 com.lolita.app.ui.screen.square.SquareScreen(
                     onEditDraft = { id -> navController.navigate(Screen.ItemEdit.createRoute(defaultStatus = "WISHED", draftId = id)) },
                     onOpenItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }, viewModel = square)

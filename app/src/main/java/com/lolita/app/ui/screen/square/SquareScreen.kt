@@ -283,3 +283,11 @@ private fun readable(e:JsonElement):String=squareInfoText(e)
         }
     } }
 }
+
+
+/** NavBackStackEntry's result handle is distinct from the ViewModel's own saved state. */
+@Composable
+fun SquareEditorResult(entry:androidx.navigation.NavBackStackEntry,vm:SquareViewModel) {
+    val result by entry.savedStateHandle.getStateFlow<String?>("square_editor_result",null).collectAsState()
+    LaunchedEffect(result) { result?.let { vm.editorFinished(it);entry.savedStateHandle.set<String?>("square_editor_result",null) } }
+}

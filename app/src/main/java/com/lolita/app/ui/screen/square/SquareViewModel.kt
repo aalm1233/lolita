@@ -59,8 +59,10 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
         changeUnit(index,if(document)unit.copy(documents=current,photos=unit.photos-path) else unit.copy(photos=current,documents=unit.documents-path))
     }
     fun cover(index:Int,path:String){val unit=units().getOrNull(index)?:return;if(path in unit.photos)changeUnit(index,unit.copy(photos=listOf(path)+unit.photos.filter{it!=path}))}
+    fun editorFinished(result:String){saved["square_editor_result"]=result;consumeEditorResult()}
     fun consumeEditorResult(){val result=editorResult.value?:return;saved["square_editor_result"]=null
         val active=saved.get<String>("square.activeDraft")?:return
+        if(result!="$active:saved" && result!="$active:paused")return
         if(result=="$active:saved"){saved["square.unitIndex"]=unitIndex.value+1;_message.value="本件已保存；其余物品需逐件核对"}
         else _message.value="登记已暂停；可继续核对，保留的草稿仍可编辑"
         saved["square.activeDraft"]=null

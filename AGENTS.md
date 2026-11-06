@@ -30,7 +30,7 @@
 - 广场2.72.0本地导入已实施：底栏新增广场，系统文件选择器导入`lolita.square` v1 ZIP，SHA原图/完整SKU校验、预览及AtomicFile目录更新；`SquareRepository → SquareViewModel → SquareScreen`由AppModule接线。公开目录与衣橱备份分离，复用ItemDraft/Item.importToken逐件或整组默认心愿，尾款只读，不自动录价/账本/套装关系；原图独立UUID复制后进入原备份。Room34/备份15不变，云端同步与原子多件登记未实施。格式与界限见`docs/square-package-format.md`，采用范围和前置七皮肤导入图见`docs/plans/2026-11-05-square-local-import.md`；新增Square导航键由Base及七套实际provider提供不同店面轮廓，原52键保持，现共53键。
 - 广场页面设计见 `docs/plans/2026-11-05-square-design.md`：基于古典玩偶、莉莉子、新路德维希本地采集资料，四类动态、批次/价格阶段、套装/小物/颜色/风格资料与筛选、整组/分件登记及七皮肤浅暗图稿归档在 `docs/visuals/2026-11-05-square-design/`。默认心愿，购买组合、衣橱套装与主件小物关系分开，组合价不复制到分件。仅设计，未接入Android或上线内容服务；主助手未操作浏览器查看淘宝。拟议迁移与备份版本不代表当前已升级。
 
-- 广场2.73.0单品资料改造：实际SKU部件可多选分件或自主合组，各输出独立名称/主图/资料/封面；公开目录可选`photoPaths/materials`绑定经核验的原规格图与部件明文，旧v1无映射进入人工选图，不把整链接图默认下放。逐件复用原ItemDraft/Item.importToken与编辑器，SavedState保留紧凑选择和进度，已准备草稿持久保存；非原子多件登记、不自动录价或建关系。标准顶栏、受限Fit主图与来源折叠应用到物品详情，原购买/封面/小物管理保留。Room34/45实体/备份15不变；设计与艺术七皮肤稿见`docs/plans/2026-11-06-square-refinement.md`，原生与发布结果见本轮实施记录。
+- 广场2.73.1单品资料改造：实际SKU部件可多选分件或自主合组，各输出独立名称/主图/资料/封面；公开目录可选`photoPaths/materials`绑定经核验的原规格图与部件明文，旧v1无映射进入人工选图，不把整链接图默认下放。逐件复用原ItemDraft/Item.importToken与编辑器，SavedState保留紧凑选择和进度，已准备草稿持久保存；非原子多件登记、不自动录价或建关系。标准顶栏、受限Fit主图与来源折叠应用到物品详情，原购买/封面/小物管理保留。Room34/45实体/备份15不变；设计与艺术七皮肤稿见`docs/plans/2026-11-06-square-refinement.md`，原生与发布结果见本轮实施记录。
 
 ## 架构与实现约定
 
@@ -740,3 +740,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.71.0／146源码`e6bfa6d9`及标签`v2.71.0`已普通推送；31项去重设备方法、七皮肤浅暗／320dp两倍字和真实IME、Debug与提交源码归档clean原签名Release通过。2.70.0覆盖两次启动保留本次相关6表原字段及17份图片／设置SHA；37项目assets／7背景／依赖及profile核验通过。GitHub与Gitee正式同一APK和SHA256SUMS匿名完整下载、摘要与HEAD通过，正式App新批次入口实拍核对。Gitee初次HTTP400触及1GB配额后，用户纠正误选并明确授权仅删除Gitee的2.62.0旧APK，释放81,094,948字节；旧发布页／校验／GitHub与本机副本保留，不授权其他旧附件清理。授权后的国内正式发布与公开最高版本查询通过，App一次实际检查显示当前和最新均为2.71.0并展示完整批量展示图说明；初次国内尚未发布时显示2.70.0的记录仅保留为历史。本轮付费生成0次、Room34／备份15不变，详见`docs/batch-display-implementation-2026-10-27.md`、`docs/batch-display-release-2.71.0-verification.json`和`docs/gitee-apk-cleanup-2.62.0-2026-10-27.json`。
 
 - 2.72.0／148广场本地包：源码`4a4bf3fa`与标签已普通推送；9项JVM、7项去重设备方法、七皮肤浅暗／320dp两倍字真实IME和53键图标通过。提交归档clean原签名Release、37素材字节／7背景与旧正式包字节一致、2.71.1覆盖两次启动保全45表／160物品／629私有图SHA和设置；正式包实导3店ZIP并保存M码心愿，54详情图与原账本保全。GitHub/Gitee同APK和校验匿名完整下载／SHA／HEAD、源码标签、公开最高版本及真实App手动检查2.72.0通过；按持续授权仅清理Gitee最旧2.64.0 APK，旧页／校验／GitHub及三份本机副本保留。首个资料包本地交付，云端同步未接入。Room34／备份15，付费0次，主助手无淘宝访问；回执`docs/square-local-import-release-2.72.0-verification.json`。
+
+- 2.73.1修正广场逐件返回：NavBackStackEntry.savedStateHandle与ViewModel.createSavedStateHandle属于不同持有者，编辑回执须由`SquareEditorResult`桥接到SquareViewModel；按当前draftId验证saved/paused，陈旧回执不能推进或抹掉当前登记身份。真实导航往返与正式App逐件保存须验收，不能仅以Repository或独立页面测试代替。

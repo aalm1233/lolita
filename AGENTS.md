@@ -34,7 +34,7 @@
 
 - 2.73.1／150广场单品资料最终交付：源码`2479f718`及标签已普通推送；12项JVM、17项去重设备方法、七皮肤浅暗/320dp两倍字/真实IME与完整App逐件保存推进、KC独立图片和未知规格、暂停草稿通过。提交源码归档clean原签名Release、37项目assets/24图片资源与两段覆盖启动保全通过；GitHub/Gitee同APK/SHA256SUMS匿名全量下载、SHA/HEAD、源码标签及正式App手动检查当前/最新2.73.1通过。2.73.0整App走查发现回执未接线，由2.73.1修正并补真实NavHost测试。Room34/备份15、原衣橱与账本、0付费/0主助手淘宝访问；最终回执`docs/square-refinement-release-2.73.1-verification.json`，实施说明`docs/square-refinement-implementation-2026-11-06.md`。
 
-- 广场浏览动线重审见`docs/plans/2026-11-06-square-browse-first-design.md`：用户明确纠正为逛选→看商品图片/单品/颜色/参数→喜欢加入现有心愿。后续改造不得把完整SKU、四步拆分/选图、完整编辑器作为默认收藏门槛；未知尺码可后补，多件/个人组合按需，组合不冒充商家SKU/套餐、各件规格独立。新图稿在`docs/visuals/2026-11-06-square-browse-first/artist/`。本轮仅审视与前置设计，尚未替换2.73.1原生流程，未改Room/备份/版本或发布；拟议来源协议/备份16不是已升级事实。
+- 广场浏览动线重审见`docs/plans/2026-11-06-square-browse-first-design.md`：用户明确纠正为逛选→看商品图片/单品/颜色/参数→喜欢加入现有心愿。后续改造不得把完整SKU、四步拆分/选图、完整编辑器作为默认收藏门槛；未知尺码可后补，多件/个人组合按需，组合不冒充商家SKU/套餐、各件规格独立。新图稿在`docs/visuals/2026-11-06-square-browse-first/artist/`。前置设计已获用户确认并实施2.74.0，已替换默认四步原生流程；来源协议SQUARE_WISH v1与备份16现已落地，Room34不变。最终范围与验收见`docs/square-browse-implementation-2026-11-06.md`。
 
 ## 架构与实现约定
 
@@ -752,3 +752,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 图片卡→当前单品/颜色/可后补尺码→参数→直接心愿，默认不经四步拆分或完整编辑器。选多件/个人组合按需，部件照片/规格独立；未知不绑定首SKU，套餐价不分摊，尾款只读。单件保存以主按钮已有状态反馈，避免Snackbar挡颜色。`SquareBrowse`投影、`AddSquareWishUseCase`事务保存、现有心愿路由复用ItemListScreen初始Tab3。
 - `SQUARE_WISH` v1使用既有ItemSourceRecord，图片以imagePaths索引保存；备份16支持完整来源/组合/图片往返及CSV可读摘要，兼容1—15，Room34/45实体不变。保存冻结目录版本、旧token/草稿查重；共享备份锁、UUID复制前持久清单、事务后二次查重与引用保护，失败不留半组。旧登记草稿继续原编辑器。
 - 本地公开包v1可附明确sizeTable；三店浏览版补41张独立表，421原图字节保留，不重新采集或猜测规格。前置设计与本轮实施/真实验收分别见`docs/plans/2026-11-06-square-browse-first-design.md`和`docs/square-browse-implementation-2026-11-06.md`。云同步未接入，付费0次，主助手淘宝访问0次。
+
+- 2.74.0／151正式源码`3c756976`与标签已普通推送；62项定向JVM、12个去重设备方法、七皮肤浅暗／320dp两倍字／真实IME／完整导航及MainActivity通过。提交归档clean原签名Release、37项目assets/24图片资源与2.73.1覆盖两次启动保全45表/163物品/720图片及设置；正式App新增一件心愿仅写Item/来源，账本不变。双平台分发最终状态见`docs/square-browse-release-2.74.0-verification.json`。公开Gitee版本API最高2.74.0，App完整手动检查遇Gitee拒绝/频控，未冒充通过；直接APK可用。依持续授权仅清理最旧Gitee2.66.2 APK，GitHub/三份本机副本/旧页/校验保留。两台任务AVD已关闭、数据保留。Room34/备份16，真实付费0、主助手淘宝访问0。

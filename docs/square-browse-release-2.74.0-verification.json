@@ -1,0 +1,219 @@
+{
+  "version": "2.74.0",
+  "versionCode": 151,
+  "sourceCommit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+  "sourceAndTagPushed": true,
+  "build": {
+    "package": "com.lolita.app",
+    "version": "2.74.0",
+    "version_code": 151,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+    "apk_sha256": "766c996b4819814cbbbf8efd848ee1f5873c334753edb7a45d63180d18d86de0",
+    "bytes": 83972501
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "upgrade": {
+    "passed": true,
+    "from": "2.73.1/150",
+    "to": "2.74.0/151",
+    "tableCount": 45,
+    "itemCount": 163,
+    "imageCount": 720,
+    "sameSignatureOverwrite": true,
+    "launches": {
+      "first": {
+        "tables": true,
+        "images": true,
+        "preferences": true
+      },
+      "second": {
+        "tables": true,
+        "images": true,
+        "preferences": true
+      }
+    }
+  },
+  "signedAppWish": {
+    "signedAppDirectWish": true,
+    "newItemCount": 1,
+    "changedTables": [
+      "item_source_records",
+      "items"
+    ],
+    "all720OriginalImagesRetained": true,
+    "unknownSizeRemainsNull": true,
+    "noLedgerWrites": true
+  },
+  "tests": {
+    "jvm": 62,
+    "distinctAndroidMethods": 12,
+    "reference": "docs/square-browse-test-verification-2026-11-06.json"
+  },
+  "github": {
+    "tag": "v2.74.0",
+    "source_commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+    "release_id": 436283146,
+    "prerelease": false,
+    "files": {
+      "lolita-2.74.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.74.0/lolita-2.74.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "766c996b4819814cbbbf8efd848ee1f5873c334753edb7a45d63180d18d86de0",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.74.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "7e053809bd6f912529cdd26a70f100a93756bb898d754bc9a4f82f28eb8b7c97",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.74.0",
+    "source_commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+    "release_id": 1279907,
+    "prerelease": false,
+    "files": {
+      "lolita-2.74.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.74.0/lolita-2.74.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "766c996b4819814cbbbf8efd848ee1f5873c334753edb7a45d63180d18d86de0",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.74.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "7e053809bd6f912529cdd26a70f100a93756bb898d754bc9a4f82f28eb8b7c97",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "giteePublicUpdate": {
+    "latest_tag": "v2.74.0",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.74.0/lolita-2.74.0.apk",
+    "source_commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b"
+  },
+  "appUpdate": {
+    "version": "2.74.0",
+    "channel": "Gitee",
+    "completedAttempts": 1,
+    "earlierAttemptAbortedBySnapshotForceStop": 1,
+    "result": "Gitee temporarily refused or rate limited",
+    "passed": false,
+    "publicApiHighestVersion": "2.74.0",
+    "directApkVerified": true,
+    "screenshot": "docs/visuals/2026-11-06-square-browse-first/native/release-update-check.png"
+  },
+  "publicPackage": {
+    "file": "三店广场资料-浏览版-20261106.zip",
+    "bytes": 271076302,
+    "sha256": "b4f1ef74e6f46cb7de8c062ede08e682259db349a54a5fa7a84c3ce403459590",
+    "originalImagesByteIdentical": 421,
+    "networkAccess": false
+  },
+  "oldApkCleanup": "docs/gitee-apk-cleanup-2.66.2-2026-11-06.json",
+  "taskAvdsClosed": [
+    "Lolita_Square_Browse_20261106",
+    "Lolita_Square_Release_20261105"
+  ],
+  "avdDataPreserved": true,
+  "temporarySigningReferencesRemoved": true,
+  "paidCalls": 0,
+  "assistantTaobaoAccess": 0,
+  "talkBackManualReading": "not run"
+}

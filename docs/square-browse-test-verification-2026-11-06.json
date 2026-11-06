@@ -1,0 +1,87 @@
+{
+  "distinctAndroidMethods": 12,
+  "passedMethods": [
+    "com.lolita.app.ui.screen.square.SquareBrowseNavigationTest#realNavigationDirectWishGroupExistingWishlistAndReturn",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#corruptPhotoAndStaleRequestNeverPartiallySave",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#directUnknownSizeAtomicCopiesAndConcurrentReceipt",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#fourteenSkinsAndSmallTextUseActualBrowsePages",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#missingMappingUnknownCategoryAndOldDraftStaySafe",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#multipleWritesRollbackAndOrphanJournalProtectsCommittedImages",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#nativeDirectWishAndPartColourParametersKeepBrowsing",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#optionalInfoOpensOnTapAndBackReturnsToProduct",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#personalGroupKeepsOwnSpecsAndBackupSixteenRoundTrip",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#savedSelectionRestoresAndAlreadyOwnedDoesNotBecomeWishedAgain",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#secondShopShortOpAndSleevesHaveIndependentImagesQuotesAndTables",
+    "com.lolita.app.ui.screen.square.SquareBrowseTest#smallDoubleFontAndSearchKeyboardKeepPrimaryReachable"
+  ],
+  "history": [
+    {
+      "log": "lolita-square-browse-final-normal.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#directUnknownSizeAtomicCopiesAndConcurrentReceipt",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#missingMappingUnknownCategoryAndOldDraftStaySafe",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#personalGroupKeepsOwnSpecsAndBackupSixteenRoundTrip",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#nativeDirectWishAndPartColourParametersKeepBrowsing",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#savedSelectionRestoresAndAlreadyOwnedDoesNotBecomeWishedAgain",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#corruptPhotoAndStaleRequestNeverPartiallySave",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#fourteenSkinsAndSmallTextUseActualBrowsePages",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#multipleWritesRollbackAndOrphanJournalProtectsCommittedImages"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-final-navigation.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#optionalInfoOpensOnTapAndBackReturnsToProduct",
+        "com.lolita.app.ui.screen.square.SquareBrowseNavigationTest#realNavigationDirectWishGroupExistingWishlistAndReturn"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-final-small.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#smallDoubleFontAndSearchKeyboardKeepPrimaryReachable",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#fourteenSkinsAndSmallTextUseActualBrowsePages",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#optionalInfoOpensOnTapAndBackReturnsToProduct"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-small-corrected.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#secondShopShortOpAndSleevesHaveIndependentImagesQuotesAndTables",
+        "com.lolita.app.ui.screen.square.SquareBrowseNavigationTest#realNavigationDirectWishGroupExistingWishlistAndReturn"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-final-feedback-small.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#missingMappingUnknownCategoryAndOldDraftStaySafe",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#multipleWritesRollbackAndOrphanJournalProtectsCommittedImages"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-feedback-small-pass.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#nativeDirectWishAndPartColourParametersKeepBrowsing",
+        "com.lolita.app.ui.screen.square.SquareBrowseNavigationTest#realNavigationDirectWishGroupExistingWishlistAndReturn"
+      ]
+    },
+    {
+      "log": "lolita-square-browse-final-normal-ui.log",
+      "passedMethods": [
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#secondShopShortOpAndSleevesHaveIndependentImagesQuotesAndTables",
+        "com.lolita.app.ui.screen.square.SquareBrowseTest#nativeDirectWishAndPartColourParametersKeepBrowsing",
+        "com.lolita.app.ui.screen.square.SquareBrowseNavigationTest#realNavigationDirectWishGroupExistingWishlistAndReturn"
+      ]
+    }
+  ],
+  "jvm": {
+    "SquareBrowseTest": 11,
+    "SquarePackageTest": 12,
+    "BackupFormatTest": 32,
+    "WardrobeBackupFormatTest": 3,
+    "BackupImportTokenTest": 4
+  },
+  "nativeScreenMatrix": "7 skins × light/dark × normal/320dp 2x × feed/product/multi",
+  "mainActivityHazeObserved": true,
+  "paidCalls": 0,
+  "assistantTaobaoAccess": 0
+}

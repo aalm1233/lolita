@@ -29,3 +29,13 @@ Room34、45实体不变。既有`ItemSourceRecord`增加`SQUARE_WISH` v1资料�
 ## 边界
 
 没有云同步、关注、推荐、购买或在线采集；主助手淘宝访问0，付费调用0。TalkBack完整人工朗读未执行，不以语义断言冒充人工验收。正式构建、旧包覆盖保全、双平台分发与更新检查结果在发布回执单列。
+
+## 正式包本机验证
+
+源码`3c756976`的git archive执行clean Release，2.74.0/151原签名通过；37项目assets与提交源码逐字节一致，24旧图片资源保持。2.73.1覆盖两次启动保全45表、163物品、720图片与设置SHA。正式App实际加入黄色JSK心愿，未知尺码保留null，只增加Item/来源两表，账本未写、原720图保留；[实拍](visuals/2026-11-06-square-browse-first/native/release-saved.png)。
+
+Gitee配额HTTP400后，依2026-10-28持续授权核验GitHub摘要/HEAD和三份本机完整副本，仅删除最旧2.66.2 APK，旧发布页与校验保留；[清理回执](gitee-apk-cleanup-2.66.2-2026-11-06.json)。最终双平台与更新入口以发布回执为准。
+
+正式App手动更新检查已执行一次完整请求，Gitee返回暂时拒绝/频率限制；此前一次检查被资料快照的force-stop中断，单列而不计成功。公开版本API已选中2.74.0，直接APK完整下载与覆盖安装通过；不把公开API通过冒充App检查成功。
+
+GitHub/Gitee正式同一APK与SHA256SUMS均已匿名完整下载、摘要与HEAD验证；源码标签指向正式构建提交。最终[发布回执](square-browse-release-2.74.0-verification.json)记录App检查限流及已通过项。两台任务AVD均正常关闭，数据保留，签名临时引用已移除。

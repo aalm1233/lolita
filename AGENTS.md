@@ -759,3 +759,5 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 - 普通商品摘要和尾款详情提供皮肤感知“淘宝查看”，按当前单品/颜色/尺码来源过滤、去重；多链接逐条标注原商品标题与价格阶段供主动选择，取消留在详情。`SquareTaobaoButton`优先淘宝包ACTION_VIEW，失败回退系统HTTPS处理；均不可用可复制链接。仅允许taobao.com/tmall.com及子域、无用户信息的标准HTTPS链接，非淘宝来源保留原文。
 - 直接心愿及尾款只读规则保留，不写业务数据、账本、图片或私人规格，Room34/备份16不变。前置艺术图稿及范围见`docs/plans/2026-11-06-square-taobao.md`。`SquareBrowseTest`定向覆盖受控Intent优先/回退/失败复制、来源选择/取消、七皮肤浅暗、320dp两倍字与无效来源；测试不实际打开淘宝，不冒充真实淘宝客户端验证。
+
+- 2.75.0／152广场外跳正式源码`2943ca0b`及标签已普通推送；5个去重定向设备方法与最终七皮肤浅暗／320dp两倍字共84张矩阵图、Debug和提交归档clean原签名Release通过。2.74.0覆盖两次启动保留2份设置SHA，37项目assets／24旧图片／2依赖素材字节一致。GitHub/Gitee同一APK与SHA256SUMS匿名完整下载、SHA/HEAD及源码标签通过；Gitee公开接口403、正式App一次手动检查遇拒绝/频控，直接APK可用，不宣称更新入口通过。按持续授权仅清理最旧Gitee2.66.3 APK，旧页/校验/GitHub及本机副本保留。两台任务AVD关闭、数据保留；Room34/备份16、付费0、主助手淘宝访问0，真实淘宝客户端未实测。回执`docs/square-taobao-release-2.75.0-verification.json`。

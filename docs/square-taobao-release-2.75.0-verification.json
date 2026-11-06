@@ -1,0 +1,241 @@
+{
+  "version": "2.75.0",
+  "versionCode": 152,
+  "sourceCommit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+  "sourceAndTagPushed": true,
+  "build": {
+    "package": "com.lolita.app",
+    "version": "2.75.0",
+    "version_code": 152,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+    "apk_sha256": "d73ac0a1b1d58299f4e7d334aa14a2365636f670a8fdd18306b9ca26a3e1faa9",
+    "bytes": 83972501
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "dependencyAssets": [
+      "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+      "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000"
+    ],
+    "dependencyAssetsByteIdentical": true,
+    "generatedProfiles": [
+      "assets/dexopt/baseline.prof",
+      "assets/dexopt/baseline.profm"
+    ]
+  },
+  "upgrade": {
+    "from": "2.74.0/151",
+    "to": "2.75.0/152",
+    "sameSignatureOverwrite": true,
+    "preservedPreferences": {
+      "shared_prefs/builtin_library.xml": "9d3831321bb3614f07322900357d5633c9ec6fa11774233bdca9a09104631052",
+      "shared_prefs/wardrobe_category_library.xml": "e8b5dd9087a98d46aa10b777c3e6c34b926a75751d8a4db77cdcfb146c105f3c"
+    },
+    "fullDatabaseAudit": "not repeated: pure UI/Intent change",
+    "passed": true,
+    "launches": 2,
+    "mainActivityResumed": true,
+    "releaseProductButtonObserved": true,
+    "assistantTaobaoAccess": 0
+  },
+  "tests": {
+    "distinctMethods": 5,
+    "initialNormal": "5 passed",
+    "initialSmall": "3 passed; visual matrix stopped on offscreen LazyColumn locator",
+    "finalChangedUiNormal": "2 passed",
+    "finalChangedUiSmall": "2 passed",
+    "build": "assembleDebug + assembleDebugAndroidTest passed",
+    "nativeMatrixScreenshots": 84,
+    "failedInitialRunRetainedLocally": true,
+    "finalCorrections": "skin shape and reading color for long titles; Snackbar action on separate line; LazyColumn scroll locator",
+    "externalIntents": "captured, zero Taobao/browser page access",
+    "businessWrites": "only existing wish regression isolated synthetic DB",
+    "databaseVersion": 34,
+    "backupVersion": 16
+  },
+  "gitee": {
+    "tag": "v2.75.0",
+    "source_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+    "release_id": 1280767,
+    "prerelease": false,
+    "files": {
+      "lolita-2.75.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/lolita-2.75.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "d73ac0a1b1d58299f4e7d334aa14a2365636f670a8fdd18306b9ca26a3e1faa9",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "a41964329bcd230fe3115b0ca07ad0ddeed9356799feb81d0a7ac66b19610aa2",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    },
+    "anonymousFullDownloadPhase": "prerelease immediately before formalization; subsequent metadata-only formalization verified",
+    "formalMetadata": {
+      "tag": "v2.75.0",
+      "release_id": 1280767,
+      "prerelease": false,
+      "source_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+      "assets": {
+        "lolita-2.75.0.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/lolita-2.75.0.apk",
+        "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/SHA256SUMS"
+      },
+      "metadata_source": "owner-authenticated exact release GET; not a public update check"
+    }
+  },
+  "giteeFormal": {
+    "tag": "v2.75.0",
+    "release_id": 1280767,
+    "prerelease": false,
+    "source_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+    "assets": {
+      "lolita-2.75.0.apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/lolita-2.75.0.apk",
+      "SHA256SUMS": "https://gitee.com/aalm1233/lolita/releases/download/v2.75.0/SHA256SUMS"
+    },
+    "metadata_source": "owner-authenticated exact release GET; not a public update check"
+  },
+  "giteePublicUpdate": {
+    "passed": false,
+    "httpStatus": 403
+  },
+  "appUpdate": {
+    "version": "2.75.0",
+    "completedAttempts": 1,
+    "earlierMenuLocatorFailuresDidNotSendRequests": 2,
+    "result": "Gitee temporarily refused or rate limited",
+    "passed": false,
+    "directApkVerified": true,
+    "publicAPI": "HTTP403",
+    "screenshot": "local artifacts/releases/2.75.0/app-update-check.png"
+  },
+  "github": {
+    "tag": "v2.75.0",
+    "source_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+    "release_id": 436475688,
+    "prerelease": false,
+    "files": {
+      "lolita-2.75.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.75.0/lolita-2.75.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 83972501,
+        "sha256": "d73ac0a1b1d58299f4e7d334aa14a2365636f670a8fdd18306b9ca26a3e1faa9",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.75.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "a41964329bcd230fe3115b0ca07ad0ddeed9356799feb81d0a7ac66b19610aa2",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 83972501,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "oldApkCleanup": "docs/gitee-apk-cleanup-2.66.3-2026-11-06.json",
+  "taskAvdsClosed": [
+    "Lolita_Square_Browse_20261106",
+    "Lolita_Square_Release_20261105"
+  ],
+  "avdDataPreserved": true,
+  "temporarySigningReferencesRemoved": true,
+  "paidCalls": 0,
+  "assistantTaobaoAccess": 0,
+  "realTaobaoClient": "not exercised; ACTION_VIEW handled by controlled test contexts",
+  "databaseVersion": 34,
+  "backupVersion": 16,
+  "talkBackManualReading": "not run",
+  "testedSource": {
+    "testedAppTree": "7e6dddbdede6f8993ec61d426610c5558532ab38",
+    "releaseAppTree": "7e6dddbdede6f8993ec61d426610c5558532ab38",
+    "identical": true
+  }
+}

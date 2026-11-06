@@ -1,0 +1,917 @@
+{
+  "captures": 228,
+  "files": [
+    {
+      "file": "chinese-dark-detail.png",
+      "sha256": "7e2d29d9505e6bb335e75fa66320d13465e61a24fdc6fe3eabc5213448661b74"
+    },
+    {
+      "file": "chinese-dark-feed.png",
+      "sha256": "4d285dde82f98229fd7060a73eb408f4f5f35cd701e6d1af9ab6e06072f06777"
+    },
+    {
+      "file": "chinese-dark-selection.png",
+      "sha256": "d21a194707a11a7d73db4f7f871ebabde6c3e0d45dccb5c3514ae53007cb8593"
+    },
+    {
+      "file": "chinese-light-detail.png",
+      "sha256": "3d47ecc280f2d54032ef759c99ce1b11a6b9f8c68c162d4414687c927ae72bd4"
+    },
+    {
+      "file": "chinese-light-feed.png",
+      "sha256": "996879c2ef5f0217fd36ed18785bfc8dc1f69ea897dc1136c45f09654151da28"
+    },
+    {
+      "file": "chinese-light-selection.png",
+      "sha256": "8f0c9b87e6d8158191bfee612856096f12d59bd95a86fb9d84072cfd075e66f0"
+    },
+    {
+      "file": "classic-dark-detail.png",
+      "sha256": "85c4f0d9bbbaed46bd4fa4e5e1d153d6b6ccee8206c68a11b86317f770e19edb"
+    },
+    {
+      "file": "classic-dark-feed.png",
+      "sha256": "91686d92949ce0bca5578f71fc45c6b600aad0a93b4d36265527cd429f8e0faa"
+    },
+    {
+      "file": "classic-dark-selection.png",
+      "sha256": "f6349afd92f0d412ab5246db81d073ced11139a5308958d76e41f4089ed226e3"
+    },
+    {
+      "file": "classic-light-detail.png",
+      "sha256": "7ec3e22cc15ae7581f71c652810b70edba095b4543f4937d62efbf6d5fde1988"
+    },
+    {
+      "file": "classic-light-feed.png",
+      "sha256": "4804a9ba493898162bad5ede9e7af844e45393c5dadc08fa4ee9d8a8ecea8bdd"
+    },
+    {
+      "file": "classic-light-selection.png",
+      "sha256": "cb6033278e4255d58bc4bf4e1b2d1880448fcd9565cfc8ddd887adf243deac4d"
+    },
+    {
+      "file": "country-dark-detail.png",
+      "sha256": "ffa187ff91781bcc6ed9e9259300eba28ad9ff7e502af0a2c36303c3d200ff0e"
+    },
+    {
+      "file": "country-dark-feed.png",
+      "sha256": "50399a0700bc6bc48c247958ffbc575ebd1078b69bd62b8fd375ce60f7bc3de4"
+    },
+    {
+      "file": "country-dark-selection.png",
+      "sha256": "0875d998f97aacf18bce6c4973869288f2804a97d2675b6ae576e378a20af33b"
+    },
+    {
+      "file": "country-light-detail.png",
+      "sha256": "58c9f7691e4447adf74d7a972859cbfe2f35cde24cc92c148d770958f568204d"
+    },
+    {
+      "file": "country-light-feed.png",
+      "sha256": "14bd4255bf88707182faee608f4cec7cf96b3d0f3b41242dbcf6c9069de9ab3e"
+    },
+    {
+      "file": "country-light-selection.png",
+      "sha256": "e444039669736bab089e726e9f153eecb15d79b7569482cef0515089028d6938"
+    },
+    {
+      "file": "default-dark-detail.png",
+      "sha256": "61d6ecffdd3a43efeb43f259d85569f2f87ada0cf58f45f0da86bb3d7e6592d0"
+    },
+    {
+      "file": "default-dark-feed.png",
+      "sha256": "91d40e630122499e3ca0ededc5ec6975dcf6702c4f4169aa2a0a2c361e87899b"
+    },
+    {
+      "file": "default-dark-selection.png",
+      "sha256": "2eeeffdcae150879bbf32c4f8ce87ae7e3e7857e85b21342c471a33dfb8a3256"
+    },
+    {
+      "file": "default-light-detail.png",
+      "sha256": "1b747a46adc1065a74f74da1816df4c4d9f9a4ddcb3c0f87adb1dc851d9ec712"
+    },
+    {
+      "file": "default-light-feed.png",
+      "sha256": "e8e4278c8773da8d971b5b08941d71236aaf0f9859811a34428f33379d4e18d2"
+    },
+    {
+      "file": "default-light-selection.png",
+      "sha256": "c476ddc51f7234b6998d4adc330035730c6349e43d03314ffa9c6ade19289989"
+    },
+    {
+      "file": "empty-chinese-dark.png",
+      "sha256": "599621eb879ed25b6541fb5dd59b989d9f2afcc3aa88fec03ba4486b9716b341"
+    },
+    {
+      "file": "empty-chinese-light.png",
+      "sha256": "a13efc38c647905d7fc8292ea81cf4406efbc6020495400026d93730aa348e79"
+    },
+    {
+      "file": "empty-classic-dark.png",
+      "sha256": "ab8cffe90d0c810c8b220badb7497df2b29dd57ae546ca06b8274f6e7c432b58"
+    },
+    {
+      "file": "empty-classic-light.png",
+      "sha256": "3d8ade008119201a47c92f1f448706ce4d8df9d1d75e8793814017f0264a99ba"
+    },
+    {
+      "file": "empty-country-dark.png",
+      "sha256": "503a2667699710506a1e6755e02f4ff824a14134a0744a3b2f332d7ff5599852"
+    },
+    {
+      "file": "empty-country-light.png",
+      "sha256": "1c3b2d2e528d16fdac47300b58fdc900efc4a4b5fd1eb2eebc164dbd8125e347"
+    },
+    {
+      "file": "empty-default-dark.png",
+      "sha256": "4d2766648c3d54c945191c222555079bccc5095ae54abd018c587d830f259dc5"
+    },
+    {
+      "file": "empty-default-light.png",
+      "sha256": "de9c709294305237777fe6b57d5f63d9bc76f752efd20f7c6827c2819a8857c0"
+    },
+    {
+      "file": "empty-gothic-dark.png",
+      "sha256": "812e817f268bb6df46174a2785c46e08a0487e5376f0a60f7307312a75020efb"
+    },
+    {
+      "file": "empty-gothic-light.png",
+      "sha256": "56c3889164d4829a3ee3bc5850af67f05aaece662c0a1cb1bf300417871b066c"
+    },
+    {
+      "file": "empty-navy-dark.png",
+      "sha256": "f22e65004051ee0cac7ef0b825fba5744b1cbf444555c5812021e5bc581eb081"
+    },
+    {
+      "file": "empty-navy-light.png",
+      "sha256": "020e65b676bde12a9160d4ccdd38ea7890013150a8b959e46c178137d9c04d44"
+    },
+    {
+      "file": "empty-victorian-dark.png",
+      "sha256": "0e49bbbfe7318b02aeba1041e1b81562f332f7ab7c7ff2c3d05a70fa0560b14e"
+    },
+    {
+      "file": "empty-victorian-light.png",
+      "sha256": "d940d279d7419edb5c77cdf49492b0b03ef03a53e5c9f1532c01613b885d20ae"
+    },
+    {
+      "file": "gothic-dark-detail.png",
+      "sha256": "32d7e354e2be75f75aee899182204255fbc934fe1ceebe57943364c685e3655f"
+    },
+    {
+      "file": "gothic-dark-feed.png",
+      "sha256": "5fa997098a6e070e06b73a63f3e39a9ef7f2d77341faac94bf475bc129b95de7"
+    },
+    {
+      "file": "gothic-dark-selection.png",
+      "sha256": "91de4b39a2c5a1b86c07c152dc27757ba9f7b87caf4ecbade58b5e0ef281d1e1"
+    },
+    {
+      "file": "gothic-light-detail.png",
+      "sha256": "de0e0786392952c902049dd76284b5bcbf8cb5e87d8416b1c627b999bd78583e"
+    },
+    {
+      "file": "gothic-light-feed.png",
+      "sha256": "526f34c6bcfcd7d5e7355841d2f281d2ef92080e8ac4b9faa37dc148345227cb"
+    },
+    {
+      "file": "gothic-light-selection.png",
+      "sha256": "9e95b589b30bfde803ffa9d364c4301cb62f0a8760bd5e85d7c460de5b31a5fe"
+    },
+    {
+      "file": "navy-dark-detail.png",
+      "sha256": "0e2b948b1778938b97be9757f405ac845207ac6242c043c5bab06246ff745271"
+    },
+    {
+      "file": "navy-dark-feed.png",
+      "sha256": "e6a1f7e2df57bcd8cc28eda92161fe4fdc65afd437824e9d5e929da66c57110a"
+    },
+    {
+      "file": "navy-dark-selection.png",
+      "sha256": "d44b74567b6f6d9ce2cc6a091813ed367727633bd52df0d57e7af0fe2b238e5c"
+    },
+    {
+      "file": "navy-light-detail.png",
+      "sha256": "6eacdd1728398ac8087bf36774119a4aa1f23e4c2349e6aa4869334bb4d3c0c3"
+    },
+    {
+      "file": "navy-light-feed.png",
+      "sha256": "1a5f81e296e923424bac88dc31fb872f06d649ce77d53cf7f72597f7a7ff27df"
+    },
+    {
+      "file": "navy-light-selection.png",
+      "sha256": "a93d56583fe2a61c092674879c4f6efb3a728a59e9e21a6ae955c118fb81e467"
+    },
+    {
+      "file": "neo-second-link-normal.png",
+      "sha256": "ebd3c560459d02967f88f8cde409a58f6d9ee40001acd61e573ef0f97333671b"
+    },
+    {
+      "file": "refined-item-chinese-dark-small.png",
+      "sha256": "466c570712f430158d0ce191b7dfe626337fb7e83020f4fb18c9ef39519160fe"
+    },
+    {
+      "file": "refined-item-chinese-dark.png",
+      "sha256": "76440e6c7c17cb00c3ffcefc3d6a401b22443335003b0d555c24b0cbe98456d3"
+    },
+    {
+      "file": "refined-item-chinese-light-small.png",
+      "sha256": "fa1635346c1c1af608605d6228f3a91f9c6edd32ea247e164c4b5df953a279e7"
+    },
+    {
+      "file": "refined-item-chinese-light.png",
+      "sha256": "74b584961e504015da04d25fd8cde62c9ed39ce2c3a63fa926c6943936c59cab"
+    },
+    {
+      "file": "refined-item-classic-dark-small.png",
+      "sha256": "49743eb73bd541993c70feb1a9fcdde07776640bec007c0d7fc77e150a75c6b1"
+    },
+    {
+      "file": "refined-item-classic-dark.png",
+      "sha256": "2fb6ab072a28f4bcb79d4422233544392f0df7364e2a6e3ad4a6ac309d2267b0"
+    },
+    {
+      "file": "refined-item-classic-light-small.png",
+      "sha256": "3b115639e292f419f8f60d024af24cbb6c8599529f5771064fed13022af42a0f"
+    },
+    {
+      "file": "refined-item-classic-light.png",
+      "sha256": "96cc5c9786ef7694d7d17ae7551655cd984d178dc5f12c94093841976f6693e1"
+    },
+    {
+      "file": "refined-item-country-dark-small.png",
+      "sha256": "4b0229233901757281dc1e1f65272d6b37ffcd7f06485008d191f12ef6872978"
+    },
+    {
+      "file": "refined-item-country-dark.png",
+      "sha256": "18f7580ec1014a8aa0a59a90ed1182b7e0b8311c78f566962a14f0803c985434"
+    },
+    {
+      "file": "refined-item-country-light-small.png",
+      "sha256": "b68c97a8540a0ecaa5afc2b8c00482baad79859022271b5c95cc87272b9d7a84"
+    },
+    {
+      "file": "refined-item-country-light.png",
+      "sha256": "b8551c7e7eabbbadffdcdd73da94af018849c8312de0b640425b53ece265d298"
+    },
+    {
+      "file": "refined-item-default-dark-small.png",
+      "sha256": "070348ab31fbb3f89b69a1018240f5acf4821f0177815c9740d77d41da40de3b"
+    },
+    {
+      "file": "refined-item-default-dark.png",
+      "sha256": "9f755359f24592db99dfe664fb7f250748527d952861a9a4be8bf76a33c518b1"
+    },
+    {
+      "file": "refined-item-default-light-small.png",
+      "sha256": "5b92b25be575450d925ebca9c77d4d3604d2bb3565140d6ab702042f3f2d23e4"
+    },
+    {
+      "file": "refined-item-default-light.png",
+      "sha256": "54cb243340ee42d161648607efc1071c9f97f82480f780f20480323f507d87c8"
+    },
+    {
+      "file": "refined-item-gothic-dark-small.png",
+      "sha256": "36521d6ca33c43c5e3e76c1f33b1cc7226470427e3a6d16427705cba07456f20"
+    },
+    {
+      "file": "refined-item-gothic-dark.png",
+      "sha256": "4013f931421e714864c9649c7ee31981f403bc575937e3e00b6db396457ad8cc"
+    },
+    {
+      "file": "refined-item-gothic-light-small.png",
+      "sha256": "6003395a98a7912df8db9ef449ba42505bd9be315402b52c1b24afcbbdb36cc5"
+    },
+    {
+      "file": "refined-item-gothic-light.png",
+      "sha256": "4e2df1e6c813a57c5a8e0b814cdf83a814ccd632d658170f2a10fefed10cb000"
+    },
+    {
+      "file": "refined-item-navy-dark-small.png",
+      "sha256": "20697b72aa7ae95235f482ce4456adab13f62c22ef8c0ab9e7208d54a8e7e61c"
+    },
+    {
+      "file": "refined-item-navy-dark.png",
+      "sha256": "6f9d3a89d512f7006f0a56d997102320cd9e99009433551d73429bbb39421a14"
+    },
+    {
+      "file": "refined-item-navy-light-small.png",
+      "sha256": "9cd1bb7443640353f932c7e1230b03532a4ece8882d46be5cb3372c62422268b"
+    },
+    {
+      "file": "refined-item-navy-light.png",
+      "sha256": "11b1f54de99e8c92a21a196d76ba08645cafaac74449cbbf42fea1148f1675c0"
+    },
+    {
+      "file": "refined-item-source-expanded.png",
+      "sha256": "d7cb3873e6e88c9add84904b4880000efbb6dfc88f64289de6282eb1b180b241"
+    },
+    {
+      "file": "refined-item-victorian-dark-small.png",
+      "sha256": "92771aa2d00474ac995fe1aa331d2f2bb40278fac5ceff36a79b3cb08bc70620"
+    },
+    {
+      "file": "refined-item-victorian-dark.png",
+      "sha256": "ca02372ca72bcee1cb4a6d7549a6a516ed898171bc1608ce2420fa701220900a"
+    },
+    {
+      "file": "refined-item-victorian-light-small.png",
+      "sha256": "b622ee240ca369ee997784050cc272cf30d496af89052a281b30bf7a8fca5910"
+    },
+    {
+      "file": "refined-item-victorian-light.png",
+      "sha256": "3ccda14a5286890fe66a4cac00ad5f9826edbdfb6db2dbcb3c4477a49cefde88"
+    },
+    {
+      "file": "refined-jsk-photos-chinese-dark-small.png",
+      "sha256": "e2817dd082efbdfd93ad053b947a0b19b0486be5bbf838906d95908d20336845"
+    },
+    {
+      "file": "refined-jsk-photos-chinese-dark.png",
+      "sha256": "9423ae8abf2a2b6438330b509fce678f9f34a61b1af0971ddb20190492ba8e0d"
+    },
+    {
+      "file": "refined-jsk-photos-chinese-light-small.png",
+      "sha256": "e0d2e9a8a30d6202661931b9427e7213b779f1567706bc9e8e20d9f6340527ca"
+    },
+    {
+      "file": "refined-jsk-photos-chinese-light.png",
+      "sha256": "a77c9603e7f108a0ac71b65e6fd534529384286de330ee45de4211289de0708e"
+    },
+    {
+      "file": "refined-jsk-photos-classic-dark-small.png",
+      "sha256": "070970631d165988f436411631ce71659e8f7624147ee3d1a5fa0098a3baa36a"
+    },
+    {
+      "file": "refined-jsk-photos-classic-dark.png",
+      "sha256": "a01f35949f51b6bc9581317e78ecae90164ecbdde9d88023c1d26c761b95a643"
+    },
+    {
+      "file": "refined-jsk-photos-classic-light-small.png",
+      "sha256": "a33b70b406560eb0003810e05b07a1d51db161e1be3bec4bda741e923d734a92"
+    },
+    {
+      "file": "refined-jsk-photos-classic-light.png",
+      "sha256": "0f4809bd3033f11d4379ccd82280846a45d1a476954d91395997c8c3067c0e8e"
+    },
+    {
+      "file": "refined-jsk-photos-country-dark-small.png",
+      "sha256": "50f0e527f77a8bea1df24be49024ef007fba4e2f2198d851d859cb1c29f2fc62"
+    },
+    {
+      "file": "refined-jsk-photos-country-dark.png",
+      "sha256": "add5affc8153e8a9b903e873b281fd4b9bd03512e070fcc650a19016c1b1d0d1"
+    },
+    {
+      "file": "refined-jsk-photos-country-light-small.png",
+      "sha256": "6393a3f4bf540157d6c65d0e71c34001c061b134931fbf38b85395444a9e8fb8"
+    },
+    {
+      "file": "refined-jsk-photos-country-light.png",
+      "sha256": "b16007bebbfee86d0587009df1634cd84195a38c2658f119dbf7eb997513b347"
+    },
+    {
+      "file": "refined-jsk-photos-default-dark-small.png",
+      "sha256": "da084087e3638f16d2b27128a46a87de959da83770cea41fd6cdc453ed847d08"
+    },
+    {
+      "file": "refined-jsk-photos-default-dark.png",
+      "sha256": "0cf57610b84d44580e752e30abd4b855eaa4703587cade88be6a5bda4897d5bb"
+    },
+    {
+      "file": "refined-jsk-photos-default-light-small.png",
+      "sha256": "935c93745ab018df076bf05f37e67cbe2dc8dde93ac89804842a0d2f0a417acb"
+    },
+    {
+      "file": "refined-jsk-photos-default-light.png",
+      "sha256": "cb0ce019afee9e3196e430065e8c78ad71ec50b3c2b6dafde8f8a1ba78895e90"
+    },
+    {
+      "file": "refined-jsk-photos-gothic-dark-small.png",
+      "sha256": "f95b32d61c85d8bd06774a5e55756e5b9bf0a8a3056b13230230573c8a7e18bd"
+    },
+    {
+      "file": "refined-jsk-photos-gothic-dark.png",
+      "sha256": "e56179834d59cf046c3adead625e4b941b2809e3e66ab03cee4334a28d00749d"
+    },
+    {
+      "file": "refined-jsk-photos-gothic-light-small.png",
+      "sha256": "10f26c99fcea97e89bb4489d6098d811072bb205701c3ea9f813d95c03f2653e"
+    },
+    {
+      "file": "refined-jsk-photos-gothic-light.png",
+      "sha256": "5db91f8c350748eb89aaa092e42aa455f5d346149c40e167da266bdf3e4808c1"
+    },
+    {
+      "file": "refined-jsk-photos-navy-dark-small.png",
+      "sha256": "0e926ff34d3c98d6161ac294acaa78f301c63f08f84792d151005f1c5c5e7aeb"
+    },
+    {
+      "file": "refined-jsk-photos-navy-dark.png",
+      "sha256": "fd7c149d7a5ce6f8b89d45db512b9106aba32ee15ab4a82cb07d60e719178244"
+    },
+    {
+      "file": "refined-jsk-photos-navy-light-small.png",
+      "sha256": "64f80080e8580e5a9e8d7e0a418eb639a7d7624da8bf11aeadaab9a675a5d12d"
+    },
+    {
+      "file": "refined-jsk-photos-navy-light.png",
+      "sha256": "ef797424ad8a2507de952b1edebb02ac78ca04fee450c450591e037888d10616"
+    },
+    {
+      "file": "refined-jsk-photos-victorian-dark-small.png",
+      "sha256": "6d6ef68b484373ef434c80235c2b46615e3a75c857b8336f371646f90ad7da4f"
+    },
+    {
+      "file": "refined-jsk-photos-victorian-dark.png",
+      "sha256": "3df78a4b537fc16be09f568f41c64f249265b6176bbaf72415b922312edef779"
+    },
+    {
+      "file": "refined-jsk-photos-victorian-light-small.png",
+      "sha256": "3c09efd2355dc836ec29f0af57392ff68bbf269ba58f9627cc935a246713a81c"
+    },
+    {
+      "file": "refined-jsk-photos-victorian-light.png",
+      "sha256": "2278baccc5a4f1bca9f9706574a2bd05aa50fc1ca55382d9036f325804dc44f0"
+    },
+    {
+      "file": "refined-kc-documents-chinese-dark-small.png",
+      "sha256": "cec276f553b0a276261fa784112c9b2aea35f58c454be1b1b1ee503adb29c010"
+    },
+    {
+      "file": "refined-kc-documents-chinese-dark.png",
+      "sha256": "e20d37f16af38d32b55ab4e14a7ac95d95ea2825754292a2b7b05f79792e0d22"
+    },
+    {
+      "file": "refined-kc-documents-chinese-light-small.png",
+      "sha256": "9f537c6fa46afd59eff875183f9f510ddd4a52058b0b30de1ae41c4a87e25534"
+    },
+    {
+      "file": "refined-kc-documents-chinese-light.png",
+      "sha256": "cf1da470528e302cb16f533655df44170b7dc61905913f406ece7713960c6b69"
+    },
+    {
+      "file": "refined-kc-documents-classic-dark-small.png",
+      "sha256": "4f388b608f37437cfdaed0e275b6dbf66116c25539d9e5b8931c72d8cc5a963a"
+    },
+    {
+      "file": "refined-kc-documents-classic-dark.png",
+      "sha256": "8eb427bf7c5abf64017132266773cc1793d7483b0bb8e32a6b2fe04cc838ed1c"
+    },
+    {
+      "file": "refined-kc-documents-classic-light-small.png",
+      "sha256": "a6a25fb091abb2d859864ce1b3e323e1b16bc69c06e563f8f5d094de5742b82b"
+    },
+    {
+      "file": "refined-kc-documents-classic-light.png",
+      "sha256": "d87256f1ee238703532c7f00973797fa8129850fb9b6ba003e1835c73a3d4612"
+    },
+    {
+      "file": "refined-kc-documents-country-dark-small.png",
+      "sha256": "91415f3688bb6fb60787e58fa7449a9358d3187ffce9a013b161291ed9d2bec0"
+    },
+    {
+      "file": "refined-kc-documents-country-dark.png",
+      "sha256": "282e0bc2889897e31286aa49e1fb6dc452a2f66f2ca0d1dc7b216fbca07ea2e8"
+    },
+    {
+      "file": "refined-kc-documents-country-light-small.png",
+      "sha256": "0cc1df82663dfef9523e9498afdd869b6efca8b8da88cd3f5e67aaed62684cf7"
+    },
+    {
+      "file": "refined-kc-documents-country-light.png",
+      "sha256": "4e2cccfc7cd6b740e726816cb348694cefcc92e1e5a94a7c43a11e7e6ab7a6bc"
+    },
+    {
+      "file": "refined-kc-documents-default-dark-small.png",
+      "sha256": "6e8485b531e4fc4ab0f5b0f80afc3a15141087208ce70da81a015829421e450d"
+    },
+    {
+      "file": "refined-kc-documents-default-dark.png",
+      "sha256": "5f0577edb8687ee78bbceec7c4461881c37cd994424269d5c9909cdb8c0129cc"
+    },
+    {
+      "file": "refined-kc-documents-default-light-small.png",
+      "sha256": "4a6f110269de5123d00b45c8bdee48c3684a82d8e6e75c63e3c75a4aee0cd4f7"
+    },
+    {
+      "file": "refined-kc-documents-default-light.png",
+      "sha256": "093a3c71b00904b11b5fbd9373576140b15f5da38e8ea740623e22fb15a1445b"
+    },
+    {
+      "file": "refined-kc-documents-gothic-dark-small.png",
+      "sha256": "1f3cf3c24813505e207bd423cbd2e347ff85da02ec05bccaf1137814bd89a05c"
+    },
+    {
+      "file": "refined-kc-documents-gothic-dark.png",
+      "sha256": "28aa6925c2a9a1ecf7d5497a29452d4ad260bbd26864368b3007a6f68dccc655"
+    },
+    {
+      "file": "refined-kc-documents-gothic-light-small.png",
+      "sha256": "31bf740f6996d292c2f0c04c3c5b1c2312a27b89ce1e1f1ee5ce82d0b86e3195"
+    },
+    {
+      "file": "refined-kc-documents-gothic-light.png",
+      "sha256": "1986a910162d16fef162c66c828c58247cd9563fa1e0e72d944bda3f7111eb55"
+    },
+    {
+      "file": "refined-kc-documents-navy-dark-small.png",
+      "sha256": "5b05470532963f29848ec8849ea5a6e49d5b6f591da9f2eddd77fe1976e75415"
+    },
+    {
+      "file": "refined-kc-documents-navy-dark.png",
+      "sha256": "0d3a68c5664d5aecb0e1497fcf9ebc1d31d1f60338ae581be1f638ce6a12f044"
+    },
+    {
+      "file": "refined-kc-documents-navy-light-small.png",
+      "sha256": "e894cbf10daeb870449f1d05242c1cbe0e5d0bd4e9407a072481773092172fe8"
+    },
+    {
+      "file": "refined-kc-documents-navy-light.png",
+      "sha256": "7824d79af5f238af8d707fe2139a73dd9d6816041c723fc3c91c683fcdd86609"
+    },
+    {
+      "file": "refined-kc-documents-victorian-dark-small.png",
+      "sha256": "315d0fe581d758ac4d0de814129dd74aea255adb84b282658bda9a4289dd8b23"
+    },
+    {
+      "file": "refined-kc-documents-victorian-dark.png",
+      "sha256": "64b00360fe2eb712a82b5d3b23b004aa8f897befb4992d7c9d6e92cfd7c781d0"
+    },
+    {
+      "file": "refined-kc-documents-victorian-light-small.png",
+      "sha256": "74e90888fb6a1d3f5600cec6556d4f054b2cd32be540968f5b59b0da5cfca2a7"
+    },
+    {
+      "file": "refined-kc-documents-victorian-light.png",
+      "sha256": "169a1af844889537a04ad3d17b170cea449f2cd0a35f7c8c7b1de0690909d9a8"
+    },
+    {
+      "file": "refined-kc-photos-chinese-dark-small.png",
+      "sha256": "45ef4f452d27369476f98344ee74cafc895ee3a90bc0039a1c0f6e070f723e4a"
+    },
+    {
+      "file": "refined-kc-photos-chinese-dark.png",
+      "sha256": "6d0abbb2c8dcfc7d7f12dd8dc110bc383491be1108f23d6483f4588360251126"
+    },
+    {
+      "file": "refined-kc-photos-chinese-light-small.png",
+      "sha256": "65303a0aa01170607479d3a5f263ba42d19507d4b64d7d86bb696ec815c5b852"
+    },
+    {
+      "file": "refined-kc-photos-chinese-light.png",
+      "sha256": "5a4e059da330ba0a125bff4aaac996377732307167c0aeaddc86cbb0e7e114e8"
+    },
+    {
+      "file": "refined-kc-photos-classic-dark-small.png",
+      "sha256": "dad5a1695725265f91fbf1c6549bcedb23e4773217180712f841f6777a4819ed"
+    },
+    {
+      "file": "refined-kc-photos-classic-dark.png",
+      "sha256": "87cedb99577c3e2ea9eb6b8834d1093e15227f5b63a1959159a966a7e7c1eca3"
+    },
+    {
+      "file": "refined-kc-photos-classic-light-small.png",
+      "sha256": "d8895b1ee0bfe43801608857a066a7da36ef9d52c873494d6d7835ea97766726"
+    },
+    {
+      "file": "refined-kc-photos-classic-light.png",
+      "sha256": "3de084f902e2f968fbd879881b767a4f8e7bceb3152f688421c993b00dcfcb94"
+    },
+    {
+      "file": "refined-kc-photos-country-dark-small.png",
+      "sha256": "eac7d0002293cf06ca43e70bfb73fb069e979e5f2eeb55c9909f099c23c73c6c"
+    },
+    {
+      "file": "refined-kc-photos-country-dark.png",
+      "sha256": "d7395a8ba32f9df05842b27468fe2c7ba36f454d755132fac8c858dee99d3ea1"
+    },
+    {
+      "file": "refined-kc-photos-country-light-small.png",
+      "sha256": "bf11488b40be67e1be36fb1370dca01f6f62167f44adc9a639382c73ffbc7c5d"
+    },
+    {
+      "file": "refined-kc-photos-country-light.png",
+      "sha256": "ad5ae114bd6dd3f1c8d4267174fedc9706508b7830c5f5601f3df1adf27e80d0"
+    },
+    {
+      "file": "refined-kc-photos-default-dark-small.png",
+      "sha256": "e97b922c6969bd5b88d6985d83c58570cadbd2a35e370149a4d486c1fddb8525"
+    },
+    {
+      "file": "refined-kc-photos-default-dark.png",
+      "sha256": "2f4204d342aaa2f332607fd0fa3fbd0b9e06d6226d7021d1c006accd6d74117a"
+    },
+    {
+      "file": "refined-kc-photos-default-light-small.png",
+      "sha256": "893960a095afb32604ca59a18b897c8b69214fb1451de19b4c242b2bd6d45b15"
+    },
+    {
+      "file": "refined-kc-photos-default-light.png",
+      "sha256": "38cf42e12fb4f29413f4dd1c9d057042711c4a16d13aea6d95fd002d6a907d0f"
+    },
+    {
+      "file": "refined-kc-photos-gothic-dark-small.png",
+      "sha256": "c4187081153ecd6f556d3d493ef535ee7ae555a0bccfe841b15cbe2d578c0c41"
+    },
+    {
+      "file": "refined-kc-photos-gothic-dark.png",
+      "sha256": "a7a8178baf6121ef8b6f500f492305f36afcce758a417a7c9b5d735f7e4f1529"
+    },
+    {
+      "file": "refined-kc-photos-gothic-light-small.png",
+      "sha256": "76bcddf7c0377371f799069cdc1c492f6b6963c032e0ccaaa737b3dd5adcddf9"
+    },
+    {
+      "file": "refined-kc-photos-gothic-light.png",
+      "sha256": "b63f720119fc15cc4b4e76a9da00754fd8c5ca278fc98d33ae4d3b8609415186"
+    },
+    {
+      "file": "refined-kc-photos-navy-dark-small.png",
+      "sha256": "05185ce1c5f593b9c257ea0b73252f1cb6dcbd32b2d1b39bb850328729707ba7"
+    },
+    {
+      "file": "refined-kc-photos-navy-dark.png",
+      "sha256": "972b8c802b37a46aa59f0f082f621b648c13d28be08682c0094d2e90091eaf2f"
+    },
+    {
+      "file": "refined-kc-photos-navy-light-small.png",
+      "sha256": "239931761896da389c1e18290fa68619f6dc6277783a8d9295a8b31e2f69c25c"
+    },
+    {
+      "file": "refined-kc-photos-navy-light.png",
+      "sha256": "b86d7f5927cb5d1bb4f2667d5a6be88cd6f36488b066a896318d6a709fcfaaac"
+    },
+    {
+      "file": "refined-kc-photos-victorian-dark-small.png",
+      "sha256": "4e099a052d385575098bef17764a0fd93caa7181608192867968c7a6fc769cb5"
+    },
+    {
+      "file": "refined-kc-photos-victorian-dark.png",
+      "sha256": "67dcd29cb8067f72858d06c425b19f0e2150a028a90c07693dc57e83c38d6860"
+    },
+    {
+      "file": "refined-kc-photos-victorian-light-small.png",
+      "sha256": "f211441b5e10e8722dc18ef7ebb6ced8246b27f83b489ecf2bb264f2746c4314"
+    },
+    {
+      "file": "refined-kc-photos-victorian-light.png",
+      "sha256": "d1096fa208ddc17c841f437cd7d65615c4e2a1cfdd0dc8ac9f25a12d002d32b1"
+    },
+    {
+      "file": "refined-preview-chinese-dark-small.png",
+      "sha256": "8b1eeb517872be81489d9d9be2f2198ab88d4dc5b94e3eba32c1e892e331e53c"
+    },
+    {
+      "file": "refined-preview-chinese-dark.png",
+      "sha256": "790f5196b688fee21c0f9f2354783b2d33000a7231704b4dcfa14ed18ac0d8ff"
+    },
+    {
+      "file": "refined-preview-chinese-light-small.png",
+      "sha256": "7d8097a0588d4dfbb3bfdb9fd7e2bf4242eccbd390bdf160505f2d463cb17ddb"
+    },
+    {
+      "file": "refined-preview-chinese-light.png",
+      "sha256": "3b9436675786527f90853c23506e909ccffbc5437d41aeb1e971df6c7472ebe8"
+    },
+    {
+      "file": "refined-preview-classic-dark-small.png",
+      "sha256": "7ceff179861c6fcfcaf9f584afaa5b56c758852d683a96a77504d9ae240901f1"
+    },
+    {
+      "file": "refined-preview-classic-dark.png",
+      "sha256": "f7c706f0a493282cef222ee3144777452b89413bd3bb5349a3e2600ffc3d79b2"
+    },
+    {
+      "file": "refined-preview-classic-light-small.png",
+      "sha256": "b5c16c4119ab17258789b6cb117dc0a76c5dbab49404663be972aa3d4b79cad9"
+    },
+    {
+      "file": "refined-preview-classic-light.png",
+      "sha256": "ad5141a4eaaf70176e012c23755168fafab866e5c42da95c83c5d68ba42dae45"
+    },
+    {
+      "file": "refined-preview-country-dark-small.png",
+      "sha256": "36bfaf5f333c746fc947532d200e12ba27758f7d07a88a78da5fae24d9a82079"
+    },
+    {
+      "file": "refined-preview-country-dark.png",
+      "sha256": "be52fecc68b0336a538cb4105e19c297d8e39c86fd167c6e5091cdc8b36375ee"
+    },
+    {
+      "file": "refined-preview-country-light-small.png",
+      "sha256": "505a095d02b7b687294e32d37b23b7a822bf54e8a39b60b5012910479f4eccf6"
+    },
+    {
+      "file": "refined-preview-country-light.png",
+      "sha256": "ca494f2b44bd95a99f5ffa59c34e112a47408baf4104900195500101334ef88d"
+    },
+    {
+      "file": "refined-preview-default-dark-small.png",
+      "sha256": "063d90a559ec0f4566afe15308e502262fcaad85dd49119088875ff6fd9aa226"
+    },
+    {
+      "file": "refined-preview-default-dark.png",
+      "sha256": "7d383c5449dfa1cb093502c63b719d68ff0e417c3a7bba0267791272f6d2d61d"
+    },
+    {
+      "file": "refined-preview-default-light-small.png",
+      "sha256": "c45307d3a14c4a447c5e03b6eb5f98da422f82e56aec18a1042adfb138c7ad6c"
+    },
+    {
+      "file": "refined-preview-default-light.png",
+      "sha256": "97d661c1661d88691242f3f9111ac2897d12f12daa94130d674a56ada0d0067c"
+    },
+    {
+      "file": "refined-preview-gothic-dark-small.png",
+      "sha256": "f871c57637fbca66937a8741981d80278d81350e00739f28edfd242f9cfcd7bf"
+    },
+    {
+      "file": "refined-preview-gothic-dark.png",
+      "sha256": "4a19d5dd020e063c663e78c985c8d19ef1a5084509e10ee95be430843516f58c"
+    },
+    {
+      "file": "refined-preview-gothic-light-small.png",
+      "sha256": "fc3303579b6346b21d1cfd1019870896d1bf8eb5b06142e4d8ae37e76294bf15"
+    },
+    {
+      "file": "refined-preview-gothic-light.png",
+      "sha256": "011dd13d21720a470dc97f3f6297624145060999e54139c2a4d8b20e11ff328a"
+    },
+    {
+      "file": "refined-preview-navy-dark-small.png",
+      "sha256": "3c45629893622b7dca96dbab0f32cb470f63dd5b56e8e0a12d34d50a7e61515a"
+    },
+    {
+      "file": "refined-preview-navy-dark.png",
+      "sha256": "3510dfe3e2ea6701c76c1893ac3a95f4e18838ee8c116e4e93b75b1d5fd5b0db"
+    },
+    {
+      "file": "refined-preview-navy-light-small.png",
+      "sha256": "293fa3c4cd408e666bee1525f6c9a955644879f97480031f469751d8bf312df3"
+    },
+    {
+      "file": "refined-preview-navy-light.png",
+      "sha256": "8310974eb870c369f00e34e79db4bfb86e9b61caf17718b53609d844441c3bf5"
+    },
+    {
+      "file": "refined-preview-victorian-dark-small.png",
+      "sha256": "71a74b1b2165b3bf798f077bcf6b60711173f21a31f866063b4058130af0179f"
+    },
+    {
+      "file": "refined-preview-victorian-dark.png",
+      "sha256": "ff903313e8025496c58546177640f85bba7a3e57b9e9c8b392d0a7850c1a4681"
+    },
+    {
+      "file": "refined-preview-victorian-light-small.png",
+      "sha256": "e57d04ae5b9034d8751cc3e171dcd971eae367732586b0daa0ed517228ce8a94"
+    },
+    {
+      "file": "refined-preview-victorian-light.png",
+      "sha256": "9f9ae205a9970de3ab6fb6ffb0cefe94c9405b519976ea2d70b6634640eeab5c"
+    },
+    {
+      "file": "refined-split-chinese-dark-small.png",
+      "sha256": "8b79f3e7dc1eb0e40039e038e58fa717679b5bc65eea7991b99b5f800ebbbf6d"
+    },
+    {
+      "file": "refined-split-chinese-dark.png",
+      "sha256": "3ecd5f05a9fcf3648e008a66df4e3b3141fb35a45516e434724e138566590832"
+    },
+    {
+      "file": "refined-split-chinese-light-small.png",
+      "sha256": "46ab332b341dd355c8660c47e1717fbb850ba9adc3f1ad122ac393afdf580979"
+    },
+    {
+      "file": "refined-split-chinese-light.png",
+      "sha256": "998bf5a567d369a8d9ead33514b99c63e3a5ac8ee6bacc39696bcf7977681633"
+    },
+    {
+      "file": "refined-split-classic-dark-small.png",
+      "sha256": "c255ba77aa4441dede73a9f22c943071b8d6f47f14e269e3a07d694a3531c2a7"
+    },
+    {
+      "file": "refined-split-classic-dark.png",
+      "sha256": "ef924ead72d9d5213521bc0ac4c380da6f6a85adec39ac3ea76acdd2e7cc55a0"
+    },
+    {
+      "file": "refined-split-classic-light-small.png",
+      "sha256": "67fc51cd9e50a05e2dac2610bfab7862e0b064314ee64e73ef5b6c7193f481e0"
+    },
+    {
+      "file": "refined-split-classic-light.png",
+      "sha256": "585ecbcbff3f57c6aad6aa6670a9548d4548675a8c3e271adb97b3d7d56c4c17"
+    },
+    {
+      "file": "refined-split-country-dark-small.png",
+      "sha256": "cf6cbfb1a0a94bd41e3f96aa412b18a7d0ff4a3be9ec5bc88e9007506183d43d"
+    },
+    {
+      "file": "refined-split-country-dark.png",
+      "sha256": "320f3af0049e03ca2eaed626291bdebbb7e4dc58f224c7bcda179512368c0db3"
+    },
+    {
+      "file": "refined-split-country-light-small.png",
+      "sha256": "8fa3c2053413f770879425e123efeb12e86dd4f0f1b422628cb28b041b4c451f"
+    },
+    {
+      "file": "refined-split-country-light.png",
+      "sha256": "239c15bd28c0db17cf46de100bed78b2e471c0b00d0a71195d3e9c9006efb8b1"
+    },
+    {
+      "file": "refined-split-default-dark-small.png",
+      "sha256": "5e3994e48f0d58f652f4d728ecf14e96309a5e4178f745660ad10f5a22ca78a1"
+    },
+    {
+      "file": "refined-split-default-dark.png",
+      "sha256": "8ed1bdad4cc1d24188cc13ef1f5a1798895cf14db475dde3f4727c10a38bb01d"
+    },
+    {
+      "file": "refined-split-default-light-small.png",
+      "sha256": "9e0ee2d0922e38d3606bc60b18d7f01ffcdc5c861f2116dc03a4b39c7b192805"
+    },
+    {
+      "file": "refined-split-default-light.png",
+      "sha256": "b3ee69304e42451cddc8db565319d746e09245a792ea828c0c4b2dfbb76dab20"
+    },
+    {
+      "file": "refined-split-gothic-dark-small.png",
+      "sha256": "8c221a42e5e1eb5e3f383b4094a566828e97f62b59890e3c811698c2b182ef13"
+    },
+    {
+      "file": "refined-split-gothic-dark.png",
+      "sha256": "68877dc79897ba8d8bc5d105387d89f272ec2f7f6f6a0de7d2b27a7f0840b2d4"
+    },
+    {
+      "file": "refined-split-gothic-light-small.png",
+      "sha256": "30b3e50b3b1b63bbdccea9ef57f4e5fc592d4bbfbb17cf991449e00f7ff55cba"
+    },
+    {
+      "file": "refined-split-gothic-light.png",
+      "sha256": "1723de5c114d453821b962f1a69238b04f67f52d38dbeac18b9eb8c25ec7d377"
+    },
+    {
+      "file": "refined-split-navy-dark-small.png",
+      "sha256": "4c62ace74e411547ce9426df1756075f65f71d1ad6422070acb4f718f8a7928a"
+    },
+    {
+      "file": "refined-split-navy-dark.png",
+      "sha256": "cf08e8d4343032bc7143f4b741c917b47ac76d2c7d42d0bbea5d78c9a3d66ae9"
+    },
+    {
+      "file": "refined-split-navy-light-small.png",
+      "sha256": "7c4960688a99c857c8a5d63853b356f71fc0aa554be8af744aa94fc1731c4b2e"
+    },
+    {
+      "file": "refined-split-navy-light.png",
+      "sha256": "05eef84ffa80c0303b9d813862df83826da59dd6376e06bc9688f6c60c703087"
+    },
+    {
+      "file": "refined-split-victorian-dark-small.png",
+      "sha256": "8074e3d9b1dfc68a66d8d9d477a6594726f9d6ca76c17b817e9b2658bac550ea"
+    },
+    {
+      "file": "refined-split-victorian-dark.png",
+      "sha256": "832412217860a838a4f864a45304f1e12d79edee39f9998129c081e599b28419"
+    },
+    {
+      "file": "refined-split-victorian-light-small.png",
+      "sha256": "98149a8156e2a83acc7b3c33a7199ba2bf449646632ce71538a90d85d0700dea"
+    },
+    {
+      "file": "refined-split-victorian-light.png",
+      "sha256": "93bae253ae9d3127452c7cc134f5cadf7ea6715fa6561a8ced0f416734e354f4"
+    },
+    {
+      "file": "small-double-font-real-ime.png",
+      "sha256": "b1675a8ac8954fc357627b4e899804b92b11375274ef48c2433b0a3addf4c2ad"
+    },
+    {
+      "file": "tail-read-only.png",
+      "sha256": "1aad0d0df83dcfb53428fcd5b6695974816337644ae0692b399ba011267a9f26"
+    },
+    {
+      "file": "victorian-dark-detail.png",
+      "sha256": "f5a212b84c80ce4467c2d926182a33738619dc262716474297d528b721e570b7"
+    },
+    {
+      "file": "victorian-dark-feed.png",
+      "sha256": "536361d31492814d3546ad52d12689c149ec98f16ae354b97924aa9850a3ace8"
+    },
+    {
+      "file": "victorian-dark-selection.png",
+      "sha256": "51fec10a8f82afb0d5a3a11623066cf6c9c337d695e47ff1dd5af75d0cc73b6b"
+    },
+    {
+      "file": "victorian-light-detail.png",
+      "sha256": "1fdae74573abddac55534abc72ad7567c6ae7b3ebbe918d31c5585716e4e922f"
+    },
+    {
+      "file": "victorian-light-feed.png",
+      "sha256": "a08bb13a08d31879e81650460371aac9f2312c2df49b1b321393f3d37ec1caae"
+    },
+    {
+      "file": "victorian-light-selection.png",
+      "sha256": "97bdb6c99ceafb6df6b15f44a427b38d09fd95e13f405ece1a2f0b5b1c6330dd"
+    }
+  ]
+}

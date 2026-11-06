@@ -30,6 +30,8 @@
 - 广场2.72.0本地导入已实施：底栏新增广场，系统文件选择器导入`lolita.square` v1 ZIP，SHA原图/完整SKU校验、预览及AtomicFile目录更新；`SquareRepository → SquareViewModel → SquareScreen`由AppModule接线。公开目录与衣橱备份分离，复用ItemDraft/Item.importToken逐件或整组默认心愿，尾款只读，不自动录价/账本/套装关系；原图独立UUID复制后进入原备份。Room34/备份15不变，云端同步与原子多件登记未实施。格式与界限见`docs/square-package-format.md`，采用范围和前置七皮肤导入图见`docs/plans/2026-11-05-square-local-import.md`；新增Square导航键由Base及七套实际provider提供不同店面轮廓，原52键保持，现共53键。
 - 广场页面设计见 `docs/plans/2026-11-05-square-design.md`：基于古典玩偶、莉莉子、新路德维希本地采集资料，四类动态、批次/价格阶段、套装/小物/颜色/风格资料与筛选、整组/分件登记及七皮肤浅暗图稿归档在 `docs/visuals/2026-11-05-square-design/`。默认心愿，购买组合、衣橱套装与主件小物关系分开，组合价不复制到分件。仅设计，未接入Android或上线内容服务；主助手未操作浏览器查看淘宝。拟议迁移与备份版本不代表当前已升级。
 
+- 广场2.73.0单品资料改造：实际SKU部件可多选分件或自主合组，各输出独立名称/主图/资料/封面；公开目录可选`photoPaths/materials`绑定经核验的原规格图与部件明文，旧v1无映射进入人工选图，不把整链接图默认下放。逐件复用原ItemDraft/Item.importToken与编辑器，SavedState保留紧凑选择和进度，已准备草稿持久保存；非原子多件登记、不自动录价或建关系。标准顶栏、受限Fit主图与来源折叠应用到物品详情，原购买/封面/小物管理保留。Room34/45实体/备份15不变；设计与艺术七皮肤稿见`docs/plans/2026-11-06-square-refinement.md`，原生与发布结果见本轮实施记录。
+
 ## 架构与实现约定
 
 - 新 DAO 必须同步接到三处：`LolitaDatabase`、对应 `Repository`、`AppModule`。

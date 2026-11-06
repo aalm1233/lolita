@@ -407,6 +407,10 @@ fun LolitaNavHost(
                     com.google.gson.Gson().fromJson(json, com.lolita.app.data.file.TaobaoProductDraft::class.java).let { it.editorToken ?: it.importToken }
                 }.getOrNull() }
                 fun finishProductEditor(saved: Boolean) {
+                    if (navController.previousBackStackEntry?.destination?.route == Screen.Square.route) {
+                        val draftId=backStackEntry.arguments?.getString("draftId")
+                        if(draftId!=null)navController.previousBackStackEntry?.savedStateHandle?.set("square_editor_result", "$draftId:${if(saved) "saved" else "paused"}")
+                    }
                     if (productToken != null && navController.previousBackStackEntry?.destination?.route == Screen.TaobaoProductImport.route) {
                         navController.previousBackStackEntry?.savedStateHandle?.set("taobao_product_editor_result", "$productToken:${if (saved) "saved" else "discarded"}")
                     }

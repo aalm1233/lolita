@@ -1,0 +1,44 @@
+{
+  "network": "HTTP/HTTPS blocked, local files only",
+  "errors": [],
+  "checks": [
+    {
+      "board": "flow",
+      "phoneCount": 6,
+      "brokenImages": 0
+    },
+    {
+      "board": "light",
+      "phoneCount": 14,
+      "brokenImages": 0
+    },
+    {
+      "board": "dark",
+      "phoneCount": 14,
+      "brokenImages": 0
+    },
+    {
+      "board": "large",
+      "phoneCount": 5,
+      "brokenImages": 0
+    },
+    {
+      "board": "interactive",
+      "phoneCount": 1,
+      "brokenImages": 0
+    },
+    {
+      "interaction": "自由组合模式",
+      "hasGroupName": true
+    },
+    {
+      "interaction": "KC独立主图选择保留",
+      "selected": "商品原图 kc"
+    },
+    {
+      "interaction": "登记预览→详情",
+      "result": "物品详情"
+    }
+  ],
+  "nativeValidation": false
+}

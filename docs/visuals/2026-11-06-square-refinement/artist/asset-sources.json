@@ -1,0 +1,92 @@
+[
+  {
+    "file": "assets/model.webp",
+    "source": "images/15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047.webp",
+    "sourceSHA256": "15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047",
+    "productId": "1088022205740",
+    "role": "main",
+    "order": 1,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/dress.webp",
+    "source": "images/a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288.webp",
+    "sourceSHA256": "a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 3,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/kc.webp",
+    "source": "images/95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53.webp",
+    "sourceSHA256": "95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 2,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/blouse.webp",
+    "source": "images/72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e.webp",
+    "sourceSHA256": "72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 1,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/set.webp",
+    "source": "images/77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c.webp",
+    "sourceSHA256": "77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 5,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/jsk-info.webp",
+    "source": "images/1a013c82c21db63981b9d84511106cd8b1d04dbee608ca6629e1a88c2a9e1d48.webp",
+    "sourceSHA256": "1a013c82c21db63981b9d84511106cd8b1d04dbee608ca6629e1a88c2a9e1d48",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 8,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/kc-info.webp",
+    "source": "images/6c33652305451952fd3260cdb713f7a6e79f5fa508cf08d8758ec572d62afff9.webp",
+    "sourceSHA256": "6c33652305451952fd3260cdb713f7a6e79f5fa508cf08d8758ec572d62afff9",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 10,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/blouse-info.webp",
+    "source": "images/bb719f1a9c129b32225feb5704b6c51cb77d6e140d72c3cfad160c5c6ee71dad.webp",
+    "sourceSHA256": "bb719f1a9c129b32225feb5704b6c51cb77d6e140d72c3cfad160c5c6ee71dad",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 11,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/back.webp",
+    "source": "images/2dac8c60a072a572a185b4a18394f2dbb30b7853bf83ec1c74d17d3c0458c706.webp",
+    "sourceSHA256": "2dac8c60a072a572a185b4a18394f2dbb30b7853bf83ec1c74d17d3c0458c706",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 4,
+    "previewOnly": true
+  },
+  {
+    "file": "assets/black-dress.webp",
+    "source": "images/891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5.webp",
+    "sourceSHA256": "891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 24,
+    "previewOnly": true
+  }
+]

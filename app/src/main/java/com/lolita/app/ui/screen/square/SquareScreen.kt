@@ -44,20 +44,30 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     LaunchedEffect(registration){registration?.let { r->viewModel.consumedRegistration();r.itemId?.let(onOpenItem)?:r.draftId?.let(onEditDraft) }}
     val event=catalog?.events?.find { it.id==eventId }
     val selectedSku by viewModel.skuKey.collectAsState()
+    val step by viewModel.step.collectAsState();val parts by viewModel.selectedParts.collectAsState()
+    val unitJson by viewModel.unitsJson.collectAsState();val unitIndex by viewModel.unitIndex.collectAsState()
+    val result by viewModel.editorResult.collectAsState()
+    LaunchedEffect(result){viewModel.consumeEditorResult()}
     BackHandler(event!=null && busy==null){viewModel.back()}
     Scaffold(contentWindowInsets=WindowInsets(0,0,0,0),containerColor=androidx.compose.ui.graphics.Color.Transparent,
         snackbarHost={SnackbarHost(snack)},bottomBar={
             if(event?.canRegister==true) {
-                if(choosing) EditorSaveBar("核对并登记到心愿",busy!=null,selectedSku!=null && busy==null,viewModel::prepare)
+                if(choosing) {
+                    val units=remember(unitJson){viewModel.units()}
+                    val label=when(step){0->"选择部件";1->"为物品选图";2->"查看登记预览";else->if(unitIndex>=units.size)"本次登记已完成" else "核对第 ${unitIndex+1} / ${units.size} 件"}
+                    EditorSaveBar(label,busy!=null,busy==null && when(step){0->selectedSku!=null;1->parts.isNotEmpty();else->unitIndex<units.size},
+                        {if(step<3)viewModel.next() else viewModel.prepare()})
+                }
                 else EditorSaveBar("选择规格，加入衣橱",false,busy==null,viewModel::choose)
             }
-        },topBar={GradientTopAppBar(title={Text(if(event==null)"广场" else if(choosing)"选择完整规格" else "商品动态")},
+        },topBar={GradientTopAppBar(title={Text(if(event==null)"广场" else if(choosing)listOf("选择完整规格","拆出我的物品","挑选对应资料","登记预览")[step.coerceIn(0,3)] else "商品动态")},
             navigationIcon={if(event!=null)IconButton(onClick=viewModel::back,enabled=busy==null){SkinIcon(IconKey.ArrowBack)}},
             actions={if(event==null)TextButton(onClick=::pick,enabled=busy==null && preview==null,colors=ButtonDefaults.textButtonColors(contentColor=LocalContentColor.current)){Text("导入资料包")}})}){padding->
         Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
             when {
                 catalog==null && busy==null->SquareEmpty(::pick)
                 catalog!=null && event==null->SquareFeed(catalog!!,viewModel)
+                event!=null && choosing && step>0->SquareRegistrationScreen(catalog!!,event,viewModel)
                 event!=null && choosing->SquareSelection(catalog!!,event,viewModel,busy!=null)
                 event!=null->SquareDetail(catalog!!,event,viewModel)
             }
@@ -102,7 +112,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
 @Composable private fun SquareFeed(c:SquareCatalog,vm:SquareViewModel){
     val query by vm.query.collectAsState();val kind by vm.kind.collectAsState();val shop by vm.shop.collectAsState()
     val color by vm.color.collectAsState();val style by vm.style.collectAsState();val form by vm.form.collectAsState()
-    var filters by rememberSaveable { mutableStateOf(false) }
+    var filters by rememberSaveable { mutableStateOf(false) };var shops by remember { mutableStateOf(false) }
     val products=remember(c){c.products.associateBy { it.id }}
     val allSkus=remember(c){c.products.flatMap { it.skus }}
     val events=remember(c,query,kind,shop,color,style,form){c.events.filter { e->
@@ -113,37 +123,46 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     val state=androidx.compose.foundation.lazy.rememberLazyListState();ObserveSkinScroll(state)
     LazyColumn(Modifier.fillMaxSize().testTag("square-feed"),state=state,contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(14.dp)){
         item { Column {
-            Text("店铺手记",style=MaterialTheme.typography.headlineSmall)
-            Text("${c.shops.size} 家店 · ${c.events.size} 条动态 · 本地资料",style=MaterialTheme.typography.bodySmall)
-            OutlinedTextField(value=query,onValueChange={vm.set("query",it)},label={Text("搜索店铺或商品")},singleLine=true,modifier=Modifier.fillMaxWidth())
-            Choices(listOf("上新","再贩","现货","尾款"),kind,{vm.set("kind",it)},"")
-            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                FilterChip(selected=shop.isEmpty(),onClick={vm.set("shop","")},label={Text("全部店铺")})
-                c.shops.forEach { s->FilterChip(selected=shop==s.id,onClick={vm.set("shop",s.id)},label={Text(s.name)}) }
+            OutlinedTextField(value=query,onValueChange={vm.set("query",it)},placeholder={Text("搜索店铺或商品")},
+                leadingIcon={SkinIcon(IconKey.Search,Modifier.size(20.dp))},singleLine=true,
+                shape=LolitaSkin.current.cardShape,modifier=Modifier.fillMaxWidth().testTag("square-search"))
+            val kinds=listOf("全部","上新","再贩","现货","尾款")
+            ScrollableTabRow(selectedTabIndex=kinds.indexOf(kind.ifEmpty{"全部"}).coerceAtLeast(0),edgePadding=0.dp,containerColor=androidx.compose.ui.graphics.Color.Transparent){
+                kinds.forEach { label->Tab(selected=kind==label || (kind.isEmpty()&&label=="全部"),onClick={vm.set("kind",if(label=="全部")"" else label)},text={Text(label,style=MaterialTheme.typography.labelLarge)}) }
             }
-            TextButton(onClick={filters=!filters}){SkinIcon(IconKey.FilterList,Modifier.size(18.dp));Spacer(Modifier.width(6.dp));Text(if(filters)"收起商品筛选" else "颜色 · 风格 · 购买内容"+(if(color+style+form!="")"（已筛选）" else ""))}
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){
+                TextButton(onClick={shops=true}){Text(c.shops.find{it.id==shop}?.name?:"全部店铺");SkinIcon(IconKey.ArrowDropDown,Modifier.size(18.dp))}
+                TextButton(onClick={filters=!filters}){SkinIcon(IconKey.FilterList,Modifier.size(18.dp));Spacer(Modifier.width(4.dp));Text("颜色 · 风格 · 内容"+(if(color+style+form!="")" ✓" else ""),style=MaterialTheme.typography.bodySmall)}
+            }
             if(filters){Choices(allSkus.mapNotNull { it.color },color,{vm.set("color",it)},"颜色")
                 Choices(allSkus.flatMap { it.styleFacts }.map { it.value },style,{vm.set("style",it)},"风格（明确来源）")
                 Choices(listOf("单品","小物","套装","组合"),form,{vm.set("form",it)},"购买内容")}
-            Text("价格与库存为采集快照，非实时销售状态。",style=MaterialTheme.typography.bodySmall)
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){
+                Text("店铺手记",style=MaterialTheme.typography.titleMedium)
+                Text("${c.shops.size} 家店 · 采集快照",style=MaterialTheme.typography.bodySmall)
+            }
         } }
         if(events.isEmpty()) item { LolitaCard { Column { Text("没有符合条件的动态");TextButton(onClick={listOf("query","kind","shop","color","style","form").forEach{vm.set(it,"")}}){Text("清除搜索和筛选")} } } }
         items(events,key={it.id}){e->val p=products.getValue(e.productIds.first());val cover=p.images.first{it.role=="main"}
             LolitaCard(variant=CardVariant.GALLERY,contentPadding=PaddingValues(0.dp),modifier=Modifier.fillMaxWidth().clickable{vm.open(e.id)}){
                 Column {
-                    LolitaShimmerImage(model=vm.image(cover.path),contentDescription=e.title,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxWidth().height(240.dp),circularRevealEnabled=false)
+                    LolitaShimmerImage(model=vm.image(cover.path),contentDescription=e.title,contentScale=ContentScale.Fit,modifier=Modifier.fillMaxWidth().height(180.dp),circularRevealEnabled=false)
                     Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
                         Text("${c.shops.first{it.id==e.shopId}.name} · ${e.kind} · ${e.state}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
-                        Text(e.title,style=MaterialTheme.typography.headlineSmall);Text(e.subtitle,style=MaterialTheme.typography.bodyMedium)
-                        Text(e.price,style=MaterialTheme.typography.titleSmall);Text(e.priceNote,style=MaterialTheme.typography.bodySmall)
-                        Text(e.date,style=MaterialTheme.typography.bodyMedium)
-                        Text("资料采集 ${e.captured}",style=MaterialTheme.typography.metadata)
+                        Text(e.title,style=MaterialTheme.typography.headlineSmall);Text(e.subtitle,style=MaterialTheme.typography.bodySmall)
+                        Text(e.date,style=MaterialTheme.typography.bodySmall)
+                        Text(e.price,style=MaterialTheme.typography.titleSmall)
                         TextButton(onClick={vm.open(e.id)}){Text(if(e.canRegister)"查看商品与规格" else "查看尾款说明")}
                     }
                 }
             }
         }
     }
+    if(shops)AlertDialog(onDismissRequest={shops=false},title={Text("选择店铺")},text={Column{
+        TextButton(onClick={vm.set("shop","");shops=false}){Text("全部店铺")}
+        c.shops.forEach { item->TextButton(onClick={vm.set("shop",item.id);shops=false}){Text(item.name)} }
+    }},confirmButton={TextButton(onClick={shops=false}){Text("关闭")}})
+
 }
 
 @Composable private fun SquareDetail(c:SquareCatalog,e:SquareEvent,vm:SquareViewModel){
@@ -155,11 +174,30 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     LazyColumn(Modifier.fillMaxSize(),state=state,contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(16.dp)){
         item {Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text(c.shops.first{it.id==e.shopId}.name,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.primary)
-            Text(e.title,style=MaterialTheme.typography.headlineSmall);Text(e.subtitle,style=MaterialTheme.typography.titleSmall)
-            Text("${e.kind} · ${e.state} · ${e.date}");Text(e.note)
-            Text("采集：${e.captured}；未标明的上架时间、库存和价格阶段不推断。",style=MaterialTheme.typography.bodySmall)
+            Text(e.title,style=MaterialTheme.typography.headlineSmall)
+            Text("${e.kind} · ${e.state} · ${e.date}",style=MaterialTheme.typography.bodySmall)
+            Text("采集 ${e.captured} · 价格与库存非实时状态",style=MaterialTheme.typography.bodySmall)
         }}
-        if(e.productIds.size>1)item {LolitaSection("商品链接与价格阶段") {row {ProductChoices(c.products.filter{it.id in e.productIds},chosenProduct,{chosenProduct=it;role="main"})}}}
+        if(e.productIds.size>1)item {LolitaCard(variant=CardVariant.COMPACT) { ExpandableInfo("当前：${p.priceType} · 切换商品链接") { ProductChoices(c.products.filter{it.id in e.productIds},chosenProduct,{chosenProduct=it;role="main"}) } }}
+        item { LolitaSection("具体单品与资料") { row { Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
+            Text("先看具体部件；进入规格后可自主拆分与组合。",style=MaterialTheme.typography.bodySmall)
+            p.skus.flatMap { it.parts }.distinctBy { it.key }.forEach { part ->
+                val exact=p.skus.firstOrNull { it.parts.size==1 && it.parts[0].key==part.key && !it.photoPaths.isNullOrEmpty() }
+                Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
+                    exact?.photoPaths?.firstOrNull()?.let { path->LolitaShimmerImage(model=vm.image(path),contentDescription=part.name,contentScale=ContentScale.Fit,
+                        modifier=Modifier.size(76.dp).clickable{viewer=listOf(vm.image(path)) to 0},circularRevealEnabled=false) }
+                    Column(Modifier.weight(1f).padding(8.dp)){Text(part.name,style=MaterialTheme.typography.titleSmall)
+                        Text(if(part.isAccessory)"小物 · 规格独立核对" else "服饰 · 可挑选对应资料",style=MaterialTheme.typography.bodySmall)
+                        p.materials.orEmpty().filter{it.partKey==part.key}.forEach { material->
+                            ExpandableInfo("查看${part.name}材质与尺码"){Text(material.facts)
+                                LazyRow { items(material.detailPaths){path->LolitaShimmerImage(model=vm.image(path),contentDescription="${part.name}资料原图",contentScale=ContentScale.Fit,
+                                    modifier=Modifier.size(96.dp).clickable{viewer=material.detailPaths.map{vm.image(it)} to material.detailPaths.indexOf(path)},circularRevealEnabled=false)} }
+                            }
+                        }
+                    }
+                }
+            }
+        } } } }
         item {LolitaSection("图片与完整资料") {row{Column{
             Choices(listOf("主图","规格图","详情图","促销图"),mapOf("main" to "主图","sku" to "规格图","detail" to "详情图","promo" to "促销图").getValue(role),{role=mapOf("主图" to "main","规格图" to "sku","详情图" to "detail","促销图" to "promo").getValue(it)},"",false)
             Text("${imgs.size} 张原图 · 点击完整放大",style=MaterialTheme.typography.bodySmall)
@@ -167,7 +205,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
                 val paths=imgs.map{vm.image(it.path)}
                 ImageFrame(Modifier.fillMaxWidth()) {
                     LolitaShimmerImage(model=paths.first(),contentDescription="${e.title}完整预览",contentScale=ContentScale.Fit,
-                        modifier=Modifier.fillMaxWidth().height(310.dp).clickable{viewer=paths to 0},circularRevealEnabled=false)
+                        modifier=Modifier.fillMaxWidth().height(238.dp).clickable{viewer=paths to 0},circularRevealEnabled=false)
                 }
                 LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(imgs.size){i->LolitaShimmerImage(model=paths[i],contentDescription="${role}原图 ${i+1}",contentScale=ContentScale.Fit,modifier=Modifier.size(72.dp).clickable{viewer=paths to i},circularRevealEnabled=false)}}
             }else Text("本链接未提供此类图片")
@@ -178,11 +216,13 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
             Text("完整SKU ${p.skus.size} 个 · 套装、组合与小物分别选择。",style=MaterialTheme.typography.bodySmall)
         }}}}
         item {LolitaSection("商品信息与来源") {row{Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+            ExpandableInfo(title="展开完整系列资料与来源") { Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
             p.info.entrySet().filter{it.key!="source" && !it.value.isJsonNull && it.value.toString()!="[]"}.forEach{(key,v)->
                 Text(infoLabel(key),style=MaterialTheme.typography.titleSmall);Text(readable(v),style=MaterialTheme.typography.bodyMedium)
             }
             Text("公开链接：${p.url}",style=MaterialTheme.typography.bodySmall)
             Text("商品 ${p.id} · 批次 ${e.batchId} · 资料版本 ${p.revision}",style=MaterialTheme.typography.bodySmall)
+            }}
         }}}}
         if(!e.canRegister)item {LolitaCard { Text("本页为尾款资料，非商品全款。仅供核对批次与时间，不建立新物品或付款。") }}
     }
@@ -213,11 +253,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
             Text(selected.rawProperties.entries.joinToString(" · "){"${it.key}：${it.value}"})
             Text("${p.priceType}：${squarePrice(selected.price)} · ${selected.stock}",style=MaterialTheme.typography.bodySmall)
             if(selected.styleFacts.isNotEmpty())Text(selected.styleFacts.joinToString("；"){"${it.value}（${it.source}）"})
-            if(selected.parts.size>1){Text("如何登记这份购买内容？",style=MaterialTheme.typography.titleSmall)
-                Row(verticalAlignment=Alignment.CenterVertically){RadioButton(partKey==null,{vm.selectPart(null)});Text("整组登记为一个物品")}
-                selected.parts.forEach{part->Row(Modifier.fillMaxWidth().clickable{vm.selectPart(part.key)},verticalAlignment=Alignment.CenterVertically){RadioButton(partKey==part.key,{vm.selectPart(part.key)});Text("只登记 ${part.name}",modifier=Modifier.weight(1f))}}
-                Text("每次仅登记所选的一件或整组；其余部件不自动登记。分件未知颜色、尺码留空，组合价不复制。",style=MaterialTheme.typography.bodySmall)
-            }
+            Text("下一步可勾选部件，分别登记或自由组合，并挑选每件的图片与资料。",style=MaterialTheme.typography.bodySmall)
             Text("默认保存为心愿；不建立订单或实付。来源报价保留在说明中，不自动录价。",style=MaterialTheme.typography.bodySmall)
 
         }}}}

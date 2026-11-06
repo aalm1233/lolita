@@ -38,4 +38,37 @@ class SquarePackageTest {
         rejected{SquarePackage.merge(old,old.copy(products=old.products.map{it.copy(title="同版本篡改")}))}
         val second=old.copy(events=old.events.map{it.copy(id="e2")});assertEquals(2,SquarePackage.merge(old,second).events.size)}
     @Test fun filteringMatchesOneActualSkuRatherThanCombiningDifferentOnes(){val blueKC=sku.copy(color="蓝色",content="KC",form="小物");val lightBlouse=sku.copy(color="浅蓝色",content="内搭",form="单品");assertFalse(listOf(blueKC,lightBlouse).any{it.matches("浅蓝色","","小物")});assertTrue(blueKC.matches("蓝色","古典","小物"))}
+    @Test fun oldCatalogHasNoInventedImageBindingsAndRefinedBindingsAreStrict(){
+        val old=SquarePackage.decode(SquarePackage.gson.toJson(catalog()));val p=old.products.single()
+        assertTrue(p.suggestUnit(sku,sku.parts,"单品").photos.isEmpty())
+        assertTrue(p.suggestUnit(sku,sku.parts,"单品").documents.isEmpty())
+        rejected{SquarePackage.validate(old.copy(products=listOf(p.copy(skus=listOf(sku.copy(photoPaths=listOf("images/missing.png")))))))}
+        rejected{SquarePackage.validate(old.copy(products=listOf(p.copy(materials=listOf(SquareMaterial("JSK",listOf("images/missing.png"),"","原图"))))))}
+    }
+    @Test fun selectingComponentUsesOnlyItsExplicitImagesAndDoesNotBorrowGroupCover(){
+        val kc=SquarePart("KC","KC","头饰",true,null,null,"配套",null)
+        val full=sku.copy(content="JSK+KC",parts=sku.parts+kc,photoPaths=listOf("group"))
+        val singleKc=sku.copy(parts=listOf(kc),photoPaths=listOf("kc"))
+        val p=catalog().products.single().copy(skus=listOf(full,singleKc),materials=listOf(SquareMaterial("KC",listOf("kc-chart"),"KC材质","原图")))
+        val unit=p.suggestUnit(full,listOf(kc),"单品")
+        assertEquals(listOf("kc"),unit.photos);assertEquals(listOf("kc-chart"),unit.documents)
+        assertNull(kc.size);assertNull(kc.color)
+        assertEquals(listOf("group"),p.suggestUnit(full,full.parts,"服饰组合").photos)
+        val unknown=p.copy(skus=listOf(full,singleKc.copy(color="黑色")))
+        assertTrue(unknown.suggestUnit(full,listOf(kc),"单品").photos.isEmpty())
+    }
+    @Test fun customGroupsHaveOrderIndependentIdentityAndValidateImageOwnership(){
+        val e=catalog().events.single();val kc=SquarePart("KC","KC",null,true,null,null,"",null)
+        val blouse=kc.copy(key="blouse",name="内搭",isAccessory=false)
+        val full=sku.copy(parts=sku.parts+kc+blouse)
+        val unit=SquareUnit(listOf("JSK","KC"),"裙与头饰","服饰组合")
+        assertEquals(unit.identity(e,full),unit.copy(partKeys=unit.partKeys.reversed()).identity(e,full))
+        assertNotEquals(unit.identity(e,full),unit.copy(partKeys=full.parts.map{it.key}).identity(e,full))
+        val p=catalog().products.single().copy(skus=listOf(full));unit.validate(p,full)
+        rejected{unit.copy(partKeys=listOf("not-in-sku")).validate(p,full)}
+        rejected{unit.copy(photos=listOf(asset.path),documents=listOf(asset.path)).validate(p,full)}
+        rejected{unit.copy(photos=listOf("other-product-image")).validate(p,full)}
+        assertEquals("square:v1:shop:batch:variant1:@whole",SquareUnit(listOf("JSK"),"JSK").identity(e,sku))
+    }
+
 }

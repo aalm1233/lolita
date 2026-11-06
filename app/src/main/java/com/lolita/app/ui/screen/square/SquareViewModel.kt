@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lolita.app.data.repository.SquareRepository
 import com.lolita.app.di.AppModule
+import com.lolita.app.data.square.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,44 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     val productId=saved.getStateFlow<String?>("square.product",null)
     val skuKey=saved.getStateFlow<String?>("square.sku",null)
     val partKey=saved.getStateFlow<String?>("square.part",null)
+    val step=saved.getStateFlow("square.step",0)
+    val selectedParts=saved.getStateFlow("square.parts",arrayListOf<String>())
+    val grouped=saved.getStateFlow("square.grouped",false)
+    val unitsJson=saved.getStateFlow("square.units", "[]")
+    val unitIndex=saved.getStateFlow("square.unitIndex",0)
+    val photoUnit=saved.getStateFlow("square.photoUnit",0)
+    val editorResult=saved.getStateFlow<String?>("square_editor_result",null)
+    fun units():List<SquareUnit> = SquarePackage.gson.fromJson(unitsJson.value,Array<SquareUnit>::class.java).toList()
+    private fun saveUnits(units:List<SquareUnit>){saved["square.units"]=SquarePackage.gson.toJson(units)}
+    private fun selection():Pair<SquareProduct,SquareSku>? {
+        val p=catalog.value?.products?.firstOrNull { it.skus.any { s -> s.key==skuKey.value } } ?: return null
+        return p to p.skus.first { it.key==skuKey.value }
+    }
+    fun togglePart(key:String){val list=selectedParts.value.toMutableList();if(key in list)list.remove(key) else list.add(key);saved["square.parts"]=ArrayList(list)}
+    fun group(value:Boolean){saved["square.grouped"]=value}
+    fun next(){when(step.value){
+        0 -> { val (_,sku)=selection()?:return;saved["square.parts"]=ArrayList(sku.parts.map{it.key});saved["square.step"]=1 }
+        1 -> { val (p,sku)=selection()?:return;val parts=sku.parts.filter{it.key in selectedParts.value};if(parts.isEmpty())return
+            saveUnits(if(grouped.value && parts.size>1)listOf(p.suggestUnit(sku,parts,if(parts.all{it.isAccessory})"小物组合" else "服饰组合")) else parts.map{p.suggestUnit(sku,listOf(it),"单品")})
+            saved["square.planEvent"]=eventId.value;saved["square.planSku"]=sku.key
+            saved["square.unitIndex"]=0;saved["square.photoUnit"]=0;saved["square.step"]=2 }
+        2 -> saved["square.step"]=3
+    }}
+    fun editUnit(index:Int){if(index<unitIndex.value)return;saved["square.photoUnit"]=index;saved["square.step"]=2}
+    fun setPhotoUnit(index:Int){if(index>=unitIndex.value)saved["square.photoUnit"]=index}
+    fun changeUnit(index:Int,unit:SquareUnit){if(index<unitIndex.value || _busy.value!=null)return;val list=units().toMutableList();if(index in list.indices){list[index]=unit;saveUnits(list)}}
+    fun toggleImage(index:Int,path:String,document:Boolean){val unit=units().getOrNull(index)?:return
+        val current=(if(document)unit.documents else unit.photos).toMutableList()
+        if(path in current)current.remove(path) else if(current.size<50)current.add(path) else {_message.value="每件每类最多选择50张图片";return}
+        changeUnit(index,if(document)unit.copy(documents=current,photos=unit.photos-path) else unit.copy(photos=current,documents=unit.documents-path))
+    }
+    fun cover(index:Int,path:String){val unit=units().getOrNull(index)?:return;if(path in unit.photos)changeUnit(index,unit.copy(photos=listOf(path)+unit.photos.filter{it!=path}))}
+    fun consumeEditorResult(){val result=editorResult.value?:return;saved["square_editor_result"]=null
+        val active=saved.get<String>("square.activeDraft")?:return
+        if(result=="$active:saved"){saved["square.unitIndex"]=unitIndex.value+1;_message.value="本件已保存；其余物品需逐件核对"}
+        else _message.value="登记已暂停；可继续核对，保留的草稿仍可编辑"
+        saved["square.activeDraft"]=null
+    }
     private val _busy=MutableStateFlow<String?>("读取广场资料")
     val busy=_busy.asStateFlow()
     private val _preview=MutableStateFlow<SquareRepository.Preview?>(null)
@@ -38,10 +77,16 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     fun image(path:String)=repository.image(path)
     fun set(key:String,value:String) { saved["square.$key"]=value }
     fun open(id:String) { saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
-    fun back() { if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
-    fun choose() { saved["square.choosing"]=true }
+    fun back() { if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
+    fun choose() {
+        saved["square.choosing"]=true
+        val planSku=saved.get<String>("square.planSku")
+        if(saved.get<String>("square.planEvent")==eventId.value && units().isNotEmpty() && unitIndex.value<units().size && planSku!=null){
+            saved["square.sku"]=planSku;saved["square.product"]=catalog.value?.products?.firstOrNull{it.skus.any{s->s.key==planSku}}?.id;saved["square.step"]=3
+        }else saved["square.step"]=0
+    }
     fun selectProduct(id:String){saved["square.product"]=id;saved["square.sku"]=null;saved["square.part"]=null}
-    fun selectSku(key:String){saved["square.sku"]=key;saved["square.part"]=null}
+    fun selectSku(key:String){saved["square.sku"]=key;saved["square.part"]=null;saved["square.step"]=0}
     fun selectPart(key:String?){saved["square.part"]=key}
     fun import(uri:Uri) { if(_preview.value!=null || _busy.value!=null)return
         work("正在读取资料包") { _preview.value=repository.preview(uri){_busy.value=it} }
@@ -52,7 +97,10 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
         finally {repository.discard(p);_preview.value=null}
     }}
     fun prepare(){val event=eventId.value?:return;val sku=skuKey.value?:return
-        work("准备完整商品图片") { _registration.value=repository.prepare(event,sku,partKey.value) }
+        val unit=units().getOrNull(unitIndex.value)?:return
+        work("准备所选物品与图片") { val r=repository.prepare(event,sku,unit)
+            if(r.itemId!=null){saved["square.unitIndex"]=unitIndex.value+1;_message.value="这件已在衣橱，打开原记录"}
+            saved["square.activeDraft"]=r.draftId;_registration.value=r }
     }
     fun consumedRegistration(){_registration.value=null}
     fun clearMessage(){_message.value=null}

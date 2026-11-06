@@ -10,7 +10,7 @@ ROOTS = {
  'neo': Path.home()/'Downloads/lilizi-neoludwig-latest-2026-11-05/neo-ludwig',
 }
 
-def build(output):
+def build(output,refined=False):
  sample=json.loads(SAMPLE.read_text().split('=',1)[1].strip().removesuffix(';'))
  assets={}; paths={}; products=[]; provenance=[]
  for shop,root in ROOTS.items():
@@ -47,6 +47,9 @@ def build(output):
    products.append({'id':product['id'],'revision':1,'shopId':shop,'title':product['title'],'url':product['url'],
        'capturedAt':product['capturedAt'],'pricePhase':phase,'priceType':product['priceType'],
        'skus':product['skus'],'info':product['info'],'images':images})
+   if refined:
+    from refine_materials import enrich
+    enrich(products[-1],p,root,PROJECT)
  events=[]
  for e in sample['events']:
   events.append({k:v for k,v in e.items() if k in ['id','title','subtitle','kind','state','date','price','priceNote','note','material','detail','captured']}|
@@ -55,6 +58,8 @@ def build(output):
   'title':'三店首包 · 2026年11月5日','capturedAt':'2026-11-05',
   'shops':[{'id':s['id'],'name':s['name'],'revision':1} for s in sample['shops']],
   'events':events,'products':products,'assets':list(assets.values())}
+ if refined:
+  payload.update(revision=2,title='三店部件资料包 · 2026年11月6日修订',capturedAt='2026-11-06')
  output.parent.mkdir(parents=True,exist_ok=True)
  with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_STORED) as z:
   def write(name,data):
@@ -68,4 +73,4 @@ def build(output):
  output.with_suffix('.receipt.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
  print(json.dumps(report,ensure_ascii=False,indent=2))
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('output',type=Path);args=parser.parse_args();build(args.output)
+ parser=argparse.ArgumentParser();parser.add_argument('output',type=Path);parser.add_argument('--refined',action='store_true');args=parser.parse_args();build(args.output,args.refined)

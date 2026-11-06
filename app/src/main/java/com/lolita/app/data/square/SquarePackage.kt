@@ -26,16 +26,18 @@ data class SquareEvent(
 data class SquareProduct(
     val id: String, val revision: Long, val shopId: String, val title: String, val url: String,
     val capturedAt: String, val pricePhase: String, val priceType: String,
-    val skus: List<SquareSku>, val info: JsonObject, val images: List<SquareImage>
+    val skus: List<SquareSku>, val info: JsonObject, val images: List<SquareImage>,
+    val materials: List<SquareMaterial>? = null
 )
 data class SquareSku(
     val id: String, val key: String, val itemId: String, val props: Map<String, String>,
     val price: String?, val priceType: String, val stock: String, val content: String,
     val color: String?, val size: String?, val form: String, val parts: List<SquarePart>,
-    val styleFacts: List<SquareStyle>, val notSoldAlone: Boolean, val rawProperties: Map<String, String>, val variantId: String
+    val styleFacts: List<SquareStyle>, val notSoldAlone: Boolean, val rawProperties: Map<String, String>, val variantId: String, val photoPaths: List<String>? = null
 )
 data class SquarePart(val key: String, val name: String, val category: String?, val isAccessory: Boolean,
     val color: String?, val size: String?, val relation: String, val uncertainty: String?)
+data class SquareMaterial(val partKey: String, val detailPaths: List<String>, val facts: String, val source: String)
 data class SquareStyle(val value: String, val source: String, val field: String)
 data class SquareImage(val path: String, val role: String, val order: Int, val url: String)
 data class SquareAsset(val path: String, val sha256: String, val bytes: Long, val width: Int, val height: Int)
@@ -73,7 +75,10 @@ object SquarePackage {
             require(p.url.startsWith("https://") && p.url.length <= 2000 && p.pricePhase in setOf("FULL","DEPOSIT","BALANCE","PLACEHOLDER")) { "商品链接或价格阶段无效" }
             require(p.skus.size in 1..1000 && p.images.size in 1..300 && p.images.any { it.role == "main" }) { "商品缺少完整规格或主图" }
             unique(p.skus) { it.id }
+            val imagePaths=p.images.map { it.path }.toSet()
+            require(p.materials.orEmpty().size<=100 && p.materials.orEmpty().all { m -> m.partKey.length in 1..100 && p.skus.any { s -> s.parts.any { it.key==m.partKey } } && m.source.length in 1..2000 && m.facts.length<=12000 && m.detailPaths.size<=30 && m.detailPaths.distinct().size==m.detailPaths.size && m.detailPaths.all { path -> path in imagePaths } }) { "部件资料引用无效" }
             p.skus.forEach { s ->
+                require(s.photoPaths.orEmpty().size<=30 && s.photoPaths.orEmpty().distinct().size==s.photoPaths.orEmpty().size && s.photoPaths.orEmpty().all { it in imagePaths }) { "规格图片引用无效" }
                 require(idPattern.matches(s.variantId) && idPattern.matches(s.id) && s.key == "${p.id}:${s.id}" && s.itemId == p.id && s.props.isNotEmpty() && s.props == s.rawProperties && s.props.size <= 12 && s.props.all { it.key.length in 1..100 && it.value.length in 1..500 }) { "商品SKU原始规格不完整" }
                 require(s.content.isNotBlank() && s.content.length <= 500 && s.form in setOf("单品","小物","套装","组合") && s.parts.size in 1..20 && s.parts.map { it.key }.distinct().size == s.parts.size) { "购买内容或部件资料无效" }
                 require(s.parts.all { it.key.isNotBlank() && it.name.isNotBlank() } && s.styleFacts.all { it.value.isNotBlank() && it.source.isNotBlank() }) { "部件或风格来源无效" }

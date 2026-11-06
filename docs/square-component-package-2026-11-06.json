@@ -1,0 +1,29 @@
+{
+  "file": "三店广场资料-单品修订包-20261106.zip",
+  "bytes": 271066968,
+  "sha256": "a58c611f01ae5ba181df9ec374cd7f615b2178a870ec6fb633598eb44281484e",
+  "shops": 3,
+  "events": 10,
+  "products": 14,
+  "skus": 542,
+  "imageReferences": 732,
+  "uniqueOriginalImages": 421,
+  "sourceManifests": [
+    {
+      "shopId": "puppets",
+      "canonicalSha256": "74fb638110a9bd3eabeefdaa7b0e97f6bc5f26a4899064100e484e7b2dd6b69a"
+    },
+    {
+      "shopId": "lilizi",
+      "canonicalSha256": "19ba3a1769e3ed55c53ba601993bc6c5c456c17fbe34644c1918eb421d0466c5"
+    },
+    {
+      "shopId": "neo",
+      "canonicalSha256": "bcd72535d7d957539440e011a3c2b5de8d8d1579cf3733e108e2d33ce03605da"
+    }
+  ],
+  "oldAssetsAndSkuIdentityUnchanged": true,
+  "skuWithExplicitPhotos": 375,
+  "partsWithDocuments": 47,
+  "bindingsSha256": "843a06e71f458203ff60cad5715e42cf2e77104bfb3018304519c35855c5b485"
+}

@@ -46,6 +46,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import com.lolita.app.ui.screen.common.SectionHeader
 import com.lolita.app.ui.screen.common.LolitaCard
 import com.lolita.app.ui.screen.common.CardVariant
+import com.lolita.app.ui.screen.common.ImageFrame
+import com.lolita.app.ui.screen.common.ExpandableInfo
 import com.lolita.app.ui.screen.common.LolitaSection
 import com.lolita.app.ui.screen.common.ShimmerLine
 import com.lolita.app.ui.screen.common.ShimmerRect
@@ -89,11 +91,8 @@ fun ItemDetailScreen(
     val sourceRecords by viewModel.sourceRecords.collectAsState()
     val sourceUriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val skin = LolitaSkin.current
-    val heroHeight = (LocalConfiguration.current.screenHeightDp * 0.36f).dp.coerceIn(240.dp, 320.dp)
-    val heroShape = (skin.cardShape as? CornerBasedShape)?.copy(
-        topStart = CornerSize(0.dp),
-        topEnd = CornerSize(0.dp)
-    ) ?: RoundedCornerShape(bottomStart = skin.cornerRadiusMedium, bottomEnd = skin.cornerRadiusMedium)
+    val heroHeight = (LocalConfiguration.current.screenHeightDp * 0.30f).dp.coerceIn(180.dp, 248.dp)
+    val heroShape = skin.cardShape
     val coroutineScope = rememberCoroutineScope()
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
@@ -216,7 +215,7 @@ fun ItemDetailScreen(
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            if (!hasImage) {
+            run {
                 GradientTopAppBar(
                     title = { Text("物品详情") },
                     navigationIcon = {
@@ -243,7 +242,7 @@ fun ItemDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
-                        top = if (hasImage) 0.dp else padding.calculateTopPadding(),
+                        top = padding.calculateTopPadding(),
                         bottom = padding.calculateBottomPadding()
                     )
                     .verticalScroll(rememberScrollState()),
@@ -307,7 +306,7 @@ fun ItemDetailScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(
-                                top = if (hasImage) 0.dp else padding.calculateTopPadding(),
+                                top = padding.calculateTopPadding(),
                                 bottom = padding.calculateBottomPadding()
                             )
                             .verticalScroll(rememberScrollState())
@@ -318,6 +317,7 @@ fun ItemDetailScreen(
                             var showFullScreen by remember { mutableStateOf(false) }
                             var selectedPage by remember { mutableIntStateOf(0) }
                             var currentPage by remember { mutableIntStateOf(0) }
+                            ImageFrame(Modifier.fillMaxWidth().padding(horizontal=skin.spacingLarge,vertical=skin.spacingMedium)) {
                             ImageGalleryPager(
                                 imageUrls = item.imageUrls,
                                 onImageClick = { page -> selectedPage = page; showFullScreen = true },
@@ -329,6 +329,7 @@ fun ItemDetailScreen(
                                 imageBackgroundColor = MaterialTheme.colorScheme.surface,
                                 onPageChanged = { currentPage = it }
                             )
+                            }
                             val path = item.imageUrls.getOrNull(currentPage)
                             val isCover = path == item.imageUrls.first()
                             Row(Modifier.fillMaxWidth().padding(horizontal = skin.spacingLarge),
@@ -392,7 +393,8 @@ fun ItemDetailScreen(
                         verticalArrangement = Arrangement.spacedBy(skin.spacingMedium)
                     ) {
                         // Name and status
-                        Column {
+                        Column(verticalArrangement=Arrangement.spacedBy(skin.spacingSmall)) {
+                            uiState.brands.find{it.id==item.brandId && !it.isUnsetBrand}?.let{brand->Text(brand.name,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)}
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -402,8 +404,7 @@ fun ItemDetailScreen(
                                     text = item.name,
                                     style = MaterialTheme.typography.headlineSmall,
                                     modifier = Modifier.weight(1f).padding(end = skin.spacingMedium),
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis
+                                    softWrap = true
                                 )
 
                                 StatusBadge(item.status)
@@ -594,12 +595,18 @@ fun ItemDetailScreen(
                         }
 
                         if (item.description.isNotEmpty()) {
-                            LolitaCard(modifier = Modifier.fillMaxWidth()) {
-                                Column {
-                                    SectionHeader(title = "描述")
-                                    Spacer(Modifier.height(8.dp))
-                                    Text(text = item.description, style = MaterialTheme.typography.bodyLarge)
-                                }
+                            val fromSquare=item.description.startsWith("广场资料 ·")
+                            val split=item.description.indexOf("\n来源与购买快照")
+                            LolitaSection(if(fromSquare) "物品资料与来源" else "备注") {
+                                row { Column(verticalArrangement=Arrangement.spacedBy(skin.spacingMedium)) {
+                                    if(fromSquare) {
+                                        if(split>0)Text(item.description.substringBefore("\n来源与购买快照").substringAfter("\n"),style=MaterialTheme.typography.bodyLarge)
+                                        else Text("来自广场的商品资料，完整来源保留如下。",style=MaterialTheme.typography.bodyMedium)
+                                        ExpandableInfo("查看完整来源与购买快照") {
+                                            Text(if(split>0)item.description.substring(split+1) else item.description,style=MaterialTheme.typography.bodyMedium)
+                                        }
+                                    } else Text(item.description,style=MaterialTheme.typography.bodyLarge)
+                                } }
                             }
                         }
 
@@ -675,41 +682,7 @@ fun ItemDetailScreen(
                     }
                 }
 
-                    // Floating top bar overlay for immersive image
-                    if (hasImage) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .statusBarsPadding()
-                                .background(
-                                    Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Black.copy(alpha = 0.5f),
-                                            Color.Transparent
-                                        ),
-                                        startY = 0f,
-                                        endY = 160f
-                                    )
-                                )
-                                .padding(horizontal = 4.dp, vertical = 4.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(onClick = onBack) {
-                                    SkinIcon(IconKey.ArrowBack, tint = Color.White)
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-                                IconButton(onClick = { onEdit(itemId) }) {
-                                    SkinIcon(IconKey.Edit, tint = Color.White)
-                                }
-                                IconButton(onClick = { showDeleteDialog = true }) {
-                                    SkinIcon(IconKey.Delete, tint = Color.White.copy(alpha = 0.8f))
-                                }
-                            }
-                        }
-                    }
+
                 }
             }
         }
@@ -755,7 +728,8 @@ internal fun ItemOrderSummary(
         }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
-            SectionHeader(title = "价格与付款", action = {
+            val stackHeader=LocalConfiguration.current.fontScale>=1.5f || LocalConfiguration.current.screenWidthDp<360
+            val summaryAction: @Composable () -> Unit = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(if (sharedParentId != null) "查看主件" else if (currentOrder == null && uiState.legacyPriceCount == 0) "设置价格" else "查看",
                         style = MaterialTheme.typography.labelMedium,
@@ -764,7 +738,9 @@ internal fun ItemOrderSummary(
                     SkinIcon(IconKey.ArrowForward, modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.primary)
                 }
-            })
+            }
+            SectionHeader(title="价格与付款",action=if(stackHeader)null else summaryAction)
+            if(stackHeader)summaryAction()
             when {
                 item.includedInParentPrice -> Text(
                     "已随主件计价",

@@ -202,15 +202,14 @@ class SquareBrowseTest {
     }
 
     @Test fun missingMappingUnknownCategoryAndOldDraftStaySafe() {
-        val c = imported(); val brooch = part(c, "sleeve-repeat", "胸针")
-        val req = request(c, listOf(SquareBrowseChoice(brooch.key)), event = "sleeve-repeat")
-        val result = io { repo.addWishes(req) }; val item = io { db.itemDao().getItemById(result.itemIds.single())!! }
-        assertTrue(item.imageUrls.isEmpty()); assertNull(item.size); assertTrue(item.colors.isEmpty())
+        val c = imported()
+        assertTrue(SquareBrowse.parts(c,c.events.single { it.id=="sleeve-repeat" }).isEmpty())
+        assertEquals(0,io { db.itemDao().getItemCount() })
         val groupSku = c.products.single { it.id == "1088022205740" }.skus.first { it.content == "JSK" && it.color == "蓝色" && it.size == "M" }
         val old = io { repo.prepare("dorothy-cotton", groupSku.key, null) }
         val jsk = part(c, "dorothy-cotton", "JSK")
         val paused = io { repo.addWishes(request(c, listOf(SquareBrowseChoice(jsk.key, "蓝色")))) }
-        assertEquals(listOf(old.draftId), paused.draftIds); assertEquals(1, io { db.itemDao().getItemCount() })
+        assertEquals(listOf(old.draftId), paused.draftIds); assertEquals(0, io { db.itemDao().getItemCount() })
         assertNotNull(io { drafts.get(old.draftId!!) })
         val bundle=c.products.single{it.id=="1088022205740"}.skus.first{it.content=="JSK+KC"&&it.color=="蓝色"&&it.size=="M"}
         val oldKc=io{repo.prepare("dorothy-cotton",bundle.key,"KC")}
@@ -272,9 +271,9 @@ class SquareBrowseTest {
             screenshot("multi-$suffix")
             compose.runOnIdle { model!!.closeMulti(); model!!.back() }
         }
-        compose.runOnIdle { model!!.open("sleeve-repeat"); model!!.selectBrowse(model!!.browseParts().single { it.partKey == "胸针" }.key) }
-        compose.onNodeWithText("暂无单品图").assertExists(); compose.onNodeWithTag("square-add-wish").assertIsDisplayed()
-        screenshot("missing-component-${if (small) "small" else "normal"}")
+        compose.runOnIdle { model!!.open("sleeve-repeat") }
+        compose.onNodeWithTag("square-feed").assertExists(); compose.onNodeWithTag("square-add-wish").assertDoesNotExist()
+        screenshot("archived-batch-hidden-${if (small) "small" else "normal"}")
         compose.runOnIdle { model!!.back(); model!!.open("sleeve-balance") }
         compose.onNodeWithTag("square-add-wish").assertDoesNotExist(); compose.onNodeWithText("选多件").assertDoesNotExist()
         screenshot("tail-${if (small) "small" else "normal"}")
@@ -422,6 +421,43 @@ class SquareBrowseTest {
         val c = imported()
         compose.runOnIdle { products.value = listOf(c.products.first().copy(url = "https://example.com/item")) }
         compose.onNodeWithTag("square-open-taobao").assertIsNotEnabled()
+    }
+
+    @Test fun archivedCatalogHidesShoppingPreservesWishAndRestoresOnNewEvidence() {
+        val c=imported(); val event=c.events.single { it.id=="dorothy-cotton" }
+        val jsk=part(c,event.id,"JSK"); val req=request(c,listOf(SquareBrowseChoice(jsk.key,"蓝色","M")))
+        val itemId=io { repo.addWishes(req) }.itemIds.single()
+        val before=io { db.itemDao().getItemById(itemId)!! }; val source=io { db.orderImportDao().sources().single() }
+        val originalHashes=source.imagePaths.map(::hash)
+        fun applyListing(base:SquareCatalog,status:String):SquareCatalog=io {
+            val stage=File(context.cacheDir,"listing-${UUID.randomUUID()}").apply { mkdirs() }
+            base.assets.forEach { a -> File(repo.image(a.path)).copyTo(File(stage,a.path).also { it.parentFile!!.mkdirs() }) }
+            val updated=base.copy(revision=base.revision+1,products=base.products.map { p -> if(p.id !in event.productIds)p else p.copy(revision=p.revision+1,listing=SquareListing(status,"受控公开状态证据","2026-11-06T23:00:00+08:00")) })
+            repo.apply(SquareRepository.Preview(updated,stage));repo.catalog.value!!
+        }
+        val archived=applyListing(c,"OFF_SALE")
+        assertEquals(c.assets,archived.assets);assertEquals(c.products.sumOf { it.skus.size },archived.products.sumOf { it.skus.size })
+        try { io { repo.addWishes(req) }; fail("Archived request must be rejected") } catch (_:IllegalArgumentException) {}
+        assertEquals(before,io { db.itemDao().getItemById(itemId)!! });assertEquals(source,io { db.orderImportDao().sources().single() })
+        assertEquals(originalHashes,source.imagePaths.map(::hash));assertEquals(0,io { db.priceDao().getAllPricesList().size })
+        show();compose.runOnIdle { model!!.set("query","漫游序章");model!!.open(event.id) }
+        compose.onNodeWithTag("square-feed").assertExists();compose.onNodeWithTag("square-event-${event.id}").assertDoesNotExist()
+        compose.onNodeWithTag("square-add-wish").assertDoesNotExist()
+        compose.runOnIdle { model!!.set("query","") }
+        for(type in SkinType.entries)for(night in listOf(false,true)) {
+            compose.runOnIdle { skin.value=type;dark.value=night }
+            compose.onNodeWithTag("square-event-${event.id}").assertDoesNotExist()
+            screenshot("archive-feed-${type.name.lowercase()}-${if(night)"dark" else "light"}")
+        }
+        compose.runOnIdle { model!!.open("sleeve-repeat") }
+        compose.onNodeWithTag("square-feed").assertExists()
+        compose.runOnIdle { model!!.open("sleeve-balance") }
+        compose.onNodeWithTag("square-add-wish").assertDoesNotExist();screenshot("archive-tail-stays-readonly")
+        val restored=applyListing(archived,"ACTIVE")
+        compose.runOnIdle { model!!.back();model!!.open(event.id) }
+        compose.onNodeWithTag("square-product").assertExists();compose.onNodeWithTag("square-add-wish").assertIsDisplayed()
+        assertEquals(before,io { db.itemDao().getItemById(itemId)!! });assertTrue(SquareVisibility.event(restored,restored.events.single { it.id==event.id }))
+        screenshot("archive-reactivated-product")
     }
 
 }

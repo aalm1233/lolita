@@ -109,9 +109,9 @@ class SquareRepository(private val context: Context, private val database: Lolit
     suspend fun prepare(eventId:String,skuKey:String,unit:SquareUnit):Registration=withContext(Dispatchers.IO) { gate.withLock {
         val catalog=_catalog.value ?: error("请先导入广场资料包")
         val event=catalog.events.single { it.id==eventId }
-        require(event.canRegister) { "尾款仅供查看，不能作为新物品登记" }
+        require(event.canRegister && SquareVisibility.event(catalog,event)) { "商品已归档或仅供查看，不能作为新物品登记" }
         val product=catalog.products.single { p -> p.id in event.productIds && p.skus.any { it.key==skuKey } }
-        require(product.pricePhase!="BALANCE") { "尾款规格不能作为新物品登记" }
+        require(SquareVisibility.product(product) && product.pricePhase!="BALANCE") { "尾款规格不能作为新物品登记" }
         val sku=product.skus.single { it.key==skuKey }
         unit.validate(product,sku)
         val parts=sku.parts.filter { it.key in unit.partKeys }

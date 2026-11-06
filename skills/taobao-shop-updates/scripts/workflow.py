@@ -70,7 +70,7 @@ def prepare(args):
             identity = "catalog-context/products/" + product["id"] + ".json"
             write_json(root / identity, product)
             context["products"].append({**{k: product[k] for k in ("id", "shopId", "title", "url", "revision", "pricePhase")},
-                                        "partKeys": sorted({p["key"] for sku in product["skus"] for p in sku["parts"]}), "identityFile": identity})
+                                        "listing": product.get("listing"), "partKeys": sorted({p["key"] for sku in product["skus"] for p in sku["parts"]}), "identityFile": identity})
     write_json(root / "square-context.json", context)
     for i, name in enumerate(names, 1):
         directory = "shops/" + f"{i:02d}-" + safe_name(name)
@@ -101,8 +101,14 @@ def source_qa(root, request, data):
             qa["deferredStores"].append(directory); continue
         store = inside(root, directory)
         shop = next(s for s in data["shops"] if s["directory"] == directory)
-        original = {p["itemId"]: p for p in read_json(store / "products.json")["products"]}
         selected = {p["id"]: p for p in data["products"] if p["shopId"] == shop["id"]}
+        if not selected:
+            # An unavailable page can update status against a validated baseline without inventing fresh SKUs/images.
+            if not data.get("listingUpdates"):
+                raise ValueError("店铺既无完整商品也无明确状态更新")
+            qa.setdefault("statusOnlyStores", []).append(directory)
+            continue
+        original = {p["itemId"]: p for p in read_json(store / "products.json")["products"]}
         deferred = {p.get("itemId") for p in data["deferred"] if p["shopId"] == shop["id"]}
         if not set(selected) <= set(original) or set(original) - set(selected) - deferred:
             raise ValueError("App商品与原始清单不一致；未采用商品必须明确列待核对")

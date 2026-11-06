@@ -121,4 +121,22 @@ class SquareBrowseTest {
         assertEquals(listOf(7L),SquareWishPlans.match(plan,SquareWishWardrobe(items=listOf(old))).exact)
     }
 
+    @Test fun archivedProductsAndEndedBatchesNeverEnterShoppingButRemainInCatalog() {
+        val c = catalog(); val archived = c.products.single().copy(id="2", title="仅展示商品", listing=SquareListing("DISPLAY_ONLY", "商家明确仅展示", "2026-11-06T22:00:00+08:00"), skus=listOf(sku("x","项链","红色",null,product="2")))
+        val mixed = c.copy(products=c.products+archived, events=listOf(e.copy(productIds=listOf("2","1"))))
+        assertEquals(listOf("1"), SquareVisibility.products(mixed,mixed.events.single()).map { it.id })
+        assertFalse(SquareBrowse.parts(mixed,mixed.events.single()).any { it.partKey=="项链" })
+        assertEquals(2,mixed.products.size)
+        val off = c.copy(products=c.products.map { it.copy(listing=SquareListing("OFF_SALE","商家下架提示","2026-11-06T22:00:00+08:00")) })
+        assertTrue(SquareVisibility.events(off).isEmpty()); assertTrue(SquareBrowse.parts(off,e).isEmpty())
+        val oldRequest=SquareBrowse.request(c,e,listOf(SquareBrowseChoice(part(c,"JSK").key)),false)
+        rejected { SquareWishPlans.build(off,oldRequest) }
+        assertTrue(SquareVisibility.events(c.copy(products=c.products.map { it.copy(pricePhase="PLACEHOLDER") })).isEmpty())
+        assertTrue(SquareVisibility.events(c.copy(events=listOf(e.copy(state="预约已结束")))).isEmpty())
+        assertEquals(1,SquareVisibility.events(c.copy(events=listOf(e.copy(kind="尾款",state="尾款开放")))).size)
+        assertEquals(1,SquareVisibility.events(c.copy(events=listOf(e.copy(state="部分规格无货")))).size)
+        val restored=off.copy(products=off.products.map { it.copy(listing=it.listing!!.copy(status="ACTIVE")) })
+        assertEquals(1,SquareVisibility.events(restored).size)
+    }
+
 }

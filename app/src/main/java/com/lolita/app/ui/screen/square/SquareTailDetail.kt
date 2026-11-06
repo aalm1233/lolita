@@ -18,7 +18,7 @@ import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 
 @Composable
 internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, amounts: Boolean, snackbar: SnackbarHostState) {
-    val p = c.products.first { it.id in e.productIds }
+    val p = SquareVisibility.products(c, e).first()
     val photos = p.images.filter { it.role == "main" }.sortedBy { it.order }.map { it.path }
     val documents = p.images.filter { it.role == "detail" }.sortedBy { it.order }.map { it.path }.distinct()
     var viewer by remember { mutableStateOf<Pair<List<String>, Int>?>(null) }

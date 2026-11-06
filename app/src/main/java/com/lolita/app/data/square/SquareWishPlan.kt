@@ -13,7 +13,7 @@ data class SquareWishResult(val itemIds: List<Long> = emptyList(), val added: In
 object SquareWishPlans {
     fun build(c: SquareCatalog, request: SquareWishRequest): List<SquareWishPlan> {
         val e = c.events.single { it.id == request.eventId }
-        require(e.canRegister && e.revision == request.eventRevision && e.productIds.associateWith { id -> c.products.single { it.id == id }.revision } == request.productRevisions) { "商品资料已更新，请重新选择" }
+        require(e.canRegister && SquareVisibility.event(c,e) && e.revision == request.eventRevision && e.productIds.associateWith { id -> c.products.single { it.id == id }.revision } == request.productRevisions) { "商品资料已更新，请重新选择" }
         require(request.choices.size in 1..20 && request.choices.map { it.key }.distinct().size == request.choices.size && (!request.grouped || request.choices.size > 1)) { "请选择要加入心愿的物品" }
         val parts = SquareBrowse.parts(c, e).associateBy { it.key }
         val selections = request.choices.map { SquareBrowse.select(c, parts[it.key] ?: error("商品资料已改变，请重新选择"), it) }

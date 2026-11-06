@@ -71,4 +71,20 @@ class SquarePackageTest {
         assertEquals("square:v1:shop:batch:variant1:@whole",SquareUnit(listOf("JSK"),"JSK").identity(e,sku))
     }
 
+    @Test fun archivedMetadataMergesWithoutDeletingPhotosAndOldPackagesStayCompatible() {
+        val original=catalog(); val before=SquarePackage.decode(SquarePackage.gson.toJson(original))
+        assertNull(before.products.single().listing); assertTrue(SquareVisibility.event(before,before.events.single()))
+        val archived=before.copy(products=before.products.map { it.copy(revision=2,listing=SquareListing("OFF_SALE","公开下架提示","2026-11-06T22:00:00+08:00")) })
+        val merged=SquarePackage.merge(before,archived)
+        assertEquals(before.assets,merged.assets); assertEquals(before.products.single().skus,merged.products.single().skus)
+        assertTrue(SquareVisibility.events(merged).isEmpty()); assertEquals(merged,SquarePackage.merge(merged,before))
+        assertEquals(merged,SquarePackage.decode(SquarePackage.gson.toJson(merged)))
+        rejected { SquarePackage.validate(archived.copy(products=archived.products.map { it.copy(listing=it.listing!!.copy(status="MISSING")) })) }
+        rejected { SquarePackage.validate(archived.copy(products=archived.products.map { it.copy(listing=it.listing!!.copy(source="")) })) }
+        rejected { SquarePackage.merge(archived,before.copy(products=before.products.map { it.copy(revision=3) })) }
+        rejected { SquarePackage.merge(archived,archived.copy(products=archived.products.map { it.copy(revision=3,listing=it.listing!!.copy(observedAt="2026-11-06T21:00:00+08:00")) })) }
+        val active=archived.copy(products=archived.products.map { it.copy(revision=3,listing=it.listing!!.copy(status="ACTIVE")) })
+        assertEquals(1,SquareVisibility.events(SquarePackage.merge(merged,active)).size)
+    }
+
 }

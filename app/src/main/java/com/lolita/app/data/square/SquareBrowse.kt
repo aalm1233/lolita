@@ -22,7 +22,7 @@ internal fun squareDigest(value: String) = UUID.nameUUIDFromBytes(value.toByteAr
 object SquareBrowse {
     fun parts(c: SquareCatalog, e: SquareEvent): List<SquareBrowsePart> {
         data class Bucket(val product: SquareProduct, val slot: String, val part: SquarePart, val skus: List<SquareSku>)
-        val products = c.products.filter { it.id in e.productIds && (!e.canRegister || it.pricePhase != "BALANCE") }
+        val products = SquareVisibility.products(c, e).filter { !e.canRegister || it.pricePhase != "BALANCE" }
         val variants = products.associate { it.id to it.skus.map { sku -> sku.variantId }.toSet() }
         val buckets = products.flatMap { p ->
             val linked = mutableSetOf(p.id)
@@ -85,7 +85,7 @@ object SquareBrowse {
     }
 
     fun request(c: SquareCatalog, e: SquareEvent, choices: List<SquareBrowseChoice>, grouped: Boolean): SquareWishRequest {
-        require(e.canRegister && choices.size in 1..20 && choices.map { it.key }.distinct().size == choices.size) { "请选择要加入心愿的物品" }
+        require(e.canRegister && SquareVisibility.event(c,e) && choices.size in 1..20 && choices.map { it.key }.distinct().size == choices.size) { "请选择要加入心愿的物品" }
         val parts = parts(c, e).associateBy { it.key }
         choices.forEach { select(c, parts[it.key] ?: error("商品资料已更新，请重新选择"), it) }
         return SquareWishRequest(e.id, e.revision, e.productIds.associateWith { id -> c.products.single { it.id == id }.revision }, choices, grouped && choices.size > 1)

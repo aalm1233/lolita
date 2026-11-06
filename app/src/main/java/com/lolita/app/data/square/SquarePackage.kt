@@ -27,8 +27,19 @@ data class SquareProduct(
     val id: String, val revision: Long, val shopId: String, val title: String, val url: String,
     val capturedAt: String, val pricePhase: String, val priceType: String,
     val skus: List<SquareSku>, val info: JsonObject, val images: List<SquareImage>,
-    val materials: List<SquareMaterial>? = null
+    val materials: List<SquareMaterial>? = null, val listing: SquareListing? = null
 )
+data class SquareListing(val status: String, val source: String, val observedAt: String)
+
+/** Keep the complete public archive; this projection only controls the shopping square. */
+object SquareVisibility {
+    private val endedStates = setOf("下架", "已下架", "仅展示", "展示", "展示页", "已结束", "预约已结束", "已截团", "截团")
+    fun product(p: SquareProduct) = p.pricePhase != "PLACEHOLDER" && (p.listing == null || p.listing.status == "ACTIVE")
+    fun products(c: SquareCatalog, e: SquareEvent): List<SquareProduct> =
+        if (e.state.trim() in endedStates) emptyList() else c.products.filter { it.id in e.productIds && product(it) && (!e.canRegister || it.pricePhase != "BALANCE") }
+    fun event(c: SquareCatalog, e: SquareEvent) = products(c, e).isNotEmpty()
+    fun events(c: SquareCatalog) = c.events.filter { event(c, it) }
+}
 data class SquareSku(
     val id: String, val key: String, val itemId: String, val props: Map<String, String>,
     val price: String?, val priceType: String, val stock: String, val content: String,
@@ -73,6 +84,7 @@ object SquarePackage {
         }
         require(c.assets.sumOf { it.bytes } <= MAX_ZIP) { "资料包图片总量超过600MiB" }
         c.products.forEach { p ->
+            p.listing?.let { require(it.status in setOf("ACTIVE", "OFF_SALE", "DISPLAY_ONLY") && it.source.isNotBlank() && it.source.length <= 2000 && it.observedAt.length in 1..80 && runCatching { java.time.OffsetDateTime.parse(it.observedAt) }.isSuccess) { "商品售卖状态或依据无效" } }
             require(idPattern.matches(p.id) && p.revision > 0 && p.shopId in shops && p.title.isNotBlank() && p.title.length <= 500 && p.capturedAt.isNotBlank()) { "商品资料或店铺引用无效" }
             require(p.url.startsWith("https://") && p.url.length <= 2000 && p.pricePhase in setOf("FULL","DEPOSIT","BALANCE","PLACEHOLDER")) { "商品链接或价格阶段无效" }
             require(p.skus.size in 1..1000 && p.images.size in 1..300 && p.images.any { it.role == "main" }) { "商品缺少完整规格或主图" }
@@ -140,6 +152,13 @@ object SquarePackage {
 
     fun merge(old: SquareCatalog?, incoming: SquareCatalog): SquareCatalog {
         if(old==null)return incoming
+        incoming.products.forEach { n ->
+            val p=old.products.firstOrNull { it.id==n.id }
+            if(p?.listing!=null && n.revision>p.revision) {
+                require(n.listing!=null) { "新版资料缺少商品售卖状态，请获取完整更新包" }
+                require(java.time.OffsetDateTime.parse(n.listing.observedAt).toInstant() >= java.time.OffsetDateTime.parse(p.listing.observedAt).toInstant()) { "商品售卖状态早于当前资料，请获取最新资料包" }
+            }
+        }
         fun <T> rows(previous:List<T>,next:List<T>,id:(T)->String,revision:(T)->Long):List<T> {
             val all=previous.associateBy(id).toMutableMap()
             next.forEach { n -> val p=all[id(n)]

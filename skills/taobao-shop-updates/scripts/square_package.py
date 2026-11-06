@@ -28,7 +28,7 @@ INFO_KEYS = {"care", "components", "craft", "excluded", "gifts", "included", "ma
 PRIVATE_KEYS = {"cookie", "cookies", "authorization", "accesstoken", "refreshtoken", "password", "buyer", "buyerid",
                 "buyernick", "userid", "addressid", "address", "phone", "mobile", "email", "收货地址", "买家", "手机号"}
 EVENT_TEXT = ("title", "subtitle", "kind", "state", "date", "price", "priceNote", "note", "material", "detail", "captured")
-PRODUCT_FIELDS = {"id", "revision", "shopId", "title", "url", "capturedAt", "pricePhase", "priceType", "skus", "info", "images", "materials", "evidenceIds", "coverage"}
+PRODUCT_FIELDS = {"id", "revision", "shopId", "title", "url", "capturedAt", "pricePhase", "priceType", "skus", "info", "images", "materials", "evidenceIds", "coverage", "listing"}
 SKU_FIELDS = {"id", "key", "itemId", "props", "rawProperties", "price", "priceType", "stock", "content", "color", "size", "form", "parts", "styleFacts", "notSoldAlone", "variantId", "photoPaths", "photoEvidenceIds", "variantEvidenceIds"}
 
 
@@ -177,15 +177,34 @@ def configure(state, package, project):
         return pointer
 
 
+def normalize_listing(listing, verify):
+    fields(listing, {"status", "source", "observedAt", "evidenceIds"}, {"status", "source", "observedAt", "evidenceIds"})
+    verify(listing.pop("evidenceIds"))
+    require(listing["status"] in {"ACTIVE", "OFF_SALE", "DISPLAY_ONLY"} and isinstance(listing["source"], str) and 1 <= len(listing["source"]) <= 2000, "售卖状态须有公开依据")
+    listing_time(listing)
+
+
+def listing_time(listing):
+    value = datetime.fromisoformat(listing["observedAt"].replace("Z", "+00:00"))
+    require(value.tzinfo is not None, "售卖状态观察时间须带时区")
+    return value
+
+
+def business_row(row):
+    value = copy.deepcopy({k: v for k, v in row.items() if k not in {"revision", "capturedAt", "captured"}})
+    if value.get("listing"): value["listing"].pop("observedAt", None)
+    return value
+
+
 def normalize(data, root, old):
-    fields(data, {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred"},
+    fields(data, {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred", "listingUpdates"},
            {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred"})
     require(data["format"] == "lolita.square.collector" and type(data["schemaVersion"]) is int and data["schemaVersion"] == 1, "采集输入版本无效")
     require(IDENTIFIER.fullmatch(data["packageId"]), "包稳定ID无效")
     if old: require(data["packageId"] == old["packageId"], "必须沿用已有packageId")
     text(data["title"]); text(data["capturedAt"])
     require(len(encoded(data)) <= 32 * 1024 * 1024, "采集输入过大")
-    require(isinstance(data["products"], list) and data["products"], "本轮无完整商品，不以旧包冒充本轮成功")
+    require(isinstance(data["products"], list) and (data["products"] or data.get("listingUpdates")), "本轮无完整商品，不以旧包冒充本轮成功")
     require(len(data["products"]) <= 2000 and len(data["events"]) <= 2000 and len(data["shops"]) <= 200, "本轮目录超过App上限")
     privacy(data)
     verify = evidence_resolver(root, data["evidence"])
@@ -207,8 +226,10 @@ def normalize(data, root, old):
         events.append({k: v for k, v in event.items() if k not in {"revision", "evidenceIds"}})
     variants = {}
     for original in data["products"]:
-        fields(original, PRODUCT_FIELDS, PRODUCT_FIELDS - {"revision", "materials"})
+        fields(original, PRODUCT_FIELDS, PRODUCT_FIELDS - {"revision", "materials", "listing"})
         product = copy.deepcopy(original); verify(product.pop("evidenceIds"))
+        if product.get("listing") is not None: normalize_listing(product["listing"], verify)
+        else: product.pop("listing", None)
         coverage = product.pop("coverage")
         fields(coverage, {"skuComplete", "detailsComplete", "skuCount"}, {"skuComplete", "detailsComplete", "skuCount"})
         require(coverage["skuComplete"] is True and coverage["detailsComplete"] is True and type(coverage["skuCount"]) is int and coverage["skuCount"] == len(product["skus"]), "商品规格/详情未采全，移入deferred，不截取打包")
@@ -304,6 +325,19 @@ def normalize(data, root, old):
                     require(confirmed and previous_product["shopId"] == product["shopId"] and encoded(previous_sku["parts"]) == encoded(sku["parts"]), "复用旧目录跨链接variantId缺少依据或规格不一致")
     for rows in (shops, events, products): require(len(rows) == len({r["id"] for r in rows}), "本轮记录ID重复")
     require({p["id"] for p in products} == {i for e in events for i in e["productIds"]}, "每个动态须提供完整商品组，每个商品须归属动态")
+    full_ids = {p["id"] for p in products}
+    updates = data.get("listingUpdates", [])
+    require(isinstance(updates, list), "listingUpdates须为数组")
+    update_ids = set()
+    for patch in updates:
+        fields(patch, {"productId", "listing"}, {"productId", "listing"})
+        require(patch["productId"] not in full_ids | update_ids, "同一商品不能同时全量采集和状态更新，状态更新不可重复")
+        previous = next((p for p in (old or {}).get("products", []) if p["id"] == patch["productId"]), None)
+        require(previous is not None and previous["shopId"] in {s["id"] for s in shops}, "仅允许更新当前请求店铺已归档的商品状态")
+        listing = copy.deepcopy(patch["listing"]); normalize_listing(listing, verify)
+        product = copy.deepcopy(previous); product["listing"] = listing
+        products.append(product); update_ids.add(product["id"])
+    require(all(any(p["shopId"] == shop["id"] for p in products) for shop in shops), "每个成功店铺须有完整商品或属于该店的状态更新")
     return {"shops": shops, "events": events, "products": products, "assets": list(assets.values()), "singleMemberSpecsFromSku": single_specs}, sources, warnings
 
 
@@ -319,9 +353,11 @@ def merge(old, incoming, data):
             if previous:
                 immutable = ("shopId", "designId", "batchId") if kind == "events" else ("shopId",) if kind == "products" else ()
                 require(all(previous[k] == row[k] for k in immutable), "已有记录店铺/设计/批次身份改变，须使用新ID")
+            if previous and previous.get("listing"):
+                if not row.get("listing"): row["listing"] = copy.deepcopy(previous["listing"])
+                require(listing_time(row["listing"]) >= listing_time(previous["listing"]), "售卖状态观察时间早于当前记录，不覆盖新状态")
             same = previous is not None and encoded({k: v for k, v in previous.items() if k != "revision"}) == encoded(row)
-            ignored = {"revision", "capturedAt", "captured"}
-            meaningful += previous is None or encoded({k: v for k, v in previous.items() if k not in ignored}) != encoded({k: v for k, v in row.items() if k not in ignored})
+            meaningful += previous is None or encoded(business_row(previous)) != encoded(business_row(row))
             row["revision"] = previous["revision"] if same else previous["revision"] + 1 if previous else 1
             result[kind].append(row); count += not same
         result[kind].extend(before.values()); changes[kind] = count
@@ -381,6 +417,8 @@ def build(input_path, output, project, state=None, expected_baseline=None):
                   "skuCount": sum(len(p["skus"]) for p in catalog["products"]), "androidContract": contract,
                   "deferred": data["deferred"], "missingMappings": warnings, "baselineRetainedWhenAbsent": True,
                   "singleMemberSpecsFromSku": incoming["singleMemberSpecsFromSku"],
+                  "listingUpdates": len(data.get("listingUpdates", [])),
+                  "archivedProducts": [p["id"] for p in catalog["products"] if p["pricePhase"] == "PLACEHOLDER" or (p.get("listing") or {}).get("status") in {"OFF_SALE", "DISPLAY_ONLY"}],
                   "semanticReview": "结构/图片/证据引用自动校验通过，不等同于人工核对事实归属", "networkAccess": False}
         atomic_json(output.with_suffix(".quality.json"), report)
         if state:

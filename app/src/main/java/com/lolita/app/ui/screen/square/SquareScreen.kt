@@ -47,7 +47,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     fun pick(){picker.launch(arrayOf("application/zip","application/x-zip-compressed","application/octet-stream"))}
     LaunchedEffect(message){message?.let { snack.showSnackbar(it);viewModel.clearMessage() }}
     LaunchedEffect(registration){registration?.let { r->viewModel.consumedRegistration();r.itemId?.let(onOpenItem)?:r.draftId?.let(onEditDraft) }}
-    val event=catalog?.events?.find { it.id==eventId }
+    val event=catalog?.let { c -> c.events.find { it.id==eventId && SquareVisibility.event(c, it) } }
     val selectedSku by viewModel.skuKey.collectAsState()
     val step by viewModel.step.collectAsState();val parts by viewModel.selectedParts.collectAsState()
     val unitJson by viewModel.unitsJson.collectAsState();val unitIndex by viewModel.unitIndex.collectAsState()
@@ -124,7 +124,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
 
 @Composable private fun SquareSelection(c:SquareCatalog,e:SquareEvent,vm:SquareViewModel,busy:Boolean){
     val pid by vm.productId.collectAsState();val key by vm.skuKey.collectAsState();val partKey by vm.partKey.collectAsState()
-    val products=c.products.filter{it.id in e.productIds && it.pricePhase!="BALANCE"}
+    val products=SquareVisibility.products(c,e).filter{it.pricePhase!="BALANCE"}
     val p=products.find{it.id==pid}?:products.first()
     val selected=p.skus.find{it.key==key}
     var search by rememberSaveable(e.id,p.id){mutableStateOf("")}

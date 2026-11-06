@@ -141,7 +141,7 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     init { work { repository.load() } }
     fun image(path:String)=repository.image(path)
     fun set(key:String,value:String) { saved["square.$key"]=value }
-    fun open(id:String) { if(id!=eventId.value){saved["square.browseKey"]=null;saved["square.browseChoices"]="[]";saved["square.multiOpen"]=false};saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
+    fun open(id:String) { val c=catalog.value?:return;if(c.events.none{it.id==id && SquareVisibility.event(c,it)})return; if(id!=eventId.value){saved["square.browseKey"]=null;saved["square.browseChoices"]="[]";saved["square.multiOpen"]=false};saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
     fun back() { if(multiOpen.value){closeMulti();return};if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
     fun choose() {
         saved["square.choosing"]=true

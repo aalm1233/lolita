@@ -29,12 +29,13 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     val color by vm.color.collectAsState(); val style by vm.style.collectAsState(); val form by vm.form.collectAsState()
     var filters by rememberSaveable { mutableStateOf(false) }; var shops by rememberSaveable { mutableStateOf(false) }
     var shopQuery by rememberSaveable { mutableStateOf("") }
-    val products = remember(c) { c.products.associateBy { it.id } }
-    val skus = remember(c) { c.products.flatMap { it.skus } }
+    val visibleEvents = remember(c) { SquareVisibility.events(c) }
+    val products = remember(c) { visibleEvents.flatMap { SquareVisibility.products(c, it) }.distinctBy { it.id }.associateBy { it.id } }
+    val skus = remember(c) { products.values.flatMap { it.skus } }
     val events = remember(c, query, kind, shop, color, style, form) {
-        c.events.filter { e -> (kind.isEmpty() || e.kind == kind) && (shop.isEmpty() || e.shopId == shop) &&
-            (query.isBlank() || (e.title + e.subtitle + c.shops.find { it.id == e.shopId }?.name + e.productIds.joinToString { products.getValue(it).title }).contains(query, true)) &&
-            e.productIds.any { id -> products.getValue(id).skus.any { it.matches(color, style, form) } } }
+        visibleEvents.filter { e -> (kind.isEmpty() || e.kind == kind) && (shop.isEmpty() || e.shopId == shop) &&
+            (query.isBlank() || (e.title + e.subtitle + c.shops.find { it.id == e.shopId }?.name + e.productIds.mapNotNull(products::get).joinToString { it.title }).contains(query, true)) &&
+            e.productIds.any { id -> products[id]?.skus?.any { it.matches(color, style, form) } == true } }
     }
     val large = LocalConfiguration.current.fontScale >= 1.5f
     val state = rememberLazyGridState(); ObserveSkinScroll(state)
@@ -64,7 +65,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
             LolitaCard { Text("暂无商品"); TextButton(onClick = { listOf("query", "kind", "shop", "color", "style", "form").forEach { vm.set(it, "") } }) { Text("清除筛选") } }
         }
         items(events, key = { it.id }) { event ->
-            val product = event.productIds.map(products::getValue).firstOrNull { it.pricePhase == "FULL" } ?: products.getValue(event.productIds.first())
+            val product = SquareVisibility.products(c, event).let { candidates -> candidates.firstOrNull { it.pricePhase == "FULL" } ?: candidates.first() }
             val cover = product.images.filter { it.role == "main" }.minBy { it.order }
             LolitaCard(variant = CardVariant.GALLERY, contentPadding = PaddingValues(0.dp),
                 modifier = Modifier.fillMaxWidth().testTag("square-event-${event.id}").clickable { vm.open(event.id) }) {
@@ -79,7 +80,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                         Text(c.shops.first { it.id == event.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(event.title, style = MaterialTheme.typography.titleSmall)
                         Text(listOf(event.state,event.date.takeUnless { it.contains("未提供") || it.contains("未知") }.orEmpty()).filter{it.isNotBlank()}.joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        if (showAmounts) { Text(event.price, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                        if (showAmounts && SquareVisibility.products(c,event).size == event.productIds.size) { Text(event.price, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
                             if (event.priceNote.isNotBlank()) Text(event.priceNote, style = MaterialTheme.typography.bodySmall) }
                     }
                 }
@@ -100,7 +101,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
             OutlinedTextField(shopQuery, { shopQuery = it }, placeholder = { Text("搜索店铺") }, singleLine = true)
             LazyColumn(Modifier.heightIn(max = 360.dp)) {
                 item { TextButton(onClick = { vm.set("shop", ""); shops = false }) { Text("全部店铺") } }
-                items(c.shops.filter { it.name.contains(shopQuery, true) }) { s -> TextButton(onClick = { vm.set("shop", s.id); shops = false }) { Text(s.name) } }
+                items(c.shops.filter { s -> visibleEvents.any { it.shopId == s.id } && s.name.contains(shopQuery, true) }) { s -> TextButton(onClick = { vm.set("shop", s.id); shops = false }) { Text(s.name) } }
             }
         }
     }, confirmButton = { TextButton(onClick = { shops = false }) { Text("关闭") } })

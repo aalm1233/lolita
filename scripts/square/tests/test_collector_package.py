@@ -99,6 +99,41 @@ class CollectorPackageTest(unittest.TestCase):
         combined, _, _ = package.merge(result, next_input, self.data)
         self.assertEqual({"123", "999"}, {p["id"] for p in combined["products"]})
 
+    def test_status_only_package_keeps_original_bytes_and_actual_app_contract(self):
+        self.write(); first=self.root/"first.zip"; package.build(self.input,first,PROJECT)
+        state=self.root/"state";pointer=package.configure(state,first,PROJECT)
+        self.data.update(products=[],events=[],listingUpdates=[dict(productId="123",listing=dict(status="DISPLAY_ONLY",source="合成公开仅展示提示",observedAt="2026-11-06T22:00:00+08:00",evidenceIds=["ev-1"]))])
+        qa=workflow.source_qa(self.root,dict(shops=[dict(directory=self.directory)]),self.data)
+        self.assertEqual([self.directory],qa["statusOnlyStores"])
+        self.write();second=self.root/"archive.zip";report=package.build(self.input,second,PROJECT,state,pointer["sha256"])
+        self.assertTrue(report["androidContract"]["passed"]);self.assertEqual(["123"],report["archivedProducts"])
+        with zipfile.ZipFile(first) as a,zipfile.ZipFile(second) as b:
+            self.assertEqual([n for n in a.namelist() if n!="manifest.json"],[n for n in b.namelist() if n!="manifest.json"])
+            self.assertTrue(all(a.read(n)==b.read(n) for n in a.namelist() if n!="manifest.json"))
+        self.assertEqual("DISPLAY_ONLY",self.catalog(second)["products"][0]["listing"]["status"])
+
+    def test_status_only_archive_retains_snapshot_and_requires_explicit_reactivation(self):
+        incoming, _, _ = self.normalize(); old, _, _ = package.merge(None, incoming, self.data)
+        data=copy.deepcopy(self.data); data.update(products=[],events=[],listingUpdates=[dict(productId="123",listing=dict(status="OFF_SALE",source="合成公开下架提示",observedAt="2026-11-06T22:00:00+08:00",evidenceIds=["ev-1"]))])
+        changed, sources, _=package.normalize(data,self.root,old)
+        archived, _, business=package.merge(old,changed,data)
+        self.assertEqual({},sources); self.assertEqual(old["assets"],archived["assets"])
+        self.assertEqual(old["products"][0]["skus"],archived["products"][0]["skus"])
+        self.assertEqual(old["products"][0]["capturedAt"],archived["products"][0]["capturedAt"])
+        self.assertEqual(1,business["products"])
+        preserved,_,_=package.merge(archived,incoming,self.data)
+        self.assertEqual("OFF_SALE",preserved["products"][0]["listing"]["status"])
+        later=copy.deepcopy(changed);later["products"][0]["listing"]["observedAt"]="2026-11-06T23:00:00+08:00"
+        _,_,business=package.merge(archived,later,data);self.assertEqual(0,business["products"])
+        later["products"][0]["listing"]["observedAt"]="2026-11-06T21:00:00+08:00"
+        with self.assertRaisesRegex(ValueError,"观察时间早于"): package.merge(archived,later,data)
+        for mutate in [lambda d:d["listingUpdates"][0].update(productId="999"),lambda d:d["listingUpdates"][0]["listing"].update(evidenceIds=[]),lambda d:d["listingUpdates"][0]["listing"].update(status="NOT_FOUND")]:
+            bad=copy.deepcopy(data);mutate(bad)
+            with self.assertRaises(ValueError):package.normalize(bad,self.root,old)
+        active=copy.deepcopy(changed);active["products"][0]["listing"]["status"]="ACTIVE"
+        restored,_,_=package.merge(archived,active,data)
+        self.assertEqual("ACTIVE",restored["products"][0]["listing"]["status"])
+
     def test_incomplete_sku_unknown_kind_and_private_data_rejected(self):
         for mutate in [lambda d: d["products"][0]["coverage"].update(skuComplete=False),
                        lambda d: d["events"][0].update(kind="猜测新品"),

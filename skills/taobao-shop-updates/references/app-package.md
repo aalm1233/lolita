@@ -1,10 +1,10 @@
 # 采集输入 → Lolita广场 v1
 
-当前消费者为Android 2.74.0及以后兼容v1版本。**公开包不是私人备份，不能生成SQUARE_WISH、Item、订单或付款。** App字段和实际校验器以工程`app/src/main/java/com/lolita/app/data/square/SquarePackage.kt`为准；阅读工程`docs/square-package-format.md`可看完整边界。
+基础格式消费者为Android 2.74.0及以后兼容v1版本；售卖状态过滤需2.75.1及以后，旧版可能忽略listing，不能宣称旧版已经隐藏。**公开包不是私人备份，不能生成SQUARE_WISH、Item、订单或付款。** App字段和实际校验器以工程`app/src/main/java/com/lolita/app/data/square/SquarePackage.kt`为准；阅读工程`docs/square-package-format.md`可看完整边界。
 
 ## 输入文件
 
-每轮根目录`square-input.json`。顶层字段必须为：
+每轮根目录`square-input.json`。顶层字段必须包含以下字段，另可提供`listingUpdates`：
 
 ```json
 {
@@ -63,3 +63,13 @@ deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给req
 4. 查看quality.json：businessChanged排除仅采集时间变化；deferred与missingMappings单列。无实际变化不重复通知旧商品。交付资料包和需要处理的事项，不把自动结构校验写成人工全量事实审核。
 
 上限：ZIP600MiB/清单8MiB/4000图/每图20MiB/单商品80MiB/每商品1000SKU及300图/总20000SKU/200店/2000商品及动态。超限停止并报告，不静默截断或自动重开淘宝。旧记录本轮未出现仍保留，不能据此删除或判断下架；私人物品完全独立。
+
+## 在售与博物馆资料分流
+
+商品可选`listing:{status,source,observedAt,evidenceIds}`。status为ACTIVE/OFF_SALE/DISPLAY_ONLY；source保留明确公开依据，observedAt为带时区的真实ISO观察时间，evidenceIds引用本轮本地证据。未知省略；页面打不开、未采到、库存0/部分缺货不等于下架。展示/收藏/汇总链接保留本地原始资料，不伪造SKU补成可售商品。
+
+已在基线中的商品下架后可能没有可读取的完整SKU，此时用`listingUpdates:[{productId,listing}]`更新售卖状态；不要求重复下载旧原图，不把旧capturedAt改为本次，不宣称SKU已刷新。products/events可为空，shops仍给真实请求店铺，证据仍须落地；仅允许更新该店已有商品、不能同轮与全量商品重复。既无完整商品又无有效状态更新仍算失败。
+
+打包器保留旧商品/原图并增加记录revision，不因缺席删除；已归档商品缺少listing时沿用旧状态，重新在售须明确ACTIVE的新证据，拒绝早于已有observedAt的覆盖。仅观察时间变化不报新品。
+
+App广场不展示OFF_SALE/DISPLAY_ONLY、PLACEHOLDER或明确已结束的预约批次；混合动态只用活跃链接，全部归档则隐藏。搜索、筛选候选、封面、单品和心愿均同口径；开放尾款按独立动态保留只读。公开目录保留历史数据供后续博物馆，当前不增加入口、不删除已有私人心愿或来源。

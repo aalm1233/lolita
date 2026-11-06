@@ -58,3 +58,7 @@ dsh输出本轮`products.json/CSV/image-manifest`、原图/证据及`square-inpu
 主助手调用技能`workflow.py package --output <本轮目录>`，校验原始完整SKU/报价/原图集合与输入一致，计算SHA、尺寸和图片路径；沿用公开目录稳定ID并按内容更新revision，保留本轮未出现的旧记录。候选包须通过工程实际`SquarePackage.kt`编译执行的unpack验收，才能交付ZIP、质量报告并原子更新本机current.json。基线发生变化、原图/格式失败或超限不推进状态，不截断资料。
 
 `businessChanged`排除只更新采集时间的记录；`deferred`列失败店和不完整商品；`missingMappings`列未提供的独立单品图。证据和原始页面不进入ZIP，自动验收不能代替图文事实审读。主助手继续只读本地，不访问淘宝。流程与真实运行结果见[实施记录](square-collector-workflow-2026-11-06.md)。
+
+## 广场可见性（2.75.1）
+
+商品可选`listing:{status,source,observedAt}`，status为ACTIVE/OFF_SALE/DISPLAY_ONLY，来源明文与观察时间必填；旧无字段包兼容。广场过滤明确下架/仅展示、PLACEHOLDER和明确结束预约批次，混合动态仅显示活跃链接；归档的商品、SKU和SHA原图仍在目录中，供未来博物馆，不删除私人心愿。不存在即下架、库存缺货即下架均不成立。开放尾款独立只读。旧App可能忽略新增嵌套字段，须升级才能按此口径展示。采集侧状态补丁与证据契约见skills/taobao-shop-updates/references/app-package.md。

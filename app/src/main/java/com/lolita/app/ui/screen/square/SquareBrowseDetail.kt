@@ -26,7 +26,7 @@ import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
 @Composable
-internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, showAmounts: Boolean) {
+internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, showAmounts: Boolean, snackbar: SnackbarHostState) {
     val key by vm.browseKey.collectAsState(); val choices by vm.browseChoices.collectAsState()
     val selection = remember(c, e, key, choices) { vm.currentBrowseSelection() } ?: return
     val parts = remember(c, e) { SquareBrowse.parts(c, e) }
@@ -75,6 +75,7 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
                     }
                 }
                 if (selection.onlyInCombination) Text("仅组合售卖", style = MaterialTheme.typography.bodySmall)
+                SquareTaobaoButton(selection.rows.map { it.first }.distinctBy { it.id }, snackbar)
                 SquareSpecChoices("颜色", SquareBrowse.colors(c, part), choice.color, { vm.chooseBrowse(color = it) }, "square-color")
                 SquareSpecChoices("尺码", SquareBrowse.sizes(c, part, choice.color), choice.size, { vm.chooseBrowse(size = it) }, "square-size",
                     action = if (selection.documents.isNotEmpty()) ({ TextButton(onClick = { view(selection.documents) }) { Text(if(selection.materials.any { it.sizeTable != null }) "尺码表" else "资料图") } }) else null)

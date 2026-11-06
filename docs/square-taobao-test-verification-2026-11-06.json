@@ -1,0 +1,15 @@
+{
+  "distinctMethods": 5,
+  "initialNormal": "5 passed",
+  "initialSmall": "3 passed; visual matrix stopped on offscreen LazyColumn locator",
+  "finalChangedUiNormal": "2 passed",
+  "finalChangedUiSmall": "2 passed",
+  "build": "assembleDebug + assembleDebugAndroidTest passed",
+  "nativeMatrixScreenshots": 84,
+  "failedInitialRunRetainedLocally": true,
+  "finalCorrections": "skin shape and reading color for long titles; Snackbar action on separate line; LazyColumn scroll locator",
+  "externalIntents": "captured, zero Taobao/browser page access",
+  "businessWrites": "only existing wish regression isolated synthetic DB",
+  "databaseVersion": 34,
+  "backupVersion": 16
+}

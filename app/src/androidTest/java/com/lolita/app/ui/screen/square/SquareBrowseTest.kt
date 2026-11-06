@@ -1,5 +1,9 @@
 package com.lolita.app.ui.screen.square
 
+import android.content.Context
+import android.content.Intent
+import android.content.ActivityNotFoundException
+import android.content.ClipboardManager
 import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.*
@@ -59,6 +64,8 @@ class SquareBrowseTest {
     private val money = MutableStateFlow(true)
     private var openedId = 0L
     private var wishOpened = false
+    private val outgoing = mutableListOf<Intent>()
+    private var linkMode = "app"
     private lateinit var host: android.view.View
     private fun <T> io(block: suspend () -> T) = runBlocking(Dispatchers.IO) { block() }
     @Before fun setup() {
@@ -92,7 +99,18 @@ class SquareBrowseTest {
             val view = LocalView.current
             SideEffect { host = view; (view.context as android.app.Activity).window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) }
             val cfg = Configuration(LocalConfiguration.current).apply { uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or if (dark.value) Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO }
-            CompositionLocalProvider(LocalConfiguration provides cfg) {
+            val base = LocalContext.current
+            val linkContext = remember(base) { object : ContextWrapper(base) {
+                override fun startActivity(intent: Intent) {
+                    if (intent.action != Intent.ACTION_VIEW) { super.startActivity(intent); return }
+                    outgoing.add(Intent(intent))
+                    when (linkMode) {
+                        "browser" -> if (intent.`package` != null) throw ActivityNotFoundException()
+                        "blocked" -> throw SecurityException("controlled blocked handler")
+                    }
+                }
+            } }
+            CompositionLocalProvider(LocalConfiguration provides cfg, LocalContext provides linkContext) {
                 LolitaTheme(skin.value, dark.value) {
                     Surface(color = MaterialTheme.colorScheme.background) {
                         Box(Modifier.fillMaxSize()) { SkinArtBackground(); SquareScreen({}, { openedId = it }, model!!, { wishOpened = true }) }
@@ -107,6 +125,10 @@ class SquareBrowseTest {
         val dir = File(target.filesDir, "square-browse-native").apply { mkdirs() }
         val bitmap = inst.uiAutomation.takeScreenshot()
         File(dir, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
+    }
+    private fun taobaoButton(): SemanticsNodeInteraction {
+        compose.onNodeWithTag("square-product").performScrollToNode(hasTestTag("square-open-taobao"))
+        return compose.onNodeWithTag("square-open-taobao")
     }
     private fun hash(path: String) = MessageDigest.getInstance("SHA-256").digest(File(path).readBytes()).joinToString("") { "%02x".format(it) }
 
@@ -316,6 +338,90 @@ class SquareBrowseTest {
         compose.onNodeWithTag("square-product").performScrollToNode(hasTestTag("square-parameters"))
         assertTrue(compose.onAllNodes(hasText("推荐臂围(cm)",substring=true)).fetchSemanticsNodes().isNotEmpty())
         screenshot("lilizi-sleeves-${if(target.resources.configuration.screenWidthDp<=320)"small" else "normal"}")
+    }
+
+    @Test fun taobaoIntentPriorityFallbackAndUntrustedSources() {
+        val calls = mutableListOf<Intent>()
+        var mode = "app"
+        val handler = object : ContextWrapper(target) {
+            override fun startActivity(intent: Intent) {
+                calls.add(Intent(intent))
+                if (mode == "blocked") throw SecurityException()
+                if (mode == "browser" && intent.`package` != null) throw ActivityNotFoundException()
+            }
+        }
+        val url = "https://item.taobao.com/item.htm?id=123456"
+        assertTrue(openSquareTaobao(handler, url)); assertEquals(1, calls.size)
+        assertEquals("com.taobao.taobao", calls.single().`package`)
+        assertEquals(Intent.ACTION_VIEW, calls.single().action); assertEquals(url, calls.single().dataString)
+        calls.clear(); mode = "browser"
+        assertTrue(openSquareTaobao(handler, url)); assertEquals(2, calls.size); assertNull(calls.last().`package`)
+        calls.clear(); mode = "blocked"
+        assertFalse(openSquareTaobao(handler, url)); assertEquals(2, calls.size)
+        for (bad in listOf("", "http://item.taobao.com/item.htm?id=1", "https://taobao.com.evil.test/item", "https://taobao.com@evil.test/item", "https://evil.test@item.taobao.com/item", "intent://item", "https://item.taobao.com:444/item", "https://example.com/item")) {
+            calls.clear(); assertFalse(bad, openSquareTaobao(handler, bad)); assertTrue(calls.isEmpty())
+        }
+        assertNotNull(squareTaobaoUri("https://detail.tmall.com/item.htm?id=123"))
+    }
+
+    @Test fun taobaoCurrentSourcesCancelTailAndCopyFailure() {
+        imported(); show(); compose.runOnIdle { model!!.open("dorothy-cotton") }
+        fun sources() = model!!.currentBrowseSelection()!!.rows.map { it.first }.filter { squareTaobaoUri(it.url) != null }.distinctBy { it.url }
+        val products = sources(); assertTrue(products.size > 1)
+        taobaoButton().performScrollTo().performClick()
+        compose.onNodeWithText("选择商品链接").assertIsDisplayed()
+        products.forEach { compose.onNodeWithTag("square-taobao-source:${it.id}").assertExists() }
+        compose.onNodeWithText("取消").performClick(); assertTrue(outgoing.isEmpty())
+        compose.onNodeWithTag("square-open-taobao").performClick()
+        compose.onNodeWithTag("square-taobao-source:${products.last().id}").performScrollTo().performClick()
+        assertEquals(products.last().url, outgoing.single().dataString)
+        assertEquals("com.taobao.taobao", outgoing.single().`package`)
+        compose.onNodeWithTag("square-product").assertExists()
+        compose.runOnIdle { model!!.chooseBrowse(color = "黑色", size = "L"); outgoing.clear(); linkMode = "browser" }
+        val black = sources()
+        taobaoButton().performScrollTo().performClick()
+        if (black.size > 1) compose.onNodeWithTag("square-taobao-source:${black.first().id}").performScrollTo().performClick()
+        assertEquals(black.first().url, outgoing.last().dataString); assertNull(outgoing.last().`package`)
+        assertEquals("黑色", model!!.currentBrowseChoice()!!.color); assertEquals("L", model!!.currentBrowseChoice()!!.size)
+        compose.runOnIdle { model!!.back(); model!!.open("sleeve-balance"); outgoing.clear(); linkMode = "blocked" }
+        compose.onNodeWithTag("square-add-wish").assertDoesNotExist()
+        taobaoButton().performScrollTo().performClick()
+        compose.onNodeWithText("无法打开淘宝，请复制链接后重试").assertIsDisplayed()
+        screenshot("taobao-failure")
+        val expected = outgoing.last().dataString
+        compose.onNodeWithText("复制链接").performClick()
+        compose.runOnIdle {
+            val clip = target.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            assertEquals(expected, clip.primaryClip!!.getItemAt(0).text.toString())
+        }
+        assertEquals(0, io { db.itemDao().getItemCount() }); assertEquals(0, io { db.priceDao().getAllPricesList().size })
+    }
+
+    @Test fun taobaoFourteenSkinsAndLargeText() {
+        imported(); show(); val small = target.resources.configuration.screenWidthDp <= 320
+        for (type in SkinType.entries) for (night in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = night; model!!.back(); model!!.open("dorothy-cotton") }
+            val suffix = "${type.name.lowercase()}-${if (night) "dark" else "light"}${if (small) "-small" else ""}"
+            taobaoButton().performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("square-add-wish").assertIsDisplayed(); screenshot("taobao-product-$suffix")
+            compose.onNodeWithTag("square-open-taobao").performClick()
+            compose.onNodeWithText("选择商品链接").assertIsDisplayed(); screenshot("taobao-chooser-$suffix")
+            compose.onNodeWithText("取消").performClick()
+            compose.runOnIdle { model!!.back(); model!!.open("sleeve-balance") }
+            taobaoButton().performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("square-add-wish").assertDoesNotExist(); screenshot("taobao-tail-$suffix")
+        }
+        assertTrue(outgoing.isEmpty())
+    }
+
+    @Test fun taobaoUnavailableSourceStaysDisabled() {
+        val products = mutableStateOf(emptyList<SquareProduct>())
+        compose.setContent { LolitaTheme { SquareTaobaoButton(products.value, remember { SnackbarHostState() }) } }
+        compose.onNodeWithTag("square-open-taobao").assertIsNotEnabled()
+        compose.onNodeWithText("暂无淘宝链接").assertExists()
+        val c = imported()
+        compose.runOnIdle { products.value = listOf(c.products.first().copy(url = "https://example.com/item")) }
+        compose.onNodeWithTag("square-open-taobao").assertIsNotEnabled()
     }
 
 }

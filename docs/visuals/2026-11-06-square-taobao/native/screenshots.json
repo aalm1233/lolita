@@ -1,0 +1,345 @@
+{
+  "sourceScreenshots": [
+    {
+      "file": "native-normal/taobao-product-default-light.png",
+      "sha256": "35be9ae7a35310e6c1fea1a6ac9f78db21104720ab30531c24951ee686888306"
+    },
+    {
+      "file": "native-normal/taobao-product-gothic-light.png",
+      "sha256": "b0a1e93dae9f2da341300c88dc2875238c1cfcaa262bff98d804de59e3eebc7b"
+    },
+    {
+      "file": "native-normal/taobao-product-chinese-light.png",
+      "sha256": "5bc872e2e864ff0497e395d06e2e1cdc981bbf1be65568e7785edbd843752c20"
+    },
+    {
+      "file": "native-normal/taobao-product-classic-light.png",
+      "sha256": "fb658a5fd9a82af2cfefcec1044852ab8877331f0c6661e68bb436b657fd5ea0"
+    },
+    {
+      "file": "native-normal/taobao-product-navy-light.png",
+      "sha256": "df63e526b2774ddce8f9353f6e2937066acf991633addaf21e3525c183600e20"
+    },
+    {
+      "file": "native-normal/taobao-product-country-light.png",
+      "sha256": "5c61b874b900aeb1ed6ead38f970e6649b9c68ea896f50956aca3be4a14b9fbf"
+    },
+    {
+      "file": "native-normal/taobao-product-victorian-light.png",
+      "sha256": "010b3c7be9f0f63d1755847352c7a469861a337f071d81a565625800716ef8d9"
+    },
+    {
+      "file": "native-normal/taobao-product-default-dark.png",
+      "sha256": "ab856c41a6c14a401b1e1edfc2873ae6d88df2a221a27a1815ebf8b9c1444329"
+    },
+    {
+      "file": "native-normal/taobao-product-gothic-dark.png",
+      "sha256": "eb2098d58f93d5de4aee618990b9170e7c0a7fa186af78035e531a83ae712fbf"
+    },
+    {
+      "file": "native-normal/taobao-product-chinese-dark.png",
+      "sha256": "00342b7c2c7b2ea51cb60e0123f40622d83b6a2502bd74bf25bdbe1cfb4b64c6"
+    },
+    {
+      "file": "native-normal/taobao-product-classic-dark.png",
+      "sha256": "5dbed949f3b91258ea067882703481246126acc77d74d0d1ea65b7c22222d45f"
+    },
+    {
+      "file": "native-normal/taobao-product-navy-dark.png",
+      "sha256": "aa9717b3675040cd975021fa7615aa7ca7db0844da3a332fcb871dde86bb690e"
+    },
+    {
+      "file": "native-normal/taobao-product-country-dark.png",
+      "sha256": "078920c401858a3e77141a4eb9f21531c8e654f6be87a0d5e9d72c07c56f484d"
+    },
+    {
+      "file": "native-normal/taobao-product-victorian-dark.png",
+      "sha256": "78adb91652205df16dc968f3f4aa6914e1903c3fd355a2111ceeecd4532e7d60"
+    },
+    {
+      "file": "native-normal/taobao-chooser-default-light.png",
+      "sha256": "ccd448fe207a52b9048fcd3abad4eddb42119363ea15e3e51621b2319a245e7d"
+    },
+    {
+      "file": "native-normal/taobao-chooser-gothic-light.png",
+      "sha256": "80fe2dd042701e7848ddcb25f897b36fc91979a2485d1937a845879dcba3f513"
+    },
+    {
+      "file": "native-normal/taobao-chooser-chinese-light.png",
+      "sha256": "b0f238412e937e1051b0a145007009e70409159653125e9250eb71755d95359e"
+    },
+    {
+      "file": "native-normal/taobao-chooser-classic-light.png",
+      "sha256": "818f0d784f3c3af012b530b611bcca4f4900c3ae641857405b4779c13d36ca5d"
+    },
+    {
+      "file": "native-normal/taobao-chooser-navy-light.png",
+      "sha256": "bce821c9e29d8177f09fe45c8ea59e4819c0dffe93f8a75da982d869d93b411b"
+    },
+    {
+      "file": "native-normal/taobao-chooser-country-light.png",
+      "sha256": "81d0fe17c25829c71e1919bad873c51fde809c31ac373ff29ec5c5ce268c24c2"
+    },
+    {
+      "file": "native-normal/taobao-chooser-victorian-light.png",
+      "sha256": "c6a8ce43bbc5555caae8d6b7fbfa5a97b26fc514fd651ee33cd5ac287df2ecc7"
+    },
+    {
+      "file": "native-normal/taobao-chooser-default-dark.png",
+      "sha256": "2941e826c04169fd83b3ca48ac2ec4ac76d92f6a152627096d5d7e358fa68bb0"
+    },
+    {
+      "file": "native-normal/taobao-chooser-gothic-dark.png",
+      "sha256": "8a6c79cec47ea1debee4c043c3f6d1bf89e4c806d55eae408f35717f99254826"
+    },
+    {
+      "file": "native-normal/taobao-chooser-chinese-dark.png",
+      "sha256": "9737722a1b335ace1102f7504e8abb8db73c5dd9bcf0a06ebe0ba1f00934541f"
+    },
+    {
+      "file": "native-normal/taobao-chooser-classic-dark.png",
+      "sha256": "1bd73e6e2220e190f387fddfb2c96d09d1c0333234926ba8962699a876ba65b4"
+    },
+    {
+      "file": "native-normal/taobao-chooser-navy-dark.png",
+      "sha256": "972e22f20315249da070349b944a1c3c8840de1eb18781f689d69b0a9c4b1e05"
+    },
+    {
+      "file": "native-normal/taobao-chooser-country-dark.png",
+      "sha256": "a918a389612fafaec3be047cc9b2db2ef4cd8bda2f1f93fecf61b43e87943647"
+    },
+    {
+      "file": "native-normal/taobao-chooser-victorian-dark.png",
+      "sha256": "ed66b982ef58f4dd3c8f3f605497636fa952e7d980c51e513d65320d579fef60"
+    },
+    {
+      "file": "native-normal/taobao-tail-default-light.png",
+      "sha256": "4ff1f6c0b2c9b9045c5234caf5fcb796b0ac9f4af6bb19173a0adc7219b0d889"
+    },
+    {
+      "file": "native-normal/taobao-tail-gothic-light.png",
+      "sha256": "3cc2f023a30058defac49dfc79d4fe86865fd047c68c920d7a99d313c774f125"
+    },
+    {
+      "file": "native-normal/taobao-tail-chinese-light.png",
+      "sha256": "73d3beeaff3032e829b7302389d0660ab8624e779a578c1995d78d03fbfc5d06"
+    },
+    {
+      "file": "native-normal/taobao-tail-classic-light.png",
+      "sha256": "296b1d24bc241d383c64a0fddf055c5d82d7459fecf2eafa217028aea3f0141d"
+    },
+    {
+      "file": "native-normal/taobao-tail-navy-light.png",
+      "sha256": "4191cf960d80ed4815219f382e6d2791d730c9711da91e1078118c0cbe0f12ac"
+    },
+    {
+      "file": "native-normal/taobao-tail-country-light.png",
+      "sha256": "bce9de7c0cd1d654c549657e97314a691877e3b85190ac6cfda78a1fa49e981f"
+    },
+    {
+      "file": "native-normal/taobao-tail-victorian-light.png",
+      "sha256": "85b3bb21f9793b3a07c6d397d9df8004c80c271b3a29e1c2180a505216f1fc88"
+    },
+    {
+      "file": "native-normal/taobao-tail-default-dark.png",
+      "sha256": "5e904ddb94544471e71f1cafc656a153cf67ad483f1eba38930c6a6bfe498bfa"
+    },
+    {
+      "file": "native-normal/taobao-tail-gothic-dark.png",
+      "sha256": "7ba90c20a8518b92c0673dd3f8fe8f92d8351b497b23e6953e3ce884495ae027"
+    },
+    {
+      "file": "native-normal/taobao-tail-chinese-dark.png",
+      "sha256": "8ad3db612a3ab9acebb84966f3cf7618a488d265c245a96542737b5d7b2d5e6c"
+    },
+    {
+      "file": "native-normal/taobao-tail-classic-dark.png",
+      "sha256": "3a81e4b2cc9f2119ec5cb76cf93491842d20a1149087e0fc2ea75540370d5b37"
+    },
+    {
+      "file": "native-normal/taobao-tail-navy-dark.png",
+      "sha256": "78a410268b1dc885adc95c37a3702a6e758c2128ba90738495a4c8c909b4502d"
+    },
+    {
+      "file": "native-normal/taobao-tail-country-dark.png",
+      "sha256": "e2c95d91f6f060edb7de7ae954d11999731617e11975315212d96f38ab631090"
+    },
+    {
+      "file": "native-normal/taobao-tail-victorian-dark.png",
+      "sha256": "13da435198c926d515df65fafe3833cd01d7914a919e87115fc2a482ba67fa2b"
+    },
+    {
+      "file": "native-small/taobao-product-default-light-small.png",
+      "sha256": "452f6e565fd8663a1680737958e7df5748c2a7c17b5c9b32b9d2e60019bd8753"
+    },
+    {
+      "file": "native-small/taobao-product-gothic-light-small.png",
+      "sha256": "e2892c35fbe2bd667530502780a2f04414637e3b461c538e0d73b649978fde2d"
+    },
+    {
+      "file": "native-small/taobao-product-chinese-light-small.png",
+      "sha256": "66bcb486d693f4987672a6c231ad2a1ceaf3532815f1fc6fe90eb1d5f0236cb3"
+    },
+    {
+      "file": "native-small/taobao-product-classic-light-small.png",
+      "sha256": "391dca5553f9b9930ea16079fbfd47bd4b6c8a7a16c9fbc2c819d05377476233"
+    },
+    {
+      "file": "native-small/taobao-product-navy-light-small.png",
+      "sha256": "2f802c97916bae351f64538c6d52035f843c6f764d95525ab749e5db2fe01f53"
+    },
+    {
+      "file": "native-small/taobao-product-country-light-small.png",
+      "sha256": "f8696c73e3307fd214db56f3578f51acf23447badeaf68c6befc3a94f88cc73e"
+    },
+    {
+      "file": "native-small/taobao-product-victorian-light-small.png",
+      "sha256": "ee7db3a3624a44fa4030ef51e3e012f74b94f9edbd0ac8b2efc4dd40ad3502d7"
+    },
+    {
+      "file": "native-small/taobao-product-default-dark-small.png",
+      "sha256": "2c77143fb4a782bdaa941c573891eb67dbabdb214f40fec0da32415dc0eafb2c"
+    },
+    {
+      "file": "native-small/taobao-product-gothic-dark-small.png",
+      "sha256": "10dd521b54931d255a8c66af4fc2bc588bb6bc4f7268cf754e368d4c8dc1d087"
+    },
+    {
+      "file": "native-small/taobao-product-chinese-dark-small.png",
+      "sha256": "80268fd38459223b8cca67d8718287c2461f42ae44e86b18ad7aa4df3d2ab4e1"
+    },
+    {
+      "file": "native-small/taobao-product-classic-dark-small.png",
+      "sha256": "7f2f27395bcec749b651849bc251f7f00b11023493253752b8b3df019dea84ee"
+    },
+    {
+      "file": "native-small/taobao-product-navy-dark-small.png",
+      "sha256": "231b5c75e40d53518f03017f1daf54c0433cbed556467f4983526228cec6fd4e"
+    },
+    {
+      "file": "native-small/taobao-product-country-dark-small.png",
+      "sha256": "00118389d46400c3b3dd40545d6c92cd0dd9a83e352b9dac1e0ca7680ee4477f"
+    },
+    {
+      "file": "native-small/taobao-product-victorian-dark-small.png",
+      "sha256": "9eddb25822d78ad6fcd482b30da781892f07c3f4ac4c3f7407791a146672f098"
+    },
+    {
+      "file": "native-small/taobao-chooser-default-light-small.png",
+      "sha256": "8c0956c9954cce378e9a14319e61edecde5e2b4347c706848a29d4dadd5e7e9d"
+    },
+    {
+      "file": "native-small/taobao-chooser-gothic-light-small.png",
+      "sha256": "de001ff43a37c565a9c2f43a01f29a167a2b773d3a1e86e61ad2a8cc5fa86bab"
+    },
+    {
+      "file": "native-small/taobao-chooser-chinese-light-small.png",
+      "sha256": "46f3f410a1a49f3a23417f1615e7b6836487f0648b597132a4c8c4871dfd758d"
+    },
+    {
+      "file": "native-small/taobao-chooser-classic-light-small.png",
+      "sha256": "ab9b4c6bc9dfcfff19100dac9119ac660e6438358598bb86cd98fce1bb7378fe"
+    },
+    {
+      "file": "native-small/taobao-chooser-navy-light-small.png",
+      "sha256": "60fb8601530dce763e46762e6227eeb5c63737e5ecf9bd6fd43c4bfbb8196770"
+    },
+    {
+      "file": "native-small/taobao-chooser-country-light-small.png",
+      "sha256": "9277a995fc0fa0ba38da9806da755e749365fd808d0f4a232f795ddfe2409c48"
+    },
+    {
+      "file": "native-small/taobao-chooser-victorian-light-small.png",
+      "sha256": "3373e5b5a41339dec7b655682fa10803ffab4f4d4743090bba805526830b7a5b"
+    },
+    {
+      "file": "native-small/taobao-chooser-default-dark-small.png",
+      "sha256": "678d8d6ce7a5efc4cadd0a1f907b3ea9ac780ef8c308e24fac651ff276f9e61c"
+    },
+    {
+      "file": "native-small/taobao-chooser-gothic-dark-small.png",
+      "sha256": "cb4b0c1cb6492b284b014b7f9722bd6e4c9c0395637b223a2b41095d32a5f1c4"
+    },
+    {
+      "file": "native-small/taobao-chooser-chinese-dark-small.png",
+      "sha256": "eb006d7994258b1623189f6e10f60f7d0c721fa6e025a1913e97ab58a05bbad5"
+    },
+    {
+      "file": "native-small/taobao-chooser-classic-dark-small.png",
+      "sha256": "a9c9ad76596804306e71b0619741c99f0aa3b84f15ed7a48773733e24be9232f"
+    },
+    {
+      "file": "native-small/taobao-chooser-navy-dark-small.png",
+      "sha256": "8f7d5e35bb7a9863b20409e2e4b829a865b528855cad4fcfdb5142f865a0b00b"
+    },
+    {
+      "file": "native-small/taobao-chooser-country-dark-small.png",
+      "sha256": "34827cd51e8461d6bb6f610cc1c1a404d27579ec011be6e0bdea164d7e6c2f21"
+    },
+    {
+      "file": "native-small/taobao-chooser-victorian-dark-small.png",
+      "sha256": "ffff2a9308b23d3634df1e81dd45e3da237979bd1d667753c92fff41ec67d2f6"
+    },
+    {
+      "file": "native-small/taobao-tail-default-light-small.png",
+      "sha256": "a78dd6b9fdea4a5a088347df75e2168d5c26799d39d782ad5ea9fe38d7cb4807"
+    },
+    {
+      "file": "native-small/taobao-tail-gothic-light-small.png",
+      "sha256": "df3781ddc7188a7c25329b34936ab99a2b9d5589dd7703484dc5ffedfe0d666e"
+    },
+    {
+      "file": "native-small/taobao-tail-chinese-light-small.png",
+      "sha256": "bc7c2775e4bc9babc0fd868e0e99c45ba9aae60ff9d2cad033ebcfdb91ca8be7"
+    },
+    {
+      "file": "native-small/taobao-tail-classic-light-small.png",
+      "sha256": "d12b9d6e08afd92e0d747456ee7b23b27c78cfa1281d07104542f870e689bc1a"
+    },
+    {
+      "file": "native-small/taobao-tail-navy-light-small.png",
+      "sha256": "7ff79617e7e93f475b8e3965040ccf42980afbee1cc1e23662639f481b96c9d4"
+    },
+    {
+      "file": "native-small/taobao-tail-country-light-small.png",
+      "sha256": "9cde3f62119e6c3c34b5f8571f72d9d47640febdf796da2861ad47673293a8cb"
+    },
+    {
+      "file": "native-small/taobao-tail-victorian-light-small.png",
+      "sha256": "c620b3dbded2c7009fd0619299c5571b4c26a3f863cac037e0bf4b84affa1286"
+    },
+    {
+      "file": "native-small/taobao-tail-default-dark-small.png",
+      "sha256": "eaf5ede0bdc1d3b467ffd1c53be3db3e8c2dd6755ad661948b5ffb2045057ad3"
+    },
+    {
+      "file": "native-small/taobao-tail-gothic-dark-small.png",
+      "sha256": "fef5d45c10683d591c8b0fcd3f8b5150d89b4ab859853e3ba251faecae2194d5"
+    },
+    {
+      "file": "native-small/taobao-tail-chinese-dark-small.png",
+      "sha256": "46507c88ad67eca36377106343762c6713f3374964e055030ce160117dc709b8"
+    },
+    {
+      "file": "native-small/taobao-tail-classic-dark-small.png",
+      "sha256": "452e766b1c8b9e6895601bb0cbce30ba8731d28c6034be3961b4648026096f7d"
+    },
+    {
+      "file": "native-small/taobao-tail-navy-dark-small.png",
+      "sha256": "5a3d3b796e499e7eca5fd2a385969c64e49024d01937de2065f04d799f9a34db"
+    },
+    {
+      "file": "native-small/taobao-tail-country-dark-small.png",
+      "sha256": "093325a72899982c2509de1b7182c290c06171d8ba257274e910ca42f0288961"
+    },
+    {
+      "file": "native-small/taobao-tail-victorian-dark-small.png",
+      "sha256": "fb4ebf802f332c6052c0b0ddb4f2f21b74e4b186dcd1dcbfba40facfc0b25aca"
+    }
+  ],
+  "count": 84,
+  "pixels": "1080x2400",
+  "small": "320dp / fontScale2.0",
+  "normal": "411dp / fontScale1.0",
+  "source": "independent AVD actual Compose screenshots, captured external Intents; no Taobao page"
+}

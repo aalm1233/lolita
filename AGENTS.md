@@ -336,7 +336,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=151, versionName="2.74.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=152, versionName="2.75.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -754,3 +754,8 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 本地公开包v1可附明确sizeTable；三店浏览版补41张独立表，421原图字节保留，不重新采集或猜测规格。前置设计与本轮实施/真实验收分别见`docs/plans/2026-11-06-square-browse-first-design.md`和`docs/square-browse-implementation-2026-11-06.md`。云同步未接入，付费0次，主助手淘宝访问0次。
 
 - 2.74.0／151正式源码`3c756976`与标签已普通推送；62项定向JVM、12个去重设备方法、七皮肤浅暗／320dp两倍字／真实IME／完整导航及MainActivity通过。提交归档clean原签名Release、37项目assets/24图片资源与2.73.1覆盖两次启动保全45表/163物品/720图片及设置；正式App新增一件心愿仅写Item/来源，账本不变。双平台分发最终状态见`docs/square-browse-release-2.74.0-verification.json`。公开Gitee版本API最高2.74.0，App完整手动检查遇Gitee拒绝/频控，未冒充通过；直接APK可用。依持续授权仅清理最旧Gitee2.66.2 APK，GitHub/三份本机副本/旧页/校验保留。两台任务AVD已关闭、数据保留。Room34/备份16，真实付费0、主助手淘宝访问0。
+
+## 广场商品外跳（2.75.0）
+
+- 普通商品摘要和尾款详情提供皮肤感知“淘宝查看”，按当前单品/颜色/尺码来源过滤、去重；多链接逐条标注原商品标题与价格阶段供主动选择，取消留在详情。`SquareTaobaoButton`优先淘宝包ACTION_VIEW，失败回退系统HTTPS处理；均不可用可复制链接。仅允许taobao.com/tmall.com及子域、无用户信息的标准HTTPS链接，非淘宝来源保留原文。
+- 直接心愿及尾款只读规则保留，不写业务数据、账本、图片或私人规格，Room34/备份16不变。前置艺术图稿及范围见`docs/plans/2026-11-06-square-taobao.md`。`SquareBrowseTest`定向覆盖受控Intent优先/回退/失败复制、来源选择/取消、七皮肤浅暗、320dp两倍字与无效来源；测试不实际打开淘宝，不冒充真实淘宝客户端验证。

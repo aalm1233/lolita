@@ -61,7 +61,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
         }
     }}
     Scaffold(contentWindowInsets=WindowInsets(0,0,0,0),containerColor=androidx.compose.ui.graphics.Color.Transparent,
-        snackbarHost={SnackbarHost(snack)},bottomBar={
+        snackbarHost={SnackbarHost(snack) { data -> Snackbar(data, actionOnNewLine = true) }},bottomBar={
             if(event?.canRegister==true) {
                 if(choosing) {
                     val units=remember(unitJson){viewModel.units()}
@@ -83,8 +83,8 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
                 catalog!=null && event==null->SquareBrowseFeed(catalog!!,viewModel,showAmounts)
                 event!=null && choosing && step>0->SquareRegistrationScreen(catalog!!,event,viewModel)
                 event!=null && choosing->SquareSelection(catalog!!,event,viewModel,busy!=null)
-                event!=null && !event.canRegister->SquareTailDetail(catalog!!,event,viewModel,showAmounts)
-                event!=null->key(event.id){SquareBrowseDetail(catalog!!,event,viewModel,showAmounts)}
+                event!=null && !event.canRegister->SquareTailDetail(catalog!!,event,viewModel,showAmounts,snack)
+                event!=null->key(event.id){SquareBrowseDetail(catalog!!,event,viewModel,showAmounts,snack)}
             }
             if(busy!=null)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
         }

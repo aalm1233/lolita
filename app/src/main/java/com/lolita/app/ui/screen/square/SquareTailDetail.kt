@@ -17,7 +17,7 @@ import com.lolita.app.ui.screen.common.*
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 
 @Composable
-internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, amounts: Boolean) {
+internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, amounts: Boolean, snackbar: SnackbarHostState) {
     val p = c.products.first { it.id in e.productIds }
     val photos = p.images.filter { it.role == "main" }.sortedBy { it.order }.map { it.path }
     val documents = p.images.filter { it.role == "detail" }.sortedBy { it.order }.map { it.path }.distinct()
@@ -34,6 +34,7 @@ internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewMo
             if (amounts) { Text(e.price, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
                 Text(p.priceType, style = MaterialTheme.typography.bodySmall) }
         }
+        item { SquareTaobaoButton(listOf(p), snackbar) }
         item { LolitaSection("本批资料") { row {
             if (p.materials.orEmpty().isEmpty()) { Text("材质　未提供"); Text("尺码表　未提供") }
             else { SquareMaterialFacts(p.materials.orEmpty().map { it.facts }); p.materials.orEmpty().forEach { it.sizeTable?.let { table -> SquareSizeTableView(table) } } }

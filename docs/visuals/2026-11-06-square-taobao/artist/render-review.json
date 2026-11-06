@@ -1,0 +1,19 @@
+{
+  "requests": [],
+  "errors": [],
+  "results": [
+    {
+      "board": "light",
+      "phones": 7
+    },
+    {
+      "board": "dark",
+      "phones": 7
+    },
+    {
+      "board": "states",
+      "phones": 6
+    }
+  ],
+  "nativeValidation": false
+}

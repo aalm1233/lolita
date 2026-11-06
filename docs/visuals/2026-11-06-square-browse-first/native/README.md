@@ -8,3 +8,5 @@
 - missing-component：没有独立图时不借用系列图作为封面。tail：尾款没有保存入口。info：可按需打开与返回关闭。small-real-ime-search：真实系统键盘。
 
 历史原型另在../artist。MainActivity/Release实拍与覆盖保全记录见实施报告。
+
+田园暗色普通商品图采用同轮较早的已加载原生帧（本机settled归档），避免后续归档里图片异步加载中的空画框覆盖已验收截图；没有编辑或补绘截图。商品布局与最终相同，单件成功反馈由最终app/after-black帧核对。

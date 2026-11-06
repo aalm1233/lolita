@@ -9,6 +9,26 @@
       "passed": true
     },
     {
+      "label": "可选解释默认收起，页面无教学段落",
+      "passed": true
+    },
+    {
+      "label": "info点按显示必要补充并关联语义",
+      "passed": true
+    },
+    {
+      "label": "Escape关闭提示并保留焦点",
+      "passed": true
+    },
+    {
+      "label": "info再次点按收起",
+      "passed": true
+    },
+    {
+      "label": "点击提示外部关闭",
+      "passed": true
+    },
+    {
       "label": "切KC同步主图、名称、材质与独立尺寸表",
       "passed": true
     },
@@ -358,6 +378,14 @@
       ]
     },
     {
+      "label": "light提示位于页面内",
+      "passed": true,
+      "left": true,
+      "top": true,
+      "right": true,
+      "bottom": true
+    },
+    {
       "label": "dark七皮肤图像、页面横向和主动作边界",
       "passed": true,
       "layouts": [
@@ -593,6 +621,14 @@
           ]
         }
       ]
+    },
+    {
+      "label": "dark提示位于页面内",
+      "passed": true,
+      "left": true,
+      "top": true,
+      "right": true,
+      "bottom": true
     },
     {
       "label": "small-light七皮肤图像、页面横向和主动作边界",
@@ -832,6 +868,14 @@
       ]
     },
     {
+      "label": "small-light提示位于页面内",
+      "passed": true,
+      "left": true,
+      "top": true,
+      "right": true,
+      "bottom": true
+    },
+    {
       "label": "small-dark七皮肤图像、页面横向和主动作边界",
       "passed": true,
       "layouts": [
@@ -1067,6 +1111,14 @@
           ]
         }
       ]
+    },
+    {
+      "label": "small-dark提示位于页面内",
+      "passed": true,
+      "left": true,
+      "top": true,
+      "right": true,
+      "bottom": true
     },
     {
       "label": "原始图片逐个SHA匹配，未绘制服饰或商标",

@@ -1,0 +1,1076 @@
+{
+  "type": "HTML prototype verification only; not Compose or device validation",
+  "networkPolicy": "HTTP/HTTPS aborted",
+  "attemptedNetworkRequests": [],
+  "pageErrors": [],
+  "checks": [
+    {
+      "label": "首屏展示商品、当前名称与加入心愿",
+      "passed": true
+    },
+    {
+      "label": "切KC同步主图、名称、材质与独立尺寸表",
+      "passed": true
+    },
+    {
+      "label": "未选颜色尺码可原地一键加入，无抽屉或编辑器",
+      "passed": true
+    },
+    {
+      "label": "原地加入保留滚动位置",
+      "passed": true
+    },
+    {
+      "label": "心愿保留KC封面和未选规格",
+      "passed": true
+    },
+    {
+      "label": "心愿返回保留原商品与滚动",
+      "passed": true
+    },
+    {
+      "label": "切内搭使用独立图片和材质",
+      "passed": true
+    },
+    {
+      "label": "抽屉默认只选当前内搭",
+      "passed": true
+    },
+    {
+      "label": "按需多选保留两个部件",
+      "passed": true
+    },
+    {
+      "label": "自主组合可合为一件",
+      "passed": true
+    },
+    {
+      "label": "多件加入成功",
+      "passed": true
+    },
+    {
+      "label": "临时心愿展示KC与内搭，重复KC不再新增",
+      "passed": true
+    },
+    {
+      "label": "第二店款式颜色切图",
+      "passed": true
+    },
+    {
+      "label": "第二店原表能按宽阅读",
+      "passed": true
+    },
+    {
+      "label": "原图支持200%放大并保留原件",
+      "passed": true
+    },
+    {
+      "label": "关闭原图保留所看短款黑色",
+      "passed": true
+    },
+    {
+      "label": "关闭显示金额隐藏报价文字",
+      "passed": true
+    },
+    {
+      "label": "蓝色S加入后命中确切心愿身份",
+      "passed": true
+    },
+    {
+      "label": "换黑色不错误继承蓝色已有状态",
+      "passed": true
+    },
+    {
+      "label": "换回蓝色S恢复已有心愿状态",
+      "passed": true
+    },
+    {
+      "label": "另一码不复用S心愿状态",
+      "passed": true
+    },
+    {
+      "label": "取消JSK仅选KC后对象图与规格不串用",
+      "passed": true
+    },
+    {
+      "label": "单KC成功回执使用KC图且不带裙码L",
+      "passed": true
+    },
+    {
+      "label": "组合回执显示真实两件与各自独立尺码",
+      "passed": true
+    },
+    {
+      "label": "心愿列表保留组合身份和两个部件图",
+      "passed": true
+    },
+    {
+      "label": "心愿顶栏返回原商品上下文",
+      "passed": true
+    },
+    {
+      "label": "短款OP报价核对为610",
+      "passed": true
+    },
+    {
+      "label": "袖套报价核对为175",
+      "passed": true
+    },
+    {
+      "label": "尾款只读不显示心愿动作，保留本批图片及阶段警示",
+      "passed": true
+    },
+    {
+      "label": "light七皮肤图像、页面横向和主动作边界",
+      "passed": true,
+      "layouts": [
+        {
+          "skin": "sweet",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "sweet",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "dark七皮肤图像、页面横向和主动作边界",
+      "passed": true,
+      "layouts": [
+        {
+          "skin": "sweet",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "sweet",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 46,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 388,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 48,
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "small-light七皮肤图像、页面横向和主动作边界",
+      "passed": true,
+      "layouts": [
+        {
+          "skin": "sweet",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "sweet",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "small-dark七皮肤图像、页面横向和主动作边界",
+      "passed": true,
+      "layouts": [
+        {
+          "skin": "sweet",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "sweet",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "gothic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "chinese",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "classic",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "navy",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "country",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "skin": "victorian",
+          "width": 318,
+          "overflow": false,
+          "bodyOverflow": false,
+          "broken": 0,
+          "primary": [
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "加入心愿",
+              "height": 66,
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "原始图片逐个SHA匹配，未绘制服饰或商标",
+      "passed": true
+    }
+  ]
+}

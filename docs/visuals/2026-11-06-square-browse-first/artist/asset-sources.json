@@ -1,0 +1,287 @@
+[
+  {
+    "file": "assets/model.webp",
+    "source": "images/15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047.webp",
+    "sourceSHA256": "15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047",
+    "productId": "1088022205740",
+    "role": "main",
+    "order": 1,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047"
+  },
+  {
+    "file": "assets/dress.webp",
+    "source": "images/a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288.webp",
+    "sourceSHA256": "a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 3,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288"
+  },
+  {
+    "file": "assets/kc.webp",
+    "source": "images/95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53.webp",
+    "sourceSHA256": "95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 2,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53"
+  },
+  {
+    "file": "assets/blouse.webp",
+    "source": "images/72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e.webp",
+    "sourceSHA256": "72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 1,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e"
+  },
+  {
+    "file": "assets/set.webp",
+    "source": "images/77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c.webp",
+    "sourceSHA256": "77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 5,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c"
+  },
+  {
+    "file": "assets/jsk-info.webp",
+    "source": "images/1a013c82c21db63981b9d84511106cd8b1d04dbee608ca6629e1a88c2a9e1d48.webp",
+    "sourceSHA256": "1a013c82c21db63981b9d84511106cd8b1d04dbee608ca6629e1a88c2a9e1d48",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 8,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "1a013c82c21db63981b9d84511106cd8b1d04dbee608ca6629e1a88c2a9e1d48"
+  },
+  {
+    "file": "assets/kc-info.webp",
+    "source": "images/6c33652305451952fd3260cdb713f7a6e79f5fa508cf08d8758ec572d62afff9.webp",
+    "sourceSHA256": "6c33652305451952fd3260cdb713f7a6e79f5fa508cf08d8758ec572d62afff9",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 10,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "6c33652305451952fd3260cdb713f7a6e79f5fa508cf08d8758ec572d62afff9"
+  },
+  {
+    "file": "assets/blouse-info.webp",
+    "source": "images/bb719f1a9c129b32225feb5704b6c51cb77d6e140d72c3cfad160c5c6ee71dad.webp",
+    "sourceSHA256": "bb719f1a9c129b32225feb5704b6c51cb77d6e140d72c3cfad160c5c6ee71dad",
+    "productId": "1088022205740",
+    "role": "detail",
+    "order": 11,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "bb719f1a9c129b32225feb5704b6c51cb77d6e140d72c3cfad160c5c6ee71dad"
+  },
+  {
+    "file": "assets/back.webp",
+    "source": "images/2dac8c60a072a572a185b4a18394f2dbb30b7853bf83ec1c74d17d3c0458c706.webp",
+    "sourceSHA256": "2dac8c60a072a572a185b4a18394f2dbb30b7853bf83ec1c74d17d3c0458c706",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 4,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "2dac8c60a072a572a185b4a18394f2dbb30b7853bf83ec1c74d17d3c0458c706"
+  },
+  {
+    "file": "assets/black-dress.webp",
+    "source": "images/891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5.webp",
+    "sourceSHA256": "891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5",
+    "productId": "1088022205740",
+    "role": "sku",
+    "order": 24,
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip",
+    "outputSHA256": "891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5"
+  },
+  {
+    "file": "assets/lilizi-main-1.jpg",
+    "source": "images/6bc3085252af20b31a68100c477688515463d49d9153363bb75baa6dbdc8517c.jpg",
+    "productId": "1016937432843",
+    "role": "main",
+    "sourceSHA256": "6bc3085252af20b31a68100c477688515463d49d9153363bb75baa6dbdc8517c",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-main-2.jpg",
+    "source": "images/542655c116e0a1df11400b7cccca26ff922bb30616643d6111c60524716de96e.jpg",
+    "productId": "1016937432843",
+    "role": "main",
+    "sourceSHA256": "542655c116e0a1df11400b7cccca26ff922bb30616643d6111c60524716de96e",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-main-3.jpg",
+    "source": "images/de0449002ea3dcfd8daace14de70300a491fab3df7528d6ff1913bfbe2dfe5c0.jpg",
+    "productId": "1016937432843",
+    "role": "main",
+    "sourceSHA256": "de0449002ea3dcfd8daace14de70300a491fab3df7528d6ff1913bfbe2dfe5c0",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-1.jpg",
+    "source": "images/e9e78505f1b5d2d64686778356a29507df5da58c1f5e0c9220c4217b7fcc6a9b.jpg",
+    "productId": "1016937432843",
+    "role": "十字OP长款 紫色",
+    "sourceSHA256": "e9e78505f1b5d2d64686778356a29507df5da58c1f5e0c9220c4217b7fcc6a9b",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-2.jpg",
+    "source": "images/83f9c5789126c3f834233afe2ed12ac94d7e25c16f2e8db0e0f84237b75e10a2.jpg",
+    "productId": "1016937432843",
+    "role": "十字OP长款 黑色",
+    "sourceSHA256": "83f9c5789126c3f834233afe2ed12ac94d7e25c16f2e8db0e0f84237b75e10a2",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-3.jpg",
+    "source": "images/16091f3383212ed383487688a2cc71506f44011506564bb67e20d927521209f4.jpg",
+    "productId": "1016937432843",
+    "role": "十字OP短款 紫色",
+    "sourceSHA256": "16091f3383212ed383487688a2cc71506f44011506564bb67e20d927521209f4",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-4.jpg",
+    "source": "images/241d15a90543ea8a1634c1d363ab31eb5dd086223598a5e713bdcf2e5c4e82e8.jpg",
+    "productId": "1016937432843",
+    "role": "十字OP短款 黑色",
+    "sourceSHA256": "241d15a90543ea8a1634c1d363ab31eb5dd086223598a5e713bdcf2e5c4e82e8",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-5.jpg",
+    "source": "images/7ee3b533a6ecbdcdbe839d20ce5f8955f806d52c8c78fbc9cc1fd366f24b37d1.jpg",
+    "productId": "1016937432843",
+    "role": "袖套 None",
+    "sourceSHA256": "7ee3b533a6ecbdcdbe839d20ce5f8955f806d52c8c78fbc9cc1fd366f24b37d1",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-info-1.png",
+    "source": "images/d29dd573ff521a10e4bb0121da734c8598e634fd95db44632ef85aba0902a2e2.png",
+    "productId": "1016937432843",
+    "role": "detail",
+    "sourceSHA256": "d29dd573ff521a10e4bb0121da734c8598e634fd95db44632ef85aba0902a2e2",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-info-2.png",
+    "source": "images/b46818006695e47273ab9f47a76ec3c534ae12ecdfea0a6b13ea643f987ec15c.png",
+    "productId": "1016937432843",
+    "role": "detail",
+    "sourceSHA256": "b46818006695e47273ab9f47a76ec3c534ae12ecdfea0a6b13ea643f987ec15c",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/lilizi-info-3.png",
+    "source": "images/57919d36b9ab143e089051832afe841d19e64cd76f1581a5a23371f9990464d5.png",
+    "productId": "1016937432843",
+    "role": "detail",
+    "sourceSHA256": "57919d36b9ab143e089051832afe841d19e64cd76f1581a5a23371f9990464d5",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/bg-country.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-country.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "8557db2d017ceb94f12cac792712ae183a2080ab15f000d3fbe56eb0fba53877",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-sweet.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-sweet.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "da1c9cb0c76549bf465327fbad6d9c273e042ad3a5e02a8b65c95c2b3bef24c9",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-victorian.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-victorian.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "89608af5750fb07f2d11ef82e219a57657c74ce4bf73c5c63b6cc2b8647f3a0e",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-navy.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-navy.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "16fe0dbc146c6876ee4ec408b07b04dcce60f8a2d8cb3427a293aa44715921ac",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-classic.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-classic.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "3450400e35157eaae94d3a41daac2675529f9665b07a040d4f69306805c4287e",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-gothic.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-gothic.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "3e32a00e0208a983d01cf1d6d16980316106d34e80f343e98c2a8442b983d801",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/bg-chinese.webp",
+    "source": "docs/visuals/2026-11-05-square-design/assets/bg-chinese.webp",
+    "role": "existing-app-skin-background-preview",
+    "sourceSHA256": "f7138805330d980a6049fe7b5de8b734f74c370cc3d47a928b45ac44f40ce68e",
+    "previewOnly": true
+  },
+  {
+    "file": "assets/neo-tail-1.jpg",
+    "source": "images/0b4ab4681ca8f4884e55e84016dbd1ee6dd763db83ef3c95ad767d31bb145b7a.jpg",
+    "productId": "1090134478903",
+    "role": "main",
+    "sourceSHA256": "0b4ab4681ca8f4884e55e84016dbd1ee6dd763db83ef3c95ad767d31bb145b7a",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/neo-tail-2.jpg",
+    "source": "images/19a8e22b12def9ceb05d6ff50d05e1e21faac55e1b3c88e2b3a5af10c6dcb1ab.jpg",
+    "productId": "1090134478903",
+    "role": "main",
+    "sourceSHA256": "19a8e22b12def9ceb05d6ff50d05e1e21faac55e1b3c88e2b3a5af10c6dcb1ab",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  },
+  {
+    "file": "assets/neo-tail-3.jpg",
+    "source": "images/debb75143e0f4babb40d19ea1b8ccb0a47565b0c1cd05929f8d515ccab3ac010.jpg",
+    "productId": "1090134478903",
+    "role": "detail",
+    "sourceSHA256": "debb75143e0f4babb40d19ea1b8ccb0a47565b0c1cd05929f8d515ccab3ac010",
+    "previewOnly": true,
+    "sourcePackage": "三店广场资料-单品修订包-20261106.zip"
+  }
+]

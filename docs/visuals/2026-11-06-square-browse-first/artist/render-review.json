@@ -1,0 +1,53 @@
+{
+  "network": "HTTP/HTTPS blocked",
+  "attemptedNetworkRequests": [],
+  "pageErrors": [],
+  "results": [
+    {
+      "board": "story",
+      "phones": 6,
+      "brokenImages": []
+    },
+    {
+      "board": "details",
+      "phones": 5,
+      "brokenImages": []
+    },
+    {
+      "board": "light",
+      "phones": 14,
+      "brokenImages": []
+    },
+    {
+      "board": "dark",
+      "phones": 14,
+      "brokenImages": []
+    },
+    {
+      "board": "large",
+      "phones": 5,
+      "brokenImages": []
+    },
+    {
+      "board": "small-light",
+      "phones": 14,
+      "brokenImages": []
+    },
+    {
+      "board": "small-dark",
+      "phones": 14,
+      "brokenImages": []
+    },
+    {
+      "board": "states",
+      "phones": 2,
+      "brokenImages": []
+    },
+    {
+      "board": "interactive",
+      "phones": 1,
+      "brokenImages": []
+    }
+  ],
+  "nativeValidation": false
+}

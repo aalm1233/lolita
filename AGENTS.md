@@ -34,6 +34,8 @@
 
 - 2.73.1／150广场单品资料最终交付：源码`2479f718`及标签已普通推送；12项JVM、17项去重设备方法、七皮肤浅暗/320dp两倍字/真实IME与完整App逐件保存推进、KC独立图片和未知规格、暂停草稿通过。提交源码归档clean原签名Release、37项目assets/24图片资源与两段覆盖启动保全通过；GitHub/Gitee同APK/SHA256SUMS匿名全量下载、SHA/HEAD、源码标签及正式App手动检查当前/最新2.73.1通过。2.73.0整App走查发现回执未接线，由2.73.1修正并补真实NavHost测试。Room34/备份15、原衣橱与账本、0付费/0主助手淘宝访问；最终回执`docs/square-refinement-release-2.73.1-verification.json`，实施说明`docs/square-refinement-implementation-2026-11-06.md`。
 
+- 广场浏览动线重审见`docs/plans/2026-11-06-square-browse-first-design.md`：用户明确纠正为逛选→看商品图片/单品/颜色/参数→喜欢加入现有心愿。后续改造不得把完整SKU、四步拆分/选图、完整编辑器作为默认收藏门槛；未知尺码可后补，多件/个人组合按需，组合不冒充商家SKU/套餐、各件规格独立。新图稿在`docs/visuals/2026-11-06-square-browse-first/artist/`。本轮仅审视与前置设计，尚未替换2.73.1原生流程，未改Room/备份/版本或发布；拟议来源协议/备份16不是已升级事实。
+
 ## 架构与实现约定
 
 - 新 DAO 必须同步接到三处：`LolitaDatabase`、对应 `Repository`、`AppModule`。

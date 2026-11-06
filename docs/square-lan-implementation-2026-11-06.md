@@ -32,4 +32,13 @@ Room34、45实体、备份16不变；私人来源/账本/已拥有状态及原�
 
 ## 发布验证
 
-按用户要求执行2.76.0/154正式发布；最终源码、签名、覆盖保全、完整App前后台及双渠道下载结果在发布回执补齐。内网服务已启动，公网穿透尚未接入。
+源码 `707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8` 已集成并普通推送master，标签v2.76.0指向同一提交；隔离worktree以仅提交源码执行clean Release，2.76.0/154原签名、非调试、37项目assets/24旧图片字节一致。APK SHA256为 `1e8ddde8f6cfee20be1fee9595747a385afc65c88ef61b9bcf845b10cdef02cd`。
+
+在独立正式AVD从2.75.0原签名覆盖，使用固定current.json指定真实备份建立基线；两次冷启动45表所有字段/关联、160原物品、629原图片及设置摘要完全保全。正式App真实LAN获取资料及缩略、保存漫游JSK心愿成功：仅Item/来源各新增1条，原160物品所有字段、原629图与账本不变。实际停止API后冷启动319ms、前台返回26ms，广场缓存及下拉、首页导航正常，无网络错误弹窗；测试后恢复API常驻。
+
+正式AVD宿主在启用Vulkan时崩溃；保留同一AVD数据，改为host GLES冷启动并关闭崩溃报告弹窗后完成上述回归，没有清数据、重装绕过签名或将宿主故障记成App通过。真实已签名[在线](visuals/2026-11-06-square-lan/native/release-online.png)、[离线](visuals/2026-11-06-square-lan/native/release-offline.png)、[加入心愿](visuals/2026-11-06-square-lan/native/release-saved.png)截图已归档。内网服务已启动，公网穿透尚未接入；双渠道附件与更新入口以最终发布回执为准。
+
+
+Gitee本轮配额不足，按2026-10-28既有授权，只清理最旧2.67.0 APK附件。清理前已重新匿名完整下载GitHub旧包并核对SHA，另核对三份本机完整副本；旧发布页、SHA256SUMS与GitHub附件保留。正式Gitee新APK与校验附件匿名全量下载、SHA及HEAD通过，实际App手动检查返回Gitee拒绝访问/限流，不能宣称自动更新检查通过；未重复重试或改动更新模块。
+
+最终GitHub/Gitee正式同一APK与SHA256SUMS匿名完整下载、SHA与HEAD均通过；GitHub最高正式版本与源码标签指向核对通过。GitHub首次HEAD临时网络失败，仅重试HEAD后通过，没有重复无关测试。完整结果见[发布回执](square-lan-release-2.76.0-verification.json)，Gitee旧附件清理见[回执](gitee-apk-cleanup-2.67.0-2026-11-07.json)。两台本次测试AVD均已关闭并保留数据，临时签名引用已移除；API本机用户常驻服务已恢复运行。

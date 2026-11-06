@@ -40,6 +40,8 @@
 
 ### 广场内网服务（2.76.0）
 
+- 正式2.76.0/154源码`707cb822`与标签已普通推送；6项Python、27项JVM、11项去重设备方法及七皮肤浅暗/320dp两倍字/真实IME通过。clean原签名Release两次覆盖冷启动保全45表/160物品/629图和设置；真实LAN/停服务缓存/心愿原图独立通过。GitHub/Gitee同APK与校验文件匿名全量下载/SHA/HEAD通过，App实际更新检查遇Gitee限流单列；花生壳与新采集调度未启用。最终回执`docs/square-lan-release-2.76.0-verification.json`，实施说明`docs/square-lan-implementation-2026-11-06.md`。
+
 - 独立服务 `scripts/square/lan_service.py`：本地 `ingest` 对已核验公开包执行实际 Kotlin 合同、SHA和图片检查后写独立SQLite/WAL；逐动态及关联商品短事务、稳定revision/变更seq、缺席保留，售卖状态证据防陈旧复活。API仅明确只读业务路由，不提供SQL、文件浏览、发布或采集入口。`service_control.py`管理本机用户API常驻服务，不是Codex采集调度；后续定时任务继续由Codex→dsh→本地核验→入库，不由API触发淘宝访问。
 - App前台进入及广场下拉刷新读取变更游标，本地目录先展示；网络/协议/图片连接失败仅类别日志，不能弹Snackbar/Toast/弹窗/通知、清空缓存或阻塞衣橱。顶栏「广场服务」地址保存在noBackup文件，清空停止联网；HTTP仅私网IPv4/回环，其他HTTPS，不允许地址携带账号/路径/参数、不跟随重定向。
 - 列表缩略与详情原图按需下载，`SquareImageFetcher`复用全局Coil管线，原图SHA/字节/尺寸核对后持久缓存，刷新可重试失败缩略。心愿/旧登记仍先准备所需原图，复制独立UUID再沿原事务保存，已收藏不依赖服务；本地坏图保持原校验错误语义。缓存序列化保留参数显式null；目录SHA与游标绑定，不完整提交从0重放。

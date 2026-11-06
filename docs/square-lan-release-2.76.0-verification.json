@@ -1,0 +1,218 @@
+{
+  "stage": "Implemented, LAN verified, signed formal releases verified; app update check rate limited by Gitee",
+  "version": "2.76.0",
+  "versionCode": 154,
+  "sourceCommit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.76.0",
+    "version_code": 154,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+    "apk_sha256": "1e8ddde8f6cfee20be1fee9595747a385afc65c88ef61b9bcf845b10cdef02cd",
+    "bytes": 84005269
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.75.0/152",
+    "toVersion": "2.76.0/154",
+    "sameSignatureOverwrite": true,
+    "coldStarts": 2,
+    "tables": 45,
+    "items": 160,
+    "images": 629,
+    "allTableFieldsReferencesImagesAndPreferencesUnchanged": true,
+    "baseline": "2026-10-28 selected baseline",
+    "sourceCommit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8"
+  },
+  "actualApp": {
+    "passed": true,
+    "realLanApi": true,
+    "physicalDeviceTest": false,
+    "AVD": "Lolita_Square_LAN_Release_20261107",
+    "onlineCatalogAndThumbnail": true,
+    "directWishSaved": true,
+    "actualServiceStoppedOfflineCacheAndPullRefresh": true,
+    "noNetworkPopup": true,
+    "navigationAndForegroundUnblocked": true,
+    "coldLaunchOfflineMs": 319,
+    "foregroundReturnOfflineMs": 26,
+    "serviceRestoredRunning": true
+  },
+  "signedWish": {
+    "passed": true,
+    "originalItemsPreserved": 160,
+    "itemsAfter": 161,
+    "changedTables": [
+      "item_source_records",
+      "items"
+    ],
+    "onlyOneWishAndOneSourceAdded": true,
+    "allOriginalImagesPreserved": 629,
+    "ledgerUnchanged": true,
+    "allOriginalRowsUnchanged": true
+  },
+  "tests": {
+    "python": 6,
+    "JVM": 27,
+    "uniqueDeviceMethods": 11,
+    "normalAndSmallUiRuns": "7 new normal plus 3 UI normal plus 3 UI small; 4 legacy targeted"
+  },
+  "databaseVersion": 34,
+  "backupVersion": 16,
+  "taobaoMainAssistantAccess": 0,
+  "paidCalls": 0,
+  "tunnelConfigured": false,
+  "scheduledCollectorCreated": false,
+  "appUpdateCheck": {
+    "performed": true,
+    "currentVersion": "2.76.0",
+    "result": "Gitee temporarily denied or rate limited",
+    "passed": false,
+    "automaticUpdateNotClaimed": true,
+    "directReleaseAndApkDownloadsVerified": true
+  },
+  "giteeCleanup": {
+    "tag": "v2.67.0",
+    "release_id": 1229610,
+    "attachment_id": 3464880,
+    "name": "lolita-2.67.0.apk",
+    "bytes": 83399061,
+    "sha256": "ea52ce47204e48aca1fe00680554d2b7828e48a13bdd7c47fe54535f73f49f19",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+    "at_utc": "2026-11-06T16:25:44.326882+00:00",
+    "github_fresh_anonymous_full_download_verified": true,
+    "three_complete_local_copies_verified": true,
+    "http_status": 204,
+    "old_release_and_checksum_retained": true
+  },
+  "implementationAndReleaseArtifactsPassed": true,
+  "github": {
+    "tag": "v2.76.0",
+    "source_commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+    "source_tag_commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+    "prerelease": false,
+    "release_id": 436725438,
+    "files": {
+      "lolita-2.76.0.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.76.0/lolita-2.76.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 84005269,
+        "sha256": "1e8ddde8f6cfee20be1fee9595747a385afc65c88ef61b9bcf845b10cdef02cd"
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.76.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f50e423599567b3054d277d1a9640ff8fe10d853b74bde132bcb3c14c337418f"
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "bytes": 84005269,
+      "content_type": "application/vnd.android.package-archive",
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "metadata_source": "gh authenticated API; initial release verifier completed anonymous GETs; retry only HEAD after transient URLError"
+  },
+  "gitee": {
+    "tag": "v2.76.0",
+    "source_commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+    "release_id": 1281533,
+    "files": {
+      "lolita-2.76.0.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.76.0/lolita-2.76.0.apk",
+        "anonymous_full_download": true,
+        "bytes": 84005269,
+        "sha256": "1e8ddde8f6cfee20be1fee9595747a385afc65c88ef61b9bcf845b10cdef02cd",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.76.0/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "f50e423599567b3054d277d1a9640ff8fe10d853b74bde132bcb3c14c337418f",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84005269,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    },
+    "formalMetadataVerified": true,
+    "formalizedAfterFreshAnonymousVerification": true
+  },
+  "service": {
+    "storage": "SQLite WAL",
+    "api": "read-only semantic API",
+    "port": 18765,
+    "transport": "LAN",
+    "persistentUserService": "com.lolita.square-api",
+    "healthyAfterTests": true
+  },
+  "testEmulators": {
+    "independentAVDsOnly": true,
+    "closed": true,
+    "dataPreserved": true,
+    "hostCrashRecoveredWithoutDataClear": true
+  },
+  "knownLimitations": [
+    "Public Gitee update API and one actual manual app update check returned 403/rate limit; direct formal APK downloads verified",
+    "Physical Android device not connected; actual LAN validated from independent AVD",
+    "PeanutHull and scheduled collector not enabled; local validated ingest entry is ready"
+  ]
+}

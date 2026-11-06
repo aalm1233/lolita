@@ -87,15 +87,8 @@ def prepare(args):
     return {"output": str(root), "shops": request["shops"], "status": "prepared"}
 
 
-def package(args):
-    from square_package import build
-    root = Path(args.output).expanduser().resolve()
-    request = read_json(root / "request.json")
-    config = request.get("appPackage")
-    if not config:
-        raise ValueError("旧请求没有App契约，请重新prepare；保留已采集文件，不重新联网")
+def source_qa(root, request, data):
     # Only explicitly successful shops enter the package; a blocked shop never masquerades as empty success.
-    data = read_json(root / config["input"])
     directories = {s["directory"] for s in data["shops"]}
     requested = {s["directory"] for s in request["shops"]}
     if not directories or not directories <= requested:
@@ -107,18 +100,24 @@ def package(args):
                 raise ValueError("未完成店铺必须列在deferred中并写明目录/原因")
             qa["deferredStores"].append(directory); continue
         store = inside(root, directory)
-        result = verify(argparse.Namespace(output=str(store), report=None))
-        qa["stores"].extend(result["stores"]); qa["passed"] &= result["passed"]
-        if not result["passed"]: continue
         shop = next(s for s in data["shops"] if s["directory"] == directory)
         original = {p["itemId"]: p for p in read_json(store / "products.json")["products"]}
         selected = {p["id"]: p for p in data["products"] if p["shopId"] == shop["id"]}
         deferred = {p.get("itemId") for p in data["deferred"] if p["shopId"] == shop["id"]}
         if not set(selected) <= set(original) or set(original) - set(selected) - deferred:
             raise ValueError("App商品与原始清单不一致；未采用商品必须明确列待核对")
+        inspected = {match[1] for path in (store / "raw/items").glob("*.json")
+                     if (match := re.fullmatch(r"([0-9]+)(?:-ssr)?\.json", path.name))}
+        if inspected - set(selected) - deferred:
+            raise ValueError("已检查但未采用的候选商品须在deferred逐件说明，不能静默漏项")
+        result = verify(argparse.Namespace(output=str(store), report=None, item_ids=set(selected)))
+        qa["stores"].extend(result["stores"]); qa["passed"] &= result["passed"]
+        if not result["passed"]: continue
         manifest = read_json(store / "image-manifest.json")
         for item_id, product in selected.items():
             source = original[item_id]
+            if any(product.get(key) != source.get(key) for key in ("title", "capturedAt", "priceType")):
+                raise ValueError("App商品标题/采集时间/价格阶段说明与原始清单不一致")
             source_skus = {s["skuId"]: s for s in source["skus"]}
             if {s["id"] for s in product["skus"]} != set(source_skus):
                 raise ValueError("App输入未保留原始完整SKU集合")
@@ -130,9 +129,21 @@ def package(args):
             actual = {(i["localPath"], i["role"], i["order"], i["url"]) for i in product["images"]}
             if actual != expected:
                 raise ValueError("App输入未保留全部原图归属/角色/顺序/来源")
+    qa["scope"] = "offline-selected-complete-sources-and-app-input; deferred records are not claimed complete"
     write_json(root / "verification.json", qa)
     if not qa["passed"]:
         raise ValueError("原始采集文件核验未通过，请先修复verification.json中的实际失败")
+    return qa
+
+
+def package(args):
+    from square_package import build
+    root = Path(args.output).expanduser().resolve()
+    request = read_json(root / "request.json")
+    config = request.get("appPackage")
+    if not config:
+        raise ValueError("旧请求没有App契约，请重新prepare；保留已采集文件，不重新联网")
+    source_qa(root, request, read_json(root / config["input"]))
     output = root / "app-package" / ("lolita-square-" + request["date"] + ".zip")
     return build(root / config["input"], output, config["project"], config["state"], config["baselineSHA256"])
 
@@ -197,7 +208,7 @@ def run(args):
             launch["status"] = "interrupted"
             write_json(root / "launch.json", launch)
             raise
-    launch.update(status="exited", exitCode=code)
+    launch.update(status="exited", exitCode=code, finishedAt=datetime.now(ZoneInfo("Asia/Shanghai")).isoformat())
     write_json(root / "launch.json", launch)
     return launch
 
@@ -211,8 +222,10 @@ def status(args):
         event_path = inside(root, launch["events"])
         if event_path.exists():
             with event_path.open("rb") as source:
+                head = source.read(65536).decode("utf-8", errors="replace").splitlines()
                 source.seek(max(0, event_path.stat().st_size - 131072))
-                lines = source.read().decode("utf-8", errors="replace").splitlines()
+                tail = source.read().decode("utf-8", errors="replace").splitlines()
+            lines = head + tail
             types = []
             for line in lines:
                 try:
@@ -228,6 +241,14 @@ def status(args):
                 if isinstance(kind, str) and re.fullmatch(r"[\w.:-]{1,80}", kind):
                     types.append(kind)
             result["recentEventTypes"] = types[-8:]
+    result["localFileCounts"] = []
+    request_file = root / "request.json"
+    if request_file.exists():
+        for shop in read_json(request_file).get("shops", []):
+            store = inside(root, shop["directory"])
+            result["localFileCounts"].append({"directory": shop["directory"],
+                "capturedItemFiles": len([p for p in (store / "raw/items").glob("*.json") if p.stem.isdigit()]),
+                "originalImageFiles": len([p for p in (store / "images").rglob("*") if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}])})
     for name in ("progress.txt", "DONE.json", "cleanup.json"):
         path = root / name
         if path.exists():
@@ -265,6 +286,9 @@ def verify(args):
         try:
             data = read_json(store / "products.json")
             products = data["products"]
+            selected_ids = getattr(args, "item_ids", None)
+            if selected_ids is not None:
+                products = [p for p in products if p.get("itemId") in selected_ids]
             if not isinstance(products, list) or not products:
                 raise ValueError("products 必须为非空数组；阻塞不代表采集完整")
             expected, ids = {}, []
@@ -297,6 +321,8 @@ def verify(args):
                 if not {"itemId", "skuId", "price", "priceType"}.issubset(reader.fieldnames or []):
                     raise ValueError("CSV缺少必要列")
                 rows = list(reader)
+                if selected_ids is not None:
+                    rows = [r for r in rows if r.get("itemId") in selected_ids]
             keys = [(r["itemId"], r["skuId"]) for r in rows]
             if Counter(keys) != Counter(expected.keys()):
                 errors.append("CSV与products的SKU集合或重复数量不一致")
@@ -305,6 +331,8 @@ def verify(args):
                     errors.append(f"CSV报价阶段/金额不一致: {key[0]}/{key[1]}")
             counts.update(products=len(products), skus=len(expected))
             manifest = read_json(store / "image-manifest.json")
+            if selected_ids is not None:
+                manifest = [i for i in manifest if i.get("itemId") in selected_ids]
             if not isinstance(manifest, list) or not manifest:
                 raise ValueError("image-manifest必须为非空数组")
             seen_paths, hashes = set(), set()

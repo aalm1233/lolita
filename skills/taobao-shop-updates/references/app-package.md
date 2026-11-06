@@ -25,7 +25,7 @@ shops：`id / name / directory / evidenceIds`，directory必须是request.shops�
 
 events：`id / shopId / designId / batchId / title / subtitle / kind / state / date / price / priceNote / note / material / detail / captured / productIds / evidenceIds`。文字字段全部为字符串；未知展示文字可空。kind只能为上新/再贩/现货/尾款；state如预热/已开售/已结束依明文填写。date保留公开日期原文，无年份不补。captured是实际采集日期。每个动态包含完整的关联商品组，每个product都须归入动态。新增批次新建batchId与event id，同批复采沿用；旧designId/batchId不改。不要凭商品ID大小或排序猜首发。
 
-products：`id / shopId / title / url / capturedAt / pricePhase / priceType / skus / info / images / materials / coverage / evidenceIds`。id与原始itemId相同，url仅`https://item.taobao.com/item.htm?id=数字`或`https://detail.tmall.com/item.htm?id=数字`，去除跟踪和用户参数。pricePhase为FULL/DEPOSIT/BALANCE/PLACEHOLDER；priceType保留真实阶段。coverage为`{"skuComplete":true,"detailsComplete":true,"skuCount":实际完整数量}`。未完整则移入deferred，不假填true。revision由打包器计算，不让模型指定。
+products：`id / shopId / title / url / capturedAt / pricePhase / priceType / skus / info / images / materials / coverage / evidenceIds`。id与原始itemId相同，url仅`https://item.taobao.com/item.htm?id=数字`或`https://detail.tmall.com/item.htm?id=数字`，去除跟踪和用户参数。pricePhase为FULL/DEPOSIT/BALANCE/PLACEHOLDER；priceType是给人看的真实价格说明，如“全款”“三团定金”“一二批尾款”，不能再填FULL等内部代码。原始products.json及CSV也使用同一可读说明，机器阶段另存pricePhase；原始网页证据不改。coverage为`{"skuComplete":true,"detailsComplete":true,"skuCount":实际完整数量}`。未完整则移入deferred，不假填true。revision由打包器计算，不让模型指定。
 
 info只可用这些公开资料键：care/components/craft/excluded/gifts/included/materials/season/sizes/source/styles。里面保留结构化明文，但不嵌入原始SSR/HTML、买家、账号或认证字段。
 
@@ -38,7 +38,9 @@ SKU字段沿用App：`id / key / itemId / props / rawProperties / price / priceT
 - id=原始skuId字符串，不接受0；key=`商品ID:SKU ID`；itemId=当前商品ID。props与rawProperties完全相同，保留每个公开维度及原值；所有实际SKU必须与原始products.json集合完全一致，不做颜色×尺码笛卡尔积。
 - price使用精确十进制**字符串或null**，不把未知写0、不把起价当该SKU价；priceType与原始采集一致。stock是公开库存原文，非实时承诺。
 - content是实际购买内容名称，form=单品/小物/套装/组合；notSoldAlone布尔值明确是否仅组合内提供。color/size为明确规范值或null，不把购买条款当尺码，但原文完整保留在props。
+- 明确“一组/N件”的商家购买内容属于套装或组合，即便暂作为一个整体部件保留，也不能仅按“小物”单件标记。只有成员明细有依据才拆parts，未确认的成员规格不借用整体值；整组报价不分摊。
 - parts每项`{key,name,category,isAccessory,color,size,relation,uncertainty}`。key在店铺设计/批次内稳定；category未知为null。每件自己的color/size独立，不能把裙子的L复制到KC。商家售卖套餐与用户未来自主组合分开。
+- 一个可独立售卖的单品/小物SKU只有唯一部件、SKU色码已明确且部件无uncertainty时，工具可以将这条SKU已知色码补到该唯一部件，并在质量报告逐项记录；套装/组合、多部件、非独立销售及原本未知值均不继承。
 - styleFacts每项`{value,source,field,evidenceIds}`，仅商家明文支持的风格，不凭图猜测。
 - photoPaths为本商品images的**输入localPath**数组，明确单品/颜色图才给；填写时photoEvidenceIds必填。缺独立图用空数组，系列图仍留images，不能充当单品图。
 - 无明确配对时省略variantId，工具按店铺/商品/SKU稳定生成。跨链接复用variantId必须同店、同动态批次、部件/颜色/尺码一致，并给每条variantEvidenceIds；不凭名称或金额猜测。继承上下文已核验的对应关系时保留其来源摘录。
@@ -51,7 +53,7 @@ sizeTable为`{columns:[字符串],rows:[{size:字符串,values:[字符串]}],not
 
 evidence对象：`"ev-1":{"path":"shops/01-店名/raw/ocr/001.txt","quote":"原文摘录与必要图中文字定位"}`。path必须是本轮实际存在、根目录内、非符号链接文件；quote为1—2000字定位，不使用“已核验”代替证据。用于店铺、动态、商品、风格、照片归属、部件资料和表格的evidenceIds均须引用这里。证据只供本地核对，**不进入ZIP**。自动检查证明引用与结构有效，不能代替人工核对图文事实。
 
-deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给request目录directory；商品没采全/批次不明/图片下载失败列明原因，不能默默丢弃。未知字段不必捏造；少映射可浏览系列图并加入待补心愿，真正不完整商品不能装作完整上新发布。
+deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给request目录directory；商品没采全/批次不明/图片下载失败列明原因，不能默默丢弃。凡已保存候选商品页却未采用的itemId也须逐件说明，包括收藏跳转、通用页和不属于本轮的候选；不要求为所有店铺历史商品建待办。未知字段不必捏造；少映射可浏览系列图并加入待补心愿，真正不完整商品不能装作完整上新发布。
 
 ## 主助手收尾（dsh不要推进基线）
 

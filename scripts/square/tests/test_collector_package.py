@@ -120,6 +120,14 @@ class CollectorPackageTest(unittest.TestCase):
         value = copy.deepcopy(self.data); value["products"][0]["materials"][0]["sizeTable"]["rows"][0]["values"] = []
         with self.assertRaises(ValueError): package.normalize(value, self.root, None)
         value = copy.deepcopy(self.data); value["products"][0]["skus"][0]["parts"][0].update(color=None, size=None)
+        value["products"][0]["skus"][0]["form"] = "组合"
+        normalized, _, _ = package.normalize(value, self.root, None)
+        self.assertIsNone(normalized["products"][0]["skus"][0]["parts"][0]["size"])
+        value["products"][0]["skus"][0]["form"] = "单品"
+        normalized, _, _ = package.normalize(value, self.root, None)
+        self.assertEqual("S", normalized["products"][0]["skus"][0]["parts"][0]["size"])
+        self.assertEqual(2, len(normalized["singleMemberSpecsFromSku"]))
+        value["products"][0]["skus"][0]["size"] = None
         normalized, _, _ = package.normalize(value, self.root, None)
         self.assertIsNone(normalized["products"][0]["skus"][0]["parts"][0]["size"])
 
@@ -162,14 +170,51 @@ class CollectorPackageTest(unittest.TestCase):
 
     def test_source_sku_or_price_disagreement_stops_before_publication(self):
         self.source_files()
-        for mode in ("price", "sku"):
+        for mode in ("price", "sku", "title", "capturedAt", "priceType"):
             value = copy.deepcopy(self.data)
             if mode == "price": value["products"][0]["skus"][0]["price"] = "999"
-            else: value["products"][0]["skus"][0]["id"] = "999"
+            elif mode == "sku": value["products"][0]["skus"][0]["id"] = "999"
+            else: value["products"][0][mode] = "incorrect source metadata"
             package.atomic_json(self.input, value)
             with self.assertRaises(ValueError): workflow.package(argparse.Namespace(output=str(self.root)))
         self.assertFalse((self.root / "state/current.json").exists())
         self.assertFalse((self.root / "app-package").exists())
+
+    def test_explicit_deferred_placeholder_cannot_block_or_enter_good_product_zip(self):
+        self.source_files()
+        raw = package.read_json(self.store / "products.json")
+        raw["products"].append(dict(itemId="999", title="合成收藏跳转", url="https://item.taobao.com/item.htm?id=999", capturedAt="2026-11-06", priceType="占位价",
+                                    skus=[dict(skuId="0", props={}, price=9999, priceType="占位价")]))
+        package.atomic_json(self.store / "products.json", raw)
+        with (self.store / "sku-prices.csv").open("a") as out: out.write("999,0,9999,占位价\n")
+        self.data["deferred"].append(dict(shopId="fixture", itemId="999", reason="收藏跳转占位，未取得可售SKU")); self.write()
+        report = workflow.package(argparse.Namespace(output=str(self.root)))
+        self.assertTrue(report["passed"]); self.assertEqual(1, report["counts"]["products"])
+        final = self.catalog(self.root / "app-package/lolita-square-2026-11-06.zip")
+        self.assertEqual(["123"], [p["id"] for p in final["products"]])
+
+    def test_long_run_status_retains_session_without_private_payload(self):
+        events = self.root / "dsh-events.jsonl"
+        events.write_text(json.dumps(dict(type="session_started", sessionId="session-fixture")) + "\n" +
+                          json.dumps(dict(type="thinking", text="PRIVATE-CONTENT" * 14000)) + "\n" +
+                          json.dumps(dict(type="tool_call")) + "\n")
+        package.atomic_json(self.root / "launch.json", dict(events=events.name, status="running"))
+        status = workflow.status(argparse.Namespace(output=str(self.root)))
+        self.assertEqual("session-fixture", status["sessionId"])
+        self.assertNotIn("PRIVATE-CONTENT", json.dumps(status))
+
+    def test_inspected_candidate_cannot_disappear_without_deferred_reason(self):
+        self.source_files()
+        candidate = self.store / "raw/items/999.json"; candidate.parent.mkdir()
+        package.atomic_json(candidate, {"title": "合成未确认候选"}); self.write()
+        with self.assertRaisesRegex(ValueError, "候选商品"):
+            workflow.package(argparse.Namespace(output=str(self.root)))
+        self.assertFalse((self.root / "state/current.json").exists())
+
+    def test_price_explanation_does_not_expose_internal_phase_code(self):
+        self.data["products"][0]["priceType"] = "DEPOSIT"
+        with self.assertRaisesRegex(ValueError, "priceType"):
+            self.normalize()
 
 
 if __name__ == "__main__": unittest.main()

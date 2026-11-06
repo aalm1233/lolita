@@ -6,13 +6,26 @@ import tempfile
 from pathlib import Path
 
 RUNNER = '''import com.lolita.app.data.square.SquarePackage
+import com.lolita.app.data.square.SquareBrowse
+import com.lolita.app.data.square.SquareBrowseChoice
 import java.io.File
 import java.nio.file.Files
 fun main(args: Array<String>) {
     val temp = Files.createTempDirectory("square-contract-").toFile()
     try {
         val c = SquarePackage.unpack(File(args[0]), File(temp, "stage"))
-        println("ANDROID_SQUARE_V1_OK shops=${c.shops.size} products=${c.products.size}")
+        var parts = 0
+        c.events.filter { it.canRegister }.forEach { event ->
+            SquareBrowse.parts(c, event).forEach { part ->
+                parts++
+                SquareBrowse.select(c, part, SquareBrowseChoice(part.key))
+                SquareBrowse.rows(c, part).forEach { (_, sku) ->
+                    val member = sku.parts.single { it.key == part.partKey }
+                    SquareBrowse.select(c, part, SquareBrowseChoice(part.key, member.color.orEmpty(), member.size.orEmpty()))
+                }
+            }
+        }
+        println("ANDROID_SQUARE_V1_OK shops=${c.shops.size} products=${c.products.size} browseParts=$parts")
     } finally { temp.deleteRecursively() }
 }
 '''
@@ -21,7 +34,8 @@ fun main(args: Array<String>) {
 def check(package, project):
     project = Path(project).expanduser().resolve()
     source = project / "app/src/main/java/com/lolita/app/data/square/SquarePackage.kt"
-    if not source.is_file():
+    browse = source.with_name("SquareBrowse.kt")
+    if not source.is_file() or not browse.is_file():
         raise ValueError("找不到App的SquarePackage.kt；请配置正确project，不跳过格式验收")
     modules = Path.home() / ".gradle/caches/modules-2/files-2.1"
     def jar(group, artifact, version=None):
@@ -47,7 +61,7 @@ def check(package, project):
         commands = [
             [str(java), "-cp", os.pathsep.join(map(str, dependencies)),
              "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-no-stdlib", "-no-reflect", "-jvm-target", "17",
-             "-classpath", os.pathsep.join(map(str, [*libs, gson])), "-d", str(output), str(source), str(main)],
+             "-classpath", os.pathsep.join(map(str, [*libs, gson])), "-d", str(output), str(source), str(browse), str(main)],
             [str(java), "-cp", os.pathsep.join(map(str, [output, *libs, gson])), "SquareContractKt", str(Path(package).resolve())],
         ]
         for command in commands:
@@ -58,4 +72,5 @@ def check(package, project):
         if "ANDROID_SQUARE_V1_OK" not in result.stdout:
             raise ValueError("Android格式验收未返回成功标记")
     return {"passed": True, "sourceSha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-            "method": "compile actual SquarePackage.kt; unpack candidate with bounded SHA/reference checks"}
+            "browseSourceSha256": hashlib.sha256(browse.read_bytes()).hexdigest(), "browseProjectionPassed": True,
+            "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec"}

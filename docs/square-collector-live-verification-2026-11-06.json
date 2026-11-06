@@ -1,0 +1,200 @@
+{
+  "passed": true,
+  "mainVerifiedAt": "2026-11-06T22:00:17.419101+08:00",
+  "shops": [
+    {
+      "id": "moryhitomi",
+      "name": "魔女贩售 MORY HITOMI",
+      "adoptedProducts": 5,
+      "adoptedSkus": 88
+    },
+    {
+      "id": "zjstory",
+      "name": "ZJstory原创设计",
+      "adoptedProducts": 3,
+      "adoptedSkus": 120
+    },
+    {
+      "id": "ozzonjapan",
+      "name": "OZZONJAPAN",
+      "adoptedProducts": 6,
+      "adoptedSkus": 27
+    }
+  ],
+  "adoptedProducts": 14,
+  "adoptedSkus": 235,
+  "newImageReferences": 703,
+  "newDistinctImageSHA": 565,
+  "newSizeTables": 13,
+  "publicPackage": {
+    "file": "六店广场资料-20261106.zip",
+    "bytes": 388474531,
+    "sha256": "6a677f7eef5e788641fc15b34a53ec4e2f2522ad5b31a7d92cebd325a9e35c89",
+    "revision": 5,
+    "counts": {
+      "assets": 986,
+      "events": 14,
+      "products": 28,
+      "shops": 6
+    },
+    "skuCount": 777
+  },
+  "androidContract": {
+    "browseProjectionPassed": true,
+    "browseSourceSha256": "e6a1e961e152db26d4f6ffce4087d4ae0c30eea563cee262af69e75496133553",
+    "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+    "passed": true,
+    "sourceSha256": "af6d39455a5eece9f390557359c86196128af150a934bf9883b33603fd16296e"
+  },
+  "sourceQAPassed": true,
+  "baselineAdvancedAfterValidation": true,
+  "defaultNextRunUsesRevision": 5,
+  "explicitSingleMemberSpecBindings": 463,
+  "merchantFourPieceGroupReviewed": true,
+  "deferred": [
+    {
+      "shopId": "moryhitomi",
+      "itemId": "1056608234556",
+      "directory": "shops/01-魔女贩售",
+      "reason": "收藏/跳转页：SKU为“+收藏勿拍+”“+通知说明+”，标价¥9999；真实商品为帕诺戏院五个三团定金链接，已单独采集"
+    },
+    {
+      "shopId": "moryhitomi",
+      "itemId": "1096442024484",
+      "directory": "shops/01-魔女贩售",
+      "reason": "本次“新品”排序第1，但为“魔女双节·满件折扣”多设计通用链接（幽灵兰/燕尾蝶），不属于标本柜II三团；未纳入本批"
+    },
+    {
+      "shopId": "moryhitomi",
+      "itemId": "578418843948",
+      "directory": "shops/01-魔女贩售",
+      "reason": "店铺¥10通用页面，非商品"
+    },
+    {
+      "shopId": "zjstory",
+      "itemId": "1096712414620",
+      "directory": "shops/02-zjstory",
+      "reason": "无相繁心/无相神使预热收藏页，自述“链接时工中”，无真实商品SKU；¥9999为占位"
+    },
+    {
+      "shopId": "zjstory",
+      "itemId": "977386796898",
+      "directory": "shops/02-zjstory",
+      "reason": "标题“现货掉落”但详情自述“本页面为定金预约页面”、页面价仅为定金、预约时间2025-09-20；价格阶段冲突，未把定金当全款，暂列deferred"
+    },
+    {
+      "shopId": "zjstory",
+      "itemId": "1005453458582",
+      "directory": "shops/02-zjstory",
+      "reason": "标题“现货掉落”但详情自述定金预约页；页面SKU价与详情图预约/全款价目不一致，无法可靠归入现货/定金/尾款，暂列deferred"
+    },
+    {
+      "shopId": "zjstory",
+      "itemId": "631765656612",
+      "directory": "shops/02-zjstory",
+      "reason": "“近期上新合集”图片跳转页，标价¥99999，无独立SKU，不能当商品"
+    },
+    {
+      "shopId": "ozzonjapan",
+      "directory": "shops/03-OZZonjapan",
+      "reason": "OZZON“新品”排序/2026年冬分类可加载90–103款；本轮采用芭蕾绮梦现货6款；Angelo 2款因动态分类无法确认已列deferred；手鞠歌/Desoro/Croce等未纳入本轮；未声称全店绝对最新。"
+    },
+    {
+      "shopId": "ozzonjapan",
+      "itemId": "1091510768772",
+      "directory": "shops/03-OZZonjapan",
+      "reason": "本地证据仅显示颜色原文“已成团3月出货，还需补款”，无法证明该条当前属于本轮上新/再贩/现货/尾款；列为deferred，保留原始商品、图片与说明，不补年份、不猜过期。"
+    },
+    {
+      "shopId": "ozzonjapan",
+      "itemId": "1090466325706",
+      "directory": "shops/03-OZZonjapan",
+      "reason": "本地证据仅显示颜色原文“已成团3月出货，还需补款”，无法证明该条当前属于本轮上新/再贩/现货/尾款；列为deferred，保留原始商品、图片与说明，不补年份、不猜过期。"
+    }
+  ],
+  "mainTaobaoAccess": false,
+  "paidCalls": 0,
+  "temporaryCdpPortClosed": true,
+  "collectorMetadataTimes": "self-reported; future operational timestamps not used as audit evidence",
+  "rawCaptureTimestamps": "canonical matches actual local captured page timestamp",
+  "manualReview": "key price/size/material/SKU images; not an exhaustive human audit of every original image",
+  "nativeVerification": {
+    "passed": true,
+    "verifiedAt": "2026-11-06T22:20:37.057947+08:00",
+    "avd": "Lolita_Square_Collector_20261106",
+    "freshIsolatedData": true,
+    "apkVersion": "2.75.0",
+    "apkVersionCode": 152,
+    "systemFilePickerImport": true,
+    "importedCounts": {
+      "shops": 6,
+      "events": 14,
+      "products": 28,
+      "skus": 777,
+      "assets": 986
+    },
+    "coldRestartCatalogRetained": true,
+    "magicSelection": {
+      "part": "长款挂脖连衣裙",
+      "color": "黑",
+      "size": "M",
+      "availableSizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    "savedDatabaseCounts": {
+      "items": 1,
+      "item_source_records": 1,
+      "prices": 0,
+      "payments": 0,
+      "payment_stages": 0,
+      "item_reference_prices": 0
+    },
+    "savedStatus": "WISHED",
+    "zjTailReadOnly": true,
+    "ozzonThreeColorsVisible": true,
+    "externalTaobaoActionInvoked": false,
+    "knownExistingInteraction": "尺码表按钮打开该部件资料图合集，本次首张为价格表；结构化尺码表在参数区，未改App交互。",
+    "screenshots": [
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/cold-restart-square.png",
+        "sha256": "bc2f0eb37c1bf7a368b0678733af38490bcb0ae643b563fb866b41259a4b7ab9"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/import-preview.png",
+        "sha256": "949749c32db4ccb79cec5a79473195fe7a809ffcac5a3c93df903aba528e9715"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/ozzon-browse.png",
+        "sha256": "238f78c83062fdc9c349e98907592bc03f92529e0dc2a5a39ca8061f1cd7ab5d"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/selected-black-m.png",
+        "sha256": "887ed6278ebd21e227017a013f376b59bab6635b1ab3e9fa386b0c836c68ce8a"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/size-table.png",
+        "sha256": "fe2afea282a2763e0a3a511c80893d51437b22e5b9ee886e6721986e21588d1e"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/square-feed.png",
+        "sha256": "fb39d70cefaeeb7d045bc76b40f82a28fc1bad53eda288dc855272f0d1d3bec3"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/wish-saved.png",
+        "sha256": "f16fba4f075d9c6a069d27102b9df9db65624bb1932bde521799b2ec190b157c"
+      },
+      {
+        "file": "docs/visuals/2026-11-06-square-collector/native/zj-tail-read-only.png",
+        "sha256": "6dd42a0e3d3584c8ec7df641a06d3bc2aebc03107fd6d84a6472147de77066bb"
+      }
+    ],
+    "taskAvdClosed": true,
+    "taskAvdDataRetained": true
+  }
+}

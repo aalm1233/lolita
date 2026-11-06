@@ -1,5 +1,5 @@
 {
-  "offlineTests": 10,
+  "offlineTests": 14,
   "skillValidation": true,
   "existingPackageReplay": {
     "androidContract": {
@@ -42,5 +42,7 @@
     "missingMappingsCount": 167
   },
   "seedPackageSHA256": "b4f1ef74e6f46cb7de8c062ede08e682259db349a54a5fa7a84c3ce403459590",
-  "freshStoresRun": "pending; separately reported, not offline replay"
+  "freshStoresRun": "passed; see docs/square-collector-live-verification-2026-11-06.json",
+  "liveListBoundaryRegression": "explicit deferred placeholder cannot block or enter complete-product package",
+  "longRunStatusRegression": "session retained without thinking/tool payload disclosure"
 }

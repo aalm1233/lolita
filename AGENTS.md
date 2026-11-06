@@ -43,7 +43,7 @@
 - 用户查店铺上新或接续采集时应用仓库源`skills/taobao-shop-updates/`（安装于`~/.codex/skills/taobao-shop-updates/`）；本机dsh的DeepSeek负责淘宝访问/原图/OCR，主助手只调度及读取本地文件，不通过浏览器、CDP、DOM或自行请求淘宝接管。
 - 标准输出原始JSON/CSV/原图与`lolita.square.collector` v1输入；`workflow.py package`核验与原始清单一致、单品/资料证据、SHA、完整SKU和尺码表，经实际App `SquarePackage.kt`离线编译验收才发布公开v1 ZIP并原子推进基线。通用入口`scripts/square/collector_package.py`，首包硬编码脚本只用于历史重放。
 - 基线保存于仓库外`~/Downloads/taobao-shop-updates/catalog-state/`；默认已以已验收三店浏览版初始化，保留稳定ID/revision和未出现的旧记录，不因缺席推断下架。并发陈旧请求拒绝覆盖；结构或原图失败不推进。`businessChanged`排除仅采集时间变化，缺失映射与失败/待核对项分列；自动证据引用通过不等于人工语义审核。
-- 本轮只改技能/本地工具，不改Android、Room34、备份16、应用2.74.0或云端，不重新发APK。10项离线回归及14商品/542SKU/421原图/41表的既有包回放通过；没有创建或更改定时调度。设计适用范围与真实新店实跑见`docs/plans/2026-11-06-square-collector-format.md`和`docs/square-collector-workflow-2026-11-06.md`。
+- 本轮只改技能/本地工具，不改Android、Room34、备份16、当前应用版本或云端，不重新发APK。14项离线回归及14商品/542SKU/421原图/41表的既有包回放通过；没有创建或更改定时调度。设计适用范围与真实新店实跑见`docs/plans/2026-11-06-square-collector-format.md`和`docs/square-collector-workflow-2026-11-06.md`。
 
 - 新 DAO 必须同步接到三处：`LolitaDatabase`、对应 `Repository`、`AppModule`。
 - ViewModel 用 `MutableStateFlow`/`StateFlow` 管 UI 状态，异步放 `viewModelScope.launch`。
@@ -768,3 +768,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 直接心愿及尾款只读规则保留，不写业务数据、账本、图片或私人规格，Room34/备份16不变。前置艺术图稿及范围见`docs/plans/2026-11-06-square-taobao.md`。`SquareBrowseTest`定向覆盖受控Intent优先/回退/失败复制、来源选择/取消、七皮肤浅暗、320dp两倍字与无效来源；测试不实际打开淘宝，不冒充真实淘宝客户端验证。
 
 - 2.75.0／152广场外跳正式源码`2943ca0b`及标签已普通推送；5个去重定向设备方法与最终七皮肤浅暗／320dp两倍字共84张矩阵图、Debug和提交归档clean原签名Release通过。2.74.0覆盖两次启动保留2份设置SHA，37项目assets／24旧图片／2依赖素材字节一致。GitHub/Gitee同一APK与SHA256SUMS匿名完整下载、SHA/HEAD及源码标签通过；Gitee公开接口403、正式App一次手动检查遇拒绝/频控，直接APK可用，不宣称更新入口通过。按持续授权仅清理最旧Gitee2.66.3 APK，旧页/校验/GitHub及本机副本保留。两台任务AVD关闭、数据保留；Room34/备份16、付费0、主助手淘宝访问0，真实淘宝客户端未实测。回执`docs/square-taobao-release-2.75.0-verification.json`。
+
+- 真实三店采集：魔女贩售（明确跳转帕诺戏院承接）/ZJstory/OZZONJAPAN，采集16链接、241实际SKU、761原图文件；严格采用14链接/235SKU/565不同SHA、另列9候选与范围说明。第三团用再贩、尾款只读、阶段冲突和未确认的已成团预约不冒充上新。已验收包合并旧三店为6店/28商品/777SKU/986原图，稳定revision5；原始色码不改，只有明确独立单SKU的唯一部件可复用其已知色码并记录，组合不继承。真实回执`docs/square-collector-live-verification-2026-11-06.json`。
+
+- 本轮6店公开包已在全新独立AVD的正式2.75.0系统文件选择器实导、冷启动保留并浏览三店；魔女黑色M码直接保存仅新增1个心愿和1条来源，账本0。现有尺码表入口为资料合集、首张可能是价格图，结构化尺码仍在参数区，本轮未改App。任务AVD已关闭、数据保留；详见上述真实回执。

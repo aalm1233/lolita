@@ -11,8 +11,10 @@ import tempfile
 import zipfile
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+from zoneinfo import ZoneInfo
 
 from android_contract import check as android_check
 
@@ -83,7 +85,9 @@ def local_file(root, relative):
 
 
 def fields(value, allowed, required=()):
-    require(isinstance(value, dict) and set(value) <= set(allowed) and set(required) <= set(value), "字段缺失或包含未支持字段")
+    require(isinstance(value, dict), "此处必须为JSON对象")
+    missing = sorted(set(required) - set(value)); extra = sorted(set(value) - set(allowed))
+    require(not missing and not extra, "字段不符；缺少=" + ",".join(missing) + "；未支持=" + ",".join(extra))
 
 
 def text(value, nullable=False):
@@ -189,7 +193,7 @@ def normalize(data, root, old):
     for row in data["deferred"]:
         fields(row, {"shopId", "directory", "itemId", "reason"}, {"shopId", "reason"})
         require(isinstance(row["reason"], str) and row["reason"], "待核对项须写明原因")
-    shops = []; events = []; products = []; sources = {}; assets = {}; warnings = []
+    shops = []; events = []; products = []; sources = {}; assets = {}; warnings = []; single_specs = []
     for shop in data["shops"]:
         fields(shop, {"id", "name", "directory", "revision", "evidenceIds"}, {"id", "name", "directory", "evidenceIds"})
         text(shop["id"]); text(shop["name"]); verify(shop["evidenceIds"])
@@ -210,6 +214,7 @@ def normalize(data, root, old):
         require(coverage["skuComplete"] is True and coverage["detailsComplete"] is True and type(coverage["skuCount"]) is int and coverage["skuCount"] == len(product["skus"]), "商品规格/详情未采全，移入deferred，不截取打包")
         require(isinstance(product["id"], str) and re.fullmatch(r"[0-9]+", product["id"]), "公开商品ID须为完整十进制字符串")
         for key in ("shopId", "title", "url", "capturedAt", "pricePhase", "priceType"): text(product[key])
+        require(product["priceType"] not in {"FULL", "DEPOSIT", "BALANCE", "PLACEHOLDER"}, "priceType填写可读价格说明；阶段代码只放pricePhase")
         url = urlparse(product["url"])
         require(url.scheme == "https" and url.hostname in {"item.taobao.com", "detail.tmall.com"} and parse_qs(url.query).get("id") == [product["id"]] and set(parse_qs(url.query)) == {"id"}, "只接受去跟踪参数的公开商品链接")
         fields(product["info"], INFO_KEYS)
@@ -231,6 +236,7 @@ def normalize(data, root, old):
         for sku in product["skus"]:
             fields(sku, SKU_FIELDS, SKU_FIELDS - {"photoPaths", "photoEvidenceIds", "variantId", "variantEvidenceIds"})
             for key in ("id", "key", "itemId", "priceType", "stock", "content", "form"): text(sku[key])
+            require(sku["priceType"] not in {"FULL", "DEPOSIT", "BALANCE", "PLACEHOLDER"}, "SKU priceType须为可读价格说明，不填内部阶段代码")
             for key in ("color", "size", "price"): text(sku[key], nullable=True)
             require(re.fullmatch(r"[0-9]+", sku["id"]) and sku["id"] != "0", "SKU ID无效或为起价摘要")
             require(type(sku["notSoldAlone"]) is bool, "单独售卖标记须为布尔值")
@@ -244,6 +250,13 @@ def normalize(data, root, old):
                 for key in ("key", "name", "relation"): text(part[key])
                 for key in ("category", "color", "size", "uncertainty"): text(part[key], nullable=True)
                 require(type(part["isAccessory"]) is bool, "小物标记须为布尔值")
+            # One explicitly independent SKU names its only member. Never spread a bundle's values to members.
+            if len(sku["parts"]) == 1 and sku["form"] in {"单品", "小物"} and not sku["notSoldAlone"]:
+                member = sku["parts"][0]
+                for field in ("color", "size"):
+                    if member[field] is None and sku[field] is not None and not member["uncertainty"]:
+                        member[field] = sku[field]
+                        single_specs.append({"productId": product["id"], "skuId": sku["id"], "partKey": member["key"], "field": field, "source": "explicit independent single-member SKU"})
             for style in sku["styleFacts"]:
                 fields(style, {"value", "source", "field", "evidenceIds"}, {"value", "source", "field", "evidenceIds"})
                 verify(style.pop("evidenceIds"))
@@ -291,7 +304,7 @@ def normalize(data, root, old):
                     require(confirmed and previous_product["shopId"] == product["shopId"] and encoded(previous_sku["parts"]) == encoded(sku["parts"]), "复用旧目录跨链接variantId缺少依据或规格不一致")
     for rows in (shops, events, products): require(len(rows) == len({r["id"] for r in rows}), "本轮记录ID重复")
     require({p["id"] for p in products} == {i for e in events for i in e["productIds"]}, "每个动态须提供完整商品组，每个商品须归属动态")
-    return {"shops": shops, "events": events, "products": products, "assets": list(assets.values())}, sources, warnings
+    return {"shops": shops, "events": events, "products": products, "assets": list(assets.values()), "singleMemberSpecsFromSku": single_specs}, sources, warnings
 
 
 def merge(old, incoming, data):
@@ -361,11 +374,13 @@ def build(input_path, output, project, state=None, expected_baseline=None):
         require(not output.exists(), "交付文件被其他任务创建，停止发布")
         os.replace(temporary, output)
         report = {"passed": True, "format": "lolita.square", "schemaVersion": 1, "packageId": catalog["packageId"],
+                  "verifiedAt": datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
                   "revision": catalog["revision"], "sha256": sha_file(output), "bytes": output.stat().st_size,
                   "counts": {k: len(catalog[k]) for k in ("shops", "events", "products", "assets")}, "changed": changes,
                   "businessChanged": business_changes,
                   "skuCount": sum(len(p["skus"]) for p in catalog["products"]), "androidContract": contract,
                   "deferred": data["deferred"], "missingMappings": warnings, "baselineRetainedWhenAbsent": True,
+                  "singleMemberSpecsFromSku": incoming["singleMemberSpecsFromSku"],
                   "semanticReview": "结构/图片/证据引用自动校验通过，不等同于人工核对事实归属", "networkAccess": False}
         atomic_json(output.with_suffix(".quality.json"), report)
         if state:

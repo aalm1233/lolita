@@ -48,3 +48,13 @@ SKU包含 `id / key / itemId / variantId / props / rawProperties / price / price
 旧v1包缺少表格仍可浏览原参数图及直接加入心愿，不强制补映射或选图。`scripts/square/enrich_size_tables.py` 只读已采集资料，以显式核验的表名绑定41张表，不联网、不改变421张图片原字节；无法可靠拆到部件的帝政SET表继续保留原图而不生成部件表。莉莉子长短OP各保留对应裙长列，不交叉显示。
 
 公开包仍为v1；新增私人心愿来源使用备份16，与公开包版本分开。来源快照的成员图片只保存显式图片数组索引，ZIP恢复统一重映射路径。
+
+## 标准采集入口（2026-11-06）
+
+后续采集使用仓库维护的[taobao-shop-updates技能](../skills/taobao-shop-updates/SKILL.md)及其[App输入契约](../skills/taobao-shop-updates/references/app-package.md)。历史`build_first_package.py/refine_materials.py/enrich_size_tables.py`仅用于重放首包，不能作为新店通用转换器。
+
+dsh输出本轮`products.json/CSV/image-manifest`、原图/证据及`square-input.json`；后者使用`lolita.square.collector` v1，图片仍为本轮相对路径，规格价格为十进制字符串，照片/风格/部件资料/表格附证据引用。公开包v1保持不变，输入协议不是新的App协议。
+
+主助手调用技能`workflow.py package --output <本轮目录>`，校验原始完整SKU/报价/原图集合与输入一致，计算SHA、尺寸和图片路径；沿用公开目录稳定ID并按内容更新revision，保留本轮未出现的旧记录。候选包须通过工程实际`SquarePackage.kt`编译执行的unpack验收，才能交付ZIP、质量报告并原子更新本机current.json。基线发生变化、原图/格式失败或超限不推进状态，不截断资料。
+
+`businessChanged`排除只更新采集时间的记录；`deferred`列失败店和不完整商品；`missingMappings`列未提供的独立单品图。证据和原始页面不进入ZIP，自动验收不能代替图文事实审读。主助手继续只读本地，不访问淘宝。流程与真实运行结果见[实施记录](square-collector-workflow-2026-11-06.md)。

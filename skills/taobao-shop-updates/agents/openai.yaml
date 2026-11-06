@@ -1,0 +1,6 @@
+interface:
+  display_name: "淘宝店铺上新核查"
+  short_description: "委派本地dsh采集，按App契约整理SKU、单品图和参数并生成广场ZIP"
+  default_prompt: "使用 $taobao-shop-updates 查一下淘宝的XX店铺上新，按当前Lolita广场契约生成可导入资料包；由本地dsh的DeepSeek采集，你只读本地文件，不自行操作淘宝浏览器。"
+policy:
+  allow_implicit_invocation: true

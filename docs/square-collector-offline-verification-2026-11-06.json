@@ -1,0 +1,46 @@
+{
+  "offlineTests": 10,
+  "skillValidation": true,
+  "existingPackageReplay": {
+    "androidContract": {
+      "method": "compile actual SquarePackage.kt; unpack candidate with bounded SHA/reference checks",
+      "passed": true,
+      "sourceSha256": "af6d39455a5eece9f390557359c86196128af150a934bf9883b33603fd16296e"
+    },
+    "baselineRetainedWhenAbsent": true,
+    "businessChanged": {
+      "events": 10,
+      "products": 14,
+      "shops": 3
+    },
+    "bytes": 271077387,
+    "changed": {
+      "events": 10,
+      "products": 14,
+      "shops": 3
+    },
+    "counts": {
+      "assets": 421,
+      "events": 10,
+      "products": 14,
+      "shops": 3
+    },
+    "deferred": [],
+    "format": "lolita.square",
+    "freshTaobaoCapture": false,
+    "networkAccess": false,
+    "originalImagesByteIdentical": 421,
+    "packageId": "three-shops-2026-11-05",
+    "passed": true,
+    "productionStateUpdated": false,
+    "replayOnly": true,
+    "revision": 1,
+    "schemaVersion": 1,
+    "semanticReview": "结构/图片/证据引用自动校验通过，不等同于人工核对事实归属",
+    "sizeTables": 41,
+    "skuCount": 542,
+    "missingMappingsCount": 167
+  },
+  "seedPackageSHA256": "b4f1ef74e6f46cb7de8c062ede08e682259db349a54a5fa7a84c3ce403459590",
+  "freshStoresRun": "pending; separately reported, not offline replay"
+}

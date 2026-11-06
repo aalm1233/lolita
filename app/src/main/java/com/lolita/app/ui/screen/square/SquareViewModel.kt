@@ -11,10 +11,73 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
 class SquareViewModel(private val repository:SquareRepository=AppModule.squareRepository(),
-    private val saved:SavedStateHandle=SavedStateHandle()):ViewModel() {
+    private val saved:SavedStateHandle=SavedStateHandle(),
+    val showAmounts:kotlinx.coroutines.flow.Flow<Boolean> = AppModule.appPreferences().showTotalPrice):ViewModel() {
+    val wardrobe=repository.wardrobe.stateIn(viewModelScope,SharingStarted.Eagerly,SquareWishWardrobe())
+    val browseKey=saved.getStateFlow<String?>("square.browseKey",null)
+    val browseChoices=saved.getStateFlow("square.browseChoices","[]")
+    val multiOpen=saved.getStateFlow("square.multiOpen",false)
+    val multiChoices=saved.getStateFlow("square.multiChoices","[]")
+    val multiGrouped=saved.getStateFlow("square.multiGrouped",false)
+    private val _wishResult=MutableStateFlow<SquareWishResult?>(null)
+    val wishResult=_wishResult.asStateFlow()
+    fun browseParts():List<SquareBrowsePart> {
+        val c=catalog.value?:return emptyList();val e=c.events.firstOrNull{it.id==eventId.value}?:return emptyList()
+        return SquareBrowse.parts(c,e)
+    }
+    private fun choices(json:String):List<SquareBrowseChoice> = runCatching { SquarePackage.gson.fromJson(json,Array<SquareBrowseChoice>::class.java).toList() }.getOrDefault(emptyList())
+    fun currentBrowsePart():SquareBrowsePart?=browseParts().firstOrNull{it.key==browseKey.value}?:browseParts().firstOrNull()
+    fun currentBrowseChoice():SquareBrowseChoice? {
+        val c=catalog.value?:return null;val part=currentBrowsePart()?:return null
+        return choices(browseChoices.value).firstOrNull{it.key==part.key}?:SquareBrowseChoice(part.key,SquareBrowse.colors(c,part).firstOrNull().orEmpty())
+    }
+    fun currentBrowseSelection():SquareBrowseSelection? {
+        val c=catalog.value?:return null;val part=currentBrowsePart()?:return null;val choice=currentBrowseChoice()?:return null
+        return runCatching{SquareBrowse.select(c,part,choice)}.getOrNull()
+    }
+    fun selectBrowse(key:String){if(_busy.value!=null)return;saved["square.browseKey"]=key}
+    fun chooseBrowse(color:String?=null,size:String?=null){
+        if(_busy.value!=null)return
+        val c=catalog.value?:return;val part=currentBrowsePart()?:return;val old=currentBrowseChoice()?:return
+        var next=old.copy(color=color?:old.color,size=size?:old.size)
+        if(next.size.isNotEmpty() && next.size !in SquareBrowse.sizes(c,part,next.color))next=next.copy(size="")
+        saved["square.browseChoices"]=SquarePackage.gson.toJson(choices(browseChoices.value).filterNot{it.key==next.key}+next)
+    }
+    fun openMulti(){if(_busy.value!=null)return;val choice=currentBrowseChoice()?:return
+        saved["square.multiChoices"]=SquarePackage.gson.toJson(listOf(choice));saved["square.multiGrouped"]=false;saved["square.multiOpen"]=true}
+    fun closeMulti(){if(_busy.value==null)saved["square.multiOpen"]=false}
+    fun selectedWishes()=choices(multiChoices.value)
+    fun toggleWish(key:String){if(_busy.value!=null)return;val current=selectedWishes();val next=if(current.any{it.key==key})current.filterNot{it.key==key}else current+SquareBrowseChoice(key)
+        saved["square.multiChoices"]=SquarePackage.gson.toJson(next);if(next.size<2)saved["square.multiGrouped"]=false}
+    fun changeWish(key:String,color:String?=null,size:String?=null){if(_busy.value!=null)return
+        val part=browseParts().firstOrNull{it.key==key}?:return;val c=catalog.value?:return
+        saved["square.multiChoices"]=SquarePackage.gson.toJson(selectedWishes().map { choice->if(choice.key!=key)choice else {
+            val next=choice.copy(color=color?:choice.color,size=size?:choice.size)
+            if(next.size.isNotEmpty() && next.size !in SquareBrowse.sizes(c,part,next.color))next.copy(size="")else next
+        } })}
+    fun groupWishes(value:Boolean){if(_busy.value==null)saved["square.multiGrouped"]=value && selectedWishes().size>1}
+    private fun wishRequest(multiple:Boolean):SquareWishRequest {
+        val c=catalog.value?:error("请先导入广场资料包");val e=c.events.single{it.id==eventId.value}
+        return SquareBrowse.request(c,e,if(multiple)selectedWishes()else listOfNotNull(currentBrowseChoice()),multiple && multiGrouped.value)
+    }
+    fun currentWishMatch():SquareWishMatch = runCatching { SquareWishPlans.match(SquareWishPlans.build(catalog.value!!,wishRequest(false)).single(),wardrobe.value) }.getOrDefault(SquareWishMatch())
+    fun saveWishes(multiple:Boolean=false,confirmRelated:Boolean=false){
+        if(_busy.value!=null)return
+        val request=runCatching {
+            if(confirmRelated)SquarePackage.gson.fromJson(saved.get<String>("square.lastWishRequest"),SquareWishRequest::class.java).copy(allowRelated=true)
+            else wishRequest(multiple)
+        }.getOrElse{_message.value="所选资料已改变，请重新选择";return}
+        if(!confirmRelated)saved["square.resultSheet"]=multiple
+        saved["square.lastWishRequest"]=SquarePackage.gson.toJson(request)
+        work("加入心愿"){val result=repository.addWishes(request);if(!result.related && result.draftIds.isEmpty())saved["square.multiOpen"]=false;_wishResult.value=result}
+    }
+    fun wishWasMultiple()=runCatching{val r=SquarePackage.gson.fromJson(saved.get<String>("square.lastWishRequest"),SquareWishRequest::class.java);saved.get<Boolean>("square.resultSheet")==true||r.grouped||r.choices.size>1}.getOrDefault(false)
+    fun clearWishResult(){_wishResult.value=null}
     val catalog=repository.catalog
     val eventId=saved.getStateFlow<String?>("square.event",null)
     val choosing=saved.getStateFlow("square.choosing",false)
@@ -78,8 +141,8 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     init { work { repository.load() } }
     fun image(path:String)=repository.image(path)
     fun set(key:String,value:String) { saved["square.$key"]=value }
-    fun open(id:String) { saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
-    fun back() { if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
+    fun open(id:String) { if(id!=eventId.value){saved["square.browseKey"]=null;saved["square.browseChoices"]="[]";saved["square.multiOpen"]=false};saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
+    fun back() { if(multiOpen.value){closeMulti();return};if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
     fun choose() {
         saved["square.choosing"]=true
         val planSku=saved.get<String>("square.planSku")

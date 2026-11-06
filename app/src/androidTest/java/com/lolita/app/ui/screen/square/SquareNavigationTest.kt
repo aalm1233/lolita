@@ -29,9 +29,9 @@ class SquareNavigationTest {
         }
         compose.onNode(isSelectable() and hasText("广场")).performClick()
         compose.waitUntil(10000){nav.currentDestination?.route==Screen.Square.route}
-        compose.onNodeWithText("导入本地资料包").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("导入资料包").performScrollTo().assertIsDisplayed()
         assertEquals(5,com.lolita.app.ui.navigation.BottomNavItems.items.size)
-        compose.onNodeWithText("导入本地资料包").performClick()
+        compose.onNodeWithText("导入资料包").performClick()
         val inst=InstrumentationRegistry.getInstrumentation()
         var pickerVisible=false
         repeat(50) {
@@ -41,6 +41,6 @@ class SquareNavigationTest {
         assertTrue("System document picker must open",pickerVisible)
         inst.uiAutomation.executeShellCommand("input keyevent 4").close()
         android.os.SystemClock.sleep(300)
-        compose.onNodeWithText("导入本地资料包").assertExists()
+        compose.onNodeWithText("导入资料包").assertExists()
     }
 }

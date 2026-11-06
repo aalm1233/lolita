@@ -59,6 +59,7 @@ interface OrderImportDao {
     @Update suspend fun updateCommit(value: OrderImportCommit)
 
     @Query("SELECT * FROM item_source_records") suspend fun sources(): List<ItemSourceRecord>
+    @Query("SELECT * FROM item_source_records WHERE kind='SQUARE_WISH'") fun observeSquareSources(): Flow<List<ItemSourceRecord>>
 
     @Query("SELECT * FROM item_source_records WHERE item_id=:itemId ORDER BY created_at DESC")
     fun observeSources(itemId: Long): Flow<List<ItemSourceRecord>>

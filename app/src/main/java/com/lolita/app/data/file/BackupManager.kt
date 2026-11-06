@@ -311,6 +311,15 @@ class BackupManager(
             sb.appendLine("物品ID,来源类型,公开商品链接,记录时间")
             backupData.itemSourceRecords.forEach { source -> sb.appendLine("${source.itemId},${escapeCsv(source.kind)},${escapeCsv(source.publicUrl)},${source.createdAt}") }
 
+            sb.appendLine("\n广场心愿成员")
+            sb.appendLine("物品ID,单品,颜色,尺码,公开链接,价格阶段,来源报价")
+            backupData.itemSourceRecords.filter { it.kind == "SQUARE_WISH" }.forEach { source ->
+                val snapshot = com.lolita.app.data.square.SquareWishSnapshot.decode(source.snapshotJson, source.imagePaths.size)
+                snapshot.members.forEach { member -> member.origins.forEach { origin ->
+                    sb.appendLine("${source.itemId},${escapeCsv(member.name)},${escapeCsv(member.color)},${escapeCsv(member.size)},${escapeCsv(origin.url)},${escapeCsv(origin.priceType)},${escapeCsv(origin.quote.takeIf { origin.quoteAppliesToMember })}")
+                } }
+            }
+
             // Sources
             sb.appendLine("\n=== SOURCES ===")
             sb.appendLine("id,name,is_preset,created_at")
@@ -1252,6 +1261,8 @@ class BackupManager(
 
     companion object {
         private val sharedOperationMutex = Mutex()
+        /** Same lock order as backup: operation lock, then Room. No catalogue callback under Room. */
+        internal suspend fun <T> withCatalogWrite(block: suspend () -> T): T = sharedOperationMutex.withLock { block() }
         private const val IMAGE_DIR = "images"
         private const val BACKUP_STAGING_DIR = "backup_staging"
         private const val ZIP_IMAGE_PREFIX = "zip://images/"

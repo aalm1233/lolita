@@ -321,7 +321,7 @@ object ImageFileHelper {
         }
     }
 
-    suspend fun copyExistingImageToInternalStorage(context: Context, sourcePath: String): String =
+    suspend fun copyExistingImageToInternalStorage(context: Context, sourcePath: String, onAllocated: (String) -> Unit = {}): String =
         withContext(Dispatchers.IO) {
             val sourceFile = File(sourcePath)
             require(sourceFile.exists()) { "Image file does not exist: $sourcePath" }
@@ -337,6 +337,7 @@ object ImageFileHelper {
             val destFile = File(dir, fileName)
 
             try {
+                onAllocated(destFile.absolutePath)
                 sourceFile.inputStream().use { input ->
                     destFile.outputStream().use { output -> input.copyTo(output) }
                 }

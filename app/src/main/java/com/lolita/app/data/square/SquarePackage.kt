@@ -37,7 +37,9 @@ data class SquareSku(
 )
 data class SquarePart(val key: String, val name: String, val category: String?, val isAccessory: Boolean,
     val color: String?, val size: String?, val relation: String, val uncertainty: String?)
-data class SquareMaterial(val partKey: String, val detailPaths: List<String>, val facts: String, val source: String)
+data class SquareMaterial(val partKey: String, val detailPaths: List<String>, val facts: String, val source: String, val sizeTable: SquareSizeTable? = null)
+data class SquareSizeTable(val columns: List<String>, val rows: List<SquareSizeRow>, val note: String = "")
+data class SquareSizeRow(val size: String, val values: List<String>)
 data class SquareStyle(val value: String, val source: String, val field: String)
 data class SquareImage(val path: String, val role: String, val order: Int, val url: String)
 data class SquareAsset(val path: String, val sha256: String, val bytes: Long, val width: Int, val height: Int)
@@ -77,6 +79,7 @@ object SquarePackage {
             unique(p.skus) { it.id }
             val imagePaths=p.images.map { it.path }.toSet()
             require(p.materials.orEmpty().size<=100 && p.materials.orEmpty().all { m -> m.partKey.length in 1..100 && p.skus.any { s -> s.parts.any { it.key==m.partKey } } && m.source.length in 1..2000 && m.facts.length<=12000 && m.detailPaths.size<=30 && m.detailPaths.distinct().size==m.detailPaths.size && m.detailPaths.all { path -> path in imagePaths } }) { "部件资料引用无效" }
+            p.materials.orEmpty().forEach { it.sizeTable?.validate() }
             p.skus.forEach { s ->
                 require(s.photoPaths.orEmpty().size<=30 && s.photoPaths.orEmpty().distinct().size==s.photoPaths.orEmpty().size && s.photoPaths.orEmpty().all { it in imagePaths }) { "规格图片引用无效" }
                 require(idPattern.matches(s.variantId) && idPattern.matches(s.id) && s.key == "${p.id}:${s.id}" && s.itemId == p.id && s.props.isNotEmpty() && s.props == s.rawProperties && s.props.size <= 12 && s.props.all { it.key.length in 1..100 && it.value.length in 1..500 }) { "商品SKU原始规格不完整" }
@@ -170,4 +173,9 @@ fun squareInfoText(e: JsonElement): String = when {
             "excluded" to "不包含","gifts" to "赠品条件","care" to "洗护","materials" to "材质","craft" to "工艺","sizes" to "尺码资料")[it.key] ?: it.key
         "$label：${squareInfoText(it.value)}"
     }
+}
+
+fun SquareSizeTable.validate() {
+    require(columns.size in 1..12 && columns.all { it.length in 1..100 } && columns.distinct().size == columns.size && rows.size in 1..50 && rows.map { it.size }.distinct().size == rows.size && note.length <= 1000) { "尺码表格式无效" }
+    require(rows.all { it.size.length in 1..100 && it.values.size == columns.size && it.values.all { v -> v.length in 1..200 } }) { "尺码表行列不完整" }
 }

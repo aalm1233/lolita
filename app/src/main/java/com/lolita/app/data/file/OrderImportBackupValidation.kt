@@ -296,7 +296,7 @@ internal object OrderImportBackupValidation {
             uuid(source.id)
             require(
                 source.itemId in items &&
-                    source.kind in setOf("ORDER_IMPORT", "PRODUCT_SUPPLEMENT") &&
+                    source.kind in setOf("ORDER_IMPORT", "PRODUCT_SUPPLEMENT", "SQUARE_WISH") &&
                     source.createdAt >= 0
             )
             require(
@@ -321,6 +321,11 @@ internal object OrderImportBackupValidation {
                     }
             )
             require(JsonParser.parseString(source.snapshotJson).isJsonObject)
+            if (source.kind == "SQUARE_WISH") {
+                require(data.formatVersion >= 16) { "广场心愿来源需要备份格式16" }
+                val snapshot = com.lolita.app.data.square.SquareWishSnapshot.decode(source.snapshotJson, source.imagePaths.size)
+                require(data.items.single { it.id == source.itemId }.importToken == snapshot.identity()) { "广场来源身份与物品不一致" }
+            }
         }
     }
 }

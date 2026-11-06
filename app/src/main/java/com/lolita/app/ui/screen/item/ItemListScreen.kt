@@ -121,7 +121,8 @@ fun ItemListScreen(
     onAddItem: (WardrobeFamily?) -> Unit = { onNavigateToEdit(null) },
     onImportOrders: () -> Unit = {},
     onImportProduct: () -> Unit = {},
-    onRestoreBackup: () -> Unit = {}
+    onRestoreBackup: () -> Unit = {},
+    initialPage: Int = 0
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -164,7 +165,7 @@ fun ItemListScreen(
     } else {
         Brush.horizontalGradient(skin.gradientColors)
     }
-    val pagerState = rememberPagerState(pageCount = { 4 })
+    val pagerState = rememberPagerState(initialPage = initialPage.coerceIn(0, 3), pageCount = { 4 })
     ObserveSkinScroll(pagerState)
     val coroutineScope = rememberCoroutineScope()
     val activeFilterCount = listOfNotNull(

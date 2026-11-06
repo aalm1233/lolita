@@ -27,6 +27,11 @@ class SquareRepository(private val context: Context, private val database: Lolit
     private val drafts: ItemDraftRepository) {
     private val gate=Mutex()
     private var loaded=false
+    private val addWish = com.lolita.app.domain.usecase.AddSquareWishUseCase(context, database)
+    val wardrobe = kotlinx.coroutines.flow.combine(database.itemDao().getAllItems(), database.orderImportDao().observeSquareSources(), database.itemDraftDao().observeDrafts()) { items, sources, drafts -> SquareWishWardrobe(items, sources, drafts) }
+    suspend fun addWishes(request: SquareWishRequest): SquareWishResult = withContext(Dispatchers.IO) { gate.withLock {
+        addWish(_catalog.value ?: error("请先导入广场资料包"), request, ::image)
+    } }
     private val root=File(context.filesDir,"square_catalog")
     private val index get()=AtomicFile(File(root,"catalog.json"))
     private val _catalog=MutableStateFlow<SquareCatalog?>(null)
@@ -37,6 +42,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
     suspend fun load()=withContext(Dispatchers.IO) { gate.withLock {
         if(loaded)return@withLock
         root.mkdirs()
+        addWish.cleanupInterrupted()
         // Only interrupted temporary imports; published image blobs are never swept here.
         root.listFiles()?.filter { it.name.startsWith("pending-") || it.name.startsWith("input-") }?.forEach { it.deleteRecursively() }
         if(File(root,"catalog.json").exists()) {

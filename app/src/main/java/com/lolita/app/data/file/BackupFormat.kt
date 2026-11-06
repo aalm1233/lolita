@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier
 
 /** Explicit JSON migration before Gson: Kotlin constructor defaults are not deserialization defaults. */
 internal object BackupFormat {
-    const val VERSION = 15
+    const val VERSION = 16
     const val SCHEMA_VERSION = 34
     private val gson = Gson()
     private const val MAX_ACTIVE_AMOUNT = com.lolita.app.domain.usecase.OrderAccounting.MAX_AMOUNT

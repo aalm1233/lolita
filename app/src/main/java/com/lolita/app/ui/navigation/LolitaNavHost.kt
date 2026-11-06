@@ -239,7 +239,7 @@ fun LolitaNavHost(
 
                 items.forEach { item ->
                     val selected = currentDestination?.hierarchy?.any {
-                        it.route == item.screen.route
+                        it.route == item.screen.route || (item.screen == Screen.ItemList && it.route == Screen.Wishlist.route)
                     } == true
                     val tint = if (selected) accent else MaterialTheme.colorScheme.onSurfaceVariant
                     NavigationBarItem(
@@ -310,11 +310,14 @@ fun LolitaNavHost(
                 com.lolita.app.ui.screen.square.SquareEditorResult(entry,square)
                 com.lolita.app.ui.screen.square.SquareScreen(
                     onEditDraft = { id -> navController.navigate(Screen.ItemEdit.createRoute(defaultStatus = "WISHED", draftId = id)) },
-                    onOpenItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }, viewModel = square)
+                    onOpenItem = { id -> navController.navigate(Screen.ItemDetail.createRoute(id)) }, viewModel = square,
+                    onOpenWishlist = { navController.navigate(Screen.Wishlist.route) { launchSingleTop = true } })
             }
-            composable(Screen.ItemList.route) {
+            listOf(Screen.ItemList.route, Screen.Wishlist.route).forEach { homeRoute ->
+            composable(homeRoute) {
                 CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this@composable) {
                 ItemListScreen(
+                    initialPage = if (homeRoute == Screen.Wishlist.route) 3 else 0,
                     onNavigateToDetail = { itemId ->
                         navController.navigate(Screen.ItemDetail.createRoute(itemId))
                     },
@@ -345,6 +348,7 @@ fun LolitaNavHost(
                     }
                 )
                 } // LocalNavAnimatedVisibilityScope
+            }
             }
 
             // Item Detail

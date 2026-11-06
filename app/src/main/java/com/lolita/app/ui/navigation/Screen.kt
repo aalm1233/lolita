@@ -4,6 +4,7 @@ sealed interface Screen {
     val route: String
 
     data object Square : Screen { override val route = "square" }
+    data object Wishlist : Screen { override val route = "wishlist" }
 
     data object ItemList : Screen {
         override val route = "item_list"

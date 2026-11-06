@@ -47,7 +47,7 @@
 
 ## 数据库
 
-- Room 数据库版本34，45个实体，备份格式15；33→34只追加ItemReferencePrice／OrderRefund／OrderCancellation，迁移在`AfterSaleMigration.kt`，不推断旧价格为参考价；32→33仅追加六张订单导入会话／来源表，迁移在`OrderImportSessionMigration.kt`，备份格式14；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
+- Room 数据库版本34，45个实体，备份格式16；33→34只追加ItemReferencePrice／OrderRefund／OrderCancellation，迁移在`AfterSaleMigration.kt`，不推断旧价格为参考价；32→33仅追加六张订单导入会话／来源表，迁移在`OrderImportSessionMigration.kt`，备份格式14；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。
 - 外键策略：子记录跟主记录删除用 `CASCADE`（Price→Item, Payment→Price）；被引用对象不该在使用中删除用 `RESTRICT`（Item→Brand, Item→Category, Item→Coordinate, Item→parent Item）。
 - 新增图片字段统一走 `ImageFileHelper`（存到 `context.filesDir/images/`，UUID 文件名），删除记录时清理图片文件。
@@ -336,7 +336,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=147, versionName="2.71.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=151, versionName="2.74.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布
@@ -746,3 +746,9 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 - 2.72.0／148广场本地包：源码`4a4bf3fa`与标签已普通推送；9项JVM、7项去重设备方法、七皮肤浅暗／320dp两倍字真实IME和53键图标通过。提交归档clean原签名Release、37素材字节／7背景与旧正式包字节一致、2.71.1覆盖两次启动保全45表／160物品／629私有图SHA和设置；正式包实导3店ZIP并保存M码心愿，54详情图与原账本保全。GitHub/Gitee同APK和校验匿名完整下载／SHA／HEAD、源码标签、公开最高版本及真实App手动检查2.72.0通过；按持续授权仅清理Gitee最旧2.64.0 APK，旧页／校验／GitHub及三份本机副本保留。首个资料包本地交付，云端同步未接入。Room34／备份15，付费0次，主助手无淘宝访问；回执`docs/square-local-import-release-2.72.0-verification.json`。
 
 - 2.73.1修正广场逐件返回：NavBackStackEntry.savedStateHandle与ViewModel.createSavedStateHandle属于不同持有者，编辑回执须由`SquareEditorResult`桥接到SquareViewModel；按当前draftId验证saved/paused，陈旧回执不能推进或抹掉当前登记身份。真实导航往返与正式App逐件保存须验收，不能仅以Repository或独立页面测试代替。
+
+## 广场浏览与直接心愿（2.74.0）
+
+- 图片卡→当前单品/颜色/可后补尺码→参数→直接心愿，默认不经四步拆分或完整编辑器。选多件/个人组合按需，部件照片/规格独立；未知不绑定首SKU，套餐价不分摊，尾款只读。单件保存以主按钮已有状态反馈，避免Snackbar挡颜色。`SquareBrowse`投影、`AddSquareWishUseCase`事务保存、现有心愿路由复用ItemListScreen初始Tab3。
+- `SQUARE_WISH` v1使用既有ItemSourceRecord，图片以imagePaths索引保存；备份16支持完整来源/组合/图片往返及CSV可读摘要，兼容1—15，Room34/45实体不变。保存冻结目录版本、旧token/草稿查重；共享备份锁、UUID复制前持久清单、事务后二次查重与引用保护，失败不留半组。旧登记草稿继续原编辑器。
+- 本地公开包v1可附明确sizeTable；三店浏览版补41张独立表，421原图字节保留，不重新采集或猜测规格。前置设计与本轮实施/真实验收分别见`docs/plans/2026-11-06-square-browse-first-design.md`和`docs/square-browse-implementation-2026-11-06.md`。云同步未接入，付费0次，主助手淘宝访问0次。

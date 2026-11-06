@@ -498,6 +498,7 @@ fun ItemDetailScreen(
                             }
                         }
 
+                        com.lolita.app.ui.screen.square.SquareItemSources(sourceRecords, com.lolita.app.ui.screen.price.pricingMoneyVisible())
                         LolitaSection("商品来源") {
                             sourceRecords.mapNotNull { it.publicUrl }.distinct().forEach { url -> row {
                                 Text(url,style=MaterialTheme.typography.bodySmall)

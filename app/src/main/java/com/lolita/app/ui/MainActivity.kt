@@ -14,6 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.lolita.app.di.AppModule
 import com.lolita.app.ui.navigation.LolitaNavHost
 import com.lolita.app.ui.screen.settings.AppUpdateHost
@@ -22,6 +24,10 @@ import com.lolita.app.ui.theme.LolitaTheme
 import com.lolita.app.ui.theme.SkinType
 
 class MainActivity : ComponentActivity() {
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launch { AppModule.squareRepository().refreshSilently() }
+    }
     private var openQuickOutfit by mutableStateOf(false)
     private var openImageTasks by mutableStateOf(false)
 

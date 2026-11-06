@@ -79,6 +79,16 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     fun wishWasMultiple()=runCatching{val r=SquarePackage.gson.fromJson(saved.get<String>("square.lastWishRequest"),SquareWishRequest::class.java);saved.get<Boolean>("square.resultSheet")==true||r.grouped||r.choices.size>1}.getOrDefault(false)
     fun clearWishResult(){_wishResult.value=null}
     val catalog=repository.catalog
+    val serviceUrl=repository.serviceUrl
+    val imageEpoch=repository.imageEpoch
+    private val _refreshing=MutableStateFlow(false)
+    val refreshing=_refreshing.asStateFlow()
+    fun refresh() {
+        if(_refreshing.value)return
+        _refreshing.value=true
+        viewModelScope.launch {try{repository.refreshSilently()}finally{_refreshing.value=false}}
+    }
+    fun configureService(value:String) { viewModelScope.launch { repository.configureService(value);repository.refreshSilently() } }
     val eventId=saved.getStateFlow<String?>("square.event",null)
     val choosing=saved.getStateFlow("square.choosing",false)
     val query=saved.getStateFlow("square.query","")
@@ -138,8 +148,9 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     val message=_message.asStateFlow()
     private val _registration=MutableStateFlow<SquareRepository.Registration?>(null)
     val registration=_registration.asStateFlow()
-    init { work { repository.load() } }
+    init { work { repository.load() };viewModelScope.launch { repository.refreshSilently() } }
     fun image(path:String)=repository.image(path)
+    fun thumbnail(path:String,epoch:Long)=repository.thumbnail(path,epoch)
     fun set(key:String,value:String) { saved["square.$key"]=value }
     fun open(id:String) { val c=catalog.value?:return;if(c.events.none{it.id==id && SquareVisibility.event(c,it)})return; if(id!=eventId.value){saved["square.browseKey"]=null;saved["square.browseChoices"]="[]";saved["square.multiOpen"]=false};saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
     fun back() { if(multiOpen.value){closeMulti();return};if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
@@ -174,6 +185,7 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
         _busy.value=label
         viewModelScope.launch(Dispatchers.IO){try{block()}catch(e:Exception){
             if(e is CancellationException)throw e
+            if(e is SquareNetworkException)return@launch
             // Package validation messages are authored Chinese; I/O exceptions never expose paths.
             _message.value=if(e is IllegalArgumentException || e is IllegalStateException)
                 e.message?.takeIf { it.any { c-> c in '\u4e00'..'\u9fff' } && it.length<=200 } ?: "资料无法读取，请重新选择完整的广场资料包"

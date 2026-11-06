@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.icon.IconKey
 import com.lolita.app.ui.theme.skin.icon.SkinIcon
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:SquareViewModel=viewModel(),onOpenWishlist:()->Unit={}) {
     val catalog by viewModel.catalog.collectAsState()
@@ -43,6 +45,11 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     val busy by viewModel.busy.collectAsState();val preview by viewModel.preview.collectAsState()
     val message by viewModel.message.collectAsState();val registration by viewModel.registration.collectAsState()
     val snack=remember { SnackbarHostState() }
+    val refreshing by viewModel.refreshing.collectAsState()
+    val serviceUrl by viewModel.serviceUrl.collectAsState()
+    var serviceOpen by rememberSaveable { mutableStateOf(false) }
+    var address by rememberSaveable { mutableStateOf("") }
+    var addressError by rememberSaveable { mutableStateOf<String?>(null) }
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(viewModel::import)}
     fun pick(){picker.launch(arrayOf("application/zip","application/x-zip-compressed","application/octet-stream"))}
     LaunchedEffect(message){message?.let { snack.showSnackbar(it);viewModel.clearMessage() }}
@@ -76,11 +83,14 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
             actions={if(event==null){
                 IconButton(onClick=onOpenWishlist,modifier=Modifier.semantics{contentDescription="查看心愿"}){SkinIcon(IconKey.Wishlist)}
                 IconButton(onClick=::pick,enabled=busy==null && preview==null,modifier=Modifier.semantics{contentDescription="导入资料包"}){SkinIcon(IconKey.FileOpen)}
+                IconButton(onClick={address=serviceUrl;addressError=null;serviceOpen=true},modifier=Modifier.testTag("square-service").semantics{contentDescription="广场服务"}){SkinIcon(IconKey.Settings)}
             }})}){padding->
         Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
             when {
-                catalog==null && busy==null->SquareEmpty(::pick)
-                catalog!=null && event==null->SquareBrowseFeed(catalog!!,viewModel,showAmounts)
+                event==null->PullToRefreshBox(isRefreshing=refreshing,onRefresh=viewModel::refresh,modifier=Modifier.fillMaxSize().testTag("square-refresh")) {
+                    if(catalog!=null)SquareBrowseFeed(catalog!!,viewModel,showAmounts)
+                    else if(busy==null)SquareEmpty(::pick)
+                }
                 event!=null && choosing && step>0->SquareRegistrationScreen(catalog!!,event,viewModel)
                 event!=null && choosing->SquareSelection(catalog!!,event,viewModel,busy!=null)
                 event!=null && !event.canRegister->SquareTailDetail(catalog!!,event,viewModel,showAmounts,snack)
@@ -91,6 +101,17 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     }
     if(multi && catalog!=null && event?.canRegister==true)SquareWishSheet(catalog!!,viewModel)
     SquareWishResultSheet(viewModel,onOpenItem,onEditDraft,onOpenWishlist)
+    if(serviceOpen)AlertDialog(onDismissRequest={serviceOpen=false},title={Text("广场服务")},text={
+        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
+            OutlinedTextField(address,{address=it;addressError=null},label={Text("服务地址")},singleLine=false,
+                modifier=Modifier.fillMaxWidth().testTag("square-service-address"),isError=addressError!=null,
+                supportingText={Text(addressError?:"清空地址后停止联网查询")})
+        }
+    },confirmButton={TextButton(onClick={
+        val value=runCatching{normalizeSquareServiceUrl(address)}
+        if(value.isSuccess){viewModel.configureService(value.getOrThrow());serviceOpen=false}
+        else addressError=value.exceptionOrNull()?.message?:"请输入有效的服务地址"
+    },modifier=Modifier.testTag("square-service-save")){Text("保存")}},dismissButton={TextButton(onClick={serviceOpen=false}){Text("取消")}})
     preview?.let { p -> AlertDialog(onDismissRequest={if(busy==null)viewModel.cancelPreview()},
         title={Text("导入到广场")},text={Column(Modifier.verticalScrollCompat()){
             Text(p.catalog.title,style=MaterialTheme.typography.titleSmall);Spacer(Modifier.height(12.dp))
@@ -105,7 +126,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
 @Composable private fun Modifier.verticalScrollCompat()=this.then(Modifier.verticalScroll(rememberScrollState()))
 
 @Composable private fun SquareEmpty(onImport:()->Unit){
-    Column(Modifier.fillMaxSize().padding(28.dp),verticalArrangement=Arrangement.Center,horizontalAlignment=Alignment.CenterHorizontally){
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(28.dp),verticalArrangement=Arrangement.Center,horizontalAlignment=Alignment.CenterHorizontally){
         SkinIcon(IconKey.Square,Modifier.size(80.dp),MaterialTheme.colorScheme.primary)
         Spacer(Modifier.height(20.dp));Text("暂无店铺资料",style=MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(20.dp));Button(onClick=onImport,shape=LolitaSkin.current.cardShape,modifier=Modifier.fillMaxWidth().testTag("square-import")){Text("导入资料包")}

@@ -1,0 +1,288 @@
+{
+  "count": 56,
+  "source": "Complete native windows captured by external adb screencap, with instrumentation state acknowledgment",
+  "normal": "411dp fontScale1",
+  "small": "320dp fontScale2",
+  "screenshots": [
+    {
+      "size": "normal",
+      "name": "feed-default-light.png",
+      "sha256": "54b235b8461233a06cebcb94dc9caa47772966ffb4a983d609ec290543c5bc86"
+    },
+    {
+      "size": "normal",
+      "name": "feed-gothic-light.png",
+      "sha256": "a560fc0be25fce6be6b8fac311fe1c3a380a4d0a175fc1310b48541769fd449c"
+    },
+    {
+      "size": "normal",
+      "name": "feed-chinese-light.png",
+      "sha256": "530b55ceabae24433e7d2c68844ba9ff7e4519633e094d8669164e05b4d76413"
+    },
+    {
+      "size": "normal",
+      "name": "feed-classic-light.png",
+      "sha256": "961ca1cb7bc3c0665682aa74950814e9fc071ccf21e7144c37f544ab0896e829"
+    },
+    {
+      "size": "normal",
+      "name": "feed-navy-light.png",
+      "sha256": "07533204eecb4d71bbe91865dc30586deeec341aff7a49912696b77c2badc92e"
+    },
+    {
+      "size": "normal",
+      "name": "feed-country-light.png",
+      "sha256": "4c24c2d01be84109c8d6ca926b82735792e06e1284a121b271d2b64cfa2d26ed"
+    },
+    {
+      "size": "normal",
+      "name": "feed-victorian-light.png",
+      "sha256": "1cfd89d3d1053ada84e57cbd0c585c6b15002d7bd6d78340b85f8f3bda51c699"
+    },
+    {
+      "size": "normal",
+      "name": "feed-default-dark.png",
+      "sha256": "23e495bc5ab3cd32f6a3710c0e3219319506872ede403ad78732b8d40bf730d4"
+    },
+    {
+      "size": "normal",
+      "name": "feed-gothic-dark.png",
+      "sha256": "ff1b6a22638dc4ccc8bd7601a44c28d48954d9e7f208622bd9c382e775b267e0"
+    },
+    {
+      "size": "normal",
+      "name": "feed-chinese-dark.png",
+      "sha256": "6711cb462cb1a7788638ae9df974bd677b754757b8bfff8ee0af24554845a383"
+    },
+    {
+      "size": "normal",
+      "name": "feed-classic-dark.png",
+      "sha256": "c2753fd3f6cd8e8c17b2592e023961c5e8c7b5e65204467c651e2992f9a14fb1"
+    },
+    {
+      "size": "normal",
+      "name": "feed-navy-dark.png",
+      "sha256": "7dea19c3a5903c2561c48dc65ff82b6319e6423f5b3caba81340753b00cefbda"
+    },
+    {
+      "size": "normal",
+      "name": "feed-country-dark.png",
+      "sha256": "3ba03ab00dab7ba1360a2e70defdfb6c1bbda8ddbe29746b776e1b7f1c42e805"
+    },
+    {
+      "size": "normal",
+      "name": "feed-victorian-dark.png",
+      "sha256": "ca8f24eed6f9f06eae611174183a1a2e317514902c3a5426627477cd9243506a"
+    },
+    {
+      "size": "normal",
+      "name": "service-default-light.png",
+      "sha256": "c6999633afaca7f077491086e0235039a9a02c73ff1141ad79e4939a98b1f33d"
+    },
+    {
+      "size": "normal",
+      "name": "service-gothic-light.png",
+      "sha256": "1e2930c0754248221a5686de3cd1b27c89ab8ff1f55bcd1ed95845b82bb88a6e"
+    },
+    {
+      "size": "normal",
+      "name": "service-chinese-light.png",
+      "sha256": "9e61b3a94023f140bd45f0ce4dd9926e703a7e874cf7447219de1448851336f0"
+    },
+    {
+      "size": "normal",
+      "name": "service-classic-light.png",
+      "sha256": "06c6743d6be91c278e6566f8c8d51d0e61d55f6a586649955346950afc9c2dc2"
+    },
+    {
+      "size": "normal",
+      "name": "service-navy-light.png",
+      "sha256": "52d0f75c658a5f4703dc511dc750a7a8f5746cd20ae707be1c8d631b4dd0024c"
+    },
+    {
+      "size": "normal",
+      "name": "service-country-light.png",
+      "sha256": "e17e3b5360b89025c242f76c28e1b76f311a3a58d65cb7114cf6746dcf836512"
+    },
+    {
+      "size": "normal",
+      "name": "service-victorian-light.png",
+      "sha256": "d3716c5e1524a69eb0bc2a2bb8aedac58342f904d362bfad75d45f53bd28365b"
+    },
+    {
+      "size": "normal",
+      "name": "service-default-dark.png",
+      "sha256": "3986e174a743832a98f70daa8b40a24ad967e375eef4afb9447ea430a489bfc6"
+    },
+    {
+      "size": "normal",
+      "name": "service-gothic-dark.png",
+      "sha256": "e349a8473ce980172f4f38bfc67a32f3eda1d8ecef30e2f34e32590f4189daf7"
+    },
+    {
+      "size": "normal",
+      "name": "service-chinese-dark.png",
+      "sha256": "1ee2944b7896e51fc10857d0a90acc451e73cba580c690575f3b07c6a9e46390"
+    },
+    {
+      "size": "normal",
+      "name": "service-classic-dark.png",
+      "sha256": "b7e920c9d1af26fa92a5d2923ac31f7432d895ee40c9b88c045348e9dde138fc"
+    },
+    {
+      "size": "normal",
+      "name": "service-navy-dark.png",
+      "sha256": "419a553409d0dc7c9d585c8ba297baeb0948fad78ac05dc0ba8a39534d51ef38"
+    },
+    {
+      "size": "normal",
+      "name": "service-country-dark.png",
+      "sha256": "c656a54de397afba10b8357a56523e81c0cd2e9fce572cd3f4c923ea69f4443f"
+    },
+    {
+      "size": "normal",
+      "name": "service-victorian-dark.png",
+      "sha256": "e54653b5ac36a1560e7fe2188e0aedf2ec3aef79070f9e5ef49b22465a35ad6c"
+    },
+    {
+      "size": "small",
+      "name": "feed-default-light.png",
+      "sha256": "409399145e5fc00042bda6faf7f418d6e8d9b478a37ee8fbf3d4b015ef4759e9"
+    },
+    {
+      "size": "small",
+      "name": "feed-gothic-light.png",
+      "sha256": "0c88009c6a9c52b7b2a0698f2ed819b8428abb3eb45c44e46ff5762056788d79"
+    },
+    {
+      "size": "small",
+      "name": "feed-chinese-light.png",
+      "sha256": "126d5f77788283b8ad2e81336ad7d65e35e3dd0550b79fc839c8588baef05cc9"
+    },
+    {
+      "size": "small",
+      "name": "feed-classic-light.png",
+      "sha256": "5d70f1e689598cc0ba85bd97a2ae3496bc55b83ee1edea53af5ce9b51a4f5795"
+    },
+    {
+      "size": "small",
+      "name": "feed-navy-light.png",
+      "sha256": "d173f7f71a14e7f12dfce4b8cd480902fb651a9447ea16d671051ea28b4b14a3"
+    },
+    {
+      "size": "small",
+      "name": "feed-country-light.png",
+      "sha256": "ea4e6ab61bf10abac44a47737cd828b5ab9b5574949b0049f58e019c1bfa5987"
+    },
+    {
+      "size": "small",
+      "name": "feed-victorian-light.png",
+      "sha256": "ed4619377bf4e0b3d27076bae488706691b9fba46f401fb91501ff3bea952209"
+    },
+    {
+      "size": "small",
+      "name": "feed-default-dark.png",
+      "sha256": "a910bf4758e87466b2300cb424d7fb6dcde3c2b40faaf35d269ee6812900171d"
+    },
+    {
+      "size": "small",
+      "name": "feed-gothic-dark.png",
+      "sha256": "3f6e2189401ce2cf08467b2e68a4bfb6b1c36ba32e75b90dbc11f9b99815c777"
+    },
+    {
+      "size": "small",
+      "name": "feed-chinese-dark.png",
+      "sha256": "78a8d40b1a63c61e91e2f33addd741179b8180d0eb0b7933362edcf1e96ed7e1"
+    },
+    {
+      "size": "small",
+      "name": "feed-classic-dark.png",
+      "sha256": "95f8ee1edd068eca46e1569e6c6193f53da0d54a65ea544a675a7d42fc6aa5b4"
+    },
+    {
+      "size": "small",
+      "name": "feed-navy-dark.png",
+      "sha256": "4fc0d74d3b49276f08f5f32ad53b3e1d4185a88e6886e15bf00654d0b1a0b3c6"
+    },
+    {
+      "size": "small",
+      "name": "feed-country-dark.png",
+      "sha256": "d849d9747821e4583d9d58f0a9e94a345dd5148e19790e923c1c33862ac090b6"
+    },
+    {
+      "size": "small",
+      "name": "feed-victorian-dark.png",
+      "sha256": "c3106154fad1a93eb71979ff98473bc3e46dc6eba88aaa2847ad600afab1fd14"
+    },
+    {
+      "size": "small",
+      "name": "service-default-light.png",
+      "sha256": "5130795aed37ebf2af491a8736e0c4002d47c76ee5451c4bf44ca099a4451661"
+    },
+    {
+      "size": "small",
+      "name": "service-gothic-light.png",
+      "sha256": "8dc8936dade66f838882b91496ea2be8aa55f90e9d49350f257f643957615faf"
+    },
+    {
+      "size": "small",
+      "name": "service-chinese-light.png",
+      "sha256": "f048415e6d9ac8f458133e928588013b3eb123a1422836dffe41e69c5a699b15"
+    },
+    {
+      "size": "small",
+      "name": "service-classic-light.png",
+      "sha256": "ff871346d132c2a7d847b2b84762d2892e3fb7b0e7f510102ffc2f5969e02711"
+    },
+    {
+      "size": "small",
+      "name": "service-navy-light.png",
+      "sha256": "c5aa725cb72b27eb5a07a5afe13f76b950a644bd329318e710c954935eccd628"
+    },
+    {
+      "size": "small",
+      "name": "service-country-light.png",
+      "sha256": "a6d0d203d6342c321560ced5e89c2aae3ed2ed9e6bb0487ee842a43ea860df07"
+    },
+    {
+      "size": "small",
+      "name": "service-victorian-light.png",
+      "sha256": "bfa928aaa51404950a175cab0fdace79eb0751a79f9cea14b3148e44bbac1940"
+    },
+    {
+      "size": "small",
+      "name": "service-default-dark.png",
+      "sha256": "a457f82ef46284f290bfa9d841fc50ed18af52f888ce9bcbbd5132d0da6ea6d9"
+    },
+    {
+      "size": "small",
+      "name": "service-gothic-dark.png",
+      "sha256": "f8a21f95f156a57b792e02437e8bf15401aea76c22d77ffd845bca08116705d9"
+    },
+    {
+      "size": "small",
+      "name": "service-chinese-dark.png",
+      "sha256": "c654349779a23148ac48106d7eb3eae9be6ea98c244e345cad68508b4781202b"
+    },
+    {
+      "size": "small",
+      "name": "service-classic-dark.png",
+      "sha256": "e0f3ec4cd56edffa45b21283540841c661baf3057c5d10c0cbd4dd5a1abca222"
+    },
+    {
+      "size": "small",
+      "name": "service-navy-dark.png",
+      "sha256": "f56779ab8d1cef3cbbcbf9de8ab20f81f2a3d4a6f1eb2ef4ef7a95955916a347"
+    },
+    {
+      "size": "small",
+      "name": "service-country-dark.png",
+      "sha256": "a1337bc310a8b32e6879d82aeb23ee4bb067448fd3c79a33418f2eb0cd12bc1e"
+    },
+    {
+      "size": "small",
+      "name": "service-victorian-dark.png",
+      "sha256": "d56a39d96086c0cbfe87d724568e7de8ed647728727a10ee83e7e8dd0fc884eb"
+    }
+  ]
+}

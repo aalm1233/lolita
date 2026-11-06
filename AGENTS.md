@@ -38,6 +38,13 @@
 
 ## 架构与实现约定
 
+### 广场内网服务（2.76.0）
+
+- 独立服务 `scripts/square/lan_service.py`：本地 `ingest` 对已核验公开包执行实际 Kotlin 合同、SHA和图片检查后写独立SQLite/WAL；逐动态及关联商品短事务、稳定revision/变更seq、缺席保留，售卖状态证据防陈旧复活。API仅明确只读业务路由，不提供SQL、文件浏览、发布或采集入口。`service_control.py`管理本机用户API常驻服务，不是Codex采集调度；后续定时任务继续由Codex→dsh→本地核验→入库，不由API触发淘宝访问。
+- App前台进入及广场下拉刷新读取变更游标，本地目录先展示；网络/协议/图片连接失败仅类别日志，不能弹Snackbar/Toast/弹窗/通知、清空缓存或阻塞衣橱。顶栏「广场服务」地址保存在noBackup文件，清空停止联网；HTTP仅私网IPv4/回环，其他HTTPS，不允许地址携带账号/路径/参数、不跟随重定向。
+- 列表缩略与详情原图按需下载，`SquareImageFetcher`复用全局Coil管线，原图SHA/字节/尺寸核对后持久缓存，刷新可重试失败缩略。心愿/旧登记仍先准备所需原图，复制独立UUID再沿原事务保存，已收藏不依赖服务；本地坏图保持原校验错误语义。缓存序列化保留参数显式null；目录SHA与游标绑定，不完整提交从0重放。
+- 网络目录允许未缓存图，使用独立数量/64MiB清单上限，不沿用ZIP600MiB总图上限；ZIP全图准入仍严格，Room34/45实体/备份16不变。设计与原生七皮肤浅暗/320dp两倍字/IME见 `docs/plans/2026-11-06-square-lan-service.md`；操作说明见 `docs/square-lan-service.md`。本轮仅内网，花生壳未接入；不新建未指定的采集调度。
+
 ### 淘宝公开目录采集
 
 - 用户查店铺上新或接续采集时应用仓库源`skills/taobao-shop-updates/`（安装于`~/.codex/skills/taobao-shop-updates/`）；本机dsh的DeepSeek负责淘宝访问/原图/OCR，主助手只调度及读取本地文件，不通过浏览器、CDP、DOM或自行请求淘宝接管。

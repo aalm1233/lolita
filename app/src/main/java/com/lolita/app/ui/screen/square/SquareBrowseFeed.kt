@@ -27,6 +27,7 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts: Boolean) {
     val query by vm.query.collectAsState(); val kind by vm.kind.collectAsState(); val shop by vm.shop.collectAsState()
     val color by vm.color.collectAsState(); val style by vm.style.collectAsState(); val form by vm.form.collectAsState()
+    val imageEpoch by vm.imageEpoch.collectAsState()
     var filters by rememberSaveable { mutableStateOf(false) }; var shops by rememberSaveable { mutableStateOf(false) }
     var shopQuery by rememberSaveable { mutableStateOf("") }
     val visibleEvents = remember(c) { SquareVisibility.events(c) }
@@ -71,7 +72,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                 modifier = Modifier.fillMaxWidth().testTag("square-event-${event.id}").clickable { vm.open(event.id) }) {
                 Column {
                     Box {
-                        LolitaShimmerImage(vm.image(cover.path), event.title, Modifier.fillMaxWidth().aspectRatio(0.8f), ContentScale.Fit, circularRevealEnabled = false)
+                        LolitaShimmerImage(vm.thumbnail(cover.path,imageEpoch), event.title, Modifier.fillMaxWidth().aspectRatio(0.8f), ContentScale.Fit, circularRevealEnabled = false)
                         Surface(Modifier.align(Alignment.TopStart).padding(8.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = .93f), shape = LolitaSkin.current.cardShape) {
                             Text(event.kind, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                         }

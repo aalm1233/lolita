@@ -9,7 +9,10 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LolitaApplication : Application() {
+class LolitaApplication : Application(), coil.ImageLoaderFactory {
+    override fun newImageLoader(): coil.ImageLoader = coil.ImageLoader.Builder(this)
+        .components { add(com.lolita.app.data.square.SquareImageFetcher.Factory { AppModule.squareRepository() }) }
+        .build()
     override fun onCreate() {
         super.onCreate()
         AppModule.init(applicationContext)

@@ -64,17 +64,17 @@ object SquarePackage {
     private val idPattern = Regex("[A-Za-z0-9_-]{1,100}")
     val gson = Gson()
 
-    fun decode(json: String): SquareCatalog {
+    fun decode(json: String, network: Boolean = false): SquareCatalog {
         val root = JsonParser.parseString(json).asJsonObject
         require(root.keySet().all { it in setOf("format","schemaVersion","packageId","revision","title","capturedAt","shops","events","products","assets") }) { "资料包有未支持的字段，请更新应用" }
         require(root["format"]?.asString == "lolita.square" && root["schemaVersion"]?.asBigDecimal?.intValueExact() == 1) { "这不是支持的广场资料包，请选择广场ZIP" }
-        return gson.fromJson(root, SquareCatalog::class.java).also(::validate)
+        return gson.fromJson(root, SquareCatalog::class.java).also { validate(it, network) }
     }
 
-    fun validate(c: SquareCatalog) {
+    fun validate(c: SquareCatalog, network: Boolean = false) {
         require(c.format == "lolita.square" && c.schemaVersion == 1 && idPattern.matches(c.packageId) && c.revision > 0) { "资料包版本或标识无效" }
         require(c.title.isNotBlank() && c.title.length <= 200 && c.capturedAt.length in 1..80) { "资料包名称或采集日期无效" }
-        require(c.shops.size in 1..200 && c.events.size in 1..2000 && c.products.size in 1..2000 && c.assets.size in 1..4000) { "资料包内容为空或超过本地导入上限" }
+        require(c.shops.size in 1..200 && c.events.size in 1..(if(network)10000 else 2000) && c.products.size in 1..(if(network)10000 else 2000) && c.assets.size in 1..(if(network)40000 else 4000)) { "资料包内容为空或超过本地导入上限" }
         fun <T> unique(rows: List<T>, key: (T)->String) { require(rows.map(key).distinct().size == rows.size) { "资料包包含重复标识" } }
         unique(c.shops) { it.id }; unique(c.events) { it.id }; unique(c.products) { it.id }; unique(c.assets) { it.path }
         val shops = c.shops.associateBy { it.id }; val products = c.products.associateBy { it.id }; val assets = c.assets.associateBy { it.path }
@@ -82,7 +82,7 @@ object SquarePackage {
         c.assets.forEach { a ->
             require(assetPath.matches(a.path) && assetPath.matchEntire(a.path)!!.groupValues[1] == a.sha256 && a.bytes in 1..MAX_IMAGE && a.width in 1..50000 && a.height in 1..50000 && a.width.toLong()*a.height <= 80_000_000) { "图片路径、大小或尺寸无效" }
         }
-        require(c.assets.sumOf { it.bytes } <= MAX_ZIP) { "资料包图片总量超过600MiB" }
+        require(network || c.assets.sumOf { it.bytes } <= MAX_ZIP) { "资料包图片总量超过600MiB" }
         c.products.forEach { p ->
             p.listing?.let { require(it.status in setOf("ACTIVE", "OFF_SALE", "DISPLAY_ONLY") && it.source.isNotBlank() && it.source.length <= 2000 && it.observedAt.length in 1..80 && runCatching { java.time.OffsetDateTime.parse(it.observedAt) }.isSuccess) { "商品售卖状态或依据无效" } }
             require(idPattern.matches(p.id) && p.revision > 0 && p.shopId in shops && p.title.isNotBlank() && p.title.length <= 500 && p.capturedAt.isNotBlank()) { "商品资料或店铺引用无效" }
@@ -107,7 +107,7 @@ object SquarePackage {
             require(e.productIds.isNotEmpty() && e.productIds.distinct().size == e.productIds.size && e.productIds.all { products[it]?.shopId == e.shopId }) { "动态商品引用无效" }
             require(e.kind == "尾款" || e.productIds.any { products.getValue(it).pricePhase != "BALANCE" }) { "尾款商品不能登记为上新" }
         }
-        require(c.products.sumOf { it.skus.size } <= 20_000) { "规格总数超过20000个" }
+        require(c.products.sumOf { it.skus.size } <= if(network)200_000 else 20_000) { "规格总数超过本地上限" }
         require(c.products.flatMap { it.images }.map { it.path }.toSet() == assets.keys) { "资料包存在未归属的图片" }
     }
 
@@ -150,7 +150,7 @@ object SquarePackage {
         return out.toByteArray()
     }
 
-    fun merge(old: SquareCatalog?, incoming: SquareCatalog): SquareCatalog {
+    fun merge(old: SquareCatalog?, incoming: SquareCatalog, network: Boolean = false): SquareCatalog {
         if(old==null)return incoming
         incoming.products.forEach { n ->
             val p=old.products.firstOrNull { it.id==n.id }
@@ -170,7 +170,7 @@ object SquarePackage {
         val used=products.flatMap { it.images }.map { it.path }.toSet()
         return incoming.copy(shops=rows(old.shops,incoming.shops,{it.id},{it.revision}),
             events=rows(old.events,incoming.events,{it.id},{it.revision}), products=products,
-            assets=(old.assets+incoming.assets).associateBy { it.path }.values.filter { it.path in used }).also { validate(it);require(gson.toJson(it).toByteArray(Charsets.UTF_8).size <= MAX_JSON) { "本地目录清单超过8MiB，请分批整理资料" } }
+            assets=(old.assets+incoming.assets).associateBy { it.path }.values.filter { it.path in used }).also { validate(it, network);require(gson.toJson(it).toByteArray(Charsets.UTF_8).size <= if(network)64L*1024*1024 else MAX_JSON.toLong()) { "本地目录清单超过上限，请分批整理资料" } }
     }
 }
 

@@ -22,18 +22,44 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
+import java.security.MessageDigest
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 class SquareRepository(private val context: Context, private val database: LolitaDatabase,
     private val drafts: ItemDraftRepository) {
     private val gate=Mutex()
+    private val refreshGate=Mutex()
+    private val downloads=Semaphore(3)
+    private val imageLocks=Array(32){Mutex()}
+    private val client=SquareNetworkClient()
+    // JsonObject info may contain explicit nulls: retain them across cache restarts.
+    private val cacheGson=com.google.gson.GsonBuilder().serializeNulls().create()
     private var loaded=false
     private val addWish = com.lolita.app.domain.usecase.AddSquareWishUseCase(context, database)
     val wardrobe = kotlinx.coroutines.flow.combine(database.itemDao().getAllItems(), database.orderImportDao().observeSquareSources(), database.itemDraftDao().observeDrafts()) { items, sources, drafts -> SquareWishWardrobe(items, sources, drafts) }
     suspend fun addWishes(request: SquareWishRequest): SquareWishResult = withContext(Dispatchers.IO) { gate.withLock {
-        addWish(_catalog.value ?: error("请先导入广场资料包"), request, ::image)
+        val c=_catalog.value ?: error("请先导入广场资料包")
+        val state=SquareWishWardrobe(database.itemDao().getAllItemsList(), database.orderImportDao().sources(), database.itemDraftDao().getAll())
+        val plans=SquareWishPlans.build(c,request)
+        val matches=plans.map { SquareWishPlans.match(it,state) }
+        // Existing wishes/drafts and related-confirmation never require another network download.
+        if(matches.none { it.drafts.isNotEmpty() } && (request.allowRelated || matches.none { it.exact.isEmpty() && it.related.isNotEmpty() })) {
+            plans.filterIndexed { i,_->matches[i].exact.isEmpty() }.flatMap { it.paths }.distinct().forEach { fetchImage(it,false) }
+        }
+        addWish(c, request, ::localImage)
     } }
     private val root=File(context.filesDir,"square_catalog")
     private val index get()=AtomicFile(File(root,"catalog.json"))
+    private val networkState get()=AtomicFile(File(root,"network-state.json"))
+    private val serviceConfig get()=AtomicFile(File(context.noBackupFilesDir,"square-service.json"))
+    private val _serviceUrl=MutableStateFlow(runCatching {
+        serviceConfig.openRead().bufferedReader().use { normalizeSquareServiceUrl(com.google.gson.JsonParser.parseReader(it).asJsonObject["url"].asString) }
+    }.getOrDefault(""))
+    val serviceUrl=_serviceUrl.asStateFlow()
+    private val _imageEpoch=MutableStateFlow(0L)
+    val imageEpoch=_imageEpoch.asStateFlow()
     private val _catalog=MutableStateFlow<SquareCatalog?>(null)
     val catalog=_catalog.asStateFlow()
     data class Preview(val catalog:SquareCatalog,val stage:File)
@@ -46,14 +72,101 @@ class SquareRepository(private val context: Context, private val database: Lolit
         // Only interrupted temporary imports; published image blobs are never swept here.
         root.listFiles()?.filter { it.name.startsWith("pending-") || it.name.startsWith("input-") }?.forEach { it.deleteRecursively() }
         if(File(root,"catalog.json").exists()) {
-            val c=index.openRead().bufferedReader().use { SquarePackage.decode(it.readText()) }
-            require(c.assets.all { File(root,it.path).isFile }) { "广场图片缺失，请重新导入资料包" }
+            val c=index.openRead().bufferedReader().use { SquarePackage.decode(it.readText(),network=true) }
+            // Remote catalogs deliberately contain not-yet-downloaded images.
+            require(networkState.baseFile.exists() || c.assets.all { File(root,it.path).isFile }) { "广场图片缺失，请重新导入资料包" }
             _catalog.value=c
         }
         loaded=true
     } }
 
-    fun image(path:String)=File(root,path).absolutePath
+    private fun localImage(path:String)=File(root,path).absolutePath
+    fun image(path:String):String = if(File(root,path).isFile)localImage(path) else "lolita-square://asset/$path?size=original&generation=${_imageEpoch.value}"
+    fun thumbnail(path:String,epoch:Long=_imageEpoch.value):String = if(File(root,path).isFile)localImage(path) else "lolita-square://asset/$path?size=thumbnail&generation=$epoch"
+
+    suspend fun configureService(value:String)=withContext(Dispatchers.IO) { gate.withLock {
+        val url=normalizeSquareServiceUrl(value)
+        val out=serviceConfig.startWrite()
+        try { out.write(SquarePackage.gson.toJson(mapOf("url" to url)).toByteArray());serviceConfig.finishWrite(out) }
+        catch(t:Throwable){serviceConfig.failWrite(out);throw t}
+        _serviceUrl.value=url
+    } }
+
+    /** Never uses the UI message flow and never holds the catalog lock across a request. */
+    suspend fun refreshSilently()=withContext(Dispatchers.IO) {
+        if(!refreshGate.tryLock())return@withContext
+        try {
+            load()
+            val base=_serviceUrl.value
+            if(base.isEmpty())return@withContext
+            val server=client.serverId(base)
+            var cursor=gate.withLock {
+                runCatching {
+                    networkState.openRead().bufferedReader().use {
+                        val state=com.google.gson.JsonParser.parseReader(it).asJsonObject
+                        if(state["url"].asString==base && state["serverId"].asString==server &&
+                            state["catalogSha256"].asString==digest(index.baseFile))state["cursor"].asLong else 0L
+                    }
+                }.getOrDefault(0L)
+            }
+            // Bound each visit; the persisted cursor resumes a large backlog on the next refresh.
+            repeat(100) {
+                currentCoroutineContext().ensureActive()
+                val page=client.changes(base,cursor)
+                require(page.serverId==server)
+                val active=gate.withLock {
+                    if(_serviceUrl.value!=base)return@withLock false
+                    var merged=_catalog.value
+                    page.changes.forEach { merged=SquarePackage.merge(merged,it.catalog,network=true) }
+                    if(merged!=null && page.changes.isNotEmpty()) {
+                        // Marker first allows crash recovery of a metadata-only catalog. Cursor zero
+                        // forces replay if the process dies before both atomic files are durable.
+                        writeNetworkState(base,server,0,"")
+                        val output=index.startWrite()
+                        try {output.write(cacheGson.toJson(merged).toByteArray(Charsets.UTF_8));index.finishWrite(output)}
+                        catch(t:Throwable){index.failWrite(output);throw t}
+                        _catalog.value=merged
+                    }
+                    if(merged!=null)writeNetworkState(base,server,page.cursor,digest(index.baseFile))
+                    true
+                }
+                if(!active || !page.hasMore)return@withContext
+                cursor=page.cursor
+            }
+        } catch(e:CancellationException){throw e}
+        catch(e:Exception){android.util.Log.w("SquareNetwork","Catalog refresh skipped (${e.javaClass.simpleName})")}
+        finally {_imageEpoch.value+=1;refreshGate.unlock()}
+    }
+    private fun digest(file:File):String {
+        val hash=MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input->val bytes=ByteArray(65536);while(true){val n=input.read(bytes);if(n<0)break;hash.update(bytes,0,n)} }
+        return hash.digest().joinToString(""){"%02x".format(it)}
+    }
+    private fun writeNetworkState(base:String,server:String,cursor:Long,sha:String) {
+        val out=networkState.startWrite()
+        try{out.write(SquarePackage.gson.toJson(mapOf("url" to base,"serverId" to server,"cursor" to cursor,"catalogSha256" to sha)).toByteArray());networkState.finishWrite(out)}
+        catch(t:Throwable){networkState.failWrite(out);throw t}
+    }
+    suspend fun fetchImage(path:String,thumbnail:Boolean):File=withContext(Dispatchers.IO) {
+        require(path.matches(Regex("images/[a-f0-9]{64}\\.(jpg|jpeg|png|webp)")))
+        imageLocks[(path.hashCode() and Int.MAX_VALUE)%imageLocks.size].withLock {
+            val asset=_catalog.value?.assets?.firstOrNull { it.path==path } ?: throw SquareNetworkException()
+            val original=File(root,path)
+            if(original.isFile && original.length()==asset.bytes && digest(original)==asset.sha256)return@withLock original
+            val dest=if(thumbnail)File(root,"thumbnails/${asset.sha256}.webp")else original
+            if(thumbnail && dest.isFile && dest.length()>0)return@withLock dest
+            val base=_serviceUrl.value
+            if(base.isEmpty()) {
+                // A damaged imported file remains a local integrity error; an uncached
+                // remote image is an ordinary silent offline miss.
+                require(!original.exists() && networkState.baseFile.exists()) { "原图不完整，请重新导入资料包" }
+                throw SquareNetworkException()
+            }
+            try { downloads.withPermit { client.image(base,asset,thumbnail,dest) } }
+            catch(e:CancellationException){throw e}
+            catch(e:Exception){android.util.Log.w("SquareNetwork","Image fetch skipped (${e.javaClass.simpleName})");throw SquareNetworkException()}
+        }
+    }
 
     suspend fun preview(uri:Uri,progress:(String)->Unit):Preview=withContext(Dispatchers.IO) { gate.withLock {
         val jobContext=currentCoroutineContext()
@@ -75,7 +188,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
                 BitmapFactory.decodeFile(file.absolutePath,options)
                 require(options.outWidth==a.width && options.outHeight==a.height && options.outMimeType in setOf("image/jpeg","image/png","image/webp")) { "图片无法完整识别，请重新获取资料包" }
             }
-            SquarePackage.merge(_catalog.value,c) // Conflict checks happen before the preview's commit button.
+            SquarePackage.merge(_catalog.value,c,network=true) // Conflict checks happen before the preview's commit button.
             Preview(c,stage)
         } catch(t:Throwable) { stage.deleteRecursively();throw t } finally { input.delete() }
     } }
@@ -84,7 +197,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
 
     suspend fun apply(preview:Preview)=withContext(NonCancellable + Dispatchers.IO) { gate.withLock {
         require(preview.stage.isDirectory) { "预览已失效，请重新选择资料包" }
-        val merged=SquarePackage.merge(_catalog.value,preview.catalog)
+        val merged=SquarePackage.merge(_catalog.value,preview.catalog,network=true)
         preview.catalog.assets.forEach { asset ->
             val dest=File(root,asset.path);dest.parentFile!!.mkdirs()
             // Replace only verified content-addressed blobs, so a reimport repairs missing/corrupt files.
@@ -92,7 +205,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
             require(source.renameTo(dest)) { "保存广场图片失败，请检查存储空间后重试" }
         }
         val output=index.startWrite()
-        try { output.write(SquarePackage.gson.toJson(merged).toByteArray(Charsets.UTF_8));index.finishWrite(output) }
+        try { output.write(cacheGson.toJson(merged).toByteArray(Charsets.UTF_8));index.finishWrite(output) }
         catch(t:Throwable){index.failWrite(output);throw t}
         _catalog.value=merged
         preview.stage.deleteRecursively()
@@ -135,6 +248,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
         val details=unit.documents
         val assets=catalog.assets.associateBy { it.path }
         require((main+details).distinct().sumOf { assets.getValue(it).bytes }<=SquarePackage.MAX_PRODUCT) { "商品图片超过80MiB，请整理资料包后重试" }
+        (main+details).distinct().forEach { fetchImage(it,false) }
         val copies=mutableListOf<String>()
         try {
             suspend fun copy(paths:List<String>)=paths.map { path ->

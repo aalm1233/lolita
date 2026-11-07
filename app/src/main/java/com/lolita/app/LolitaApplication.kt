@@ -15,6 +15,7 @@ class LolitaApplication : Application(), coil.ImageLoaderFactory {
         .build()
     override fun onCreate() {
         super.onCreate()
+        com.lolita.app.data.diagnostics.LocalDiagnostics.install(this)
         AppModule.init(applicationContext)
         // Instantiation launches exactly one recovery barrier before any screen can submit.
         AppModule.imageTaskCoordinator()

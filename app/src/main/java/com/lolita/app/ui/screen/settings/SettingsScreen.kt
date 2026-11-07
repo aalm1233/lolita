@@ -274,6 +274,8 @@ fun SettingsScreen(
                 onClick = appUpdateViewModel::checkForUpdate
             )
 
+            DiagnosticExportEntry()
+
             Spacer(modifier = Modifier.height(24.dp))
 
             HorizontalDivider(color = MaterialTheme.colorScheme.primaryContainer, thickness = 1.dp)

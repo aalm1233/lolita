@@ -82,4 +82,18 @@ class BackupExportResultTest {
         assertEquals(state.lastExport, model.uiState.value.lastExport)
         assertTrue(model.uiState.value.message!!.contains("文件已导出"))
     }
+
+    @Test fun rejectedHistoricalArrayReturnsMessageAndRecordsSanitizedFailureWithoutChangingData() = runBlocking {
+        val raw = "[\\\"旧颜色\\\"]"
+        db.openHelper.writableDatabase.execSQL("UPDATE items SET colors=?", arrayOf(raw))
+        lateinit var model: BackupRestoreViewModel
+        instrumentation.runOnMainSync { model = BackupRestoreViewModel(manager); store.put("failed-export", model); model.exportJson() }
+        val state = withTimeout(15_000) { model.uiState.first { !it.isExporting && it.message != null } }
+        assertNull(state.lastExport)
+        assertEquals(raw, db.openHelper.readableDatabase.query("SELECT colors FROM items").use { it.moveToFirst(); it.getString(0) })
+        val report = com.lolita.app.data.diagnostics.LocalDiagnostics.report(context)
+        assertTrue(report.contains("[backup-export]"))
+        assertTrue(report.contains("BackupManager"))
+        assertFalse(report.contains("旧颜色"))
+    }
 }

@@ -1,0 +1,1663 @@
+{
+  "targetSchema": 34,
+  "device": "Android15/API35 dedicated AVD",
+  "canonicalDirectCases": 34,
+  "sourceDerivedV1": true,
+  "actualHistoricalApkMatrix": false,
+  "productionMigrationsUnchangedSince": "v2.78.1",
+  "releaseTags": [
+    {
+      "tag": "v1.0.0",
+      "schema": 6,
+      "appVersion": "1.0",
+      "versionCode": 1,
+      "commit": "32e3d333f597ced336632ae219b95a71c2b8c971",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.13.0",
+      "schema": 14,
+      "appVersion": "2.12.3",
+      "versionCode": 26,
+      "commit": "9152a1ea16a4aa926324a50610fb6db3bfb71825",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.20",
+      "schema": 15,
+      "appVersion": "2.20",
+      "versionCode": 35,
+      "commit": "41ad660169b022b9f19491b9f894563aaab6e222",
+      "githubFormalRelease": false,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.34.5",
+      "schema": 18,
+      "appVersion": "2.34.5",
+      "versionCode": 57,
+      "commit": "1fbcbf3d6a2df3bb0c220812ee6f3f4ebf5a27e4",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.36.11",
+      "schema": 19,
+      "appVersion": "2.36.11",
+      "versionCode": 73,
+      "commit": "00478e1c4109bde5a45a38fa4e7fb7def3ec7cee",
+      "githubFormalRelease": false,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.37.1",
+      "schema": 20,
+      "appVersion": "2.37.1",
+      "versionCode": 75,
+      "commit": "23337e61d150e6e955649fb92e9f4954b7096428",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.38.0",
+      "schema": 21,
+      "appVersion": "2.38.0",
+      "versionCode": 76,
+      "commit": "5515848dfd49692f54127841eb42d20b59a71dfa",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.38.2",
+      "schema": 21,
+      "appVersion": "2.38.2",
+      "versionCode": 78,
+      "commit": "01f0434dbb7feeb5bb24f0f16d5f3d963c2d9829",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.0",
+      "schema": 21,
+      "appVersion": "2.39.0",
+      "versionCode": 79,
+      "commit": "834411cbed4e50b8630444c8be6e64e7f30c6ed1",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.1",
+      "schema": 22,
+      "appVersion": "2.39.1",
+      "versionCode": 80,
+      "commit": "3972ad170b00604d6ba575bce6f81cd57b08a043",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.2",
+      "schema": 23,
+      "appVersion": "2.39.2",
+      "versionCode": 81,
+      "commit": "d96f239b808157c7439831d7f8d7e78f14a245c1",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.3",
+      "schema": 23,
+      "appVersion": "2.39.3",
+      "versionCode": 82,
+      "commit": "9606258ee2b5f20b4f7a800baca7e5c605a4e946",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.4",
+      "schema": 23,
+      "appVersion": "2.39.4",
+      "versionCode": 83,
+      "commit": "5cf310c78283e7ca9e33a8ae516d1830a36bd779",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.39.5",
+      "schema": 23,
+      "appVersion": "2.39.5",
+      "versionCode": 84,
+      "commit": "5f2c9a126c7df42254b05a3f41d9b2e8284713f9",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.0",
+      "schema": 23,
+      "appVersion": "2.40.0",
+      "versionCode": 85,
+      "commit": "b1b33eddf5bf3a8e987cd7867455d932e490982a",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.1",
+      "schema": 23,
+      "appVersion": "2.40.1",
+      "versionCode": 86,
+      "commit": "e9bb511ef7b0640572e41bbc603e4e03f36bbe55",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.2",
+      "schema": 23,
+      "appVersion": "2.40.2",
+      "versionCode": 87,
+      "commit": "92cd06b50626ded5e27a8ca01fe0337bfad63275",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.3",
+      "schema": 23,
+      "appVersion": "2.40.3",
+      "versionCode": 88,
+      "commit": "e60a7a63940de65bf32433d185965dea1af72067",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.4",
+      "schema": 23,
+      "appVersion": "2.40.4",
+      "versionCode": 89,
+      "commit": "022e9a6c178cd9b214c7cbfd699ace16449b741e",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.40.5",
+      "schema": 23,
+      "appVersion": "2.40.5",
+      "versionCode": 90,
+      "commit": "b464e0e974def2615af1e99e8c1c70c33656f757",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.41.0",
+      "schema": 23,
+      "appVersion": "2.41.0",
+      "versionCode": 91,
+      "commit": "b83cf907be71fd62dcd6ded171bdd08d58fde752",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.42.0",
+      "schema": 23,
+      "appVersion": "2.42.0",
+      "versionCode": 92,
+      "commit": "2cd13cb92a7b684dd3e5e3f8b053a1105ae21380",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.43.0",
+      "schema": 24,
+      "appVersion": "2.43.0",
+      "versionCode": 93,
+      "commit": "5ddf7a59f1bcf028a6d9ab5d14f3929548a9921b",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.44.0",
+      "schema": 24,
+      "appVersion": "2.44.0",
+      "versionCode": 94,
+      "commit": "cc1437e6c2655680d9004c19799b1f91774e0511",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.44.1",
+      "schema": 25,
+      "appVersion": "2.44.1",
+      "versionCode": 95,
+      "commit": "cf50a05dfe67e85d0032d858e738d7d4e4a83a70",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.45.0",
+      "schema": 26,
+      "appVersion": "2.45.0",
+      "versionCode": 96,
+      "commit": "b9dafa67ddee68bd0f5a8cc65c9b6080410a2c3c",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.45.1",
+      "schema": 26,
+      "appVersion": "2.45.1",
+      "versionCode": 97,
+      "commit": "b9f4d0ff0c104e4c26be601ced53d05cdc667e31",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.45.2",
+      "schema": 26,
+      "appVersion": "2.45.2",
+      "versionCode": 98,
+      "commit": "7aee8489ff44348d05a71ee470648a9166b18b41",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.46.0",
+      "schema": 26,
+      "appVersion": "2.46.0",
+      "versionCode": 99,
+      "commit": "31899045a8619539e0455429b14bf5aafccbb3da",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.46.1",
+      "schema": 26,
+      "appVersion": "2.46.1",
+      "versionCode": 100,
+      "commit": "1c3690d98550572f267069379feb827d420d3533",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.46.2",
+      "schema": 26,
+      "appVersion": "2.46.2",
+      "versionCode": 101,
+      "commit": "95d44ab9807f751c6465e1a3ee549d191b34328a",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.46.3",
+      "schema": 26,
+      "appVersion": "2.46.3",
+      "versionCode": 102,
+      "commit": "1b73aa4f4317dc42028a122bd675299f4bc68cca",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.46.4",
+      "schema": 26,
+      "appVersion": "2.46.4",
+      "versionCode": 103,
+      "commit": "63ebf65da15f7538d280a04fd469d5de1fda1940",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.47.0",
+      "schema": 26,
+      "appVersion": "2.47.0",
+      "versionCode": 104,
+      "commit": "3e1a444f1e04f03770e52ccdc6b211dd8926558f",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.47.1",
+      "schema": 26,
+      "appVersion": "2.47.1",
+      "versionCode": 105,
+      "commit": "a0abcbac2b86d20248eaa0366c89712c1016ee6a",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.48.0",
+      "schema": 27,
+      "appVersion": "2.48.0",
+      "versionCode": 106,
+      "commit": "db5a3e7129059677ace84787fc974459c7e83c34",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.49.0",
+      "schema": 27,
+      "appVersion": "2.49.0",
+      "versionCode": 107,
+      "commit": "14f707e763d4902e17ebc91134c666d92df53482",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.50.0",
+      "schema": 27,
+      "appVersion": "2.50.0",
+      "versionCode": 108,
+      "commit": "b57e4f1a43f904834631fad690f0e3f1b2dff456",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.51.0",
+      "schema": 28,
+      "appVersion": "2.51.0",
+      "versionCode": 109,
+      "commit": "620e72abdc5b2ebd70d801a30cc88659ae837140",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.51.1",
+      "schema": 28,
+      "appVersion": "2.51.1",
+      "versionCode": 110,
+      "commit": "eba8c536f86a71b94a5a1feac2ab0931653d4f7c",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.52.0",
+      "schema": 28,
+      "appVersion": "2.52.0",
+      "versionCode": 111,
+      "commit": "2cbe0ce020902970b7d82d5800fbd2a28032a7e1",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.53.0",
+      "schema": 29,
+      "appVersion": "2.53.0",
+      "versionCode": 112,
+      "commit": "fb7a7433ae52adb0c852d7090db9a3c266a98a66",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.54.0",
+      "schema": 29,
+      "appVersion": "2.54.0",
+      "versionCode": 113,
+      "commit": "4be8e506254e4b62c67491e03d949513b20c0e12",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.55.0",
+      "schema": 30,
+      "appVersion": "2.55.0",
+      "versionCode": 114,
+      "commit": "f9e527857003e835e6994bf5e0b647a059202c34",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.55.1",
+      "schema": 30,
+      "appVersion": "2.55.1",
+      "versionCode": 115,
+      "commit": "f70e5ef11e06dbb4cf6f98328292ec76176b6b0d",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.55.2",
+      "schema": 30,
+      "appVersion": "2.55.2",
+      "versionCode": 116,
+      "commit": "b0ec5d514ba011f67559866092e153fe4830ee65",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.55.3",
+      "schema": 30,
+      "appVersion": "2.55.3",
+      "versionCode": 117,
+      "commit": "d80140eba41bd6ff1ae66ef966541c40c66ba30c",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.55.4",
+      "schema": 30,
+      "appVersion": "2.55.4",
+      "versionCode": 118,
+      "commit": "9fef3766c59c6ecb07bac9e481dd84be1695ca3e",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.56.0",
+      "schema": 30,
+      "appVersion": "2.56.0",
+      "versionCode": 119,
+      "commit": "fe225e03dc21e96a8596c616941096877eeae9c9",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.56.1",
+      "schema": 30,
+      "appVersion": "2.56.1",
+      "versionCode": 120,
+      "commit": "fecd1f6018bd2006cdd8ec2bf6f0d5cc4ec4424f",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.56.2",
+      "schema": 30,
+      "appVersion": "2.56.2",
+      "versionCode": 121,
+      "commit": "82d7c8b4dc2d306c528cbf8420555bceae65eaa6",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.57.0",
+      "schema": 30,
+      "appVersion": "2.57.0",
+      "versionCode": 122,
+      "commit": "03403a44d6fb76574a82f9e0c471d9ed29f0c089",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.57.1",
+      "schema": 30,
+      "appVersion": "2.57.1",
+      "versionCode": 123,
+      "commit": "4be5d43d54b0802ed62ffa30b9753de66dca4d2a",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.57.2",
+      "schema": 30,
+      "appVersion": "2.57.2",
+      "versionCode": 124,
+      "commit": "4785a513c096cf4b9c29a04502a837c985098bae",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.58.0",
+      "schema": 30,
+      "appVersion": "2.58.0",
+      "versionCode": 125,
+      "commit": "6eef1baf24958724f13da64cc92b1b87ebb2418e",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.58.1",
+      "schema": 30,
+      "appVersion": "2.58.1",
+      "versionCode": 126,
+      "commit": "2d0884fe79d49704b5a9b8ba10cabf1a3a24ef9f",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.59.0",
+      "schema": 30,
+      "appVersion": "2.59.0",
+      "versionCode": 127,
+      "commit": "30fb69f6fea7b9f18cd0b51fa8e64e4be3f7b4ba",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.60.0",
+      "schema": 30,
+      "appVersion": "2.60.0",
+      "versionCode": 128,
+      "commit": "2a5012e75d3c62f4537739cc18ac901f6d07a441",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.60.1",
+      "schema": 30,
+      "appVersion": "2.60.1",
+      "versionCode": 129,
+      "commit": "0ac698f09b075b58ed1db0cfd490c39426182ee2",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.60.2",
+      "schema": 30,
+      "appVersion": "2.60.2",
+      "versionCode": 130,
+      "commit": "020625b8827a30dad24abcf8aff1fdef015b91a6",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.61.0",
+      "schema": 30,
+      "appVersion": "2.61.0",
+      "versionCode": 131,
+      "commit": "822519aa5c3ff3626575279792fa3ba2f4a3ec1a",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.61.1",
+      "schema": 30,
+      "appVersion": "2.61.1",
+      "versionCode": 132,
+      "commit": "c4ac3c62fc0c410d8e01f7a895f55c6565052871",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.62.0",
+      "schema": 31,
+      "appVersion": "2.62.0",
+      "versionCode": 133,
+      "commit": "be57547dcfce8e9beaf32ce20bc117c7bf203f16",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.63.0",
+      "schema": 32,
+      "appVersion": "2.63.0",
+      "versionCode": 134,
+      "commit": "f43762d2cfb6ce287e6e19d42c6f41af8480606e",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.64.0",
+      "schema": 32,
+      "appVersion": "2.64.0",
+      "versionCode": 135,
+      "commit": "94721aa5fb27685b6e6ca90f24f5b47ba49def62",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.65.0",
+      "schema": 32,
+      "appVersion": "2.65.0",
+      "versionCode": 136,
+      "commit": "9b9f7a7fd4646658ad4b7d1afbd50b4dfa6440b9",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.66.0",
+      "schema": 32,
+      "appVersion": "2.66.0",
+      "versionCode": 137,
+      "commit": "b0a43f693f9e8fafeaf51489b4f1daf6fe02ff90",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.66.1",
+      "schema": 32,
+      "appVersion": "2.66.1",
+      "versionCode": 138,
+      "commit": "0325e7afb95da18787419a237c5788db44a7370c",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.66.2",
+      "schema": 32,
+      "appVersion": "2.66.2",
+      "versionCode": 139,
+      "commit": "8b5f383f5d63362e86284ab6205069f8bb98fc01",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.66.3",
+      "schema": 32,
+      "appVersion": "2.66.3",
+      "versionCode": 140,
+      "commit": "f6f65ee5441d48144d4de88aa0a65e71a0eb08e0",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.66.4",
+      "schema": 32,
+      "appVersion": "2.66.4",
+      "versionCode": 141,
+      "commit": "de28bff23594a3c2dcfd91b3356484f7a5bd8d8f",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.67.0",
+      "schema": 32,
+      "appVersion": "2.67.0",
+      "versionCode": 142,
+      "commit": "94b13c23cd37d58fc9cb7ac68b718453c07cb13b",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.68.0",
+      "schema": 33,
+      "appVersion": "2.68.0",
+      "versionCode": 143,
+      "commit": "fa7797c341a0ab5754044431ed9f54a20fbdb6a6",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.69.0",
+      "schema": 33,
+      "appVersion": "2.69.0",
+      "versionCode": 144,
+      "commit": "6dc28e928983bccd921b006c9f54e227e7c04768",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.70.0",
+      "schema": 34,
+      "appVersion": "2.70.0",
+      "versionCode": 145,
+      "commit": "4d2a71c7ba1d2bb30bf08300bbffcbc11ee8a33d",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.71.0",
+      "schema": 34,
+      "appVersion": "2.71.0",
+      "versionCode": 146,
+      "commit": "e6bfa6d9fe0cbcdd67a2862c98c73e6413c3eaa0",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.71.1",
+      "schema": 34,
+      "appVersion": "2.71.1",
+      "versionCode": 147,
+      "commit": "a2a03b32179221ae3883b02e53794a138f18302f",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.72.0",
+      "schema": 34,
+      "appVersion": "2.72.0",
+      "versionCode": 148,
+      "commit": "4a4bf3fa94703ef1b4ff7cd6f6dcf9037f263b80",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.73.0",
+      "schema": 34,
+      "appVersion": "2.73.0",
+      "versionCode": 149,
+      "commit": "4d44347351197086810457390f2b9053a52d36b8",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.73.1",
+      "schema": 34,
+      "appVersion": "2.73.1",
+      "versionCode": 150,
+      "commit": "2479f71808181c4438472b82e4f24d8fa7dcc52d",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.74.0",
+      "schema": 34,
+      "appVersion": "2.74.0",
+      "versionCode": 151,
+      "commit": "3c756976ce0aa34e3cecd99d49e8a17f650a6e7b",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.75.0",
+      "schema": 34,
+      "appVersion": "2.75.0",
+      "versionCode": 152,
+      "commit": "2943ca0bb31f7f76e7117fb1f4583a829f6c2ffe",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.75.1",
+      "schema": 34,
+      "appVersion": "2.75.1",
+      "versionCode": 153,
+      "commit": "f4f7f33360ad6cca57f60e76c4a0c22ffcc5d589",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.76.0",
+      "schema": 34,
+      "appVersion": "2.76.0",
+      "versionCode": 154,
+      "commit": "707cb8227066f5a2f9fb09aa3b9a884c5b9e06b8",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.77.0",
+      "schema": 34,
+      "appVersion": "2.77.0",
+      "versionCode": 155,
+      "commit": "cab1169544961ad2da9c9848d92aca0c80a799a6",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.78.0",
+      "schema": 34,
+      "appVersion": "2.78.0",
+      "versionCode": 156,
+      "commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    },
+    {
+      "tag": "v2.78.1",
+      "schema": 34,
+      "appVersion": "2.78.1",
+      "versionCode": 157,
+      "commit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+      "githubFormalRelease": true,
+      "directSchemaFixturePassed": true,
+      "actualApkInstallTested": false
+    }
+  ],
+  "nativeCases": [
+    {
+      "from": 20,
+      "via": [
+        23,
+        26,
+        30,
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": true,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "0ac73e4bb8a8357fc099efb3487c88124840b279f1203825b175632b433e524f",
+      "squareServiceOpenedAndCancelled": false,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 20,
+      "via": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": true,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "72786c0d63ceb70eaf6e2c5a075b237f3895829d3e0e5c3be48860bc0eb61fdf",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 20,
+      "via": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": true,
+      "damagedLegacyColor": true,
+      "exportSucceeded": false,
+      "legacyV12ColorColumn": false,
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 6,
+      "via": [
+        10,
+        13,
+        15,
+        18,
+        20,
+        23,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "e6b1eb7d8b67851de2e7fd68a0582c67320f9f64c80966ccf0e547b59f07f8ee",
+      "squareServiceOpenedAndCancelled": false,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 12,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": true,
+      "exportSha256": "32e583e6e1427cdbf9b14d1ff4692c4d7510cb6dcb8c00c4627e561c01b4e4c6",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 1,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": true,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "9dafe280612a5ecfa0563ef1df2f46ad7a82b322f0bd63f014f57bc40b754ac3",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 2,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "550acadc69155530330cc18fe43d1b62515ddf9ee0c228ccfe39d73ded86ea6f",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 3,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "c6ccab2c2269a526f80d4dea8df07fa70a382b1be7fd5194be6b3be5a2c86a8e",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 4,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "22c032387697638fd8b48cd32c0d62fb9fbcb26a9e64f2a35ad1b3ba7b53edec",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 5,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "0a5288275f9410827b8d91d19f0ea6874b55471f7c422079c754ca63619182e3",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 6,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "426b9454c87b6faf090bd58b99460d25d3dd452062deb09963123e77876d5ae1",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 7,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "5ab1437a88b8cd6506d2d08a414d55437d9fa3527ea88bdc22422dcc1bd2d847",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 8,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "420c991784296681555235c8b3c8a328ae69e9d745209586a308569497ca541f",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 9,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "244d50105fd8f2f22d04fe6d47d1d1ec745836d89e7eb58d98647dde71be6022",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 10,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "f26ce7241905b67fafb927b455fe2f686b763291f5c730040b296922e0fa46d6",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 11,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "a75556ece336ee6dd79c9b1e80883c6afbb271fedf895af2d28b4c01d0b6ac0d",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 12,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "c40e614b15f8e1a8ed708d947664ac3e094b045a2082a637b114a38337da8ea1",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 13,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "8fd17bfc26ec156a49a9980f0619aa61078050344e596e51be7a19accc345b17",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 14,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "5d7333fdb15ebafa46aa53864c96723d288b026814a1d521a8dd6070fdfce018",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 15,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "ea54e038fb845e02059d0d9e17b57f4f622af8385ce24a864ba841707f27e054",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 16,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "8efa023d6c1ae9fc115a21a07f2fd47995d1fe3a0f35fe2e25a8d358d7bff5dc",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 17,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "a38eb9aed4bbbd33096e3601b82db63d1a8d038d77ad0630bd734c7f0e75b242",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 18,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "a79c97e6893782806f1a219cc27178a717d6cb258d6aa7e89f82bce3beb3683c",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 19,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "5b20bd8ec11ce0590c6f98292f19a398194fe469baf0ca0073929d4ed6d1f0e4",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 20,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "09764676e5c79e5d04e9a55130b046962d81c9e99d4b1c88f1510d16f2286feb",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 21,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "c0d977763d8eb508e2d8b90d9668e7e672f4c4b538404982c34b7b1c5e5e6953",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 22,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "d231cb4514cde9286e601e4266b0cb1cf877a25f925491576c010ff8bebd62bc",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 23,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "575501c67b152d1556852b0934554dfd4800ed5bb2b7908a3d6ef237ce151b01",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 24,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "8f6f35e385ea5b6226d3aeb5c37f6096ac7a09ad96e78c7d16a868eb1ba389ce",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 25,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "6837fc288112ea970cd8fcdc10ff55ec9009ee642c4ffc2a07da7dfc5d2ddd65",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 26,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "562a1891f99a958ff43e8fcffce26686728b89b90fb5948f02cd4869fd212081",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 27,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "f5356ca3da1fb26c01fc884bbab5713f6e2d17cf5bbf8f8e218abb50e1b6ec65",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 28,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "c22226c232f6bab8e0e4e08d85c5bf205924001de380b5552fbf2920ebada98f",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 29,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "0f46495e6feb3ff981e28c6cf0a417dbaabc9b3c01cd52108ad533b64241ce4f",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 30,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "12a1bd0b89c4d9399e71063a1455b5b5042b83bf1a7b8da74f32898c951eb5ed",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 31,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "56dfbcd6f6e9d542f223ce9f5d9ee449a62b47fda1af28d9658953acaad377e0",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 32,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "59384880b39444e9f1cd79a219dcd2404359197271b7a9ce2c2b2ed90693f991",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 33,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "e6a56c274d2b2f17b1362b5714a3849868fbd50111630beff9cf98550db9cbb6",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    },
+    {
+      "from": 34,
+      "via": [
+        34
+      ],
+      "to": 34,
+      "sourceDerivedV1": false,
+      "releasedBodies": false,
+      "damagedLegacyColor": false,
+      "exportSucceeded": true,
+      "legacyV12ColorColumn": false,
+      "exportSha256": "6c7118a1fbe9ca525a86bf9459bb75982826ab66200a7c2a52efa982cf82323f",
+      "squareServiceOpenedAndCancelled": true,
+      "itemsPreserved": 5,
+      "pricesPreserved": 5,
+      "paymentsPreserved": 1,
+      "unknownPaidDatePreserved": true,
+      "imageSha256Preserved": true
+    }
+  ]
+}

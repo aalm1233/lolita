@@ -1,5 +1,8 @@
 # 开发协作流程
 
+- 2.78.2／158加入本机脱敏诊断：`LocalDiagnostics`在原系统处理器前尽力记录未捕获异常类型/代码位置和堆状态；最近崩溃/导出失败各32KiB，保存在noBackup，不含异常消息/衣橱/图片/地址/请求。个人页「导出诊断记录」经系统保存位置主动导出TXT，无自动上传、无新增权限；备份导出普通失败也留脱敏记录。Room34/45实体/备份16不变。MIX Flip 2两处退出尚未确认根因，不把诊断补丁或AVD通过当作修复。前置图与边界见`docs/plans/2026-11-07-crash-diagnostics.md`。
+- 2026-11-07补齐每个旧库1–33→34与34对照的34个直升起点（v1按历史实体源码重建，2–34用原schema），均真实导出/预览JSON并打开/输入/取消广场服务；另保留已发布20→34逐版/分组回放、中间旧任务/草稿及v12额外color列分支。87标签/85公开Release映射、39子场景回执和限制见`docs/square-all-upgrade-paths-2026-11-07.md`；迁移回放不等于每个APK安装或小米真机验收。
+
 ## 项目事实
 
 - 单模块 Android 应用，Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。
@@ -369,7 +372,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=157, versionName="2.78.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=158, versionName="2.78.2"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -98,6 +98,7 @@ class BackupRestoreViewModel(
                     message = "${format.title}已保存至${exportDirectory()}"
                 )
             }, onFailure = {
+                withContext(Dispatchers.IO) { com.lolita.app.data.diagnostics.LocalDiagnostics.recordBackupExportFailure(AppModule.context(), it) }
                 _uiState.value = _uiState.value.copy(message = backupFailure(it, "导出失败，请检查存储空间后重试。"))
             })
             _uiState.value = _uiState.value.copy(isExporting = false)

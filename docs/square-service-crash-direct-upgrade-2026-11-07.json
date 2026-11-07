@@ -1,0 +1,61 @@
+{
+  "status": "not-reproduced-reporter-environment-pending",
+  "crashReproduced": false,
+  "fixClaimed": false,
+  "appCodeChanged": false,
+  "environment": {
+    "avd": "Lolita_Square_Direct_Upgrade_20261107",
+    "androidApi": 35,
+    "androidVersion": "15",
+    "graphics": "host",
+    "isolated": true
+  },
+  "upgrade": {
+    "from": "2.71.1",
+    "fromVersionCode": 147,
+    "fromAPK_SHA256": "4840bc34039b572fccedced218e944bb23a8793c756fee884c1b3a4b04676c0c",
+    "to": "2.78.0",
+    "toVersionCode": 156,
+    "toAPK_SHA256": "7aa7619c6273ef22ae6be1564228fab53f7c570921e63c4211725eb3da20287b",
+    "bothPublishedOriginalSignedAPKsVerified": true,
+    "installMode": "adb install -r; no uninstall/data clear",
+    "oldTask": "Old backup screen moved to background, no force-stop before covering APK",
+    "oldSquareConfigurationAndCatalogAbsent": true,
+    "schemaBefore": 34,
+    "schemaAfter": 34
+  },
+  "baseline": {
+    "dataset": "lolita-personal-2026-10-28",
+    "establishedVia": "2.71.1 normal ZIP backup picker and confirmed restore on dedicated AVD; source and device copy SHA checked",
+    "items": 160,
+    "privateFilesIncludingRetainedBuiltinImages": 629
+  },
+  "scenarios": [
+    "First Square visit following direct upgrade, open service dialog",
+    "Address field focus and real keyboard, cancel",
+    "Public initial synchronization: cursor15, 7 shops, 31 products, 15 events",
+    "Subsequent force-stop/cold start, reopen dialog, use built-in address without saving, cancel"
+  ],
+  "dataChecks": [
+    {
+      "checkpoint": "after-first-open",
+      "all45TableRowsIdentical": true,
+      "all629ImagesSHA256Identical": true,
+      "persistentSettingsBytesIdentical": true
+    },
+    {
+      "checkpoint": "after-cold-start",
+      "all45TableRowsIdentical": true,
+      "all629ImagesSHA256Identical": true,
+      "persistentSettingsBytesIdentical": true
+    }
+  ],
+  "volatileFilesExcluded": "WorkManager SQLite -shm/-wal files are runtime coordination state, not user setting bytes",
+  "crashLogEmpty": true,
+  "privacy": "Only aggregates published; private rows, photographs, settings and detailed fingerprints retained locally",
+  "paidCalls": 0,
+  "limitations": [
+    "Reporter confirmed Square gear entry; exact upgrade versions, Android/device and stack trace remain unknown.",
+    "This directly tests 2.71.1 to 2.78.0 on Android15. Both use Room34, so it does not establish earlier database migration or other Android/OEM compatibility."
+  ]
+}

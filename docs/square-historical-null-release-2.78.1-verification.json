@@ -1,0 +1,242 @@
+{
+  "status": "published-with-update-api-limitation",
+  "corePassed": true,
+  "originalReporterCauseConfirmed": false,
+  "version": "2.78.1",
+  "versionCode": 157,
+  "sourceCommit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+  "tag": "v2.78.1",
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.1",
+    "version_code": 157,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+    "apk_sha256": "814865ba6d93e751cb98692d329e222567421f1ab4d21235a3815955d9fb11e3",
+    "bytes": 84005269
+  },
+  "assets": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "tests": {
+    "passed": true,
+    "jvm": [
+      {
+        "class": "com.lolita.app.data.square.SquarePackageTest",
+        "tests": 17,
+        "failures": 0
+      },
+      {
+        "class": "com.lolita.app.data.square.SquareBrowseTest",
+        "tests": 12,
+        "failures": 0
+      },
+      {
+        "class": "com.lolita.app.data.square.SquareNetworkConfigTest",
+        "tests": 2,
+        "failures": 0
+      }
+    ],
+    "jvmTotal": 31,
+    "androidUniquePassed": 7,
+    "androidMethods": [
+      "historicalNullMetadataCacheReopensAcrossSkinsAndServiceDialog",
+      "malformedOrMissingHistoricalServiceConfigFallsBackWithoutMutatingIt",
+      "serviceAddressValidationCancelAndRealKeyboard",
+      "thumbnailOriginalAndWishHaveIndependentOfflineImages",
+      "historicalUnknownTailPriceAndServiceStayReadableOnSmallScreen",
+      "upgrade32To33PreservesEveryOldTableColumnRelationshipAndImageByte",
+      "upgrade33To34PreservesEveryOldTableAndAddsOnlyEmptyAfterSaleTables"
+    ],
+    "nativeMatrixScreenshots": 28,
+    "nativeSmallScreenshots": 2,
+    "originalJVMFailure": "NullPointerException in SquareVisibility.products -> trim; accepted events.state=null",
+    "signedOldAppCrashReproduced": true,
+    "sourceCommit": "fdb43107ee031ea313738665e817e805d5ed3c91"
+  },
+  "signedUpgrade": {
+    "passed": true,
+    "fromVersion": "2.78.0",
+    "toVersion": "2.78.1",
+    "sameSignatureInstall": true,
+    "launches": 2,
+    "oldSignedAppNullFixtureCrashReproduced": true,
+    "newSignedAppSameNullCacheDialogAndKeyboardWork": true,
+    "unknownValuesRetained": true,
+    "catalogProducts": 31,
+    "cursor": 15,
+    "databaseVersion": 34,
+    "items": 160,
+    "privateImageCount": 629,
+    "checkpoints": [
+      {
+        "checkpoint": "after-history-first",
+        "all45TablesAllRowsIdentical": true,
+        "allPrivateImageSHA256Identical": true,
+        "persistentSettingsBytesIdentical": true
+      },
+      {
+        "checkpoint": "after-history-second",
+        "all45TablesAllRowsIdentical": true,
+        "allPrivateImageSHA256Identical": true,
+        "persistentSettingsBytesIdentical": true
+      }
+    ],
+    "transientWorkManagerWALAndSHMExcluded": true,
+    "originalReporterSameCauseConfirmed": false
+  },
+  "publishing": {
+    "github": {
+      "tag": "v2.78.1",
+      "source_commit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+      "release_id": 437488693,
+      "prerelease": false,
+      "files": {
+        "lolita-2.78.1.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.1/lolita-2.78.1.apk",
+          "anonymous_full_download": true,
+          "bytes": 84005269,
+          "sha256": "814865ba6d93e751cb98692d329e222567421f1ab4d21235a3815955d9fb11e3",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.1/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "cdd20b682c29047cf0f0b0be4a4b362692c98808f5e12cae8e7d85069d89c4ba",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 84005269,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "tag": "v2.78.1",
+      "source_commit": "fdb43107ee031ea313738665e817e805d5ed3c91",
+      "release_id": 1283518,
+      "prerelease": false,
+      "files": {
+        "lolita-2.78.1.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.1/lolita-2.78.1.apk",
+          "anonymous_full_download": true,
+          "bytes": 84005269,
+          "sha256": "814865ba6d93e751cb98692d329e222567421f1ab4d21235a3815955d9fb11e3",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.1/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "cdd20b682c29047cf0f0b0be4a4b362692c98808f5e12cae8e7d85069d89c4ba",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 84005269,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    }
+  },
+  "appUpdateCheck": {
+    "currentVersion": "2.78.1",
+    "texts": [
+      "检查失败",
+      "当前版本：v2.78.1",
+      "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试"
+    ],
+    "passed": false,
+    "scope": "Manual signed App check after Gitee formal release"
+  },
+  "reproducer": "Accepted v1 event.state=null crashes 2.78.0 SquareVisibility.products -> trim; reproduced in JVM and original signed App with dedicated public-cache fixture.",
+  "fixedBehavior": "Descriptions remain unknown; safe visibility/UI; no invented status/date/zero price; same cache works after covering install.",
+  "giteeQuotaCleanupReceipt": "gitee-apk-cleanup-2.70.0-2026-11-07.json",
+  "databaseVersion": 34,
+  "backupVersion": 16,
+  "paidCalls": 0,
+  "newCollectorSchedules": 0,
+  "mainAssistantTaobaoAccesses": 0,
+  "limitations": [
+    "Reporter confirmed 2.78.0 and Square gear entry, but no original device/database/stack trace was obtained. Same cause is unconfirmed.",
+    "Gitee public update API and signed App manual check return 403; anonymous stable APK full download works.",
+    "Native device environment Android15/API35; no claim of all OEM environments."
+  ]
+}

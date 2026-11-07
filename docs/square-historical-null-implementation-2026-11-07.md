@@ -10,4 +10,6 @@
 
 [未知价格](visuals/2026-11-07-square-historical-null/unknown-price.png)、[中华暗色服务配置](visuals/2026-11-07-square-historical-null/service-dialog.png)、[小屏尾款](visuals/2026-11-07-square-historical-null/tail-small.png)为原生测试截图：夹具保留目录但停用网络，没有缓存的公开图使用现有回退，非图像功能变更。没有新页面/布局/皮肤，沿用现有设计；无迁移、备份结构或私人图片引用变化，未发起采集/付费。
 
-正式构建、覆盖修复及分发结果将在本次发布回执归档，不能以当前测试记录替代正式发布验收。
+源码 `fdb43107` 及 `v2.78.1` 已普通推送。提交源码归档clean原签名Release通过，37项项目assets／24张既有图片资源字节保持。2.78.0正式原包的异常缓存原样保留后同签名覆盖，新正式包两次启动均正常，配置及键盘可用；45表全部行、629张本机图片SHA及持久设置字节一致，描述null保留且游标仍15。WorkManager瞬态WAL/SHM不作为用户设置判据。[正式包配置](visuals/2026-11-07-square-historical-null/signed-fixed-service.png)来自真正MainActivity，非独立Compose测试容器。AVD宿主退出后保留数据重启，应用旧空指针与宿主问题分开记录；结束关闭全部本次AVD，未清理用户设备。
+
+GitHub／Gitee正式同APK和SHA256SUMS均匿名全量下载、SHA与HEAD通过；Gitee配额不足时按持续授权仅清理最旧2.70.0 APK，先核对GitHub新鲜匿名完整副本及三份本机完整副本，旧页/校验/GitHub保留，见[清理回执](gitee-apk-cleanup-2.70.0-2026-11-07.json)。Gitee版本API及新正式App手动检查仍403，直链可用，不把此项记为通过。[最终发布回执](square-historical-null-release-2.78.1-verification.json)区分已复现并修复的空值崩溃与未确认同因的原用户反馈。

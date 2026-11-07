@@ -23,4 +23,12 @@ Room34/45实体/备份16、图片和公开服务均不变，无新增权限或�
 
 ## 正式发布
 
-待提交源码后的clean原签名Release覆盖、真实SAF保存及双平台正式分发校验完成后回填回执。
+源码与标签`6733ce45`已普通推送至GitHub master／v2.78.2；仅提交源码的git archive完成clean Release及lintVital，原正式签名不变。APK 84,021,653字节，SHA256 `86522f25529d0c49a74571aedbe277d7b112c521a2f85e62a7094dd44407d590`。37项目assets和24张既有图片资源字节保持，androidTest故意崩溃探针未进入正式DEX。
+
+独立AVD从已发布2.78.1原包同签名覆盖，首启／冷启、完整App实际JSON导出160物品（669,351字节）、真实系统保存位置导出诊断TXT均通过；45表全部行指纹、629本机原图SHA及持久设置与升级前一致。当前测试基准指针和原ZIP SHA已重新核对，原数据与图片不复制到公开附件。
+
+[GitHub](https://github.com/aalm1233/lolita/releases/tag/v2.78.2)与[Gitee](https://gitee.com/aalm1233/lolita/releases/tag/v2.78.2)正式发布同APK／SUMS，两个平台匿名完整GET/SHA/HEAD及GitHub源标签校验通过；Gitee配额下仅清理最旧2.71.0 APK，先核验GitHub新鲜匿名完整下载与三份本机原副本，旧发布页／SUMS保留，见[清理回执](gitee-apk-cleanup-2.71.0-2026-11-07.json)。完整[发布回执](crash-diagnostics-release-2.78.2-verification.json)。
+
+**限制仍保留**：MIX Flip2现场根因未确认。本轮附加窗口探索发现AOSP 840×840像素窗口叠加IME时旧地址弹窗内容会被遮挡；进程仍存活、无新异常，恢复窗口后原输入仍在，已取消未保存。该既有布局问题单列待修，不能与两处直接退出混同。本版不改该弹窗。
+
+Gitee公开更新API仍403，原签名App手动检查实际显示「Gitee 暂时拒绝访问或请求过于频繁，请稍后重试」；不计作检查更新通过。稳定APK匿名下载正常，需通过发布页手动覆盖安装。安装后先复现一次，再重开个人页「导出诊断记录」，提供TXT后继续定位，无需卸载或清除资料。

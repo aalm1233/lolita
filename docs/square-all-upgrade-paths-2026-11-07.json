@@ -1659,5 +1659,11 @@
       "unknownPaidDatePreserved": true,
       "imageSha256Preserved": true
     }
+  ],
+  "targetAppVersion": "2.78.2",
+  "inventoryThroughAppVersion": "2.78.1",
+  "v1ReconstructedFromCommits": [
+    "f5a2cf1c",
+    "9a36ae8c"
   ]
 }

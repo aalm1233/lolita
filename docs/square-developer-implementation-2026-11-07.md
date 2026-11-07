@@ -15,3 +15,9 @@ Room34、45实体、备份16保持；没有新的素材、照片上传、采集�
 27项定向JVM、7项仓库设备方法和3项UI方法覆盖配置兼容、已导入ZIP清空、心愿/草稿/图片保全、在途目录/图片、断网静默、七皮肤浅暗、小屏两倍字与键盘。
 
 验证及正式发布结果记录于 `docs/square-developer-release-2.77.0-verification.json`。完整截图和私人资料逐表/图片核验中间产物仅留本机，不发布用户备份或私人数据。
+
+正式2.77.0/155源码`cab1169544961ad2da9c9848d92aca0c80a799a6`与标签已普通推送。提交源码隔离clean Release成功，原签名、非调试、37项目assets/24旧图片字节保持；两次冷启动45表/161物品/632私人图及设置完全一致。正式App实点取消保留目录原字节、确认后空态，私人全表/图片仍一致，下一次前台从服务重新拉回目录。实际[开发者工具](visuals/2026-11-07-square-developer/native/signed-developer-tools.png)、[清空后](visuals/2026-11-07-square-developer/native/signed-cleared-empty.png)已归档。再次进入后的目录文件重建通过实际断言核对；即时截图采到了尚未完成导航的首页，含私人缩略图，仅留本机，不作为公开截图证据。APK SHA256：`67be91defb3a5310a2e2da4e5ae3c35d7cb4615453044a3dc2095f9917959e64`。
+
+Gitee初次配额不足后按2026-10-28持续授权，仅清理最旧2.68.0 APK；新鲜GitHub匿名完整下载及三份既有本机副本SHA预先核对，旧发布页和校验文件保留，[清理回执](gitee-apk-cleanup-2.68.0-2026-11-07.json)。2.77.0 Gitee正式附件匿名完整下载、SHA/HEAD及公开最高正式版本通过；正式App一次手动检查正确显示当前/最新均2.77.0。两台本次独立AVD已关闭并保留数据，临时签名引用已移除，API常驻服务保持。
+
+GitHub正式附件匿名完整下载及SHA/HEAD、最高正式版本与源码标签最终核对通过，与Gitee及本机原签名APK为相同字节。完整结果见[最终回执](square-developer-release-2.77.0-verification.json)。

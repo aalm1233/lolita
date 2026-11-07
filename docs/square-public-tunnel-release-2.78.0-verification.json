@@ -1,0 +1,253 @@
+{
+  "status": "published-with-update-api-limitation",
+  "corePassed": true,
+  "appUpdatePassed": false,
+  "version": "2.78.0",
+  "versionCode": 156,
+  "sourceCommit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+  "tag": "v2.78.0",
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.0",
+    "version_code": 156,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+    "apk_sha256": "7aa7619c6273ef22ae6be1564228fab53f7c570921e63c4211725eb3da20287b",
+    "bytes": 84005269
+  },
+  "assets": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "tests": {
+    "passed": true,
+    "verifiedAt": "2026-11-07T10:53:19.939627+08:00",
+    "jvm": {
+      "class": "SquareNetworkConfigTest",
+      "tests": 2,
+      "failures": 0
+    },
+    "android": {
+      "methods": [
+        "realServiceMetadataOnlyConcurrentRefreshAndRestart",
+        "disconnectedEmptyStateRefreshIsSilentAndImportStaysAvailable",
+        "freshHttpsConnectionsReadEveryPageAndOriginal",
+        "incrementalUpdateBadCursorAndCorruptImagePreserveCache",
+        "thumbnailOriginalAndWishHaveIndependentOfflineImages",
+        "builtInAddressStoredOverrideAndExplicitDisableSurviveRestart",
+        "invalidResponsesNeverReplaceCatalogOrProduceMessage"
+      ],
+      "uniquePassed": 7,
+      "url": "https://f8b8b6fa0e0f.eicp.fun",
+      "fixtureCorrection": "Invalid-response test server now responds until closed; reran that method after correction. Other six methods and production code were unchanged."
+    },
+    "build": "assembleDebug + assembleDebugAndroidTest passed",
+    "networkSourceSHA256": "846dbb4ae5edf042cba48d2f6f064ac00cbbcdbd04fce5f45d5ba0ea116251e7"
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.77.0",
+    "toVersion": "2.78.0",
+    "sameSignatureInstall": true,
+    "coldStarts": 2,
+    "databaseVersion": 34,
+    "items": 161,
+    "privateImageCount": 632,
+    "settingsFilesUnchanged": 7,
+    "recordCountsUnchanged": true,
+    "scope": "Record counts, private image count, and stored settings bytes; no full row/image SHA audit for this network-only change"
+  },
+  "signedAppPublic": {
+    "passed": true,
+    "version": "2.78.0",
+    "signedApp": true,
+    "normalSettingsBuiltinAndSave": true,
+    "serviceUrl": "https://f8b8b6fa0e0f.eicp.fun",
+    "cursor": 15,
+    "shops": 7,
+    "products": 31,
+    "newShopDisplayed": "花与珍珠匣",
+    "newGroupDisplayed": "六周年款浓巧100% · 定金预约",
+    "newOriginalImagesVerified": [
+      {
+        "path": "images/9cbf9b87232cf303833d100540258190632af404591c4100239d10487b492de1.webp",
+        "bytes": 82822,
+        "sha256": "9cbf9b87232cf303833d100540258190632af404591c4100239d10487b492de1"
+      },
+      {
+        "path": "images/e728092afa83fd74ba41957d9161a2350dc0f887ba6588912447760bc0fd941c.webp",
+        "bytes": 85904,
+        "sha256": "e728092afa83fd74ba41957d9161a2350dc0f887ba6588912447760bc0fd941c"
+      },
+      {
+        "path": "images/f1fb439cee860214b03595664768619ad149071fb5022ec91eafa196eae1d97b.webp",
+        "bytes": 85454,
+        "sha256": "f1fb439cee860214b03595664768619ad149071fb5022ec91eafa196eae1d97b"
+      }
+    ],
+    "privateRecordCountsAndImageCountUnchanged": true,
+    "settingsChangedOnlyByExplicitServiceSave": [
+      "no_backup/square-service.json"
+    ],
+    "giteeFormalAnonymousFullDownloadPassed": true
+  },
+  "publishing": {
+    "github": {
+      "tag": "v2.78.0",
+      "source_commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+      "release_id": 437280885,
+      "prerelease": false,
+      "files": {
+        "lolita-2.78.0.apk": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.0/lolita-2.78.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 84005269,
+          "sha256": "7aa7619c6273ef22ae6be1564228fab53f7c570921e63c4211725eb3da20287b",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "e938b316fee6945cba58fbf5f192ac86325f47c76dd8aafc65845c3e2ca46f32",
+          "redirect_chain": [
+            {
+              "host": "github.com",
+              "status": 302
+            },
+            {
+              "host": "release-assets.githubusercontent.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/vnd.android.package-archive",
+        "bytes": 84005269,
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "source_tag_commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+      "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+    },
+    "gitee": {
+      "tag": "v2.78.0",
+      "source_commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+      "release_id": 1282277,
+      "prerelease": false,
+      "files": {
+        "lolita-2.78.0.apk": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.0/lolita-2.78.0.apk",
+          "anonymous_full_download": true,
+          "bytes": 84005269,
+          "sha256": "7aa7619c6273ef22ae6be1564228fab53f7c570921e63c4211725eb3da20287b",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        },
+        "SHA256SUMS": {
+          "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.0/SHA256SUMS",
+          "anonymous_full_download": true,
+          "bytes": 84,
+          "sha256": "e938b316fee6945cba58fbf5f192ac86325f47c76dd8aafc65845c3e2ca46f32",
+          "redirect_chain": [
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "gitee.com",
+              "status": 302
+            },
+            {
+              "host": "foruda.gitee.com",
+              "status": 200
+            }
+          ]
+        }
+      },
+      "apk_head": {
+        "http_status": 200,
+        "content_type": "application/zip",
+        "bytes": 84005269,
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    }
+  },
+  "appUpdateCheck": {
+    "texts": [
+      "检查失败",
+      "当前版本：v2.78.0",
+      "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试"
+    ],
+    "passed": false,
+    "currentVersion": "2.78.0",
+    "reason": "Gitee public version API HTTP 403; manual check displays temporary refusal/rate limiting",
+    "checkedAt": "2026-11-07T11:10:53.818652+08:00",
+    "apkStableDownloadVerified": true
+  },
+  "publicAccess": {
+    "url": "https://f8b8b6fa0e0f.eicp.fun",
+    "localTarget": "127.0.0.1:18765",
+    "phoneCellularHealth": "User confirmed lolita.square.api with Wi-Fi disabled; health endpoint only",
+    "hostProtocolAndImages": "LAN/public pagination and product objects matched; 3 thumbnails and 3 originals SHA/size/dimensions verified",
+    "boundaries": "database/raw/root paths 404; write method 405",
+    "hostDiagnosticScope": "Public DNS address selected per diagnostic process; system proxy/DNS unchanged. Android app uses normal DNS/TLS."
+  },
+  "giteeQuotaCleanupReceipt": "gitee-apk-cleanup-2.69.0-2026-11-07.json",
+  "databaseVersion": 34,
+  "backupVersion": 16,
+  "paidPurchases": 0,
+  "newCollectorSchedules": 0,
+  "limitations": [
+    "Gitee public version API and signed App manual update check return HTTP 403; stable direct APK download verified.",
+    "Upgrade audit scoped to record counts, image count and settings bytes, not full row/private-image SHA audit."
+  ]
+}

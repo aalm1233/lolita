@@ -1,0 +1,15 @@
+{
+  "tag": "v2.69.0",
+  "release_id": 1233377,
+  "attachment_id": 3474142,
+  "name": "lolita-2.69.0.apk",
+  "bytes": 83644821,
+  "sha256": "cfe97d8bc64b8f7318c8a9a28eef763c1413c9137aff8f3062310490a2c786cd",
+  "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+  "new_source_commit": "d1c2b877fafec194630e7535323b37cd9ff9bcaa",
+  "at_utc": "2026-11-07T03:02:35.656744+00:00",
+  "github_fresh_anonymous_full_download_verified": true,
+  "three_complete_local_copies_verified": true,
+  "http_status": 204,
+  "old_release_and_checksum_retained": true
+}

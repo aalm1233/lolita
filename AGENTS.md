@@ -53,6 +53,8 @@
 
 ### 广场公网 HTTPS（2.78.0）
 
+- 2.78.0／156源码 `d1c2b877` 与标签已普通推送，clean原签名Release、2项JVM／7项去重设备方法、37项assets／24图片资源核对、两次覆盖冷启动范围保全与正式App公网新店/原图通过；GitHub／Gitee同APK匿名全量下载、SHA/HEAD通过。Gitee版本API及正式App检查更新当前403，直链正常，此限制未冒充通过。最终回执 `docs/square-public-tunnel-release-2.78.0-verification.json`。
+
 - 内置服务改为 `https://f8b8b6fa0e0f.eicp.fun`，由花生壳长期引擎仅映射本机 `127.0.0.1:18765` 的只读广场API；TP-Link原动态DNS保留。已有自定义值与明确空地址不迁移，“使用内置地址”沿原设置入口。节点与凭据留仓库外，不新建采集调度。
 - HTTP请求显式 `Connection: close`，避免穿透中继复用已由源站关闭的连接；连接/读取超时调整为7.5秒/15秒以适配公网转发，保留HTTPS证书与主机名校验、禁止重定向、前台/下拉及静默失败。图片与私人心愿规则、Room34/45实体/备份16不变。前置范围与验收选择见 `docs/plans/2026-11-07-square-public-tunnel.md`，实施与最终原生/发布结果见 `docs/square-public-tunnel-implementation-2026-11-07.md`。
 

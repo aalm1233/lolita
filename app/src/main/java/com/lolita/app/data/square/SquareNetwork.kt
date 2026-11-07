@@ -16,6 +16,9 @@ import java.util.UUID
 /** Network failures are deliberately excluded from user-facing message flows. */
 class SquareNetworkException : IOException("Square service unavailable")
 
+// LAN verification phase. Stored user overrides (including an explicit blank) take precedence.
+const val DEFAULT_SQUARE_SERVICE_URL = "http://192.168.0.104:18765"
+
 fun normalizeSquareServiceUrl(value: String): String {
     val text = value.trim()
     if (text.isEmpty()) return ""

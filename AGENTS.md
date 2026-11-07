@@ -36,6 +36,8 @@
 
 - 广场浏览动线重审见`docs/plans/2026-11-06-square-browse-first-design.md`：用户明确纠正为逛选→看商品图片/单品/颜色/参数→喜欢加入现有心愿。后续改造不得把完整SKU、四步拆分/选图、完整编辑器作为默认收藏门槛；未知尺码可后补，多件/个人组合按需，组合不冒充商家SKU/套餐、各件规格独立。新图稿在`docs/visuals/2026-11-06-square-browse-first/artist/`。前置设计已获用户确认并实施2.74.0，已替换默认四步原生流程；来源协议SQUARE_WISH v1与备份16现已落地，Room34不变。最终范围与验收见`docs/square-browse-implementation-2026-11-06.md`。
 
+- 2.77.0广场内置内网地址与开发者清空：无已存配置时默认`http://192.168.0.104:18765`，保留明确空地址与自定义值；齿轮内可填回内置地址。开发者工具经二次确认，仅原子移走公开缓存/原图/缩略/暂存/游标；目录世代拒绝清空前响应，共用登记锁及全部图片锁等待在途下载，独立回收目录在启动重试删除。衣橱/心愿/登记草稿/UUID图片/账本和服务端保留，下次刷新从0同步。前置图稿与范围见`docs/plans/2026-11-07-square-developer.md`，Room34/45实体/备份16不变。
+
 ## 架构与实现约定
 
 ### 广场内网服务（2.76.0）
@@ -352,7 +354,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=153, versionName="2.75.1"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=155, versionName="2.77.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

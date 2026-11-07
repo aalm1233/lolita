@@ -58,7 +58,7 @@ class SquareNetworkTest {
     @Before fun setup(){
         db=Room.inMemoryDatabaseBuilder(context,LolitaDatabase::class.java).build()
         drafts=ItemDraftRepository(db,ItemRepository(db.itemDao(),database=db,context=context))
-        repo=SquareRepository(context,db,drafts)
+        repo=SquareRepository(context,db,drafts,defaultServiceUrl="")
         ImageFileHelper.configure(context,db)
         coil.Coil.setImageLoader(coil.ImageLoader.Builder(context).components{add(SquareImageFetcher.Factory{repo})}.build())
         io{repo.load()}
@@ -99,7 +99,7 @@ class SquareNetworkTest {
         assertTrue(File(context.filesDir,"square_catalog/images").listFiles().orEmpty().isEmpty())
         io{coroutineScope{List(4){async{repo.refreshSilently()}}.awaitAll()}}
         assertEquals(before,repo.catalog.value)
-        val restart=SquareRepository(context,db,drafts)
+        val restart=SquareRepository(context,db,drafts,defaultServiceUrl="")
         io{restart.load()}
         val archive=File(target.filesDir,"square-network-native").apply{mkdirs()}
         File(archive,"expected.json").writeText(SquarePackage.gson.toJson(before))
@@ -158,7 +158,7 @@ class SquareNetworkTest {
             val path=product.images.first().path
             try{io{repo.fetchImage(path,false)};fail("Corrupt image must be rejected")}catch(_:SquareNetworkException){}
             assertFalse(File(context.filesDir,"square_catalog/$path").exists())
-            val restart=SquareRepository(context,db,drafts);io{restart.load()};assertEquals(before,restart.catalog.value)
+            val restart=SquareRepository(context,db,drafts,defaultServiceUrl="");io{restart.load()};assertEquals(before,restart.catalog.value)
         }finally{server.close();thread.join(1000)}
     }
     @Test fun invalidResponsesNeverReplaceCatalogOrProduceMessage(){
@@ -214,12 +214,135 @@ class SquareNetworkTest {
         compose.onNodeWithText("内网可使用HTTP，其他服务请使用HTTPS").assertExists()
         compose.onNodeWithTag("square-service-address").performTextReplacement(base)
         compose.waitUntil(10000){ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime())==true}
-        compose.onNodeWithTag("square-service-save").assertIsDisplayed();shot("service-real-ime")
-        compose.onNodeWithTag("square-service-save").performClick()
+        compose.onNodeWithTag("square-service-save").assertIsDisplayed()
+        // Semantics visibility can include pixels hidden behind a separate IME window.
+        // Verify real screen bounds and tap the physical button instead of a semantics action.
+        val ime=ViewCompat.getRootWindowInsets(host)!!.getInsets(WindowInsetsCompat.Type.ime()).bottom
+        val dialogRoot=compose.onAllNodes(isRoot()).onLast().fetchSemanticsNode().root
+        val dialogView=dialogRoot as? androidx.compose.ui.platform.ViewRootForTest
+        val location=IntArray(2);dialogView!!.view.getLocationOnScreen(location)
+        val bounds=compose.onNodeWithTag("square-service-save").fetchSemanticsNode().boundsInRoot
+        val bottom=location[1]+bounds.bottom
+        val keyboardTop=target.resources.displayMetrics.heightPixels-ime
+        assertTrue("Save must be fully above IME: $bottom <= $keyboardTop",bottom<=keyboardTop)
+        shot("service-real-ime")
+        inst.uiAutomation.injectInputEvent(android.view.MotionEvent.obtain(android.os.SystemClock.uptimeMillis(),android.os.SystemClock.uptimeMillis(),android.view.MotionEvent.ACTION_DOWN,location[0]+bounds.center.x,location[1]+bounds.center.y,0),true)
+        inst.uiAutomation.injectInputEvent(android.view.MotionEvent.obtain(android.os.SystemClock.uptimeMillis(),android.os.SystemClock.uptimeMillis(),android.view.MotionEvent.ACTION_UP,location[0]+bounds.center.x,location[1]+bounds.center.y,0),true)
         compose.waitUntil(15000){vm!!.catalog.value!=null}
         compose.onNodeWithTag("square-feed").assertExists();assertEquals(base,repo.serviceUrl.value)
         compose.onNodeWithTag("square-service").performClick()
         compose.onNodeWithTag("square-service-address").performTextClearance()
         compose.onNodeWithText("取消").performClick();assertEquals(base,repo.serviceUrl.value)
+    }
+
+    @Test fun builtInAddressStoredOverrideAndExplicitDisableSurviveRestart(){
+        assertEquals(DEFAULT_SQUARE_SERVICE_URL,SquareRepository(context,db,drafts).serviceUrl.value)
+        io{repo.configureService("https://square.example.com")}
+        assertEquals("https://square.example.com",SquareRepository(context,db,drafts).serviceUrl.value)
+        io{repo.configureService("");repo.clearLocalCatalog()}
+        assertEquals("",SquareRepository(context,db,drafts).serviceUrl.value)
+        // A detached cache left by a killed process is garbage, never a fallback catalog.
+        val interrupted=File(context.filesDir,"square-discarded-interrupted").apply{mkdirs()}
+        File(interrupted,"catalog.json").writeText("not a live catalog")
+        val restart=SquareRepository(context,db,drafts)
+        io{restart.load()};assertNull(restart.catalog.value);assertFalse(interrupted.exists())
+    }
+
+    @Test fun clearRetainsWishDraftPrivateImagesAndReplaysCursorZero(){
+        online();val c=repo.catalog.value!!;val e=c.events.first{it.id=="dorothy-cotton"}
+        val part=SquareBrowse.parts(c,e).first{it.partKey=="JSK"};val choice=SquareBrowseChoice(part.key,"蓝色")
+        val result=io{repo.addWishes(SquareBrowse.request(c,e,listOf(choice),false))}
+        val item=io{db.itemDao().getItemById(result.itemIds.single())!!}
+        val source=io{db.orderImportDao().sources()}
+        val draft=com.lolita.app.data.local.entity.ItemDraft(
+            dataJson=com.lolita.app.data.local.entity.ItemDraftData(name="保留的登记草稿").encode(),imagePaths=item.imageUrls)
+        io{db.itemDraftDao().save(draft)}
+        val privateBytes=item.imageUrls.associateWith{java.security.MessageDigest.getInstance("SHA-256").digest(File(it).readBytes()).toList()}
+        File(context.filesDir,"square_catalog/pending-stale").mkdirs()
+        io{repo.clearLocalCatalog()}
+        assertNull(repo.catalog.value);assertFalse(File(context.filesDir,"square_catalog").exists())
+        assertEquals(base,repo.serviceUrl.value)
+        assertEquals(item,io{db.itemDao().getItemById(item.id)})
+        assertEquals(source,io{db.orderImportDao().sources()});assertEquals(draft,io{drafts.get(draft.id)})
+        privateBytes.forEach{(path,bytes)->assertEquals(bytes,java.security.MessageDigest.getInstance("SHA-256").digest(File(path).readBytes()).toList())}
+        assertEquals(0,io{db.priceDao().getAllPricesList().size})
+        val restart=SquareRepository(context,db,drafts)
+        io{restart.load()};assertNull(restart.catalog.value)
+        // With the old nonzero cursor still present this would return zero changes and stay empty.
+        io{restart.refreshSilently()};assertEquals(c,restart.catalog.value)
+        assertTrue(File(context.filesDir,"square_catalog/images").listFiles().orEmpty().isEmpty())
+    }
+
+    @Test fun delayedMetadataResponseCannotRepopulateClearedCache(){
+        online();val c=repo.catalog.value!!
+        val received=java.util.concurrent.CountDownLatch(1);val release=java.util.concurrent.CountDownLatch(1)
+        val server=ServerSocket(0)
+        val thread=Thread{
+            try{repeat(2){server.accept().use{s->
+                val line=s.getInputStream().bufferedReader().readLine().orEmpty()
+                val body=if(line.contains("/v1/health"))"""{"format":"lolita.square.api","schemaVersion":1,"serverId":"delayed"}"""
+                else {received.countDown();release.await(10,java.util.concurrent.TimeUnit.SECONDS)
+                    com.google.gson.GsonBuilder().serializeNulls().create().toJson(mapOf("serverId" to "delayed","cursor" to 1,"hasMore" to false,"changes" to listOf(mapOf("seq" to 1,"catalog" to c))))}
+                val bytes=body.toByteArray();s.getOutputStream().write(("HTTP/1.1 200 OK\r\nContent-Length: ${bytes.size}\r\nConnection: close\r\n\r\n").toByteArray()+bytes)
+            }}}catch(_:Exception){}
+        }.apply{isDaemon=true;start()}
+        try{io{
+            repo.configureService("http://127.0.0.1:${server.localPort}")
+            coroutineScope{
+                val request=async{repo.refreshSilently()}
+                assertTrue(received.await(10,java.util.concurrent.TimeUnit.SECONDS))
+                repo.clearLocalCatalog();release.countDown();request.await()
+            }
+        };assertNull(repo.catalog.value);assertFalse(File(context.filesDir,"square_catalog/catalog.json").exists())
+        }finally{release.countDown();server.close();thread.join(1000)}
+    }
+
+    @Test fun clearWaitsForActiveImageAndRemovesItsCompletedFile(){
+        online();val c=repo.catalog.value!!;val asset=c.assets.minBy{it.bytes}
+        val original=io{repo.fetchImage(asset.path,false)};val bytes=original.readBytes();assertTrue(original.delete())
+        val received=java.util.concurrent.CountDownLatch(1);val release=java.util.concurrent.CountDownLatch(1)
+        val server=ServerSocket(0)
+        val thread=Thread{
+            try{server.accept().use{s->s.getInputStream().bufferedReader().readLine();received.countDown()
+                release.await(10,java.util.concurrent.TimeUnit.SECONDS)
+                s.getOutputStream().write(("HTTP/1.1 200 OK\r\nContent-Length: ${bytes.size}\r\nConnection: close\r\n\r\n").toByteArray()+bytes)
+            }}catch(_:Exception){}
+        }.apply{isDaemon=true;start()}
+        try{io{
+            repo.configureService("http://127.0.0.1:${server.localPort}")
+            coroutineScope{
+                val image=async{repo.fetchImage(asset.path,false)}
+                assertTrue(received.await(10,java.util.concurrent.TimeUnit.SECONDS))
+                val clear=async{repo.clearLocalCatalog()};delay(150);assertFalse(clear.isCompleted)
+                release.countDown();image.await();clear.await()
+            }
+        };assertNull(repo.catalog.value);assertFalse(File(context.filesDir,"square_catalog").exists())
+        }finally{release.countDown();server.close();thread.join(1000)}
+    }
+
+    @Test fun developerToolsFourteenSkinsCancelConfirmAndDefaultAddress(){
+        online();io{repo.configureService("")};val c=repo.catalog.value
+        show()
+        for(type in SkinType.entries)for(night in listOf(false,true)){
+            compose.runOnIdle{skin.value=type;dark.value=night}
+            val suffix="${type.name.lowercase()}-${if(night)"dark" else "light"}"
+            compose.onNodeWithTag("square-service").performClick()
+            compose.onNodeWithTag("square-service-default").performScrollTo().performClick()
+            compose.onNodeWithTag("square-service-address").assertTextContains(DEFAULT_SQUARE_SERVICE_URL)
+            assertEquals("",repo.serviceUrl.value) // Filling the field does not save or refresh.
+            shot("default-$suffix")
+            compose.onNodeWithTag("square-developer").performScrollTo().performClick();shot("tools-$suffix")
+            compose.onNodeWithTag("square-clear-open").performClick()
+            compose.onNodeWithText("清空本机广场资料？").assertIsDisplayed()
+            compose.onNodeWithTag("square-clear-confirm").assertIsDisplayed();shot("clear-$suffix")
+            compose.onNodeWithText("取消").performClick();assertEquals(c,repo.catalog.value)
+        }
+        compose.onNodeWithTag("square-service").performClick()
+        compose.onNodeWithTag("square-developer").performScrollTo().performClick()
+        compose.onNodeWithTag("square-clear-open").performClick()
+        compose.onNodeWithTag("square-clear-confirm").performClick()
+        compose.waitUntil(10000){vm!!.busy.value==null && vm!!.catalog.value==null}
+        compose.onNodeWithTag("square-import").assertIsDisplayed();shot("cleared-empty")
+        assertNull(vm!!.message.value);assertNull(vm!!.eventId.value)
     }
 }

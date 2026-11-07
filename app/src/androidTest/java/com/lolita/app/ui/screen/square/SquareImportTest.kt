@@ -59,7 +59,7 @@ class SquareImportTest {
     private lateinit var host:android.view.View
     private fun <T> io(block:suspend()->T)=runBlocking(Dispatchers.IO){block()}
     @Before fun setup(){db=Room.inMemoryDatabaseBuilder(context,LolitaDatabase::class.java).build()
-        drafts=ItemDraftRepository(db,ItemRepository(db.itemDao(),database=db,context=context));repo=SquareRepository(context,db,drafts)
+        drafts=ItemDraftRepository(db,ItemRepository(db.itemDao(),database=db,context=context));repo=SquareRepository(context,db,drafts,defaultServiceUrl="")
         ImageFileHelper.configure(context,db)
         io{repo.load();db.brandDao().insertBrand(Brand(id=1,name="古典玩偶"));db.categoryDao().insertCategory(Category(id=1,name="JSK",categorySemantic=CategorySemantic.JSK))}
     }

@@ -48,6 +48,8 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     val refreshing by viewModel.refreshing.collectAsState()
     val serviceUrl by viewModel.serviceUrl.collectAsState()
     var serviceOpen by rememberSaveable { mutableStateOf(false) }
+    var developerOpen by rememberSaveable { mutableStateOf(false) }
+    var clearConfirm by rememberSaveable { mutableStateOf(false) }
     var address by rememberSaveable { mutableStateOf("") }
     var addressError by rememberSaveable { mutableStateOf<String?>(null) }
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(viewModel::import)}
@@ -101,17 +103,32 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     }
     if(multi && catalog!=null && event?.canRegister==true)SquareWishSheet(catalog!!,viewModel)
     SquareWishResultSheet(viewModel,onOpenItem,onEditDraft,onOpenWishlist)
-    if(serviceOpen)AlertDialog(onDismissRequest={serviceOpen=false},title={Text("广场服务")},text={
+    if(serviceOpen)AlertDialog(onDismissRequest={serviceOpen=false},modifier=Modifier.imePadding(),title={Text("广场服务")},text={
         Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
             OutlinedTextField(address,{address=it;addressError=null},label={Text("服务地址")},singleLine=false,
                 modifier=Modifier.fillMaxWidth().testTag("square-service-address"),isError=addressError!=null,
                 supportingText={Text(addressError?:"清空地址后停止联网查询")})
+            TextButton(onClick={address=DEFAULT_SQUARE_SERVICE_URL;addressError=null},modifier=Modifier.testTag("square-service-default")){Text("使用内置地址")}
+            TextButton(onClick={serviceOpen=false;developerOpen=true},enabled=busy==null && preview==null,
+                modifier=Modifier.testTag("square-developer")){Text("开发者工具")}
         }
     },confirmButton={TextButton(onClick={
         val value=runCatching{normalizeSquareServiceUrl(address)}
         if(value.isSuccess){viewModel.configureService(value.getOrThrow());serviceOpen=false}
         else addressError=value.exceptionOrNull()?.message?:"请输入有效的服务地址"
     },modifier=Modifier.testTag("square-service-save")){Text("保存")}},dismissButton={TextButton(onClick={serviceOpen=false}){Text("取消")}})
+    if(developerOpen)AlertDialog(onDismissRequest={developerOpen=false},title={Text("开发者工具")},text={
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            OutlinedButton(onClick={developerOpen=false;clearConfirm=true},enabled=busy==null && preview==null,
+                modifier=Modifier.fillMaxWidth().testTag("square-clear-open")){Text("清空本机广场资料")}
+        }
+    },confirmButton={TextButton(onClick={developerOpen=false}){Text("关闭")}})
+    if(clearConfirm)AlertDialog(onDismissRequest={clearConfirm=false},title={Text("清空本机广场资料？")},text={
+        Text("删除本机广场目录与图片缓存。衣橱、心愿、登记草稿和服务端资料保留。下次刷新会重新获取。",
+            modifier=Modifier.verticalScroll(rememberScrollState()))
+    },confirmButton={TextButton(onClick={clearConfirm=false;viewModel.clearLocalCatalog()},enabled=busy==null && preview==null,
+        modifier=Modifier.testTag("square-clear-confirm"),colors=ButtonDefaults.textButtonColors(contentColor=MaterialTheme.colorScheme.error)){Text("清空")}},
+        dismissButton={TextButton(onClick={clearConfirm=false}){Text("取消")}})
     preview?.let { p -> AlertDialog(onDismissRequest={if(busy==null)viewModel.cancelPreview()},
         title={Text("导入到广场")},text={Column(Modifier.verticalScrollCompat()){
             Text(p.catalog.title,style=MaterialTheme.typography.titleSmall);Spacer(Modifier.height(12.dp))

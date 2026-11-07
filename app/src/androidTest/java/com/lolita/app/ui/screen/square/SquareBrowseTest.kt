@@ -71,7 +71,7 @@ class SquareBrowseTest {
     @Before fun setup() {
         db = Room.inMemoryDatabaseBuilder(context, LolitaDatabase::class.java).build()
         drafts = ItemDraftRepository(db, ItemRepository(db.itemDao(), database = db, context = context))
-        repo = SquareRepository(context, db, drafts)
+        repo = SquareRepository(context, db, drafts, defaultServiceUrl="")
         ImageFileHelper.configure(context, db)
         io { repo.load() }
     }
@@ -89,6 +89,26 @@ class SquareBrowseTest {
         }
         val preview = repo.preview(Uri.fromFile(input)) {}; repo.apply(preview)
         repo.catalog.value!!
+    }
+    @Test fun clearImportedCatalogPreservesIndependentDraftAndRejectsOldPreview() {
+        val c=imported();val p=c.products.first{it.id=="1088022205740"}
+        val sku=p.skus.first{it.content=="JSK" && it.color=="蓝色" && it.size=="M"}
+        val unit=p.suggestUnit(sku,sku.parts,"单品").copy(photos=listOf(p.images.first().path),documents=emptyList())
+        val registration=io{repo.prepare("dorothy-cotton",sku.key,unit)}
+        val draft=io{drafts.get(registration.draftId!!)!!}
+        assertEquals(1,draft.imagePaths.size)
+        val before=draft.imagePaths.associateWith{MessageDigest.getInstance("SHA-256").digest(File(it).readBytes()).toList()}
+        val stage=File(context.filesDir,"square_catalog/pending-stale-preview").apply{mkdirs()}
+        val stale=SquareRepository.Preview(c,stage)
+        io{repo.clearLocalCatalog()}
+        assertNull(repo.catalog.value);assertFalse(stage.exists());assertFalse(File(context.filesDir,"square_catalog").exists())
+        try{io{repo.apply(stale)};fail("A preview cleared with the cache must be invalid")}
+        catch(_:IllegalArgumentException){}
+        assertEquals(draft,io{drafts.get(draft.id)})
+        before.forEach{(path,hash)->assertEquals(hash,MessageDigest.getInstance("SHA-256").digest(File(path).readBytes()).toList())}
+        val restart=SquareRepository(context,db,drafts,defaultServiceUrl="")
+        io{restart.load()};assertNull(restart.catalog.value)
+        assertEquals(0,io{db.itemDao().getItemCount()});assertTrue(io{db.priceDao().getAllPricesList().isEmpty()})
     }
     private fun part(c: SquareCatalog, event: String, key: String) = SquareBrowse.parts(c, c.events.single { it.id == event }).single { it.partKey == key }
     private fun request(c: SquareCatalog, choices: List<SquareBrowseChoice>, grouped: Boolean = false, event: String = "dorothy-cotton") =

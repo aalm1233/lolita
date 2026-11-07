@@ -28,7 +28,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
 class SquareRepository(private val context: Context, private val database: LolitaDatabase,
-    private val drafts: ItemDraftRepository) {
+    private val drafts: ItemDraftRepository, defaultServiceUrl:String=DEFAULT_SQUARE_SERVICE_URL) {
     private val gate=Mutex()
     private val refreshGate=Mutex()
     private val downloads=Semaphore(3)
@@ -37,6 +37,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
     // JsonObject info may contain explicit nulls: retain them across cache restarts.
     private val cacheGson=com.google.gson.GsonBuilder().serializeNulls().create()
     private var loaded=false
+    @Volatile private var cacheGeneration=0L
     private val addWish = com.lolita.app.domain.usecase.AddSquareWishUseCase(context, database)
     val wardrobe = kotlinx.coroutines.flow.combine(database.itemDao().getAllItems(), database.orderImportDao().observeSquareSources(), database.itemDraftDao().observeDrafts()) { items, sources, drafts -> SquareWishWardrobe(items, sources, drafts) }
     suspend fun addWishes(request: SquareWishRequest): SquareWishResult = withContext(Dispatchers.IO) { gate.withLock {
@@ -56,7 +57,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
     private val serviceConfig get()=AtomicFile(File(context.noBackupFilesDir,"square-service.json"))
     private val _serviceUrl=MutableStateFlow(runCatching {
         serviceConfig.openRead().bufferedReader().use { normalizeSquareServiceUrl(com.google.gson.JsonParser.parseReader(it).asJsonObject["url"].asString) }
-    }.getOrDefault(""))
+    }.getOrDefault(normalizeSquareServiceUrl(defaultServiceUrl)))
     val serviceUrl=_serviceUrl.asStateFlow()
     private val _imageEpoch=MutableStateFlow(0L)
     val imageEpoch=_imageEpoch.asStateFlow()
@@ -67,6 +68,8 @@ class SquareRepository(private val context: Context, private val database: Lolit
 
     suspend fun load()=withContext(Dispatchers.IO) { gate.withLock {
         if(loaded)return@withLock
+        // A crash after the atomic cache move must never restore cleared public data.
+        context.filesDir.listFiles()?.filter { it.name.startsWith("square-discarded-") }?.forEach { it.deleteRecursively() }
         root.mkdirs()
         addWish.cleanupInterrupted()
         // Only interrupted temporary imports; published image blobs are never swept here.
@@ -92,9 +95,31 @@ class SquareRepository(private val context: Context, private val database: Lolit
         _serviceUrl.value=url
     } }
 
+    /** Public cache only. Private UUID images, Room records and service configuration are retained. */
+    suspend fun clearLocalCatalog()=withContext(NonCancellable + Dispatchers.IO) {
+        val discarded=gate.withLock {
+            // Registration already owns gate before requesting images; keep the same lock order.
+            val locked=mutableListOf<Mutex>()
+            try {
+                imageLocks.forEach { it.lock();locked.add(it) }
+                val old=File(context.filesDir,"square-discarded-${UUID.randomUUID()}")
+                require(!root.exists() || root.renameTo(old)) { "广场资料未清空，请检查存储空间后重试" }
+                cacheGeneration+=1
+                _catalog.value=null
+                loaded=true
+                _imageEpoch.value+=1
+                old
+            } finally { locked.asReversed().forEach { it.unlock() } }
+        }
+        // Only the detached public directory is swept. Failed cleanup is retried on next load.
+        discarded.deleteRecursively()
+        Unit
+    }
+
     /** Never uses the UI message flow and never holds the catalog lock across a request. */
     suspend fun refreshSilently()=withContext(Dispatchers.IO) {
         if(!refreshGate.tryLock())return@withContext
+        val generation=cacheGeneration
         try {
             load()
             val base=_serviceUrl.value
@@ -115,7 +140,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
                 val page=client.changes(base,cursor)
                 require(page.serverId==server)
                 val active=gate.withLock {
-                    if(_serviceUrl.value!=base)return@withLock false
+                    if(_serviceUrl.value!=base || cacheGeneration!=generation)return@withLock false
                     var merged=_catalog.value
                     page.changes.forEach { merged=SquarePackage.merge(merged,it.catalog,network=true) }
                     if(merged!=null && page.changes.isNotEmpty()) {

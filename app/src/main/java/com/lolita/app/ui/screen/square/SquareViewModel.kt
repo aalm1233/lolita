@@ -89,6 +89,21 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
         viewModelScope.launch {try{repository.refreshSilently()}finally{_refreshing.value=false}}
     }
     fun configureService(value:String) { viewModelScope.launch { repository.configureService(value);repository.refreshSilently() } }
+    fun clearLocalCatalog() {
+        if(_busy.value!=null || _preview.value!=null)return
+        work("清空本机广场资料") {
+            repository.clearLocalCatalog()
+            // Keep persistent ItemDraft/ItemSourceRecord untouched; drop only this page's choices.
+            listOf("event","product","sku","part","browseKey","planEvent","planSku","activeDraft").forEach { saved["square.$it"]=null }
+            listOf("choosing","multiOpen","multiGrouped","grouped","resultSheet").forEach { saved["square.$it"]=false }
+            listOf("browseChoices","multiChoices","units").forEach { saved["square.$it"]="[]" }
+            listOf("query","kind","shop","color","style","form").forEach { saved["square.$it"]="" }
+            listOf("step","unitIndex","photoUnit").forEach { saved["square.$it"]=0 }
+            saved["square.parts"]=arrayListOf<String>()
+            saved["square.lastWishRequest"]=null;saved["square_editor_result"]=null
+            _registration.value=null;_wishResult.value=null;_message.value=null
+        }
+    }
     val eventId=saved.getStateFlow<String?>("square.event",null)
     val choosing=saved.getStateFlow("square.choosing",false)
     val query=saved.getStateFlow("square.query","")

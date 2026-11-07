@@ -1,0 +1,731 @@
+{
+  "nativeCaptures": 90,
+  "matrix": 84,
+  "methods": [
+    "developerToolsFourteenSkinsCancelConfirmAndDefaultAddress",
+    "serviceAddressValidationCancelAndRealKeyboard",
+    "disconnectedEmptyStateRefreshIsSilentAndImportStaysAvailable"
+  ],
+  "sources": [
+    {
+      "source": "normal-final/default-default-light.png",
+      "sha256": "57a71e8cc5099f1f45cfde68262dad037cf44e97ba919d97a504cbeb4c6421b1",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-default-dark.png",
+      "sha256": "0a34b755dd9d895bf49098c1c48c27cde838fc7dd75ca9fb876cee725158441b",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-gothic-light.png",
+      "sha256": "dff6d665c5821f5dc1c5a8177c0dfb40a4e92fc9aba80b13ae2f3ee5364a2f60",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-gothic-dark.png",
+      "sha256": "31114ec83527165fa422e18c238edc1279af8cefef2d9b0e99070cad8feab2de",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-chinese-light.png",
+      "sha256": "d4092c5a0da1a0ad49006a520cf525652d21188b8fb9f7ee99214ec8a2041c8a",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-chinese-dark.png",
+      "sha256": "5d1533972604f28cd85817297b647ef2ae16d8f877f7f535940a2e07324fd85e",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-classic-light.png",
+      "sha256": "402ab494e2b76321ea9bcb1a8d1a17bcf1c7d4f2ce024dd3447a60bb6fbe347c",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-classic-dark.png",
+      "sha256": "e2acedd5c71b1dbf4b005cf86d7cdc34095f4b91eca57b8d5649b77102b84cfb",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-navy-light.png",
+      "sha256": "13d472a80514831398cc3d359fa7f841b9ee770ec46f6d857d1033d1ccd46876",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-navy-dark.png",
+      "sha256": "d9239d79323536d5a932d4dd9e5b59248e0741545f5af2ad05368c9ebc3165f4",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-country-light.png",
+      "sha256": "d2234c6d1155f345694bdedf6ad846a3b19787ef3a46433cb15c7a7a6a5e7db2",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-country-dark.png",
+      "sha256": "fd66800221387a59d52b1a13f313cefbf93e38d09bf3723ba237886c376f8a23",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-victorian-light.png",
+      "sha256": "842f2d8079c0a0a97acd86b2b73e377a80895726e206ab7613039129d6255383",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/default-victorian-dark.png",
+      "sha256": "4f33f4b20e65df4ddb540c4392fbb91c62327b8330a2a3032b57e2bd80729a64",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-default-light.png",
+      "sha256": "da48ce4665e8b6592185e9321053548ec6632f15be12efd3d6398ec5843a13b3",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-default-dark.png",
+      "sha256": "f28556c06be137ecf7a01f87045332f171b8fd756b782d6857d30480bb78db91",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-gothic-light.png",
+      "sha256": "ecf3b542e22074ae0dfeb18c892cf3cab056464019e22a1c8545096e8ee8c392",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-gothic-dark.png",
+      "sha256": "8eb5880b640d7f29d7216ceb06d925dc107c8844279231218c56a1e18ab55fd7",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-chinese-light.png",
+      "sha256": "4da48f1baff45c2ba684e215fb0e7fc5c595f202a475bdcefa99867736237755",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-chinese-dark.png",
+      "sha256": "d1f9e8bd681929c0af7b3472eaf51cff2b517ecf6d4c447c0ef32bc0d061171a",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-classic-light.png",
+      "sha256": "1aa34e03d2e87d6adc69d7d74eebec5e89a95bb0fd1b0ed033a652fc941c1285",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-classic-dark.png",
+      "sha256": "eca53edada0e920792f77e07001b566cdb80cea1e7f2df20e8cc154f528bcae5",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-navy-light.png",
+      "sha256": "33b3354f992678853888d9ea74823297883cae8e7c7ef6e24bd95814a7a73c7b",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-navy-dark.png",
+      "sha256": "d3b81dc3bdedae2f4807ecba750789246181255b74ff8578dd289a0192475efb",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-country-light.png",
+      "sha256": "89093ee29a247363579dcbb629f73d532ad192babdc8f3ce05501dc3cff0cff2",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-country-dark.png",
+      "sha256": "8f1e768412da63c0fbbd3884c768b94daab5598015fbed2f5f06d4aa665f225b",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-victorian-light.png",
+      "sha256": "98f94d8a392e6860e397fc58c6953ca435f55514e41365fec7d42c538472babe",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/tools-victorian-dark.png",
+      "sha256": "a2baba24b62c41f1af9479528de631ffeecdb4634f32c590a854993c32e277a3",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-default-light.png",
+      "sha256": "c7d2c749671647b55e85a0fa0ab642d16a2bcd6d12522e7a50f436251c2b44ce",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-default-dark.png",
+      "sha256": "8418d689e78d18a02c922897c039a47b5c6f615339dbc30e4deb2d1413bdfb5d",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-gothic-light.png",
+      "sha256": "a77e515923338ae32eb61351b0db27fd16d9cda991d28c03ad914d1ccd2d3f18",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-gothic-dark.png",
+      "sha256": "a6cbd41f5934a0837859505f20bfe7fe6120c7bbfb3d1b61f97d15875fe399f6",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-chinese-light.png",
+      "sha256": "c900c8942f8db95c6ba078342d52c48c9c0cbe5c3589dd330e4aa32386aa4025",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-chinese-dark.png",
+      "sha256": "bb188521ab9af1e91f1baaeed430e407cc165d2857ee4dc66508eef377e96384",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-classic-light.png",
+      "sha256": "eb2938376ef41431b6619611abe0417075299bdd6068daab6e574c7bc25ec4e7",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-classic-dark.png",
+      "sha256": "b40acbf32e692a1451fa5ca1867ceebb72eae779c3a900a900315757d1190ad8",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-navy-light.png",
+      "sha256": "310bb79584b6c071c1ce92254605a31cca950fcd85f278beb7f9688cb9886683",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-navy-dark.png",
+      "sha256": "b54b93ac8c20776ec315b4b19958bd2bb157685938dfe431ea4902e720dcf2be",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-country-light.png",
+      "sha256": "39d1a89d1dfc7ff6ad54c3229fdf232e40a84f7086fe6e0c20d4de577ccffae8",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-country-dark.png",
+      "sha256": "30264c12f087086a4ed20be812124755deb8b2148feb40cdd30bf7c5078d1fad",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-victorian-light.png",
+      "sha256": "1645c8f58568540b545f5f4645dc5bf259cb7dab34dd6548b71e7a1a1df0a157",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/clear-victorian-dark.png",
+      "sha256": "4410367c8ad977c8f0c40fef24d90895d022c5b81dca4f7430ae70ce1389ca50",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/service-real-ime.png",
+      "sha256": "1f2a40ab1cbf96ec3a60a1e5fae22229b23fde836ced153425f33259953bd8dc",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/empty-offline.png",
+      "sha256": "6f4caa193977d9708dca124325559ca8d41fc02e45e566525e99c0b386b724b4",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "normal-final/cleared-empty.png",
+      "sha256": "e22ba1a85a4dd5e266708cb657859ab4a48328f2a5414577a0bc82f992e0daf8",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-default-light.png",
+      "sha256": "26e3828239e6b6b6e36172fc53bc8565a420f24fc15ce43966db6023a8470a6c",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-default-dark.png",
+      "sha256": "6b659dfd416d1a35a27edd9fce6b984ae69366a6f7fae8407656e9e10719240d",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-gothic-light.png",
+      "sha256": "8052b5e5310172b94d2c6af6f5649cd3a5bd7945aff271668cd3b1b1ef06a894",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-gothic-dark.png",
+      "sha256": "efde316dd703673c691264370854e5bb6f923c87893be26094e3cba0b7d0c707",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-chinese-light.png",
+      "sha256": "94023b7bca47fccee91daac2d0a94028d4eeba281d948cd36fbac850c749ba3a",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-chinese-dark.png",
+      "sha256": "32299c9b27fcf6560584a8e7e569d7b038a71788fbcab5519a168ce997635b9f",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-classic-light.png",
+      "sha256": "fb0b68b742ae49bb61f952f42f79047f79b99b16bcb060723e51e1875b5a3ee5",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-classic-dark.png",
+      "sha256": "80df84fd110ace01d5803ef3341101b16cb7141c00434e78d6812a6d77053b51",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-navy-light.png",
+      "sha256": "340fcab40aafb8323fe2d8754c1aa201f31b956978fe6ac2a063a5a53cda0433",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-navy-dark.png",
+      "sha256": "be7d8a82bda6b482b849912de2c9ca610e6f2ebff8b5e40bef9b3b0b4c04f0e6",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-country-light.png",
+      "sha256": "a9c2c9c7713570b10bdc08e3d0c1dedfda77464c74d32f5bc704024650d7a319",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-country-dark.png",
+      "sha256": "a4de0f01acf0cfdc85566e0632f7cbdf03f5d473418cb15eb143163b29ed240d",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-victorian-light.png",
+      "sha256": "116f31c4f6f1f41b322d6c356f0d20002f1e9d7f3ba8475d8169627716a9a123",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/default-victorian-dark.png",
+      "sha256": "f11dbd2a40db2e33645dfbf1b29b05680887e91ed2041185432442bebaa7dfc8",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-default-light.png",
+      "sha256": "e844ce1f353a642cf93e38223fb6a71bd3f5a73630175b03ef0a0af0a071a435",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-default-dark.png",
+      "sha256": "fe52fecdeb3a5aacacdfb0eadafaf804d01ecfa8eeb777d06cc97e80d336471e",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-gothic-light.png",
+      "sha256": "5b7098126f3e119d61b9cd7144fd3db2aec99d386a298a8d183329a4ea0671de",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-gothic-dark.png",
+      "sha256": "b4f1918664dd226c4e7cae30fba23143fdbf9d3711a4104e6c9485e177dca6a7",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-chinese-light.png",
+      "sha256": "11164cb13becceb00e02dc0807f3fe02019bd8b82bbc6a1363baf00f12b143a2",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-chinese-dark.png",
+      "sha256": "1274cbfd4bf34b07304d47e05333607a40d8cad2198a92e0e9535c6c6fbf1ea9",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-classic-light.png",
+      "sha256": "ab52ac3109471117dc56a62add12c9d2b06e3a5e2a6362156acdd53bdb4aed9f",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-classic-dark.png",
+      "sha256": "6b1288ada4e8d6f083ccbf16537a06a9a0cf59946c4a98e0d1a0a7ee1acb0bc9",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-navy-light.png",
+      "sha256": "11a26176583f36c541c0aa064f78fb2917625697bad7ecd519ae46b1da4616f7",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-navy-dark.png",
+      "sha256": "ea583218f6546fe6e959aa7b618f2773c63d99b7fee74e7f9c75e23373c9449e",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-country-light.png",
+      "sha256": "d1d5f96829d9b32c959984c8da9531c717cb7004658d2062bd9475c7e0c22440",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-country-dark.png",
+      "sha256": "cc0e81cc3b3beaadc68de491fcf142dddc4b291091e93714af8d6d94ef26253c",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-victorian-light.png",
+      "sha256": "b395ba940df185cda98cdcbff98f285f1aecda796671e3db4ded58eb8dc7cfc4",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/tools-victorian-dark.png",
+      "sha256": "bbbf9aa864fd8716a12bb2610c66ab9c08d49fd29edacaf2ceca0e73432a097a",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-default-light.png",
+      "sha256": "f5b9fe53eb8ba5919c3e8f5540edba9ffe93e79dfca31af79af8136ddb7f8aac",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-default-dark.png",
+      "sha256": "606800e30f24f65ebc3b9c7be8ac0a569da6ef5e5d2970fa0ffeee87fa3098e3",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-gothic-light.png",
+      "sha256": "5579b079b0bccac2edbe2ecafeaa9bc45eccf82402f6e3a54cffe8c037b491d3",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-gothic-dark.png",
+      "sha256": "1679f1a0b238362c7ffe90a969f6768376181c8f0b96773470ccb95aa0a64edf",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-chinese-light.png",
+      "sha256": "433fa6ccf3ff8e55ff6a76d65afd929d892b766b3826a6ee55a3284e3b987a93",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-chinese-dark.png",
+      "sha256": "31e916f1838d1eb1a565d367cb4e5d51284a846cd0c9ffcf85eb236e09481f98",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-classic-light.png",
+      "sha256": "ef88fe8b6c982f69207307cc0bd7a795cebdc3bbdf12f347af795e11f1cbb6b8",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-classic-dark.png",
+      "sha256": "aa0c04ed2411a0ad35442cfe49322f9e9df85cb456ce779b3066817f9611ee2e",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-navy-light.png",
+      "sha256": "99e3e45e507998290158a72f5a0cc067ad9742253bc3b3ec7b4b92f1ae67ea62",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-navy-dark.png",
+      "sha256": "1a3ffbfac9384e69ccfdbd2add3b9fe515b84899c831e428451f916e7d9b9d69",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-country-light.png",
+      "sha256": "d025957874e899037f07dee624501576d153fd9b29bcb0c410c6d691c0e7b2cb",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-country-dark.png",
+      "sha256": "1396d7741c20a419187ed463a5ec64fc3eaad386a688e80da2839c6e990e8506",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-victorian-light.png",
+      "sha256": "c7870dc25fd51124f116204c4878b9c192e71a7a122332c5b3e47b72e2a07f44",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/clear-victorian-dark.png",
+      "sha256": "d34303eea95cc2fdcc82370839a4c7938e1138e38aad04c840bbc369f3b29545",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-ime-final/service-real-ime.png",
+      "sha256": "f734cc0106f378bead4fd99f403ff3c21132da9c240aaf9908b6472fbc283ff5",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/empty-offline.png",
+      "sha256": "09d2abee4a0410742bf0fee76de6daa4ac298039afbb8991ea5b776bfc4290e2",
+      "pixels": [
+        1080,
+        2400
+      ]
+    },
+    {
+      "source": "small-final/cleared-empty.png",
+      "sha256": "cf7153a49b6ac5dda51962ff9ebf5dfba1633aef33d344a28142c686013c8b23",
+      "pixels": [
+        1080,
+        2400
+      ]
+    }
+  ]
+}

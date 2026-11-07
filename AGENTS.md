@@ -51,6 +51,11 @@
 - 列表缩略与详情原图按需下载，`SquareImageFetcher`复用全局Coil管线，原图SHA/字节/尺寸核对后持久缓存，刷新可重试失败缩略。心愿/旧登记仍先准备所需原图，复制独立UUID再沿原事务保存，已收藏不依赖服务；本地坏图保持原校验错误语义。缓存序列化保留参数显式null；目录SHA与游标绑定，不完整提交从0重放。
 - 网络目录允许未缓存图，使用独立数量/64MiB清单上限，不沿用ZIP600MiB总图上限；ZIP全图准入仍严格，Room34/45实体/备份16不变。设计与原生七皮肤浅暗/320dp两倍字/IME见 `docs/plans/2026-11-06-square-lan-service.md`；操作说明见 `docs/square-lan-service.md`。本轮仅内网，花生壳未接入；不新建未指定的采集调度。
 
+### 广场公网 HTTPS（2.78.0）
+
+- 内置服务改为 `https://f8b8b6fa0e0f.eicp.fun`，由花生壳长期引擎仅映射本机 `127.0.0.1:18765` 的只读广场API；TP-Link原动态DNS保留。已有自定义值与明确空地址不迁移，“使用内置地址”沿原设置入口。节点与凭据留仓库外，不新建采集调度。
+- HTTP请求显式 `Connection: close`，避免穿透中继复用已由源站关闭的连接；连接/读取超时调整为7.5秒/15秒以适配公网转发，保留HTTPS证书与主机名校验、禁止重定向、前台/下拉及静默失败。图片与私人心愿规则、Room34/45实体/备份16不变。前置范围与验收选择见 `docs/plans/2026-11-07-square-public-tunnel.md`，实施与最终原生/发布结果见 `docs/square-public-tunnel-implementation-2026-11-07.md`。
+
 ### 淘宝公开目录采集
 
 - 用户查店铺上新或接续采集时应用仓库源`skills/taobao-shop-updates/`（安装于`~/.codex/skills/taobao-shop-updates/`）；本机dsh的DeepSeek负责淘宝访问/原图/OCR，主助手只调度及读取本地文件，不通过浏览器、CDP、DOM或自行请求淘宝接管。
@@ -356,7 +361,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=155, versionName="2.77.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=156, versionName="2.78.0"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

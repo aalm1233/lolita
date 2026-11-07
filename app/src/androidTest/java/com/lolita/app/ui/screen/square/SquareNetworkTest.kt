@@ -94,6 +94,27 @@ class SquareNetworkTest {
         val bitmap=compose.onAllNodes(isRoot()).onLast().captureToImage().asAndroidBitmap()
         File(dir,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
     }
+    @Test fun freshHttpsConnectionsReadEveryPageAndOriginal(){
+        val client=SquareNetworkClient()
+        val server=io{client.serverId(base)}
+        assertEquals(server,io{client.serverId(base)})
+        var cursor=0L
+        val products=linkedMapOf<String,SquareProduct>()
+        var complete=false
+        for(pageIndex in 0 until 2000){
+            val page=io{client.changes(base,cursor)}
+            assertEquals(server,page.serverId)
+            page.changes.forEach{change->change.catalog.products.forEach{products[it.id]=it}}
+            cursor=page.cursor
+            if(!page.hasMore){complete=true;break}
+        }
+        assertTrue("All change pages must finish",complete)
+        assertTrue("The configured real service must contain products",products.isNotEmpty())
+        val catalog=io{client.changes(base,0)}.changes.first().catalog
+        val asset=catalog.assets.first{it.path==catalog.products.first().images.first().path}
+        val original=File(context.cacheDir,"direct-network-original")
+        assertTrue(io{client.image(base,asset,false,original)}.isFile)
+    }
     @Test fun realServiceMetadataOnlyConcurrentRefreshAndRestart(){
         online();val before=repo.catalog.value!!
         assertTrue(File(context.filesDir,"square_catalog/images").listFiles().orEmpty().isEmpty())
@@ -165,7 +186,7 @@ class SquareNetworkTest {
         online();val before=repo.catalog.value
         val server=ServerSocket(0)
         val thread=Thread{
-            try{repeat(2){server.accept().use{s->s.getInputStream().bufferedReader().readLine();s.getOutputStream().write("HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nBAD".toByteArray())}}}catch(_:Exception){}
+            try{while(!server.isClosed)server.accept().use{s->s.getInputStream().bufferedReader().readLine();s.getOutputStream().write("HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nBAD".toByteArray())}}catch(_:Exception){}
         }.apply{isDaemon=true;start()}
         try{
             io{repo.configureService("http://127.0.0.1:${server.localPort}");repo.refreshSilently()}

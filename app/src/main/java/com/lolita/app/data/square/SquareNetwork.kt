@@ -16,8 +16,8 @@ import java.util.UUID
 /** Network failures are deliberately excluded from user-facing message flows. */
 class SquareNetworkException : IOException("Square service unavailable")
 
-// LAN verification phase. Stored user overrides (including an explicit blank) take precedence.
-const val DEFAULT_SQUARE_SERVICE_URL = "http://192.168.0.104:18765"
+// Public HTTPS service. Stored user overrides (including an explicit blank) take precedence.
+const val DEFAULT_SQUARE_SERVICE_URL = "https://f8b8b6fa0e0f.eicp.fun"
 
 fun normalizeSquareServiceUrl(value: String): String {
     val text = value.trim()
@@ -42,8 +42,10 @@ class SquareNetworkClient {
     private fun connection(base: String, path: String): HttpURLConnection {
         require(normalizeSquareServiceUrl(base) == base && base.isNotEmpty())
         return (URI(base + path).toURL().openConnection() as HttpURLConnection).apply {
-            connectTimeout = 2500; readTimeout = 4000; instanceFollowRedirects = false
+            connectTimeout = 7500; readTimeout = 15000; instanceFollowRedirects = false
             setRequestProperty("Accept", "application/json")
+            // The relay can retain an origin-closed connection; keep each request independent.
+            setRequestProperty("Connection", "close")
         }
     }
     private suspend fun bytes(c: HttpURLConnection, max: Long): ByteArray {

@@ -290,7 +290,7 @@ class SquareRepository(private val context: Context, private val database: Lolit
                 }
                 if(part!=null && !whole)appendLine("分件未单独标明的颜色、尺码留空，编辑时核对。")
                 appendLine("\n来源与购买快照")
-                appendLine("${event.kind} / ${event.state}；采集：${product.capturedAt}")
+                appendLine("${event.kind} / ${event.state ?: "状态未知"}；采集：${product.capturedAt}")
                 appendLine("商品：${product.url}")
                 appendLine("原始完整规格："+sku.rawProperties.entries.joinToString("；") { "${it.key}：${it.value}" })
                 appendLine("原购买内容：${sku.content}")

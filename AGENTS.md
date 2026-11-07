@@ -53,6 +53,8 @@
 
 ### 广场公网 HTTPS（2.78.0）
 
+- 2.78.1／157修复v1目录历史描述性空值：事件状态/日期/展示价格等显式可空，缺失和null保留未知；可见性与展示不得直接对其trim/contains/isNotBlank，不从未知状态推断下架，未知价格不补0。无Room/备份升级；前置范围、失败先行复现和验收见 `docs/plans/2026-11-07-square-historical-null.md`。此为已复现的数据缺口修复，原用户闪退是否同因未确认。
+
 - 用户反馈广场齿轮服务弹窗闪退，现仍未复现／未定位。已补独立AVD的2.71.1正式包直接覆盖2.78.0（旧任务保留、无广场配置/缓存、当前基准160物品/629本机图片），首次公网同步及输入/取消、冷启动重开正常；45表全部行、图片SHA及持久设置保全。仅覆盖Android15与Room34→34，不证明早期迁移/OEM兼容或已修复；待反馈者确切版本/设备/异常栈，见 `docs/square-service-crash-investigation-2026-11-07.md`。
 
 - 2.78.0／156源码 `d1c2b877` 与标签已普通推送，clean原签名Release、2项JVM／7项去重设备方法、37项assets／24图片资源核对、两次覆盖冷启动范围保全与正式App公网新店/原图通过；GitHub／Gitee同APK匿名全量下载、SHA/HEAD通过。Gitee版本API及正式App检查更新当前403，直链正常，此限制未冒充通过。最终回执 `docs/square-public-tunnel-release-2.78.0-verification.json`。
@@ -365,7 +367,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=156, versionName="2.78.0"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=157, versionName="2.78.1"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -62,3 +62,7 @@ dsh输出本轮`products.json/CSV/image-manifest`、原图/证据及`square-inpu
 ## 广场可见性（2.75.1）
 
 商品可选`listing:{status,source,observedAt}`，status为ACTIVE/OFF_SALE/DISPLAY_ONLY，来源明文与观察时间必填；旧无字段包兼容。广场过滤明确下架/仅展示、PLACEHOLDER和明确结束预约批次，混合动态仅显示活跃链接；归档的商品、SKU和SHA原图仍在目录中，供未来博物馆，不删除私人心愿。不存在即下架、库存缺货即下架均不成立。开放尾款独立只读。旧App可能忽略新增嵌套字段，须升级才能按此口径展示。采集侧状态补丁与证据契约见skills/taobao-shop-updates/references/app-package.md。
+
+## 历史描述性空值兼容（2.78.1）
+
+旧v1事件的subtitle/state/date/price/priceNote/note/material/detail/captured可能缺失或为JSON null；2.78.1按未知保留，展示安全回退，不补0或日期、不从未知状态推断下架。身份、引用、SKU、商品与图片校验不变；描述字段存在时仅接受文字或null。协议仍为v1，Room34／备份16不变。

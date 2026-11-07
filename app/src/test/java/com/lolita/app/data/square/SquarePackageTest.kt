@@ -21,6 +21,39 @@ class SquarePackageTest {
     private inline fun rejected(block:()->Unit){try{block();fail("Must reject invalid package")}catch(expected:IllegalArgumentException){}}
     private fun zip(root:File,c:SquareCatalog=catalog(),name:String=asset.path,photo:ByteArray=bytes):File=File(root,"input.zip").also{file->
         ZipOutputStream(file.outputStream()).use{z->z.putNextEntry(ZipEntry("manifest.json"));z.write(SquarePackage.gson.toJson(c).toByteArray());z.closeEntry();z.putNextEntry(ZipEntry(name));z.write(photo);z.closeEntry()}}
+    @Test fun historicalNullStateDoesNotCrashVisibility() {
+        val root=SquarePackage.gson.toJsonTree(catalog()).asJsonObject
+        root["events"].asJsonArray[0].asJsonObject.add("state",com.google.gson.JsonNull.INSTANCE)
+        val decoded=SquarePackage.decode(root.toString())
+        assertEquals(1,SquareVisibility.events(decoded).size)
+    }
+    @Test fun missingAndExplicitNullEventDescriptionsRoundTripWithoutInventingValues() {
+        val fields=listOf("subtitle","state","date","price","priceNote","note","material","detail","captured")
+        for (missing in listOf(false,true)) {
+            val root=SquarePackage.gson.toJsonTree(catalog()).asJsonObject
+            val event=root["events"].asJsonArray[0].asJsonObject
+            fields.forEach { if(missing) event.remove(it) else event.add(it,com.google.gson.JsonNull.INSTANCE) }
+            val c=SquarePackage.decode(root.toString())
+            assertNull(c.events.single().state);assertNull(c.events.single().date);assertNull(c.events.single().price)
+            assertEquals(1,SquareVisibility.events(c).size)
+            val json=com.google.gson.GsonBuilder().serializeNulls().create().toJson(c)
+            assertEquals(c,SquarePackage.decode(json))
+            assertEquals(catalog().products,c.products)
+        }
+    }
+    @Test fun unknownDescriptionsDoNotReviveExplicitlyArchivedProducts() {
+        val c=catalog().copy(events=catalog().events.map { it.copy(state=null,date=null,price=null) },
+            products=catalog().products.map { it.copy(listing=SquareListing("OFF_SALE","明确下架","2026-11-07T10:00:00+08:00")) })
+        SquarePackage.validate(c)
+        assertTrue(SquareVisibility.events(c).isEmpty())
+    }
+    @Test fun nonTextEventDescriptionsAreRejected() {
+        for(field in listOf("subtitle","state","date","price","priceNote","note","material","detail","captured")) {
+            val root=SquarePackage.gson.toJsonTree(catalog()).asJsonObject
+            root["events"].asJsonArray[0].asJsonObject.add(field,JsonObject())
+            rejected { SquarePackage.decode(root.toString()) }
+        }
+    }
     @Test fun validPackageUnpacksAllBytesAndKeepsOriginalMetadata(){val root=Files.createTempDirectory("square").toFile();try{
         val c=SquarePackage.unpack(zip(root),File(root,"stage"));assertEquals("M",c.products.single().skus.single().size);assertArrayEquals(bytes,File(root,"stage/${asset.path}").readBytes())
     }finally{root.deleteRecursively()}}

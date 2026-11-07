@@ -30,8 +30,8 @@ internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewMo
         item {
             Text(c.shops.single { it.id == e.shopId }.name, style = MaterialTheme.typography.bodySmall)
             Text(e.title, style = MaterialTheme.typography.headlineSmall)
-            Text("尾款 · ${e.state} · ${e.date}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-            if (amounts) { Text(e.price, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
+            Text(listOf("尾款",e.state.orEmpty(),e.date.orEmpty()).filter(String::isNotBlank).joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+            if (amounts) { Text(e.price?.takeIf(String::isNotBlank) ?: "价格未知", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
                 Text(p.priceType, style = MaterialTheme.typography.bodySmall) }
         }
         item { SquareTaobaoButton(listOf(p), snackbar) }
@@ -44,7 +44,7 @@ internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewMo
                 modifier = Modifier.fillMaxWidth().height(420.dp).clickable { viewer = documents.map(vm::image) to index }, circularRevealEnabled = false)
         } }
         item { LolitaSection("来源") { row {
-            Text("${e.captured} 快照", style = MaterialTheme.typography.bodySmall)
+            Text("${e.captured?.takeIf(String::isNotBlank) ?: c.capturedAt} 快照", style = MaterialTheme.typography.bodySmall)
             Text(p.url, style = MaterialTheme.typography.bodySmall)
         } } }
     }

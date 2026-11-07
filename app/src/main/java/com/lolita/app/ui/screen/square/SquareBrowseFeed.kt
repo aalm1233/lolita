@@ -35,7 +35,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     val skus = remember(c) { products.values.flatMap { it.skus } }
     val events = remember(c, query, kind, shop, color, style, form) {
         visibleEvents.filter { e -> (kind.isEmpty() || e.kind == kind) && (shop.isEmpty() || e.shopId == shop) &&
-            (query.isBlank() || (e.title + e.subtitle + c.shops.find { it.id == e.shopId }?.name + e.productIds.mapNotNull(products::get).joinToString { it.title }).contains(query, true)) &&
+            (query.isBlank() || (e.title + e.subtitle.orEmpty() + c.shops.find { it.id == e.shopId }?.name + e.productIds.mapNotNull(products::get).joinToString { it.title }).contains(query, true)) &&
             e.productIds.any { id -> products[id]?.skus?.any { it.matches(color, style, form) } == true } }
     }
     val large = LocalConfiguration.current.fontScale >= 1.5f
@@ -80,9 +80,9 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(c.shops.first { it.id == event.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(event.title, style = MaterialTheme.typography.titleSmall)
-                        Text(listOf(event.state,event.date.takeUnless { it.contains("未提供") || it.contains("未知") }.orEmpty()).filter{it.isNotBlank()}.joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        if (showAmounts && SquareVisibility.products(c,event).size == event.productIds.size) { Text(event.price, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
-                            if (event.priceNote.isNotBlank()) Text(event.priceNote, style = MaterialTheme.typography.bodySmall) }
+                        Text(listOf(event.state.orEmpty(),event.date.orEmpty().takeUnless { it.contains("未提供") || it.contains("未知") }.orEmpty()).filter{it.isNotBlank()}.joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (showAmounts && SquareVisibility.products(c,event).size == event.productIds.size) { Text(event.price?.takeIf(String::isNotBlank) ?: "价格未知", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                            event.priceNote?.takeIf(String::isNotBlank)?.let { Text(it, style = MaterialTheme.typography.bodySmall) } }
                     }
                 }
             }

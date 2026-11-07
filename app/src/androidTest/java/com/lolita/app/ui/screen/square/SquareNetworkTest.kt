@@ -94,6 +94,64 @@ class SquareNetworkTest {
         val bitmap=compose.onAllNodes(isRoot()).onLast().captureToImage().asAndroidBitmap()
         File(dir,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
     }
+    @Test fun historicalNullMetadataCacheReopensAcrossSkinsAndServiceDialog() {
+        online()
+        val historical=repo.catalog.value!!.let { c->c.copy(events=c.events.map { it.copy(subtitle=null,state=null,date=null,price=null,priceNote=null,note=null,material=null,detail=null,captured=null) }) }
+        // This cache shape was accepted by the original v1 parser. Metadata-only marker is retained.
+        File(context.filesDir,"square_catalog/catalog.json").writeText(com.google.gson.GsonBuilder().serializeNulls().create().toJson(historical))
+        io{repo.configureService("")}
+        repo=SquareRepository(context,db,drafts)
+        io{repo.load()};assertEquals(historical,repo.catalog.value)
+        show()
+        for(type in SkinType.entries)for(night in listOf(false,true)) {
+            compose.runOnIdle{skin.value=type;dark.value=night}
+            compose.onAllNodesWithText("价格未知").onFirst().assertIsDisplayed()
+            val suffix="${type.name.lowercase()}-${if(night)"dark" else "light"}"
+            shot("history-feed-$suffix")
+            compose.onNodeWithTag("square-service").performClick()
+            compose.onNodeWithTag("square-service-address").assertIsDisplayed()
+            compose.onNodeWithTag("square-service-default").performScrollTo().performClick()
+            compose.onNodeWithTag("square-service-address").assertTextContains(DEFAULT_SQUARE_SERVICE_URL)
+            shot("history-service-$suffix")
+            compose.onNodeWithText("取消").performClick()
+            assertEquals("",repo.serviceUrl.value)
+        }
+        assertEquals(historical,SquareRepository(context,db,drafts).let{io{it.load()};it.catalog.value})
+        assertEquals(0,io{db.itemDao().getItemCount()});assertEquals(0,io{db.priceDao().getAllPricesList().size})
+    }
+    @Test fun historicalUnknownTailPriceAndServiceStayReadableOnSmallScreen() {
+        online()
+        val c=repo.catalog.value!!
+        val tail=c.events.first { it.kind=="尾款" && SquareVisibility.event(c,it) }
+        val old=c.copy(events=c.events.map { it.copy(state=null,date=null,price=null,priceNote=null,captured=null) })
+        File(context.filesDir,"square_catalog/catalog.json").writeText(com.google.gson.GsonBuilder().serializeNulls().create().toJson(old))
+        io{repo.configureService("")};repo=SquareRepository(context,db,drafts);io{repo.load()}
+        show();compose.runOnIdle{vm!!.open(tail.id)}
+        compose.onNodeWithTag("square-product").performScrollToNode(hasText("价格未知"))
+        compose.onNodeWithText("价格未知").assertIsDisplayed()
+        compose.onNodeWithTag("square-add-wish").assertDoesNotExist();shot("history-tail-small")
+        compose.runOnIdle{vm!!.back()}
+        compose.onNodeWithTag("square-service").performClick()
+        compose.onNodeWithTag("square-service-address").performClick()
+        compose.waitUntil(10000){ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime())==true}
+        compose.onNodeWithTag("square-service-save").assertIsDisplayed();shot("history-service-small-ime")
+        assertEquals(0,io{db.priceDao().getAllPricesList().size})
+    }
+    @Test fun malformedOrMissingHistoricalServiceConfigFallsBackWithoutMutatingIt() {
+        val file=File(context.noBackupFilesDir,"square-service.json")
+        for(json in listOf<String?>(null,"", "null", "{}", "{\"url\":null}", "{\"url\":[]}", "{broken")) {
+            if(json==null)file.delete() else file.writeText(json)
+            val restored=SquareRepository(context,db,drafts)
+            assertEquals(DEFAULT_SQUARE_SERVICE_URL,restored.serviceUrl.value)
+            if(json==null)assertFalse(file.exists()) else assertEquals(json,file.readText())
+        }
+        file.writeText("{\"url\":\"\"}")
+        repo=SquareRepository(context,db,drafts);assertEquals("",repo.serviceUrl.value)
+        show();compose.onNodeWithTag("square-service").performClick()
+        compose.onNodeWithTag("square-service-address").assertIsDisplayed()
+        compose.onNodeWithText("取消").performClick()
+        assertEquals("{\"url\":\"\"}",file.readText())
+    }
     @Test fun freshHttpsConnectionsReadEveryPageAndOriginal(){
         val client=SquareNetworkClient()
         val server=io{client.serverId(base)}

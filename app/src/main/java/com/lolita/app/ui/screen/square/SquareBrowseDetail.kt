@@ -80,7 +80,7 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
                 SquareSpecChoices("尺码", SquareBrowse.sizes(c, part, choice.color), choice.size, { vm.chooseBrowse(size = it) }, "square-size",
                     action = if (selection.documents.isNotEmpty()) ({ TextButton(onClick = { view(selection.documents) }) { Text(if(selection.materials.any { it.sizeTable != null }) "尺码表" else "资料图") } }) else null)
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("${e.date} · ${e.captured} 快照", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
+                    Text("${e.date?.takeIf(String::isNotBlank) ?: "日期未知"} · ${e.captured?.takeIf(String::isNotBlank) ?: c.capturedAt} 快照", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
                     InfoTip("快照信息", "价格与库存为采集快照。")
                 }
             }

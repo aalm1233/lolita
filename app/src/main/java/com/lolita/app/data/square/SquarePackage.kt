@@ -19,9 +19,9 @@ data class SquareCatalog(
 data class SquareShop(val id: String, val name: String, val revision: Long)
 data class SquareEvent(
     val id: String, val revision: Long, val shopId: String, val designId: String, val batchId: String,
-    val title: String, val subtitle: String, val kind: String, val state: String, val date: String,
-    val price: String, val priceNote: String, val note: String, val material: String, val detail: String,
-    val captured: String, val productIds: List<String>
+    val title: String, val subtitle: String?, val kind: String, val state: String?, val date: String?,
+    val price: String?, val priceNote: String?, val note: String?, val material: String?, val detail: String?,
+    val captured: String?, val productIds: List<String>
 ) { val canRegister get() = kind != "尾款" }
 data class SquareProduct(
     val id: String, val revision: Long, val shopId: String, val title: String, val url: String,
@@ -36,7 +36,7 @@ object SquareVisibility {
     private val endedStates = setOf("下架", "已下架", "仅展示", "展示", "展示页", "已结束", "预约已结束", "已截团", "截团")
     fun product(p: SquareProduct) = p.pricePhase != "PLACEHOLDER" && (p.listing == null || p.listing.status == "ACTIVE")
     fun products(c: SquareCatalog, e: SquareEvent): List<SquareProduct> =
-        if (e.state.trim() in endedStates) emptyList() else c.products.filter { it.id in e.productIds && product(it) && (!e.canRegister || it.pricePhase != "BALANCE") }
+        if (e.state.orEmpty().trim() in endedStates) emptyList() else c.products.filter { it.id in e.productIds && product(it) && (!e.canRegister || it.pricePhase != "BALANCE") }
     fun event(c: SquareCatalog, e: SquareEvent) = products(c, e).isNotEmpty()
     fun events(c: SquareCatalog) = c.events.filter { event(c, it) }
 }
@@ -68,6 +68,17 @@ object SquarePackage {
         val root = JsonParser.parseString(json).asJsonObject
         require(root.keySet().all { it in setOf("format","schemaVersion","packageId","revision","title","capturedAt","shops","events","products","assets") }) { "资料包有未支持的字段，请更新应用" }
         require(root["format"]?.asString == "lolita.square" && root["schemaVersion"]?.asBigDecimal?.intValueExact() == 1) { "这不是支持的广场资料包，请选择广场ZIP" }
+        // Older v1 catalogs can omit descriptive text or store explicit JSON null.
+        // Keep unknown values; reject non-text values rather than coercing their meaning.
+        require(root["events"]?.isJsonArray == true) { "动态资料无效" }
+        root["events"].asJsonArray.forEach { event ->
+            require(event.isJsonObject) { "动态资料无效" }
+            for (field in listOf("subtitle", "state", "date", "price", "priceNote", "note", "material", "detail", "captured")) {
+                event.asJsonObject[field]?.let { value ->
+                    require(value.isJsonNull || value.isJsonPrimitive && value.asJsonPrimitive.isString) { "动态文字资料无效" }
+                }
+            }
+        }
         return gson.fromJson(root, SquareCatalog::class.java).also { validate(it, network) }
     }
 

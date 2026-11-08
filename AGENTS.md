@@ -6,6 +6,8 @@
 - 2026-11-07补齐每个旧库1–33→34与34对照的34个直升起点（v1按历史实体源码重建，2–34用原schema），均真实导出/预览JSON并打开/输入/取消广场服务；另保留已发布20→34逐版/分组回放、中间旧任务/草稿及v12额外color列分支。87标签/85公开Release映射、39子场景回执和限制见`docs/square-all-upgrade-paths-2026-11-07.md`；迁移回放不等于每个APK安装或小米真机验收。
 - 2.78.2正式交付：源码/标签`6733ce45`普通推送，clean原签名包双平台匿名全量GET/SHA/HEAD及源标签通过；45表全行/629图SHA/持久设置保全，真实App JSON与诊断SAF保存通过。7项JVM、13项去重正常设备方法和独立进程真实崩溃捕获通过；MIX Flip2根因仍待TXT，AOSP极短窗口+IME遮挡单列待修。Gitee检查更新API/实际App仍403，稳定APK可手动下载；回执`docs/crash-diagnostics-release-2.78.2-verification.json`。
 
+- 2.78.3正式交付：源码/标签`8f358422`普通推送，14项JVM、3项正常设备方法及独立SIGABRT探针/真实系统栈读取通过；提交归档clean原签名Release、37素材/24旧图、2.78.2覆盖首次/冷启动和3份设置保全、正式App诊断SAF保存通过。GitHub/Gitee同APK匿名全量GET/SHA/HEAD及源标签核验，本次Gitee公开查询及实际App检查当前/最新2.78.3通过；依持续授权仅清理最旧Gitee2.71.1 APK。目标手机根因仍待原生栈，回执`docs/native-crash-diagnostics-release-2.78.3-verification.json`。
+
 ## 项目事实
 
 - 单模块 Android 应用，Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。

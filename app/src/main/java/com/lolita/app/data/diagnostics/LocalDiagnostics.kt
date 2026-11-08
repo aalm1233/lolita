@@ -1,17 +1,18 @@
 package com.lolita.app.data.diagnostics
 
 import android.app.ActivityManager
+import android.app.ApplicationExitInfo
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import com.lolita.app.BuildConfig
 import java.io.File
 
-/** Local only. No business database, image, address, request or system trace access. */
+/** Local only. Native system traces pass a strict code-location allowlist before export. */
 object LocalDiagnostics {
     private fun store(context: Context) = DiagnosticStore(File(context.noBackupFilesDir, "diagnostics"))
     private fun metadata() = linkedMapOf(
-        "format" to "lolita.diagnostics.v1",
+        "format" to "lolita.diagnostics.v2",
         "timestampMs" to System.currentTimeMillis().toString(),
         "appVersion" to BuildConfig.VERSION_NAME,
         "versionCode" to BuildConfig.VERSION_CODE.toString(),
@@ -51,14 +52,27 @@ object LocalDiagnostics {
         if (Build.VERSION.SDK_INT >= 30) {
             val exits = runCatching {
                 context.getSystemService(ActivityManager::class.java)
-                    .getHistoricalProcessExitReasons(context.packageName, 0, 5)
+                    .getHistoricalProcessExitReasons(context.packageName, 0, 10)
                     .filter { it.processName == context.packageName }
+                    .sortedByDescending { it.timestamp }
             }.getOrNull()
-            // Do not read description, traceInputStream, processName or processStateSummary.
+            // Never read description or processStateSummary (may contain private content).
             val exit = exits?.firstOrNull()
             if (exit == null) append("unavailable\n") else {
                 append("timestampMs=${exit.timestamp}\nreason=${exit.reason}\nstatus=${exit.status}\n")
                 append("pssKb=${exit.pss}\nrssKb=${exit.rss}\nimportance=${exit.importance}\n")
+            }
+            append("\n[native-exit]\n")
+            val native = exits?.firstOrNull { it.reason == ApplicationExitInfo.REASON_CRASH_NATIVE }
+            if (native == null) append("no-native-exit-in-recent-history\n") else {
+                // This can predate an upgrade; do not attribute it to the current version.
+                append("timestampMs=${native.timestamp}\nreason=${native.reason}\nstatus=${native.status}\n")
+                append("appVersionAtExit=unknown\n")
+                if (Build.VERSION.SDK_INT < 31) append("trace=unsupported-before-api31\n") else {
+                    append(runCatching {
+                        native.traceInputStream?.use { NativeExitTrace.render(it) } ?: "trace=unavailable\n"
+                    }.getOrDefault("trace=unavailable\n"))
+                }
             }
         } else append("unsupported-before-api30\n")
     }

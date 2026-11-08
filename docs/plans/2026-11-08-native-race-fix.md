@@ -26,3 +26,5 @@ Debug及androidTest构建通过；13项PersonalImageIntegrity JVM测试、23项�
 实际NavHost顶栏/底栏的七皮肤浅暗共14组广场服务弹窗及导航通过，840×1600/420dpi（320dp宽）、字体2.0。首次未暂停装饰动画时Compose idling超时，属测试等待失败而非进程原生退出；测试仅暂停背景装饰运动，保留真实blur标志与实现后通过。正式App的正常动画另由正式包走查核对。截图留本机，开发回执见`docs/native-race-fix-debug-verification-2026-11-08.json`。
 
 本地库89个类名与原AAR一致，全部原始源码/资源摘要仅RenderScriptContext一处改变；归一化Kotlin内部module后缀后，公开JVM签名差异仅applyBlur/release增加synchronized。原AAR中Haze1.6.9的其他效果与Poko生成语义保留。正式包的构建、覆盖安装和公开附件结果在发布完成后另行记录。
+
+正式交付已完成，构建、覆盖安装、双平台和更新入口的最终结果见[实施记录](../native-race-fix-implementation-2026-11-08.md)。

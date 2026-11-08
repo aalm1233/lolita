@@ -1,5 +1,7 @@
 # 开发协作流程
 
+- 2026-11-08原生路径审计在Haze1.6.9的RenderScript输入回调/释放处复现真实native竞态：完整输入串行基线通过，未保护两次均在AllocationIoReceive/GrallocConsumer链路SIGSEGV；仅为回调/释放加共锁的隔离对照两次共120轮存活、异常集合为空。另实测图片校验默认ImageDecoder会分配HARDWARE。手机旧TXT为SIGABRT且无栈，尚不能认定同因；本轮仅审计/可复查探针文档，无生产代码/版本/正式APK变更。证据与排除的无效探针见`docs/native-path-audit-2026-11-08.md`。
+
 - 2.78.3／159补齐原生退出诊断：用户2.78.2 TXT出现reason5/status6，只确认原生SIGABRT、未确认根因。导出v2区分最新退出与最近原生退出；API31+按AOSP protobuf白名单提取崩溃线程最多64帧，输入4MiB、输出32KiB上限，不导出错误原文/日志/寄存器/内存/完整路径，不保存原始trace。入口与皮肤不变，Room34/45实体/备份16不变；范围见`docs/plans/2026-11-08-native-crash-diagnostics.md`。
 
 - 2.78.2／158加入本机脱敏诊断：`LocalDiagnostics`在原系统处理器前尽力记录未捕获异常类型/代码位置和堆状态；最近崩溃/导出失败各32KiB，保存在noBackup，不含异常消息/衣橱/图片/地址/请求。个人页「导出诊断记录」经系统保存位置主动导出TXT，无自动上传、无新增权限；备份导出普通失败也留脱敏记录。Room34/45实体/备份16不变。MIX Flip 2两处退出尚未确认根因，不把诊断补丁或AVD通过当作修复。前置图与边界见`docs/plans/2026-11-07-crash-diagnostics.md`。

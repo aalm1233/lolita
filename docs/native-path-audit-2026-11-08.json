@@ -1,0 +1,124 @@
+{
+  "appVersion": "2.78.3",
+  "appSource": "8f358422e7ae66470322eb66f08dd435856815c5",
+  "productionCodeChanged": false,
+  "phoneLogVersion": "2.78.2",
+  "phoneExitReason": 5,
+  "phoneExitStatus": 6,
+  "phoneTriggerUnknown": true,
+  "phoneStackAbsent": true,
+  "phoneRootCauseConfirmed": false,
+  "hazeVersion": "1.6.9",
+  "hazeAarSHA256": "93646031890b6938a6684d00df1cdc99d30c3739b08da3aeed809285b9afbd07",
+  "resolvedComposeCore": "1.8.0",
+  "resolvedMaterial3": "1.3.1",
+  "allocatorExperiment": {
+    "androidApi": 35,
+    "decoders": [
+      {
+        "explicitSoftware": false,
+        "allocator": 0,
+        "config": "HARDWARE",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "explicitSoftware": true,
+        "allocator": 1,
+        "config": "ARGB_8888",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "bothCurrentValidatorsAccepted": true,
+    "loadedSelectedLibraries": [
+      "libhwui.so",
+      "libRS.so",
+      "libart.so",
+      "libsqlite.so"
+    ]
+  },
+  "callbackRace": {
+    "validInputSerialControlPassed": true,
+    "unprotectedCrashes": 2,
+    "unprotectedRuns": 2,
+    "exitReason": 5,
+    "exitStatus": 11,
+    "frames": [
+      {
+        "index": 0,
+        "relativePc": "0000000000037ed8",
+        "library": "libRS_internal.so",
+        "symbol": "android::renderscript::GrallocConsumer::lockNextBuffer(unsigned int)+44",
+        "buildId": "da0a5e454373fc8b9158310d9ddf9561"
+      },
+      {
+        "index": 1,
+        "relativePc": "000000000002b744",
+        "library": "libRS_internal.so",
+        "symbol": "android::renderscript::rsi_AllocationIoReceive(android::renderscript::Context*, void*)+36",
+        "buildId": "da0a5e454373fc8b9158310d9ddf9561"
+      },
+      {
+        "index": 2,
+        "relativePc": "0000000000049f50",
+        "library": "libRS_internal.so",
+        "symbol": "android::renderscript::rsp_AllocationIoReceive(android::renderscript::Context*, void const*, unsigned long)+36",
+        "buildId": "da0a5e454373fc8b9158310d9ddf9561"
+      },
+      {
+        "index": 3,
+        "relativePc": "0000000000044da8",
+        "library": "libRS_internal.so",
+        "symbol": "android::renderscript::ThreadIO::playCoreCommands(android::renderscript::Context*, int)+352",
+        "buildId": "da0a5e454373fc8b9158310d9ddf9561"
+      },
+      {
+        "index": 4,
+        "relativePc": "000000000002df78",
+        "library": "libRS_internal.so",
+        "symbol": "android::renderscript::Context::threadProc(void*)+2472",
+        "buildId": "da0a5e454373fc8b9158310d9ddf9561"
+      },
+      {
+        "index": 5,
+        "relativePc": "000000000006c354",
+        "library": "libc.so",
+        "symbol": "__pthread_start(void*)+196",
+        "buildId": "1b9fecf834d610f77e641f026ca7269b"
+      },
+      {
+        "index": 6,
+        "relativePc": "000000000005efc4",
+        "library": "libc.so",
+        "symbol": "__start_thread+64",
+        "buildId": "1b9fecf834d610f77e641f026ca7269b"
+      }
+    ],
+    "protectedPasses": 2,
+    "protectedIterations": 120,
+    "protectedExceptions": 0,
+    "protection": "same instance monitor around original input callback and release; application AAR unchanged"
+  },
+  "excludedExperiments": [
+    {
+      "type": "uninitialized input",
+      "reason": "No Surface input or ioReceive before applyBlur; native SIGSEGV not valid race evidence",
+      "includedInSuccessfulReproductions": false
+    },
+    {
+      "type": "reflection setup",
+      "reason": "incorrect getter name corrected before valid input probes",
+      "includedInSuccessfulReproductions": false
+    }
+  ],
+  "probeSHA256": "99b628f19d75c60f02053268b917e0ab17debb6aae79a5553075d925f5aa1b59",
+  "newApkReleased": false,
+  "realUserDataChanged": false,
+  "paidRequests": 0,
+  "temporaryAndroidTestSourceRemoved": true,
+  "restoredTestApkProbeAbsent": true,
+  "restoredTestApkInstalled": true,
+  "taskAvdStopped": true,
+  "taskAvdDataRetained": true
+}

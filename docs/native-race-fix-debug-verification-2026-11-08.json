@@ -1,0 +1,56 @@
+{
+  "version": "2.78.4",
+  "versionCode": 160,
+  "room": 34,
+  "entities": 45,
+  "backupFormat": 16,
+  "hazeUpstream": "1.6.9",
+  "upstreamCommit": "b01a57b5c2c0c27efddbba888d13f1ef5f79de12",
+  "sourceChanges": [
+    "RenderScriptContext.kt"
+  ],
+  "originalClassCount": 89,
+  "patchedClassCount": 89,
+  "publicApiChangesAfterInternalModuleNormalization": [
+    "synchronized modifier on applyBlur and release"
+  ],
+  "jvm": {
+    "PersonalImageIntegrityTest": 13,
+    "failures": 0
+  },
+  "device": {
+    "androidApi": 35,
+    "gpu": "host",
+    "nativeMethods": 2,
+    "nativeRuns": 2,
+    "nativeConcurrentIterations": 120,
+    "nativeWorkerExceptions": 0,
+    "backupTests": 23,
+    "uiTests": 1,
+    "uniqueMethods": 26,
+    "failures": 0
+  },
+  "ui": {
+    "widthPixels": 840,
+    "heightPixels": 1600,
+    "densityDpi": 420,
+    "widthDp": 320,
+    "fontScale": 2.0,
+    "skins": 7,
+    "modes": 2,
+    "screenshots": 14,
+    "blurEnabled": true,
+    "decorativeAmbientPausedForComposeIdling": true
+  },
+  "initialUiTest": {
+    "passed": false,
+    "reason": "Compose idling timed out with continuous decorative ambient motion",
+    "nativeCrash": false,
+    "fixedTestOnly": true
+  },
+  "phoneNativeFramesStillAbsent": true,
+  "phoneRootCauseConfirmed": false,
+  "newPermission": false,
+  "paidRequests": 0,
+  "temporaryProbeRemoved": true
+}

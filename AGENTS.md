@@ -1,5 +1,7 @@
 # 开发协作流程
 
+- 2.78.4／160修复已复现的Haze RenderScript生命周期竞态：以`third_party/haze`保留1.6.9原始common/Android源码、Apache许可证及原始摘要，本地模块`:haze-patched`让回调、全部模糊计算及幂等释放共享实例锁，替代Maven Haze而不升级Haze2。只锁回调/释放的复测捕获计算异常，不能算完整修复；新增`RenderScriptLifetimeTest`不加测试侧锁直接覆盖生产代码，`SquareHazeLifetimeTest`保持实际顶栏/底栏毛玻璃并覆盖七皮肤浅暗与服务弹窗。两处只读图片校验显式SOFTWARE分配，其余完整性、路径和引用不变。Room34/45实体/备份16不变；手机SIGABRT同因仍未确认，实施/验收见`docs/plans/2026-11-08-native-race-fix.md`。
+
 - 2026-11-08原生路径审计在Haze1.6.9的RenderScript输入回调/释放处复现真实native竞态：完整输入串行基线通过，未保护两次均在AllocationIoReceive/GrallocConsumer链路SIGSEGV；仅为回调/释放加共锁的隔离对照两次共120轮存活、异常集合为空。另实测图片校验默认ImageDecoder会分配HARDWARE。手机旧TXT为SIGABRT且无栈，尚不能认定同因；本轮仅审计/可复查探针文档，无生产代码/版本/正式APK变更。证据与排除的无效探针见`docs/native-path-audit-2026-11-08.md`。
 
 - 2.78.3／159补齐原生退出诊断：用户2.78.2 TXT出现reason5/status6，只确认原生SIGABRT、未确认根因。导出v2区分最新退出与最近原生退出；API31+按AOSP protobuf白名单提取崩溃线程最多64帧，输入4MiB、输出32KiB上限，不导出错误原文/日志/寄存器/内存/完整路径，不保存原始trace。入口与皮肤不变，Room34/45实体/备份16不变；范围见`docs/plans/2026-11-08-native-crash-diagnostics.md`。
@@ -12,7 +14,7 @@
 
 ## 项目事实
 
-- 单模块 Android 应用，Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。
+- 单应用模块 Android 项目，另含Haze 1.6.9生命周期补丁库`:haze-patched`（`third_party/haze`），Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。
 - 数据流：`Entity (Room) -> DAO -> Repository -> ViewModel (StateFlow) -> Composable`
 - DI 不是 Hilt/Dagger，是 `AppModule` 手写 service locator；`LolitaApplication.onCreate()` 初始化。ViewModel 通过构造参数默认值从 `AppModule` 取仓库。
 - Room 注解处理用 **KSP**（不是 Kapt）。Schema 导出目录 `app/schemas/`。
@@ -379,7 +381,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=159, versionName="2.78.3"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=160, versionName="2.78.4"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

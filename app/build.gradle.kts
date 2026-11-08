@@ -23,8 +23,8 @@ android {
         minSdk = 26
         targetSdk = 35
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        versionCode = 159
-        versionName = "2.78.3"
+        versionCode = 160
+        versionName = "2.78.4"
     }
 
     signingConfigs {
@@ -128,7 +128,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     // Haze (blur / frosted glass effects)
-    implementation("dev.chrisbanes.haze:haze:1.6.9")
+    implementation(project(":haze-patched"))
 
     // Shimmer & image loading polish
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")

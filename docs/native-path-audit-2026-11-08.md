@@ -63,3 +63,11 @@ API35实测同一张1600×1200合成PNG，复用当前采样/完整性参数：�
 手机根因仍需与2.78.3报告的native-exit帧对应：若落到AllocationIoReceive/GrallocConsumer，当前竞态将成为直接匹配；若是libart、其他libhwui或libsqlite函数，应沿实际帧继续定位。现有reason/status两个数字无法确定哪个函数终止，也不应为了给出结论而更改数据库或批量清数据。
 
 完成实验后已移除临时androidTest源、重建并还原不包含该探针的测试包，关闭本次AVD并保留数据。生产源码、正式2.78.3 APK、用户数据、既有广场API与内网穿透保持。
+
+## 同日重试与修复范围纠正
+
+用户要求再次尝试后，使用同一AVD冷启动和相同完整缓冲探针重新独立运行。原版两次在完成9轮及3轮后崩溃，均是新的SIGSEGV，顶部相对PC、BuildID和AllocationIoReceive/GrallocConsumer调用链与前轮一致。累计原版有效复现4/4。
+
+仅锁回调/release的两次重试都完成60轮且进程未退出，但工作线程分别出现`NullPointerException + RSInvalidStateException`与`NullPointerException`；JUnit表面的OK不能覆盖探针捕获的异常，因此本轮两次均不算完整通过。此前两次零异常是当时实测结果，不构成该保护充分性的证明。
+
+追加guardedCalculation=true，将applyBlur全部操作也放入同一个monitor后，两次各60轮完成、捕获异常为空。归档探针新增该显式参数，原有默认对照不变。该压力场景刻意并发计算和释放；不能据此断言手机一定走过同样调度。用户随后要求正式修复，采用的生产同步范围与验收见[修复方案](plans/2026-11-08-native-race-fix.md)。

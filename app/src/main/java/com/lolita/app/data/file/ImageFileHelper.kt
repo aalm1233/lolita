@@ -42,6 +42,8 @@ object ImageFileHelper {
             } else if (android.os.Build.VERSION.SDK_INT < 28) return@withContext false
             val decoded = if (android.os.Build.VERSION.SDK_INT >= 28) {
                 android.graphics.ImageDecoder.decodeBitmap(android.graphics.ImageDecoder.createSource(file)) { decoder, info, _ ->
+                    // Validation never draws this bitmap; avoid a GPU/Gralloc allocation.
+                    decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
                     decoder.setTargetSampleSize(maxOf(1, maxOf(info.size.width, info.size.height) / 1024))
                     decoder.setOnPartialImageListener { false }
                 }
@@ -84,6 +86,7 @@ object ImageFileHelper {
             } else if(android.os.Build.VERSION.SDK_INT<28) return@withContext false
             val decoded=if(android.os.Build.VERSION.SDK_INT>=28) {
                 android.graphics.ImageDecoder.decodeBitmap(android.graphics.ImageDecoder.createSource(file)) {decoder,info,_ ->
+                    decoder.allocator=android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
                     decoder.setTargetSampleSize(maxOf(1,maxOf(info.size.width,info.size.height)/1024))
                     decoder.setOnPartialImageListener {false}
                 }

@@ -112,7 +112,7 @@
       "includedInSuccessfulReproductions": false
     }
   ],
-  "probeSHA256": "99b628f19d75c60f02053268b917e0ab17debb6aae79a5553075d925f5aa1b59",
+  "probeSHA256": "d346d9cce420d1bafba5dfb63d6707000c0b8a8f038cfbcb0dd545fc8729d989",
   "newApkReleased": false,
   "realUserDataChanged": false,
   "paidRequests": 0,
@@ -120,5 +120,34 @@
   "restoredTestApkProbeAbsent": true,
   "restoredTestApkInstalled": true,
   "taskAvdStopped": true,
-  "taskAvdDataRetained": true
+  "taskAvdDataRetained": true,
+  "retry": {
+    "samePhoneLogUnchanged": true,
+    "unprotectedRuns": 2,
+    "unprotectedCrashes": 2,
+    "newCrashCompletedIterations": [
+      9,
+      3
+    ],
+    "sameTopCodeFrames": true,
+    "exitReason": 5,
+    "exitStatus": 11,
+    "callbackAndReleaseOnly": {
+      "runs": 2,
+      "completedIterations": 120,
+      "processNativeCrashes": 0,
+      "fullyPassedRuns": 0,
+      "workerExceptions": {
+        "java.lang.NullPointerException": 2,
+        "android.renderscript.RSInvalidStateException": 1
+      }
+    },
+    "callbackCalculationAndRelease": {
+      "runs": 2,
+      "completedIterations": 120,
+      "workerExceptions": 0,
+      "processNativeCrashes": 0
+    },
+    "guardIsCompleteProductionFix": false
+  }
 }

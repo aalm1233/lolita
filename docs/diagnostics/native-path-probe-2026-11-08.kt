@@ -25,7 +25,9 @@ class NativePathAuditProbeTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val output = File(context.cacheDir,"rs-race-probe.txt")
         val guarded=InstrumentationRegistry.getArguments().getString("guardedRelease") == "true"
-        output.writeText("buffer-initialized isolated library race probe guarded=$guarded\n")
+        val guardedCalculation=InstrumentationRegistry.getArguments().getString("guardedCalculation") == "true"
+        require(!guardedCalculation || guarded)
+        output.writeText("buffer-initialized isolated library race probe guarded=$guarded guardedCalculation=$guardedCalculation\n")
         val rs = android.renderscript.RenderScript.create(context)
         val type = Class.forName("dev.chrisbanes.haze.RenderScriptContext")
         val ctor = type.declaredConstructors.single { it.parameterTypes.size == 2 }.apply { isAccessible=true }
@@ -65,7 +67,10 @@ class NativePathAuditProbeTest {
                 val start=java.util.concurrent.CountDownLatch(1)
                 val worker=Thread {
                     start.await()
-                    try { repeat(5) { apply.invoke(instance,16f) } }
+                    try {
+                        if (guardedCalculation) synchronized(instance) { repeat(5) { apply.invoke(instance,16f) } }
+                        else repeat(5) { apply.invoke(instance,16f) }
+                    }
                     catch(e:java.lang.reflect.InvocationTargetException) { failures.add(e.targetException.javaClass.name) }
                 }
                 output.appendText("iteration=$index start\n")

@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Lolita"
 include(":app")
+include(":haze-patched")
+project(":haze-patched").projectDir = file("third_party/haze")

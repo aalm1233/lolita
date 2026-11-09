@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.AtomicFile
+import androidx.core.util.AtomicFile
 import java.io.File
 import java.security.KeyStore
 import java.util.Base64

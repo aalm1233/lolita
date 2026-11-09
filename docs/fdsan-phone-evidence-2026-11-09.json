@@ -1,0 +1,25 @@
+{
+  "exportAppVersion": "2.78.4",
+  "versionCode": 160,
+  "logSHA256": "408317d04a33062dea665dff88cdaafdeecc690a81bb808aa25c2d0f97688099",
+  "exitTimeAsiaShanghai": "2026-11-09T12:00:50.800+08:00",
+  "exportTimeAsiaShanghai": "2026-11-09T12:01:25.418+08:00",
+  "exitReason": 5,
+  "status": 6,
+  "signal": 6,
+  "frameCount": 37,
+  "relevantFrames": [
+    "frame0=libc.so pc=67250 fdsan_error(char const*, ...)+568 buildId=0b77c628c9546e8a409a10c0cbfe69d9",
+    "frame1=libc.so pc=66f54 android_fdsan_close_with_tag+952 buildId=0b77c628c9546e8a409a10c0cbfe69d9",
+    "frame2=libc.so pc=677c4 close+20 buildId=0b77c628c9546e8a409a10c0cbfe69d9",
+    "frame3=libandroid_runtime.so pc=101f88 android::com_android_internal_content_F2fsUtils_nativeCommitAtomicWrite(_JNIEnv*, _jclass*, _jobject*)+96 buildId=74eb2850a913140eb658e458ecf40581",
+    "frame4=boot-framework.oat pc=1f0a2c art_jni_trampoline+124 buildId=f465473201f38e240b4d2334508fc8b9630f8778",
+    "frame5=boot-framework.oat pc=663b78 android.util.AtomicFile.finishWrite+392 buildId=f465473201f38e240b4d2334508fc8b9630f8778",
+    "frame6=libart.so pc=20a320 nterp_helper+4016 buildId=da3ef03f6a236bb3d873ad020203526d",
+    "frame7=base.vdex pc=2b218f8 com.lolita.app.data.repository.SquareRepository.writeNetworkState+176 buildId=?"
+  ],
+  "crashPathConfirmed": true,
+  "exactOemFdOwnershipErrorDetailAvailable": false,
+  "actualOemF2fsPathReproducedOnAvd": false,
+  "rawUserLogPublished": false
+}

@@ -1,5 +1,7 @@
 # 开发协作流程
 
+- 2.78.5／161依据手机2.78.4导出的37帧原生栈修复系统AtomicFile兼容：`SquareRepository.writeNetworkState → AtomicFile.finishWrite → F2fsUtils.nativeCommitAtomicWrite → fdsan_error`，并非此前Haze实验链路。应用五处直接系统AtomicFile改用既有core1.15.0的`androidx.core.util.AtomicFile`，精确AAR字节码确认独立fsync/close/rename且不委派系统F2FS。保留文件名/格式/密文/锁/Keystore别名、Room34/45实体/备份16；不关闭同步、不清数据。范围和验证边界见`docs/plans/2026-11-09-fdsan-atomic-file-fix.md`，目标手机回验仍待更新。
+
 - 2.78.4／160正式交付：源码/标签`f6213efc`已普通推送；13项JVM、26项去重设备方法和生产补丁120轮零异常通过，七皮肤浅暗/320dp两倍字及正式App真实IME/JSON通过。提交归档clean原签名Release含lintVital、37素材/24旧图片、2.78.3覆盖两次启动保全45表全行/160物品/629图/6份持久设置通过。双平台正式同APK匿名全量GET/SHA/HEAD、源标签、Gitee版本API及实际App当前/最新2.78.4通过；仅依持续授权清理最旧Gitee2.72.0 APK。手机SIGABRT同因仍未确认，回执`docs/native-race-fix-release-2.78.4-verification.json`，实施见`docs/native-race-fix-implementation-2026-11-08.md`。
 
 - 2.78.4／160修复已复现的Haze RenderScript生命周期竞态：以`third_party/haze`保留1.6.9原始common/Android源码、Apache许可证及原始摘要，本地模块`:haze-patched`让回调、全部模糊计算及幂等释放共享实例锁，替代Maven Haze而不升级Haze2。只锁回调/释放的复测捕获计算异常，不能算完整修复；新增`RenderScriptLifetimeTest`不加测试侧锁直接覆盖生产代码，`SquareHazeLifetimeTest`保持实际顶栏/底栏毛玻璃并覆盖七皮肤浅暗与服务弹窗。两处只读图片校验显式SOFTWARE分配，其余完整性、路径和引用不变。Room34/45实体/备份16不变；手机SIGABRT同因仍未确认，实施/验收见`docs/plans/2026-11-08-native-race-fix.md`。
@@ -383,7 +385,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=160, versionName="2.78.4"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=161, versionName="2.78.5"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

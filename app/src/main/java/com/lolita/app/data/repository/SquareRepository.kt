@@ -3,7 +3,8 @@ package com.lolita.app.data.repository
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.AtomicFile
+// Keep the AndroidX implementation: OEM framework AtomicFile can abort in F2FS commit/fdsan.
+import androidx.core.util.AtomicFile
 import androidx.room.withTransaction
 import com.lolita.app.data.file.ImageFileHelper
 import com.lolita.app.data.file.TaobaoProductParser

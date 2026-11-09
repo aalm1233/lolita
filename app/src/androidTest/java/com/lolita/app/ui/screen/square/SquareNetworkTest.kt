@@ -94,6 +94,40 @@ class SquareNetworkTest {
         val bitmap=compose.onAllNodes(isRoot()).onLast().captureToImage().asAndroidBitmap()
         File(dir,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
     }
+    @Test fun historicalAtomicFilesRecoverAndRepeatedRefreshKeepsCatalogCursorBound() {
+        online()
+        val expected=repo.catalog.value!!
+        val files=listOf(File(context.filesDir,"square_catalog/catalog.json"),
+            File(context.filesDir,"square_catalog/network-state.json"),
+            File(context.noBackupFilesDir,"square-service.json"))
+        // Same filenames/bytes as the framework implementation, including its legacy .bak.
+        for(file in files) {
+            file.copyTo(File(file.path+".bak"),overwrite=true)
+            file.writeText("interrupted invalid base")
+            File(file.path+".new").writeText("incomplete pending write")
+        }
+        val reopened=SquareRepository(context,db,drafts,defaultServiceUrl="")
+        io { reopened.load() }
+        assertEquals(base,reopened.serviceUrl.value)
+        assertEquals(expected,reopened.catalog.value)
+        repeat(20) {
+            io { reopened.refreshSilently() }
+            assertEquals(expected,reopened.catalog.value)
+            val index=File(context.filesDir,"square_catalog/catalog.json")
+            val state=com.google.gson.JsonParser.parseString(File(context.filesDir,"square_catalog/network-state.json").readText()).asJsonObject
+            val sha=java.security.MessageDigest.getInstance("SHA-256").digest(index.readBytes()).joinToString(""){b->"%02x".format(b)}
+            assertEquals(sha,state["catalogSha256"].asString)
+            assertEquals(base,state["url"].asString)
+            assertTrue(state["cursor"].asLong>0)
+        }
+        files.forEach { assertFalse(File(it.path+".bak").exists());assertFalse(File(it.path+".new").exists()) }
+        val stable=files.map { it.readBytes().toList() }
+        io { reopened.configureService("http://127.0.0.1:9");reopened.refreshSilently() }
+        assertEquals(expected,reopened.catalog.value)
+        assertEquals(stable.take(2),files.take(2).map { it.readBytes().toList() })
+        assertEquals(0,io { db.itemDao().getItemCount() })
+        assertEquals(0,io { db.priceDao().getAllPricesList().size })
+    }
     @Test fun historicalNullMetadataCacheReopensAcrossSkinsAndServiceDialog() {
         online()
         val historical=repo.catalog.value!!.let { c->c.copy(events=c.events.map { it.copy(subtitle=null,state=null,date=null,price=null,priceNote=null,note=null,material=null,detail=null,captured=null) }) }

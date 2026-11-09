@@ -1,7 +1,7 @@
 package com.lolita.app.domain.usecase
 
 import android.content.Context
-import android.util.AtomicFile
+import androidx.core.util.AtomicFile
 import androidx.room.withTransaction
 import com.lolita.app.data.file.BackupManager
 import com.lolita.app.data.file.ImageFileHelper

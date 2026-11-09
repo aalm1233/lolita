@@ -27,7 +27,7 @@ class WigHeadTemplateCatalog(private val context: Context) {
     }
 
     companion object {
-        private fun preference(context: Context) = android.util.AtomicFile(File(context.noBackupFilesDir, "wig-head-template-preference-v1"))
+        private fun preference(context: Context) = androidx.core.util.AtomicFile(File(context.noBackupFilesDir, "wig-head-template-preference-v1"))
         fun readPreference(context: Context): WigHeadTemplateSnapshot? {
             val file = preference(context)
             if (!file.baseFile.exists()) return null

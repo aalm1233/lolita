@@ -3,7 +3,7 @@ package com.lolita.app.data.recognition
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.AtomicFile
+import androidx.core.util.AtomicFile
 import com.lolita.app.domain.model.RecognitionProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -86,6 +86,7 @@
 
 - 用户查店铺上新或接续采集时应用仓库源`skills/taobao-shop-updates/`（安装于`~/.codex/skills/taobao-shop-updates/`）；本机dsh的DeepSeek负责淘宝访问/原图/OCR，主助手只调度及读取本地文件，不通过浏览器、CDP、DOM或自行请求淘宝接管。
 - 标准输出原始JSON/CSV/原图与`lolita.square.collector` v1输入；`workflow.py package`核验与原始清单一致、单品/资料证据、SHA、完整SKU和尺码表，经实际App `SquarePackage.kt`离线编译验收才发布公开v1 ZIP并原子推进基线。通用入口`scripts/square/collector_package.py`，首包硬编码脚本只用于历史重放。
+- 2026-11-09起采集技能默认补齐package→主助手本机`lan_service.py ingest`→只读API验收，细则在`skills/taobao-shop-updates/references/sqlite-publication.md`。只写现有服务使用的独立公开SQLite，不写App Room或私人衣橱；`package`命令本身仍只打包。无业务变化仍完成入库/验收以覆盖首次与补交；按动态短事务可能部分成功，失败保留包且不回退采集基线。分别记录ZIP/入库/API状态，不把本机API通过称为公网或手机更新通过。用户明确只要离线包时跳过入库；维护技能不等于创建或修改实际调度。
 - 基线保存于仓库外`~/Downloads/taobao-shop-updates/catalog-state/`；默认已以已验收三店浏览版初始化，保留稳定ID/revision和未出现的旧记录，不因缺席推断下架。并发陈旧请求拒绝覆盖；结构或原图失败不推进。`businessChanged`排除仅采集时间变化，缺失映射与失败/待核对项分列；自动证据引用通过不等于人工语义审核。
 - 本轮只改技能/本地工具，不改Android、Room34、备份16、当前应用版本或云端，不重新发APK。14项离线回归及14商品/542SKU/421原图/41表的既有包回放通过；没有创建或更改定时调度。设计适用范围与真实新店实跑见`docs/plans/2026-11-06-square-collector-format.md`和`docs/square-collector-workflow-2026-11-06.md`。
 

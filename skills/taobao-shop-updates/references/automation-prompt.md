@@ -4,8 +4,8 @@
 
 使用workflow.py prepare生成本轮请求和目录上下文，将collector-task.txt完整交给dsh。dsh除原始JSON、CSV、原图及证据，还需按app-package.md生成square-input.json：完整实际SKU、四类动态、独立单品/小物/商家套餐、颜色、各件尺码、单品图片归属、部件参数、风格依据和独立尺码表。未知留空，未采完整/不能归类列deferred；定金、尾款、占位价、套餐价不冒充单件全款。没有证据不补图、不猜尺码或批次。
 
-完成后读取关键原图复核，执行本地workflow.py package；它核验原始文件和App输入一致性、图片哈希及实际Android Kotlin契约，通过才发布App可导入的lolita.square v1 ZIP与quality.json并推进目录基线。失败不覆盖上次数据；未出现的旧商品保留，不推断下架。报告成功店与失败/待核对项，不用旧包冒充本轮完成。确认dsh已清理自己创建的临时进程。
+完成后读取关键原图复核，执行本地workflow.py package；它核验原始文件和App输入一致性、图片哈希及实际Android Kotlin契约，通过才发布App可导入的lolita.square v1 ZIP与quality.json并推进目录基线。打包失败不推进基线；未出现的旧商品保留，不推断下架。随后主助手按技能references/sqlite-publication.md调用工程lan_service.py ingest写入现有广场服务使用的本机SQLite，再经本机只读API核对动态、商品revision及原图，保留ingest.json与api-verification.json。package本身不入库；businessChanged=false也要完成入库/验收，防止漏掉首次入库或失败补交。入库失败保留本轮已核验ZIP用于补交、不回退采集基线；按动态短事务可能部分成功，须如实报告。API不通不得将旧目录或ZIP成功写成广场已更新。报告成功店与失败/待核对项，不用旧包冒充本轮完成。确认dsh已清理自己创建的临时进程。
 
-按quality.json的businessChanged判断实际内容变化，只有采集时间改变不作为上新。仅对真实变化、失败或需要用户处理的事项反馈，并给资料包路径；没有变化时不重复汇报旧商品。不自动上传云端、购买、加购或改私人衣橱。本提示不改变既有调度、目标店铺和通知设置，也不创建额外定时任务。
+按quality.json的businessChanged判断实际内容变化，只有采集时间改变不作为上新。仅对真实变化、采集/入库/API失败或需要用户处理的事项反馈，并给资料包及回执路径；没有变化且入库/API正常时不重复汇报旧商品。仅写本机公开目录库，不自动上传其他云端、购买、加购或改私人衣橱；不重启或改配现有API/花生壳。本提示不改变既有调度、目标店铺和通知设置，也不创建额外定时任务。
 
 明确下架/仅展示/已结束预约批次归档留作后续博物馆，不推送成在售上新；按公开证据保存listing或listingUpdates，保留旧SKU与原图。未出现/失败/部分缺货不推断下架；重新在售须新证据，不因缺字段复活。

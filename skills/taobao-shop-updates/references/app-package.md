@@ -60,7 +60,9 @@ deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给req
 1. 读取关键原图、SKU报价/颜色/尺码与表格，核对事实。
 2. `uv run --offline --with pillow python <技能>/scripts/workflow.py package --output <本轮目录>`。
 3. 工具核验原始JSON/CSV/图片，对照SKU与原图完整集合，计算SHA，合并历史公开目录并按实际变化升revision，再编译调用工程原版SquarePackage.kt验收候选ZIP。成功后才发布app-package/ZIP与quality.json并原子推进current.json；任何错误保留旧基线，候选文件仅供排错。
-4. 查看quality.json：businessChanged排除仅采集时间变化；deferred与missingMappings单列。无实际变化不重复通知旧商品。交付资料包和需要处理的事项，不把自动结构校验写成人工全量事实审核。
+4. 查看quality.json：businessChanged排除仅采集时间变化；deferred与missingMappings单列，不把自动结构校验写成人工全量事实审核。
+5. 主助手按[本机SQLite入库与API验收](sqlite-publication.md)调用工程`lan_service.py ingest`写入现有服务的数据目录，保留`ingest.json`，再通过只读API核对动态、商品revision及原图，保存`api-verification.json`。`package`本身不会入库；无业务变化也不能跳过首次入库或失败补交。入库失败不回退采集基线，保留已核验包供补交；逐动态提交可能部分成功，不能承诺整包回滚。用户明确只要离线ZIP时跳过。
+6. 交付资料包、质量报告、入库/API结果和需要处理的事项；无实际变化且入库/API正常时不重复通知旧商品，不把ZIP生成成功称为广场已更新。
 
 上限：ZIP600MiB/清单8MiB/4000图/每图20MiB/单商品80MiB/每商品1000SKU及300图/总20000SKU/200店/2000商品及动态。超限停止并报告，不静默截断或自动重开淘宝。旧记录本轮未出现仍保留，不能据此删除或判断下架；私人物品完全独立。
 

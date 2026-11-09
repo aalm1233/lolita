@@ -1,5 +1,7 @@
 # 开发协作流程
 
+- 2.78.5／161正式交付：源码/标签`8ddf28a5`已普通推送；Debug、22项定向设备方法及提交归档clean原签名Release含lintVital通过。五处正式调用者字节码改用AndroidX，37素材/24旧图片保持；原2.78.4覆盖两次启动，45表全行/160物品/629图/6份原设置保全，正式App齿轮/地址保存/真实IME与JSON解析通过。双平台正式同APK匿名全量GET/SHA/HEAD、源标签、Gitee公开最高版本及实际App当前/最新2.78.5通过；仅依持续授权清理最旧Gitee2.73.0 APK。正式包主缓存公网超时/跨地址历史全量重放失败单列，未计刷新通过，原地址及其未显式保存状态已恢复；独立内网目录20次刷新通过。手机FD关闭归属检测链路已定位，原始误关FD细节及真机回验未确认。回执`docs/fdsan-atomic-release-2.78.5-verification.json`，实施见`docs/fdsan-atomic-implementation-2026-11-09.md`。
+
 - 2.78.5／161依据手机2.78.4导出的37帧原生栈修复系统AtomicFile兼容：`SquareRepository.writeNetworkState → AtomicFile.finishWrite → F2fsUtils.nativeCommitAtomicWrite → fdsan_error`，并非此前Haze实验链路。应用五处直接系统AtomicFile改用既有core1.15.0的`androidx.core.util.AtomicFile`，精确AAR字节码确认独立fsync/close/rename且不委派系统F2FS。保留文件名/格式/密文/锁/Keystore别名、Room34/45实体/备份16；不关闭同步、不清数据。范围和验证边界见`docs/plans/2026-11-09-fdsan-atomic-file-fix.md`，目标手机回验仍待更新。
 
 - 2.78.4／160正式交付：源码/标签`f6213efc`已普通推送；13项JVM、26项去重设备方法和生产补丁120轮零异常通过，七皮肤浅暗/320dp两倍字及正式App真实IME/JSON通过。提交归档clean原签名Release含lintVital、37素材/24旧图片、2.78.3覆盖两次启动保全45表全行/160物品/629图/6份持久设置通过。双平台正式同APK匿名全量GET/SHA/HEAD、源标签、Gitee版本API及实际App当前/最新2.78.4通过；仅依持续授权清理最旧Gitee2.72.0 APK。手机SIGABRT同因仍未确认，回执`docs/native-race-fix-release-2.78.4-verification.json`，实施见`docs/native-race-fix-implementation-2026-11-08.md`。
@@ -95,6 +97,8 @@
 - 领域层在 `domain/`：`domain/model/`、`domain/usecase/`（如 `MatchingEngine.kt`）。
 
 ## 数据库
+
+- 应用直接管理的原子文件统一使用已依赖的`androidx.core.util.AtomicFile`，保留调用方互斥、失败回滚及历史`.new/.bak`语义，不切回系统`android.util.AtomicFile`。MIX Flip 2现场在系统F2FS提交/关闭处触发fdsan原生退出；不通过关闭fdsan或移除原子性规避。范围与证据见`docs/plans/2026-11-09-fdsan-atomic-file-fix.md`。
 
 - Room 数据库版本34，45个实体，备份格式16；33→34只追加ItemReferencePrice／OrderRefund／OrderCancellation，迁移在`AfterSaleMigration.kt`，不推断旧价格为参考价；32→33仅追加六张订单导入会话／来源表，迁移在`OrderImportSessionMigration.kt`，备份格式14；31→32仅追加ImageTask的三个可空批次字段，迁移在`MaterialBatchMigration.kt`；30→31追加独立`ItemTryOnMaterial`、任务分层信息及试衣结果底图副本，迁移在`TryOnMaterialMigration.kt`；29→30增量追加`StorageNode`、`ItemDraft`、`RecognitionTask`、`ItemEvidence`、`ImageProvenance`及相关列，迁移在`WardrobeMigration.kt`。原个人模特、后台任务、账本及历史归档全部保留。
 - Migration 在 `LolitaDatabase.kt` 注册，20→21 的重建与数据迁移、21→22 的历史购买资料标记、22→23 的订单永久购买证据和提醒范围日志位于 `OrderMigration.kt`，每次改结构必须升 version + 写 Migration。

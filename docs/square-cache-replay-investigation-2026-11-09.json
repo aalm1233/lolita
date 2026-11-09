@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-09",
+  "scope": "Read-only extraction of retained test AVD public cache; offline replay with actual SquarePackage.kt and SquareBrowse.kt. No production code, data or service changes.",
+  "avd": "Lolita_Square_Direct_Upgrade_20261107",
+  "historicalCacheSha256": "e9cfe26c8ebd1c6a463c2a63afa72f51c83b9912031929403025d118b78de1fd",
+  "publicApiPagesSha256": "c94b72e25b918161a753a5e7cb9516dad56091f1b32afab05dc45513864b2a0d",
+  "kotlinSourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e",
+  "runnerSha256": "6c4bdf87fb096e0c0469b9788ba92e511948659b6962c478bb1c6d5cbd67753e",
+  "events": 15,
+  "products": 31,
+  "changes": 15,
+  "allNineEventDescriptionFieldsNull": true,
+  "originalReplay": {
+    "passed": false,
+    "failedSeq": 1,
+    "exception": "IllegalArgumentException",
+    "reason": "same revision content conflict"
+  },
+  "restoreOnlyNineInjectedDescriptionFields": {
+    "passed": true,
+    "throughSeq": 15,
+    "products": 31,
+    "remainingRowsAndRevisionsUnchanged": true
+  },
+  "freshReplay": {
+    "passed": true,
+    "throughSeq": 15,
+    "products": 31
+  },
+  "historicalFixtureProvenance": "docs/square-historical-null-implementation-2026-11-07.md: dedicated signed-App null-description cache fixture retained on the test AVD, not reporter data",
+  "generalHistoricalCacheCompatibilityFaultConfirmed": false,
+  "validationRelaxed": false,
+  "onDeviceCacheMutatedThisInvestigation": false,
+  "privateDataReadOrChanged": false,
+  "applicationCodeChanged": false,
+  "newApkNeeded": false,
+  "avdStoppedDataRetained": true,
+  "limits": [
+    "This corrects classification of the specific retained fixture; it does not prove all possible historical cache shapes.",
+    "No new signed-App online refresh was claimed; the control is offline production Kotlin merge replay."
+  ]
+}

@@ -1,6 +1,6 @@
 # 开发协作流程
 
-- 2.78.5／161正式交付：源码/标签`8ddf28a5`已普通推送；Debug、22项定向设备方法及提交归档clean原签名Release含lintVital通过。五处正式调用者字节码改用AndroidX，37素材/24旧图片保持；原2.78.4覆盖两次启动，45表全行/160物品/629图/6份原设置保全，正式App齿轮/地址保存/真实IME与JSON解析通过。双平台正式同APK匿名全量GET/SHA/HEAD、源标签、Gitee公开最高版本及实际App当前/最新2.78.5通过；仅依持续授权清理最旧Gitee2.73.0 APK。正式包主缓存公网超时/跨地址历史全量重放失败单列，未计刷新通过，原地址及其未显式保存状态已恢复；独立内网目录20次刷新通过。手机FD关闭归属检测链路已定位，原始误关FD细节及真机回验未确认。回执`docs/fdsan-atomic-release-2.78.5-verification.json`，实施见`docs/fdsan-atomic-implementation-2026-11-09.md`。
+- 2.78.5／161正式交付：源码/标签`8ddf28a5`已普通推送；Debug、22项定向设备方法及提交归档clean原签名Release含lintVital通过。五处正式调用者字节码改用AndroidX，37素材/24旧图片保持；原2.78.4覆盖两次启动，45表全行/160物品/629图/6份原设置保全，正式App齿轮/地址保存/真实IME与JSON解析通过。双平台正式同APK匿名全量GET/SHA/HEAD、源标签、Gitee公开最高版本及实际App当前/最新2.78.5通过；仅依持续授权清理最旧Gitee2.73.0 APK。正式包主缓存公网超时/跨地址重放失败原观察保留，未计刷新通过，原地址及其未显式保存状态已恢复；后续离线核查确认该冲突来自2.78.1保留的null描述测试夹具，仅恢复9个注入字段后15条更新通过，不能泛化为用户历史缓存故障，见`docs/square-cache-replay-investigation-2026-11-09.json`；独立内网目录20次刷新通过。手机FD关闭归属检测链路已定位，原始误关FD细节及真机回验未确认。回执`docs/fdsan-atomic-release-2.78.5-verification.json`，实施见`docs/fdsan-atomic-implementation-2026-11-09.md`。
 
 - 2.78.5／161依据手机2.78.4导出的37帧原生栈修复系统AtomicFile兼容：`SquareRepository.writeNetworkState → AtomicFile.finishWrite → F2fsUtils.nativeCommitAtomicWrite → fdsan_error`，并非此前Haze实验链路。应用五处直接系统AtomicFile改用既有core1.15.0的`androidx.core.util.AtomicFile`，精确AAR字节码确认独立fsync/close/rename且不委派系统F2FS。保留文件名/格式/密文/锁/Keystore别名、Room34/45实体/备份16；不关闭同步、不清数据。范围和验证边界见`docs/plans/2026-11-09-fdsan-atomic-file-fix.md`，目标手机回验仍待更新。
 

@@ -111,7 +111,8 @@
     "physicalOemReplayNotAvailable": true,
     "originalAddressRestored": true,
     "originalPreferenceAbsenceRestored": true,
-    "onlyNewTestCreatedConfigRemoved": true
+    "onlyNewTestCreatedConfigRemoved": true,
+    "followUp": "2026-11-09: offline actual-Kotlin replay identifies retained injected null-description test fixture as same-revision conflict. Restore only the nine injected event fields -> all 15 changes pass. General user historical-cache defect not established; see square-cache-replay-investigation-2026-11-09.json. Original failed signed-App observation above remains unchanged."
   },
   "exactReleaseCallerAudit": {
     "exactReleaseClasses": true,

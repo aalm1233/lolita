@@ -32,3 +32,11 @@ close / android_fdsan_close_with_tag / fdsan_error
 最终分发、更新入口与清理结果见[发布回执](fdsan-atomic-release-2.78.5-verification.json)，手机证据见[脱敏帧](fdsan-phone-evidence-2026-11-09.json)，前置范围见[修复计划](plans/2026-11-09-fdsan-atomic-file-fix.md)。
 
 [GitHub正式发布](https://github.com/aalm1233/lolita/releases/tag/v2.78.5) · [Gitee正式发布](https://gitee.com/aalm1233/lolita/releases/tag/v2.78.5)。原用户数据、图片、TXT、寄存器及内存均未发布，付费请求0。
+
+## 历史缓存重放后续澄清（2026-11-09）
+
+上面的正式包失败观察保留，但不能继续将它泛化为用户历史缓存兼容故障。只读提取原测试AVD公开目录后发现，15条事件的9个描述字段全部为null，符合2.78.1为重现旧空指针而注入并保留的[专用测试夹具](square-historical-null-implementation-2026-11-07.md)，不是反馈者提供的缓存。相同事件revision在服务端仍有原始描述，因此合并按既有规则拒绝同版本内容冲突。
+
+离线编译当前实际`SquarePackage.kt`与`SquareBrowse.kt`：原缓存在seq1复现同版本冲突；仅在内存恢复上述9个事件描述字段，保留其他数据和revision，15条服务端更新全部合并通过，保留31商品；从空目录回放也通过。不能据此放宽同版本冲突、售卖状态或图片校验，更不需要为这个测试残留发布App修复。若确需重置测试环境，可使用既有开发者工具清空公开缓存后重新同步；衣橱、心愿和私人图片不在此清理范围。
+
+本次没有回写AVD缓存、改App/服务、升版本或重发APK，模拟器已关闭且保留数据。此前把它列为一般性待修功能问题的表述予以纠正。原公网超时及手机回验不在本次处理范围。离线控制不冒充正式App重新联网通过；[脱敏核查回执](square-cache-replay-investigation-2026-11-09.json)与[可复查Kotlin探针](diagnostics/square-cache-replay-2026-11-09.kt)保留范围与限制。

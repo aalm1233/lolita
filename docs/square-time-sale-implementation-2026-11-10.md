@@ -27,3 +27,11 @@ Room34/45实体/备份16不变，无新增权限、付费或调度；AndroidX At
 原生3项新方法最终通过，覆盖5条现货分类、预约再贩、明确开售与年份说明、采集回退、历史预约和尾款只读；七皮肤浅暗4类状态共56张。归档[现货列表](visuals/2026-11-10-square-time-sale/native/stock-seven-skins.jpg)、[开售详情](visuals/2026-11-10-square-time-sale/native/launch-seven-skins.jpg)、[点按时间依据](visuals/2026-11-10-square-time-sale/native/evidence-seven-skins.jpg)、[尾款](visuals/2026-11-10-square-time-sale/native/tail-seven-skins.jpg)。历史预约长区间曾挤压说明按钮，已给文本分配剩余宽度并实测按钮可达。首轮测试的日期空格断言修正；一次测试脚本用系统返回退出测试Activity，改为通过页面模型切换以稳定收集矩阵，未将失败计为通过。
 
 最终完整NavHost直接收藏/多件合组/进入已有心愿与返回方法通过，合计4个去重设备方法。重新接回的文件与此前已验收候选一致，保留原测试记录；正式源码归档构建、覆盖升级和发布另验。
+
+## 正式发布
+
+源码与标签`5df4b6d19f0794b087d00854a56634233561dcf8`已普通推送至远端master/v2.78.7，本地master原有两条旧提交保留。提交归档clean原签名Release含lintVital通过；37项目素材与源码一致，24份旧图片和五处AndroidX AtomicFile调用保持。APK为84,054,421字节，SHA256 `b800ecef1bb710cd1a2ea2c8f2f1cea462c52ad0a25e985b80d689d78b09e8dd`。
+
+正式2.78.6覆盖两次冷启动及最终视觉后，45表全行、160物品、629私有图SHA与6份设置和原先未保存的服务配置状态完全一致。旧升级AVD保留历史诊断注入的公开null字段，未将它当作当前商品日期来源，也未清理私人数据；另用独立新AVD的正式MainActivity通过原内置公网HTTPS完整拉取7店/63动态/91商品/3746素材，实际显示[预约区间](visuals/2026-11-10-square-time-sale/release/official-fresh-feed.png)、[图片开售时间](visuals/2026-11-10-square-time-sale/release/official-fresh-launch.png)、[时间依据](visuals/2026-11-10-square-time-sale/release/official-fresh-time-evidence.png)、[现货再贩](visuals/2026-11-10-square-time-sale/release/official-fresh-stock.png)与[只读尾款](visuals/2026-11-10-square-time-sale/release/official-fresh-tail.png)。目录按原模型可选null字段和历史数值报价转文字语义比较源数据保持；原图缓存抽查SHA与字节通过，没有为验证改动生产模型或价格。
+
+GitHub/Gitee正式同APK及SHA256SUMS匿名完整下载/SHA/HEAD、源标签、Gitee公开最高版本与实际正式App当前/最新2.78.7通过。配额不足后仅按持续授权清理Gitee最旧2.74.0 APK，旧发布/校验/GitHub和三份本机完整副本保留。最终包另存三份相同APK；两台任务AVD关闭留数据，临时签名配置副本清除，原签名及令牌保留。[最终回执](square-time-sale-release-2.78.7-verification.json)记录验证边界；本轮不测小屏/大字，不声称OEM真机或一般网络故障已修复。

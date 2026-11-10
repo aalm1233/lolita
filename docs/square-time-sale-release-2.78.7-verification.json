@@ -1,0 +1,298 @@
+{
+  "version": "2.78.7",
+  "versionCode": 163,
+  "sourceCommit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+  "gitTag": "v2.78.7",
+  "sourcePushedTo": "origin/master",
+  "localPreexistingMasterCommitsPreserved": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.7",
+    "version_code": 163,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "apk_sha256": "b800ecef1bb710cd1a2ea2c8f2f1cea462c52ad0a25e985b80d689d78b09e8dd",
+    "bytes": 84054421
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "isolatedCommittedCleanBuild": {
+    "source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "committed_archive_only": true,
+    "clean": true,
+    "task": "assembleRelease",
+    "root": "/tmp/lolita-square-time-sale-release-20261110"
+  },
+  "lintVitalPassed": true,
+  "atomicFileCallers": {
+    "exactReleaseClasses": true,
+    "allFiveCallersUseAndroidX": true,
+    "frameworkAtomicFileAbsentInCallers": true,
+    "exactAndroidXCore": "1.15.0"
+  },
+  "tests": {
+    "jvm": 28,
+    "nativeDistinctMethods": 4,
+    "newNativeMethods": 3,
+    "fullNavHost": true,
+    "skinModes": 14,
+    "matrixStates": 56,
+    "smallScreen": false,
+    "largeFont": false,
+    "collectorOfflinePriorDataStage": 17,
+    "sameFinalAppSourceAsVerifiedCandidate": true
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.6",
+    "toVersion": "2.78.7",
+    "sameSignature": true,
+    "install": "-r",
+    "coldStarts": 2,
+    "roomVersion": 34,
+    "tables": 45,
+    "allRowsUnchanged": true,
+    "items": 160,
+    "images": 629,
+    "allImageShaUnchanged": true,
+    "settings": 6,
+    "allSettingsShaUnchanged": true,
+    "baseline": "Same existing dedicated AVD and pre-upgrade snapshot; no restore or clear"
+  },
+  "postVisualPrivateDataAndOriginalSettingsUnchanged": true,
+  "originalServiceConfigWasAbsentAndRemainsAbsent": true,
+  "formalSquare": {
+    "passed": true,
+    "formalVersion": "2.78.7",
+    "sourceCommit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "freshAvd": "Lolita_Square_Time_Formal_20261110",
+    "base": "https://f8b8b6fa0e0f.eicp.fun",
+    "cursor": 89,
+    "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+    "exactServerRows": {
+      "shops": 7,
+      "events": 63,
+      "products": 91,
+      "assets": 3746
+    },
+    "optionalNullNormalization": [
+      "product.listing",
+      "product.materials",
+      "sku.photoPaths",
+      "material.sizeTable"
+    ],
+    "legacyModelCoercion": "Existing SquareSku String? parses legacy numeric JSON price as its decimal text; no price mutation or new schema rule.",
+    "actualMainActivity": true,
+    "reservationRange": "2026-10-17—2026-11-17",
+    "printedSaleWithoutInventedYear": "10月30日 20:00",
+    "timeEvidenceTap": true,
+    "stockRereleaseBadge": true,
+    "tailInterval": "10月15日上午10时—11月12日下午17时",
+    "tailReadOnly": true,
+    "publicPhotosVisuallyVerified": true,
+    "cachedOriginalSamples": [
+      {
+        "sha256": "0b4ab4681ca8f4884e55e84016dbd1ee6dd763db83ef3c95ad767d31bb145b7a",
+        "bytes": 360017
+      },
+      {
+        "sha256": "a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288",
+        "bytes": 274852
+      },
+      {
+        "sha256": "debb75143e0f4babb40d19ea1b8ccb0a47565b0c1cd05929f8d515ccab3ac010",
+        "bytes": 497846
+      }
+    ],
+    "noPrivateWishCreated": true,
+    "noServiceOverride": true,
+    "upgradeAvdBoundary": "Pre-existing historical null-injection fixture remains in old public cache; preserved and not used as proof of current dates. Fresh complete public cache exactly matches current server."
+  },
+  "github": {
+    "tag": "v2.78.7",
+    "source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "release_id": 440113023,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.7.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.7/lolita-2.78.7.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "b800ecef1bb710cd1a2ea2c8f2f1cea462c52ad0a25e985b80d689d78b09e8dd",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.7/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "dc8367a2635156587e41b387e0dd2f1fa4d3c4215df3b9eac1cfebc28126f65f",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.78.7",
+    "source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "release_id": 1293876,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.7.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.7/lolita-2.78.7.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "b800ecef1bb710cd1a2ea2c8f2f1cea462c52ad0a25e985b80d689d78b09e8dd",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.7/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "dc8367a2635156587e41b387e0dd2f1fa4d3c4215df3b9eac1cfebc28126f65f",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "publicUpdateApi": {
+    "latest_tag": "v2.78.7",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.7/lolita-2.78.7.apk",
+    "source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8"
+  },
+  "actualAppUpdate": {
+    "passed": true,
+    "version": "2.78.7",
+    "currentVersion": "2.78.7",
+    "latestVersion": "2.78.7",
+    "sameSignedFormalApk": true,
+    "actualMainActivity": true,
+    "api": "Gitee anonymous release list",
+    "dialog": "已是最新版本"
+  },
+  "quotaCleanup": {
+    "tag": "v2.74.0",
+    "release_id": 1279907,
+    "attachment_id": 3612116,
+    "name": "lolita-2.74.0.apk",
+    "bytes": 83972501,
+    "sha256": "766c996b4819814cbbbf8efd848ee1f5873c334753edb7a45d63180d18d86de0",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "5df4b6d19f0794b087d00854a56634233561dcf8",
+    "at_utc": "2026-11-10T08:42:29.088634+00:00",
+    "github_fresh_anonymous_full_download_verified": true,
+    "three_complete_local_copies_verified": true,
+    "http_status": 204,
+    "old_release_and_checksum_retained": true
+  },
+  "serverDataStage": "docs/square-time-sale-data-correction-2026-11-10.json",
+  "privateDatabaseVersion": 34,
+  "entities": 45,
+  "backupFormat": 16,
+  "paidCalls": 0,
+  "mainAssistantTaobaoAccess": 0,
+  "cleanup": {
+    "taskAvdsShutdownRequested": true,
+    "avdDataPreserved": true,
+    "noAutoRestart": true,
+    "temporarySigningCopiesRemoved": true,
+    "persistentSigningAndTokenPreserved": true
+  },
+  "limitations": [
+    "Small screen and large font excluded by user.",
+    "No OEM phone validation in this UI task.",
+    "Old upgrade AVD contains historical diagnostic null injections in public cache. It was preserved; current public display was verified on an independent fresh cache. No general network repair claimed.",
+    "Absent years and unproven current drop start dates are not invented."
+  ],
+  "distribution": {
+    "github": "https://github.com/aalm1233/lolita/releases/tag/v2.78.7",
+    "gitee": "https://gitee.com/aalm1233/lolita/releases/tag/v2.78.7",
+    "apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.7/lolita-2.78.7.apk"
+  },
+  "atUtc": "2026-11-10T09:15:36.088845+00:00"
+}

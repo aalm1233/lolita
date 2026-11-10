@@ -1,0 +1,286 @@
+{
+  "version": "2.78.9",
+  "versionCode": 165,
+  "sourceCommit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+  "gitTag": "v2.78.9",
+  "sourcePushedTo": "origin/master",
+  "previousSourceOnlyTag": "v2.78.8",
+  "previousTagRewritten": false,
+  "previousTagHasFormalRelease": false,
+  "changes": [
+    "Remove all three Square top-right actions and unreachable dialogs",
+    "Collapse search into a left icon in the category row, reusing homepage SearchModeBar",
+    "Cancel or second back clears query and collapses; nonempty query remains visible after detail return"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.9",
+    "version_code": 165,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "apk_sha256": "2e2ee5f26f821946731a94631a28e20000ed6e6cf20ecb758f0496e8ae03bd84",
+    "bytes": 84038037
+  },
+  "isolatedCommittedBuild": {
+    "passed": true,
+    "committedArchiveOnly": true,
+    "sourceCommit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "clean": true,
+    "task": "assembleRelease",
+    "lintVitalPassed": true,
+    "root": "/tmp/lolita-square-search-release-20261110"
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "additionalAssets": [
+      {
+        "path": "assets/dexopt/baseline.prof",
+        "bytes": 10206,
+        "sha256": "69b73c07080fcdf5078b1fe2d3e4524fb9e6f5d388c24ff02cafb95c066ff8b3",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/dexopt/baseline.profm",
+        "bytes": 534,
+        "sha256": "a89f115b3926c05d02255a004b10a2c8a5ac71d2d8156667af6e5733b6aad058",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+        "bytes": 30461,
+        "sha256": "c6e18381293bb50bef5914b7925b6160aea82494d80af25bde3f691f40baecb8",
+        "unchangedFromPreviousFormal": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000",
+        "bytes": 61866,
+        "sha256": "fb4e84a77d09427d1d469f854db6832b5341b3da6df0926f44242af89b777657",
+        "unchangedFromPreviousFormal": true
+      }
+    ]
+  },
+  "tests": {
+    "passed": true,
+    "debugBuild": true,
+    "androidTestBuild": true,
+    "distinctDeviceMethods": 5,
+    "methods": [
+      "SquarePolishTest.collapsedSearchCancelBackAndDetailReturnKeepFilterContext",
+      "SquarePolishTest.collapsedAndExpandedSearchAcrossSevenSkinsAndModes",
+      "SquareHazeLifetimeTest.squareTitleAndNavigationKeepBlurAcrossSevenSkinsAndModes",
+      "SquareBrowseNavigationTest.realNavigationDirectWishGroupExistingWishlistAndReturn",
+      "SquareNetworkTest.disconnectedEmptyStateRefreshIsSilentAndImportStaysAvailable"
+    ],
+    "searchSkinModes": 14,
+    "searchStatesPerMode": 2,
+    "searchMatrixStatesNormalAndSmall": 56,
+    "smallWidthDp": 320,
+    "smallFontScale": 2,
+    "actualKeyboard": true,
+    "hardwareBackTwice": true,
+    "filterContextPreserved": true,
+    "detailReturnQueryPreserved": true,
+    "finalPlaceholderSingleLine": true,
+    "scope": "UI-only; no unrelated JVM/Room/backup/image audit",
+    "initialTestFixtureFailuresRetained": true
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.7",
+    "toVersion": "2.78.9",
+    "fromInstalledSha256": "b800ecef1bb710cd1a2ea2c8f2f1cea462c52ad0a25e985b80d689d78b09e8dd",
+    "install": "-r",
+    "sameFormalSignature": true,
+    "coldStarts": 2,
+    "settingsUnchanged": true,
+    "settingsCount": 2,
+    "serviceConfigWasAbsentAndRemainsAbsent": true,
+    "scope": "UI-only; no database, backup or private-image changes, no unrelated full data audit",
+    "postActualVisualSettingsUnchanged": true
+  },
+  "formalSquare": {
+    "passed": true,
+    "actualMainActivity": true,
+    "officialVersion": "2.78.9",
+    "removedActionsAbsent": true,
+    "searchCollapsedByDefault": true,
+    "searchOpensWithCancel": true,
+    "cancelCollapses": true,
+    "existingPublicCatalogRetained": true,
+    "noServiceOverride": true,
+    "homepageSharedSearchUnchangedVerified": true
+  },
+  "github": {
+    "tag": "v2.78.9",
+    "source_commit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "release_id": 440499757,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.9.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.9/lolita-2.78.9.apk",
+        "anonymous_full_download": true,
+        "bytes": 84038037,
+        "sha256": "2e2ee5f26f821946731a94631a28e20000ed6e6cf20ecb758f0496e8ae03bd84",
+        "completed_in_prior_anonymous_stream_attempt": true,
+        "originalRedirectAllowlistValidated": true
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.9/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "3127a9222dc9618597fa42bdfa02288b38af365523eb5d921d09538a2a4b54ea",
+        "completed_in_prior_anonymous_stream_attempt": true,
+        "originalRedirectAllowlistValidated": true
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84038037,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ],
+      "verificationBudgetSeconds": 45,
+      "perConnectionReadTimeoutSeconds": 12,
+      "priorEightSecondProbeAttempts": 2,
+      "priorEightSecondProbePassed": false
+    },
+    "source_tag_commit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.78.9",
+    "source_commit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "release_id": 1295197,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.9.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.9/lolita-2.78.9.apk",
+        "anonymous_full_download": true,
+        "bytes": 84038037,
+        "sha256": "2e2ee5f26f821946731a94631a28e20000ed6e6cf20ecb758f0496e8ae03bd84",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.9/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "3127a9222dc9618597fa42bdfa02288b38af365523eb5d921d09538a2a4b54ea",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84038037,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "publicUpdateApi": {
+    "passed": false,
+    "initialHttpStatus": 403,
+    "delayedRecheckHttpStatus": 403,
+    "ownerMetadataNotSubstituted": true
+  },
+  "actualAppUpdate": {
+    "performed": true,
+    "passed": false,
+    "currentVersion": "2.78.9",
+    "result": "Gitee temporarily refused access or rate-limited",
+    "message": "Gitee 暂时拒绝访问或请求过于频繁，请稍后重试",
+    "directApkAnonymousDownloadAndHeadPassed": true
+  },
+  "giteeQuotaCleanup": {
+    "tag": "v2.75.0",
+    "release_id": 1280767,
+    "attachment_id": 3614893,
+    "name": "lolita-2.75.0.apk",
+    "bytes": 83972501,
+    "sha256": "d73ac0a1b1d58299f4e7d334aa14a2365636f670a8fdd18306b9ca26a3e1faa9",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "92a8090f3c58c915917fd1013a2b01e1d66f2ada",
+    "at_utc": "2026-11-10T14:59:42.955051+00:00",
+    "github_digest_and_head_verified": true,
+    "github_and_three_local_complete_copies_verified": true,
+    "head_chain": [
+      {
+        "host": "github.com",
+        "status": 302
+      },
+      {
+        "host": "release-assets.githubusercontent.com",
+        "status": 200
+      }
+    ],
+    "http_status": 204,
+    "old_release_and_other_attachments_retained": true
+  },
+  "roomVersion": 34,
+  "entities": 45,
+  "backupVersion": 16,
+  "noSchemaOrBackupChange": true,
+  "noTaobaoAccess": true,
+  "noNewPaidCalls": true,
+  "noCacheOrPrivateDataClear": true,
+  "noUnrelatedFullDataAudit": true,
+  "temporarySigningReferencesRemoved": true,
+  "taskAvdsClosedDataRetained": true,
+  "existingUserAvdsAffected": false,
+  "localPreexistingUntrackedFilesPreserved": true,
+  "limitations": [
+    "Gitee public update API and actual app manual check refused/rate-limited; stable APK downloads pass.",
+    "GitHub eight-second HEAD attempts timed out twice; availability HEAD passed using 12-second per-connection and 45-second total verification budgets, without changing the app network policy.",
+    "Emulator UI verification does not establish OEM phone compatibility."
+  ]
+}

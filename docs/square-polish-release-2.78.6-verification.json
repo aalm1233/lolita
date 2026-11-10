@@ -1,0 +1,258 @@
+{
+  "version": "2.78.6",
+  "versionCode": 162,
+  "sourceCommit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+  "gitTag": "v2.78.6",
+  "sourcePushedTo": "origin/master",
+  "localPreexistingMasterCommitsPreserved": true,
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.6",
+    "version_code": 162,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "apk_sha256": "f1bb9b3b41c050938e1db7bbef457868e528fde800db6180a9576a4533527931",
+    "bytes": 84038041
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24
+  },
+  "isolatedCommittedCleanBuild": {
+    "source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "committed_archive_only": true,
+    "clean": true,
+    "task": "assembleRelease",
+    "root": "/tmp/lolita-square-release-20261110"
+  },
+  "lintVitalPassed": true,
+  "tests": {
+    "jvm": 19,
+    "nativeDistinctMethods": 13,
+    "skinModes": 14,
+    "matrixStates": 84,
+    "realIme": true,
+    "fullNavHost": true,
+    "smallScreen": false,
+    "largeFont": false
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.5",
+    "toVersion": "2.78.6",
+    "sameSignature": true,
+    "install": "-r",
+    "coldStarts": 2,
+    "roomVersion": 34,
+    "tables": 45,
+    "allRowsUnchanged": true,
+    "items": 160,
+    "images": 629,
+    "allImageShaUnchanged": true,
+    "settings": 6,
+    "allSettingsShaUnchanged": true,
+    "baseline": "Existing dedicated AVD restored from authorized current.json dataset; compare pre-upgrade state, no fresh restore"
+  },
+  "postVisualPrivateDataAndOriginalSettingsUnchanged": true,
+  "originalServiceWasUnstoredAndRestored": true,
+  "formalSquare": {
+    "formalInstalledApkShaMatches": true,
+    "deviceApkSha256": "f1bb9b3b41c050938e1db7bbef457868e528fde800db6180a9576a4533527931",
+    "actualPublicCatalogImagesViaExistingLan": true,
+    "filterCardsAndAccessoryDetail": true,
+    "referenceBadgeVisible": true,
+    "privateWishNotAdded": true,
+    "temporaryServiceUrl": "http://10.0.2.2:18765",
+    "publicImageRefresh": "Old public cache showed image requests unresolved; not counted as public refresh pass; LAN verified",
+    "originalServiceConfigWasAbsent": true,
+    "originalUnstoredServiceStateRestored": true,
+    "intermediateRestoreRejectedByFinalSnapshot": true
+  },
+  "github": {
+    "tag": "v2.78.6",
+    "source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "release_id": 439928435,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.6.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.6/lolita-2.78.6.apk",
+        "anonymous_full_download": true,
+        "bytes": 84038041,
+        "sha256": "f1bb9b3b41c050938e1db7bbef457868e528fde800db6180a9576a4533527931",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.6/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "01c619bb6d01ba32cafdc25290ae985d3cd2f64bd29c27d2028bb537ec123904",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84038041,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.78.6",
+    "source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "release_id": 1292975,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.6.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.6/lolita-2.78.6.apk",
+        "anonymous_full_download": true,
+        "bytes": 84038041,
+        "sha256": "f1bb9b3b41c050938e1db7bbef457868e528fde800db6180a9576a4533527931",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.6/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 84,
+        "sha256": "01c619bb6d01ba32cafdc25290ae985d3cd2f64bd29c27d2028bb537ec123904",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84038041,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "publicUpdateApi": {
+    "latest_tag": "v2.78.6",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.6/lolita-2.78.6.apk",
+    "source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b"
+  },
+  "actualAppUpdate": {
+    "currentVersion": "2.78.6",
+    "texts": [
+      "已是最新版本",
+      "当前版本：v2.78.6",
+      "最新发布：v2.78.6",
+      "修整广场的六处浏览体验：",
+      "- 商品卡片精简标题、状态与报价，明确全款、定金、尾款及未知信息。\n- 商品详情优先展示单品、颜色与尺码；尺码表提前，完整参数和来源可展开查看。\n- 缺少单品图时显示标记清楚的系列参考图，不借用为心愿封面。\n- 同款明确颜色集中选择，单品与多件选择支持搜索，保留原始收藏身份。\n- 筛选结果、卡片与进入详情的单品保持一致；仅组合售卖不冒充单件报价。\n- 筛选依当前店铺及条件收敛，完成按钮固定，清除属性保留店铺和搜索。"
+    ],
+    "expectedLatest": "2.78.6",
+    "passed": true,
+    "fullReleaseNotesVisible": true
+  },
+  "quotaCleanup": {
+    "tag": "v2.73.1",
+    "release_id": 1278508,
+    "attachment_id": 3607852,
+    "name": "lolita-2.73.1.apk",
+    "bytes": 83874197,
+    "sha256": "86251351a58d83f062f83c6505ec6bfef3152f6dd176c2970eec09ed318a92c0",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b",
+    "at_utc": "2026-11-10T04:04:41.866441+00:00",
+    "github_fresh_anonymous_full_download_verified": true,
+    "three_complete_local_copies_verified": true,
+    "http_status": 204,
+    "old_release_and_checksum_retained": true
+  },
+  "privateDatabaseVersion": 34,
+  "entities": 45,
+  "backupFormat": 16,
+  "paidCalls": 0,
+  "mainAssistantTaobaoAccess": 0,
+  "cleanup": {
+    "taskAvdsShutdownRequested": true,
+    "avdDataPreserved": true,
+    "noAutoRestart": true,
+    "temporarySigningCopiesRemoved": true,
+    "persistentSigningAndGiteeTokenPreserved": true,
+    "taskAvdsConfirmedClosed": true
+  },
+  "limitations": [
+    "Small screen and large font excluded by user.",
+    "Formal old public cache image requests remained unresolved before LAN verification; not counted as successful public refresh. No public network fix claimed.",
+    "No OEM phone validation in this UI task."
+  ],
+  "distribution": {
+    "github": "https://github.com/aalm1233/lolita/releases/tag/v2.78.6",
+    "gitee": "https://gitee.com/aalm1233/lolita/releases/tag/v2.78.6",
+    "apk": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.6/lolita-2.78.6.apk"
+  },
+  "atUtc": "2026-11-10T04:31:53.344150+00:00"
+}

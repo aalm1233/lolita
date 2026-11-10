@@ -18,6 +18,8 @@
 
 - 2.78.3正式交付：源码/标签`8f358422`普通推送，14项JVM、3项正常设备方法及独立SIGABRT探针/真实系统栈读取通过；提交归档clean原签名Release、37素材/24旧图、2.78.2覆盖首次/冷启动和3份设置保全、正式App诊断SAF保存通过。GitHub/Gitee同APK匿名全量GET/SHA/HEAD及源标签核验，本次Gitee公开查询及实际App检查当前/最新2.78.3通过；依持续授权仅清理最旧Gitee2.71.1 APK。目标手机根因仍待原生栈，回执`docs/native-crash-diagnostics-release-2.78.3-verification.json`。
 
+- 2.78.6／162广场六项修整正式交付：源码/标签`cc2ec9d9`已普通推送至master；19项JVM、13个去重设备方法、七皮肤浅暗84状态、真实IME与完整NavHost通过。提交归档clean原签名Release含lintVital、37素材/24旧图片、2.78.5覆盖两次启动保全45表/160物品/629私有图/6份原设置；临时内网视觉验收后原未保存地址状态及私人资料再次核对保持。双平台同APK匿名完整GET/SHA/HEAD、源标签、Gitee公开最高版本及实际App当前/最新2.78.6通过。仅依持续授权清理最旧Gitee2.73.1 APK；原本地master两条旧提交保留，修复分支正常推远端master。用户排除小屏/大字体；旧公网缓存图片未加载不计公网刷新通过，内网实拍通过。Room34/45实体/备份16不变，任务AVD关闭留数据。回执`docs/square-polish-release-2.78.6-verification.json`，实施`docs/square-polish-implementation-2026-11-10.md`。
+
 ## 项目事实
 
 - 单应用模块 Android 项目，另含Haze 1.6.9生命周期补丁库`:haze-patched`（`third_party/haze`），Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。

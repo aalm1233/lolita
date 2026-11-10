@@ -25,4 +25,14 @@
 - 走查修正：空态及单品卡片内容需明确Column布局，修复重叠点击与图文叠放；选择器暗色底色显式消费当前Material surfaceVariant，修复弹层配置下浅底浅字；筛选匹配配件标签自动滚入视区；仅组合报价不冒充单件全款。
 - 早期测试问题单列：临时ZIP清单误命名catalog.json导致准入拒绝，改回协议manifest.json，未放宽生产校验；两个测试选择器歧义/子串断言修正；一次ADB UiAutomation断开不计通过。最终全批13方法中12通过，NavHost测试补等待真实详情加载并定位未合并语义，最终三项定向复测（84状态、Bunny收藏、完整NavHost）全部通过，生产导航未绕过。详细原始日志仅保存在本机Downloads本轮目录。
 
-正式提交源码的隔离clean签名构建、2.78.5覆盖和两端发布结果以 `square-polish-release-2.78.6-verification.json` 为最终回执；发布后补充，不将Debug截图当正式APK验收。
+正式提交源码的隔离clean签名构建、2.78.5覆盖和两端发布结果以 `square-polish-release-2.78.6-verification.json` 为最终回执，不将Debug截图当正式APK验收。
+
+## 正式交付
+
+源码与标签 `cc2ec9d9633573c327c90e72f6e5ea21ff37fc9b` 已普通推送至 GitHub master / v2.78.6；本地原 master 两条未合入远端的旧提交保留，未带入本次正式源码。提交归档 clean 原签名 Release（含 lintVital）通过，APK 84,038,041字节，SHA256 `f1bb9b3b41c050938e1db7bbef457868e528fde800db6180a9576a4533527931`。37份项目素材与源码相同，24份旧图片资源保持。
+
+正式2.78.5同签名覆盖并两次冷启动，45表全行、160物品、629私有图SHA及6份原设置保全；临时内网地址用于新目录图片/筛选/配件详情的真实MainActivity核验。[实际列表](visuals/2026-11-10-square-polish/release/official-lan-feed.png)、[筛选卡片](visuals/2026-11-10-square-polish/release/official-filtered-card.png)、[参考图与匹配配件](visuals/2026-11-10-square-polish/release/official-reference-accessory.png)归档。最后快照识别到测试恢复脚本把adb的不存在提示当作配置文件，未认定恢复通过；依据升级前清单恢复原先“未保存地址”状态，再次核对45表/629图/6设置完全相同。原公网缓存图片最初未加载，仅内网图片验证通过，不将此算公网刷新修复。
+
+GitHub/Gitee正式附件同APK与SHA256SUMS，匿名完整下载/SHA/HEAD及GitHub源标签通过；Gitee公开接口选择2.78.6，实际正式App显示当前/最新均2.78.6及完整更新说明。配额不足后依持续授权，仅清理Gitee最旧2.73.1 APK；旧发布、校验、GitHub及3份本机完整副本保留，见[清理回执](gitee-apk-cleanup-2.73.1-2026-11-10.json)。
+
+两台任务AVD关闭且数据保留，无自动重启；临时签名配置副本清除，本机原签名和Gitee令牌保留。[最终回执](square-polish-release-2.78.6-verification.json)为发布验证依据。

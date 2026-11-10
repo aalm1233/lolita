@@ -18,7 +18,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.lolita.app.data.square.*
@@ -62,7 +64,14 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                 val kinds = listOf("全部", "上新", "再贩", "现货", "尾款")
                 val selected = kinds.indexOf(kind.ifEmpty { "全部" }).coerceAtLeast(0)
                 val tabs: @Composable () -> Unit = {
-                    kinds.forEachIndexed { index, label -> Tab(selected == index, { vm.set("kind", if (index == 0) "" else label) }, text = { Text(label, style = MaterialTheme.typography.labelLarge) }) }
+                    kinds.forEachIndexed { index, label ->
+                        Tab(selected == index, { vm.set("kind", if (index == 0) "" else label) },
+                            modifier = Modifier.heightIn(min = 48.dp).testTag("square-kind-$label")) {
+                            Text(label, modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 8.dp).width(IntrinsicSize.Max),
+                                style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp, lineHeight = 20.sp),
+                                textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
+                        }
+                    }
                 }
                 if (searching) {
                     SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,

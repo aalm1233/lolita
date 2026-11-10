@@ -72,9 +72,10 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
                 }
                 else SquareWishDock(viewModel,onOpenItem,busy==null)
             }
-        },topBar={GradientTopAppBar(title={Text(if(event==null)"广场" else if(choosing)listOf("选择完整规格","拆出我的物品","挑选对应资料","登记预览")[step.coerceIn(0,3)] else "商品详情")},
-            navigationIcon={if(event!=null)IconButton(onClick=viewModel::back,enabled=busy==null){SkinIcon(IconKey.ArrowBack)}})}){padding->
-        Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
+        },topBar={if(event!=null)GradientTopAppBar(title={Text(if(choosing)listOf("选择完整规格","拆出我的物品","挑选对应资料","登记预览")[step.coerceIn(0,3)] else "商品详情")},
+            modifier=Modifier.testTag("square-detail-topbar"),
+            navigationIcon={IconButton(onClick=viewModel::back,enabled=busy==null){SkinIcon(IconKey.ArrowBack)}})}){padding->
+        Box(Modifier.fillMaxSize().then(if(event==null)Modifier.statusBarsPadding() else Modifier).padding(padding).consumeWindowInsets(padding)) {
             when {
                 event==null->PullToRefreshBox(isRefreshing=refreshing,onRefresh=viewModel::refresh,modifier=Modifier.fillMaxSize().testTag("square-refresh")) {
                     if(catalog!=null)SquareBrowseFeed(catalog!!,viewModel,showAmounts)

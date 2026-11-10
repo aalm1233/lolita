@@ -22,6 +22,8 @@
 
 ## 项目事实
 
+- 2.78.10／166按用户要求删除广场列表/加载/空态的整条标题栏，列表自行消费状态栏安全区；商品详情/尾款/规格登记保留标准标题与返回。分类改为13sp/20sp单行、两侧各6dp，保留48dp高点按区，普通字号五类等分、大字沿原横向滚动。搜索与筛选/图片/原数据流保持，Room34/45实体/备份16不变。前置七皮肤稿与验收见`docs/plans/2026-11-10-square-compact-header.md`，最终发布状态待本轮补齐。
+
 - 2.78.9／165按用户要求删除广场右上角查看心愿、导入资料包、广场服务三个操作及失去入口的服务/开发者弹窗，不迁移入口。标题、详情返回、下拉刷新、空态导入及商品收藏/结果查看心愿保留；已保存地址与缓存不改，Room34/45实体/备份16保持。范围与验收见`docs/plans/2026-11-10-square-topbar-removal.md`，追加按首页收起搜索，分类栏左侧点按展开输入与取消，取消清空查询，详情返回保留非空搜索；复用首页SearchModeBar且不恢复右侧操作。2.78.8仅源码标签，无正式附件；最终源码/标签`92a8090f`已普通推送；Debug、5个去重定向设备方法、56个搜索皮肤状态（含320dp两倍字与真实IME）、完整Haze NavHost与收藏导航通过。提交归档clean原签名Release含lintVital、37项目素材/24旧图片/依赖素材/profile核验，2.78.7覆盖两次启动及正式实页/首页原搜索通过，2份设置与原未保存地址状态保持。双平台正式同APK匿名完整GET/SHA与可用性HEAD、GitHub源标签通过；GitHub8秒短HEAD两次超时，45秒预算可用性HEAD200，不计短时探测通过；Gitee公开版本API及延时复核403，实际App检查同样拒绝/频控，直链可用，不计更新入口通过。仅按持续授权清理最旧Gitee2.75.0 APK，旧页/校验/GitHub及三份本机副本保留；任务AVD关闭留数据。回执`docs/square-topbar-search-release-2.78.9-verification.json`。
 
 - 2.78.7／163广场时间与当前分类显示正式交付：用户在26条服务端资料修正后明确接续App修复。源码/标签`5df4b6d1`已普通推送；28项JVM、4个去重设备方法、七皮肤浅暗56状态与完整NavHost通过。提交归档clean原签名Release含lintVital、37素材/24旧图和五处AndroidX调用核验；2.78.6覆盖两次冷启动及最终视觉后45表/160物品/629私有图/6份原设置保持。独立新AVD正式MainActivity经内置公网HTTPS显示预约区间、无年份开售、现货再贩及只读尾款，目录与原图缓存抽查通过。双平台同APK匿名全量GET/SHA/HEAD、源标签、公开最高版本及实际App当前/最新2.78.7通过；仅按持续授权清理最旧Gitee2.74.0 APK。旧升级AVD诊断注入的公开null夹具保留，不用作当前日期验证；不泛化为网络修复。用户排除小屏/大字；Room34/45实体/备份16不变，任务AVD关闭留数据。回执`docs/square-time-sale-release-2.78.7-verification.json`。
@@ -406,7 +408,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=165, versionName="2.78.9"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=166, versionName="2.78.10"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

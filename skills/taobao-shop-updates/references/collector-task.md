@@ -41,6 +41,7 @@ App输出契约：{{SKILL_DIR}}/references/app-package.md
 - 完整SKU集合与原始products/CSV逐项一致，报价用十进制字符串或null，所有规格原文照录。分离售卖阶段、库存文字和发货；不将定金/尾款换算全款或组合价拆给成员。
 - 图片localPath相对本次根目录，保留全部main/sku/detail/promo与原顺序；单品photoPaths只引用当前商品的明确独立图，并给对应属性/图文证据。不能靠图片风格/模特整搭推断部件颜色或制造小物图。
 - parts明确独立衣物、小物、商家套餐包含项；未知的成员颜色/尺码保持null。materials按partKey提供明确面料、工艺、包含/不含、洗护与资料图；sizeTable必须保持列、行、单位、范围和人体/成衣说明，长短款拆各自适用列；共享原表可保留，无法分清适用对象就不生成表。
+- 若规格栏包含购买须知/其他链接提示及防拍价，依App契约逐项核实后将明确非实物说明行独立保留nonPurchasableOptions和证据报告；原始全部SKU行仍保存，实际可购完整SKU与CSV/App输入一致，公开info.source保留说明。分别统计原始行/实物SKU/说明组合行，不给说明项编造parts，不依据价格未知、库存0或高价独自排除真实商品，不放宽校验。
 - 风格只来自参数、标题、商家明文并附依据，不按画风猜。source与evidence保留可追溯文件和摘录。资料未知留空，真正缺失或阻塞写deferred；禁止为让校验变绿捏造证据、补齐不存在的SKU/图片/尺码。
 - 覆盖每个完整商品组并给coverage：skuComplete/detailsComplete与真实skuCount。没有采完整的商品列deferred，不能把部分SKU包装成完整集合。某店阻塞不影响已完成店，但必须记录目录和原因。
 

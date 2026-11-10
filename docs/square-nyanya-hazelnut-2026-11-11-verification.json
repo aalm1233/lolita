@@ -1,0 +1,436 @@
+{
+  "passed": true,
+  "startedDate": "2026-11-10",
+  "completedAt": "2026-11-11T00:14:06.107323+08:00",
+  "order": [
+    "nyanya",
+    "hazelnut-cocoa"
+  ],
+  "scope": "Two new public shop catalogs; existing seven shops preserved. This task does not change App source/version, private data, schedules or purchases.",
+  "appSourceChanged": false,
+  "newApkReleased": false,
+  "shops": [
+    {
+      "shopId": "nyanya",
+      "name": "NyaNya原创Lolita洋装",
+      "capturedAt": "2026-11-10T23:03:02+08:00",
+      "productLinks": 4,
+      "events": [
+        {
+          "id": "nyanya-2026-anniv-print-tail",
+          "title": "11周年周年印花系列尾款（10.25—11.25）",
+          "kind": "尾款",
+          "state": "尾款进行中（标题11.25截）",
+          "date": "尾款期限：2026年10月25日—2026年11月25日",
+          "productIds": [
+            "1095231900015"
+          ]
+        },
+        {
+          "id": "nyanya-2026-applepie2-tail",
+          "title": "苹果派橱窗2.0再贩尾款（9.18—11.14）",
+          "kind": "尾款",
+          "state": "尾款进行中（标题11.14截）",
+          "date": "尾款期限：2026年9月18日—2026年11月14日",
+          "productIds": [
+            "929674375546"
+          ]
+        },
+        {
+          "id": "nyanya-2026-11th-member-bag",
+          "title": "11周年会员商品 苹果派/周年印花帆布袋",
+          "kind": "上新",
+          "state": "全款预售（第一批已发货；截止日期未公开）",
+          "date": "上架/截止日期未公开；第一批评价2026年11月3日/5日",
+          "productIds": [
+            "1083056835157"
+          ]
+        },
+        {
+          "id": "nyanya-2026-member-iris-necklace",
+          "title": "2026年会员限定礼 蕾丝鸢尾茶壶项链",
+          "kind": "上新",
+          "state": "全款预售，11.10截止（标题原文无年份）",
+          "date": "上架时间：2026年9月17日；标题截止：11.10（原文未注明年份）；发货时间：2026年内",
+          "productIds": [
+            "1084077929947"
+          ]
+        }
+      ],
+      "rawSkuRows": 130,
+      "purchasableSkuCount": 80,
+      "nonPurchasableExplanationRows": 50,
+      "imageFiles": 150,
+      "differentAssets": 147,
+      "sizeTables": 10,
+      "package": "/Users/dengtong/Downloads/taobao-shop-updates/2026-11-10/nyanya-hazelnut-223319/nyanya/app-package/lolita-square-2026-11-10.zip",
+      "packageSha256": "91214604185d70de55ffe130fe5884d52176cd3502ab55a3404b7f5305bb02f0",
+      "androidContract": {
+        "browseProjectionPassed": true,
+        "browseSourceSha256": "7581f6ec4d48b09690fecc00db031006f079bee263e5308bfc7d7379be79b77d",
+        "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+        "passed": true,
+        "sourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e"
+      },
+      "rawSourceVerificationPassed": true,
+      "ingest": {
+        "changed": 4,
+        "cursor": 93,
+        "products": 95,
+        "assets": 3893
+      },
+      "api": {
+        "shopId": "nyanya",
+        "checkedAt": "2026-11-10T15:30:38.269288+00:00",
+        "services": [
+          {
+            "base": "http://127.0.0.1:18765",
+            "passed": true,
+            "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+            "cursor": 93,
+            "globalCounts": {
+              "shops": 8,
+              "events": 67,
+              "products": 95,
+              "assets": 3893
+            },
+            "shopCounts": {
+              "shops": 1,
+              "events": 4,
+              "products": 4,
+              "assets": 147
+            },
+            "incomingProductAndImageSamples": [
+              {
+                "productId": "1095231900015",
+                "originalSha256": "7c29065133c52003add45ec9802ac1a5a3d513ab7417e4002318aac7c6176ce1"
+              },
+              {
+                "productId": "929674375546",
+                "originalSha256": "7d5f6707d0f6cd624d8e83279705d9763d908334b2b8f64281d8f3b2fe889099"
+              },
+              {
+                "productId": "1083056835157",
+                "originalSha256": "cbef06460306cf3572a98e2b352d5e932a3afed7657f2ae55bc3a7a72fbd42e6"
+              },
+              {
+                "productId": "1084077929947",
+                "originalSha256": "d32f2e6c53930bba2c470a1628e944176851248be71ad63c89dd64f37740b21a"
+              }
+            ],
+            "otherShopsPreserved": true
+          },
+          {
+            "base": "https://f8b8b6fa0e0f.eicp.fun",
+            "passed": true,
+            "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+            "cursor": 93,
+            "globalCounts": {
+              "shops": 8,
+              "events": 67,
+              "products": 95,
+              "assets": 3893
+            },
+            "shopCounts": {
+              "shops": 1,
+              "events": 4,
+              "products": 4,
+              "assets": 147
+            },
+            "incomingProductAndImageSamples": [
+              {
+                "productId": "1095231900015",
+                "originalSha256": "7c29065133c52003add45ec9802ac1a5a3d513ab7417e4002318aac7c6176ce1"
+              },
+              {
+                "productId": "929674375546",
+                "originalSha256": "7d5f6707d0f6cd624d8e83279705d9763d908334b2b8f64281d8f3b2fe889099"
+              },
+              {
+                "productId": "1083056835157",
+                "originalSha256": "cbef06460306cf3572a98e2b352d5e932a3afed7657f2ae55bc3a7a72fbd42e6"
+              },
+              {
+                "productId": "1084077929947",
+                "originalSha256": "d32f2e6c53930bba2c470a1628e944176851248be71ad63c89dd64f37740b21a"
+              }
+            ],
+            "otherShopsPreserved": true
+          }
+        ],
+        "errors": [],
+        "scope": "Complete API change-feed replay; exact shop catalog equality; unchanged other shops; every incoming product and its first original/thumbnail. No Android UI claim.",
+        "passed": true
+      },
+      "deferred": [
+        {
+          "shopId": "nyanya",
+          "itemId": "926847048393",
+          "directory": "shops/01-Nyanya",
+          "reason": "已保存候选页；属更早的Nya的四季草莓&熊熊剧院现货系列（评价2026-07），非本轮11周年最近商品组，未纳入广场。"
+        },
+        {
+          "shopId": "nyanya",
+          "itemId": "730772738016",
+          "directory": "shops/01-Nyanya",
+          "reason": "已保存候选页；往期9/10周年会员礼掉落，非本轮11周年，未纳入广场。"
+        },
+        {
+          "shopId": "nyanya",
+          "itemId": "1085466724181",
+          "directory": "shops/01-Nyanya",
+          "reason": "店铺卡片显示会员1500积分兑换帆布袋，999999为占位价；未保存商品页，积分权益不作为本轮商品。"
+        },
+        {
+          "shopId": "nyanya",
+          "itemId": "1085421888018",
+          "directory": "shops/01-Nyanya",
+          "reason": "店铺卡片显示会员800积分兑换帆布袋，999999为占位价；未保存商品页，积分权益不作为本轮商品。"
+        }
+      ],
+      "missingMappings": [
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6137881913078"
+        },
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6301891278126"
+        },
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6301891278127"
+        },
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6301891278128"
+        },
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6301891278129"
+        },
+        {
+          "missing": "independentPhoto",
+          "productId": "1084077929947",
+          "skuId": "6301891278130"
+        }
+      ],
+      "semanticReview": "/Users/dengtong/Downloads/taobao-shop-updates/2026-11-10/nyanya-hazelnut-223319/nyanya/main-review",
+      "state": "/Users/dengtong/Downloads/taobao-shop-updates/catalog-state/by-shop/nyanya"
+    },
+    {
+      "shopId": "hazelnut-cocoa",
+      "name": "榛果可可花束",
+      "capturedAt": "2026-11-10T23:50:00+08:00",
+      "productLinks": 3,
+      "events": [
+        {
+          "id": "hz-2026-11-10-autumn-bouquet-2026",
+          "title": "11/10 现货掉落｜献给秋日的花束2026 两穿JSK / 上衣 / KC / 发带（11月10日—11月24日限时价）",
+          "kind": "现货",
+          "state": "现货掉落中（11月10日—11月24日限时优惠价）",
+          "date": "11月10日—11月24日；限时优惠期（商家原文未注明年份，非首次上架日期）",
+          "productIds": [
+            "1096011267763",
+            "1061209276316"
+          ]
+        },
+        {
+          "id": "hz-2026-11-10-autumn-bouquet-resale",
+          "title": "现货 · 再贩｜献给秋日的花束 JSK吊带裙（11月10日—11月24日限时价）",
+          "kind": "现货",
+          "state": "再贩现货掉落中（11月10日—11月24日限时优惠价）",
+          "date": "11月10日—11月24日；限时优惠期（商家原文未注明年份，非首次上架日期）",
+          "productIds": [
+            "1061209552232"
+          ]
+        }
+      ],
+      "rawSkuRows": 40,
+      "purchasableSkuCount": 36,
+      "nonPurchasableExplanationRows": 4,
+      "imageFiles": 111,
+      "differentAssets": 103,
+      "sizeTables": 3,
+      "package": "/Users/dengtong/Downloads/taobao-shop-updates/2026-11-10/nyanya-hazelnut-223319/hazelnut-cocoa/app-package/lolita-square-2026-11-10.zip",
+      "packageSha256": "d9a1c351006e4c1dca9d14bf1a9a3dc13e7cbe956d031659975de8d09b5ee501",
+      "androidContract": {
+        "browseProjectionPassed": true,
+        "browseSourceSha256": "7581f6ec4d48b09690fecc00db031006f079bee263e5308bfc7d7379be79b77d",
+        "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+        "passed": true,
+        "sourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e"
+      },
+      "rawSourceVerificationPassed": true,
+      "ingest": {
+        "changed": 2,
+        "cursor": 95,
+        "products": 98,
+        "assets": 3995
+      },
+      "api": {
+        "shopId": "hazelnut-cocoa",
+        "checkedAt": "2026-11-10T16:05:31.638667+00:00",
+        "services": [
+          {
+            "base": "http://127.0.0.1:18765",
+            "passed": true,
+            "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+            "cursor": 95,
+            "globalCounts": {
+              "shops": 9,
+              "events": 69,
+              "products": 98,
+              "assets": 3995
+            },
+            "shopCounts": {
+              "shops": 1,
+              "events": 2,
+              "products": 3,
+              "assets": 103
+            },
+            "incomingProductAndImageSamples": [
+              {
+                "productId": "1096011267763",
+                "originalSha256": "7662f1db2693fa68d3e81f964b55ab7bea92ae86e600a1cc32b4d4ad0d12e2e2"
+              },
+              {
+                "productId": "1061209276316",
+                "originalSha256": "539ac6f66b7702ba646752d59953e24fa5b0984cfc1e07fa1a7c2d32b58d9096"
+              },
+              {
+                "productId": "1061209552232",
+                "originalSha256": "564ce4a90dbf46bb7b8aea20b2d3eb2c8331df024d26935f3af173a6e2a84eb0"
+              }
+            ],
+            "otherShopsPreserved": true
+          },
+          {
+            "base": "https://f8b8b6fa0e0f.eicp.fun",
+            "passed": true,
+            "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+            "cursor": 95,
+            "globalCounts": {
+              "shops": 9,
+              "events": 69,
+              "products": 98,
+              "assets": 3995
+            },
+            "shopCounts": {
+              "shops": 1,
+              "events": 2,
+              "products": 3,
+              "assets": 103
+            },
+            "incomingProductAndImageSamples": [
+              {
+                "productId": "1096011267763",
+                "originalSha256": "7662f1db2693fa68d3e81f964b55ab7bea92ae86e600a1cc32b4d4ad0d12e2e2"
+              },
+              {
+                "productId": "1061209276316",
+                "originalSha256": "539ac6f66b7702ba646752d59953e24fa5b0984cfc1e07fa1a7c2d32b58d9096"
+              },
+              {
+                "productId": "1061209552232",
+                "originalSha256": "564ce4a90dbf46bb7b8aea20b2d3eb2c8331df024d26935f3af173a6e2a84eb0"
+              }
+            ],
+            "otherShopsPreserved": true
+          }
+        ],
+        "errors": [],
+        "scope": "Complete API change-feed replay; exact shop catalog equality; unchanged other shops; every incoming product and its first original/thumbnail. No Android UI claim.",
+        "passed": true
+      },
+      "deferred": [
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "1058908164827",
+          "reason": "汇总/跳转页：仅1个“下拉详情页面 跳转”选项，9999占位价，0人付款；详情内链指向两穿JSK/上衣小物，已分别采集；本页不作为商品。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "1063045891100",
+          "reason": "小布丁鞋类，非本轮献给秋日的花束2026；仅用于确认官方店身份，未纳入本轮商品。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "1051856761598",
+          "reason": "周年奶油草莓蛋糕系列（波点长SK/上衣），非本轮献给秋日的花束2026；页面未显示11/10本轮日期。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "1051857041547",
+          "reason": "周年奶油草莓蛋糕系列（侧开襟JSK/印花SK/波点衬衫），非本轮献给秋日的花束2026。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "1080531935708",
+          "reason": "2026泰迪定金页面汇总，卡片标注“已截团制作中”，非本轮；未采其SKU。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "971569212369",
+          "reason": "同系列25团旧批次（不规则套装SK/背心裙），仍售但非本轮11/10掉落；未纳入。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "969117499603",
+          "reason": "同系列25团旧批次（段段OP/罩裙/不规则衬裙），仍售但非本轮11/10掉落；未纳入。"
+        },
+        {
+          "shopId": "hazelnut-cocoa",
+          "itemId": "969594086909",
+          "reason": "同系列24/25团旧批次配件，仍售但非本轮11/10掉落；本轮配件已由1061209276316覆盖。"
+        }
+      ],
+      "missingMappings": [],
+      "semanticReview": "/Users/dengtong/Downloads/taobao-shop-updates/2026-11-10/nyanya-hazelnut-223319/hazelnut-cocoa/main-review",
+      "state": "/Users/dengtong/Downloads/taobao-shop-updates/catalog-state/by-shop/hazelnut-cocoa"
+    }
+  ],
+  "totals": {
+    "addedShops": 2,
+    "productLinks": 7,
+    "events": 6,
+    "rawSkuRows": 170,
+    "purchasableSkus": 116,
+    "nonPurchasableExplanationRows": 54,
+    "imageFiles": 261,
+    "differentAssetsAcrossNewShops": 250,
+    "sizeTables": 13,
+    "globalAddedAssets": 249
+  },
+  "finalServerCounts": {
+    "shops": 9,
+    "events": 69,
+    "products": 98,
+    "assets": 3995
+  },
+  "existingShopsAndProductsPreserved": true,
+  "collectionBy": "Local dsh DeepSeek",
+  "mainAssistantTaobaoAccess": 0,
+  "mainAssistantReview": "Original-image review of membership pricing, material composition and size-table values; semantic explanation-option audit; current spot classification and date scope corrected without inventing years.",
+  "cleanup": {
+    "dshRunsExited": true,
+    "temporaryDebugPortsClosed": {
+      "9223": true,
+      "9229": true
+    },
+    "originalTaobaoAppRestoredByDsh": true
+  },
+  "knownBoundaries": [
+    "Recent verifiable cohort only, not all historical items or absolute first releases.",
+    "NyaNya necklace title says 11.10 cutoff without year; original observed date and qualification conditions retained, not real-time stock guarantee.",
+    "Hazelnut 11.10-11.24 is a limited-price window without a printed year, not proof of original listing date.",
+    "Instruction rows and placeholder prices remain in raw evidence/nonPurchasableOptions; only real purchase SKUs enter item selectors. Unknown price or zero stock alone never excludes a SKU.",
+    "API verification does not claim a new Android UI test."
+  ],
+  "appVersionPolicy": "This data-only task does not modify App source/version or create an APK; concurrent App releases are independent."
+}

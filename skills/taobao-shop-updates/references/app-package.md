@@ -40,6 +40,7 @@ SKU字段沿用App：`id / key / itemId / props / rawProperties / price / priceT
 - content是实际购买内容名称，form=单品/小物/套装/组合；notSoldAlone布尔值明确是否仅组合内提供。color/size为明确规范值或null，不把购买条款当尺码，但原文完整保留在props。
 - 明确“一组/N件”的商家购买内容属于套装或组合，即便暂作为一个整体部件保留，也不能仅按“小物”单件标记。只有成员明细有依据才拆parts，未确认的成员规格不借用整体值；整组报价不分摊。
 - parts每项`{key,name,category,isAccessory,color,size,relation,uncertainty}`。key在店铺设计/批次内稳定；category未知为null。每件自己的color/size独立，不能把裙子的L复制到KC。商家售卖套餐与用户未来自主组合分开。
+- 商家可能把完整购买须知、其他链接提示等放进规格栏，并为其生成SKU ID和防拍价。须结合原始props、skuCore报价/库存与公开说明逐项核对；明确非实物购买规格的说明行可在原始products的`nonPurchasableOptions`和独立报告中保留完整ID/props/原报价/库存/理由/证据，原始SSR和整理前副本不改。实际可购SKU完整留在products.skus、CSV和App输入，三者一致；分别统计原始行、实物SKU及说明组合行。公开info.source保留说明原文与来源，不给说明行编造parts或照片。价格未知、库存0、价格高或文字长都不能单独作为分流理由；无法确认则deferred，不能为通过校验删真实规格。现有App每条购买SKU要求至少一个实际部件，不能用空parts混入说明项。
 - 一个可独立售卖的单品/小物SKU只有唯一部件、SKU色码已明确且部件无uncertainty时，工具可以将这条SKU已知色码补到该唯一部件，并在质量报告逐项记录；套装/组合、多部件、非独立销售及原本未知值均不继承。
 - styleFacts每项`{value,source,field,evidenceIds}`，仅商家明文支持的风格，不凭图猜测。
 - photoPaths为本商品images的**输入localPath**数组，明确单品/颜色图才给；填写时photoEvidenceIds必填。缺独立图用空数组，系列图仍留images，不能充当单品图。

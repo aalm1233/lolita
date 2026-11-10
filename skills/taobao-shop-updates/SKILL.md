@@ -54,3 +54,7 @@ description: 查询淘宝店铺上新、品牌最新款或接续采集时，委�
 每店：`README.md`、`products.json`、`sku-prices.csv`、`image-manifest.json`、`images/<商品ID>/{main,sku,detail,promo}/`、`raw/`（含逐图OCR）、`evidence/`、`DONE.json`。结构要求在委派模板中。根目录保留 `request.json`、`progress.txt`、`verification.json`、`cleanup.json`、`DONE.json`。
 
 最终回答以商品信息为主：先说是否证实最新、目前购买状态；列主要款式/价格/颜色、必要的尺码/材质/发货和未知项，链接本地报告及原图。说明由本机 dsh 采集、自己只读本地文件。内部工具排障过程不占主要篇幅。
+
+## 已有时间与主分类纠正
+
+用户指出现有日期/分类错误时，先只读核验已有原图与SSR；仍无证据才列补采缺口。仅动态日期/当前分类修正可使用[App契约](references/app-package.md)的`eventUpdates`，绑定已有基线/revision与本地证据，经正常打包和入库；不伪装重采，不改变原商品、SKU、原图、下架状态或尾款只读边界。主分类依当前售卖状态，历史再贩保留副标签；旧预约、预计发货和采集时间不得冒充本轮上架日。

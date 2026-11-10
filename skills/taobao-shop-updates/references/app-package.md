@@ -75,3 +75,13 @@ deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给req
 打包器保留旧商品/原图并增加记录revision，不因缺席删除；已归档商品缺少listing时沿用旧状态，重新在售须明确ACTIVE的新证据，拒绝早于已有observedAt的覆盖。仅观察时间变化不报新品。
 
 App广场不展示OFF_SALE/DISPLAY_ONLY、PLACEHOLDER或明确已结束的预约批次；混合动态只用活跃链接，全部归档则隐藏。搜索、筛选候选、封面、单品和心愿均同口径；开放尾款按独立动态保留只读。公开目录保留历史数据供后续博物馆，当前不增加入口、不删除已有私人心愿或来源。
+
+### 已有动态的日期与当前分类复核
+
+已验证旧商品/SKU/原图不变、仅修正时间或当前主分类时，collector v1可提交可选 `eventUpdates`，不伪装为重新采全：
+
+```json
+{"eventId":"existing-event","expectedRevision":2,"kind":"现货","date":"历史预约：2024年5月30日—2024年6月27日；本轮掉落日期未提供","evidenceIds":["verified-image"]}
+```
+
+`date`、`kind`至少一个；只修正当前请求店铺已有动态，必须给出基线中的精确revision及本地图片/明文证据。不能借此改ID、店铺/设计/批次、关联商品、价格或售卖可见性，也不允许改变尾款只读边界。日期不能清空，不从采集、商品ID或文件时间补造；保留年份缺失、历史批次与多款日期各自范围。主助手复核后仍走 `workflow.py package` → 实际App合同/SHA → 本机ingest/API。工具沿原merge自动推进变化的动态revision，商品、SKU与原图沿已验收基线完整保留。质量报告单列 `eventUpdates` 数量，不能宣称新采集或上新。

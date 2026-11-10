@@ -88,6 +88,28 @@ class CollectorPackageTest(unittest.TestCase):
             package.build(self.input, self.root / "bad.zip", PROJECT, state, saved["sha256"])
         self.assertEqual(saved, package.current(state)); self.assertFalse((self.root / "bad.zip").exists())
 
+    def test_event_metadata_correction_uses_original_products_and_revision_guard(self):
+        self.write(); first = self.root / "first.zip"
+        package.build(self.input, first, PROJECT)
+        state = self.root / "state"; pointer = package.configure(state, first, PROJECT)
+        previous = self.catalog(first)
+        self.data.update(products=[], events=[], eventUpdates=[dict(eventId="fixture-first", expectedRevision=1,
+            kind="现货", date="图示开售：10月30日20:00（年份未注明）", evidenceIds=["ev-1"])])
+        self.write(); output = self.root / "metadata.zip"
+        report = package.build(self.input, output, PROJECT, state, pointer["sha256"])
+        current = self.catalog(output)
+        self.assertEqual(previous["products"], current["products"])
+        self.assertEqual(previous["assets"], current["assets"])
+        self.assertEqual(2, current["events"][0]["revision"])
+        self.assertEqual("现货", current["events"][0]["kind"])
+        self.assertEqual(1, report["eventUpdates"])
+        self.assertEqual(0, report["businessChanged"]["products"])
+        with zipfile.ZipFile(first) as a, zipfile.ZipFile(output) as b:
+            for asset in current["assets"]: self.assertEqual(a.read(asset["path"]), b.read(asset["path"]))
+        for mutation in [dict(expectedRevision=2), dict(eventId="missing"), dict(kind="尾款"), dict(date=""), dict(evidenceIds=[]), dict(state="现货")]:
+            changed = copy.deepcopy(self.data); changed["eventUpdates"][0].update(mutation)
+            with self.assertRaises(ValueError): package.normalize(changed, self.root, previous)
+
     def test_omitted_records_retained_and_new_observation_not_new_business(self):
         incoming, _, _ = self.normalize(); old, _, _ = package.merge(None, incoming, self.data)
         changed = copy.deepcopy(incoming); changed["products"][0]["capturedAt"] = "2026-11-07"

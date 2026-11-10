@@ -197,14 +197,14 @@ def business_row(row):
 
 
 def normalize(data, root, old):
-    fields(data, {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred", "listingUpdates"},
+    fields(data, {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred", "listingUpdates", "eventUpdates"},
            {"format", "schemaVersion", "packageId", "title", "capturedAt", "shops", "events", "products", "evidence", "deferred"})
     require(data["format"] == "lolita.square.collector" and type(data["schemaVersion"]) is int and data["schemaVersion"] == 1, "采集输入版本无效")
     require(IDENTIFIER.fullmatch(data["packageId"]), "包稳定ID无效")
     if old: require(data["packageId"] == old["packageId"], "必须沿用已有packageId")
     text(data["title"]); text(data["capturedAt"])
     require(len(encoded(data)) <= 32 * 1024 * 1024, "采集输入过大")
-    require(isinstance(data["products"], list) and (data["products"] or data.get("listingUpdates")), "本轮无完整商品，不以旧包冒充本轮成功")
+    require(isinstance(data["products"], list) and (data["products"] or data.get("listingUpdates") or data.get("eventUpdates")), "本轮无完整商品，不以旧包冒充本轮成功")
     require(len(data["products"]) <= 2000 and len(data["events"]) <= 2000 and len(data["shops"]) <= 200, "本轮目录超过App上限")
     privacy(data)
     verify = evidence_resolver(root, data["evidence"])
@@ -337,7 +337,29 @@ def normalize(data, root, old):
         listing = copy.deepcopy(patch["listing"]); normalize_listing(listing, verify)
         product = copy.deepcopy(previous); product["listing"] = listing
         products.append(product); update_ids.add(product["id"])
-    require(all(any(p["shopId"] == shop["id"] for p in products) for shop in shops), "每个成功店铺须有完整商品或属于该店的状态更新")
+    event_updates = data.get("eventUpdates", [])
+    require(isinstance(event_updates, list), "eventUpdates须为数组")
+    event_ids = {e["id"] for e in events}
+    for patch in event_updates:
+        fields(patch, {"eventId", "expectedRevision", "date", "kind", "evidenceIds"}, {"eventId", "expectedRevision", "evidenceIds"})
+        verify(patch["evidenceIds"])
+        require("date" in patch or "kind" in patch, "动态资料修正须明确日期或当前分类")
+        require(patch["eventId"] not in event_ids, "同一动态不可同时全量采集和资料修正，修正不可重复")
+        previous = next((e for e in (old or {}).get("events", []) if e["id"] == patch["eventId"]), None)
+        require(previous is not None and previous["shopId"] in {s["id"] for s in shops}, "仅允许修正当前店铺已有动态")
+        require(type(patch["expectedRevision"]) is int and patch["expectedRevision"] == previous["revision"], "动态版本已变化，请基于最新资料复核")
+        event = copy.deepcopy(previous)
+        if "date" in patch:
+            text(patch["date"])
+            require(0 < len(patch["date"].strip()) <= 2000, "日期修正须保留明确时间与依据，不能清空旧值")
+            event["date"] = patch["date"]
+        if "kind" in patch:
+            require(patch["kind"] in {"上新", "再贩", "现货", "尾款"} and (patch["kind"] == "尾款") == (previous["kind"] == "尾款"), "资料修正不能改变尾款只读边界")
+            event["kind"] = patch["kind"]
+        events.append(event); event_ids.add(event["id"])
+    require(all(any(p["shopId"] == shop["id"] for p in products) or
+                any(e["shopId"] == shop["id"] for e in events if e["id"] in {u["eventId"] for u in event_updates}) for shop in shops),
+            "每个成功店铺须有完整商品、状态更新或有依据的动态资料修正")
     return {"shops": shops, "events": events, "products": products, "assets": list(assets.values()), "singleMemberSpecsFromSku": single_specs}, sources, warnings
 
 
@@ -417,7 +439,7 @@ def build(input_path, output, project, state=None, expected_baseline=None):
                   "skuCount": sum(len(p["skus"]) for p in catalog["products"]), "androidContract": contract,
                   "deferred": data["deferred"], "missingMappings": warnings, "baselineRetainedWhenAbsent": True,
                   "singleMemberSpecsFromSku": incoming["singleMemberSpecsFromSku"],
-                  "listingUpdates": len(data.get("listingUpdates", [])),
+                  "listingUpdates": len(data.get("listingUpdates", [])), "eventUpdates": len(data.get("eventUpdates", [])),
                   "archivedProducts": [p["id"] for p in catalog["products"] if p["pricePhase"] == "PLACEHOLDER" or (p.get("listing") or {}).get("status") in {"OFF_SALE", "DISPLAY_ONLY"}],
                   "semanticReview": "结构/图片/证据引用自动校验通过，不等同于人工核对事实归属", "networkAccess": False}
         atomic_json(output.with_suffix(".quality.json"), report)

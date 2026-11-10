@@ -88,6 +88,9 @@
 
 ### 淘宝公开目录采集
 
+- 2026-11-10按用户纠正收敛为服务端资料修正：依据已有原图/OCR/SSR校正26条动态日期或分类，5条再贩现货改归现货；保留再贩标题、历史预约与无年份原文。91商品完整JSON/SKU/价格/listing、3746素材及其他动态保持。App候选改动已隔离，正式版仍2.78.6/162，本轮不发APK；该版仅接受完整日期的显示限制单列，不能补造年份或将旧预约冒充本轮开售。回执`docs/square-time-sale-data-correction-2026-11-10.json`。
+- 本地采集输入可选`eventUpdates`仅修正已有动态date/kind：绑定原revision与本地证据，不改变尾款边界、商品、SKU、图片或listing。沿正常稳定基线自动推进revision，完整打包/实际Kotlin合同/原图SHA/SQLite ingest/只读API验收；不得手写SQL或伪装重采完整商品。时间/分类元数据错误优先修正服务端，客户端显示缺陷另行说明范围。
+
 - 用户查店铺上新或接续采集时应用仓库源`skills/taobao-shop-updates/`（安装于`~/.codex/skills/taobao-shop-updates/`）；本机dsh的DeepSeek负责淘宝访问/原图/OCR，主助手只调度及读取本地文件，不通过浏览器、CDP、DOM或自行请求淘宝接管。
 - 标准输出原始JSON/CSV/原图与`lolita.square.collector` v1输入；`workflow.py package`核验与原始清单一致、单品/资料证据、SHA、完整SKU和尺码表，经实际App `SquarePackage.kt`离线编译验收才发布公开v1 ZIP并原子推进基线。通用入口`scripts/square/collector_package.py`，首包硬编码脚本只用于历史重放。
 - 2026-11-09起采集技能默认补齐package→主助手本机`lan_service.py ingest`→只读API验收，细则在`skills/taobao-shop-updates/references/sqlite-publication.md`。只写现有服务使用的独立公开SQLite，不写App Room或私人衣橱；`package`命令本身仍只打包。无业务变化仍完成入库/验收以覆盖首次与补交；按动态短事务可能部分成功，失败保留包且不回退采集基线。分别记录ZIP/入库/API状态，不把本机API通过称为公网或手机更新通过。用户明确只要离线包时跳过入库；维护技能不等于创建或修改实际调度。

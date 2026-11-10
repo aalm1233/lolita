@@ -104,9 +104,9 @@ def source_qa(root, request, data):
         selected = {p["id"]: p for p in data["products"] if p["shopId"] == shop["id"]}
         if not selected:
             # An unavailable page can update status against a validated baseline without inventing fresh SKUs/images.
-            if not data.get("listingUpdates"):
-                raise ValueError("店铺既无完整商品也无明确状态更新")
-            qa.setdefault("statusOnlyStores", []).append(directory)
+            if not data.get("listingUpdates") and not data.get("eventUpdates"):
+                raise ValueError("店铺既无完整商品也无明确状态/动态资料修正")
+            qa.setdefault("metadataOnlyStores" if data.get("eventUpdates") and not data.get("listingUpdates") else "statusOnlyStores", []).append(directory)
             continue
         original = {p["itemId"]: p for p in read_json(store / "products.json")["products"]}
         deferred = {p.get("itemId") for p in data["deferred"] if p["shopId"] == shop["id"]}

@@ -1,0 +1,428 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-10T15:11:27.519964+08:00",
+  "scope": "Server metadata corrections only; App candidate isolated after user scope correction.",
+  "currentAppVersion": "2.78.6",
+  "appSourceChanged": false,
+  "newAppRelease": false,
+  "collection": "Local dsh DeepSeek audit of existing public images/OCR/SSR; no new Taobao access by main assistant or dsh in this audit.",
+  "correctedEvents": 26,
+  "correctedCurrentStockCategories": 5,
+  "counts": {
+    "shops": 7,
+    "events": 63,
+    "products": 91,
+    "assets": 3746
+  },
+  "preserved": {
+    "allProductJsonSkuPriceAndListing": true,
+    "allAssetMetadata": true,
+    "allShops": true,
+    "allOtherEvents": true,
+    "stableIds": true,
+    "originalEventCaptureTimes": true,
+    "eventChangesRestrictedTo": [
+      "date",
+      "kind",
+      "revision"
+    ],
+    "privateWardrobeRoomBackupUntouched": true
+  },
+  "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+  "packages": [
+    {
+      "shopId": "puppets",
+      "packageSha256": "5c702a0914fc08c5e65cc07ae43c5a52aacf214fc33feb3c735e1346c78cf67e",
+      "eventUpdates": 6,
+      "androidContract": {
+        "browseProjectionPassed": true,
+        "browseSourceSha256": "7581f6ec4d48b09690fecc00db031006f079bee263e5308bfc7d7379be79b77d",
+        "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+        "passed": true,
+        "sourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e"
+      },
+      "ingest": {
+        "changed": 6,
+        "cursor": 69,
+        "products": 91,
+        "assets": 3746
+      },
+      "api": {
+        "passed": true,
+        "checkedAt": "2026-11-10T14:54:46.840149+08:00",
+        "base": "http://127.0.0.1:18765",
+        "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+        "cursor": 69,
+        "packageSha256": "5c702a0914fc08c5e65cc07ae43c5a52aacf214fc33feb3c735e1346c78cf67e",
+        "events": 12,
+        "products": 18,
+        "correctedEvents": 6,
+        "allProductsSkuAndAssetsUnchanged": true,
+        "otherEventsPreserved": true,
+        "originalImageSamples": 1
+      }
+    },
+    {
+      "shopId": "neo",
+      "packageSha256": "32a373979656b15d779835ceae2e397e88f77a6cb2742ea8320a0f1d668abe08",
+      "eventUpdates": 13,
+      "androidContract": {
+        "browseProjectionPassed": true,
+        "browseSourceSha256": "7581f6ec4d48b09690fecc00db031006f079bee263e5308bfc7d7379be79b77d",
+        "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+        "passed": true,
+        "sourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e"
+      },
+      "ingest": {
+        "changed": 13,
+        "cursor": 82,
+        "products": 91,
+        "assets": 3746
+      },
+      "api": {
+        "passed": true,
+        "checkedAt": "2026-11-10T14:54:46.980705+08:00",
+        "base": "http://127.0.0.1:18765",
+        "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+        "cursor": 82,
+        "packageSha256": "32a373979656b15d779835ceae2e397e88f77a6cb2742ea8320a0f1d668abe08",
+        "events": 15,
+        "products": 20,
+        "correctedEvents": 13,
+        "allProductsSkuAndAssetsUnchanged": true,
+        "otherEventsPreserved": true,
+        "originalImageSamples": 1
+      }
+    },
+    {
+      "shopId": "zjstory",
+      "packageSha256": "dbf22616b607c392011eb15188c413616f5f96362c09c1aef29f23e32faaaedb",
+      "eventUpdates": 7,
+      "androidContract": {
+        "browseProjectionPassed": true,
+        "browseSourceSha256": "7581f6ec4d48b09690fecc00db031006f079bee263e5308bfc7d7379be79b77d",
+        "method": "compile actual SquarePackage.kt + SquareBrowse.kt; unpack SHA/references and project every actual part/spec",
+        "passed": true,
+        "sourceSha256": "1f606373a208598c49434a7b8a22184205e2a6e82444f80ef0279dc27b80c00e"
+      },
+      "ingest": {
+        "changed": 7,
+        "cursor": 89,
+        "products": 91,
+        "assets": 3746
+      },
+      "api": {
+        "passed": true,
+        "checkedAt": "2026-11-10T14:55:40.584524+08:00",
+        "base": "http://127.0.0.1:18765",
+        "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+        "cursor": 89,
+        "packageSha256": "dbf22616b607c392011eb15188c413616f5f96362c09c1aef29f23e32faaaedb",
+        "events": 7,
+        "products": 9,
+        "correctedEvents": 7,
+        "allProductsSkuAndAssetsUnchanged": true,
+        "otherEventsPreserved": true,
+        "originalImageSamples": 1
+      }
+    }
+  ],
+  "corrections": [
+    {
+      "eventId": "longgu-muyuan-balance",
+      "shopId": "zjstory",
+      "title": "马年限定龙骨墓园 · 衬衫尾款",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "尾款",
+      "kind": "尾款",
+      "oldDate": "页面未给本批尾款截止日",
+      "date": "历史定金开启：2026.4.20晚19:00（第八批定金图示）；本页为一二批尾款，对应关系及尾款截止日未提供"
+    },
+    {
+      "eventId": "chuangshiji-spot",
+      "shopId": "zjstory",
+      "title": "创世纪末世纪 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "上架日期未提供",
+      "date": "历史预约：2026.2.10晚19:00；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "pilgrim-balance",
+      "shopId": "neo",
+      "title": "音乐朝圣者",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "尾款",
+      "kind": "尾款",
+      "oldDate": "11月12日 17:00 截止",
+      "date": "第一批次尾款：10月15日上午10时—11月12日下午17时（图示未注明年份）"
+    },
+    {
+      "eventId": "sleeve-balance",
+      "shopId": "neo",
+      "title": "双层姬袖衬衫",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "尾款",
+      "kind": "尾款",
+      "oldDate": "尾款截止日未提供",
+      "date": "第一批次尾款：10月15日上午10时—11月12日下午17时（图示未注明年份）"
+    },
+    {
+      "eventId": "snow-white-tea-party-drop",
+      "shopId": "puppets",
+      "title": "白雪童话 茶会款 · 跑单掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "8月28日 20:00开售",
+      "date": "图示开售：8月28日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "snow-white-drop",
+      "shopId": "puppets",
+      "title": "白雪童话 · 跑单掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "8月28日 20:00开售",
+      "date": "图示开售：8月28日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "victoria-garden-2025-rerelease",
+      "shopId": "puppets",
+      "title": "维多利亚花园2025 · 再贩掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "再贩",
+      "kind": "现货",
+      "oldDate": "06月12日 20:00开启预售",
+      "date": "图示开售：06月12日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "farm-friends-2-drop",
+      "shopId": "puppets",
+      "title": "农场小伙伴 2.0 · 跑单掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "7月17日 20:00开售",
+      "date": "图示开售：7月17日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "stripe-punk-rose-2-drop",
+      "shopId": "puppets",
+      "title": "条纹格命 朋克玫瑰2.0 施华洛版 · 跑单掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "06月12日 20:00开启预售",
+      "date": "图示开售：06月12日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "victoria-garden-velvet-drop",
+      "shopId": "puppets",
+      "title": "维多利亚花园 丝绒版 · 跑单掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "06月12日 20:00开启预售",
+      "date": "图示开售：06月12日20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+    },
+    {
+      "eventId": "jixiangtian-2025-repeat-drop",
+      "shopId": "neo",
+      "title": "吉祥天 2025 再贩 · 掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "再贩",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得"
+    },
+    {
+      "eventId": "qianchongzhongxia-drop",
+      "shopId": "neo",
+      "title": "千层仲夏挞 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2025年8月7日 上午10时—2025年9月9日 下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "shouwangzhe-drop",
+      "shopId": "neo",
+      "title": "守望者系列 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约（守望者2.0/1.0斗篷）：2025年7月16日 上午10时—2025年8月14日 下午17时；历史预约（守望者1.0）：2025年5月22日上午10时—2025年6月24日下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "xuwangzhimian-2024-repeat",
+      "shopId": "neo",
+      "title": "虚妄之冕 2024再贩 · 掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "再贩",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024年10月9日 上午10时—2024年11月8日 下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "qingdianzhiqi-2024-drop",
+      "shopId": "neo",
+      "title": "2024 庆典之期 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约（裙装/中性款）：2024年7月12日上午9时—2024年8月7日下午17时；本轮现货/掉落开启日期未提供，小物预约日期未取得"
+    },
+    {
+      "eventId": "gelite-drop",
+      "shopId": "neo",
+      "title": "哥特衬衫/长裤/背心 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2025年3月20日上午10时—2025年4月9日下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "yueyingweixu-drop",
+      "shopId": "neo",
+      "title": "月影位序 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2025年3月5日 上午10时—2025年4月2日 下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "miwudanganju-drop",
+      "shopId": "neo",
+      "title": "迷雾档案局 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024年11月28日上午10时—2025年1月2日下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "jueshengqibing-2024-drop",
+      "shopId": "neo",
+      "title": "决胜棋兵 2024 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024年11月19日下午17时—2024年11月26日 下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "jinshumeigui-drop",
+      "shopId": "neo",
+      "title": "金属玫瑰 · 现货掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2023年12月12日 上午10时—2024年1月4日 下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "qifeng-2024-repeat",
+      "shopId": "neo",
+      "title": "2024 戚风系列 再贩 · 掉落",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "再贩",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024年5月30日 上午10时—2024年6月27日下午17时；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "wangyue-baihe-resale",
+      "shopId": "zjstory",
+      "title": "望月百合 · 再贩/在售",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "再贩",
+      "kind": "现货",
+      "oldDate": "详情图写“预约时间：2026.02.16 晚19:00开始”；早于本轮采集日，未推定新一轮日期；首发日期未知",
+      "date": "历史预约：2026.02.16 晚19:00；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "longgu-embroidery-spot",
+      "shopId": "zjstory",
+      "title": "龙骨墓园刺绣版 · 现货/预约价",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2025.1.28晚19:00；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "liujin-4-spot",
+      "shopId": "zjstory",
+      "title": "鎏金岁月4.0 · 现货",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024.02.09晚19:00；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "liujin-2-spot",
+      "shopId": "zjstory",
+      "title": "鎏金岁月2.0 · 现货",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024.01.27晚19:00；本轮现货/掉落开启日期未提供"
+    },
+    {
+      "eventId": "xiari-zhanshi-spot",
+      "shopId": "zjstory",
+      "title": "夏日战队 · 现货",
+      "oldRevision": 1,
+      "newRevision": 2,
+      "oldKind": "现货",
+      "kind": "现货",
+      "oldDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "date": "历史预约：2024.09.20晚19:00；本轮现货/掉落开启日期未提供"
+    }
+  ],
+  "limitations": [
+    "2.78.6 App accepts only a whole YYYY-MM-DD-like date string; printed month/day, clock, ranges and annotated historical dates remain hidden as unknown in that version.",
+    "No year is invented from collection year, title or shipping estimate. Old reservation and shipping times do not prove current stock-drop start.",
+    "API check is local; this is not an Android display or public tunnel refresh claim."
+  ],
+  "tests": {
+    "collectorOffline": 17,
+    "actualAndroidPackageContract": true
+  },
+  "appCandidateArchive": "/Users/dengtong/Downloads/lolita-square-time-sale-20261110/app-followup"
+}

@@ -113,7 +113,7 @@ class HistoricalUpgradeChainTest {
         insert("outfit_item_cross_ref", mapOf("item_id" to 1L, "outfit_log_id" to 1L))
     }
 
-    private fun runChain(start: Int, stops: List<Int>, migrations: Array<Migration>, openService: Boolean = false, damagedLegacyColor: Boolean = false, legacyV12ColorColumn: Boolean = false) = runBlocking {
+    private fun runChain(start: Int, stops: List<Int>, migrations: Array<Migration>, openSquare: Boolean = false, damagedLegacyColor: Boolean = false, legacyV12ColorColumn: Boolean = false) = runBlocking {
         val name = "historical-chain-${UUID.randomUUID()}"
         val root = File(target.cacheDir, name).apply { mkdirs() }
         val context = object : ContextWrapper(target) {
@@ -201,7 +201,7 @@ class HistoricalUpgradeChainTest {
                 manager.previewBackup(uri).getOrThrow()
             }
             assertEquals(hash, MessageDigest.getInstance("SHA-256").digest(image.readBytes()).toList())
-            if (openService) {
+            if (openSquare) {
                 lateinit var vm: SquareViewModel
                 inst.runOnMainSync { vm = SquareViewModel(repository, SavedStateHandle(), MutableStateFlow(false)); store.put(name, vm) }
                 inst.runOnMainSync { displayed.value = vm }
@@ -209,10 +209,8 @@ class HistoricalUpgradeChainTest {
                     compose.setContent { LolitaTheme { Surface(Modifier.fillMaxSize()) { displayed.value?.let { model -> key(model) { SquareScreen({}, {}, model) } } } } }
                     contentInstalled = true
                 }
-                compose.onNodeWithTag("square-service").performClick()
-                compose.onNodeWithTag("square-service-address").assertIsDisplayed().performTextReplacement("http://192.168.0.200:18765")
-                compose.onNodeWithText("取消").performClick()
-                compose.onNodeWithTag("square-service").assertIsDisplayed()
+                compose.onNodeWithTag("square-refresh").assertExists()
+                compose.onNodeWithTag("square-service").assertDoesNotExist()
             }
             File(target.filesDir, "historical-upgrade-results").apply { mkdirs() }.let { directory ->
                 File(directory, "from-$start-via-${stops.joinToString("-")}-damaged-$damagedLegacyColor-v12extra-$legacyV12ColorColumn.json").writeText(gson.toJson(mapOf(
@@ -220,7 +218,7 @@ class HistoricalUpgradeChainTest {
                     "sourceDerivedV1" to (start == 1), "releasedBodies" to (migrations === ReleasedUpgradeMigrations.all),
                     "damagedLegacyColor" to damagedLegacyColor, "exportSucceeded" to result.isSuccess,
                     "legacyV12ColorColumn" to legacyV12ColorColumn,
-                    "exportSha256" to exportedSha, "squareServiceOpenedAndCancelled" to openService,
+                    "exportSha256" to exportedSha, "squareOpenedWithoutTopBarActions" to openSquare,
                     "itemsPreserved" to 5, "pricesPreserved" to 5, "paymentsPreserved" to 1,
                     "unknownPaidDatePreserved" to true, "imageSha256Preserved" to true
                 )))
@@ -237,19 +235,19 @@ class HistoricalUpgradeChainTest {
     @Test fun currentMigrationsFrom6ReopenAtEveryHistoricalMilestoneAndExportJson() =
         runChain(6, listOf(10, 13, 15, 18, 20, 23, 26, 29, 30, 31, 32, 33, 34), current)
 
-    @Test fun released20Through34BodiesReopenEachVersionExportJsonAndOpenSquareService() =
-        runChain(20, (21..34).toList(), ReleasedUpgradeMigrations.all, openService = true)
+    @Test fun released20Through34BodiesReopenEachVersionExportJsonAndOpenSquare() =
+        runChain(20, (21..34).toList(), ReleasedUpgradeMigrations.all, openSquare = true)
 
     @Test fun releasedMultiHopGroupsReachSameReadableJsonEndpoint() =
         runChain(20, listOf(23, 26, 30, 34), ReleasedUpgradeMigrations.all)
 
-    @Test fun alreadyMigratedBadColorIsPreservedAndJsonFailsWithoutCrashingSquareService() =
-        runChain(20, (21..34).toList(), ReleasedUpgradeMigrations.all, openService = true, damagedLegacyColor = true)
+    @Test fun alreadyMigratedBadColorIsPreservedAndJsonFailsWithoutCrashingSquare() =
+        runChain(20, (21..34).toList(), ReleasedUpgradeMigrations.all, openSquare = true, damagedLegacyColor = true)
 
-    @Test fun everyHistoricalSchemaDirectlyUpgradesTo34ExportsJsonAndOpensService() {
+    @Test fun everyHistoricalSchemaDirectlyUpgradesTo34ExportsJsonAndOpensSquare() {
         val failures = mutableListOf<String>()
         for (start in 1..34) {
-            try { runChain(start, listOf(34), current, openService = true) }
+            try { runChain(start, listOf(34), current, openSquare = true) }
             catch (failure: AssertionError) { failures += "$start: ${failure.javaClass.simpleName}" }
             catch (failure: Exception) { failures += "$start: ${failure.javaClass.simpleName}" }
         }
@@ -257,5 +255,5 @@ class HistoricalUpgradeChainTest {
     }
 
     @Test fun historicalV12WithExtraOldColorColumnRepairsAndDirectlyUpgradesTo34() =
-        runChain(12, listOf(34), current, openService = true, legacyV12ColorColumn = true)
+        runChain(12, listOf(34), current, openSquare = true, legacyV12ColorColumn = true)
 }

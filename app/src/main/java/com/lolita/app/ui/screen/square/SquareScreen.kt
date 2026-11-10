@@ -21,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.JsonElement
 import com.lolita.app.data.square.*
@@ -46,12 +44,6 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     val message by viewModel.message.collectAsState();val registration by viewModel.registration.collectAsState()
     val snack=remember { SnackbarHostState() }
     val refreshing by viewModel.refreshing.collectAsState()
-    val serviceUrl by viewModel.serviceUrl.collectAsState()
-    var serviceOpen by rememberSaveable { mutableStateOf(false) }
-    var developerOpen by rememberSaveable { mutableStateOf(false) }
-    var clearConfirm by rememberSaveable { mutableStateOf(false) }
-    var address by rememberSaveable { mutableStateOf("") }
-    var addressError by rememberSaveable { mutableStateOf<String?>(null) }
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(viewModel::import)}
     fun pick(){picker.launch(arrayOf("application/zip","application/x-zip-compressed","application/octet-stream"))}
     LaunchedEffect(message){message?.let { snack.showSnackbar(it);viewModel.clearMessage() }}
@@ -81,12 +73,7 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
                 else SquareWishDock(viewModel,onOpenItem,busy==null)
             }
         },topBar={GradientTopAppBar(title={Text(if(event==null)"广场" else if(choosing)listOf("选择完整规格","拆出我的物品","挑选对应资料","登记预览")[step.coerceIn(0,3)] else "商品详情")},
-            navigationIcon={if(event!=null)IconButton(onClick=viewModel::back,enabled=busy==null){SkinIcon(IconKey.ArrowBack)}},
-            actions={if(event==null){
-                IconButton(onClick=onOpenWishlist,modifier=Modifier.semantics{contentDescription="查看心愿"}){SkinIcon(IconKey.Wishlist)}
-                IconButton(onClick=::pick,enabled=busy==null && preview==null,modifier=Modifier.semantics{contentDescription="导入资料包"}){SkinIcon(IconKey.FileOpen)}
-                IconButton(onClick={address=serviceUrl;addressError=null;serviceOpen=true},modifier=Modifier.testTag("square-service").semantics{contentDescription="广场服务"}){SkinIcon(IconKey.Settings)}
-            }})}){padding->
+            navigationIcon={if(event!=null)IconButton(onClick=viewModel::back,enabled=busy==null){SkinIcon(IconKey.ArrowBack)}})}){padding->
         Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
             when {
                 event==null->PullToRefreshBox(isRefreshing=refreshing,onRefresh=viewModel::refresh,modifier=Modifier.fillMaxSize().testTag("square-refresh")) {
@@ -103,32 +90,6 @@ fun SquareScreen(onEditDraft:(String)->Unit,onOpenItem:(Long)->Unit,viewModel:Sq
     }
     if(multi && catalog!=null && event?.canRegister==true)SquareWishSheet(catalog!!,viewModel)
     SquareWishResultSheet(viewModel,onOpenItem,onEditDraft,onOpenWishlist)
-    if(serviceOpen)AlertDialog(onDismissRequest={serviceOpen=false},modifier=Modifier.imePadding(),title={Text("广场服务")},text={
-        Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(address,{address=it;addressError=null},label={Text("服务地址")},singleLine=false,
-                modifier=Modifier.fillMaxWidth().testTag("square-service-address"),isError=addressError!=null,
-                supportingText={Text(addressError?:"清空地址后停止联网查询")})
-            TextButton(onClick={address=DEFAULT_SQUARE_SERVICE_URL;addressError=null},modifier=Modifier.testTag("square-service-default")){Text("使用内置地址")}
-            TextButton(onClick={serviceOpen=false;developerOpen=true},enabled=busy==null && preview==null,
-                modifier=Modifier.testTag("square-developer")){Text("开发者工具")}
-        }
-    },confirmButton={TextButton(onClick={
-        val value=runCatching{normalizeSquareServiceUrl(address)}
-        if(value.isSuccess){viewModel.configureService(value.getOrThrow());serviceOpen=false}
-        else addressError=value.exceptionOrNull()?.message?:"请输入有效的服务地址"
-    },modifier=Modifier.testTag("square-service-save")){Text("保存")}},dismissButton={TextButton(onClick={serviceOpen=false}){Text("取消")}})
-    if(developerOpen)AlertDialog(onDismissRequest={developerOpen=false},title={Text("开发者工具")},text={
-        Column(Modifier.verticalScroll(rememberScrollState())) {
-            OutlinedButton(onClick={developerOpen=false;clearConfirm=true},enabled=busy==null && preview==null,
-                modifier=Modifier.fillMaxWidth().testTag("square-clear-open")){Text("清空本机广场资料")}
-        }
-    },confirmButton={TextButton(onClick={developerOpen=false}){Text("关闭")}})
-    if(clearConfirm)AlertDialog(onDismissRequest={clearConfirm=false},title={Text("清空本机广场资料？")},text={
-        Text("删除本机广场目录与图片缓存。衣橱、心愿、登记草稿和服务端资料保留。下次刷新会重新获取。",
-            modifier=Modifier.verticalScroll(rememberScrollState()))
-    },confirmButton={TextButton(onClick={clearConfirm=false;viewModel.clearLocalCatalog()},enabled=busy==null && preview==null,
-        modifier=Modifier.testTag("square-clear-confirm"),colors=ButtonDefaults.textButtonColors(contentColor=MaterialTheme.colorScheme.error)){Text("清空")}},
-        dismissButton={TextButton(onClick={clearConfirm=false}){Text("取消")}})
     preview?.let { p -> AlertDialog(onDismissRequest={if(busy==null)viewModel.cancelPreview()},
         title={Text("导入到广场")},text={Column(Modifier.verticalScrollCompat()){
             Text(p.catalog.title,style=MaterialTheme.typography.titleSmall);Spacer(Modifier.height(12.dp))

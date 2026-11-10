@@ -9,12 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
 import androidx.room.Room
@@ -52,7 +49,6 @@ class SquareNetworkTest {
     private val models=ViewModelStore()
     private val skin=mutableStateOf(SkinType.DEFAULT)
     private val dark=mutableStateOf(false)
-    private lateinit var host:android.view.View
     private val base get()=InstrumentationRegistry.getArguments().getString("squareServiceUrl")?:"http://10.0.2.2:18765"
     private fun <T> io(block:suspend()->T):T=runBlocking(Dispatchers.IO){block()}
     @Before fun setup(){
@@ -72,7 +68,6 @@ class SquareNetworkTest {
     private fun show(){
         inst.runOnMainSync{vm=SquareViewModel(repo,SavedStateHandle(),MutableStateFlow(true));models.put("vm",vm!!)}
         compose.setContent{
-            host=LocalView.current
             val cfg=Configuration(LocalConfiguration.current).apply{uiMode=(uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or if(dark.value)Configuration.UI_MODE_NIGHT_YES else Configuration.UI_MODE_NIGHT_NO}
             CompositionLocalProvider(LocalConfiguration provides cfg){
                 LolitaTheme(skin.value,dark.value){Surface(color=MaterialTheme.colorScheme.background){
@@ -128,7 +123,7 @@ class SquareNetworkTest {
         assertEquals(0,io { db.itemDao().getItemCount() })
         assertEquals(0,io { db.priceDao().getAllPricesList().size })
     }
-    @Test fun historicalNullMetadataCacheReopensAcrossSkinsAndServiceDialog() {
+    @Test fun historicalNullMetadataCacheReopensAcrossSkins() {
         online()
         val historical=repo.catalog.value!!.let { c->c.copy(events=c.events.map { it.copy(subtitle=null,state=null,date=null,price=null,priceNote=null,note=null,material=null,detail=null,captured=null) }) }
         // This cache shape was accepted by the original v1 parser. Metadata-only marker is retained.
@@ -142,18 +137,12 @@ class SquareNetworkTest {
             compose.onAllNodesWithText("价格未知").onFirst().assertIsDisplayed()
             val suffix="${type.name.lowercase()}-${if(night)"dark" else "light"}"
             shot("history-feed-$suffix")
-            compose.onNodeWithTag("square-service").performClick()
-            compose.onNodeWithTag("square-service-address").assertIsDisplayed()
-            compose.onNodeWithTag("square-service-default").performScrollTo().performClick()
-            compose.onNodeWithTag("square-service-address").assertTextContains(DEFAULT_SQUARE_SERVICE_URL)
-            shot("history-service-$suffix")
-            compose.onNodeWithText("取消").performClick()
             assertEquals("",repo.serviceUrl.value)
         }
         assertEquals(historical,SquareRepository(context,db,drafts).let{io{it.load()};it.catalog.value})
         assertEquals(0,io{db.itemDao().getItemCount()});assertEquals(0,io{db.priceDao().getAllPricesList().size})
     }
-    @Test fun historicalUnknownTailPriceAndServiceStayReadableOnSmallScreen() {
+    @Test fun historicalUnknownTailPriceStaysReadableOnSmallScreen() {
         online()
         val c=repo.catalog.value!!
         val tail=c.events.first { it.kind=="尾款" && SquareVisibility.event(c,it) }
@@ -165,10 +154,7 @@ class SquareNetworkTest {
         compose.onNodeWithText("价格未知").assertIsDisplayed()
         compose.onNodeWithTag("square-add-wish").assertDoesNotExist();shot("history-tail-small")
         compose.runOnIdle{vm!!.back()}
-        compose.onNodeWithTag("square-service").performClick()
-        compose.onNodeWithTag("square-service-address").performClick()
-        compose.waitUntil(10000){ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime())==true}
-        compose.onNodeWithTag("square-service-save").assertIsDisplayed();shot("history-service-small-ime")
+        compose.onNodeWithTag("square-feed").assertExists()
         assertEquals(0,io{db.priceDao().getAllPricesList().size})
     }
     @Test fun malformedOrMissingHistoricalServiceConfigFallsBackWithoutMutatingIt() {
@@ -181,9 +167,7 @@ class SquareNetworkTest {
         }
         file.writeText("{\"url\":\"\"}")
         repo=SquareRepository(context,db,drafts);assertEquals("",repo.serviceUrl.value)
-        show();compose.onNodeWithTag("square-service").performClick()
-        compose.onNodeWithTag("square-service-address").assertIsDisplayed()
-        compose.onNodeWithText("取消").performClick()
+        show();compose.onNodeWithTag("square-service").assertDoesNotExist()
         assertEquals("{\"url\":\"\"}",file.readText())
     }
     @Test fun freshHttpsConnectionsReadEveryPageAndOriginal(){
@@ -297,7 +281,7 @@ class SquareNetworkTest {
         assertNull(vm!!.message.value);assertNull(vm!!.catalog.value)
         shot("empty-offline")
     }
-    @Test fun fourteenSkinsCachedOfflineFeedAndServiceDialog(){
+    @Test fun fourteenSkinsCachedOfflineFeed(){
         online()
         val c=repo.catalog.value!!
         io{SquareVisibility.events(c).take(4).forEach{e->
@@ -312,42 +296,10 @@ class SquareNetworkTest {
             compose.onNodeWithTag("square-feed").assertExists()
             val suffix="${type.name.lowercase()}-${if(night)"dark" else "light"}"
             shot("feed-$suffix")
-            compose.onNodeWithTag("square-service").performClick()
-            compose.onNodeWithTag("square-service-address").assertIsDisplayed()
-            compose.onNodeWithTag("square-service-save").assertIsDisplayed();shot("service-$suffix")
-            compose.onNodeWithText("取消").performClick()
         }
         compose.onNodeWithTag("square-refresh").performTouchInput{swipeDown()}
         compose.waitUntil(10000){!vm!!.refreshing.value};assertNull(vm!!.message.value)
     }
-    @Test fun serviceAddressValidationCancelAndRealKeyboard(){
-        show();compose.onNodeWithTag("square-service").performClick()
-        compose.onNodeWithTag("square-service-address").performTextInput("http://public.example.com")
-        compose.onNodeWithTag("square-service-save").performClick()
-        compose.onNodeWithText("内网可使用HTTP，其他服务请使用HTTPS").assertExists()
-        compose.onNodeWithTag("square-service-address").performTextReplacement(base)
-        compose.waitUntil(10000){ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime())==true}
-        compose.onNodeWithTag("square-service-save").assertIsDisplayed()
-        // Semantics visibility can include pixels hidden behind a separate IME window.
-        // Verify real screen bounds and tap the physical button instead of a semantics action.
-        val ime=ViewCompat.getRootWindowInsets(host)!!.getInsets(WindowInsetsCompat.Type.ime()).bottom
-        val dialogRoot=compose.onAllNodes(isRoot()).onLast().fetchSemanticsNode().root
-        val dialogView=dialogRoot as? androidx.compose.ui.platform.ViewRootForTest
-        val location=IntArray(2);dialogView!!.view.getLocationOnScreen(location)
-        val bounds=compose.onNodeWithTag("square-service-save").fetchSemanticsNode().boundsInRoot
-        val bottom=location[1]+bounds.bottom
-        val keyboardTop=target.resources.displayMetrics.heightPixels-ime
-        assertTrue("Save must be fully above IME: $bottom <= $keyboardTop",bottom<=keyboardTop)
-        shot("service-real-ime")
-        inst.uiAutomation.injectInputEvent(android.view.MotionEvent.obtain(android.os.SystemClock.uptimeMillis(),android.os.SystemClock.uptimeMillis(),android.view.MotionEvent.ACTION_DOWN,location[0]+bounds.center.x,location[1]+bounds.center.y,0),true)
-        inst.uiAutomation.injectInputEvent(android.view.MotionEvent.obtain(android.os.SystemClock.uptimeMillis(),android.os.SystemClock.uptimeMillis(),android.view.MotionEvent.ACTION_UP,location[0]+bounds.center.x,location[1]+bounds.center.y,0),true)
-        compose.waitUntil(15000){vm!!.catalog.value!=null}
-        compose.onNodeWithTag("square-feed").assertExists();assertEquals(base,repo.serviceUrl.value)
-        compose.onNodeWithTag("square-service").performClick()
-        compose.onNodeWithTag("square-service-address").performTextClearance()
-        compose.onNodeWithText("取消").performClick();assertEquals(base,repo.serviceUrl.value)
-    }
-
     @Test fun builtInAddressStoredOverrideAndExplicitDisableSurviveRestart(){
         assertEquals(DEFAULT_SQUARE_SERVICE_URL,SquareRepository(context,db,drafts).serviceUrl.value)
         io{repo.configureService("https://square.example.com")}
@@ -433,29 +385,4 @@ class SquareNetworkTest {
         }finally{release.countDown();server.close();thread.join(1000)}
     }
 
-    @Test fun developerToolsFourteenSkinsCancelConfirmAndDefaultAddress(){
-        online();io{repo.configureService("")};val c=repo.catalog.value
-        show()
-        for(type in SkinType.entries)for(night in listOf(false,true)){
-            compose.runOnIdle{skin.value=type;dark.value=night}
-            val suffix="${type.name.lowercase()}-${if(night)"dark" else "light"}"
-            compose.onNodeWithTag("square-service").performClick()
-            compose.onNodeWithTag("square-service-default").performScrollTo().performClick()
-            compose.onNodeWithTag("square-service-address").assertTextContains(DEFAULT_SQUARE_SERVICE_URL)
-            assertEquals("",repo.serviceUrl.value) // Filling the field does not save or refresh.
-            shot("default-$suffix")
-            compose.onNodeWithTag("square-developer").performScrollTo().performClick();shot("tools-$suffix")
-            compose.onNodeWithTag("square-clear-open").performClick()
-            compose.onNodeWithText("清空本机广场资料？").assertIsDisplayed()
-            compose.onNodeWithTag("square-clear-confirm").assertIsDisplayed();shot("clear-$suffix")
-            compose.onNodeWithText("取消").performClick();assertEquals(c,repo.catalog.value)
-        }
-        compose.onNodeWithTag("square-service").performClick()
-        compose.onNodeWithTag("square-developer").performScrollTo().performClick()
-        compose.onNodeWithTag("square-clear-open").performClick()
-        compose.onNodeWithTag("square-clear-confirm").performClick()
-        compose.waitUntil(10000){vm!!.busy.value==null && vm!!.catalog.value==null}
-        compose.onNodeWithTag("square-import").assertIsDisplayed();shot("cleared-empty")
-        assertNull(vm!!.message.value);assertNull(vm!!.eventId.value)
-    }
 }

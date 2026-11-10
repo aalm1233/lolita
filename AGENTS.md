@@ -22,6 +22,8 @@
 
 ## 项目事实
 
+- 广场时间与当前分类共用`SquareEventPresentation`：有证据的月日/时分/区间保留，无年份不补造；历史预约、图示开售、尾款及采集分别标记。现货/余量/跑单掉落归现货，历史再贩保留副标签，预约/预热再贩与只读尾款独立。列表、筛选、详情一致，日期长区间不能挤走说明按钮。用户在服务端修正后明确授权补齐App显示，目标2.78.7/163，前置设计`docs/plans/2026-11-10-square-time-sale.md`。
+
 - 单应用模块 Android 项目，另含Haze 1.6.9生命周期补丁库`:haze-patched`（`third_party/haze`），Kotlin 2.1.0 + Jetpack Compose (BOM 2024.12.01) + Material3。compileSdk 35, minSdk 26, targetSdk 35, JVM target 17。
 - 数据流：`Entity (Room) -> DAO -> Repository -> ViewModel (StateFlow) -> Composable`
 - DI 不是 Hilt/Dagger，是 `AppModule` 手写 service locator；`LolitaApplication.onCreate()` 初始化。ViewModel 通过构造参数默认值从 `AppModule` 取仓库。
@@ -397,7 +399,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=162, versionName="2.78.6"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=163, versionName="2.78.7"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

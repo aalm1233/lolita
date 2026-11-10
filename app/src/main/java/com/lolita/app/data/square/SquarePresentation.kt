@@ -18,11 +18,8 @@ object SquarePresentation {
         return "$amount · ${phase(phases.single())}" + (if (preferred.any { it.second.parts.size > 1 || it.second.notSoldAlone }) " · 含组合价" else "") + if (preferred.any { it.second.price?.toBigDecimalOrNull() == null }) " · 部分未知" else ""
     }
 
-    fun date(raw: String?): String {
-        val text = raw.orEmpty().trim()
-        // Provenance often contains a capture date; it is not the sale/release date.
-        return Regex("\\d{4}[-年/.]\\d{1,2}[-月/.]\\d{1,2}日?").matchEntire(text)?.value ?: "日期未知"
-    }
+    fun date(raw: String?): String = SquareEventPresentation.businessTime(raw)?.value ?: "日期未知"
+
 
     fun partName(e: SquareEvent, p: SquareBrowsePart): String {
         val prefix = e.title.substringBefore(" · ").trim().trimEnd('·', ' ', '-', '—')

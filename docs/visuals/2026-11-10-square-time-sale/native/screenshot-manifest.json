@@ -1,0 +1,455 @@
+{
+  "skinModes": 14,
+  "matrixStates": 56,
+  "screenshots": [
+    {
+      "state": "stock",
+      "skin": "default",
+      "mode": "light",
+      "sha256": "5b953208800e2c668bed810cd0d830523ccf1ffb18009d91ead2e994f563d54f",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "default",
+      "mode": "dark",
+      "sha256": "04c864bed440f158cb0d50c1bb74e0478d1a12bc3916662b816b0a5eaadee792",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "gothic",
+      "mode": "light",
+      "sha256": "9c8351de82532f475ad0b07c404c97aa9a85fabf4267a22e9451ac94a61aacfa",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "gothic",
+      "mode": "dark",
+      "sha256": "f76dc76517305ab756e678864a35fd14bb8db53d35c2ab4a9b2a32ab8265dc7d",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "chinese",
+      "mode": "light",
+      "sha256": "6a9967eeeecd5ccdfe88a65710c6afcfa3cd5f5ddc6e962485a40a3895c7b852",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "chinese",
+      "mode": "dark",
+      "sha256": "dfcfe31dfe985e3f06903cc8edd0df6009fcdfc4be1c43c18d6d00f70478414c",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "classic",
+      "mode": "light",
+      "sha256": "45a9d68414c8eb266f45750a0ca64f2aebba610e88676aa3f072ce0ddf993921",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "classic",
+      "mode": "dark",
+      "sha256": "b232e58e753b958eef7a2235a3f738b3d3d770c385217ef39b8abe4ecd1601a2",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "navy",
+      "mode": "light",
+      "sha256": "9ad7504e23579257e2e79a2ad7e1c27aca9731b53b4124101f8a0172b84b2805",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "navy",
+      "mode": "dark",
+      "sha256": "0bae773041f0f561343ae98e8eb28dd3c5510246f0ea9bb3c4027301b574fc8a",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "country",
+      "mode": "light",
+      "sha256": "e5bb4bcf5cce5ea3aff1965459b10979daa1028bb4c8feb675397b05f6798469",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "country",
+      "mode": "dark",
+      "sha256": "5f9452b0009c9861bcfb4682868435948530ca06a089e612c1ccf06ddcecbd71",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "victorian",
+      "mode": "light",
+      "sha256": "9f7880197b1ccb610ec6a689e353bcb0efa23200f0f9e801bfe2dcc69a6a16d0",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "stock",
+      "skin": "victorian",
+      "mode": "dark",
+      "sha256": "2b8093676b0d873d84bc5003420d855c19111320d47e90ba08709f70cb9ceed8",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "default",
+      "mode": "light",
+      "sha256": "bbf44f4e3db19d0d8977a52d992756af5ccbaae091a61826ef2aca4e040b3952",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "default",
+      "mode": "dark",
+      "sha256": "1271e14f3d1e555dc85fe626e49c9ab69a40f45ab36b931b6a06011ea5a132b5",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "gothic",
+      "mode": "light",
+      "sha256": "1f5f78c08656ebe91d941e492f52df493814159ab159238340c49fccbcbfc849",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "gothic",
+      "mode": "dark",
+      "sha256": "73324cc2a1569513d1a3e67701b9462de7e10fc3837f2d71a9d40bca2bf8419b",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "chinese",
+      "mode": "light",
+      "sha256": "f217ff90e00238dac22d75d03011a54cc4b6d68ab9f07c5b99769420f0eaa398",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "chinese",
+      "mode": "dark",
+      "sha256": "d5ca70b42f379cb3ce60ae8e353f3286810093ec2cfc8c1e4431d3dfe744b3c0",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "classic",
+      "mode": "light",
+      "sha256": "4cf75ff8bf45475e0e7c16893fbad02bd7e29270bd063445627a168b445bcdcd",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "classic",
+      "mode": "dark",
+      "sha256": "1f85270bbb308af75794723488c42766df5a2ba9505fd282683c03673b8a6aae",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "navy",
+      "mode": "light",
+      "sha256": "fe749d2ad1f9c7e880756ecaabad5a578039f355bea10d69c6696cdb32c9250a",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "navy",
+      "mode": "dark",
+      "sha256": "2ede263fd9b7f341e772ebffe4de7e821dd68faf8c4e1714ccea70cf618474ac",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "country",
+      "mode": "light",
+      "sha256": "b4de52b705a9faee6714dcf1884607f2189a15ddd258b9e4296f1ac9f0572134",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "country",
+      "mode": "dark",
+      "sha256": "8277d3807e2ecc8b317f3bd514df6c91d6c7413e4aa2d84d8864d9ec1ff044b8",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "victorian",
+      "mode": "light",
+      "sha256": "f01f513596c6a5214b3dcbb634522ff552bf718b7969a7040b444fd3c84d3fd4",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "launch",
+      "skin": "victorian",
+      "mode": "dark",
+      "sha256": "e06989648de878c7cce807a7be4a9d270047dedf852573b79a15c27324d4014f",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "default",
+      "mode": "light",
+      "sha256": "92ede250b9f11f5e35ff20dcea51e983cada5bc80117b2d4f5fb0b2da7827d3e",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "default",
+      "mode": "dark",
+      "sha256": "d021046d8e431513c1be2d6c61ee7a060959c6e05454ce100cdb573dc6e5cf94",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "gothic",
+      "mode": "light",
+      "sha256": "38a15eec182896caf8dcf642648cf377843b61450291a164dee0db43593cb004",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "gothic",
+      "mode": "dark",
+      "sha256": "6d8eeb28109dc3c29b8dfac509debdeb12e9f30bbbb307c1eaf9af8d76076386",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "chinese",
+      "mode": "light",
+      "sha256": "2d105cd5e61ca6928076c7564d19183a983d406cc5ac53e72bc1ee22d71313f5",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "chinese",
+      "mode": "dark",
+      "sha256": "9768d6663c8853be6ac3186ded61be40aba63929d1282d4778fb547625a83f17",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "classic",
+      "mode": "light",
+      "sha256": "b06eb1c4aa1c9b4a44a6a646131384f54c8cc0d3d80af0ecbaa9921610158d42",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "classic",
+      "mode": "dark",
+      "sha256": "203ac6fbb578ab3fd1c0a079621d474fac0b2bcdfd80ad4e53d67d55fd33aec1",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "navy",
+      "mode": "light",
+      "sha256": "337098a4fe6395d43bf877b4d8650aae9d9a6e525846fabfe56fb8064202c718",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "navy",
+      "mode": "dark",
+      "sha256": "b533b5622efc981a4872b6e6d1ad40481fe1a6f9ab9db05c6cfe5d234c542df4",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "country",
+      "mode": "light",
+      "sha256": "b2fde3b40909cac6be07e48fac848e208693a97b9d4a4c39c48909dc4325b6fd",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "country",
+      "mode": "dark",
+      "sha256": "4c0d5c18b1f8477d5dd3e848629c31b1e027b58fb3d3d87ba612268a583a04d1",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "victorian",
+      "mode": "light",
+      "sha256": "1e8ab405d74e6a8c5047629660996657efccb975ef97ac4ce60eb379da8f7aa7",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "evidence",
+      "skin": "victorian",
+      "mode": "dark",
+      "sha256": "6fe33723259325dba5db08c4da7811fa3201bdc86095d890d2aca93e33ae99bc",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "default",
+      "mode": "light",
+      "sha256": "de7671e4350409ce176bd5024ee74cebbd01eb694b6f7142b02a5120bbf738b5",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "default",
+      "mode": "dark",
+      "sha256": "a1f8b355601114d7d3428faa5ab3fcb8f607fc6fb8c49e023d0f65f75ada34ab",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "gothic",
+      "mode": "light",
+      "sha256": "ecb789c8e27538545974e417057b73358412dd6df686911770e77d7b94917744",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "gothic",
+      "mode": "dark",
+      "sha256": "26fcd999c53cfc911a0b25d17453306b0e343cde9c8e35a41edabc7c5e2304d8",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "chinese",
+      "mode": "light",
+      "sha256": "62dfb1ca3fd810d5e3d3a759345ae4913013a453f7dc5e9241f26b8025207c7c",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "chinese",
+      "mode": "dark",
+      "sha256": "13f60f3028a2292dd4161559d9af870ea18dab85cced3deb966d02e0977d82cd",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "classic",
+      "mode": "light",
+      "sha256": "ea00d2ef849618732e2b4453d0053ff222768c13b5e66e608bcbba296a367976",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "classic",
+      "mode": "dark",
+      "sha256": "b44cf7cdb704e217dbe102823db52951e1d3d11a551ff1854b6099c0fb81c8ea",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "navy",
+      "mode": "light",
+      "sha256": "98149d9b5325fb958a4f790976516b58a4c8dca93a8f2ae8358e2c1aeab01c2e",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "navy",
+      "mode": "dark",
+      "sha256": "52c02a6e5af7a4629825a53ba5bec331a95bffc7e7be765469b42d7b8e0345ad",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "country",
+      "mode": "light",
+      "sha256": "25344db3765cad96059be0889b21e6bba9909063d1dab97f5bbdc53b60ca4b71",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "country",
+      "mode": "dark",
+      "sha256": "dc3848d306442d47e6f208ecd798e47a3757e7363e821465f7ea955819cdb7ae",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "victorian",
+      "mode": "light",
+      "sha256": "f47da9c23a5298d7160c135d81e2658fdb221880bfc258f884551ca5a89c38ed",
+      "width": 1080,
+      "height": 2400
+    },
+    {
+      "state": "tail",
+      "skin": "victorian",
+      "mode": "dark",
+      "sha256": "98077c9523ab431b43ad4f45e673c74089063384557816026dfc2e0383270fd9",
+      "width": 1080,
+      "height": 2400
+    }
+  ],
+  "scope": "Actual Compose on regular Pixel7 at default font; no small/large-font run"
+}

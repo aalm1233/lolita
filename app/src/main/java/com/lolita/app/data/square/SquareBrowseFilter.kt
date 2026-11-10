@@ -3,7 +3,7 @@ package com.lolita.app.data.square
 data class SquareBrowseFilter(val query: String = "", val kind: String = "", val shop: String = "",
     val color: String = "", val style: String = "", val form: String = "") {
     fun contains(c: SquareCatalog, e: SquareEvent): Boolean = SquareVisibility.event(c, e) &&
-        (kind.isEmpty() || e.kind == kind) && (shop.isEmpty() || e.shopId == shop) &&
+        (kind.isEmpty() || SquareEventPresentation.kind(e) == kind) && (shop.isEmpty() || e.shopId == shop) &&
         (query.isBlank() || (listOf(e.title, e.subtitle.orEmpty(), c.shops.find { it.id == e.shopId }?.name.orEmpty()) +
             SquareVisibility.products(c, e).map { it.title }).joinToString(" ").contains(query, true))
 

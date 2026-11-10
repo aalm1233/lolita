@@ -1,0 +1,425 @@
+{
+  "scope": "Existing public images and state only; preserve capturedAt, products, SKU, images, listing. No new acquisition.",
+  "corrections": [
+    {
+      "shopId": "puppets",
+      "eventId": "snow-white-tea-party-drop",
+      "beforeDate": "8月28日 20:00开售",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "snow-white-tea-party-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "snow-white-tea-party-drop-state",
+          "snow-white-tea-party-drop-time-0"
+        ],
+        "date": "图示开售：8月28日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+      },
+      "reason": "标题“掉落 全款预售”，图003写8月28日20:00开售；采集时部分SKU无货/即将售罄，页面仍在售。"
+    },
+    {
+      "shopId": "puppets",
+      "eventId": "snow-white-drop",
+      "beforeDate": "8月28日 20:00开售",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "snow-white-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "snow-white-drop-state",
+          "snow-white-drop-time-0"
+        ],
+        "date": "图示开售：8月28日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+      },
+      "reason": "标题“掉落 全款预售”，图003写8月28日20:00开售；96个SKU部分有货/部分无货，页面在售。"
+    },
+    {
+      "shopId": "puppets",
+      "eventId": "victoria-garden-2025-rerelease",
+      "beforeDate": "06月12日 20:00开启预售",
+      "beforeKind": "再贩",
+      "correction": {
+        "eventId": "victoria-garden-2025-rerelease",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "victoria-garden-2025-rerelease-state",
+          "victoria-garden-2025-rerelease-time-0"
+        ],
+        "date": "图示开售：06月12日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供",
+        "kind": "现货"
+      },
+      "reason": "标题“跑单掉落 再贩 全款预售”，图002写“上新时间：06月12日 20:00开启预售”；19个SKU中9即将售罄/10无货，页面ACTIVE。当前为跑单掉落现货形态，主分类现货，保留再贩标签；全款预售/300天内发货不等于即发。"
+    },
+    {
+      "shopId": "puppets",
+      "eventId": "farm-friends-2-drop",
+      "beforeDate": "7月17日 20:00开售",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "farm-friends-2-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "farm-friends-2-drop-state",
+          "farm-friends-2-drop-time-0"
+        ],
+        "date": "图示开售：7月17日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+      },
+      "reason": "四个商品标题均为“跑单掉落 全款预售”，各自图002写7月17日20:00开售；部分SKU无货/即将售罄，页面在售。"
+    },
+    {
+      "shopId": "puppets",
+      "eventId": "stripe-punk-rose-2-drop",
+      "beforeDate": "06月12日 20:00开启预售",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "stripe-punk-rose-2-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "stripe-punk-rose-2-drop-state",
+          "stripe-punk-rose-2-drop-time-0"
+        ],
+        "date": "图示开售：06月12日 20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+      },
+      "reason": "标题“跑单掉落 全款预售”，图002写“上新时间：06月12日 20:00开启预售”；54个SKU中50无货/4即将售罄，页面仍在售。"
+    },
+    {
+      "shopId": "puppets",
+      "eventId": "victoria-garden-velvet-drop",
+      "beforeDate": "06月12日 20:00开启预售",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "victoria-garden-velvet-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "victoria-garden-velvet-drop-state",
+          "victoria-garden-velvet-drop-time-0"
+        ],
+        "date": "图示开售：06月12日20:00（原文未注明年份）；本轮跑单/掉落单独开启日期未提供"
+      },
+      "reason": "标题“跑单掉落 全款预售”，图002写“上新时间：06月12日20:00开启预售”；54个SKU中41无货/12即将售罄/1有货，页面在售。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "pilgrim-balance",
+      "beforeDate": "11月12日 17:00 截止",
+      "beforeKind": "尾款",
+      "correction": {
+        "eventId": "pilgrim-balance",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "pilgrim-balance-state",
+          "pilgrim-balance-time-0"
+        ],
+        "date": "第一批次尾款：10月15日上午10时—11月12日下午17时（图示未注明年份）"
+      },
+      "reason": "标题为第一批次尾款；图004明写10月15日10:00至11月12日17:00；SKU均有货。保持尾款只读，不转现货。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "sleeve-balance",
+      "beforeDate": "尾款截止日未提供",
+      "beforeKind": "尾款",
+      "correction": {
+        "eventId": "sleeve-balance",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "sleeve-balance-state",
+          "sleeve-balance-time-0"
+        ],
+        "date": "第一批次尾款：10月15日上午10时—11月12日下午17时（图示未注明年份）"
+      },
+      "reason": "标题为第一批次尾款；图003明写10月15日10:00至11月12日17:00；SKU均有货。修正“截止日未提供”为11月12日17:00，但保持尾款只读。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "jixiangtian-2025-repeat-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "再贩",
+      "correction": {
+        "eventId": "jixiangtian-2025-repeat-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "jixiangtian-2025-repeat-drop-state"
+        ],
+        "kind": "现货"
+      },
+      "reason": "标题“掉落不包邮 吉祥天 2025 再贩”，59 SKU均无货/即将售罄，页面ACTIVE；当前是掉落现货主分类，保留再贩标签。部分缺货不等于下架；全款预售/300天发货不等于即发。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "qianchongzhongxia-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "qianchongzhongxia-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "qianchongzhongxia-drop-state",
+          "qianchongzhongxia-drop-time-0"
+        ],
+        "date": "历史预约：2025年8月7日 上午10时—2025年9月9日 下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 千层仲夏挞”，页面ACTIVE；SKU即将售罄/无货。旧图002仍写2025年定金页，属旧批次，不能混用。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "shouwangzhe-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "shouwangzhe-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "shouwangzhe-drop-state",
+          "shouwangzhe-drop-time-0",
+          "shouwangzhe-drop-time-1"
+        ],
+        "date": "历史预约（守望者2.0/1.0斗篷）：2025年7月16日 上午10时—2025年8月14日 下午17时；历史预约（守望者1.0）：2025年5月22日上午10时—2025年6月24日下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "三个商品均为“现货掉落不包邮”，页面ACTIVE、SKU即将售罄/无货；旧图仍写2025年定金页，属旧批次。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "xuwangzhimian-2024-repeat",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "再贩",
+      "correction": {
+        "eventId": "xuwangzhimian-2024-repeat",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "xuwangzhimian-2024-repeat-state",
+          "xuwangzhimian-2024-repeat-time-0"
+        ],
+        "date": "历史预约：2024年10月9日 上午10时—2024年11月8日 下午17时；本轮现货/掉落开启日期未提供",
+        "kind": "现货"
+      },
+      "reason": "标题“现货掉落不包邮 虚妄之冕 2024再贩”，页面ACTIVE、SKU即将售罄/无货；旧图001写2024年定金页。当前为掉落现货主分类，保留再贩标签；部分缺货不等于下架。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "qingdianzhiqi-2024-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "qingdianzhiqi-2024-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "qingdianzhiqi-2024-drop-state",
+          "qingdianzhiqi-2024-drop-time-0"
+        ],
+        "date": "历史预约（裙装/中性款）：2024年7月12日上午9时—2024年8月7日下午17时；本轮现货/掉落开启日期未提供，小物预约日期未取得"
+      },
+      "reason": "两商品均为“现货掉落不包邮”，页面ACTIVE、SKU即将售罄/无货；裙装页旧图001写2024年定金期，小物页无日期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "gelite-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "gelite-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "gelite-drop-state",
+          "gelite-drop-time-0"
+        ],
+        "date": "历史预约：2025年3月20日上午10时—2025年4月9日下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 哥特衬衫/双排扣长裤/百年孤寂背心”，页面ACTIVE；旧图001写2025年定金期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "yueyingweixu-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "yueyingweixu-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "yueyingweixu-drop-state",
+          "yueyingweixu-drop-time-0"
+        ],
+        "date": "历史预约：2025年3月5日 上午10时—2025年4月2日 下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 月影位序”，页面ACTIVE；旧图001写2025年定金期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "miwudanganju-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "miwudanganju-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "miwudanganju-drop-state",
+          "miwudanganju-drop-time-0"
+        ],
+        "date": "历史预约：2024年11月28日上午10时—2025年1月2日下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 迷雾档案局”，页面ACTIVE；旧图001写2024年定金期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "jueshengqibing-2024-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "jueshengqibing-2024-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "jueshengqibing-2024-drop-state",
+          "jueshengqibing-2024-drop-time-0"
+        ],
+        "date": "历史预约：2024年11月19日下午17时—2024年11月26日 下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 决胜棋兵 2024”，页面ACTIVE；旧图001写2024年第二批次定金期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "jinshumeigui-drop",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "jinshumeigui-drop",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "jinshumeigui-drop-state",
+          "jinshumeigui-drop-time-0"
+        ],
+        "date": "历史预约：2023年12月12日 上午10时—2024年1月4日 下午17时；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货掉落不包邮 金属玫瑰”，页面ACTIVE；旧图001写2023年定金期。"
+    },
+    {
+      "shopId": "neo",
+      "eventId": "qifeng-2024-repeat",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "再贩",
+      "correction": {
+        "eventId": "qifeng-2024-repeat",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "qifeng-2024-repeat-state",
+          "qifeng-2024-repeat-time-0"
+        ],
+        "date": "历史预约：2024年5月30日 上午10时—2024年6月27日下午17时；本轮现货/掉落开启日期未提供",
+        "kind": "现货"
+      },
+      "reason": "标题“现货掉落不包邮 2024 戚风系列 再贩”，页面ACTIVE、SKU即将售罄/无货；旧图001写2024年定金期。当前为掉落现货主分类，保留再贩标签；部分缺货不等于下架。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "longgu-muyuan-balance",
+      "beforeDate": "页面未给本批尾款截止日",
+      "beforeKind": "尾款",
+      "correction": {
+        "eventId": "longgu-muyuan-balance",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "longgu-muyuan-balance-state",
+          "longgu-muyuan-balance-time-0"
+        ],
+        "date": "历史定金开启：2026.4.20晚19:00（第八批定金图示）；本页为一二批尾款，对应关系及尾款截止日未提供"
+      },
+      "reason": "标题“一二批尾款”，SKU均为尾款价208且有货；图007仅写第八批定金2026.4.20开启，图014写定金预约页。保持尾款只读。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "chuangshiji-spot",
+      "beforeDate": "上架日期未提供",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "chuangshiji-spot",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "chuangshiji-spot-state",
+          "chuangshiji-spot-time-0"
+        ],
+        "date": "历史预约：2026.2.10晚19:00；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "两商品标题“现货掉落”，页面ACTIVE；旧图006写2026.2.10定金预约页，属旧批次。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "wangyue-baihe-resale",
+      "beforeDate": "详情图写“预约时间：2026.02.16 晚19:00开始”；早于本轮采集日，未推定新一轮日期；首发日期未知",
+      "beforeKind": "再贩",
+      "correction": {
+        "eventId": "wangyue-baihe-resale",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "wangyue-baihe-resale-state",
+          "wangyue-baihe-resale-time-0"
+        ],
+        "date": "历史预约：2026.02.16 晚19:00；本轮现货/掉落开启日期未提供",
+        "kind": "现货"
+      },
+      "reason": "详情图006写2026.02.16预约、且写“本次再贩”；当前OP SKU=458（旧预约价428+30）且有2个有货、配饰2个有货，页面ACTIVE。主分类现货，保留再贩标签；不能从部分缺货推断下架。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "longgu-embroidery-spot",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "longgu-embroidery-spot",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "longgu-embroidery-spot-state",
+          "longgu-embroidery-spot-time-0"
+        ],
+        "date": "历史预约：2025.1.28晚19:00；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题为在售，页面ACTIVE；旧图004写2025.1.28定金预约页；部分SKU为999定金占位，不当作售价。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "liujin-4-spot",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "liujin-4-spot",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "liujin-4-spot-state",
+          "liujin-4-spot-time-0"
+        ],
+        "date": "历史预约：2024.02.09晚19:00；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货”，页面ACTIVE，SKU为现货价；旧图007写2024.02.09定金预约页。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "liujin-2-spot",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "liujin-2-spot",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "liujin-2-spot-state",
+          "liujin-2-spot-time-0"
+        ],
+        "date": "历史预约：2024.01.27晚19:00；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货”，页面ACTIVE，SKU为现货价；旧图006写2024.01.27再贩预约。"
+    },
+    {
+      "shopId": "zjstory",
+      "eventId": "xiari-zhanshi-spot",
+      "beforeDate": "本次可核实：2026-11-09 页面在售；首发/首次上架日期未取得",
+      "beforeKind": "现货",
+      "correction": {
+        "eventId": "xiari-zhanshi-spot",
+        "expectedRevision": 1,
+        "evidenceIds": [
+          "xiari-zhanshi-spot-state",
+          "xiari-zhanshi-spot-time-0"
+        ],
+        "date": "历史预约：2024.09.20晚19:00；本轮现货/掉落开启日期未提供"
+      },
+      "reason": "标题“现货”，页面ACTIVE，SKU为现货价；旧图003写2024.09.20定金预约页。"
+    }
+  ]
+}

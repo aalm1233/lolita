@@ -30,7 +30,9 @@ internal fun SquareTailDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewMo
         item {
             Text(c.shops.single { it.id == e.shopId }.name, style = MaterialTheme.typography.bodySmall)
             Text(e.title, style = MaterialTheme.typography.headlineSmall)
-            Text(listOf("尾款",e.state.orEmpty(),e.date.orEmpty()).filter(String::isNotBlank).joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+            val time = SquareEventPresentation.time(e, c.capturedAt)
+            Text(if (time.label.startsWith("尾款")) time.summary else "尾款 · ${time.summary}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+            InfoTip("时间与售卖依据", listOf(SquareEventPresentation.time(e, c.capturedAt).detail, e.state.orEmpty()).filter { it.isNotBlank() }.joinToString("\n"))
             if (amounts) { Text(e.price?.takeIf(String::isNotBlank) ?: "价格未知", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
                 Text(p.priceType, style = MaterialTheme.typography.bodySmall) }
         }

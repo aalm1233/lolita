@@ -87,14 +87,14 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                     Box {
                         LolitaShimmerImage(vm.thumbnail(cover,imageEpoch), event.title, Modifier.fillMaxWidth().aspectRatio(0.8f), ContentScale.Fit, circularRevealEnabled = false)
                         Surface(Modifier.align(Alignment.TopStart).padding(8.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = .93f), shape = LolitaSkin.current.cardShape) {
-                            Text(event.kind, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
+                            Text(SquareEventPresentation.badge(event), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                         }
                     }
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(c.shops.first { it.id == event.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         Text(event.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                         if (filtered && part != null) Text(SquarePresentation.partName(event, part) + if (exactCover == null) " · 系列参考图" else "", style = MaterialTheme.typography.bodySmall)
-                        Text(SquarePresentation.date(event.date), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(SquareEventPresentation.time(event, c.capturedAt).summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if (showAmounts) Text(SquarePresentation.price(matches),
                             style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
                     }

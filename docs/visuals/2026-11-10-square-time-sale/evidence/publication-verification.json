@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "shops": [
+    {
+      "shopId": "puppets",
+      "passed": true,
+      "checkedAt": "2026-11-10T14:54:46.840149+08:00",
+      "base": "http://127.0.0.1:18765",
+      "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+      "cursor": 69,
+      "packageSha256": "5c702a0914fc08c5e65cc07ae43c5a52aacf214fc33feb3c735e1346c78cf67e",
+      "events": 12,
+      "products": 18,
+      "correctedEvents": 6,
+      "allProductsSkuAndAssetsUnchanged": true,
+      "otherEventsPreserved": true,
+      "originalImageSamples": 1
+    },
+    {
+      "shopId": "neo",
+      "passed": true,
+      "checkedAt": "2026-11-10T14:54:46.980705+08:00",
+      "base": "http://127.0.0.1:18765",
+      "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+      "cursor": 82,
+      "packageSha256": "32a373979656b15d779835ceae2e397e88f77a6cb2742ea8320a0f1d668abe08",
+      "events": 15,
+      "products": 20,
+      "correctedEvents": 13,
+      "allProductsSkuAndAssetsUnchanged": true,
+      "otherEventsPreserved": true,
+      "originalImageSamples": 1
+    },
+    {
+      "shopId": "zjstory",
+      "passed": true,
+      "checkedAt": "2026-11-10T14:55:40.584524+08:00",
+      "base": "http://127.0.0.1:18765",
+      "serverId": "21107c8f-4b7a-429a-8a86-8738dbe8686e",
+      "cursor": 89,
+      "packageSha256": "dbf22616b607c392011eb15188c413616f5f96362c09c1aef29f23e32faaaedb",
+      "events": 7,
+      "products": 9,
+      "correctedEvents": 7,
+      "allProductsSkuAndAssetsUnchanged": true,
+      "otherEventsPreserved": true,
+      "originalImageSamples": 1
+    }
+  ],
+  "counts": {
+    "shops": 7,
+    "events": 63,
+    "products": 91,
+    "assets": 3746
+  }
+}

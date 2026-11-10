@@ -69,9 +69,9 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
             Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("${c.shops.single { it.id == e.shopId }.name} · ${e.title.substringBefore(" · ")}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(SquarePresentation.partName(e, part), style = MaterialTheme.typography.titleLarge, modifier = Modifier.testTag("square-product-title"))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("${e.kind} · ${SquarePresentation.date(e.date)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    InfoTip("动态详情", listOfNotNull(e.state, e.date, e.priceNote).joinToString("\n").ifBlank { "状态与日期未知" })
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text("${SquareEventPresentation.badge(e)} · ${SquareEventPresentation.time(e, c.capturedAt).summary}", modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    InfoTip("时间与售卖依据", listOf(SquareEventPresentation.time(e, c.capturedAt).detail, e.state.orEmpty(), if (showAmounts) e.priceNote.orEmpty() else "").filter { it.isNotBlank() }.joinToString("\n"))
                 }
                 if (showAmounts) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {

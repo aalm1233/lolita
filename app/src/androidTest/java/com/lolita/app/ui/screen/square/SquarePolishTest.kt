@@ -141,7 +141,9 @@ class SquarePolishTest {
         compose.onNodeWithTag("square-event-${event.id}").assertExists()
         open(event.id)
         compose.onNodeWithTag("square-product").assertExists()
+        compose.onNodeWithTag("square-detail-topbar").assertIsDisplayed()
         compose.runOnIdle { model!!.back() }
+        compose.onNodeWithTag("square-detail-topbar").assertDoesNotExist()
         compose.onNodeWithTag("square-search").assertTextContains(keyword)
         compose.onNodeWithText("取消").performClick()
         compose.onNodeWithTag("square-search").assertDoesNotExist()

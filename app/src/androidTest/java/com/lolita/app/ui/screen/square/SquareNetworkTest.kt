@@ -278,6 +278,7 @@ class SquareNetworkTest {
         compose.waitUntil(10000){!vm!!.refreshing.value}
         compose.onNodeWithTag("square-import").assertIsDisplayed()
         compose.onNodeWithText("暂无店铺资料").assertIsDisplayed()
+        compose.onNodeWithText("广场").assertDoesNotExist()
         assertNull(vm!!.message.value);assertNull(vm!!.catalog.value)
         shot("empty-offline")
     }

@@ -52,6 +52,10 @@ class SquareHazeLifetimeTest {
             compose.runOnIdle { selectedSkin.value = skin; dark.value = night }
             compose.onNode(isSelectable() and hasText("广场")).performClick()
             compose.onNodeWithTag("square-refresh").assertExists()
+            compose.waitUntil(15000) {
+                compose.onAllNodesWithTag("square-feed").fetchSemanticsNodes().isNotEmpty() ||
+                    compose.onAllNodesWithTag("square-import").fetchSemanticsNodes().isNotEmpty()
+            }
             compose.onNodeWithTag("square-service").assertDoesNotExist()
             compose.onNodeWithContentDescription("查看心愿").assertDoesNotExist()
             compose.onNodeWithContentDescription("导入资料包").assertDoesNotExist()

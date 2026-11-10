@@ -11,3 +11,19 @@
 Debug 与 AndroidTest 构建通过。3个去重定向设备方法通过：真实Haze顶栏/底栏的完整NavHost七皮肤浅暗、实际商品收藏/合组/已有心愿及返回、离线下拉刷新/空态导入。另在320dp、两倍字下复用顶栏方法通过，合计28个顶栏皮肤状态；没有输入框变化，IME不适用。原生原图和测试日志保存在本机 artifacts/releases/2.78.8；[常规七皮肤](../visuals/2026-11-10-square-topbar/topbar-seven-skins.jpg)和[320dp两倍字](../visuals/2026-11-10-square-topbar/topbar-small-seven-skins.jpg)归档对照。首次模拟器会话退出导致原图导出中断，保留数据重启后完整重新导出；应用测试原已通过，失败的导出不计验收。
 
 正式源码提交后进行隔离clean签名构建和双平台分发，最终结果另附发布回执。
+
+## 追加：搜索框按首页收起
+
+用户接续要求参考首页把广场搜索框收起来。已阅读首页 ItemListScreen 的 NormalModeBar / SearchModeBar：默认左侧搜索图标，点开输入框并聚焦，取消清空和收起。广场保留无右侧操作的标准标题；在动态分类栏左侧放搜索图标，展开时以同一行搜索输入和取消替代分类标签。店铺与属性筛选保留，查询逻辑和实际SKU匹配不改。非空搜索返回详情后继续展开，不让筛选条件隐藏；取消和再次返回清空查询，不清店铺/动态/属性。
+
+实施前绘制[构图](../visuals/2026-11-10-square-topbar/artist/story.svg)及[七皮肤浅色](../visuals/2026-11-10-square-topbar/artist/light.svg)、[七皮肤暗色](../visuals/2026-11-10-square-topbar/artist/dark.svg)。这是代码原生SVG界面图，不包含编造商品资料；实现复用现有首页 SearchModeBar、各皮肤 Search 图标及原 TabRow，不新增图片资产。兼容小屏大字、真实IME、取消/返回及查询恢复；无实体、备份、原图、网络、权限或费用变化。
+
+此前2.78.8/164源码标签已正常推送，但尚未创建正式Release或发布APK；不改写该标签。追加需求合入2.78.9/165统一正式发布，旧构建停止且不用作最终包。原按钮移除验收保留为阶段记录，最终受影响搜索和顶栏按新源码复验。
+
+最终搜索版本 Debug、AndroidTest 编译通过，5个去重设备方法通过（搜索状态、搜索七皮肤浅暗、真实Haze完整导航顶栏、收藏/已有心愿/返回、静默离线刷新空态）。320dp两倍字下两个搜索方法再次通过，含实际IME与两次返回，合计56个搜索收起/展开皮肤状态。初次状态用例误选旧资料不存在的动态，随后误用历史kind筛选当前现货，均仅修正测试夹具；生产查询、分类逻辑未放宽。最终常规及小屏状态用例通过。
+
+原生对照：[搜索收起](../visuals/2026-11-10-square-topbar/search-collapsed-seven-skins.jpg)、[搜索展开](../visuals/2026-11-10-square-topbar/search-expanded-seven-skins.jpg)、[320dp两倍字收起](../visuals/2026-11-10-square-topbar/search-small-collapsed-seven-skins.jpg)、[320dp两倍字展开](../visuals/2026-11-10-square-topbar/search-small-expanded-seven-skins.jpg)。原图和完整日志留本机artifacts/releases/2.78.9。
+
+小屏原生检查发现长搜索占位字在两倍字体下折行，已在复用的SearchModeBar将占位字限制为单行省略；真实输入仍保留原单行滚动行为，取消始终可见。修改后重跑受影响的常规/小屏搜索状态和皮肤矩阵。首页默认占位字仍为原“搜索物品”，无业务行为变化。
+
+单行占位字最终修正后的Debug/AndroidTest构建、常规搜索2方法及320dp两倍字2方法全部通过，归档矩阵已替换为最终原生截图。

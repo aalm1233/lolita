@@ -1,5 +1,6 @@
 package com.lolita.app.ui.screen.square
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
@@ -10,13 +11,19 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.lolita.app.data.square.*
 import com.lolita.app.ui.screen.common.*
+import com.lolita.app.ui.screen.item.SearchModeBar
 import com.lolita.app.ui.theme.LolitaSkin
 import com.lolita.app.ui.theme.skin.animation.ObserveSkinScroll
 import com.lolita.app.ui.theme.skin.animation.SkinTabIndicator
@@ -31,6 +38,17 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     val imageEpoch by vm.imageEpoch.collectAsState()
     var filters by rememberSaveable { mutableStateOf(false) }; var shops by rememberSaveable { mutableStateOf(false) }
     var shopQuery by rememberSaveable { mutableStateOf("") }
+    var searching by rememberSaveable { mutableStateOf(query.isNotEmpty()) }
+    val searchFocus = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    fun closeSearch() {
+        focusManager.clearFocus()
+        keyboard?.hide()
+        vm.set("query", "")
+        searching = false
+    }
+    BackHandler(searching && !filters && !shops) { closeSearch() }
     val visibleEvents = remember(c) { SquareVisibility.events(c) }
     val filter = remember(query, kind, shop, color, style, form) { SquareBrowseFilter(query, kind, shop, color, style, form) }
     val events = remember(c, filter) { filter.events(c) }
@@ -41,17 +59,24 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item(span = { GridItemSpan(maxLineSpan) }, key = "controls") {
             Column {
-                OutlinedTextField(query, { vm.set("query", it) }, singleLine = true, placeholder = { Text("搜索商品或店铺") },
-                    leadingIcon = { SkinIcon(IconKey.Search, Modifier.size(20.dp)) },
-                    shape = LolitaSkin.current.cardShape, modifier = Modifier.fillMaxWidth().testTag("square-search"))
                 val kinds = listOf("全部", "上新", "再贩", "现货", "尾款")
                 val selected = kinds.indexOf(kind.ifEmpty { "全部" }).coerceAtLeast(0)
                 val tabs: @Composable () -> Unit = {
                     kinds.forEachIndexed { index, label -> Tab(selected == index, { vm.set("kind", if (index == 0) "" else label) }, text = { Text(label, style = MaterialTheme.typography.labelLarge) }) }
                 }
-                if (large) ScrollableTabRow(selected, edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
-                    indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
-                else TabRow(selected, containerColor = androidx.compose.ui.graphics.Color.Transparent, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                if (searching) {
+                    SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,
+                        placeholder = "搜索商品或店铺", inputModifier = Modifier.testTag("square-search"))
+                    LaunchedEffect(Unit) { searchFocus.requestFocus() }
+                } else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { searching = true }, modifier = Modifier.testTag("square-search-open").semantics { contentDescription = "搜索商品或店铺" }) {
+                        SkinIcon(IconKey.Search)
+                    }
+                    if (large) ScrollableTabRow(selected, modifier = Modifier.weight(1f), edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                        indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                    else TabRow(selected, modifier = Modifier.weight(1f), containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                        indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     TextButton(onClick = { shops = true }) { Text(c.shops.find { it.id == shop }?.name ?: "全部店铺"); SkinIcon(IconKey.ArrowDropDown, Modifier.size(18.dp)) }
                     TextButton(onClick = { filters = true }, modifier = Modifier.testTag("square-filter-button")) { Text("筛选" + listOf(color, style, form).count { it.isNotEmpty() }.takeIf { it > 0 }?.let { " · $it" }.orEmpty()); SkinIcon(IconKey.FilterList, Modifier.size(18.dp)) }

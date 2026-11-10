@@ -867,7 +867,8 @@ internal fun SearchModeBar(
     onQueryChange: (String) -> Unit,
     onCancel: () -> Unit,
     focusRequester: FocusRequester,
-    placeholder: String
+    placeholder: String,
+    inputModifier: Modifier = Modifier
 ) {
     val contentColor = LocalContentColor.current
     Row(
@@ -888,7 +889,8 @@ internal fun SearchModeBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .then(inputModifier),
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(color = contentColor),
                 cursorBrush = SolidColor(contentColor),
@@ -898,7 +900,8 @@ internal fun SearchModeBar(
                         Spacer(Modifier.width(6.dp))
                         Box(Modifier.weight(1f)) {
                             if (query.isEmpty()) {
-                                Text("搜索物品", color = contentColor.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyMedium)
+                                Text(placeholder, color = contentColor.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyMedium,
+                                    maxLines = 1, overflow = TextOverflow.Ellipsis)
                             }
                             innerTextField()
                         }

@@ -302,7 +302,8 @@ class SquareBrowseTest {
     @Test fun smallDoubleFontAndSearchKeyboardKeepPrimaryReachable() {
         Assume.assumeTrue(target.resources.configuration.screenWidthDp <= 320 && target.resources.configuration.fontScale >= 1.99f)
         imported(); show()
-        compose.onNodeWithTag("square-search").performClick().performTextInput("漫游")
+        compose.onNodeWithTag("square-search-open").performClick()
+        compose.onNodeWithTag("square-search").performTextInput("漫游")
         compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == true }
         screenshot("small-real-ime-search")
         inst.uiAutomation.executeShellCommand("input keyevent 4").close()

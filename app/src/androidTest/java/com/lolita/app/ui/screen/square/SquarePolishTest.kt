@@ -127,6 +127,58 @@ class SquarePolishTest {
     private fun open(id: String) { compose.runOnIdle { model!!.open(id) }; compose.waitForIdle() }
     private fun scroll(tag: String) = compose.onNodeWithTag("square-product").performScrollToNode(hasTestTag(tag))
 
+    @Test fun collapsedSearchCancelBackAndDetailReturnKeepFilterContext() {
+        val c = imported(); show()
+        val event = SquareVisibility.events(c).first { it.canRegister }
+        val keyword = event.title.take(3)
+        val currentKind = SquareEventPresentation.kind(event)
+        compose.runOnIdle { model!!.set("shop", event.shopId); model!!.set("kind", currentKind) }
+        compose.onNodeWithTag("square-search").assertDoesNotExist()
+        compose.onNodeWithTag("square-search-open").performClick()
+        compose.onNodeWithTag("square-search").assertIsFocused()
+        compose.onNodeWithText("搜索商品或店铺").assertExists()
+        compose.onNodeWithTag("square-search").performTextInput(keyword)
+        compose.onNodeWithTag("square-event-${event.id}").assertExists()
+        open(event.id)
+        compose.onNodeWithTag("square-product").assertExists()
+        compose.runOnIdle { model!!.back() }
+        compose.onNodeWithTag("square-search").assertTextContains(keyword)
+        compose.onNodeWithText("取消").performClick()
+        compose.onNodeWithTag("square-search").assertDoesNotExist()
+        compose.onNodeWithTag("square-search-open").assertIsDisplayed()
+        assertEquals("", model!!.query.value)
+        assertEquals(event.shopId, model!!.shop.value); assertEquals(currentKind, model!!.kind.value)
+        compose.onNodeWithTag("square-search-open").performClick()
+        compose.onNodeWithTag("square-search").performTextInput(keyword)
+        compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == true }
+        screenshot("search-real-ime")
+        inst.uiAutomation.executeShellCommand("input keyevent 4").close()
+        compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == false }
+        inst.uiAutomation.executeShellCommand("input keyevent 4").close()
+        compose.waitUntil(10000) { compose.onAllNodesWithTag("square-search").fetchSemanticsNodes().isEmpty() }
+        assertEquals("", model!!.query.value)
+        compose.onNodeWithTag("square-search-open").assertIsDisplayed()
+        assertEquals(event.shopId, model!!.shop.value); assertEquals(currentKind, model!!.kind.value)
+    }
+
+    @Test fun collapsedAndExpandedSearchAcrossSevenSkinsAndModes() {
+        imported(); show()
+        for (type in SkinType.entries) for (night in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = night }
+            val suffix = "${type.name.lowercase()}-${if (night) "dark" else "light"}"
+            compose.onNodeWithTag("square-search").assertDoesNotExist()
+            compose.onNodeWithTag("square-search-open").assertIsDisplayed()
+            screenshot("search-collapsed-$suffix")
+            compose.onNodeWithTag("square-search-open").performClick()
+            compose.onNodeWithTag("square-search").assertIsFocused()
+            compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == true }
+            compose.onNodeWithText("取消").assertIsDisplayed()
+            screenshot("search-expanded-$suffix")
+            compose.onNodeWithText("取消").performClick()
+            compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == false }
+        }
+    }
+
     @Test fun compactHierarchyShowsOwnTitleAndSwitchesRealOzzColour() {
         imported(); show(); screenshot("feed-normal")
         open("angelo-villainess-elegance-deposit")

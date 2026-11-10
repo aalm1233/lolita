@@ -31,7 +31,7 @@ class SquareBrowseNavigationTest {
     @Before fun setup() {
         val fd = inst.uiAutomation.executeShellCommand("getprop ro.boot.qemu.avd_name")
         val name = FileInputStream(fd.fileDescriptor).bufferedReader().use { it.readText() }; fd.close()
-        Assume.assumeTrue("Only the task's dedicated AVD", name.trim() == "Lolita_Square_Browse_20261106")
+        Assume.assumeTrue("Only the task's dedicated AVD", name.trim() in setOf("Lolita_Square_Browse_20261106", "Lolita_Square_Polish_20261110"))
         baseline = io { AppModule.database().itemDao().getAllItemsList().map { it.id }.toSet() }; permitted = true
         val file = File(context.cacheDir, "browse-public-fixture.zip")
         if (!file.exists()) {
@@ -75,7 +75,8 @@ class SquareBrowseNavigationTest {
         compose.waitUntil(15000) { io { AppModule.database().itemDao().getAllItemsList().any { it.id !in baseline && it.size == "L" && it.colors == listOf("黑色") } } }
         compose.onNodeWithTag("square-add-wish").assertTextContains("已在心愿", substring = true).performClick()
         compose.waitUntil(10000) { nav.currentDestination?.route == Screen.ItemDetail.route }
-        compose.onNodeWithTag("square-item-members").performScrollTo().assertIsDisplayed(); shot("app-wish-parameters")
+        compose.waitUntil(10000) { compose.onAllNodesWithTag("square-item-members", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("square-item-members", useUnmergedTree = true).performScrollTo().assertIsDisplayed(); shot("app-wish-parameters")
         back(); compose.waitUntil(10000) { nav.currentDestination?.route == Screen.Square.route }
         compose.onNodeWithTag("square-color:黑色").assertIsSelected()
         compose.onNodeWithTag("square-size:L").assertIsSelected()
@@ -105,7 +106,8 @@ class SquareBrowseNavigationTest {
             }
         }; AppModule.database().itemDao().getItemById(source.itemId)!! }
         compose.runOnIdle { nav.navigate(Screen.ItemDetail.createRoute(group.id)) }
-        compose.onNodeWithTag("square-item-members").performScrollTo().assertIsDisplayed(); shot("app-group-details")
+        compose.waitUntil(10000) { compose.onAllNodesWithTag("square-item-members", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("square-item-members", useUnmergedTree = true).performScrollTo().assertIsDisplayed(); shot("app-group-details")
         assertNull(group.size); assertTrue(group.colors.isEmpty())
         val source = io { AppModule.database().orderImportDao().sources().single { it.itemId == group.id } }
         val snapshot = com.lolita.app.data.square.SquareWishSnapshot.decode(source.snapshotJson, source.imagePaths.size)

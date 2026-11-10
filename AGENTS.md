@@ -58,6 +58,8 @@
 
 - 正式2.77.0/155源码`cab11695`及标签已普通推送；27项JVM、10项去重设备方法、七皮肤浅暗/320dp两倍字及真实IME边界/物理点按通过。提交归档clean原签名Release、37素材/24旧图片核验，2.76.0覆盖两次启动保全45表/161物品/632私有图和设置；正式App清空后私人资料不变、下一前台重拉及手动检查当前/最新2.77.0通过。GitHub/Gitee同APK与SHA匿名完整下载/HEAD通过，仅依持续授权清理最旧Gitee2.68.0 APK并保留旧页/校验/GitHub/三份本机副本。AVD关闭留数据，API常驻保留；最终回执`docs/square-developer-release-2.77.0-verification.json`，实施说明`docs/square-developer-implementation-2026-11-07.md`。
 
+- 广场2.78.6／162六项浏览修整按用户顺序5→6→1→4→2→3实施：`SquarePresentation`只做摘要及同一销售链接明确颜色后缀的展示分组，不改`SquareBrowse`单品键/来源协议。缺少精确照片时标记系列参考图，心愿图片仍沿原精确映射。`SquareBrowseFilter`共用实际SKU匹配选择卡片封面及详情初始单品/颜色；筛选候选依店铺/动态/搜索和其他属性收敛，清除属性保留上层上下文。单品与多件选择可搜索，隐藏选择不清空；完整资料保留展开入口，未知与仅组合边界直接显示。Room34/45实体/备份16不变。前置图稿及本轮验收范围见`docs/plans/2026-11-10-square-polish.md`；本轮用户明确排除小屏、大字体，不计这两项通过。最终发布结果另见本轮回执。
+
 ## 架构与实现约定
 
 ### 广场内网服务（2.76.0）
@@ -390,7 +392,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=161, versionName="2.78.5"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=162, versionName="2.78.6"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

@@ -29,7 +29,6 @@ import com.lolita.app.ui.theme.skin.icon.SkinIcon
 internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareViewModel, showAmounts: Boolean, snackbar: SnackbarHostState) {
     val key by vm.browseKey.collectAsState(); val choices by vm.browseChoices.collectAsState()
     val selection = remember(c, e, key, choices) { vm.currentBrowseSelection() } ?: return
-    val parts = remember(c, e) { SquareBrowse.parts(c, e) }
     val part = selection.part; val choice = selection.choice
     var viewer by remember { mutableStateOf<Pair<List<String>, Int>?>(null) }
     val state = rememberLazyListState(); ObserveSkinScroll(state)
@@ -39,49 +38,60 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
         contentPadding = PaddingValues(bottom = 20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item(key = "hero") {
             key(part.key, choice.color) {
-                ImageFrame(Modifier.fillMaxWidth().height(if(selection.photos.isEmpty())96.dp else height).testTag("square-product-images")) {
-                    if (selection.photos.isNotEmpty()) ImageGalleryPager(selection.photos.map(vm::image), { view(selection.photos, it) },
-                        Modifier.fillMaxSize(), part.name, contentScale = ContentScale.Fit)
-                    else Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            SkinIcon(IconKey.Image, Modifier.size(36.dp), MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text("暂无单品图", style = MaterialTheme.typography.bodySmall)
+                val reference = selection.photos.isEmpty() && selection.seriesPhotos.isNotEmpty()
+                val hero = selection.photos.ifEmpty { selection.seriesPhotos }
+                Column {
+                    ImageFrame(Modifier.fillMaxWidth().height(if(hero.isEmpty())96.dp else height).testTag("square-product-images")) {
+                        if (hero.isNotEmpty()) Box(Modifier.fillMaxSize()) {
+                            ImageGalleryPager(hero.map(vm::image), { view(hero, it) }, Modifier.fillMaxSize(), part.name, contentScale = ContentScale.Fit)
+                            if (reference) Surface(Modifier.align(Alignment.TopStart).padding(8.dp).testTag("square-series-reference"),
+                                color = MaterialTheme.colorScheme.surface, shape = com.lolita.app.ui.theme.LolitaSkin.current.cardShape) {
+                                Text("系列参考图", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp))
+                            }
+                        }
+                        else Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                SkinIcon(IconKey.Image, Modifier.size(36.dp), MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("暂无单品图", style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
+                    if (reference) Text("未提供对应单品图，参考图不作为心愿封面。", style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
                 }
             }
         }
         item(key = "parts") {
-            LazyRow(modifier = Modifier.testTag("square-part-list"), contentPadding = PaddingValues(horizontal = 14.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(parts, key = { it.key }) { option ->
-                    val optionChoice = if (option.key == choice.key) choice else SquareBrowseChoice(option.key, SquareBrowse.colors(c, option).firstOrNull().orEmpty())
-                    val cover = remember(c, option, optionChoice) { SquareBrowse.select(c, option, optionChoice).photos.firstOrNull() }
-                    FilterChip(selected = part.key == option.key, onClick = { vm.selectBrowse(option.key) },
-                        modifier = Modifier.testTag("square-part-${option.partKey}"),
-                        leadingIcon = cover?.let { path -> { LolitaShimmerImage(vm.image(path), option.name, Modifier.size(36.dp, 46.dp), contentScale = ContentScale.Fit, circularRevealEnabled = false) } },
-                        label = { Text(option.name, style = MaterialTheme.typography.labelLarge) })
-                }
-            }
+            SquarePartPicker(c, e, vm, part)
         }
+
         item(key = "choices") {
             Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(c.shops.single { it.id == e.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("${e.title} · ${part.name}", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.testTag("square-product-title"))
-                Text("${e.kind} · ${e.state}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                Text("${c.shops.single { it.id == e.shopId }.name} · ${e.title.substringBefore(" · ")}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(SquarePresentation.partName(e, part), style = MaterialTheme.typography.titleLarge, modifier = Modifier.testTag("square-product-title"))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("${e.kind} · ${SquarePresentation.date(e.date)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    InfoTip("动态详情", listOfNotNull(e.state, e.date, e.priceNote).joinToString("\n").ifBlank { "状态与日期未知" })
+                }
                 if (showAmounts) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(if (selection.quote != null) squarePrice(selection.quote) else "报价未确认", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
-                        selection.priceType?.let { Text(it, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f)) }
+                        Text(if (selection.onlyInCombination) "组合报价见说明" else if (selection.quote != null) squarePrice(selection.quote) else "报价未确认", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
+                        Text(SquarePresentation.phase(selection.phase), style = MaterialTheme.typography.bodySmall)
+                        selection.priceType?.let { InfoTip("报价说明", it) }
                     }
                 }
                 if (selection.onlyInCombination) Text("仅组合售卖", style = MaterialTheme.typography.bodySmall)
-                SquareTaobaoButton(selection.rows.map { it.first }.distinctBy { it.id }, snackbar)
-                SquareSpecChoices("颜色", SquareBrowse.colors(c, part), choice.color, { vm.chooseBrowse(color = it) }, "square-color")
+                val group = SquarePresentation.groups(c, e).first { g -> g.members.any { it.key == part.key } }
+                val colors = group.members.flatMap { SquareBrowse.colors(c, it) }.distinct()
+                SquareSpecChoices("颜色", colors, if (group.members.size > 1) choice.color.ifEmpty { SquareBrowse.colors(c, part).single() } else choice.color, { color ->
+                    val member = group.members.firstOrNull { color in SquareBrowse.colors(c, it) } ?: part
+                    vm.selectBrowseColor(member.key, color)
+                }, "square-color", allowUnset = group.members.size == 1)
                 SquareSpecChoices("尺码", SquareBrowse.sizes(c, part, choice.color), choice.size, { vm.chooseBrowse(size = it) }, "square-size",
                     action = if (selection.documents.isNotEmpty()) ({ TextButton(onClick = { view(selection.documents) }) { Text(if(selection.materials.any { it.sizeTable != null }) "尺码表" else "资料图") } }) else null)
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("${e.date?.takeIf(String::isNotBlank) ?: "日期未知"} · ${e.captured?.takeIf(String::isNotBlank) ?: c.capturedAt} 快照", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
-                    InfoTip("快照信息", "价格与库存为采集快照。")
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
+                    InfoTip("快照信息", "价格与库存为采集快照。\n${e.captured?.takeIf(String::isNotBlank) ?: c.capturedAt}")
+                    SquareTaobaoButton(selection.rows.map { it.first }.distinctBy { it.id }, snackbar, compact = true)
                 }
             }
         }
@@ -96,8 +106,10 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
                             Text(part.name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
                             if (selection.onlyInCombination) InfoTip("购买内容", "当前收藏的是本部件；商家仅提供组合售卖。组合报价不作为本件全款。")
                         }
-                        SquareMaterialFacts(selection.materials.map { it.facts })
                         selection.materials.firstNotNullOfOrNull { it.sizeTable }?.let { SquareSizeTableView(it) }
+                        val facts = selection.materials.map { it.facts }
+                        squareImportantFacts(facts).forEach { Text(it, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 8.dp)) }
+                        if (squareReadableFactLines(facts).isNotEmpty()) ExpandableInfo("完整参数与售卖说明") { SquareMaterialFacts(facts) }
                         if (squareReadableFactLines(selection.materials.map { it.facts }).isEmpty() && selection.materials.none { it.sizeTable != null }) Text("参数未提供", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 12.dp))
                     }
                 }
@@ -128,6 +140,10 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
             Box(Modifier.padding(horizontal = 14.dp)) {
                 LolitaSection("来源") { row {
                     ExpandableInfo("${c.shops.single { it.id == e.shopId }.name} · ${selection.rows.map { it.first.capturedAt }.distinct().joinToString(" / ")}") {
+                        Text(e.title, style = MaterialTheme.typography.bodyMedium)
+                        Text(part.name, style = MaterialTheme.typography.bodyMedium)
+                        listOfNotNull(e.state, e.date, e.priceNote, e.note, e.material, e.detail).distinct().forEach { Text(it, style = MaterialTheme.typography.bodySmall) }
+                        if (showAmounts) e.price?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                         selection.rows.map { it.first }.distinctBy { it.id }.forEach { p ->
                             Text(p.url, style = MaterialTheme.typography.bodySmall)
                             Text(p.priceType, style = MaterialTheme.typography.bodySmall)
@@ -143,21 +159,24 @@ internal fun SquareBrowseDetail(c: SquareCatalog, e: SquareEvent, vm: SquareView
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun SquareSpecChoices(label: String, options: List<String>, selected: String, onSelect: (String) -> Unit,
-    tag: String, action: (@Composable () -> Unit)? = null) {
+    tag: String, action: (@Composable () -> Unit)? = null, allowUnset: Boolean = true, unsetLabel: String = "暂不选") {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.weight(1f))
             action?.invoke()
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            (listOf("") + options).forEach { value ->
-                FilterChip(selected == value, { onSelect(value) }, modifier = Modifier.testTag("$tag:$value"), label = { Text(value.ifEmpty { "暂不选" }) })
+            ((if (allowUnset) listOf("") else emptyList()) + options).forEach { value ->
+                FilterChip(selected == value, { onSelect(value) }, modifier = Modifier.testTag("$tag:$value"), label = { Text(value.ifEmpty { unsetLabel }) })
             }
         }
     }
 }
 
-internal fun squareReadableFactLines(facts: List<String>) = facts.flatMap { it.lines() }.filter { it.isNotBlank() && !it.startsWith("资料图说明") }.distinct()
+internal fun squareReadableFactLines(facts: List<String>) = facts.flatMap { it.split(Regex("\\n|[；;](?=[^；;：:]{1,10}[：:])")) }.filter { it.isNotBlank() && !it.startsWith("资料图说明") }.distinct()
+
+internal fun squareImportantFacts(facts: List<String>) = facts.flatMap { it.split(Regex("[。；;\\n]")) }
+    .map(String::trim).filter { line -> line.isNotBlank() && listOf("仅", "不含", "不附", "尾款", "另付", "另计", "易剥落", "勾丝", "未知", "未提供").any(line::contains) }.distinct()
 
 @Composable
 internal fun SquareMaterialFacts(facts: List<String>) {

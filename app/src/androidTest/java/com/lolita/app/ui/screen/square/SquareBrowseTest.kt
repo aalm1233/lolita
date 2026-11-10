@@ -330,13 +330,13 @@ class SquareBrowseTest {
     }
     @Test fun optionalInfoOpensOnTapAndBackReturnsToProduct() {
         imported(); show(); compose.runOnIdle { model!!.open("dorothy-cotton") }
-        compose.onNodeWithText("价格与库存为采集快照。").assertDoesNotExist()
+        compose.onNodeWithText("价格与库存为采集快照。", substring = true).assertDoesNotExist()
         compose.onNodeWithContentDescription("快照信息").performScrollTo().performClick()
-        compose.onNodeWithText("价格与库存为采集快照。").assertIsDisplayed()
+        compose.onNodeWithText("价格与库存为采集快照。", substring = true).assertIsDisplayed()
         screenshot("info-${if(target.resources.configuration.screenWidthDp<=320)"small" else "normal"}")
         inst.uiAutomation.executeShellCommand("input keyevent 4").close()
-        compose.waitUntil(5000) { compose.onAllNodesWithText("价格与库存为采集快照。").fetchSemanticsNodes().isEmpty() }
-        compose.onNodeWithText("价格与库存为采集快照。").assertDoesNotExist()
+        compose.waitUntil(5000) { compose.onAllNodesWithText("价格与库存为采集快照。", substring = true).fetchSemanticsNodes().isEmpty() }
+        compose.onNodeWithText("价格与库存为采集快照。", substring = true).assertDoesNotExist()
         compose.onNodeWithTag("square-product").assertExists()
     }
 

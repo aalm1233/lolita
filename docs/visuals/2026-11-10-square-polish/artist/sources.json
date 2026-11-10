@@ -1,0 +1,67 @@
+[
+  {
+    "path": "assets/bg-country.webp",
+    "sha256": "8557db2d017ceb94f12cac792712ae183a2080ab15f000d3fbe56eb0fba53877",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-country.webp"
+  },
+  {
+    "path": "assets/dress.webp",
+    "sha256": "a8a44e2dec822e0b6d14025585026fb01dcdd0ae7939ab972787f0cea6f28288",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/dress.webp"
+  },
+  {
+    "path": "assets/bg-sweet.webp",
+    "sha256": "da1c9cb0c76549bf465327fbad6d9c273e042ad3a5e02a8b65c95c2b3bef24c9",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-sweet.webp"
+  },
+  {
+    "path": "assets/bg-victorian.webp",
+    "sha256": "89608af5750fb07f2d11ef82e219a57657c74ce4bf73c5c63b6cc2b8647f3a0e",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-victorian.webp"
+  },
+  {
+    "path": "assets/blouse.webp",
+    "sha256": "72fa58e772bd3b00827b4ce674089f355675c67bf5702af633e206caa695c49e",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/blouse.webp"
+  },
+  {
+    "path": "assets/kc.webp",
+    "sha256": "95332344a87645ac7181b29852512e9fd69c6831e270b184609c6bbd79df7f53",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/kc.webp"
+  },
+  {
+    "path": "assets/black-dress.webp",
+    "sha256": "891feb0e58261e4831ff48df74af75bb8ca8f8d380cd35013fec014a20700bc5",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/black-dress.webp"
+  },
+  {
+    "path": "assets/bg-navy.webp",
+    "sha256": "16fe0dbc146c6876ee4ec408b07b04dcce60f8a2d8cb3427a293aa44715921ac",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-navy.webp"
+  },
+  {
+    "path": "assets/model.webp",
+    "sha256": "15e111764ac74e096c53575b6779440b571bab65b6cc6ca7ee1d4fc0df16f047",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/model.webp"
+  },
+  {
+    "path": "assets/bg-classic.webp",
+    "sha256": "3450400e35157eaae94d3a41daac2675529f9665b07a040d4f69306805c4287e",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-classic.webp"
+  },
+  {
+    "path": "assets/bg-gothic.webp",
+    "sha256": "3e32a00e0208a983d01cf1d6d16980316106d34e80f343e98c2a8442b983d801",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-gothic.webp"
+  },
+  {
+    "path": "assets/bg-chinese.webp",
+    "sha256": "f7138805330d980a6049fe7b5de8b734f74c370cc3d47a928b45ac44f40ce68e",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/bg-chinese.webp"
+  },
+  {
+    "path": "assets/set.webp",
+    "sha256": "77afd735cf61884d78f7dddc9d8faa2f0d412bbda1cf3674757410942992421c",
+    "source": "docs/visuals/2026-11-06-square-browse-first/artist/assets/set.webp"
+  }
+]

@@ -29,22 +29,39 @@ internal fun SquareWishSheet(c: SquareCatalog, vm: SquareViewModel) {
     val json by vm.multiChoices.collectAsState(); val grouped by vm.multiGrouped.collectAsState(); val busy by vm.busy.collectAsState()
     val choices = remember(json) { vm.selectedWishes() }
     val parts = remember(c, vm.eventId.value) { vm.browseParts() }
+    val event = c.events.first { it.id == vm.eventId.value }
+    val groups = remember(c, event) { SquarePresentation.groups(c, event) }
+    var query by rememberSaveable { mutableStateOf("") }
+    var expanded by rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
     var editing by rememberSaveable { mutableStateOf(choices.firstOrNull()?.key) }
     val selected = choices.firstOrNull { it.key == editing } ?: choices.firstOrNull()
     val part = parts.firstOrNull { it.key == selected?.key }
     ModalBottomSheet(onDismissRequest = vm::closeMulti, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surface, dragHandle = if (busy == null) ({ BottomSheetDefaults.DragHandle() }) else null) {
-        Column(Modifier.fillMaxWidth().testTag("square-wish-sheet")) {
+        Column(Modifier.fillMaxWidth().imePadding().testTag("square-wish-sheet")) {
             LazyColumn(Modifier.testTag("square-wish-options").weight(1f, fill = false).heightIn(max = (LocalConfiguration.current.screenHeightDp * .65f).dp).padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 item { SectionHeader("加入心愿") }
-                items(parts, key = { it.key }) { option ->
-                    val choice = choices.firstOrNull { it.key == option.key }
-                    val cover = SquareBrowse.select(c, option, choice ?: SquareBrowseChoice(option.key, SquareBrowse.colors(c, option).firstOrNull().orEmpty())).photos.firstOrNull()
-                    Row(Modifier.fillMaxWidth().testTag("square-wish-part-${option.partKey}").clickable(enabled = busy == null) { vm.toggleWish(option.key) }, verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(choice != null, { vm.toggleWish(option.key) }, enabled = busy == null)
-                        cover?.let { LolitaShimmerImage(vm.image(it), option.name, Modifier.size(46.dp, 58.dp), ContentScale.Fit, circularRevealEnabled = false) }
-                        Text(option.name, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f).padding(start = 10.dp))
+                item {
+                    OutlinedTextField(query, { query = it }, placeholder = { Text("搜索单品或颜色") }, singleLine = true,
+                        shape = LolitaSkin.current.cardShape, modifier = Modifier.fillMaxWidth().testTag("square-wish-search"))
+                    Text("已选 ${choices.size} 件", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
+                }
+                items(groups.filter { group -> group.label.contains(query, true) || group.members.any { it.name.contains(query, true) } }, key = { it.key }) { group ->
+                    Column {
+                        if (group.members.size > 1) TextButton(onClick = { expanded = if (group.key in expanded) expanded - group.key else expanded + group.key }, modifier = Modifier.fillMaxWidth()) {
+                            Text(group.label, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
+                            Text("${group.members.size} 色 · 已选 ${choices.count { choice -> group.members.any { it.key == choice.key } }} · ${if (group.key in expanded) "收起" else "展开"}")
+                        }
+                        if (group.members.size == 1 || group.key in expanded || query.isNotBlank()) group.members.filter { query.isBlank() || group.label.contains(query, true) || it.name.contains(query, true) }.forEach { option ->
+                            val choice = choices.firstOrNull { it.key == option.key }
+                            val cover = SquareBrowse.select(c, option, choice ?: SquareBrowseChoice(option.key, SquareBrowse.colors(c, option).firstOrNull().orEmpty())).photos.firstOrNull()
+                            Row(Modifier.fillMaxWidth().testTag("square-wish-part-${option.partKey}").clickable(enabled = busy == null) { vm.toggleWish(option.key) }, verticalAlignment = Alignment.CenterVertically) {
+                                Checkbox(choice != null, { vm.toggleWish(option.key) }, enabled = busy == null)
+                                cover?.let { LolitaShimmerImage(vm.image(it), option.name, Modifier.size(46.dp, 58.dp), ContentScale.Fit, circularRevealEnabled = false) }
+                                Text(SquarePresentation.partName(event, option), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f).padding(start = 10.dp))
+                            }
+                        }
                     }
                 }
                 if (choices.size > 1) item {
@@ -57,7 +74,7 @@ internal fun SquareWishSheet(c: SquareCatalog, vm: SquareViewModel) {
                 if (part != null && selected != null) item {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         if (choices.size > 1) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            choices.forEach { choice -> FilterChip(selected.key == choice.key, { editing = choice.key }, label = { Text(parts.first { it.key == choice.key }.name) }) }
+                            choices.forEach { choice -> FilterChip(selected.key == choice.key, { editing = choice.key }, label = { Text(SquarePresentation.partName(event, parts.first { it.key == choice.key })) }) }
                         }
                         SquareSpecChoices("${part.name} · 颜色", SquareBrowse.colors(c, part), selected.color,
                             { vm.changeWish(part.key, color = it) }, "square-wish-color")

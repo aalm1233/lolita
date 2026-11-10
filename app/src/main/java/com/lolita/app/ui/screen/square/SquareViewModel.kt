@@ -41,6 +41,11 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
         return runCatching{SquareBrowse.select(c,part,choice)}.getOrNull()
     }
     fun selectBrowse(key:String){if(_busy.value!=null)return;saved["square.browseKey"]=key}
+    fun selectBrowseColor(key: String, color: String) {
+        if (_busy.value != null) return
+        selectBrowse(key)
+        chooseBrowse(color = color)
+    }
     fun chooseBrowse(color:String?=null,size:String?=null){
         if(_busy.value!=null)return
         val c=catalog.value?:return;val part=currentBrowsePart()?:return;val old=currentBrowseChoice()?:return
@@ -167,7 +172,21 @@ class SquareViewModel(private val repository:SquareRepository=AppModule.squareRe
     fun image(path:String)=repository.image(path)
     fun thumbnail(path:String,epoch:Long)=repository.thumbnail(path,epoch)
     fun set(key:String,value:String) { saved["square.$key"]=value }
-    fun open(id:String) { val c=catalog.value?:return;if(c.events.none{it.id==id && SquareVisibility.event(c,it)})return; if(id!=eventId.value){saved["square.browseKey"]=null;saved["square.browseChoices"]="[]";saved["square.multiOpen"]=false};saved["square.event"]=id;saved["square.choosing"]=false;saved["square.product"]=null;saved["square.sku"]=null;saved["square.part"]=null }
+    fun open(id: String) {
+        val c = catalog.value ?: return
+        val e = c.events.firstOrNull { it.id == id && SquareVisibility.event(c, it) } ?: return
+        val filter = SquareBrowseFilter(query.value, kind.value, shop.value, color.value, style.value, form.value)
+        val stamp = SquarePackage.gson.toJson(filter)
+        if (id != eventId.value || saved.get<String>("square.openFilter") != stamp) {
+            val choice = filter.opening(c, e)
+            saved["square.browseKey"] = choice?.key
+            saved["square.browseChoices"] = SquarePackage.gson.toJson(listOfNotNull(choice))
+            saved["square.multiOpen"] = false
+        }
+        saved["square.openFilter"] = stamp
+        saved["square.event"] = id; saved["square.choosing"] = false
+        saved["square.product"] = null; saved["square.sku"] = null; saved["square.part"] = null
+    }
     fun back() { if(multiOpen.value){closeMulti();return};if(choosing.value && step.value>0)saved["square.step"]=step.value-1 else if(choosing.value)saved["square.choosing"]=false else saved["square.event"]=null }
     fun choose() {
         saved["square.choosing"]=true

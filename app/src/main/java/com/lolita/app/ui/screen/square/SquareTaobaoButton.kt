@@ -51,7 +51,7 @@ internal fun openSquareTaobao(context: Context, url: String): Boolean {
 }
 
 @Composable
-internal fun SquareTaobaoButton(products: List<SquareProduct>, snackbar: SnackbarHostState) {
+internal fun SquareTaobaoButton(products: List<SquareProduct>, snackbar: SnackbarHostState, compact: Boolean = false) {
     val links = remember(products) { products.filter { squareTaobaoUri(it.url) != null }.distinctBy { it.url } }
     var choosing by remember(links) { mutableStateOf(false) }
     val context = LocalContext.current
@@ -67,15 +67,16 @@ internal fun SquareTaobaoButton(products: List<SquareProduct>, snackbar: Snackba
             }
         }
     }
-    OutlinedButton(
-        onClick = { if (links.size == 1) open(links.single()) else choosing = true },
-        enabled = links.isNotEmpty(), shape = LolitaSkin.current.cardShape,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("square-open-taobao")
-    ) {
+    val click = { if (links.size == 1) open(links.single()) else choosing = true }
+    val label: @Composable RowScope.() -> Unit = {
         Text(if (links.isEmpty()) "暂无淘宝链接" else "淘宝查看")
-        Spacer(Modifier.width(8.dp))
-        SkinIcon(IconKey.OpenInNew, Modifier.size(20.dp))
+        Spacer(Modifier.width(6.dp))
+        SkinIcon(IconKey.OpenInNew, Modifier.size(18.dp))
     }
+    if (compact) TextButton(onClick = click, enabled = links.isNotEmpty(), shape = LolitaSkin.current.cardShape,
+        modifier = Modifier.testTag("square-open-taobao"), content = label)
+    else OutlinedButton(onClick = click, enabled = links.isNotEmpty(), shape = LolitaSkin.current.cardShape,
+        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("square-open-taobao"), content = label)
     if (choosing) AlertDialog(
         onDismissRequest = { choosing = false },
         title = { Text("选择商品链接") },

@@ -54,7 +54,7 @@ class CompleteWardrobeMannequinTest {
         assertTrue(piece.contains("Preserve all target hair fibers"))
         assertTrue(piece.contains("never complete it into a full-head wig"))
         val shoe = MannequinRequest(1, "/shoe", subject = MannequinSubject(2, "鞋", MannequinPresentation.ACCESSORY, CategorySemantic.MARY_JANE)).prompt()
-        assertTrue(shoe.contains("one visible shoe or sock must remain one"))
+        assertTrue(shoe.lowercase().contains("one visible shoe or sock must remain one"))
         assertTrue(shoe.contains("do not invent hidden soles"))
     }
     @Test fun changingCategoryLabelDoesNotChangeConfirmedSemanticPrompt() {

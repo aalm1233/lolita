@@ -180,6 +180,9 @@ class MannequinScreenTest {
         compose.onNodeWithText("生成单品展示图").performClick()
         compose.onNodeWithText("确认生成单品展示图？").assertIsDisplayed()
         compose.waitForIdle()
+        // Platform dialog window fade runs outside Compose's idling clock.
+        instrumentation.waitForIdleSync()
+        Thread.sleep(400)
         instrumentation.uiAutomation.takeScreenshot().also { bitmap ->
             File(output, "confirmation.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
         }
@@ -189,6 +192,8 @@ class MannequinScreenTest {
         generated.complete("accessory-task")
         compose.waitUntil(10_000) { !vm.uiState.value.isSubmitting }
         assertEquals(photos.first(), submitted!!.imagePath)
+        assertEquals(vm.uiState.value.item!!.name,submitted!!.targetName)
+        assertEquals(vm.uiState.value.item!!.composition,submitted!!.composition)
         assertEquals(com.lolita.app.domain.model.MannequinSubject(1, "KC", com.lolita.app.domain.model.MannequinPresentation.ACCESSORY, com.lolita.app.domain.model.CategorySemantic.KC), submitted!!.subject)
     }
 

@@ -16,7 +16,7 @@ val MannequinSubject.batchDisplayLabel: String
     } else "单品主视图"
 
 data class PreparedDisplayInput(val product: PreparedMaterialInput, val subject: MannequinSubject, val composition: ItemComposition,
-    val templatePath: String? = null, val templateSha256: String? = null) {
+    val templatePath: String? = null, val templateSha256: String? = null, val targetName: String, val targetColors: List<String>) {
     val paths get() = listOfNotNull(templatePath) + product.imagePath
 }
 

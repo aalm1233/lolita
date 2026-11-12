@@ -6,6 +6,8 @@ import com.lolita.app.domain.model.MannequinPresentation
 import com.lolita.app.domain.model.MannequinRequest
 import com.lolita.app.domain.model.MannequinSubject
 import com.lolita.app.domain.model.CategorySemantic
+import com.lolita.app.domain.model.ItemComposition
+import com.lolita.app.domain.model.StandaloneProductPrompts
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import java.nio.file.Files
@@ -22,7 +24,12 @@ fun main(args: Array<String>) = runBlocking {
     val subject = MannequinSubject(1, job["category"].asString,
         MannequinPresentation.valueOf(job["presentation"].asString),
         CategorySemantic.valueOf(job["semantic"].asString))
-    val prompt = MannequinRequest(1, paths.last().toString(), subject = subject).prompt()
+    val instructions = job["instructions"]?.asString.orEmpty()
+    val composition = job["composition"]?.asString?.let(ItemComposition::valueOf) ?: ItemComposition.UNCONFIRMED
+    val colors = job["colors"]?.asJsonArray?.map { it.asString }.orEmpty()
+    val prompt = if (subject.presentation == MannequinPresentation.ACCESSORY)
+        StandaloneProductPrompts.front(requireNotNull(subject.semantic), composition, job["name"].asString, instructions, colors)
+    else MannequinRequest(1, paths.last().toString(), instructions, subject).prompt()
     if (args[0] == "prepare") {
         Files.writeString(folder.resolve("prompt.txt"), prompt)
         println("Prepared production prompt; no HTTP")

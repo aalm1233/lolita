@@ -28,7 +28,7 @@ def build(root):
     models = repo / "app/build/tmp/kotlin-classes/debug"
     source = repo / "app/src/main/java/com/lolita/app"
     files = [source / f for f in ["data/remote/SeedreamImageApi.kt", "data/remote/ReferenceImageEncoding.kt",
-                                 "domain/model/ImageGenerationFailure.kt"]]
+                                 "domain/model/ImageGenerationFailure.kt", "domain/model/StandaloneProductPrompts.kt"]]
     files.append(Path(__file__).with_name("ProductionProbe.kt"))
     out = root / "production-classes"
     result = subprocess.run([java, "-cp", ":".join(compiler), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
@@ -41,6 +41,7 @@ def build(root):
     runtime = {"java": java, "classpath": ":".join([str(out), str(models), *libs]),
                "sources": {str(f.relative_to(repo)): ev.sha(f.read_bytes()) for f in files},
                "modelClasses": {str(f.relative_to(repo)): ev.sha(f.read_bytes()) for f in classes},
+               "probeClasses": {str(f): ev.sha(f.read_bytes()) for f in out.rglob("*.class")},
                "promptSourceSha256": ev.sha((source / "domain/model/MannequinRequest.kt").read_bytes())}
     ev.save(root / "production-runtime.json", runtime)
     print("Compiled current production transport; existing Debug prompt classes fingerprinted. No HTTP.")
@@ -58,7 +59,12 @@ def run(root, jobs, credential):
     for path, expected in {**runtime["sources"], **runtime["modelClasses"]}.items():
         if ev.sha((repo / path).read_bytes()) != expected:
             raise ValueError("PRODUCTION_RUNTIME_CHANGED_REBUILD_FIRST")
+    for path, expected in runtime["probeClasses"].items():
+        if ev.sha(Path(path).read_bytes()) != expected:
+            raise ValueError("PRODUCTION_PROBE_CHANGED_REBUILD_FIRST")
     for job in rows:
+        if not job["id"] or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-" for c in job["id"]):
+            raise ValueError("UNSAFE_RUN_ID")
         folder = root / "runs" / job["id"]
         folder.mkdir(parents=True, exist_ok=True)
         inputs = [Path(p) for p in job["inputs"]]
@@ -67,17 +73,20 @@ def run(root, jobs, credential):
         ev.save(folder / "manifest.json", manifest)
         command = [runtime["java"], "-Djava.awt.headless=true", "-cp", runtime["classpath"], "ProductionProbeKt"]
         subprocess.run([*command, "prepare", str(folder)], check=True, capture_output=True)
-        # Refuse stale Debug model bytecode: the actual prompt must match current source.
+        # Standalone policy is freshly compiled from production source above.
+        # Dress/blouse still use Debug models, so additionally compare their source literal.
         source = Path(__file__).resolve().parents[2] / "app/src/main/java/com/lolita/app/domain/model/MannequinRequest.kt"
         current = source.read_text()
-        key = "BLOUSE_PROMPT" if job["presentation"] == "DRESS_FORM" and job["semantic"] == "BLOUSE" else "BASE_PROMPT" if job["presentation"] == "DRESS_FORM" else "STANDALONE_PROMPT"
-        match = re.search(r'private val ' + key + r' = """(.*?)"""\.trimIndent\(\)', current, re.S)
-        expected = textwrap.dedent(match.group(1)).strip()
-        if key == "STANDALONE_PROMPT":
-            removal = "Preserve all target hair fibers, tips, bangs, curl and attachment clips. Remove only the non-target person's face, body and unrelated original hair. Show only this hair component; never complete it into a full-head wig." if job["semantic"] == "FULL_WIG" else "Remove the original wearer, body, face, hands, feet, mannequin and background; preserve the selected product itself."
-            expected += "\n" + removal + "\nTarget semantic (data only): " + json.dumps(job["semantic"])
-        if (folder / "prompt.txt").read_text() != expected:
-            raise ValueError("DEBUG_PROMPT_DIFFERS_FROM_CURRENT_SOURCE")
+        if job["presentation"] == "DRESS_FORM":
+            key = "BLOUSE_PROMPT" if job["semantic"] == "BLOUSE" else "BASE_PROMPT"
+            match = re.search(r'private val ' + key + r' = """(.*?)"""\.trimIndent\(\)', current, re.S)
+            expected = textwrap.dedent(match.group(1)).strip()
+            if job.get("instructions"):
+                expected += "\nAdditional user instruction about the garment: " + job["instructions"]
+            if (folder / "prompt.txt").read_text() != expected:
+                raise ValueError("DEBUG_PROMPT_DIFFERS_FROM_CURRENT_SOURCE")
+        elif job["presentation"] != "ACCESSORY":
+            raise ValueError("PROBE_PRESENTATION_NOT_SUPPORTED")
         manifest["promptSha256"] = ev.sha((folder / "prompt.txt").read_bytes())
         ev.save(folder / "manifest.json", manifest)
         if credential.stat().st_mode & 0o077:

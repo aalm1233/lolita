@@ -35,6 +35,11 @@ class DisplayBatchWorkflowTest {
         assertEquals(rows.size,f.serviceStarts);f.runner.runQueue()
         val save=ids.map{val t=f.db.imageTaskDao().get(it)!!;t.validate();val r=ImageTaskRequest.decode(t.requestJson)
             assertEquals(ImageTaskKind.MANNEQUIN,t.kind);assertNull(r.materialSpec);r.validateInputImages(t.sourceImagePaths)
+            val row=rows.single{it.itemId==r.garments.single().itemId}
+            if(row.prepared.subject.presentation==MannequinPresentation.ACCESSORY) {
+                val item=original.getValue(row.itemId)
+                assertEquals(StandaloneProductPrompts.front(row.prepared.subject.semantic!!,item.composition,item.name,row.instructions,item.colors),r.promptSnapshot)
+            }
             BatchMaterialConfirmation(it,t.resultImagePath!!,null)
         }
         f.coordinator.confirmDisplayBatch(b.id,save,true);f.coordinator.confirmDisplayBatch(b.id,save,true)
@@ -54,6 +59,50 @@ class DisplayBatchWorkflowTest {
         assertTrue(f.db.imageProvenanceDao().getAll().isEmpty())
         save.forEach{assertEquals(ImageTaskStatus.AWAITING_CONFIRMATION,f.db.imageTaskDao().get(it.taskId)!!.status);assertTrue(File(it.imagePath).isFile)}
         assertEquals(items.first().imageUrls,f.db.itemDao().getItemById(items.first().id)!!.imageUrls)
+    }}
+    @Test fun disclosedNameCannotChangeBeforeSendAndOldQueuedPromptIsNeverRebuilt()=runBlocking{fixture{f->
+        val item=f.db.itemDao().getItemById(f.itemId)!!
+        val rows=inputs(f)
+        f.db.itemDao().updateItem(item.copy(name="未确认的新名称"))
+        assertTrue(runCatching{f.coordinator.submitDisplayBatch(batch(),UUID.randomUUID().toString(),rows,ImageGenerationProvider.SEEDREAM)}.isFailure)
+        assertEquals(0,f.serviceStarts)
+        f.db.itemDao().updateItem(item.copy(colors=listOf("未确认颜色")))
+        assertTrue(runCatching{f.coordinator.submitDisplayBatch(batch(),UUID.randomUUID().toString(),rows,ImageGenerationProvider.SEEDREAM)}.isFailure)
+        assertEquals(0,f.serviceStarts)
+        f.db.itemDao().updateItem(item)
+        val oldId=f.coordinator.submitDisplayBatch(batch(),UUID.randomUUID().toString(),rows,ImageGenerationProvider.SEEDREAM).single()
+        val oldTask=f.db.imageTaskDao().get(oldId)!!
+        val oldRequest=ImageTaskRequest.decode(oldTask.requestJson).copy(promptSnapshot="original paid prompt before tuning")
+        f.db.imageTaskDao().update(oldTask.copy(requestJson=oldRequest.encode()))
+        val newId=f.coordinator.submitDisplayBatch(batch(),UUID.randomUUID().toString(),inputs(f),ImageGenerationProvider.SEEDREAM).single()
+        val newPrompt=ImageTaskRequest.decode(f.db.imageTaskDao().get(newId)!!.requestJson).promptSnapshot!!
+        assertEquals(StandaloneProductPrompts.front(CategorySemantic.WAIST_ACCESSORY,item.composition,item.name,"保留原细节"),newPrompt)
+        f.runner.runQueue()
+        assertEquals(2,f.displayCalls)
+        assertEquals(setOf("original paid prompt before tuning",newPrompt),f.displayPrompts.toSet())
+        assertEquals("original paid prompt before tuning",ImageTaskRequest.decode(f.db.imageTaskDao().get(oldId)!!.requestJson).promptSnapshot)
+    }}
+    @Test fun singleAccessoryFreezesDisclosedNameAndCompositionBeforeQueue()=runBlocking{fixture{f->
+        val item=f.db.itemDao().getItemById(f.itemId)!!
+        val category=f.db.categoryDao().getCategoryById(item.categoryId)!!
+        val request=MannequinRequest(item.id,item.imageUrls.first(),subject=mannequinSubject(category,true),targetName=item.name,composition=item.composition)
+        f.db.itemDao().updateItem(item.copy(name="尚未确认"))
+        assertTrue(runCatching{f.coordinator.submitMannequin(request,ImageGenerationProvider.SEEDREAM)}.isFailure)
+        assertEquals(0,f.serviceStarts)
+        f.db.itemDao().updateItem(item)
+        val id=f.coordinator.submitMannequin(request,ImageGenerationProvider.SEEDREAM)
+        f.runner.runQueue()
+        assertEquals(1,f.displayCalls)
+        assertEquals(listOf(StandaloneProductPrompts.front(CategorySemantic.WAIST_ACCESSORY,item.composition,item.name)),f.displayPrompts)
+        assertEquals(request.prompt(),ImageTaskRequest.decode(f.db.imageTaskDao().get(id)!!.requestJson).promptSnapshot)
+    }}
+    @Test fun targetChangeDuringImageValidationRollsBackBeforeAnyServiceStarts()=runBlocking{fixture{f->
+        val rows=inputs(f)
+        val item=f.db.itemDao().getItemById(f.itemId)!!
+        f.beforeSourceValidation={f.db.itemDao().updateItem(item.copy(colors=listOf("并发改变颜色")))}
+        assertTrue(runCatching{f.coordinator.submitDisplayBatch(batch(),UUID.randomUUID().toString(),rows,ImageGenerationProvider.SEEDREAM)}.isFailure)
+        assertEquals(0,f.serviceStarts)
+        assertTrue(f.db.imageTaskDao().getAll().isEmpty())
     }}
     @Test fun changedInputAndInsertionFailureCannotStartPartialBatch()=runBlocking{fixture{f->
         f.batchItems(2);val b=batch();val rows=inputs(f)

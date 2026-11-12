@@ -63,7 +63,9 @@ data class MannequinUiState(
     val canGenerate get() = !busy && !isLoading && !loadFailed && keyLoaded && hasKey && selectionIssue == null
     val generationRequest: MannequinRequest? get() = if (selectionIssue == null)
         MannequinRequest(requireNotNull(item).id, selectedImage, instructions, requireNotNull(subject),
-            selectedHeadTemplate.takeIf { presentation == MannequinPresentation.WIG_HEAD }, referenceViewConfirmed, originalImagePath) else null
+            selectedHeadTemplate.takeIf { presentation == MannequinPresentation.WIG_HEAD }, referenceViewConfirmed, originalImagePath,
+            item.name.takeIf { presentation == MannequinPresentation.ACCESSORY }, item.composition.takeIf { presentation == MannequinPresentation.ACCESSORY },
+            item.colors.toList().takeIf { presentation == MannequinPresentation.ACCESSORY }.orEmpty()) else null
 
 }
 

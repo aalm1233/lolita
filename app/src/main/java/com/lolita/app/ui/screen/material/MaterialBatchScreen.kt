@@ -194,9 +194,12 @@ private fun MaterialBatchFeeDialog(fee:MaterialBatchFee,busy:Boolean,onDismiss:(
             item{LolitaSection(title="${fee.provider.recipient} · ${fee.provider.label}"){row{
                 Text("${fee.rows.size}件物品 · ${fee.rows.size}次${if(display)"展示图生成" else if(fee.phase==MaterialBatchPhase.INPUTS)"主视生成" else "分层"}请求",style=MaterialTheme.typography.titleMedium)
                 Text(if(display)"每件生成1张展示图，本批最多${fee.rows.size}张；返回后集中核对并追加相册，不自动设为封面。" else if(fee.phase==MaterialBatchPhase.INPUTS)"本次最多输出${fee.rows.size}张主视图。返回后集中核对，再另行确认分层费用。" else "每次含底图和最多16个透明层，本批最多${fee.rows.size*17}张成功输出。按实际输出张数计费，不能预先确认金额。")
-                Text("AI可能改绘商品细节，请核对后保存。API单独按服务资费计费。未选相册、订单、价格、位置与身体参数不发送。",style=MaterialTheme.typography.bodySmall)
+                Text(if(display) "发送所选图片、物品名称、类型、颜色、组合与补充要求。不发送未选图、订单、价格、位置或身体参数。AI细节需核对，API另计费。"
+                    else "AI可能改绘商品细节，请核对后保存。API单独按服务资费计费。未选相册、订单、价格、位置与身体参数不发送。",style=MaterialTheme.typography.bodySmall)
             }}}
-            itemsIndexed(fee.rows,key={_,row->row.itemId}){index,row->LolitaSection(title="将发送的图片 ${index+1} · ${row.name}"){row{row.display?.let{prepared->Text(prepared.subject.batchDisplayLabel);prepared.templatePath?.let{template->Text("将发送的固定人台模板");MaterialPhoto(template,"放大实际人台模板${index+1}",{onZoom(template)},190)}};MaterialPhoto(row.input.imagePath,"放大实际输入${index+1}",{onZoom(row.input.imagePath)},190)}}}
+            itemsIndexed(fee.rows,key={_,row->row.itemId}){index,row->LolitaSection(title="将发送的图片 ${index+1} · ${row.name}"){row{row.display?.let{prepared->Text(if(prepared.subject.presentation==MannequinPresentation.ACCESSORY)
+                "${prepared.subject.batchDisplayLabel} · ${prepared.subject.semantic?.label.orEmpty()} · ${prepared.composition.label}\n颜色：${prepared.targetColors.joinToString("／").ifBlank{"未设置"}}"
+                else prepared.subject.batchDisplayLabel);prepared.templatePath?.let{template->Text("将发送的固定人台模板");MaterialPhoto(template,"放大实际人台模板${index+1}",{onZoom(template)},190)}};MaterialPhoto(row.input.imagePath,"放大实际输入${index+1}",{onZoom(row.input.imagePath)},190)}}}
             item{LolitaSection(title="费用与结果"){row{if(fee.instructions.isNotBlank())Text("本批补充要求：${fee.instructions}");Text("全部验证并入队后才开始。单件失败不阻塞其他任务，不自动重试，也不自动进入下一次付费阶段。取消或超时后服务仍可能计费。")}}}
             item{BatchCheck("已核对本批全部实际输入、接收方和费用范围",checked,!busy){checked=it}}
         }}

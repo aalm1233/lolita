@@ -111,7 +111,7 @@ fun MannequinScreen(
                 Column(Modifier.fillMaxWidth().imePadding().padding(horizontal = skin.spacingLarge, vertical = skin.spacingMedium),
                     verticalArrangement = Arrangement.spacedBy(skin.spacingSmall)) {
                     Text(if (wig) "上传所选头模与假发原图至 ${state.provider.recipient}，共2张图片；API 单独计费。"
-                        else if (accessory) "上传所选小物原图及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
+                        else if (accessory) "上传所选小物原图、名称、类型、颜色、组合及补充说明至 ${state.provider.recipient}，共1张图片；API 单独计费。"
                         else if (blouse) "上传所选衬衫原图、固定人台模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。"
                         else "上传所选原图、固定模板及补充说明至 ${state.provider.recipient}，共2张图片；API 单独计费。",
                         style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("mannequinUploadSummary"))
@@ -293,12 +293,14 @@ fun MannequinScreen(
                     LolitaShimmerImage(model = confirmed.request.imagePath, contentDescription = "本次将上传的原图", contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxWidth().height(120.dp), circularRevealEnabled = false)
                 }
-                Text("分类：${confirmed.request.subject?.categoryName.orEmpty()}")
+                Text(if(confirmed.request.targetName!=null)
+                    "物品：${confirmed.request.targetName}\n类型：${confirmed.request.subject?.semantic?.label.orEmpty()}\n颜色：${confirmed.request.colors.joinToString("／").ifBlank{"未设置"}}\n组合：${confirmed.request.composition?.label.orEmpty()}"
+                    else "分类：${confirmed.request.subject?.categoryName.orEmpty()}")
                 if (confirmed.request.instructions.isNotBlank()) Text("补充说明：${confirmed.request.instructions}")
                 Text(if (confirmed.request.presentation == MannequinPresentation.WIG_HEAD)
                     "将上传上方选定的头模与假发原图至 ${confirmed.provider.recipient}，共2张图片，API 单独计费。结果须核对颜色、形状、组成数量和发梢；不会替换封面。"
                     else if (confirmed.request.presentation == MannequinPresentation.ACCESSORY)
-                    "将上传这张小物原图与补充说明至 ${confirmed.provider.recipient}，不上传人台模板，共1张图片；API 单独计费。结果在任务中心核对后再添加。"
+                    "将上传这张小物原图、物品名称、类型、颜色、组合与补充说明至 ${confirmed.provider.recipient}，不上传人台模板，共1张图片；API 单独计费。结果在任务中心核对后再添加。"
                     else if (confirmedBlouse)
                     "将上传这张衬衫原图、固定无头无手臂人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。保留领口、袖口和下摆，下身留空，不补裙裤。结果须在任务中心核对后再添加，不自动替换封面。"
                     else "将上传这张原图、无杆人台模板与补充说明至 ${confirmed.provider.recipient}，共2张图片；API 单独计费。结果在任务中心核对后再添加。")

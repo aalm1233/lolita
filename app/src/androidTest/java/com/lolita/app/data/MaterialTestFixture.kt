@@ -38,6 +38,8 @@ internal class MaterialTestFixture {
     var layerCalls = 0
     var fusionCalls = 0
     var displayCalls = 0
+    val displayPrompts = mutableListOf<String>()
+    var beforeSourceValidation: suspend () -> Unit = {}
     var displayOutput: suspend () -> ByteArray = { opaque }
     var serviceStarts = 0
     var frontOutput: suspend () -> ByteArray = { opaque }
@@ -48,7 +50,7 @@ internal class MaterialTestFixture {
     var categoryId = 0L
     val coordinator = ImageTaskCoordinator(db,scope,{serviceStarts++}, { ImageFileHelper.saveGeneratedImage(context,it) },ImageFileHelper::deleteImage,
         { ImageFileHelper.isOwnedGeneratedImage(context,it) },
-        validateSourceImage = { ImageFileHelper.isOwnedReadableImage(context,it) },
+        validateSourceImage = { val action=beforeSourceValidation; beforeSourceValidation={};action();ImageFileHelper.isOwnedReadableImage(context,it) },
         validateProductImage = { ImageFileHelper.isOwnedReadableProductImage(context,it) },
         snapshotBuiltInImage = { ImageFileHelper.copyAssetToInternalStorage(context,it) },
         appendImageProvenance = { itemId,path,mode,taskId -> db.imageProvenanceDao().upsert(ImageProvenance(path,itemId,ImageSourceType.AI_GENERATED,mode,taskId)) },
@@ -59,7 +61,7 @@ internal class MaterialTestFixture {
         images::prepare,images::prepareMannequin,
         { _,inputs,_ -> fusionCalls++; receivedImages=inputs; opaque },
         prepareSnapshotImages=images::prepareSnapshots,
-        generateMannequin={ _,inputs,_ -> displayCalls++; receivedImages=inputs; displayOutput() },
+        generateMannequin={ _,inputs,prompt -> displayCalls++; displayPrompts+=prompt; receivedImages=inputs; displayOutput() },
         generateMaterial={ _,inputs,_ -> frontCalls++; receivedImages=inputs; frontOutput() },
         decomposeMaterial={ _,inputs,_ -> layerCalls++; receivedImages=inputs; layerOutput() })
     val runner = ImageTaskRunner(coordinator,executor::execute)

@@ -6,7 +6,7 @@
 
 `three_view.py run` 接收经过逐图选择的JSON作业：`id/itemId/category/name/strategy/inputs`，可选`notes/size/prompt`。每张输出预留一次调用；500次硬上限、线程间加锁原子记账、每批最多三路、跨批互斥、同ID拒绝重发，额度/鉴权/限流后停止派发新请求。失败和未知结果仍计数。无重定向、自动重试或额外识图服务；只保存服务错误代码，不保存消息或响应正文。只应使用小批次，并逐图检查前一批后再继续。
 
-`production_probe.py build/run` 离线编译当前正式Seedream传输源码、记录Debug模型类摘要，并要求实际提示词与当前 `MannequinRequest.kt` 完全相等才允许请求。运行前复核源码和类文件摘要。它仍使用主机归一化输入，不代替Android编码、任务或页面验证。
+`production_probe.py build/run` 离线编译当前正式Seedream传输和单品提示源码，记录Debug模型类与探针类摘要。人台模式还检查实际提示与当前 `MannequinRequest.kt` 字面值相等。运行前复核源码和类文件摘要；先完成Debug构建，再编译探针，不能与Gradle重建类文件同时进行。它仍使用主机归一化输入，不代替Android编码、任务或页面验证。
 
 `evidence_board.py prepare` 只接受当前物品自己的、无AI生成标记且逐图确认视角的图片与归一化裁切；缺失角度不创建付费作业。发送后不能重写该证据输入。`compose` 通过本地代码填未知格，默认保留原裁切；只有明确提供结果SHA且与成功回执一致才换入AI提取。结果仍需逐图检查细节、方向和裁切，三格Fit排版不表示真实等物理比例。
 

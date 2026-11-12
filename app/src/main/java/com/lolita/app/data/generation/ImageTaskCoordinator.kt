@@ -143,7 +143,7 @@ class ImageTaskCoordinator(
         return try {
             if (subject.presentation == MannequinPresentation.DRESS_FORM)
                 template = snapshotBuiltInImage(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET)
-            PreparedDisplayInput(product, subject, item.composition, template, template?.let(::imageSha256))
+            PreparedDisplayInput(product, subject, item.composition, template, template?.let(::imageSha256), item.name, item.colors.toList())
         } catch (failure: Throwable) {
             withContext(NonCancellable) { cleanup(listOfNotNull(product.imagePath, template)) }
             throw failure
@@ -161,19 +161,20 @@ class ImageTaskCoordinator(
             val category = requireNotNull(db.categoryDao().getCategoryById(item.categoryId))
             val subject = batchDisplaySubject(category)
             require(subject == prepared.subject && item.composition == prepared.composition && item.status.supportsVirtualTryOn && row.originalPath in item.productReferenceImages) { "物品或原图已改变" }
+            require(item.name == prepared.targetName && item.colors == prepared.targetColors) { "物品名称或颜色已改变，请重新核对发送内容" }
             require(validateProductImage(prepared.product.sourcePath) && imageSha256(prepared.product.sourcePath) == prepared.product.sourceSha256 &&
                 imageSha256(prepared.product.imagePath) == prepared.product.sha256) { "实际输入已改变" }
             require((subject.presentation == MannequinPresentation.DRESS_FORM) == (prepared.templatePath != null)) { "实际人台输入不完整" }
             prepared.templatePath?.let { require(validateSourceImage(it) && imageSha256(it) == prepared.templateSha256) { "人台模板已改变" } }
             val prompt = if (subject.presentation == MannequinPresentation.DRESS_FORM)
                 MannequinRequest(item.id, prepared.product.imagePath, row.instructions, subject).prompt()
-            else TryOnMaterialPrompts.front(category.categorySemantic, item.composition, row.instructions)
+            else StandaloneProductPrompts.front(category.categorySemantic, item.composition, item.name, row.instructions, item.colors)
             val request = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
                 row.instructions, version = 4, mannequinSubject = subject, promptVersion = 1, promptSnapshot = prompt,
                 serviceModel = provider.model, inputSha256s = prepared.paths.map(::imageSha256), productOriginalImagePath = row.originalPath)
             batchTask(batch, operationId, row.position, ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.batchDisplayLabel}", request, prepared.paths)
         }
-        enqueueBatch(jobs)
+        enqueueBatch(jobs, confirmedDisplayInputs = rows.associate { it.itemId to it.prepared })
     }
 
     suspend fun submitLayerBatch(batch: MaterialBatchIdentity, operationId: String, rows: List<BatchLayerInput>): List<String> =
@@ -201,7 +202,8 @@ class ImageTaskCoordinator(
             keepSourceImages = true, batchId = batch.id, batchName = batch.name, batchPosition = position)
 
     /** Validate the entire admission before its single transaction; start no service for a partial batch. */
-    private suspend fun enqueueBatch(jobs: List<ImageTask>, parents: List<ImageTask> = emptyList()): List<String> {
+    private suspend fun enqueueBatch(jobs: List<ImageTask>, parents: List<ImageTask> = emptyList(),
+        confirmedDisplayInputs: Map<Long, PreparedDisplayInput> = emptyMap()): List<String> {
         require(jobs.isNotEmpty())
         val existing = jobs.map { dao.get(it.id) }
         if (existing.any { it != null }) {
@@ -238,6 +240,9 @@ class ImageTaskCoordinator(
                 require(item.status.supportsVirtualTryOn && db.categoryDao().getCategoryById(item.categoryId)?.categorySemantic == request.garments.single().semantic &&
                     (request.version < 6 && job.kind != ImageTaskKind.MANNEQUIN || item.composition == request.garments.single().composition)) { "批次中有物品类型、组合或状态已改变" }
                 if (job.kind == ImageTaskKind.MANNEQUIN) {
+                    confirmedDisplayInputs[item.id]?.let { confirmed ->
+                        require(item.name == confirmed.targetName && item.colors == confirmed.targetColors && item.composition == confirmed.composition) { "本批目标资料已改变，请重新核对" }
+                    }
                     require(batchDisplaySubject(requireNotNull(db.categoryDao().getCategoryById(item.categoryId))) == request.mannequinSubject &&
                         request.productOriginalImagePath in item.productReferenceImages) { "本批展示方式或原参考图已改变" }
                 }
@@ -539,6 +544,7 @@ class ImageTaskCoordinator(
             }
         }
         if (subject.semantic != null) {
+            if (request.targetName != null) require(request.targetName == item.name && request.composition == item.composition && request.colors == item.colors) { "物品名称、颜色或组合已改变，请重新核对" }
             suspend fun enqueueSnapshot(template: String?): String {
                 val sources = listOfNotNull(template) + request.imagePath
                 val metadata = ImageTaskRequest(listOf(ImageTaskGarment(item.id, item.name, TryOnRole.MAIN, subject.semantic, item.composition)),
@@ -548,7 +554,7 @@ class ImageTaskCoordinator(
                     }, wigHeadTemplate = request.wigHeadTemplate,
                     productOriginalImagePath = request.originalImagePath)
                 return enqueue(ImageTaskKind.MANNEQUIN, provider, "${item.name} · ${subject.presentation.label}", metadata, sources,
-                    onPersisted={persisted=true})
+                    onPersisted={persisted=true}, confirmedMannequinTarget=request)
             }
             return@accepted when (subject.presentation) {
                 MannequinPresentation.DRESS_FORM -> withStagedBuiltInInput(com.lolita.app.data.tryon.TryOnImages.MANNEQUIN_ASSET,
@@ -595,7 +601,7 @@ class ImageTaskCoordinator(
 
     private suspend fun enqueue(kind: ImageTaskKind, provider: ImageGenerationProvider, title: String,
         request: ImageTaskRequest, paths: List<String>, personalModelId: Long? = null, expectedModelImagePath: String? = null,
-        onPersisted:()->Unit={}): String {
+        onPersisted:()->Unit={}, confirmedMannequinTarget: MannequinRequest? = null): String {
         suspend fun <T> admission(stage:MannequinAdmissionFailureKind,block:suspend ()->T):T =
             if(kind==ImageTaskKind.MANNEQUIN)mannequinAdmission(stage,block) else block()
         val task = admission(MannequinAdmissionFailureKind.STORAGE) { state.withLock {
@@ -623,6 +629,9 @@ class ImageTaskCoordinator(
                     referencedProductImages=item.productReferenceImages.toSet()
                     val category=db.categoryDao().getCategoryById(item.categoryId)
                     admission(MannequinAdmissionFailureKind.SUBJECT) {
+                        confirmedMannequinTarget?.takeIf { it.targetName != null }?.let { confirmed ->
+                            require(item.name == confirmed.targetName && item.colors == confirmed.colors && item.composition == confirmed.composition) { "本次单品目标资料已改变，请重新核对" }
+                        }
                         val currentSubject = mannequinSubject(category)
                         require(currentSubject != null && currentSubject == metadata.mannequinSubject) { "物品分类已改变，请重新核对展示方式" }
                     }

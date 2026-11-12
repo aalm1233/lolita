@@ -94,6 +94,14 @@ class MaterialBatchScreenTest {
         compose.onNodeWithText("透明层").assertDoesNotExist()
         compose.runOnIdle{skin.value=SkinType.DEFAULT;dark.value=false;vm.uiState.value.rows.forEach{vm.toggle(it.key,true)};vm.prepareFee()}
         compose.waitUntil(10000){vm.uiState.value.fee!=null && !vm.uiState.value.busy};screenshot("fee-display")
+        for(type in SkinType.entries)for(night in listOf(false,true)) {
+            compose.runOnIdle{skin.value=type;dark.value=night}
+            compose.onNodeWithTag("batchFeeSend").assertIsDisplayed().assertIsNotEnabled()
+            compose.onNodeWithTag("batchFeeInputs").performScrollToNode(hasText("发送所选图片、物品名称、类型、颜色、组合与补充要求。",substring=true))
+            compose.onNodeWithText("发送所选图片、物品名称、类型、颜色、组合与补充要求。",substring=true).assertIsDisplayed()
+            screenshot("fee-${type.name.lowercase()}-${if(night)"dark" else "light"}")
+        }
+        compose.runOnIdle{skin.value=SkinType.DEFAULT;dark.value=false}
         assertEquals(0,f.displayCalls);feeSend();screenshot("queue-display")
         assertEquals(3,runBlocking{f.db.imageTaskDao().getAll().size});assertEquals(0,f.displayCalls)
         f.displayOutput={if(f.displayCalls==2)throw ImageGenerationFailure(ImageGenerationFailureKind.MODEL) else f.receivedImages.last()}
@@ -135,6 +143,8 @@ class MaterialBatchScreenTest {
         compose.onNodeWithTag("batchPrimary").performClick()
         compose.waitUntil(10000){vm.uiState.value.fee!=null && !vm.uiState.value.busy};assertEquals(3,vm.uiState.value.fee!!.rows.size)
         compose.onNodeWithTag("batchFeeSend").assertIsDisplayed().assertIsNotEnabled();screenshot("small-fee")
+        compose.onNodeWithText("发送所选图片、物品名称、类型、颜色、组合与补充要求。",substring=true).performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("batchFeeSend").assertIsDisplayed().assertIsNotEnabled();screenshot("small-fee-upload-fields")
         compose.runOnIdle{vm.dismissFee()}
     }
 }

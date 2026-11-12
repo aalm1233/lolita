@@ -1,0 +1,91 @@
+{
+  "schema": "lolita.image-evaluation.summary.v1",
+  "date": "2026-11-12",
+  "scope": "Independent research tools; no Android production changes or APK release",
+  "provider": "Volcano Ark Seedream",
+  "model": "doubao-seedream-5-0-pro-260628",
+  "budget": {
+    "limitRequests": 500,
+    "attempts": 121,
+    "successfulRequests": 121,
+    "returnedImages": 121,
+    "remainingRequests": 379,
+    "unknownOutcomes": 0,
+    "automaticRetries": 0,
+    "invoiceVerified": false
+  },
+  "inventory": {
+    "items": 160,
+    "imageEntries": 619,
+    "distinctImageSha256": 580,
+    "aiMarkedEntries": 36,
+    "duplicateContentEntries": 39,
+    "decodedEntries": 619,
+    "imageIOFallbacks": 4,
+    "testedItems": 41,
+    "actualCategoriesCovered": 30
+  },
+  "strategies": {
+    "naive": 22,
+    "grounded": 38,
+    "multiref": 6,
+    "extract": 28,
+    "production-extract": 4,
+    "infer-labeled": 4,
+    "from-extracted": 10,
+    "infer-photoreal": 4,
+    "production-prompt-candidate": 3,
+    "production-prompt-control": 2
+  },
+  "review": {
+    "reviewer": "primary_assistant",
+    "reviewedOutputs": 121,
+    "humanBlindReview": false,
+    "completeThreeViewGroundTruthAvailable": false,
+    "overallAccuracy": null,
+    "completeFidelityPassDeclared": false,
+    "productionTransportRequests": 4,
+    "knownViewExtractions": 12,
+    "localEvidenceBoards": 7,
+    "evidenceCells": {
+      "APPROVED_AI_EXTRACTION": 10,
+      "UNKNOWN_NO_REQUEST": 9,
+      "SOURCE_CROP": 2
+    },
+    "locallyLabeledSpeculativePreviews": 8,
+    "wigHeadRemovalCandidate": "3 paired selected samples: head form retained in all controls and removed in all candidates; strands and cropping remain unverified; not applied to production"
+  },
+  "validation": {
+    "offlineSafetyTests": 15,
+    "offlineSafetyTestsPassed": 15,
+    "pythonCompile": true,
+    "assembleDebug": true,
+    "productionProbeCompiled": true,
+    "verifiedOutputSha256": 121,
+    "inputAndPromptHashesUnchanged": true,
+    "originalBackupUnchanged": true,
+    "all619OriginalImageHashesUnchanged": true,
+    "integrityFailures": [],
+    "localGalleryLinksChecked": true,
+    "speculativePreviewSourcePixelsUnchanged": true
+  },
+  "privacy": {
+    "personalImagesCommitted": false,
+    "personalJobsCommitted": false,
+    "credentialsCommitted": false,
+    "privateResultsOutsideRepository": true,
+    "appDatabaseModified": false,
+    "backupRestored": false
+  },
+  "toolSourceSha256": {
+    "scripts/image_eval/contact_sheet.py": "4ca871337608f6eadd5f350db8313f439d33595ca568eebf779e83dbb56bcee5",
+    "scripts/image_eval/evidence_board.py": "bd8625c549d935f21b9442fb299b827343b12cad0a0b2c7e9e807b22098a8483",
+    "scripts/image_eval/label_hypotheses.py": "ea230cab1791fbd55fc87d4920fc23680b19a57471251540970471462bee9ca4",
+    "scripts/image_eval/production_probe.py": "3e98ac077aa64f3f37f0a5216eccbb73ebe84b0050a79f9e535a87644e079f0f",
+    "scripts/image_eval/report.py": "4804199af536ae4c7b789114ac99ae3bdb8d4c22069bbbdb9a100976830f1700",
+    "scripts/image_eval/test_evidence_board.py": "1d6241d40fbb1132209598c2f7c64a40dc919ca2b75a8526b9a6ed36aa479089",
+    "scripts/image_eval/test_three_view.py": "dec41b43307347dd8a35f9a1fffadd1c4fbab10a3c640a3f31c0e36bac909602",
+    "scripts/image_eval/three_view.py": "f029cc3cc4e25e26a00cabc765b8a482eea4070f5bb709a8b3ea58ef62567ee7",
+    "scripts/image_eval/ProductionProbe.kt": "64056a0e401e41140bd867defd5a310ddb4f1c3416241e70c66e18ced70153d3"
+  }
+}

@@ -1,0 +1,370 @@
+{
+  "version": "2.78.11",
+  "versionCode": 167,
+  "checkedAtUtc": "2026-11-12T09:45:32.679792+00:00",
+  "sourceCommit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+  "gitTag": "v2.78.11",
+  "sourcePushedTo": "origin/master",
+  "changes": [
+    "New single/batch standalone display requests share type-specific extraction policy",
+    "Freeze disclosed product name, recorded colors, stable type and composition; reject stale target in admission transaction",
+    "Separate full wig / hair component / doll rules; preserve visible pair and target accessory",
+    "Preserve original dress/blouse torso and selected wig-head template flows, old material layers and historical prompt snapshots"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.11",
+    "version_code": 167,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "apk_sha256": "eea369b7ce45f0388dce484c9bbb2f0edd98921b34336aeb7bbb376e2891d188",
+    "bytes": 84054421
+  },
+  "isolatedCommittedBuild": {
+    "passed": true,
+    "sourceCommit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "committedArchiveOnly": true,
+    "clean": true,
+    "task": "clean assembleRelease",
+    "lintVitalPassed": true,
+    "temporarySigningLinksRemoved": true
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "additionalAssets": [
+      {
+        "path": "assets/dexopt/baseline.prof",
+        "bytes": 10209,
+        "sha256": "5137e227b7bae38026bb1cc59dca957cd7c789f609d2bf7da2ba888cd9555ece",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/dexopt/baseline.profm",
+        "bytes": 534,
+        "sha256": "642206557a936f16eb5dda1c25d8f74c90b84cc6845205b22453d864c4f82389",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+        "bytes": 30461,
+        "sha256": "c6e18381293bb50bef5914b7925b6160aea82494d80af25bde3f691f40baecb8",
+        "unchangedFromPreviousFormal": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000",
+        "bytes": 61866,
+        "sha256": "fb4e84a77d09427d1d469f854db6832b5341b3da6df0926f44242af89b777657",
+        "unchangedFromPreviousFormal": true
+      }
+    ],
+    "newStandalonePromptInCompiledDex": true
+  },
+  "tests": {
+    "jvm": {
+      "tests": 34,
+      "failures": 0
+    },
+    "toolSafety": {
+      "tests": 15,
+      "failures": 0
+    },
+    "distinctDeviceMethods": 29,
+    "methods": [
+      "com.lolita.app.data.DisplayBatchWorkflowTest#changedInputAndInsertionFailureCannotStartPartialBatch",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#disclosedNameCannotChangeBeforeSendAndOldQueuedPromptIsNeverRebuilt",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#mixedTypesFreezeActualTemplatesAndSaveOneImageEachWithoutLayers",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#singleAccessoryFreezesDisclosedNameAndCompositionBeforeQueue",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#staleCompositionRollsBackWholeSaveAndLeavesAllPreviews",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#targetChangeDuringImageValidationRollsBackBeforeAnyServiceStarts",
+      "com.lolita.app.data.DisplayBatchWorkflowTest#zipRoundTripPreservesSavedAndPendingDisplayImagesAndFrozenInputs",
+      "com.lolita.app.data.MaterialBatchScreenTest#batchWholeFlowAcrossSevenSkinsKeepsEachItemIndependentAndSavesTogether",
+      "com.lolita.app.data.MaterialBatchScreenTest#realSmallDeviceLargeFontSearchKeyboardAndFeeRemainReachable",
+      "com.lolita.app.data.MaterialBatchViewModelTest#hiddenSelectionsAndItemsBeyondFirstThirtyUseAllChosenInputsWithoutPaidCalls",
+      "com.lolita.app.data.MaterialBatchViewModelTest#missingDisplayFilterUsesAlbumProvenanceAfterTaskDeletion",
+      "com.lolita.app.data.MaterialBatchViewModelTest#pendingReviewSelectionRequiresAllChecksAndLayerChangeClearsThem",
+      "com.lolita.app.data.MaterialBatchViewModelTest#serviceAndSourceChangesRevokeWholeBatchFee",
+      "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#sevenSkinsLightDarkLargeFontKeepTaskAndSubmitControlsReachable",
+      "com.lolita.app.ui.screen.mannequin.MannequinScreenTest#standaloneAccessoryDeclaresOnePhotoAndSubmitsTheConfirmedCategory",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#aBlouseConfirmationCannotSubmitAfterItsStableCategoryChanges",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#acceptedSubmissionSurvivesClearingItsWaiter",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#accessorySubmissionUsesCurrentCategorySnapshotRatherThanLegacyDressDefault",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#confirmedBlouseSubmitsTwoTorsoInputsInEitherLegacyGroup",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#detailCropUsesItsExactReferencedOriginalAndKeepsTheAlbumUnchanged",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#detailSelectionRestoresAndRemovedReferenceOrStaleConfirmationCannotSubmit",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#legacyPreviewRetainsFileAcrossOwnerClearAndExplicitSaveMergesLatestItemOnce",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#providerMismatchRejectsAndSubmissionFailureNeverAutomaticallyRetries",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#rejectedLegacyExternalCorruptAliasesAndWrongOwnerRemainUntouched",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#restoredRetryKeepsEditedAndExplicitlyClearedInstructionsWithoutResubmitting",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#retryDraftCannotBeEditedBeforeItsInstructionsFinishLoading",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#retryUsesCurrentPhotoAndRetainsInstructionsWithoutEnqueuing",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#selectedPhotoInstructionsAndLatestTaskPersistWithoutOwningPreview",
+      "com.lolita.app.ui.screen.mannequin.MannequinViewModelTest#staleSourceDeletedItemAndMissingKeyRejectSubmissionAndSecretsStayOutOfSavedState"
+    ],
+    "sevenSkinModes": 14,
+    "smallWidthDp": 320,
+    "smallFontScale": 2,
+    "realIme": true,
+    "disclosureReachable": true,
+    "actualModelCallsInDeviceTests": 0,
+    "externalProductionTransportCalls": 4
+  },
+  "evaluation": {
+    "requestLimit": 500,
+    "previousResearchRequests": 121,
+    "newRequests": 36,
+    "newReturnedImages": 36,
+    "cumulativeRequests": 157,
+    "cumulativeReturnedImages": 157,
+    "remainingRequests": 343,
+    "newAssistantReviewedOutputs": 36,
+    "automaticRetries": 0,
+    "unknownOutcomes": 0,
+    "realProvider": "Volcano Ark Seedream",
+    "model": "doubao-seedream-5-0-pro-260628",
+    "newControlRequests": 12,
+    "firstCandidateRequests": 12,
+    "finalProductionKotlinTransportRequests": 4,
+    "exactFinalPromptRepeats": 8,
+    "newSelectedItems": 12,
+    "originalBackupAnd619ImagesUnchanged": true,
+    "humanBlindReview": false,
+    "populationAccuracy": null,
+    "strictProductFidelityVerified": false,
+    "automaticThreeViewFeatureAdded": false,
+    "selectedFinalRepeatObservations": {
+      "blackTargetOnly": "3/3",
+      "pairOfCuffsOnly": "3/3",
+      "wigWithoutHeadForm": "3/3",
+      "openShoeGaps": "2/3, one closed-shaft regression retained"
+    },
+    "remainingIssues": [
+      "Fine texture, lace, curls, chain topology and straps can be redrawn",
+      "Some footwear changes viewing direction or closes gaps",
+      "Selected-sample qualitative observations are not a general accuracy rate"
+    ],
+    "invoiceVerified": false
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.10",
+    "toVersion": "2.78.11",
+    "sameFormalSignature": true,
+    "install": "-r",
+    "coldStarts": 2,
+    "all45TablesEveryRowUnchanged": true,
+    "items": 160,
+    "privateImages": 629,
+    "privateImageSha256Unchanged": true,
+    "settingsUnchanged": true,
+    "settingsCount": 2,
+    "serviceConfigWasAbsentAndRemainsAbsent": true,
+    "installedApkSha256": "eea369b7ce45f0388dce484c9bbb2f0edd98921b34336aeb7bbb376e2891d188",
+    "scope": "Dedicated Android15 AVD, not OEM phone verification",
+    "postActualVisualAllTablesImagesAndSettingsUnchanged": true
+  },
+  "formalDisplayEntry": {
+    "passed": true,
+    "actualMainActivity": true,
+    "version": "2.78.11",
+    "installedApkMatchesSignedArtifact": true,
+    "laboratoryToBatchEntryViaRealNavHost": true,
+    "realUserInventoryAndPhotosRendered": true,
+    "initialSelectedItems": 0,
+    "provider": "SEEDREAM",
+    "apiKeyNotConfigured": true,
+    "apiKeyUnchanged": true,
+    "imageGenerationRequests": 0,
+    "feeAndSaveValidation": "Separate 29-method device suite with controlled transport; 4 final current production Kotlin transport calls against real provider recorded separately",
+    "privateScreenshotsKeptOutsideRepository": true
+  },
+  "actualAppUpdate": {
+    "passed": true,
+    "currentVersion": "2.78.11",
+    "latestVersion": "2.78.11",
+    "actualFormalApp": true,
+    "highestFormalPublicApiVerifiedSeparately": true,
+    "errorShown": []
+  },
+  "github": {
+    "tag": "v2.78.11",
+    "source_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "release_id": 442713884,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.11.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.11/lolita-2.78.11.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "eea369b7ce45f0388dce484c9bbb2f0edd98921b34336aeb7bbb376e2891d188",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.11/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "ef5bdbf7f3faa8d4b5b3cadaf62259829199ab8815509f3fc17b6c0de1a9c532",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ],
+      "verification_budget_seconds": 45
+    },
+    "source_tag_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.78.11",
+    "source_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "release_id": 1301458,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.11.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.11/lolita-2.78.11.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "eea369b7ce45f0388dce484c9bbb2f0edd98921b34336aeb7bbb376e2891d188",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.11/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "ef5bdbf7f3faa8d4b5b3cadaf62259829199ab8815509f3fc17b6c0de1a9c532",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ],
+      "verification_budget_seconds": 8
+    }
+  },
+  "giteePublicHighestFormalVersion": {
+    "latest_tag": "v2.78.11",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.11/lolita-2.78.11.apk",
+    "source_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096"
+  },
+  "giteeQuotaCleanup": {
+    "tag": "v2.76.0",
+    "release_id": 1281533,
+    "attachment_id": 3616812,
+    "name": "lolita-2.76.0.apk",
+    "bytes": 84005269,
+    "sha256": "1e8ddde8f6cfee20be1fee9595747a385afc65c88ef61b9bcf845b10cdef02cd",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "293ba84d5c9b685ba515a1442ca9d6fbf9f6e096",
+    "at_utc": "2026-11-12T09:25:49.019296+00:00",
+    "github_digest_and_head_verified": true,
+    "github_and_three_local_complete_copies_verified": true,
+    "head_chain": [
+      {
+        "host": "github.com",
+        "status": 302
+      },
+      {
+        "host": "release-assets.githubusercontent.com",
+        "status": 200
+      }
+    ],
+    "http_status": 204,
+    "old_release_and_other_attachments_retained": true
+  },
+  "privacyAndCompatibility": {
+    "personalImagesOrRawBackupsCommitted": false,
+    "personalJobsOrReviewsCommitted": false,
+    "credentialsCommitted": false,
+    "privateResultsOutsideRepository": true,
+    "roomVersion": 34,
+    "roomEntities": 45,
+    "backupFormat": 16,
+    "noSchemaOrBackupUpgrade": true,
+    "oldPromptSnapshotsNotRebuilt": true,
+    "automaticCoverReplacement": false,
+    "additionalGenerationStageAdded": false
+  },
+  "limitations": [
+    "Android15 emulator checks do not establish OEM-phone compatibility",
+    "Real model quality calls used host-normalized selected references; device workflow tests used controlled transport",
+    "Formal MainActivity entry used unchanged unconfigured API-key state and made zero extra generation requests",
+    "GitHub availability HEAD used a 45-second verification budget; Gitee used 8 seconds; app update budget was not changed"
+  ]
+}

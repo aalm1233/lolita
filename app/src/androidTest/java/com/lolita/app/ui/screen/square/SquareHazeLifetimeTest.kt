@@ -57,6 +57,8 @@ class SquareHazeLifetimeTest {
         val directory = File(instrumentation.targetContext.cacheDir, "square-compact-ui").apply { mkdirs() }
         for (skin in SkinType.entries) for (night in listOf(false, true)) {
             compose.runOnIdle { selectedSkin.value = skin; dark.value = night }
+            compose.onNode(isSelectable() and hasText("首页")).performClick()
+            val homeTabBounds = compose.onNode(isSelectable() and hasText("位置")).fetchSemanticsNode().boundsInRoot
             compose.onNode(isSelectable() and hasText("广场")).performClick()
             compose.onNodeWithTag("square-refresh").assertExists()
             compose.waitUntil(15000) {
@@ -72,19 +74,24 @@ class SquareHazeLifetimeTest {
             val statusTop = ViewCompat.getRootWindowInsets(host)!!.getInsets(WindowInsetsCompat.Type.statusBars()).top
             assertTrue(compose.onNodeWithTag("square-refresh").fetchSemanticsNode().boundsInRoot.top + location[1] >= statusTop)
             if (compose.onAllNodesWithTag("square-feed").fetchSemanticsNodes().isNotEmpty()) {
-                for (label in listOf("全部", "上新", "再贩", "现货", "尾款")) {
+                for (label in listOf("上新", "再贩", "现货", "尾款")) {
                     val tab = compose.onNodeWithTag("square-kind-$label")
                     tab.performScrollTo().assertIsDisplayed().performClick().assertIsSelected()
                     val results = mutableListOf<TextLayoutResult>()
                     compose.onNode(hasText(label) and hasAnyAncestor(hasTestTag("square-kind-$label")), useUnmergedTree = true)
                         .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(results) }
                     val text = results.single()
-                    assertEquals(13f, text.layoutInput.style.fontSize.value)
+                    assertEquals(12f, text.layoutInput.style.fontSize.value)
                     assertEquals(1, text.lineCount)
                     assertFalse("Complete label required: $label; width=${text.didOverflowWidth}, height=${text.didOverflowHeight}, size=${text.size}, constraints=${text.layoutInput.constraints}, fontScale=${text.layoutInput.density.fontScale}, lines=${text.lineCount}", text.hasVisualOverflow)
-                    assertTrue(tab.fetchSemanticsNode().boundsInRoot.height >= 48 * host.resources.displayMetrics.density - 1)
+                    val bounds = tab.fetchSemanticsNode().boundsInRoot
+                    assertEquals("Square and Home tab heights", homeTabBounds.height, bounds.height, 1f)
+                    assertEquals("Square and Home tab top", homeTabBounds.top, bounds.top, 1f)
+                    val filterBounds = compose.onNodeWithTag("square-filter-button").fetchSemanticsNode().boundsInRoot
+                    assertEquals("Filter aligned with tabs", bounds.center.y, filterBounds.center.y, 1f)
                 }
-                compose.onNodeWithTag("square-kind-全部").performScrollTo().performClick()
+                compose.onNodeWithTag("square-kind-全部").assertDoesNotExist()
+                compose.onNodeWithTag("square-kind-上新").performScrollTo().performClick()
             }
             compose.waitForIdle()
             val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())

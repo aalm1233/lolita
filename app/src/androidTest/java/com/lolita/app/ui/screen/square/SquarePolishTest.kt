@@ -127,6 +127,73 @@ class SquarePolishTest {
     private fun open(id: String) { compose.runOnIdle { model!!.open(id) }; compose.waitForIdle() }
     private fun scroll(tag: String) = compose.onNodeWithTag("square-product").performScrollToNode(hasTestTag(tag))
 
+    @Test fun inlineFilterSheetAcrossSevenSkinsAndModes() {
+        val c = imported(); show()
+        val e = SquareVisibility.events(c).first { it.canRegister }
+        compose.runOnIdle { model!!.set("kind", SquareEventPresentation.kind(e)); model!!.set("shop", e.shopId) }
+        for (type in SkinType.entries) for (night in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = night }
+            val suffix = "${type.name.lowercase()}-${if (night) "dark" else "light"}"
+            compose.onNodeWithTag("square-shop-chip").assertIsDisplayed()
+            compose.onNodeWithTag("square-filter-button").assertIsDisplayed()
+            screenshot("inline-selected-$suffix")
+            compose.onNodeWithTag("square-filter-button").performClick()
+            compose.onNodeWithTag("square-filter-shop").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("square-filter-done").assertIsDisplayed()
+            screenshot("inline-filters-$suffix")
+            compose.onNodeWithTag("square-filter-shop").performClick()
+            compose.onNodeWithTag("square-shop-search").assertIsDisplayed()
+            screenshot("inline-shops-$suffix")
+            compose.onNodeWithText("关闭").performClick()
+            compose.onNodeWithTag("square-filter-done").performClick()
+        }
+    }
+
+    @Test fun shopFilterLivesInSheetAndKeepsCategorySearchAndAttributes() {
+        val c = imported(); show()
+        assertEquals("上新", model!!.kind.value)
+        compose.onNodeWithTag("square-kind-上新").assertIsSelected()
+        compose.onNodeWithTag("square-kind-全部").assertDoesNotExist()
+        compose.onNodeWithTag("square-filter-shop").assertDoesNotExist()
+        val e = SquareVisibility.events(c).first { it.canRegister }
+        val shopName = c.shops.single { it.id == e.shopId }.name
+        val currentKind = SquareEventPresentation.kind(e)
+        compose.onNodeWithTag("square-kind-$currentKind").performClick()
+        compose.onNodeWithTag("square-filter-button").performClick()
+        compose.onNodeWithTag("square-filter-shop").performScrollTo().performClick()
+        compose.onNodeWithTag("square-shop-search").performTextInput(shopName)
+        compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == true }
+        screenshot("shop-search-ime")
+        compose.onNodeWithTag("square-shop-${e.shopId}").performClick()
+        assertEquals(e.shopId, model!!.shop.value)
+        compose.onNodeWithTag("square-filter-done").assertIsDisplayed()
+        compose.onNodeWithTag("square-filter-done").performClick()
+        compose.onNodeWithTag("square-shop-chip").assertIsDisplayed()
+        compose.onNodeWithTag("square-filter-button").assertContentDescriptionEquals("筛选，已选1项")
+        compose.runOnIdle { model!!.set("query", e.title.take(3)); model!!.set("form", "小物") }
+        compose.onNodeWithTag("square-filter-button").performClick()
+        compose.onNodeWithText("清除属性").performClick()
+        assertEquals(e.shopId, model!!.shop.value)
+        assertEquals(currentKind, model!!.kind.value)
+        assertEquals(e.title.take(3), model!!.query.value)
+        compose.onNodeWithTag("square-filter-shop").performScrollTo().performClick()
+        compose.onNodeWithTag("square-shop-all").performClick()
+        assertEquals("", model!!.shop.value)
+        compose.onNodeWithTag("square-filter-done").performClick()
+        compose.onNodeWithTag("square-shop-chip").assertDoesNotExist()
+        compose.runOnIdle { model!!.set("shop", e.shopId); model!!.set("query", "无匹配商品") }
+        compose.onNodeWithText("清除店铺筛选").performClick()
+        assertEquals("", model!!.shop.value)
+        assertEquals("无匹配商品", model!!.query.value)
+        assertEquals(currentKind, model!!.kind.value)
+        val legacy = SquareViewModel(repo, SavedStateHandle(mapOf("square.kind" to "")), money)
+        store.put("legacy", legacy)
+        assertEquals("上新", legacy.kind.value)
+        val restored = SquareViewModel(repo, SavedStateHandle(mapOf("square.kind" to "现货")), money)
+        store.put("restored", restored)
+        assertEquals("现货", restored.kind.value)
+    }
+
     @Test fun collapsedSearchCancelBackAndDetailReturnKeepFilterContext() {
         val c = imported(); show()
         val event = SquareVisibility.events(c).first { it.canRegister }
@@ -231,7 +298,7 @@ class SquarePolishTest {
 
     @Test fun accessoryFilterCardAndDetailAgreeAndClearKeepsShopAndSearch() {
         val c = imported(); show(); val e = c.events.single { it.id == "jixiangtian-2025-repeat-drop" }
-        compose.runOnIdle { model!!.set("shop", e.shopId); model!!.set("form", "小物"); model!!.set("query", "吉祥天") }
+        compose.runOnIdle { model!!.set("shop", e.shopId); model!!.set("kind", SquareEventPresentation.kind(e)); model!!.set("form", "小物"); model!!.set("query", "吉祥天") }
         compose.onNodeWithTag("square-event-${e.id}").performScrollTo().performClick()
         assertTrue(model!!.currentBrowsePart()!!.accessory)
         assertFalse(model!!.currentBrowsePart()!!.name.contains("OP")); screenshot("filtered-accessory")

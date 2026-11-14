@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.semantics.contentDescription
@@ -54,43 +54,60 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     val visibleEvents = remember(c) { SquareVisibility.events(c) }
     val filter = remember(query, kind, shop, color, style, form) { SquareBrowseFilter(query, kind, shop, color, style, form) }
     val events = remember(c, filter) { filter.events(c) }
+    val activeFilterCount = listOf(shop, color, style, form).count { it.isNotEmpty() }
+    val selectedShopName = c.shops.find { it.id == shop }?.name ?: shop
     val large = LocalConfiguration.current.fontScale >= 1.5f
     val state = rememberLazyGridState(); ObserveSkinScroll(state)
     LazyVerticalGrid(columns = GridCells.Fixed(if (large) 1 else 2), state = state,
-        modifier = Modifier.fillMaxSize().testTag("square-feed"), contentPadding = PaddingValues(12.dp),
+        modifier = Modifier.fillMaxSize().testTag("square-feed"), contentPadding = PaddingValues(start = 12.dp, end = 12.dp, bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item(span = { GridItemSpan(maxLineSpan) }, key = "controls") {
             Column {
-                val kinds = listOf("全部", "上新", "再贩", "现货", "尾款")
-                val selected = kinds.indexOf(kind.ifEmpty { "全部" }).coerceAtLeast(0)
+                val kinds = listOf("上新", "再贩", "现货", "尾款")
+                val selected = kinds.indexOf(kind).coerceAtLeast(0)
                 val tabs: @Composable () -> Unit = {
                     kinds.forEachIndexed { index, label ->
-                        Tab(selected == index, { vm.set("kind", if (index == 0) "" else label) },
-                            modifier = Modifier.heightIn(min = 48.dp).testTag("square-kind-$label")) {
+                        Tab(selected == index, { vm.set("kind", label) },
+                            modifier = Modifier.heightIn(min = 34.dp).testTag("square-kind-$label"),
+                            selectedContentColor = LocalContentColor.current,
+                            unselectedContentColor = LocalContentColor.current.copy(alpha = 0.7f)) {
                             Text(label, modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 8.dp).width(IntrinsicSize.Max),
-                                style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp, lineHeight = 20.sp),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (selected == index) FontWeight.SemiBold else FontWeight.Medium,
                                 textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
                         }
                     }
                 }
-                if (searching) {
-                    SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,
-                        placeholder = "搜索商品或店铺", inputModifier = Modifier.testTag("square-search"))
-                    LaunchedEffect(Unit) { searchFocus.requestFocus() }
-                } else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { searching = true }, modifier = Modifier.testTag("square-search-open").semantics { contentDescription = "搜索商品或店铺" }) {
-                        SkinIcon(IconKey.Search)
+                Row(Modifier.fillMaxWidth().testTag("square-controls")
+                    .then(if (searching) Modifier else Modifier.padding(vertical = 2.dp)), verticalAlignment = Alignment.CenterVertically) {
+                    if (searching) {
+                        Box(Modifier.weight(1f)) {
+                            SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,
+                                placeholder = "搜索商品或店铺", inputModifier = Modifier.testTag("square-search"))
+                        }
+                        LaunchedEffect(Unit) { searchFocus.requestFocus() }
+                    } else {
+                        IconButton(onClick = { searching = true }, modifier = Modifier.size(32.dp).testTag("square-search-open").semantics { contentDescription = "搜索商品或店铺" }) {
+                            SkinIcon(IconKey.Search)
+                        }
+                        if (large) ScrollableTabRow(selected, modifier = Modifier.weight(1f), edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                            divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                        else TabRow(selected, modifier = Modifier.weight(1f), containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                            divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
                     }
-                    if (large) ScrollableTabRow(selected, modifier = Modifier.weight(1f), edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
-                        indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
-                    else TabRow(selected, modifier = Modifier.weight(1f), containerColor = androidx.compose.ui.graphics.Color.Transparent,
-                        indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                    BadgedBox(badge = {
+                        if (activeFilterCount > 0) Badge { Text("$activeFilterCount") }
+                    }) {
+                        IconButton(onClick = { filters = true }, modifier = Modifier.size(32.dp)
+                            .testTag("square-filter-button").semantics {
+                                contentDescription = if (activeFilterCount > 0) "筛选，已选${activeFilterCount}项" else "筛选"
+                            }) { SkinIcon(IconKey.FilterList) }
+                    }
                 }
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(onClick = { shops = true }) { Text(c.shops.find { it.id == shop }?.name ?: "全部店铺"); SkinIcon(IconKey.ArrowDropDown, Modifier.size(18.dp)) }
-                    TextButton(onClick = { filters = true }, modifier = Modifier.testTag("square-filter-button")) { Text("筛选" + listOf(color, style, form).count { it.isNotEmpty() }.takeIf { it > 0 }?.let { " · $it" }.orEmpty()); SkinIcon(IconKey.FilterList, Modifier.size(18.dp)) }
-                }
-                if (color + style + form != "") FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (activeFilterCount > 0) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (shop.isNotEmpty()) InputChip(selected = true, onClick = { vm.set("shop", "") },
+                        modifier = Modifier.testTag("square-shop-chip"), label = { Text(selectedShopName) },
+                        trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
                     listOf("color" to color, "style" to style, "form" to form).filter { it.second.isNotEmpty() }.forEach { (key, value) ->
                         InputChip(selected = true, onClick = { vm.set(key, "") }, label = { Text(value) }, trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
                     }
@@ -102,6 +119,7 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("暂无商品")
                     TextButton(enabled = color + style + form != "", onClick = { listOf("color", "style", "form").forEach { vm.set(it, "") } }) { Text("清除属性筛选") }
+                    if (shop.isNotEmpty()) TextButton(onClick = { vm.set("shop", "") }) { Text("清除店铺筛选") }
                     if (query.isNotBlank()) TextButton(onClick = { vm.set("query", "") }) { Text("清除搜索") }
                 }
             }
@@ -140,7 +158,15 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
         Column(Modifier.fillMaxWidth().fillMaxHeight(.85f).imePadding().testTag("square-filter-sheet")) {
             LazyColumn(Modifier.weight(1f).padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 item { SectionHeader("筛选") }
-                item { Text(listOf(c.shops.find { it.id == shop }?.name ?: "全部店铺", kind.ifEmpty { "全部动态" }).joinToString(" · "), style = MaterialTheme.typography.bodySmall) }
+                item { Text(kind, style = MaterialTheme.typography.bodySmall) }
+                item {
+                    TextButton(onClick = { shops = true }, modifier = Modifier.fillMaxWidth().testTag("square-filter-shop")) {
+                        Text("店铺", color = MaterialTheme.colorScheme.onSurface)
+                        Spacer(Modifier.width(12.dp))
+                        Text(if (shop.isEmpty()) "全部店铺" else selectedShopName, modifier = Modifier.weight(1f), textAlign = TextAlign.Start)
+                        SkinIcon(IconKey.ArrowDropDown, Modifier.size(18.dp))
+                    }
+                }
                 item { SquareSpecChoices("内容", filter.candidates(c, "form"), form, { vm.set("form", it) }, "square-filter-form", unsetLabel = "不限") }
                 item { SquareFacetChoices("颜色", filter.candidates(c, "color"), color, { vm.set("color", it) }, "square-filter-color") }
                 item { SquareFacetChoices("风格", filter.candidates(c, "style"), style, { vm.set("style", it) }, "square-filter-style") }
@@ -153,10 +179,10 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     }
     if (shops) AlertDialog(onDismissRequest = { shops = false }, title = { Text("店铺") }, text = {
         Column {
-            OutlinedTextField(shopQuery, { shopQuery = it }, placeholder = { Text("搜索店铺") }, singleLine = true)
+            OutlinedTextField(shopQuery, { shopQuery = it }, placeholder = { Text("搜索店铺") }, singleLine = true, modifier = Modifier.testTag("square-shop-search"))
             LazyColumn(Modifier.heightIn(max = 360.dp)) {
-                item { TextButton(onClick = { vm.set("shop", ""); shops = false }) { Text("全部店铺") } }
-                items(c.shops.filter { s -> visibleEvents.any { it.shopId == s.id } && s.name.contains(shopQuery, true) }) { s -> TextButton(onClick = { vm.set("shop", s.id); shops = false }) { Text(s.name) } }
+                item { TextButton(onClick = { vm.set("shop", ""); shops = false }, modifier = Modifier.testTag("square-shop-all")) { Text("全部店铺") } }
+                items(c.shops.filter { s -> visibleEvents.any { it.shopId == s.id } && s.name.contains(shopQuery, true) }) { s -> TextButton(onClick = { vm.set("shop", s.id); shops = false }, modifier = Modifier.testTag("square-shop-${s.id}")) { Text(s.name) } }
             }
         }
     }, confirmButton = { TextButton(onClick = { shops = false }) { Text("关闭") } })

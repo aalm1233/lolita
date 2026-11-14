@@ -14,4 +14,10 @@
 
 真实页面按常规/小屏各归档70状态，含分类、搜索键盘、已选店铺、筛选面板、店铺选择框，共140状态。[常规分类](../visuals/2026-11-14-square-tabs/normal-feed-seven-skins.jpg)、[常规筛选](../visuals/2026-11-14-square-tabs/normal-filters-seven-skins.jpg)、[大字分类](../visuals/2026-11-14-square-tabs/small-feed-seven-skins.jpg)、[大字筛选](../visuals/2026-11-14-square-tabs/small-filters-seven-skins.jpg)与同目录搜索/店铺对照板可查看。初次回归发现详情返回搜索态丢筛选入口，最终保留搜索栏右侧筛选并复测通过；首次默认内存构建失败，后续构建通过，阶段日志留本机。未放宽断言，未重复全量测试。
 
-无数据库/备份/图片管线变化，相应迁移与全库/原图审计不适用。正式签名包、覆盖启动与发布结果待补充。
+无数据库/备份/图片管线变化，相应迁移与全库/原图审计不适用。源码/标签`e5c5b788`已普通推送至远端master/v2.78.12。提交源码归档隔离`clean assembleRelease`及lintVital通过；正式包84,054,421字节，SHA256 `d1fa11443f7c61bdde3205183957993fcc3c1af15b3749479d6f68c01a6903d2`，原签名、37项目assets、24旧图片、两项依赖素材与两份生成profile核验。正式2.78.11覆盖安装及两次冷启动通过；2份设置与原服务配置缺席状态在实页及检查更新后保持。不重复本轮未改的全库/图片/备份审计。
+
+正式MainActivity[分类](../visuals/2026-11-14-square-tabs/release/official-feed.png)、[筛选](../visuals/2026-11-14-square-tabs/release/official-filters.png)、[店铺选择](../visuals/2026-11-14-square-tabs/release/official-shops.png)、[详情](../visuals/2026-11-14-square-tabs/release/official-detail.png)、[搜索](../visuals/2026-11-14-square-tabs/release/official-search.png)、[实际更新](../visuals/2026-11-14-square-tabs/release/official-update-check.png)核对完成；首页与广场文字纵向范围实测均为162–210px，搜索展开保留同列筛选。本轮不将服务端缓存变化或联网刷新计为专项验收。
+
+Gitee触及1GB配额，按持续授权核验GitHub摘要/匿名HEAD及三份本机完整副本后，仅删除最旧2.77.0 APK，旧发布页/校验/GitHub/本机副本保留，见[清理回执](../gitee-apk-cleanup-2.77.0-2026-11-14.json)。Gitee正式同APK匿名完整GET/SHA/HEAD与公开最高版本查询通过；实际App当前与最新均为2.78.12，完整更新说明通过。GitHub初次HTTP2上传停滞，保留草稿后经本机系统代理HTTP1上传完成；正式同APK与SHA匿名完整GET/SHA/HEAD和源标签核验通过。双平台一致，见[最终回执](../square-inline-filters-release-2.78.12-verification.json)。
+
+两台本轮启动的AVD已关闭并保留数据。正式AVD在新APK安装前出现宿主退出134，保留数据恢复后完成原包核验、覆盖启动与实页验收；没有观察到新版App崩溃。所有临时签名引用已清除，原工作区分支及未跟踪文件保留，并已快进同步本次源码。

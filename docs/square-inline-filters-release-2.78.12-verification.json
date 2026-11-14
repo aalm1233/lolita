@@ -321,7 +321,7 @@
     "initialDefaultMemoryBuildFailedThenFinalBuildPassed": true,
     "firstSearchDetailReturnLostFilterFixedAndRetested": true,
     "emulatorHostExitBeforeNewApkInstallationRecoveredWithoutDataClear": true,
-    "githubInitialHttp2UploadInterruptedWithDraftPreserved": true,
-    "githubHttp1SystemProxyUploadUsed": true
+    "githubHttp1SystemProxyUploadUsed": true,
+    "githubInitialUploadInterruptedWithDraftPreserved": true
   }
 }

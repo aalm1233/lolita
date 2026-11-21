@@ -22,6 +22,8 @@
 
 ## 项目事实
 
+- 2.78.13/169广场图片缓存复用：`SquareRepository.thumbnail`按本地原图→非空持久缩略图→远程占位选择；已有缩略图不再随刷新代数生成新请求标识，复用Coil内存缓存。缺失/失败仍随刷新重试，新内容SHA独立获取，原图校验、下载锁及收藏完整图保持。纯后台变更，无页面/皮肤调整，Room34/45实体/备份16不变。设计和定向请求计数验收见`docs/plans/2026-11-21-square-image-cache.md`，发布结果另行归档。
+
 - 2.78.12/168广场分类栏按用户要求与首页同高：搜索、上新/再贩/现货/尾款、筛选同列，移除全部并默认上新；旧空分类恢复为上新，已有其他分类保持。店铺入口移入筛选面板，沿用可搜索选择框，筛选计数包含店铺且列表可独立清除。原清除属性保留店铺/动态/搜索。Room34/45实体/备份16及图片/私人资料/付费不变。前置图稿与验收见`docs/plans/2026-11-14-square-inline-filters.md`，6个去重定向设备方法、七皮肤浅暗/320dp两倍字/真实IME及首页高度与顶部实测通过，140原生状态归档；源码/标签`e5c5b788`已普通推送至master；提交归档clean原签名Release含lintVital、37素材/24旧图/依赖/profile通过。2.78.11覆盖两次冷启动及实页后2份设置与原地址缺席状态保持。双平台正式同APK匿名完整GET/SHA/HEAD、GitHub源标签、Gitee公开最高版本及实际App当前/最新2.78.12通过；Gitee配额仅按持续授权清理最旧2.77.0 APK并保留旧页/校验/GitHub/三份本机副本。原工作区分支/未跟踪文件保持，任务AVD关闭留数据。回执`docs/square-inline-filters-release-2.78.12-verification.json`。
 
 
@@ -415,7 +417,7 @@ bash run_device_test.sh            # 运行 UI 自动化测试套件
 
 ## 版本号
 
-- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=167, versionName="2.78.11"）。
+- 刷新版本号：`versionCode + 1`，`versionName` 顺延（当前 versionCode=169, versionName="2.78.13"）。
 - 新功能升 minor，常规修复升 patch，大改/不兼容升 major。
 
 ## 提交、推送与发布

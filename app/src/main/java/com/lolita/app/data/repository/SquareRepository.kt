@@ -86,7 +86,16 @@ class SquareRepository(private val context: Context, private val database: Lolit
 
     private fun localImage(path:String)=File(root,path).absolutePath
     fun image(path:String):String = if(File(root,path).isFile)localImage(path) else "lolita-square://asset/$path?size=original&generation=${_imageEpoch.value}"
-    fun thumbnail(path:String,epoch:Long=_imageEpoch.value):String = if(File(root,path).isFile)localImage(path) else "lolita-square://asset/$path?size=thumbnail&generation=$epoch"
+    fun thumbnail(path:String,epoch:Long=_imageEpoch.value):String {
+        val original=File(root,path)
+        if(original.isFile)return original.absolutePath
+        // Content-addressed thumbnails survive refreshes and process restarts. A stable
+        // local model also lets Coil reuse the decoded image instead of fetching it again.
+        val cached=File(root,"thumbnails/${original.nameWithoutExtension}.webp")
+        if(cached.isFile && cached.length()>0)return cached.absolutePath
+        // Only missing/failed images need a new request model on refresh to retry.
+        return "lolita-square://asset/$path?size=thumbnail&generation=$epoch"
+    }
 
     suspend fun configureService(value:String)=withContext(Dispatchers.IO) { gate.withLock {
         val url=normalizeSquareServiceUrl(value)

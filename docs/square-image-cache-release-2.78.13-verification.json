@@ -1,0 +1,292 @@
+{
+  "version": "2.78.13",
+  "versionCode": 169,
+  "sourceCommit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+  "gitTag": "v2.78.13",
+  "sourcePushedTo": "origin/master",
+  "checkedAtUtc": "2026-11-21T05:42:16.649480+00:00",
+  "changes": [
+    "Use persistent original or nonempty thumbnail file paths before a refresh-sensitive remote model",
+    "Keep missing/failed image retries and new content SHA downloads; retain complete original requirements for wishes"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.13",
+    "version_code": 169,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "apk_sha256": "9d4f2354c2ee708c3286a74e4cf9f9d1fb71d1b72c9dac2206d0be12407f447a",
+    "bytes": 84054421
+  },
+  "isolatedCommittedBuild": {
+    "sourceCommit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "committedArchiveOnly": true,
+    "clean": true,
+    "task": "clean assembleRelease",
+    "lintVitalPassed": true,
+    "passed": true,
+    "temporarySigningLinksRemoved": true
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "additionalAssets": [
+      {
+        "path": "assets/dexopt/baseline.prof",
+        "bytes": 10201,
+        "sha256": "812047059d8f85ea7dcb3ffe7ffe19ee0960324053aab006052f6cb186e8c941",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/dexopt/baseline.profm",
+        "bytes": 535,
+        "sha256": "9de31e935bbdd6aeac893b471dc4f80631c145ac50b61d1fa5afa556499ef239",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+        "bytes": 30461,
+        "sha256": "c6e18381293bb50bef5914b7925b6160aea82494d80af25bde3f691f40baecb8",
+        "unchangedFromPreviousFormal": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000",
+        "bytes": 61866,
+        "sha256": "fb4e84a77d09427d1d469f854db6832b5341b3da6df0926f44242af89b777657",
+        "unchangedFromPreviousFormal": true
+      }
+    ]
+  },
+  "tests": {
+    "debugBuildPassed": true,
+    "androidTestBuildPassed": true,
+    "oldImplementationRegressionFailed": true,
+    "distinctDeviceMethods": [
+      "cachedThumbnailKeepsStableModelMemoryCacheAndOfflineRestart",
+      "originalStaysIndependentAndTakesPrecedenceOffline",
+      "failedAndEmptyThumbnailsRetryWithoutReplacingGoodFiles",
+      "concurrentDownloadsAndNewContentOnlyFetchMissingImage"
+    ],
+    "methodsPassed": 4,
+    "controlledHttpServer": true,
+    "actualCoilDecode": true,
+    "thumbnailDownloadsAfterInitialLoad": 1,
+    "thumbnailDownloadsAfterFiveRefreshes": 1,
+    "subsequentDecodes": "MEMORY_CACHE",
+    "offlineRepositoryRestartAndMemoryEviction": "DISK",
+    "originalDownloadsWhenOnlyThumbnailNeeded": 0,
+    "concurrentImageCalls": 12,
+    "concurrentImageDownloads": 1,
+    "newContentHashAdditionalDownloads": 1,
+    "badResponseRejectedAndEmptyCacheRetryPassed": true
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.12",
+    "toVersion": "2.78.13",
+    "sameFormalSignature": true,
+    "install": "-r",
+    "coldStarts": 2,
+    "tablesIdentical": 45,
+    "syntheticItemsPreserved": 1,
+    "privateImageHashesIdentical": 12,
+    "preferencesIdentical": true,
+    "serviceConfigPreserved": true,
+    "publicImageHashesPreserved": 29,
+    "fixture": "Existing isolated synthetic Design AVD; no personal backup restored",
+    "privateDataAndSettingsAlsoPreservedAfterSquareAndUpdateCheck": true
+  },
+  "formalMainActivity": {
+    "formalVersion": "2.78.13",
+    "actualMainActivity": true,
+    "installedApkSha256": "9d4f2354c2ee708c3286a74e4cf9f9d1fb71d1b72c9dac2206d0be12407f447a",
+    "cachedPublicImagesVisible": true,
+    "feedAndPullToRefreshExercised": true,
+    "uiUnchanged": true,
+    "scope": "Existing synthetic fixture cache; actual HTTP transfer counts established by isolated device tests, not inferred from screenshots"
+  },
+  "actualAppUpdate": {
+    "currentVersion": "2.78.13",
+    "texts": [
+      "已是最新版本",
+      "当前版本：v2.78.13",
+      "最新发布：v2.78.13",
+      "本版更新",
+      "优化广场图片缓存复用：已缓存的缩略图和原图直接从本机读取，刷新时保持稳定缓存路径，减少重复图片加载。",
+      "缺失或加载失败的图片仍可通过刷新重试；商品换新图时按新内容加载，详情与收藏继续使用完整原图。",
+      "衣橱、心愿、私人图片和备份格式保持不变。",
+      "GitHub 源码提交：1efa0b889656b4918b7ae78ff4a4f8b683e78608。\nGitee 标签对应分发说明，完整应用源码以 GitHub 为准。",
+      "关闭"
+    ],
+    "source": "Formal MainActivity manual update check",
+    "alreadyLatest": true,
+    "passed": true
+  },
+  "github": {
+    "tag": "v2.78.13",
+    "source_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "release_id": 453461710,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.13.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.13/lolita-2.78.13.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "9d4f2354c2ee708c3286a74e4cf9f9d1fb71d1b72c9dac2206d0be12407f447a",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.13/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "51bb0b953f7a691fd51d66b2204f3e9c50f413684fc87218c59b5c65ca0bc37c",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously",
+    "availabilityHeadBudgetSeconds": 45
+  },
+  "gitee": {
+    "tag": "v2.78.13",
+    "source_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "release_id": 1341759,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.13.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.13/lolita-2.78.13.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "9d4f2354c2ee708c3286a74e4cf9f9d1fb71d1b72c9dac2206d0be12407f447a",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.13/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "51bb0b953f7a691fd51d66b2204f3e9c50f413684fc87218c59b5c65ca0bc37c",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    },
+    "availabilityHeadBudgetSeconds": 8
+  },
+  "giteePublicUpdate": {
+    "latest_tag": "v2.78.13",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.13/lolita-2.78.13.apk",
+    "source_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608"
+  },
+  "cleanup": {
+    "tag": "v2.78.0",
+    "release_id": 1282277,
+    "attachment_id": 3618897,
+    "name": "lolita-2.78.0.apk",
+    "bytes": 84005269,
+    "sha256": "7aa7619c6273ef22ae6be1564228fab53f7c570921e63c4211725eb3da20287b",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "1efa0b889656b4918b7ae78ff4a4f8b683e78608",
+    "at_utc": "2026-11-21T05:33:04.841829+00:00",
+    "github_fresh_anonymous_full_download_verified": true,
+    "three_complete_local_copies_verified": true,
+    "http_status": 204,
+    "old_release_and_checksum_retained": true
+  },
+  "dataBoundaries": {
+    "room": 34,
+    "entities": 45,
+    "backup": 16,
+    "uiAndSkinsUnchanged": true,
+    "privateDataAndImageRulesUnchanged": true,
+    "paidCalls": 0
+  },
+  "scope": "Cache selection only; deterministic transfer counts from isolated synthetic HTTP/device tests. No measured public latency or percentage savings claimed.",
+  "taskAvdsClosed": true,
+  "taskAvdShutdown": {
+    "method": "adb emu kill; default_boot snapshot saved; no task emulator remains",
+    "hostExitStatus": 134,
+    "scope": "Observed after requested emulator shutdown and snapshot save, following completed tests/upgrade/UI checks; not attributed to an application crash"
+  }
+}

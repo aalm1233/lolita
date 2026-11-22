@@ -69,7 +69,9 @@ deferred每项`{shopId, itemId?, directory?, reason}`。整店失败必须给req
 
 ## 在售与博物馆资料分流
 
-商品可选`listing:{status,source,observedAt,evidenceIds}`。status为ACTIVE/OFF_SALE/DISPLAY_ONLY；source保留明确公开依据，observedAt为带时区的真实ISO观察时间，evidenceIds引用本轮本地证据。未知省略；页面打不开、未采到、库存0/部分缺货不等于下架。展示/收藏/汇总链接保留本地原始资料，不伪造SKU补成可售商品。
+商品可选`listing:{status,source,observedAt,evidenceIds}`。status为ACTIVE/OFF_SALE/DISPLAY_ONLY；source保留明确公开依据，observedAt为带时区的真实ISO观察时间，evidenceIds引用本轮本地证据。未知省略；页面打不开、未采到、库存0/部分缺货不等于下架。无售卖计划的纯展示、汇总及权益链接留本地原始资料。
+
+已公布销售计划的预热动态使用 `kind=上新`、`state=预热`。即使当前链接只供收藏，若商家明文给出拟售阶段且链接已列出完整的公开实物选项和主图，沿用现有 v1 格式，以明确的计划阶段写 `pricePhase`（例如页面「出售状态：定金」用 `DEPOSIT`）。`priceType` 标出「预热，未开售」，状态未开售且无明确下架/纯展示时省略新商品的 `listing`。只记录有明确实物对应的真实选项ID和原规格文字。无真实报价则 `price=null`，库存展示「未开售」，原始防拍价及占位库存保存到本地证据。覆盖统计区分公开预热选项和正式可购SKU。计划阶段、商品身份或完整公开选项尚无法核实时仍标记「计划售卖」，将发布缺口列入 `deferred`，不添加虚构行。可购时用新鲜证据在同一批次补充报价、库存和规格。
 
 已在基线中的商品下架后可能没有可读取的完整SKU，此时用`listingUpdates:[{productId,listing}]`更新售卖状态；不要求重复下载旧原图，不把旧capturedAt改为本次，不宣称SKU已刷新。products/events可为空，shops仍给真实请求店铺，证据仍须落地；仅允许更新该店已有商品、不能同轮与全量商品重复。既无完整商品又无有效状态更新仍算失败。
 

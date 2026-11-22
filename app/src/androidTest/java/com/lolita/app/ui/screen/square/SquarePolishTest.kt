@@ -81,13 +81,23 @@ class SquarePolishTest {
         testRoot.deleteRecursively()
         ImageFileHelper.configure(target, com.lolita.app.di.AppModule.database())
     }
-    private fun imported(): SquareCatalog = io {
+    private fun imported(scrollable: Boolean = false): SquareCatalog = io {
         val input = File(target.cacheDir, "polish-public-fixture.zip")
         if (!input.isFile) {
             val fd = inst.uiAutomation.executeShellCommand("cat /sdcard/Download/square-polish.zip")
             FileInputStream(fd.fileDescriptor).use { source -> input.outputStream().use { source.copyTo(it) } }; fd.close()
         }
-        val preview = repo.preview(Uri.fromFile(input)) {}; repo.apply(preview)
+        val preview = repo.preview(Uri.fromFile(input)) {}
+        val ready = if (scrollable) {
+            // Repeat public content only in this isolated fixture to guarantee a long feed.
+            val event = SquareVisibility.events(preview.catalog).first { it.canRegister }
+            val extra = (1..8).map { index -> event.copy(id = "scroll-fixture-$index",
+                designId = "scroll-design-$index", batchId = "scroll-batch-$index", title = "滚动验收 $index · ${event.title}") }
+            preview.copy(catalog = preview.catalog.copy(events = preview.catalog.events + extra)).also {
+                SquarePackage.validate(it.catalog)
+            }
+        } else preview
+        repo.apply(ready)
         repo.catalog.value!!
     }
     private fun show() {
@@ -126,6 +136,72 @@ class SquarePolishTest {
 
     private fun open(id: String) { compose.runOnIdle { model!!.open(id) }; compose.waitForIdle() }
     private fun scroll(tag: String) = compose.onNodeWithTag("square-product").performScrollToNode(hasTestTag(tag))
+    private fun category(label: String): SemanticsNodeInteraction = compose.onNodeWithTag("square-kind-$label").also {
+        if (target.resources.configuration.fontScale >= 1.5f) it.performScrollTo()
+    }
+
+    @Test fun topControlsStayVisibleWhileProductsScrollAcrossSevenSkinsAndModes() {
+        val c = imported(scrollable = true); show()
+        val (kind, events) = SquareVisibility.events(c).groupBy { SquareEventPresentation.kind(it) }
+            .maxBy { it.value.size }
+        assertTrue("Fixture must contain enough products to scroll", events.size >= 4)
+        compose.runOnIdle { model!!.set("kind", kind) }
+        for (type in SkinType.entries) for (night in listOf(false, true)) {
+            compose.runOnIdle { skin.value = type; dark.value = night }
+            compose.onNodeWithTag("square-feed").performScrollToIndex(0)
+            val before = compose.onNodeWithTag("square-controls").fetchSemanticsNode().boundsInRoot
+            val suffix = "${type.name.lowercase()}-${if (night) "dark" else "light"}"
+            screenshot("pinned-before-$suffix")
+            compose.onNodeWithTag("square-feed").performScrollToNode(hasTestTag("square-event-${events.last().id}"))
+            compose.onNodeWithTag("square-event-${events.first().id}").assertIsNotDisplayed()
+            compose.onNodeWithTag("square-controls").assertIsDisplayed()
+            val after = compose.onNodeWithTag("square-controls").fetchSemanticsNode().boundsInRoot
+            assertEquals("Controls top must stay fixed after product scroll", before.top, after.top, 1f)
+            assertEquals("Controls height must stay fixed after product scroll", before.height, after.height, 1f)
+            compose.onNodeWithTag("square-search-open").assertIsDisplayed()
+            category(kind).assertIsDisplayed().assertIsSelected()
+            compose.onNodeWithTag("square-filter-button").assertIsDisplayed()
+            screenshot("pinned-scrolled-$suffix")
+            compose.onNodeWithTag("square-filter-button").performClick()
+            compose.onNodeWithTag("square-filter-done").assertIsDisplayed().performClick()
+            compose.onNodeWithTag("square-controls").assertIsDisplayed()
+        }
+    }
+
+    @Test fun scrolledFeedSearchKeyboardFiltersAndDetailReturnRemainUsable() {
+        val c = imported(scrollable = true); show()
+        val (kind, events) = SquareVisibility.events(c).groupBy { SquareEventPresentation.kind(it) }
+            .maxBy { it.value.size }
+        compose.runOnIdle { model!!.set("kind", kind) }
+        compose.onNodeWithTag("square-feed").performScrollToNode(hasTestTag("square-event-${events.last().id}"))
+        compose.onNodeWithTag("square-search-open").assertIsDisplayed().performClick()
+        compose.onNodeWithTag("square-search").assertIsFocused()
+        compose.waitUntil(10000) { ViewCompat.getRootWindowInsets(host)?.isVisible(WindowInsetsCompat.Type.ime()) == true }
+        val before = compose.onNodeWithTag("square-controls").fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("square-feed").performScrollToIndex(0)
+        compose.onNodeWithTag("square-feed").performTouchInput { swipeUp() }
+        compose.onNodeWithTag("square-search").assertIsDisplayed()
+        assertEquals(before.top, compose.onNodeWithTag("square-controls").fetchSemanticsNode().boundsInRoot.top, 1f)
+        screenshot("pinned-search-real-ime")
+        compose.onNodeWithTag("square-filter-button").performClick()
+        compose.onNodeWithTag("square-filter-done").assertIsDisplayed().performClick()
+        compose.onNodeWithText("取消").performClick()
+        val event = events.first { it.canRegister }
+        compose.onNodeWithTag("square-feed").performScrollToNode(hasTestTag("square-event-${event.id}"))
+        compose.onNodeWithTag("square-event-${event.id}").performClick()
+        compose.onNodeWithTag("square-detail-topbar").assertIsDisplayed()
+        compose.runOnIdle { model!!.back() }
+        compose.onNodeWithTag("square-controls").assertIsDisplayed()
+        category(kind).assertIsSelected()
+        compose.runOnIdle { model!!.set("shop", event.shopId); model!!.set("query", "无匹配商品") }
+        compose.onNodeWithTag("square-shop-chip").assertIsDisplayed()
+        compose.onNodeWithText("暂无商品").assertIsDisplayed()
+        screenshot("pinned-empty-selected")
+        compose.onNodeWithTag("square-shop-chip").performClick()
+        assertEquals("", model!!.shop.value)
+        assertEquals("无匹配商品", model!!.query.value)
+        assertEquals(kind, model!!.kind.value)
+    }
 
     @Test fun inlineFilterSheetAcrossSevenSkinsAndModes() {
         val c = imported(); show()

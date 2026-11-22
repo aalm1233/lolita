@@ -76,7 +76,9 @@ class SquareHazeLifetimeTest {
             if (compose.onAllNodesWithTag("square-feed").fetchSemanticsNodes().isNotEmpty()) {
                 for (label in listOf("上新", "再贩", "现货", "尾款")) {
                     val tab = compose.onNodeWithTag("square-kind-$label")
-                    tab.performScrollTo().assertIsDisplayed().performClick().assertIsSelected()
+                    // The fixed normal-size tabs no longer have a scrolling ancestor.
+                    if (instrumentation.targetContext.resources.configuration.fontScale >= 1.5f) tab.performScrollTo()
+                    tab.assertIsDisplayed().performClick().assertIsSelected()
                     val results = mutableListOf<TextLayoutResult>()
                     compose.onNode(hasText(label) and hasAnyAncestor(hasTestTag("square-kind-$label")), useUnmergedTree = true)
                         .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(results) }
@@ -91,7 +93,9 @@ class SquareHazeLifetimeTest {
                     assertEquals("Filter aligned with tabs", bounds.center.y, filterBounds.center.y, 1f)
                 }
                 compose.onNodeWithTag("square-kind-全部").assertDoesNotExist()
-                compose.onNodeWithTag("square-kind-上新").performScrollTo().performClick()
+                val newTab = compose.onNodeWithTag("square-kind-上新")
+                if (instrumentation.targetContext.resources.configuration.fontScale >= 1.5f) newTab.performScrollTo()
+                newTab.performClick()
             }
             compose.waitForIdle()
             val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())

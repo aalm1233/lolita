@@ -58,97 +58,99 @@ internal fun SquareBrowseFeed(c: SquareCatalog, vm: SquareViewModel, showAmounts
     val selectedShopName = c.shops.find { it.id == shop }?.name ?: shop
     val large = LocalConfiguration.current.fontScale >= 1.5f
     val state = rememberLazyGridState(); ObserveSkinScroll(state)
-    LazyVerticalGrid(columns = GridCells.Fixed(if (large) 1 else 2), state = state,
-        modifier = Modifier.fillMaxSize().testTag("square-feed"), contentPadding = PaddingValues(start = 12.dp, end = 12.dp, bottom = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        item(span = { GridItemSpan(maxLineSpan) }, key = "controls") {
-            Column {
-                val kinds = listOf("上新", "再贩", "现货", "尾款")
-                val selected = kinds.indexOf(kind).coerceAtLeast(0)
-                val tabs: @Composable () -> Unit = {
-                    kinds.forEachIndexed { index, label ->
-                        Tab(selected == index, { vm.set("kind", label) },
-                            modifier = Modifier.heightIn(min = 34.dp).testTag("square-kind-$label"),
-                            selectedContentColor = LocalContentColor.current,
-                            unselectedContentColor = LocalContentColor.current.copy(alpha = 0.7f)) {
-                            Text(label, modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 8.dp).width(IntrinsicSize.Max),
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = if (selected == index) FontWeight.SemiBold else FontWeight.Medium,
-                                textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
-                        }
-                    }
-                }
-                Row(Modifier.fillMaxWidth().testTag("square-controls")
-                    .then(if (searching) Modifier else Modifier.padding(vertical = 2.dp)), verticalAlignment = Alignment.CenterVertically) {
-                    if (searching) {
-                        Box(Modifier.weight(1f)) {
-                            SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,
-                                placeholder = "搜索商品或店铺", inputModifier = Modifier.testTag("square-search"))
-                        }
-                        LaunchedEffect(Unit) { searchFocus.requestFocus() }
-                    } else {
-                        IconButton(onClick = { searching = true }, modifier = Modifier.size(32.dp).testTag("square-search-open").semantics { contentDescription = "搜索商品或店铺" }) {
-                            SkinIcon(IconKey.Search)
-                        }
-                        if (large) ScrollableTabRow(selected, modifier = Modifier.weight(1f), edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
-                            divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
-                        else TabRow(selected, modifier = Modifier.weight(1f), containerColor = androidx.compose.ui.graphics.Color.Transparent,
-                            divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
-                    }
-                    BadgedBox(badge = {
-                        if (activeFilterCount > 0) Badge { Text("$activeFilterCount") }
-                    }) {
-                        IconButton(onClick = { filters = true }, modifier = Modifier.size(32.dp)
-                            .testTag("square-filter-button").semantics {
-                                contentDescription = if (activeFilterCount > 0) "筛选，已选${activeFilterCount}项" else "筛选"
-                            }) { SkinIcon(IconKey.FilterList) }
-                    }
-                }
-                if (activeFilterCount > 0) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (shop.isNotEmpty()) InputChip(selected = true, onClick = { vm.set("shop", "") },
-                        modifier = Modifier.testTag("square-shop-chip"), label = { Text(selectedShopName) },
-                        trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
-                    listOf("color" to color, "style" to style, "form" to form).filter { it.second.isNotEmpty() }.forEach { (key, value) ->
-                        InputChip(selected = true, onClick = { vm.set(key, "") }, label = { Text(value) }, trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
+    Column(Modifier.fillMaxSize()) {
+        // Controls stay outside the scrolling products, just like the Home controls.
+        Column(Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
+            val kinds = listOf("上新", "再贩", "现货", "尾款")
+            val selected = kinds.indexOf(kind).coerceAtLeast(0)
+            val tabs: @Composable () -> Unit = {
+                kinds.forEachIndexed { index, label ->
+                    Tab(selected == index, { vm.set("kind", label) },
+                        modifier = Modifier.heightIn(min = 34.dp).testTag("square-kind-$label"),
+                        selectedContentColor = LocalContentColor.current,
+                        unselectedContentColor = LocalContentColor.current.copy(alpha = 0.7f)) {
+                        Text(label, modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 8.dp).width(IntrinsicSize.Max),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = if (selected == index) FontWeight.SemiBold else FontWeight.Medium,
+                            textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
                     }
                 }
             }
-        }
-        if (events.isEmpty()) item(span = { GridItemSpan(maxLineSpan) }) {
-            LolitaCard {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("暂无商品")
-                    TextButton(enabled = color + style + form != "", onClick = { listOf("color", "style", "form").forEach { vm.set(it, "") } }) { Text("清除属性筛选") }
-                    if (shop.isNotEmpty()) TextButton(onClick = { vm.set("shop", "") }) { Text("清除店铺筛选") }
-                    if (query.isNotBlank()) TextButton(onClick = { vm.set("query", "") }) { Text("清除搜索") }
+            Row(Modifier.fillMaxWidth().testTag("square-controls")
+                .then(if (searching) Modifier else Modifier.padding(vertical = 2.dp)), verticalAlignment = Alignment.CenterVertically) {
+                if (searching) {
+                    Box(Modifier.weight(1f)) {
+                        SearchModeBar(query, { vm.set("query", it) }, ::closeSearch, searchFocus,
+                            placeholder = "搜索商品或店铺", inputModifier = Modifier.testTag("square-search"))
+                    }
+                    LaunchedEffect(Unit) { searchFocus.requestFocus() }
+                } else {
+                    IconButton(onClick = { searching = true }, modifier = Modifier.size(32.dp).testTag("square-search-open").semantics { contentDescription = "搜索商品或店铺" }) {
+                        SkinIcon(IconKey.Search)
+                    }
+                    if (large) ScrollableTabRow(selected, modifier = Modifier.weight(1f), edgePadding = 0.dp, containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                        divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                    else TabRow(selected, modifier = Modifier.weight(1f), containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                        divider = {}, indicator = { SkinTabIndicator(it, selected) }, tabs = tabs)
+                }
+                BadgedBox(badge = {
+                    if (activeFilterCount > 0) Badge { Text("$activeFilterCount") }
+                }) {
+                    IconButton(onClick = { filters = true }, modifier = Modifier.size(32.dp)
+                        .testTag("square-filter-button").semantics {
+                            contentDescription = if (activeFilterCount > 0) "筛选，已选${activeFilterCount}项" else "筛选"
+                        }) { SkinIcon(IconKey.FilterList) }
+                }
+            }
+            if (activeFilterCount > 0) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (shop.isNotEmpty()) InputChip(selected = true, onClick = { vm.set("shop", "") },
+                    modifier = Modifier.testTag("square-shop-chip"), label = { Text(selectedShopName) },
+                    trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
+                listOf("color" to color, "style" to style, "form" to form).filter { it.second.isNotEmpty() }.forEach { (key, value) ->
+                    InputChip(selected = true, onClick = { vm.set(key, "") }, label = { Text(value) }, trailingIcon = { SkinIcon(IconKey.Close, Modifier.size(16.dp)) })
                 }
             }
         }
-        items(events, key = { it.id }) { event ->
-            val opening = remember(c, event, filter) { filter.opening(c, event) }
-            val part = remember(c, event, opening) { SquareBrowse.parts(c, event).find { it.key == opening?.key } }
-            val selection = remember(c, part, opening) { if (part != null && opening != null) SquareBrowse.select(c, part, opening) else null }
-            val matches = filter.rows(c, event)
-            val product = matches.firstOrNull { it.first.pricePhase == "FULL" }?.first ?: matches.first().first
-            val exactCover = selection?.photos?.firstOrNull()
-            val cover = exactCover ?: product.images.filter { it.role == "main" }.minBy { it.order }.path
-            val filtered = color.isNotEmpty() || style.isNotEmpty() || form.isNotEmpty()
-            LolitaCard(variant = CardVariant.GALLERY, contentPadding = PaddingValues(0.dp),
-                modifier = Modifier.fillMaxWidth().testTag("square-event-${event.id}").clickable { vm.open(event.id) }) {
-                Column {
-                    Box {
-                        LolitaShimmerImage(vm.thumbnail(cover,imageEpoch), event.title, Modifier.fillMaxWidth().aspectRatio(0.8f), ContentScale.Fit, circularRevealEnabled = false)
-                        Surface(Modifier.align(Alignment.TopStart).padding(8.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = .93f), shape = LolitaSkin.current.cardShape) {
-                            Text(SquareEventPresentation.badge(event), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
-                        }
+        LazyVerticalGrid(columns = GridCells.Fixed(if (large) 1 else 2), state = state,
+            modifier = Modifier.weight(1f).fillMaxWidth().testTag("square-feed"),
+            contentPadding = PaddingValues(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (events.isEmpty()) item(span = { GridItemSpan(maxLineSpan) }) {
+                LolitaCard {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("暂无商品")
+                        TextButton(enabled = color + style + form != "", onClick = { listOf("color", "style", "form").forEach { vm.set(it, "") } }) { Text("清除属性筛选") }
+                        if (shop.isNotEmpty()) TextButton(onClick = { vm.set("shop", "") }) { Text("清除店铺筛选") }
+                        if (query.isNotBlank()) TextButton(onClick = { vm.set("query", "") }) { Text("清除搜索") }
                     }
-                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        Text(c.shops.first { it.id == event.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(event.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                        if (filtered && part != null) Text(SquarePresentation.partName(event, part) + if (exactCover == null) " · 系列参考图" else "", style = MaterialTheme.typography.bodySmall)
-                        Text(SquareEventPresentation.time(event, c.capturedAt).summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        if (showAmounts) Text(SquarePresentation.price(matches),
-                            style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                }
+            }
+            items(events, key = { it.id }) { event ->
+                val opening = remember(c, event, filter) { filter.opening(c, event) }
+                val part = remember(c, event, opening) { SquareBrowse.parts(c, event).find { it.key == opening?.key } }
+                val selection = remember(c, part, opening) { if (part != null && opening != null) SquareBrowse.select(c, part, opening) else null }
+                val matches = filter.rows(c, event)
+                val product = matches.firstOrNull { it.first.pricePhase == "FULL" }?.first ?: matches.first().first
+                val exactCover = selection?.photos?.firstOrNull()
+                val cover = exactCover ?: product.images.filter { it.role == "main" }.minBy { it.order }.path
+                val filtered = color.isNotEmpty() || style.isNotEmpty() || form.isNotEmpty()
+                LolitaCard(variant = CardVariant.GALLERY, contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier.fillMaxWidth().testTag("square-event-${event.id}").clickable { vm.open(event.id) }) {
+                    Column {
+                        Box {
+                            LolitaShimmerImage(vm.thumbnail(cover,imageEpoch), event.title, Modifier.fillMaxWidth().aspectRatio(0.8f), ContentScale.Fit, circularRevealEnabled = false)
+                            Surface(Modifier.align(Alignment.TopStart).padding(8.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = .93f), shape = LolitaSkin.current.cardShape) {
+                                Text(SquareEventPresentation.badge(event), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
+                            }
+                        }
+                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Text(c.shops.first { it.id == event.shopId }.name, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(event.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            if (filtered && part != null) Text(SquarePresentation.partName(event, part) + if (exactCover == null) " · 系列参考图" else "", style = MaterialTheme.typography.bodySmall)
+                            Text(SquareEventPresentation.time(event, c.capturedAt).summary, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            if (showAmounts) Text(SquarePresentation.price(matches),
+                                style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                        }
                     }
                 }
             }

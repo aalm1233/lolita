@@ -16,4 +16,12 @@
 
 真实对照：[普通滚动前](../visuals/2026-11-22-square-pinned-header/normal-before-seven-skins.jpg)、[普通滚动后](../visuals/2026-11-22-square-pinned-header/normal-scrolled-seven-skins.jpg)、[大字滚动前](../visuals/2026-11-22-square-pinned-header/small-before-seven-skins.jpg)、[大字滚动后](../visuals/2026-11-22-square-pinned-header/small-scrolled-seven-skins.jpg)、[普通真实IME](../visuals/2026-11-22-square-pinned-header/normal-search-ime.png)、[大字真实IME](../visuals/2026-11-22-square-pinned-header/small-search-ime.png)。原图在各皮肤下继续Fit；固定栏与网格纵向分离，滚动内容不覆盖操作文字。
 
-首轮因本机依赖缓存缺失补下载，阶段日志保留；最终源码构建通过，无生产代码编译失败。正式提交归档clean Release与覆盖发布验证接续执行。
+首轮因本机依赖缓存缺失补下载，阶段日志保留；最终源码构建通过，无生产代码编译失败。正式提交归档clean Release与覆盖发布验证已完成。
+
+正式源码/标签`b876d0e0`已普通推送至master/v2.78.14。提交归档clean原签名Release含lintVital通过，正式包84,054,421字节，SHA256 `1a4b3194f1079d9fcc08c7d24f383723c0ee4ef461d18164313612007e25e86b`；37项目素材、24旧图片、依赖与生成profile核对通过。2.78.13覆盖两次冷启动通过；3份设置与原服务地址缺席状态在正式实页和实际检查更新后保持。无数据库/备份/图片管线变化，不重复无关全库/图片/备份审计。
+
+正式MainActivity的[滚动前](../visuals/2026-11-22-square-pinned-header/release/official-before.jpg)、[连续滚动后](../visuals/2026-11-22-square-pinned-header/release/official-scrolled.jpg)、[筛选](../visuals/2026-11-22-square-pinned-header/release/official-filters.jpg)与[搜索/IME](../visuals/2026-11-22-square-pinned-header/release/official-search-ime.jpg)已核对，搜索与筛选实际触摸坐标滚动前后完全相同；向下手势可操作，不把此项当作公网刷新或耗时测量通过。
+
+GitHub/Gitee正式同APK和校验文件匿名完整GET/SHA/HEAD、源标签及Gitee公开最高版本通过，实际App当前/最新均为2.78.14，完整更新说明正确。上传遇网络失败后，仅调整本机发布工具传输/上传时间预算并接续现有草稿，没有修改App网络代码或已发布标签。Gitee实际1GB配额400后，仅按持续授权核验GitHub全量下载和三份本机完整副本，再清理最旧2.78.1 APK，保留旧页/校验/GitHub与本机副本，见[清理回执](../gitee-apk-cleanup-2.78.1-2026-11-22.json)。最终结果见[发布核验](../square-pinned-header-release-2.78.14-verification.json)。
+
+两台任务AVD均经正常请求退出并保存快照，宿主返回0，数据保留；临时签名引用已移除。原工作区分支与未跟踪文件保留，正常纳入并保留同期已发布的采集规范文档提交。

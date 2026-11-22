@@ -1,0 +1,331 @@
+{
+  "version": "2.78.14",
+  "versionCode": 170,
+  "sourceCommit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+  "gitTag": "v2.78.14",
+  "sourcePushedTo": "origin/master",
+  "checkedAtUtc": "2026-11-22T05:43:57.921375+00:00",
+  "changes": [
+    "Keep search/category/filter controls and selected chips outside the scrolling product grid",
+    "Preserve Home-matched height, skins, search/filter context, detail return and pull gesture"
+  ],
+  "apk": {
+    "package": "com.lolita.app",
+    "version": "2.78.14",
+    "version_code": 170,
+    "min_sdk": 26,
+    "target_sdk": 35,
+    "debuggable": false,
+    "certificate_sha256": "d26185c57f5d2eee158127ebd2eab921bfb8457d9f2cced94ec3f6e40937530c",
+    "source_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "apk_sha256": "1a4b3194f1079d9fcc08c7d24f383723c0ee4ef461d18164313612007e25e86b",
+    "bytes": 84054421
+  },
+  "isolatedCommittedBuild": {
+    "sourceCommit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "committedArchiveOnly": true,
+    "clean": true,
+    "task": "clean assembleRelease",
+    "lintVitalPassed": true,
+    "passed": true,
+    "temporarySigningLinksRemoved": true
+  },
+  "materials": {
+    "projectAssets": 37,
+    "byteIdentical": true,
+    "allPreviousImageResourcesUnchanged": 24,
+    "additionalAssets": [
+      {
+        "path": "assets/dexopt/baseline.prof",
+        "bytes": 10201,
+        "sha256": "30b9bd41cd76229d9872dc2fac96ce3254d35d4957464f3099966adbc282cc9c",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/dexopt/baseline.profm",
+        "bytes": 534,
+        "sha256": "7ebc2957f180bb9bf9fdf6d7df97f5e2c9c90474774206384e2c67329c9f1c3f",
+        "exactGeneratedBuildOutput": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties",
+        "bytes": 30461,
+        "sha256": "c6e18381293bb50bef5914b7925b6160aea82494d80af25bde3f691f40baecb8",
+        "unchangedFromPreviousFormal": true
+      },
+      {
+        "path": "assets/org/apache/commons/math3/random/new-joe-kuo-6.1000",
+        "bytes": 61866,
+        "sha256": "fb4e84a77d09427d1d469f854db6832b5341b3da6df0926f44242af89b777657",
+        "unchangedFromPreviousFormal": true
+      }
+    ]
+  },
+  "tests": {
+    "debugBuildPassed": true,
+    "androidTestBuildPassed": true,
+    "oldFormalRegressionReproduced": true,
+    "distinctDeviceMethods": [
+      "topControlsStayVisibleWhileProductsScrollAcrossSevenSkinsAndModes",
+      "scrolledFeedSearchKeyboardFiltersAndDetailReturnRemainUsable",
+      "compactFeedKeepsCompleteCategoryLabelsAcrossSevenSkinsAndModes",
+      "shopFilterLivesInSheetAndKeepsCategorySearchAndAttributes",
+      "collapsedSearchCancelBackAndDetailReturnKeepFilterContext"
+    ],
+    "methodsPassed": 5,
+    "normal": {
+      "size": "1080x2400",
+      "dpi": 420,
+      "fontScale": 1.0,
+      "methods": 5,
+      "passed": true
+    },
+    "small": {
+      "size": "840x1800 (320dp)",
+      "dpi": 420,
+      "fontScale": 2.0,
+      "methods": 3,
+      "passed": true
+    },
+    "sevenSkinsLightDark": true,
+    "controlsTopAndHeightTolerancePx": 1,
+    "actualIme": true,
+    "homeHeightAndTopPositionPreserved": true,
+    "nativeScreenshotCounts": {
+      "normal": 30,
+      "normal-nav": 14,
+      "small": 30,
+      "small-nav": 14
+    },
+    "totalNativeStates": 88
+  },
+  "upgrade": {
+    "passed": true,
+    "fromVersion": "2.78.13",
+    "toVersion": "2.78.14",
+    "sameFormalSignature": true,
+    "install": "-r",
+    "coldStarts": 2,
+    "preferencesIdentical": true,
+    "persistentPreferenceFiles": 3,
+    "serviceConfigPreserved": "absent",
+    "fullDatabaseAndImageAudit": "not repeated for layout-only change",
+    "startupResults": [
+      "Starting: Intent { cmp=com.lolita.app/.ui.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: com.lolita.app/.ui.MainActivity\nTotalTime: 338\nWaitTime: 341\nComplete\n",
+      "Starting: Intent { cmp=com.lolita.app/.ui.MainActivity }\nStatus: ok\nLaunchState: COLD\nActivity: com.lolita.app/.ui.MainActivity\nTotalTime: 254\nWaitTime: 255\nComplete\n"
+    ],
+    "settingsAlsoPreservedAfterFormalSquareUi": true,
+    "settingsAlsoPreservedAfterActualUpdateCheck": true
+  },
+  "formalMainActivity": {
+    "version": "2.78.14",
+    "actualMainActivity": true,
+    "productScrolls": 2,
+    "controlsBefore": {
+      "搜索商品或店铺": "[11,123][116,236]",
+      "筛选": "[943,123][1069,236]"
+    },
+    "controlsAfter": {
+      "搜索商品或店铺": "[11,123][116,236]",
+      "筛选": "[943,123][1069,236]"
+    },
+    "controlsStayFixed": true,
+    "scrolledSearchAndFilterReachable": true,
+    "noDataOrServiceConfigurationEdit": true,
+    "pullGestureExercised": true,
+    "networkRefreshSuccessNotInferred": true,
+    "installedApkSha256": "1a4b3194f1079d9fcc08c7d24f383723c0ee4ef461d18164313612007e25e86b"
+  },
+  "actualAppUpdate": {
+    "currentVersion": "2.78.14",
+    "texts": [
+      "已是最新版本",
+      "当前版本：v2.78.14",
+      "最新发布：v2.78.14",
+      "本版更新",
+      "修复广场顶部栏固定：浏览商品时，搜索、上新／再贩／现货／尾款和筛选保持在顶部，已选筛选标签也可随时清除。",
+      "保留现有分类栏高度、七套皮肤、搜索取消、详情返回和下拉刷新行为。",
+      "衣橱、心愿、图片缓存、私人资料和备份格式保持不变。",
+      "GitHub 源码提交：b876d0e0d930115fe148fbe5f47f8a6864c3b190。\nGitee 标签对应分发说明，完整应用源码以 GitHub 为准。",
+      "关闭"
+    ],
+    "source": "Formal MainActivity manual update check",
+    "alreadyLatest": true,
+    "passed": true
+  },
+  "github": {
+    "tag": "v2.78.14",
+    "source_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "release_id": 454223675,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.14.apk": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.14/lolita-2.78.14.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "1a4b3194f1079d9fcc08c7d24f383723c0ee4ef461d18164313612007e25e86b",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://github.com/aalm1233/lolita/releases/download/v2.78.14/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "05835ca0633cfd3500f184d4c7b0c34ab996c46d7b4e3ad8d52705eea89853e8",
+        "redirect_chain": [
+          {
+            "host": "github.com",
+            "status": 302
+          },
+          {
+            "host": "release-assets.githubusercontent.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/vnd.android.package-archive",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "github.com",
+          "status": 302
+        },
+        {
+          "host": "release-assets.githubusercontent.com",
+          "status": 200
+        }
+      ]
+    },
+    "source_tag_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "metadata_source": "gh authenticated read-only API; assets downloaded anonymously"
+  },
+  "gitee": {
+    "tag": "v2.78.14",
+    "source_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "release_id": 1352103,
+    "prerelease": false,
+    "files": {
+      "lolita-2.78.14.apk": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.14/lolita-2.78.14.apk",
+        "anonymous_full_download": true,
+        "bytes": 84054421,
+        "sha256": "1a4b3194f1079d9fcc08c7d24f383723c0ee4ef461d18164313612007e25e86b",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      },
+      "SHA256SUMS": {
+        "stable_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.14/SHA256SUMS",
+        "anonymous_full_download": true,
+        "bytes": 85,
+        "sha256": "05835ca0633cfd3500f184d4c7b0c34ab996c46d7b4e3ad8d52705eea89853e8",
+        "redirect_chain": [
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "gitee.com",
+            "status": 302
+          },
+          {
+            "host": "foruda.gitee.com",
+            "status": 200
+          }
+        ]
+      }
+    },
+    "apk_head": {
+      "http_status": 200,
+      "content_type": "application/zip",
+      "bytes": 84054421,
+      "redirect_chain": [
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "gitee.com",
+          "status": 302
+        },
+        {
+          "host": "foruda.gitee.com",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "giteePublicUpdate": {
+    "latest_tag": "v2.78.14",
+    "pages": 4,
+    "formal_only": true,
+    "stable_apk_url": "https://gitee.com/aalm1233/lolita/releases/download/v2.78.14/lolita-2.78.14.apk",
+    "source_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190"
+  },
+  "cleanup": {
+    "tag": "v2.78.1",
+    "release_id": 1283518,
+    "attachment_id": 3622610,
+    "name": "lolita-2.78.1.apk",
+    "bytes": 84005269,
+    "sha256": "814865ba6d93e751cb98692d329e222567421f1ab4d21235a3815955d9fb11e3",
+    "authorization": "2026-10-28 ongoing necessary oldest Gitee APK quota cleanup",
+    "new_source_commit": "b876d0e0d930115fe148fbe5f47f8a6864c3b190",
+    "at_utc": "2026-11-22T05:29:26.209615+00:00",
+    "github_fresh_anonymous_full_download_verified": true,
+    "three_complete_local_copies_verified": true,
+    "http_status": 204,
+    "old_release_and_checksum_retained": true
+  },
+  "dataBoundaries": {
+    "room": 34,
+    "entities": 45,
+    "backup": 16,
+    "layoutOnly": true,
+    "privateDataAndImageRulesUnchanged": true,
+    "fullDatabaseAndImageAuditNotRepeated": true,
+    "paidCalls": 0
+  },
+  "scope": "Fixed header layout only. Old formal bug reproduced with UI trees/screenshots; long-feed fixtures are isolated and do not publish synthetic products. Gesture validation does not claim public refresh performance or target-phone/OEM validation.",
+  "taskAvdsClosed": true,
+  "taskAvdShutdown": {
+    "debug": {
+      "avd": "Lolita_Square_Polish_20261110",
+      "serial": "emulator-5580",
+      "requestedExit": "adb emu kill",
+      "hostExitCode": 0,
+      "dataRetained": true
+    },
+    "formal": {
+      "avd": "Lolita_Square_Design_20261109",
+      "serial": "emulator-5566",
+      "requestedExit": "adb emu kill",
+      "dataRetained": true,
+      "hostExitCode": 0
+    },
+    "temporarySigningLinksRemoved": true,
+    "bothTaskAvdsClosed": true
+  }
+}
